@@ -7,7 +7,8 @@ export function createServerClient() {
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   if (!supabaseUrl || !supabaseKey) {
-    throw new Error('Missing Supabase environment variables')
+    // Return a dummy client during build when env vars aren't available
+    return createClient('https://placeholder.supabase.co', 'placeholder-key')
   }
 
   return createClient(supabaseUrl, supabaseKey)

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { createServerClient } from '@/lib/supabase-server'
 
-export const revalidate = 3600 // Regenerate every hour (ISR)
+export const dynamic = 'force-dynamic' // Render at runtime, not build time
 
 function getWeekendRange() {
   const now = new Date()

@@ -5,7 +5,7 @@ import ActivityDetailHeader from '@/components/ActivityDetailHeader'
 import ActivityActions from '@/components/ActivityActions'
 import ReviewsList from '@/components/ReviewsList'
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 interface ActivityDetailProps {
   params: Promise<{ id: string }>

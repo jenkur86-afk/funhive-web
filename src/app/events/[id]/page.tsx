@@ -5,7 +5,7 @@ import EventDetailHeader from '@/components/EventDetailHeader'
 import EventActions from '@/components/EventActions'
 import ReviewsList from '@/components/ReviewsList'
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 interface EventDetailProps {
   params: Promise<{ id: string }>
