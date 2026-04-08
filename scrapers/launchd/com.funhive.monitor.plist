@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- FunHive Scraper Monitor -->
+    <!-- Runs daily at 8:00 AM to generate monitoring report -->
+
+    <key>Label</key>
+    <string>com.funhive.monitor</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/bin/node</string>
+        <string>/Users/jenniferkurtz/FunHive/backend/scripts/local-scraper-monitor.js</string>
+    </array>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>8</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/jenniferkurtz/FunHive/backend/logs/monitor-stdout.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/jenniferkurtz/FunHive/backend/logs/monitor-stderr.log</string>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/jenniferkurtz/FunHive/backend/scripts</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin</string>
+        <key>NODE_ENV</key>
+        <string>production</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <false/>
+
+    <key>Nice</key>
+    <integer>10</integer>
+</dict>
+</plist>

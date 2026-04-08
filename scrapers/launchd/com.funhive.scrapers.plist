@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- FunHive Daily Scraper Runner -->
+    <!-- Runs at 3:00 AM every day to execute the day's scraper group -->
+
+    <key>Label</key>
+    <string>com.funhive.scrapers</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/bin/node</string>
+        <string>/Users/jenniferkurtz/FunHive/backend/scripts/local-scraper-runner.js</string>
+    </array>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>3</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/jenniferkurtz/FunHive/backend/logs/scraper-stdout.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/jenniferkurtz/FunHive/backend/logs/scraper-stderr.log</string>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/jenniferkurtz/FunHive/backend/scripts</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin</string>
+        <key>NODE_ENV</key>
+        <string>production</string>
+    </dict>
+
+    <!-- Run even if logged out -->
+    <key>RunAtLoad</key>
+    <false/>
+
+    <!-- Keep trying if it fails -->
+    <key>KeepAlive</key>
+    <false/>
+
+    <!-- Nice priority (lower priority) -->
+    <key>Nice</key>
+    <integer>10</integer>
+</dict>
+</plist>

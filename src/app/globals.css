@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+:root {
+  --honey-gold: #F5A623;
+  --honey-dark: #D4891C;
+  --honey-light: #FFF3D6;
+  --hive-brown: #8B6914;
+  --bee-black: #2D2D2D;
+  --cream: #FFFBF0;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: var(--cream);
+  color: var(--bee-black);
+}

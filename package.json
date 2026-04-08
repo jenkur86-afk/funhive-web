@@ -1,0 +1,50 @@
+{
+  "name": "funhive-web",
+  "version": "1.0.0",
+  "description": "FunHive - Family events discovery website",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "scraper": "node scrapers/local-scraper-runner.js",
+    "scraper:dry-run": "node scrapers/local-scraper-runner.js --dry-run",
+    "scraper:monitor": "node scrapers/local-scraper-monitor.js"
+  },
+  "dependencies": {
+    "@stripe/stripe-js": "^5.5.0",
+    "@supabase/ssr": "^0.6.0",
+    "@supabase/supabase-js": "^2.102.1",
+    "leaflet": "^1.9.4",
+    "next": "^15.3.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-leaflet": "^5.0.0",
+    "stripe": "^17.7.0",
+    "us-zips": "^2022.9.1",
+    "zipcodes": "^8.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.0",
+    "@types/leaflet": "^1.9.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^15.3.0",
+    "postcss": "^8.5.0",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.8.0"
+  },
+  "scraperDependencies": {
+    "_comment": "Install these separately for local scraper runner: npm install puppeteer cheerio axios moment ngeohash node-ical xlsx",
+    "puppeteer": "^24.0.0",
+    "cheerio": "^1.0.0",
+    "axios": "^1.7.0",
+    "moment": "^2.30.0",
+    "ngeohash": "^0.6.0",
+    "node-ical": "^0.20.0",
+    "xlsx": "^0.18.0"
+  }
+}

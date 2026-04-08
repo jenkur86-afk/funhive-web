@@ -1,0 +1,29 @@
+{
+  "name": "funhive-scrapers",
+  "version": "1.0.0",
+  "description": "FunHive local scraper runner - runs on your Mac via launchd",
+  "private": true,
+  "scripts": {
+    "scrape": "node local-scraper-runner.js",
+    "scrape:dry-run": "node local-scraper-runner.js --dry-run",
+    "scrape:group1": "node local-scraper-runner.js --group 1",
+    "scrape:group2": "node local-scraper-runner.js --group 2",
+    "scrape:group3": "node local-scraper-runner.js --group 3",
+    "scrape:all": "node local-scraper-runner.js --all",
+    "monitor": "node local-scraper-monitor.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.0",
+    "axios": "^1.7.0",
+    "cheerio": "^1.0.0",
+    "dotenv": "^16.4.0",
+    "moment": "^2.30.0",
+    "ngeohash": "^0.6.0",
+    "node-ical": "^0.20.0",
+    "puppeteer": "^24.0.0",
+    "puppeteer-core": "^24.40.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "xlsx": "^0.18.0"
+  }
+}

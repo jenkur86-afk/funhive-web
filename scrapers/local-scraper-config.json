@@ -1,0 +1,73 @@
+{
+  "description": "Configuration for local scraper runner",
+  "created": "January 2026 - Cloud-to-Local Migration",
+
+  "schedule": {
+    "description": "3-day rotation schedule matching cloud functions",
+    "groups": {
+      "1": {
+        "days": [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31],
+        "time": "03:00",
+        "timezone": "America/New_York"
+      },
+      "2": {
+        "days": [2, 5, 8, 11, 14, 17, 20, 23, 26, 29],
+        "time": "03:00",
+        "timezone": "America/New_York"
+      },
+      "3": {
+        "days": [3, 6, 9, 12, 15, 18, 21, 24, 27, 30],
+        "time": "03:00",
+        "timezone": "America/New_York"
+      }
+    },
+    "osm": {
+      "days": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      "time": "04:00",
+      "description": "OSM venue scrapers run monthly, days 1-10"
+    },
+    "eventSeries": {
+      "hours": [0, 6, 12, 18],
+      "description": "Event series creation runs every 6 hours"
+    },
+    "monitor": {
+      "time": "08:00",
+      "description": "Scraper monitoring runs daily at 8 AM"
+    }
+  },
+
+  "execution": {
+    "browserRestartInterval": 5,
+    "delayBetweenScrapersMs": 2000,
+    "maxConcurrentScrapers": 1,
+    "retryOnFailure": false,
+    "retryDelayMs": 30000
+  },
+
+  "logging": {
+    "directory": "../logs",
+    "keepDays": 30,
+    "logToFirestore": true,
+    "logToConsole": true,
+    "logToFile": true
+  },
+
+  "notifications": {
+    "enabled": false,
+    "emailOnFailure": false,
+    "email": "jenniferkurtz@gmail.com",
+    "failureThreshold": 3
+  },
+
+  "checkpointing": {
+    "enabled": true,
+    "file": "../logs/scraper-checkpoint.json",
+    "description": "Allows resuming from last successful scraper if interrupted"
+  },
+
+  "macos": {
+    "wakeBeforeRun": true,
+    "wakeMinutesBefore": 5,
+    "pmsetCommand": "sudo pmset repeat wake MTWRFSU 02:55:00"
+  }
+}

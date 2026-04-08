@@ -1,0 +1,527 @@
+#!/usr/bin/env node
+
+/**
+ * KIDS OUT AND ABOUT DMV SCRAPER
+ *
+ * Scrapes family events from dmv.kidsoutandabout.com
+ * Coverage: Washington DC, Maryland, Virginia (DMV region)
+ *
+ * Data Source: JSON-LD structured data on event pages
+ * Estimated Events: 200+ per month
+ *
+ * Usage:
+ *   node scraper-kidsoutandabout-dmv.js          # Test mode (3 days)
+ *   node scraper-kidsoutandabout-dmv.js --full   # Full mode (30 days)
+ *
+ * Cloud Function: scheduledKidsOutAndAboutDMV
+ * Schedule: Every 3 days
+ */
+
+const axios = require('axios');
+const cheerio = require('cheerio');
+const ngeohash = require('ngeohash');
+const { admin, db } = require('./helpers/supabase-adapter');
+const { categorizeEvent } = require('./event-categorization-helper');
+const { normalizeDateString } = require('./date-normalization-helper');
+const { generateEventId } = require('./event-id-helper');
+const { logScraperResult } = require('./scraper-logger');
+const { linkEventToVenue } = require('./venue-matcher');
+
+const SCRAPER_NAME = 'KidsOutAndAbout-DMV';
+const BASE_URL = 'https://dmv.kidsoutandabout.com';
+
+// States covered by this scraper
+const DMV_STATES = ['DC', 'MD', 'VA'];
+
+/**
+ * Format date as YYYY-MM-DD for URL
+ */
+function formatDateForUrl(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/**
+ * Parse date string to Date object
+ */
+function parseEventDate(dateStr) {
+  if (!dateStr) return null;
+
+  // Handle ISO date strings
+  if (dateStr.includes('T')) {
+    return new Date(dateStr);
+  }
+
+  // Handle MM/DD/YYYY format
+  const parts = dateStr.split('/');
+  if (parts.length === 3) {
+    return new Date(parts[2], parts[0] - 1, parts[1]);
+  }
+
+  // Try direct parsing
+  const parsed = new Date(dateStr);
+  return isNaN(parsed.getTime()) ? null : parsed;
+}
+
+/**
+ * Extract state from location string
+ */
+function extractState(location) {
+  if (!location) return null;
+
+  // Look for state abbreviations
+  const stateMatch = location.match(/\b(DC|MD|VA|Virginia|Maryland|Washington\s*D\.?C\.?)\b/i);
+  if (stateMatch) {
+    const state = stateMatch[1].toUpperCase();
+    if (state.includes('VIRGINIA')) return 'VA';
+    if (state.includes('MARYLAND')) return 'MD';
+    if (state.includes('WASHINGTON') || state.includes('DC')) return 'DC';
+    return state;
+  }
+  return null;
+}
+
+/**
+ * Parse age range from string
+ */
+function parseAgeRange(ageStr) {
+  if (!ageStr) return 'All Ages';
+
+  const lower = ageStr.toLowerCase();
+  if (lower.includes('all ages')) return 'All Ages';
+  if (lower.includes('adult')) return 'Adults';
+  if (lower.includes('teen')) return 'Teens';
+  if (lower.includes('toddler')) return 'Toddlers (1-3)';
+  if (lower.includes('preschool')) return 'Preschool (3-5)';
+  if (lower.includes('elementary') || lower.includes('school age')) return 'Elementary (6-12)';
+
+  return ageStr.substring(0, 50);
+}
+
+/**
+ * Fetch event list page for a specific date
+ */
+async function fetchEventListPage(date) {
+  const dateStr = formatDateForUrl(date);
+  const url = `${BASE_URL}/event-list/${dateStr}`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+        'Accept': 'text/html,application/xhtml+xml',
+      },
+      timeout: 30000,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`  ⚠️ Failed to fetch ${dateStr}: ${error.message}`);
+    return null;
+  }
+}
+
+/**
+ * Extract event URLs from list page
+ */
+function extractEventUrls(html) {
+  const $ = cheerio.load(html);
+  const urls = new Set();
+
+  // Find all event links
+  $('a[href*="/content/"]').each((_, el) => {
+    const href = $(el).attr('href');
+    if (href && href.includes('/content/') && !href.includes('/content/search')) {
+      const fullUrl = href.startsWith('http') ? href : `${BASE_URL}${href}`;
+      urls.add(fullUrl);
+    }
+  });
+
+  return Array.from(urls);
+}
+
+/**
+ * Fetch and parse individual event page
+ */
+async function fetchEventDetails(url) {
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+        'Accept': 'text/html,application/xhtml+xml',
+      },
+      timeout: 30000,
+    });
+
+    const $ = cheerio.load(response.data);
+
+    // Try to extract JSON-LD data first
+    let jsonLdData = null;
+    $('script[type="application/ld+json"]').each((_, el) => {
+      try {
+        const json = JSON.parse($(el).html());
+        if (json['@type'] === 'Event' || (Array.isArray(json) && json.some(j => j['@type'] === 'Event'))) {
+          jsonLdData = Array.isArray(json) ? json.find(j => j['@type'] === 'Event') : json;
+        }
+      } catch (e) {}
+    });
+
+    // Extract data from page content
+    const title = $('h1').first().text().trim() || $('title').text().split('|')[0].trim();
+
+    // Get description
+    let description = '';
+    $('.field-name-body p, .node-content p').each((i, el) => {
+      if (i < 3) description += $(el).text().trim() + ' ';
+    });
+    description = description.trim().substring(0, 500);
+
+    // Extract location from page
+    let venue = '', address = '', city = '', state = '', zipCode = '';
+
+    // Try to find location info
+    const locationText = $('*:contains("Location:")').last().parent().text();
+    const addressMatch = locationText.match(/(\d+[^,]+),\s*([^,]+),\s*([A-Z]{2})\s*(\d{5})?/);
+    if (addressMatch) {
+      address = addressMatch[1].trim();
+      city = addressMatch[2].trim();
+      state = addressMatch[3];
+      zipCode = addressMatch[4] || '';
+    }
+
+    // Try to get venue name
+    venue = $('*:contains("Location:")').last().next().text().trim();
+    if (!venue) {
+      venue = jsonLdData?.location?.name || '';
+    }
+
+    // Get coordinates from JSON-LD or try to geocode
+    let latitude = null, longitude = null;
+    if (jsonLdData?.location?.geo) {
+      latitude = parseFloat(jsonLdData.location.geo.latitude);
+      longitude = parseFloat(jsonLdData.location.geo.longitude);
+    }
+
+    // Parse dates
+    let startDate = jsonLdData?.startDate || '';
+    let endDate = jsonLdData?.endDate || '';
+
+    // Get time info
+    let time = '';
+    const timeText = $('*:contains("Time:")').first().parent().text();
+    const timeMatch = timeText.match(/Time:\s*(.+?)(?:\n|$)/i);
+    if (timeMatch) {
+      time = timeMatch[1].trim();
+    }
+
+    // Get age range
+    let ageRange = 'All Ages';
+    const ageText = $('*:contains("Ages:")').first().parent().text();
+    if (ageText) {
+      const ageMatch = ageText.match(/Ages?:\s*(.+?)(?:\n|$)/i);
+      if (ageMatch) {
+        ageRange = parseAgeRange(ageMatch[1].trim());
+      }
+    }
+
+    // Get cost
+    let cost = 'See website';
+    const priceText = $('*:contains("Price:")').first().parent().text();
+    if (priceText) {
+      const priceMatch = priceText.match(/Price:\s*(.+?)(?:\n|$)/i);
+      if (priceMatch) {
+        cost = priceMatch[1].trim().substring(0, 100);
+      }
+    }
+    if (cost.toLowerCase().includes('free')) cost = 'Free';
+
+    // Get categories/tags
+    const tags = [];
+    $('.field-name-field-tags a, .taxonomy-term a').each((_, el) => {
+      tags.push($(el).text().trim());
+    });
+
+    // Use JSON-LD data to fill in gaps
+    if (jsonLdData) {
+      if (!venue && jsonLdData.location?.name) venue = jsonLdData.location.name;
+      if (!address && jsonLdData.location?.address) {
+        if (typeof jsonLdData.location.address === 'string') {
+          address = jsonLdData.location.address;
+        } else {
+          address = jsonLdData.location.address.streetAddress || '';
+          city = city || jsonLdData.location.address.addressLocality || '';
+          state = state || jsonLdData.location.address.addressRegion || '';
+          zipCode = zipCode || jsonLdData.location.address.postalCode || '';
+        }
+      }
+    }
+
+    // Determine state for DMV filtering
+    const eventState = state || extractState(venue + ' ' + address + ' ' + city);
+
+    return {
+      name: title,
+      description: description,
+      venue: venue,
+      address: address,
+      city: city,
+      state: eventState,
+      zipCode: zipCode,
+      latitude: latitude,
+      longitude: longitude,
+      startDate: startDate,
+      endDate: endDate,
+      time: time,
+      ageRange: ageRange,
+      cost: cost,
+      tags: tags,
+      url: url,
+    };
+
+  } catch (error) {
+    console.log(`  ⚠️ Failed to parse event: ${error.message}`);
+    return null;
+  }
+}
+
+/**
+ * Geocode address if coordinates are missing
+ */
+async function geocodeAddress(address, city, state, zipCode) {
+  if (!address && !city) return null;
+
+  const query = [address, city, state, zipCode].filter(Boolean).join(', ');
+
+  try {
+    const response = await axios.get('https://nominatim.openstreetmap.org/search', {
+      params: { q: query, format: 'json', limit: 1, countrycodes: 'us' },
+      headers: { 'User-Agent': 'FunHive/1.0' },
+      timeout: 10000,
+    });
+
+    if (response.data && response.data.length > 0) {
+      return {
+        latitude: parseFloat(response.data[0].lat),
+        longitude: parseFloat(response.data[0].lon),
+      };
+    }
+  } catch (error) {}
+
+  return null;
+}
+
+/**
+ * Save events to Firestore
+ */
+async function saveEvents(events) {
+  if (events.length === 0) return { saved: 0, failed: 0 };
+
+  const batch = db.batch();
+  let saved = 0, failed = 0;
+
+  for (const event of events) {
+    try {
+      const eventId = generateEventId(event.url);
+      const docRef = db.collection('events').doc(eventId);
+      batch.set(docRef, event, { merge: true });
+      saved++;
+    } catch (error) {
+      failed++;
+    }
+  }
+
+  try {
+    await batch.commit();
+  } catch (error) {
+    console.error('Batch commit error:', error.message);
+    failed = events.length;
+    saved = 0;
+  }
+
+  return { saved, failed };
+}
+
+/**
+ * Main scraper function
+ */
+async function scrapeKidsOutAndAboutDMV(options = {}) {
+  const { daysToScrape = 7, testMode = false } = options;
+
+  console.log(`\n🐝 KIDS OUT AND ABOUT DMV SCRAPER`);
+  console.log(`📅 Scraping ${daysToScrape} days of events`);
+  console.log(`🎯 Coverage: DC, MD, VA`);
+  console.log('='.repeat(60));
+
+  const startTime = Date.now();
+  const allEvents = [];
+  const seenUrls = new Set();
+
+  // Generate dates to scrape
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  for (let i = 0; i < daysToScrape; i++) {
+    const date = new Date(today);
+    date.setDate(date.getDate() + i);
+
+    console.log(`\n📆 ${date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`);
+
+    const html = await fetchEventListPage(date);
+    if (!html) continue;
+
+    const eventUrls = extractEventUrls(html);
+    console.log(`  Found ${eventUrls.length} event links`);
+
+    // Filter out already-seen URLs
+    const newUrls = eventUrls.filter(url => !seenUrls.has(url));
+    newUrls.forEach(url => seenUrls.add(url));
+
+    console.log(`  Processing ${newUrls.length} new events...`);
+
+    let processed = 0;
+    for (const url of newUrls) {
+      const details = await fetchEventDetails(url);
+      if (!details || !details.name) continue;
+
+      // Filter to DMV states only
+      if (details.state && !DMV_STATES.includes(details.state)) {
+        continue;
+      }
+
+      // Geocode if needed
+      if (!details.latitude || !details.longitude) {
+        const coords = await geocodeAddress(
+          details.address, details.city, details.state, details.zipCode
+        );
+        if (coords) {
+          details.latitude = coords.latitude;
+          details.longitude = coords.longitude;
+        }
+      }
+
+      // Build event object
+      const { parentCategory, displayCategory, subcategory } = categorizeEvent({
+        name: details.name,
+        description: details.description,
+      });
+
+      // Normalize date format
+      const rawDate = details.startDate || date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      const normalizedDate = normalizeDateString(rawDate);
+      if (!normalizedDate) {
+        console.log(`  ⚠️ Skipping event with invalid date: "${rawDate}"`);
+        continue;
+      }
+
+      const event = {
+        name: details.name,
+        eventDate: normalizedDate,
+        startTime: details.time || '',
+        endTime: '',
+        description: details.description,
+        venue: details.venue || 'See event page',
+        address: details.address || '',
+        city: details.city || '',
+        state: details.state || '',
+        zipCode: details.zipCode || '',
+        location: details.latitude && details.longitude ? {
+          latitude: details.latitude,
+          longitude: details.longitude,
+        } : null,
+        geohash: details.latitude && details.longitude
+          ? ngeohash.encode(details.latitude, details.longitude, 7)
+          : null,
+        ageRange: details.ageRange || 'All Ages',
+        cost: details.cost || 'See website',
+        parentCategory,
+        displayCategory,
+        subcategory,
+        url: details.url,
+        imageUrl: '',
+        metadata: {
+          sourceName: 'Kids Out and About DMV',
+          sourceUrl: BASE_URL,
+          scrapedAt: new Date().toISOString(),
+          scraperName: SCRAPER_NAME,
+          platform: 'kidsoutandabout',
+          state: details.state || 'DMV',
+          addedDate: new Date().toISOString(),
+        },
+      };
+
+      allEvents.push(event);
+      processed++;
+
+      // Rate limiting - be nice to the server
+      await new Promise(resolve => setTimeout(resolve, 200));
+    }
+
+    console.log(`  ✅ Processed ${processed} DMV events`);
+
+    // Rate limiting between days
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
+
+  console.log(`\n📊 SAVING TO FIRESTORE`);
+  console.log('-'.repeat(40));
+
+  const { saved, failed } = await saveEvents(allEvents);
+
+  const duration = ((Date.now() - startTime) / 1000).toFixed(1);
+
+  console.log(`\n${'='.repeat(60)}`);
+  console.log(`✅ SCRAPER COMPLETE`);
+  console.log(`   Events found: ${allEvents.length}`);
+  console.log(`   Events saved: ${saved}`);
+  console.log(`   Failed: ${failed}`);
+  console.log(`   Duration: ${duration}s`);
+  console.log(`${'='.repeat(60)}\n`);
+
+  // Log to scraperLogs collection
+  try {
+    await db.collection('scraperLogs').add({
+      scraperName: SCRAPER_NAME,
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      eventsImported: saved,
+      eventsFailed: failed,
+      eventsFound: allEvents.length,
+      duration: parseFloat(duration),
+      status: failed === 0 ? 'success' : 'partial',
+      daysScraped: daysToScrape,
+    });
+  } catch (error) {
+    console.error('Failed to log scraper run:', error.message);
+  }
+
+  return { imported: saved, failed, total: allEvents.length };
+}
+
+/**
+ * Cloud Function export
+ */
+async function scrapeKidsOutAndAboutDMVCloudFunction() {
+  console.log('☁️ Running as Cloud Function');
+  return await scrapeKidsOutAndAboutDMV({ daysToScrape: 14, testMode: false });
+}
+
+// Run if executed directly
+if (require.main === module) {
+  const args = process.argv.slice(2);
+  const fullMode = args.includes('--full');
+  const daysToScrape = fullMode ? 30 : 7;
+
+  console.log(`\n🚀 Starting Kids Out and About DMV Scraper (${fullMode ? 'Full' : 'Test'} Mode)`);
+
+  scrapeKidsOutAndAboutDMV({ daysToScrape, testMode: !fullMode })
+    .then(() => process.exit(0))
+    .catch(error => {
+      console.error('Scraper failed:', error);
+      process.exit(1);
+    });
+}
+
+module.exports = {
+  scrapeKidsOutAndAboutDMV,
+  scrapeKidsOutAndAboutDMVCloudFunction,
+};
