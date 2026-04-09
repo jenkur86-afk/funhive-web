@@ -131,12 +131,23 @@ async function scrapeGenericEvents() {
 
               const linkEl = card.querySelector('a[href]');
 
+              // Look for age/audience info on the event card
+              const ageEl = [
+                card.querySelector('[class*="audience"]'),
+                card.querySelector('[class*="age-range"]'),
+                card.querySelector('[class*="age_range"]'),
+                card.querySelector('[class*="ages"]'),
+                card.querySelector('[class*="age-group"]'),
+                card.querySelector('[class*="category"]')
+              ].find(el => el && el.textContent.trim().length > 0 && el.textContent.trim().length < 80);
+
               if (possibleTitles.length > 0) {
                 const event = {
                   title: possibleTitles[0].textContent.trim(),
                   date: possibleDates.length > 0 ? possibleDates[0].textContent.trim() : '',
                   description: possibleDescs.length > 0 ? possibleDescs[0].textContent.trim() : '',
                   url: linkEl ? linkEl.href : window.location.href,
+                  ageRange: ageEl ? ageEl.textContent.trim() : '',
                   location: libName,
                   venueName: libName
                 };

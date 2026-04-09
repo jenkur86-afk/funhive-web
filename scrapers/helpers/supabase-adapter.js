@@ -112,6 +112,128 @@ function _isDateObjInPast(dateObj) {
 }
 
 // ============================================================================
+// AGE DETECTION — auto-tag events with age ranges
+// ============================================================================
+
+function detectAgeRange(name, description) {
+  const text = `${name || ''} ${description || ''}`.toLowerCase();
+
+  // Explicit age ranges: "ages 3-5", "age 6 to 12", "ages 0-18"
+  const ageMatch = text.match(/\bages?\s+(\d{1,2})\s*[-–to]+\s*(\d{1,2})\b/);
+  if (ageMatch) return `${ageMatch[1]}-${ageMatch[2]}`;
+
+  // Parenthetical ages: "(ages 11-18)", "(3-5 yrs)"
+  const parenMatch = text.match(/\((?:ages?\s+)?(\d{1,2})\s*[-–]\s*(\d{1,2})(?:\s*(?:yrs?|years?))?\)/);
+  if (parenMatch) return `${parenMatch[1]}-${parenMatch[2]}`;
+
+  // Specific group keywords (order matters — check specific before general)
+  if (/\b(baby|babies|infant|lap\s*sit)\b/.test(text)) return '0-2';
+  if (/\btoddler/.test(text)) return '1-3';
+  if (/\b(preschool|pre-k|prek|pre\s*k)\b/.test(text)) return '3-5';
+  if (/\btween/.test(text)) return '9-12';
+  if (/\bteen\b/.test(text) && !/\bfamil(y|ies)\b/.test(text)) return '11-18';
+  if (/\belementary/.test(text)) return '5-11';
+
+  // "kids" or "children" without "family" context → likely 4-12
+  if (/\b(kids?|children)\b/.test(text) && !/\bfamil(y|ies)\b/.test(text)) return '4-12';
+
+  // Family / all ages
+  if (/\ball\s*ages\b/.test(text)) return 'All Ages';
+  if (/\bfamil(y|ies)\b/.test(text)) return 'All Ages';
+
+  return null;
+}
+
+// ============================================================================
+// NON-FAMILY FILTERING — reject events not suitable for a family site
+// ============================================================================
+
+const NON_FAMILY_PATTERNS = [
+  // Explicit adult-only labels
+  /\badults?\s*only\b/i,
+  /\b(18|21)\s*\+/i,
+  /\b(18|21)\s*and\s*(over|up|older)\b/i,
+  /\bfor\s+(older\s+)?adults\b/i,
+  /\badult\s+(program|workshop|class|craft|event)\b/i,
+
+  // Senior-specific programs
+  /\bsenior\s+(program|workshop|class|event|group|circle|social|lunch|exercise|fitness|yoga|tai\s*chi|bingo|trip)\b/i,
+  /\bseniors?\s+only\b/i,
+  /\bfor\s+seniors\b/i,
+  /\b(50|55|60|65)\s*\+/i,
+  /\bolder\s+adults\b/i,
+  /\bretire[ed]/i,
+  /\baarp\b/i,
+  /\bmedicare\b/i,
+  /\bdementia\b/i,
+  /\balzheimer/i,
+  /\bcaregiver\s+support\b/i,
+
+  // Alcohol / nightlife
+  /\bwine\s+tasting\b/i,
+  /\bbeer\s+tasting\b/i,
+  /\bcocktail\s+(class|hour|making|tasting)\b/i,
+  /\bhappy\s+hour\b/i,
+  /\bbar\s+crawl\b/i,
+  /\bpub\s+crawl\b/i,
+  /\bbrewery\s+tour\b/i,
+  /\bbyob\b/i,
+
+  // Dating / adult social
+  /\bsingles?\s+night\b/i,
+  /\bspeed\s+dating\b/i,
+  /\bdate\s+night\b/i,
+  /\bburlesque\b/i,
+
+  // Adult library / community programs
+  /\bbook\s+club\b/i,
+  /\bknitting\s+(circle|club|group)\b/i,
+  /\bquilting\b/i,
+  /\bcrochet\s+(circle|club|group)\b/i,
+  /\bmahjong\b/i,
+  /\bbridge\s+club\b/i,
+  /\bjob\s+(search|seeker|fair|workshop)\b/i,
+  /\bresume\s+(writing|workshop|help|review)\b/i,
+  /\btax\s+(prep|help|assistance|filing)\b/i,
+  /\bestate\s+planning\b/i,
+  /\bscam[\s-]proof/i,
+  /\bfraud\s+prevention\b/i,
+  /\bgenealogy\b/i,
+  /\bblood\s+(drive|donation)\b/i,
+  /\bnarcan\b/i,
+];
+
+// If event matches a non-family pattern BUT also matches these, keep it
+const FAMILY_RESCUE_PATTERNS = [
+  /\bfamil(y|ies)\b/i,
+  /\bkid/i,
+  /\bchild/i,
+  /\btoddler/i,
+  /\bbab(y|ies)\b/i,
+  /\binfant/i,
+  /\ball\s*ages\b/i,
+  /\bstorytime/i,
+  /\bpuppet/i,
+  /\bteen/i,
+  /\byouth\b/i,
+  /\bjunior\b/i,
+  /\bpreschool/i,
+  /\belementary/i,
+];
+
+function isNonFamilyEvent(name, description) {
+  const text = `${name || ''} ${description || ''}`;
+
+  for (const pattern of NON_FAMILY_PATTERNS) {
+    if (pattern.test(text)) {
+      const rescued = FAMILY_RESCUE_PATTERNS.some(fp => fp.test(text));
+      if (!rescued) return pattern.source;
+    }
+  }
+  return null;
+}
+
+// ============================================================================
 // DIRECT SUPABASE FUNCTIONS (recommended for new code)
 // ============================================================================
 
@@ -120,6 +242,13 @@ function _isDateObjInPast(dateObj) {
  * Converts Firestore event document format to PostgreSQL columns
  */
 async function saveEvent(id, data) {
+  // Reject non-family events
+  const nonFamilyReason = isNonFamilyEvent(data.name, data.description);
+  if (nonFamilyReason) {
+    console.log(`  ⏭️ Skipping non-family event: "${data.name}" [${nonFamilyReason}]`);
+    return null;
+  }
+
   // Reject past events
   const evtDateStr = data.eventDate || '';
   if (evtDateStr && _isDateInPast(evtDateStr)) {
@@ -151,6 +280,7 @@ async function saveEvent(id, data) {
     scraped_at: data.metadata?.scrapedAt || new Date().toISOString(),
     start_time: data.startTime || null,
     end_time: data.endTime || null,
+    age_range: data.ageRange || detectAgeRange(data.name, data.description) || null,
   };
 
   // Auto-extract time from event_date if not explicitly set
@@ -320,7 +450,7 @@ function createFirestoreCompatibleDB() {
               try {
                 flattened = flattenForTable(table, data);
               } catch (e) {
-                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name')) {
+                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event')) {
                   return; // silently skip
                 }
                 throw e;
@@ -371,7 +501,7 @@ function createFirestoreCompatibleDB() {
           try {
             flattened = flattenForTable(collectionName, data);
           } catch (e) {
-            if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name')) {
+            if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event')) {
               return { id }; // silently skip
             }
             throw e;
@@ -409,7 +539,7 @@ function createFirestoreCompatibleDB() {
                 upsertByTable[table].push({ id: op.id, ...flattenForTable(table, op.data) });
               } catch (e) {
                 // Skip past events and invalid events gracefully
-                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name')) {
+                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event')) {
                   continue;
                 }
                 throw e;
@@ -502,6 +632,12 @@ function flattenEvent(data) {
     throw new Error('Cannot save event with empty/null name');
   }
 
+  // Reject non-family events
+  const nonFamilyReason = isNonFamilyEvent(data.name, data.description);
+  if (nonFamilyReason) {
+    throw new Error(`Skipping non-family event: "${data.name}" [${nonFamilyReason}]`);
+  }
+
   // Reject past events — parse date from eventDate string or date field
   const eventDateStr = data.eventDate || data.event_date;
   if (eventDateStr && _isDateInPast(eventDateStr)) {
@@ -578,6 +714,14 @@ function flattenEvent(data) {
     row.category = row.category || data.metadata.category;
     // State: metadata.state as additional fallback
     row.state = row.state || data.metadata.state;
+  }
+
+  // Auto-detect age range from event name/description
+  if (!data.ageRange && !data.age_range) {
+    const detectedAge = detectAgeRange(data.name, data.description);
+    if (detectedAge) row.age_range = detectedAge;
+  } else {
+    row.age_range = data.ageRange || data.age_range;
   }
 
   // Clean up nulls — don't write null values that overwrite existing data

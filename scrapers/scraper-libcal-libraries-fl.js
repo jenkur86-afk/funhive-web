@@ -59,6 +59,7 @@ async function scrapeLibCalEvents() {
             const linkEl = card.querySelector('a[href]');
             const imageEl = card.querySelector('img');
             const locationEl = card.querySelector('.s-lc-ea-loc, .event-location');
+            const ageEl = card.querySelector('.s-lc-ea-audience, .s-lc-ea-cat, [class*="audience"], [class*="age"], .event-category');
 
             if (titleEl && dateEl) {
               const event = {
@@ -68,6 +69,7 @@ async function scrapeLibCalEvents() {
                 description: descEl ? descEl.textContent.trim() : '',
                 url: linkEl ? linkEl.href : window.location.href,
                 imageUrl: imageEl ? imageEl.src : '',
+                ageRange: ageEl ? ageEl.textContent.trim() : '',
                 location: locationEl ? locationEl.textContent.trim() : libName,
                 venueName: libName
               };

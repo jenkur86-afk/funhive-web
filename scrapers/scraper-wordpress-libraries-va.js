@@ -59,7 +59,9 @@ async function scrapeGenericEvents() {
           const title = card.querySelector('h1, h2, h3, h4, [class*="title"], a');
           const date = card.querySelector('[class*="date"], time');
           if (title && title.textContent.trim()) {
-            events.push({ title: title.textContent.trim(), date: date ? date.textContent.trim() : '', location: libName, venueName: libName });
+            // Look for age/audience info on the event card
+            const ageEl = card ? [card.querySelector('[class*="audience"]'), card.querySelector('[class*="age"]'), card.querySelector('[class*="category"]')].find(el => el && el.textContent.trim().length > 0 && el.textContent.trim().length < 80) : null;
+            events.push({ title: title.textContent.trim(), date: date ? date.textContent.trim() : '', ageRange: ageEl ? ageEl.textContent.trim() : '', location: libName, venueName: libName });
           }
         });
         const seen = new Set();

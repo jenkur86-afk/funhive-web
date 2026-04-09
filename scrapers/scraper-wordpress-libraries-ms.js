@@ -75,6 +75,7 @@ async function scrapeGenericEvents() {
               const date = card.querySelector('[class*="date"], time');
               const desc = card.querySelector('[class*="description"], p');
               const link = card.querySelector('a[href]');
+              const ageEl = [card.querySelector('[class*="audience"]'), card.querySelector('[class*="age"]'), card.querySelector('[class*="category"]')].find(el => el && el.textContent.trim().length > 0 && el.textContent.trim().length < 80);
 
               if (title && title.textContent.trim()) {
                 events.push({
@@ -82,6 +83,7 @@ async function scrapeGenericEvents() {
                   date: date ? date.textContent.trim() : '',
                   description: desc ? desc.textContent.trim() : '',
                   url: link ? link.href : window.location.href,
+                  ageRange: ageEl ? ageEl.textContent.trim() : '',
                   location: libName,
                   venueName: libName
                 });

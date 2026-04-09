@@ -603,6 +603,12 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
         }
       };
 
+      // Pass through age range from scraper (source-extracted takes priority)
+      // The adapter will fall back to keyword detection if this is empty
+      if (event.ageRange || event.age_range || event.audience) {
+        eventDoc.ageRange = event.ageRange || event.age_range || event.audience;
+      }
+
       // Only add venue-related fields if we have a valid venue
       if (hasValidVenue) {
         eventDoc.venue = event.venueName || event.venue || library.name;

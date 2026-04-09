@@ -109,6 +109,7 @@ async function scrapeBiblioCommonsEvents() {
               const descEl = card.querySelector('.cp-event-card-description, .event-description');
               const linkEl = card.querySelector('a[href]');
               const imageEl = card.querySelector('img');
+              const ageEl = card.querySelector('.cp-event-audience, .event-tags, [class*="audience"], [class*="age"], a[href*="audiences="]');
 
               if (titleEl) {
                 events.push({
@@ -118,6 +119,7 @@ async function scrapeBiblioCommonsEvents() {
                   description: descEl ? descEl.textContent.trim() : '',
                   url: linkEl ? linkEl.href : window.location.href,
                   imageUrl: imageEl ? imageEl.src : '',
+                  ageRange: ageEl ? ageEl.textContent.trim() : '',
                   location: libName,
                   venueName: libName
                 });
