@@ -320,7 +320,7 @@ async function saveActivity(id, data) {
     hours: data.hours || null,
     price_range: data.priceRange || null,
     is_free: data.isFree || false,
-    age_range: data.ageRange || null,
+    age_range: data.ageRange || detectAgeRange(data.name, data.description) || null,
     address: data.address || data.location?.address || null,
     city: data.city || data.location?.city || null,
     state: data.state || data.location?.state || null,

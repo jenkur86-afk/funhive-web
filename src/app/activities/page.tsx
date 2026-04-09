@@ -532,8 +532,8 @@ export default function VenuesPage() {
                     )}
                     <div className="flex flex-wrap items-center gap-2 mt-2">
                       {venue.category && catIcon && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-50 text-amber-700 text-xs rounded">
-                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill={catIcon.color}>
+                        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded" style={{ color: catIcon.color, backgroundColor: catIcon.color + '15' }}>
+                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
                             <path d={catIcon.path} />
                           </svg>
                           {venue.category}
