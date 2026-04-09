@@ -22,7 +22,7 @@ const { linkEventToVenue } = require('./venue-matcher');
 // Check https://www.wicomicolibrary.org/events manually to verify.
 const LIBRARY = {
   name: 'Wicomico Public Libraries',
-  url: 'https://www.wicomicolibrary.org/events',
+  url: 'https://www.wicomicolibrary.org/events/upcoming',
   county: 'Wicomico',
   state: 'MD',
   website: 'https://www.wicomicolibrary.org',
@@ -106,85 +106,85 @@ async function scrapeWicomicoEvents() {
     const events = await page.evaluate(() => {
       const results = [];
 
-      // Wicomico uses h3 tags for event titles
-      const eventContainers = document.querySelectorAll('h3');
+      // Wicomico uses lc-event / event-card classes (LibraryCalendar platform)
+      const eventCards = document.querySelectorAll('article.event-card, .lc-event--upcoming > article');
 
-      eventContainers.forEach(h3 => {
+      eventCards.forEach(card => {
         try {
-          // Get the parent container that has all event info
-          let eventContainer = h3.parentElement;
-          while (eventContainer && !eventContainer.textContent.includes('Nov') && !eventContainer.textContent.includes('Dec') && !eventContainer.textContent.includes('Jan')) {
-            eventContainer = eventContainer.parentElement;
-            if (!eventContainer || eventContainer.tagName === 'BODY') break;
-          }
+          // Extract title
+          const titleEl = card.querySelector('.lc-event__title a, .lc-event__link, h3 a, h2 a');
+          if (!titleEl) return;
 
-          if (!eventContainer || eventContainer.tagName === 'BODY') return;
-
-          // Extract title from h3
-          const titleLink = h3.querySelector('a');
-          if (!titleLink) return;
-
-          const title = titleLink.textContent.trim();
+          const title = titleEl.textContent.trim();
           if (!title || title.length < 3) return;
 
           // Extract URL
-          const url = titleLink.href || '';
+          const url = titleEl.href || '';
 
-          // Get all text content
-          const fullText = eventContainer.textContent;
-
-          // Extract date and time - Wicomico format: "Nov 10 2025 Mon 10:30am–11:15am"
+          // Extract date from lc-date-icon elements (month/day/year spans)
           let eventDate = '';
-          let time = '';
+          const monthEl = card.querySelector('.lc-date-icon__item--month');
+          const dayEl = card.querySelector('.lc-date-icon__item--day');
+          const yearEl = card.closest('.lc-event--upcoming') ?
+            card.closest('.lc-event--upcoming').querySelector('.lc-event__month-summary') : null;
 
-          const dateTimeMatch = fullText.match(/(\w{3}\s+\d{1,2}\s+\d{4}\s+\w{3})\s+(\d{1,2}:\d{2}(?:am|pm)(?:–|-)\d{1,2}:\d{2}(?:am|pm))/i);
-          if (dateTimeMatch) {
-            eventDate = dateTimeMatch[1];
-            time = dateTimeMatch[2];
-          } else {
-            // Try to extract just the date
-            const dateMatch = fullText.match(/\w{3}\s+\d{1,2}\s+\d{4}\s+\w{3}/i);
+          if (monthEl && dayEl) {
+            const month = monthEl.textContent.trim();
+            const day = dayEl.textContent.trim();
+            // Extract year from month-summary or use current year
+            let year = new Date().getFullYear();
+            if (yearEl) {
+              const yearMatch = yearEl.textContent.match(/\d{4}/);
+              if (yearMatch) year = yearMatch[0];
+            }
+            eventDate = month + ' ' + day + ', ' + year;
+          }
+
+          // Fallback: try regex on full text
+          if (!eventDate) {
+            const fullText = card.textContent;
+            const dateMatch = fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+\w+\s+\d{1,2},?\s+\d{4}/i) ||
+                             fullText.match(/\w{3,9}\s+\d{1,2},?\s+\d{4}/i);
             if (dateMatch) eventDate = dateMatch[0];
+          }
 
-            // Try to extract time separately
-            const timeMatch = fullText.match(/\d{1,2}:\d{2}(?:am|pm)(?:–|-)\d{1,2}:\d{2}(?:am|pm)/i) ||
-                             fullText.match(/\d{1,2}:\d{2}(?:am|pm)/i);
+          // Extract time
+          let time = '';
+          const timeEl = card.querySelector('.lc-event-info-item--time, [class*="time"]');
+          if (timeEl) {
+            time = timeEl.textContent.trim();
+          } else {
+            const fullText = card.textContent;
+            const timeMatch = fullText.match(/\d{1,2}:\d{2}(?:am|pm)(?:[–-]\d{1,2}:\d{2}(?:am|pm))?/i);
             if (timeMatch) time = timeMatch[0];
           }
 
           // Extract location/branch
           let location = '';
-          const locationMatch = fullText.match(/(?:Location|Branch|Library):\s*([^\n]+)/i);
-          if (locationMatch) {
-            location = locationMatch[1].trim();
+          const branchEl = card.querySelector('.lc-event__branch, [class*="branch"]');
+          if (branchEl) {
+            location = branchEl.textContent.replace(/Library Branch:\s*/i, '').trim();
           }
 
           // Extract age group
           let ageGroup = '';
-          const ageMatch = fullText.match(/(?:Age Group|Ages?):\s*([^\n]+)/i);
-          if (ageMatch) {
-            ageGroup = ageMatch[1].trim();
+          const ageEl = card.querySelector('.lc-event__age-groups, [class*="age"]');
+          if (ageEl) {
+            ageGroup = ageEl.textContent.trim();
           }
 
-          // Extract program type
+          // Extract program type / categories
           let programType = '';
-          const programMatch = fullText.match(/(?:Program Type):\s*([^\n]+)/i);
-          if (programMatch) {
-            programType = programMatch[1].trim();
+          const catEl = card.querySelector('[class*="categories"], [class*="category"]');
+          if (catEl) {
+            programType = catEl.textContent.trim();
           }
 
-          // Extract description (look for paragraph tags in the container)
+          // Extract description
           let description = '';
-          const paragraphs = eventContainer.querySelectorAll('p');
-          if (paragraphs.length > 0) {
-            let longest = '';
-            paragraphs.forEach(p => {
-              const text = p.textContent.trim();
-              if (text.length > longest.length && !text.includes('Age Group') && !text.includes('Program Type')) {
-                longest = text;
-              }
-            });
-            description = longest;
+          const descEl = card.querySelector('.lc-event__body, .lc-event-subtitle, p');
+          if (descEl) {
+            description = descEl.textContent.trim();
           }
 
           if (title && eventDate) {

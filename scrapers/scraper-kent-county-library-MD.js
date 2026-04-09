@@ -21,7 +21,7 @@ const { logScraperResult } = require('./scraper-logger');
 const { linkEventToVenue } = require('./venue-matcher');
 
 const LIBRARY_NAME = 'Kent County Public Library';
-const EVENTS_URL = 'https://kent-md.libcal.com/calendar';
+const EVENTS_URL = 'https://kent-md.libcal.com/calendar?cid=-1&t=d';
 const SCRAPER_NAME = 'kent-county-library-MD';
 
 // Branch addresses with coordinates

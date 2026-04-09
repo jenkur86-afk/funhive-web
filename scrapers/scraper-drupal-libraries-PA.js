@@ -120,7 +120,7 @@ async function scrapeDateEvents(library, date, page) {
   try {
     await page.goto(url, {
       waitUntil: 'networkidle2',
-      timeout: 15000
+      timeout: 30000
     });
 
     await page.waitForSelector('body', { timeout: 5000 });

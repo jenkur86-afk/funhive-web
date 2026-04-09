@@ -24,7 +24,7 @@ const { getOrCreateActivity } = require('./event-save-helper');
 const { normalizeDateString } = require('./date-utils');
 
 const LIBRARY_NAME = 'Allegany County Library System';
-const EVENTS_URL = 'https://allegany.librarymarket.com';
+const EVENTS_URL = 'https://allegany.librarymarket.com/events/upcoming';
 const SCRAPER_NAME = 'allegany-county-library-MD';
 
 // Branch addresses with coordinates
@@ -106,10 +106,22 @@ async function scrapeAlleganyCountyLibrary() {
           const linkEl = card.querySelector('a[href*="/event/"], a[href]');
           const url = linkEl ? linkEl.href : '';
 
-          // Get date/time - LibraryMarket format: "Thursday, December 4, 2025 at 10:00am - 6:00pm"
+          // Get date from lc-date-icon elements (LibraryMarket platform)
           const fullText = card.textContent;
           let eventDate = '';
           let eventTime = '';
+
+          const lcMonthEl = card.querySelector('.lc-date-icon__item--month');
+          const lcDayEl = card.querySelector('.lc-date-icon__item--day');
+          if (lcMonthEl && lcDayEl) {
+            const yr = fullText.match(/\d{4}/);
+            eventDate = lcMonthEl.textContent.trim() + ' ' + lcDayEl.textContent.trim() + ', ' + (yr ? yr[0] : new Date().getFullYear());
+            const timeEl = card.querySelector('.lc-event-info-item--time, [class*="time"]');
+            if (timeEl) eventTime = timeEl.textContent.trim();
+          }
+
+          // Fallback: LibraryMarket format: "Thursday, December 4, 2025 at 10:00am - 6:00pm"
+          if (!eventDate) {
 
           // Match full date with time
           const dateTimeMatch = fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+\w+\s+\d{1,2},?\s+\d{4}\s+(?:at\s+)?(\d{1,2}:\d{2}\s*(?:am|pm))/i);
@@ -121,6 +133,7 @@ async function scrapeAlleganyCountyLibrary() {
                              fullText.match(/\w+\s+\d{1,2},?\s+\d{4}/i);
             if (dateMatch) eventDate = dateMatch[0];
           }
+          } // end fallback
 
           // Get branch/location - LibraryMarket shows "Library Branch:" or location field
           let branch = '';

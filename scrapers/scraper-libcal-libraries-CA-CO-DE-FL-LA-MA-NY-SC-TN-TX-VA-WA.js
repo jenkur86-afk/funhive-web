@@ -162,7 +162,7 @@ const LIBRARY_SYSTEMS = [
 
   {
     name: 'Riverside County Library System',
-    url: 'https://rivlib.libcal.com/calendar/rcls?cid=15516&t=g&d=0000-00-00&cal=15516&inc',
+    url: 'https://rivlib.libcal.com/calendar/rcls?cid=15516&t=g&d=0000-00-00&cal=15516&inc&cid=-1&t=d',
     county: 'Riverside',
     state: 'CA',
     website: 'https://www.rivlib.info',
@@ -173,7 +173,7 @@ const LIBRARY_SYSTEMS = [
   // REMOVED: Santa Cruz Public Libraries - migrated to LibNet platform
   // {
   //   name: 'Santa Cruz Public Libraries',
-  //   url: 'https://santacruzpl.libcal.com/calendar/SCPL',
+  //   url: 'https://santacruzpl.libcal.com/calendar/SCPL?cid=-1&t=d',
   //   county: 'Santa Cruz',
   //   state: 'CA',
   //   website: 'https://www.santacruzpl.org',
@@ -183,7 +183,7 @@ const LIBRARY_SYSTEMS = [
 
   {
     name: 'San Leandro Public Library',
-    url: 'https://sanleandro.libcal.com/calendar/events',
+    url: 'https://sanleandro.libcal.com/calendar/events?cid=-1&t=d',
     county: 'Alameda',
     state: 'CA',
     website: 'https://www.sanleandro.org/depts/lib/',
@@ -192,7 +192,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Placer County Library',
-    url: 'https://placer.libcal.com/calendar',
+    url: 'https://placer.libcal.com/calendar?cid=-1&t=d',
     county: 'Placer',
     state: 'CA',
     website: 'https://www.placerlibrary.org',
@@ -202,7 +202,7 @@ const LIBRARY_SYSTEMS = [
   // REMOVED: Sonoma County Library - now uses WordPress at events.sonomalibrary.org
   // {
   //   name: 'Sonoma County Library',
-  //   url: 'https://sonomacounty.libcal.com/calendar',
+  //   url: 'https://sonomacounty.libcal.com/calendar?cid=-1&t=d',
   //   county: 'Sonoma',
   //   state: 'CA',
   //   website: 'https://sonomalibrary.org',
@@ -211,7 +211,7 @@ const LIBRARY_SYSTEMS = [
   // },
   {
     name: 'Anaheim Public Library',
-    url: 'https://anaheim.libcal.com/calendar',
+    url: 'https://anaheim.libcal.com/calendar?cid=-1&t=d',
     county: 'Orange',
     state: 'CA',
     website: 'https://www.anaheim.net/library',
@@ -220,7 +220,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Fresno County Public Library',
-    url: 'https://fresnolibrary.libcal.com/calendar',
+    url: 'https://fresnolibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Fresno',
     state: 'CA',
     website: 'https://www.fresnolibrary.org',
@@ -231,7 +231,7 @@ const LIBRARY_SYSTEMS = [
   // COLORADO
   {
     name: 'Denver Public Library',
-    url: 'https://denverlibrary.libcal.com/calendar',
+    url: 'https://denverlibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Denver',
     state: 'CO',
     website: 'https://www.denverlibrary.org',
@@ -262,7 +262,7 @@ const LIBRARY_SYSTEMS = [
 
   {
     name: 'Mesa County Libraries',
-    url: 'https://mesacountylibraries.libcal.com/calendar/events',
+    url: 'https://mesacountylibraries.libcal.com/calendar/events?cid=-1&t=d',
     county: 'Mesa',
     state: 'CO',
     website: 'https://mesacountylibraries.org',
@@ -272,7 +272,7 @@ const LIBRARY_SYSTEMS = [
 
   {
     name: 'Lafayette Public Library',
-    url: 'https://lafayettepubliclibrary.libcal.com/calendar/main',
+    url: 'https://lafayettepubliclibrary.libcal.com/calendar/main?cid=-1&t=d',
     county: 'Boulder',
     state: 'CO',
     website: 'https://www.cityoflafayette.com/267/Library',
@@ -292,7 +292,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'New Haven Free Public Library',
-    url: 'https://nhfpl.libcal.com/calendar',
+    url: 'https://nhfpl.libcal.com/calendar?cid=-1&t=d',
     county: 'New Haven',
     state: 'CT',
     website: 'https://nhfpl.org',
@@ -301,7 +301,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Stratford Library',
-    url: 'https://stratfordlibrary.libcal.com/calendar/events',
+    url: 'https://stratfordlibrary.libcal.com/calendar/events?cid=-1&t=d',
     county: 'Fairfield',
     state: 'CT',
     website: 'https://www.stratfordlibrary.org',
@@ -334,7 +334,7 @@ const LIBRARY_SYSTEMS = [
   // IOWA
   {
     name: 'Davenport Public Library',
-    url: 'https://davenportlibrary.libcal.com/calendar',
+    url: 'https://davenportlibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Scott',
     state: 'IA',
     website: 'https://www.davenportlibrary.com',
@@ -343,7 +343,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Sioux City Public Library',
-    url: 'https://siouxcitylibrary.libcal.com/calendar',
+    url: 'https://siouxcitylibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Woodbury',
     state: 'IA',
     website: 'https://www.siouxcitylibrary.org',
@@ -375,7 +375,7 @@ const LIBRARY_SYSTEMS = [
   // LOUISIANA
   {
     name: 'Lafayette Public Library',
-    url: 'https://lafayettela.libcal.com/calendar',
+    url: 'https://lafayettela.libcal.com/calendar?cid=-1&t=d',
     county: 'Lafayette',
     state: 'LA',
     website: 'https://www.lafayettela.gov/library',
@@ -396,7 +396,7 @@ const LIBRARY_SYSTEMS = [
 
   {
     name: 'Newton Free Library',
-    url: 'https://newtonfreelibrary.libcal.com/calendar',
+    url: 'https://newtonfreelibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Middlesex',
     state: 'MA',
     website: 'https://newtonfreelibrary.net',
@@ -406,7 +406,7 @@ const LIBRARY_SYSTEMS = [
 
   {
     name: 'Brookline Public Library',
-    url: 'https://brooklinelibrary.libcal.com/calendar',
+    url: 'https://brooklinelibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Norfolk',
     state: 'MA',
     website: 'https://www.brooklinelibrary.org',
@@ -417,7 +417,7 @@ const LIBRARY_SYSTEMS = [
   // NEW YORK
   {
     name: 'Buffalo & Erie County Public Library',
-    url: 'https://buffalolib.libcal.com/calendar/events',
+    url: 'https://buffalolib.libcal.com/calendar/events?cid=-1&t=d',
     county: 'Erie',
     state: 'NY',
     website: 'https://www.buffalolib.org',
@@ -437,7 +437,7 @@ const LIBRARY_SYSTEMS = [
 
   {
     name: 'Onondaga County Public Libraries',
-    url: 'https://onlib-central.libcal.com/calendar',
+    url: 'https://onlib-central.libcal.com/calendar?cid=-1&t=d',
     county: 'Onondaga',
     state: 'NY',
     website: 'https://www.onlib.org',
@@ -455,7 +455,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Westchester Library System',
-    url: 'https://westchesterlibraries.libcal.com/calendar',
+    url: 'https://westchesterlibraries.libcal.com/calendar?cid=-1&t=d',
     county: 'Westchester',
     state: 'NY',
     website: 'https://www.westchesterlibraries.org',
@@ -464,7 +464,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Suffolk Cooperative Library System',
-    url: 'https://suffolk.libcal.com/calendar',
+    url: 'https://suffolk.libcal.com/calendar?cid=-1&t=d',
     county: 'Suffolk',
     state: 'NY',
     website: 'https://www.suffolk.lib.ny.us',
@@ -474,7 +474,7 @@ const LIBRARY_SYSTEMS = [
   // REMOVED: Nassau Library System - now uses WordPress at events.nassaulibrary.org
   // {
   //   name: 'Nassau Library System',
-  //   url: 'https://nassaulibrary.libcal.com/calendar',
+  //   url: 'https://nassaulibrary.libcal.com/calendar?cid=-1&t=d',
   //   county: 'Nassau',
   //   state: 'NY',
   //   website: 'https://www.nassaulibrary.org',
@@ -492,7 +492,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Great Neck Library',
-    url: 'https://greatnecklibrary.libcal.com/calendar',
+    url: 'https://greatnecklibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Nassau',
     state: 'NY',
     website: 'https://www.greatnecklibrary.org',
@@ -501,7 +501,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Hicksville Public Library',
-    url: 'https://hicksvillelibrary.libcal.com/calendar',
+    url: 'https://hicksvillelibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Nassau',
     state: 'NY',
     website: 'https://www.hicksvillelibrary.org',
@@ -528,7 +528,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Freeport Memorial Library',
-    url: 'https://freeportlibrary.libcal.com/calendar',
+    url: 'https://freeportlibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Nassau',
     state: 'NY',
     website: 'https://freeportlibrary.org',
@@ -537,7 +537,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Rockville Centre Public Library',
-    url: 'https://rvcpl.libcal.com/calendar',
+    url: 'https://rvcpl.libcal.com/calendar?cid=-1&t=d',
     county: 'Nassau',
     state: 'NY',
     website: 'https://rvclibrary.org',
@@ -546,7 +546,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Oceanside Public Library',
-    url: 'https://oceansidelibrary.libcal.com/calendar',
+    url: 'https://oceansidelibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Nassau',
     state: 'NY',
     website: 'https://oceansidelibrary.org',
@@ -555,7 +555,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'North Merrick Public Library',
-    url: 'https://nmerricklibrary.libcal.com/calendar',
+    url: 'https://nmerricklibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Nassau',
     state: 'NY',
     website: 'https://nmerricklibrary.org',
@@ -564,7 +564,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Wantagh Public Library',
-    url: 'https://wantaghlibrary.libcal.com/calendar',
+    url: 'https://wantaghlibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Nassau',
     state: 'NY',
     website: 'https://wantaghlibrary.org',
@@ -573,7 +573,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'East Meadow Public Library',
-    url: 'https://eastmeadow.libcal.com/calendar',
+    url: 'https://eastmeadow.libcal.com/calendar?cid=-1&t=d',
     county: 'Nassau',
     state: 'NY',
     website: 'https://eastmeadowlibrary.org',
@@ -582,7 +582,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Baldwin Public Library',
-    url: 'https://baldwinlib.libcal.com/calendar',
+    url: 'https://baldwinlib.libcal.com/calendar?cid=-1&t=d',
     county: 'Nassau',
     state: 'NY',
     website: 'https://www.baldwinlib.org',
@@ -591,7 +591,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'North Bellmore Public Library',
-    url: 'https://northbellmorelibrary.libcal.com/calendar',
+    url: 'https://northbellmorelibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Nassau',
     state: 'NY',
     website: 'https://northbellmorelibrary.org',
@@ -629,7 +629,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Jersey City Free Public Library',
-    url: 'https://jclibrary.libcal.com/calendar',
+    url: 'https://jclibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Hudson',
     state: 'NJ',
     website: 'https://jclibrary.org',
@@ -638,7 +638,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Newark Public Library',
-    url: 'https://npl.libcal.com/calendar',
+    url: 'https://npl.libcal.com/calendar?cid=-1&t=d',
     county: 'Essex',
     state: 'NJ',
     website: 'https://www.npl.org',
@@ -647,7 +647,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Monmouth County Library System',
-    url: 'https://monmouthcountylib.libcal.com/calendar',
+    url: 'https://monmouthcountylib.libcal.com/calendar?cid=-1&t=d',
     county: 'Monmouth',
     state: 'NJ',
     website: 'https://monmouthcountylib.org',
@@ -677,7 +677,7 @@ const LIBRARY_SYSTEMS = [
   // NORTH CAROLINA
   {
     name: 'Durham County Library',
-    url: 'https://durhamcountylibrary.libcal.com/calendar',
+    url: 'https://durhamcountylibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Durham',
     state: 'NC',
     website: 'https://www.durhamcountylibrary.org',
@@ -687,7 +687,7 @@ const LIBRARY_SYSTEMS = [
   // REMOVED: Wake County Public Libraries - now uses Eventbrite at wake.gov/events
   // {
   //   name: 'Wake County Public Libraries',
-  //   url: 'https://wakegov.libcal.com/calendar',
+  //   url: 'https://wakegov.libcal.com/calendar?cid=-1&t=d',
   //   county: 'Wake',
   //   state: 'NC',
   //   website: 'https://www.wake.gov/departments-government/libraries',
@@ -705,7 +705,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Gaston County Public Library',
-    url: 'https://gastonlibrary.libcal.com/calendar/events',
+    url: 'https://gastonlibrary.libcal.com/calendar/events?cid=-1&t=d',
     county: 'Gaston',
     state: 'NC',
     website: 'https://www.gastongov.com/183/Public-Library',
@@ -755,7 +755,7 @@ const LIBRARY_SYSTEMS = [
   // OHIO
   {
     name: 'Cleveland Public Library',
-    url: 'https://cpl.libcal.com/calendar/events/?cid=8758&t=g&d=0000-00-00&cal=8758',
+    url: 'https://cpl.libcal.com/calendar/events/?cid=8758&t=g&d=0000-00-00&cal=8758&cid=-1&t=d',
     county: 'Cuyahoga',
     state: 'OH',
     website: 'https://cpl.org',
@@ -767,7 +767,7 @@ const LIBRARY_SYSTEMS = [
   // REMOVED: Carnegie Library of Pittsburgh - now uses WordPress Events Calendar at carnegielibrary.org/events
   // {
   //   name: 'Carnegie Library of Pittsburgh',
-  //   url: 'https://carnegielibrary.libcal.com/calendar',
+  //   url: 'https://carnegielibrary.libcal.com/calendar?cid=-1&t=d',
   //   county: 'Allegheny',
   //   state: 'PA',
   //   website: 'https://www.carnegielibrary.org',
@@ -776,7 +776,7 @@ const LIBRARY_SYSTEMS = [
   // },
   {
     name: 'Montgomery County-Norristown Public Library',
-    url: 'https://mnl.libcal.com/calendar',
+    url: 'https://mnl.libcal.com/calendar?cid=-1&t=d',
     county: 'Montgomery',
     state: 'PA',
     website: 'https://www.mc-norristown.lib.pa.us',
@@ -794,7 +794,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Chester County Library System',
-    url: 'https://ccls.libcal.com/calendar/ChesterCountyLibrary',
+    url: 'https://ccls.libcal.com/calendar/ChesterCountyLibrary?cid=-1&t=d',
     county: 'Chester',
     state: 'PA',
     website: 'https://www.ccls.org',
@@ -803,7 +803,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Delaware County Library System',
-    url: 'https://delcolibraries.libcal.com/calendar',
+    url: 'https://delcolibraries.libcal.com/calendar?cid=-1&t=d',
     county: 'Delaware',
     state: 'PA',
     website: 'https://www.delcolibraries.org',
@@ -823,7 +823,7 @@ const LIBRARY_SYSTEMS = [
   // RHODE ISLAND
   {
     name: 'Warwick Public Library',
-    url: 'https://warwicklibrary.libcal.com/calendar',
+    url: 'https://warwicklibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Kent',
     state: 'RI',
     website: 'https://www.warwicklibrary.org',
@@ -841,7 +841,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'East Providence Public Library',
-    url: 'https://eplib.libcal.com/calendar',
+    url: 'https://eplib.libcal.com/calendar?cid=-1&t=d',
     county: 'Providence',
     state: 'RI',
     website: 'https://www.eastprovidencelibrary.org',
@@ -850,7 +850,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'West Warwick Public Library',
-    url: 'https://wwpl.libcal.com/calendar/WWPL',
+    url: 'https://wwpl.libcal.com/calendar/WWPL?cid=-1&t=d',
     county: 'Kent',
     state: 'RI',
     website: 'https://www.westwarwicklibrary.org',
@@ -861,7 +861,7 @@ const LIBRARY_SYSTEMS = [
   // SOUTH CAROLINA
   {
     name: 'Charleston County Public Library',
-    url: 'https://ccplsc.libcal.com/calendar',
+    url: 'https://ccplsc.libcal.com/calendar?cid=-1&t=d',
     county: 'Charleston',
     state: 'SC',
     website: 'https://www.ccpl.org',
@@ -870,7 +870,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Berkeley County Library System',
-    url: 'https://berkeleylibrarysc.libcal.com/calendar',
+    url: 'https://berkeleylibrarysc.libcal.com/calendar?cid=-1&t=d',
     county: 'Berkeley',
     state: 'SC',
     website: 'https://www.berkeleylibrarysc.org',
@@ -879,7 +879,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'South Carolina State Library',
-    url: 'https://statelibrary.sc.libcal.com/calendar/events',
+    url: 'https://statelibrary.sc.libcal.com/calendar/events?cid=-1&t=d',
     county: 'Richland',
     state: 'SC',
     website: 'https://www.statelibrary.sc.gov',
@@ -901,7 +901,7 @@ const LIBRARY_SYSTEMS = [
   // TEXAS
   {
     name: 'Arlington Public Library',
-    url: 'https://arlingtontx.libcal.com/calendar',
+    url: 'https://arlingtontx.libcal.com/calendar?cid=-1&t=d',
     county: 'Tarrant',
     state: 'TX',
     website: 'https://arlingtontx.gov/library',
@@ -911,7 +911,7 @@ const LIBRARY_SYSTEMS = [
 
   {
     name: 'Corpus Christi Public Library',
-    url: 'https://cctexas.libcal.com/calendar',
+    url: 'https://cctexas.libcal.com/calendar?cid=-1&t=d',
     county: 'Nueces',
     state: 'TX',
     website: 'https://www.cctexas.com/departments/library',
@@ -921,7 +921,7 @@ const LIBRARY_SYSTEMS = [
 
   {
     name: 'McKinney Public Library',
-    url: 'https://mckinneytexas.libcal.com/calendar',
+    url: 'https://mckinneytexas.libcal.com/calendar?cid=-1&t=d',
     county: 'Collin',
     state: 'TX',
     website: 'https://www.mckinneytexas.org/350/Public-Library',
@@ -942,7 +942,7 @@ const LIBRARY_SYSTEMS = [
   // WEST VIRGINIA
   {
     name: 'West Virginia Library Commission',
-    url: 'https://wvlc.libcal.com/calendar',
+    url: 'https://wvlc.libcal.com/calendar?cid=-1&t=d',
     county: 'Kanawha',
     state: 'WV',
     website: 'https://librarycommission.wv.gov',
@@ -953,7 +953,7 @@ const LIBRARY_SYSTEMS = [
   // WASHINGTON
   {
     name: 'Spokane County Library District',
-    url: 'https://scld.libcal.com/calendar/events',
+    url: 'https://scld.libcal.com/calendar/events?cid=-1&t=d',
     county: 'Spokane',
     state: 'WA',
     website: 'https://www.scld.org',
@@ -973,7 +973,7 @@ const LIBRARY_SYSTEMS = [
 
   {
     name: 'Whatcom County Library System',
-    url: 'https://wcls.libcal.com/calendar/events',
+    url: 'https://wcls.libcal.com/calendar/events?cid=-1&t=d',
     county: 'Whatcom',
     state: 'WA',
     website: 'https://www.wcls.org',

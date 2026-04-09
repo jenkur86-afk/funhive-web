@@ -692,21 +692,21 @@ async function scrapeLibraryEvents(library, browser) {
       url = `${url}&r=thismonth`;
     }
 
-    // OPTIMIZED: Faster page load strategy
+    // Wait for full page + AJAX to load (Communico loads events via AJAX)
     await page.goto(url, {
-      waitUntil: 'domcontentloaded',
-      timeout: 15000
+      waitUntil: 'networkidle2',
+      timeout: 30000
     });
 
-    // Wait for Communico to load events - need more time for thismonth view
-    await page.waitForSelector('body', { timeout: 3000 });
+    // Wait for Communico event elements to appear
+    await page.waitForSelector('.eelistevent, .em-event-list-item, article', { timeout: 10000 }).catch(() => null);
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     // Scroll to load lazy-loaded content
     await page.evaluate(() => {
       window.scrollTo(0, document.body.scrollHeight);
     });
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     // Extract events from the page
     const events = await page.evaluate(() => {
@@ -771,7 +771,7 @@ async function scrapeLibraryEvents(library, browser) {
 
           // Extract time
           let time = '';
-          const timeEl = el.querySelector('.event-time, .time, [class*="time"]');
+          const timeEl = el.querySelector('.event-time, .time, .eelisttime, [class*="time"]');
           if (timeEl) {
             time = timeEl.textContent.trim();
           } else {
@@ -797,7 +797,7 @@ async function scrapeLibraryEvents(library, browser) {
 
           // Extract description
           let description = '';
-          const descEl = el.querySelector('.description, p, [class*="description"]');
+          const descEl = el.querySelector('.description, .eelistdesc, p, [class*="description"]');
           if (descEl) {
             description = descEl.textContent.trim();
           }

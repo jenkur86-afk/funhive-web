@@ -27,7 +27,7 @@ const { ScraperLogger } = require('./scraper-logger');
     "name": "Allegany County Library System",
     "url": "https://www.alleganycountylibrary.info",
     "platform": "librarymarket",
-    "eventsUrl": "https://allegany.librarymarket.com"
+    "eventsUrl": "https://allegany.librarymarket.com/events/upcoming"
   }
 ]
  */
@@ -67,7 +67,7 @@ const LIBRARIES = [
     "name": "Ruth Enlow Library of Garrett County",
     "url": "https://www.relib.net",
     "platform": "librarymarket",
-    "eventsUrl": "https://relib.librarymarket.com/events/month",
+    "eventsUrl": "https://relib.librarymarket.com/events/upcoming",
     city: 'Oakland',
     state: 'MD',
     county: 'Garrett',
@@ -135,14 +135,20 @@ async function scrapeGenericEvents() {
                 card.querySelector('a')
               ].filter(el => el && el.textContent.trim().length > 0);
 
+              // Extract date from lc-date-icon (LibraryMarket) or fallback
+              let lcDateStr = '';
+              const lcMonth = card.querySelector('.lc-date-icon__item--month');
+              const lcDay = card.querySelector('.lc-date-icon__item--day');
+              if (lcMonth && lcDay) {
+                const yr = (card.closest('.lc-event--upcoming') || card).textContent.match(/\d{4}/);
+                lcDateStr = lcMonth.textContent.trim() + ' ' + lcDay.textContent.trim() + ', ' + (yr ? yr[0] : new Date().getFullYear());
+              }
               const possibleDates = [
+                lcDateStr ? { textContent: lcDateStr, trim() { return lcDateStr; } } : null,
                 card.querySelector('[class*="date"]'),
                 card.querySelector('[class*="time"]'),
                 card.querySelector('time'),
-                ...Array.from(card.querySelectorAll('*')).filter(el =>
-                  el.textContent.match(/\d{1,2}\/\d{1,2}\/\d{2,4}|\w+ \d{1,2},? \d{4}|^\d{1,2}:\d{2}/i)
-                )
-              ].filter(el => el);
+              ].filter(el => el && (el.textContent || '').trim().length > 0);
 
               const possibleDescs = [
                 card.querySelector('[class*="description"]'),

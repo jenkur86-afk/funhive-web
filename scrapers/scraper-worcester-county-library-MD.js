@@ -23,7 +23,7 @@ const { logScraperResult } = require('./scraper-logger');
 const { linkEventToVenue } = require('./venue-matcher');
 
 const LIBRARY_NAME = 'Worcester County Library';
-const EVENTS_URL = 'https://worcesterlibrary.libcal.com/calendar/Library_Events';
+const EVENTS_URL = 'https://worcesterlibrary.libcal.com/calendar/Library_Events?cid=-1&t=d';
 const SCRAPER_NAME = 'worcester-county-library-MD';
 
 // Branch addresses with coordinates
