@@ -4,7 +4,16 @@
  * Used by local-scraper-runner.js to execute scrapers locally
  *
  * Created: January 2026 - Cloud-to-Local Migration
+ * Updated: April 2026 - Regional expansion support
  */
+
+const fs = require('fs');
+const path = require('path');
+const REGION_CONFIG_PATH = path.join(__dirname, 'region-config.json');
+function loadRegionConfig() { try { return JSON.parse(fs.readFileSync(REGION_CONFIG_PATH, 'utf-8')); } catch(e) { return null; } }
+function getActiveStates() { const c = loadRegionConfig(); if (!c) return null; const s = []; for (const k of c.activeRegions||[]) { const r = c.regions[k]; if (r && r.active) s.push(...r.states); } return s; }
+function getRegionForState(sc) { const c = loadRegionConfig(); if (!c) return null; for (const [k,r] of Object.entries(c.regions)) { if (r.states.includes(sc)) return k; } return null; }
+function isScraperActive(sc, as) { if (!as) return true; if (!sc.state) return true; if (sc.state === 'Multi') return true; return as.includes(sc.state); }
 
 // Day groups for 3-day rotation schedule
 // Group 1: Days 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31
@@ -1343,17 +1352,9 @@ function getMacaroniSiteCounts() {
   return counts;
 }
 
-module.exports = {
-  SCRAPERS,
-  MACARONI_SCRAPERS,
-  OSM_SCRAPERS,
-  getDayGroup,
-  getScrapersForGroup,
-  getMacaroniScrapersForGroup,
-  getOSMScrapersForDay,
-  getAllScraperNames,
-  getAllMacaroniScraperNames,
-  getGroupCounts,
-  getMacaroniGroupCounts,
-  getMacaroniSiteCounts
-};
+function getScrapersForGroupByRegion(g, o={}) { const as = o.regionFilter||getActiveStates(); const r={}; for (const [n,c] of Object.entries(SCRAPERS)) { if (c.group===g && isScraperActive(c,as)) r[n]=c; } return r; }
+function getMacaroniScrapersForGroupByRegion(g, o={}) { const as = o.regionFilter||getActiveStates(); const r={}; for (const [n,c] of Object.entries(MACARONI_SCRAPERS)) { if (c.group===g && isScraperActive(c,as)) r[n]=c; } return r; }
+function getOSMScrapersForDayByRegion(d, o={}) { const as = o.regionFilter||getActiveStates(); if (!as) return getOSMScrapersForDay(d); const r={}; for (const [n,c] of Object.entries(OSM_SCRAPERS)) { if (c.day===d) { const bs=c.states||[]; const ab=bs.filter(s=>as.includes(s)); if (ab.length>0) r[n]={...c,activeStates:ab}; } } return r; }
+function getRegionSummary() { const c=loadRegionConfig(); if(!c) return null; const s={}; for (const [k,r] of Object.entries(c.regions)) { const st=r.states; let sc=0,mc=0; for (const v of Object.values(SCRAPERS)){if(st.includes(v.state))sc++;} for (const v of Object.values(MACARONI_SCRAPERS)){if(st.includes(v.state))mc++;} s[k]={name:r.name,active:r.active,phase:r.phase,states:st.length,scrapers:sc,macaroni:mc,total:sc+mc}; } return s; }
+
+module.exports = { SCRAPERS, MACARONI_SCRAPERS, OSM_SCRAPERS, getDayGroup, getScrapersForGroup, getMacaroniScrapersForGroup, getOSMScrapersForDay, getAllScraperNames, getAllMacaroniScraperNames, getGroupCounts, getMacaroniGroupCounts, getMacaroniSiteCounts, getActiveStates, getRegionForState, isScraperActive, getScrapersForGroupByRegion, getMacaroniScrapersForGroupByRegion, getOSMScrapersForDayByRegion, getRegionSummary, loadRegionConfig };

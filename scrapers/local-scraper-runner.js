@@ -33,7 +33,8 @@ const {
   getOSMScrapersForDay,
   getGroupCounts,
   getMacaroniGroupCounts,
-  getMacaroniSiteCounts
+  getMacaroniSiteCounts,
+  getActiveStates, getScrapersForGroupByRegion, getMacaroniScrapersForGroupByRegion, getOSMScrapersForDayByRegion, getRegionSummary, loadRegionConfig
 } = require('./scraper-registry');
 
 // ============================================================================
@@ -204,7 +205,8 @@ async function logToFirestore(scraperName, status, stats, error, executionTime) 
 // ============================================================================
 
 async function runScraperGroup(group, options = {}) {
-  const scrapers = getScrapersForGroup(group);
+  const regionFilter = options.regionFilter || undefined;
+  const scrapers = regionFilter ? getScrapersForGroupByRegion(group, { regionFilter }) : getScrapersForGroupByRegion(group);
   const scraperNames = Object.keys(scrapers);
 
   log(`\n${'='.repeat(60)}`);
@@ -421,6 +423,8 @@ async function main() {
   const options = {
     group: null,
     scraper: null,
+    region: null,
+    regionFilter: null,
     osm: false,
     macaroni: false,
     macaroniOnly: false,
@@ -436,6 +440,13 @@ async function main() {
       options.group = parseInt(args[++i]);
     } else if (arg === '--scraper' && args[i + 1]) {
       options.scraper = args[++i];
+    } else if (arg === '--region' && args[i + 1]) {
+      options.region = args[++i].toLowerCase();
+    } else if (arg === '--regions') {
+      const summary = getRegionSummary(); const as = getActiveStates();
+      console.log('FunHive Region Configuration - Active: ' + (as ? as.join(', ') : 'ALL'));
+      for (const [k,i] of Object.entries(summary)) console.log('  ' + (i.active?'ACTIVE':'INACTIVE') + ' ' + k.toUpperCase() + ' - ' + i.name + ' (' + i.total + ' scrapers)');
+      process.exit(0);
     } else if (arg === '--osm') {
       options.osm = true;
     } else if (arg === '--macaroni') {

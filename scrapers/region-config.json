@@ -1,0 +1,88 @@
+{
+  "description": "Region configuration for FunHive scraper pipeline.",
+  "created": "April 2026",
+  "activeRegions": [
+    "dmv"
+  ],
+  "regions": {
+    "dmv": {
+      "name": "DC / Maryland / Virginia",
+      "states": [
+        "DC",
+        "MD",
+        "VA"
+      ],
+      "active": true,
+      "phase": 1
+    },
+    "eastern": {
+      "name": "Eastern US",
+      "states": [
+        "ME",
+        "NH",
+        "VT",
+        "MA",
+        "RI",
+        "CT",
+        "NY",
+        "NJ",
+        "PA",
+        "DE",
+        "WV",
+        "NC",
+        "SC",
+        "GA",
+        "FL",
+        "AL",
+        "MS",
+        "TN",
+        "KY"
+      ],
+      "active": false,
+      "phase": 2
+    },
+    "central": {
+      "name": "Central US",
+      "states": [
+        "OH",
+        "IN",
+        "MI",
+        "IL",
+        "WI",
+        "MN",
+        "IA",
+        "MO",
+        "AR",
+        "LA",
+        "KS",
+        "NE",
+        "SD",
+        "ND",
+        "OK",
+        "TX"
+      ],
+      "active": false,
+      "phase": 3
+    },
+    "western": {
+      "name": "Western US",
+      "states": [
+        "CA",
+        "CO",
+        "WA",
+        "OR",
+        "AZ",
+        "NV",
+        "UT",
+        "NM",
+        "ID",
+        "MT",
+        "WY",
+        "AK",
+        "HI"
+      ],
+      "active": false,
+      "phase": 4
+    }
+  }
+}
