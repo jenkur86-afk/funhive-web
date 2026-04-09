@@ -172,6 +172,7 @@ export default function EventsPage() {
   async function loadEvents() {
     setLoading(true)
     try {
+      const today = new Date().toISOString().split('T')[0]
       let allData: any[] = []
 
       if (locationCoords) {
@@ -183,7 +184,7 @@ export default function EventsPage() {
           max_results: 500,
         } as any) as { data: any[] | null; error: any }
         if (!result.error && result.data) {
-          allData = result.data
+          allData = result.data.filter((e: any) => !e.event_date || e.event_date >= today)
         }
 
         // Also fetch events WITHOUT geometry that have city/state/zip
@@ -192,6 +193,7 @@ export default function EventsPage() {
           .from('events')
           .select('*')
           .is('location', null)
+          .gte('event_date', today)
           .not('event_date', 'is', null)
           .limit(300)
 
@@ -206,6 +208,7 @@ export default function EventsPage() {
         let query = supabase
           .from('events')
           .select('*')
+          .gte('event_date', today)
           .not('event_date', 'is', null)
           .order('event_date', { ascending: true })
           .limit(500)
