@@ -19,18 +19,35 @@ function getWeekendRange() {
   }
 }
 
+
+// Parse non-ISO event_date strings for filtering
+function parseEventDateServer(dateStr: string): Date | null {
+  if (!dateStr) return null
+  if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) return new Date(dateStr + 'T00:00:00')
+  const d = new Date(dateStr)
+  if (!isNaN(d.getTime())) return d
+  return null
+}
+
 export default async function HomePage() {
   const supabase = createServerClient()
   const today = new Date().toISOString().split('T')[0]
   const weekend = getWeekendRange()
 
   // Upcoming events: soonest future events by date
-  const { data: upcomingEvents } = await supabase
+  const { data: rawUpcoming } = await supabase
     .from('events')
     .select('*')
-    .gte('event_date', today)
+    .not('event_date', 'is', null)
     .order('event_date', { ascending: true })
-    .limit(6)
+    .limit(200)
+  const upcomingEvents = (rawUpcoming || []).filter(e => {
+    const d = parseEventDateServer(e.event_date)
+    if (!d) return false
+    const t = new Date(today + 'T00:00:00')
+    d.setHours(0,0,0,0)
+    return d >= t
+  }).slice(0, 6)
 
   // This Weekend: events on the upcoming Saturday + Sunday
   const { data: weekendEvents } = await supabase

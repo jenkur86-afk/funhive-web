@@ -169,6 +169,28 @@ export default function EventsPage() {
     }
   }
 
+
+// Parse event_date strings like "April 1, 2026 10:00am" or "2026-04-09" into Date objects
+function parseEventDate(dateStr: string): Date | null {
+  if (!dateStr) return null
+  // Already ISO format
+  if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) return new Date(dateStr + 'T00:00:00')
+  // Try native parsing ("April 1, 2026 10:00am" works in most browsers)
+  const d = new Date(dateStr)
+  if (!isNaN(d.getTime())) return d
+  return null
+}
+
+function isEventOnOrAfterToday(event: any): boolean {
+  if (!event.event_date) return false
+  const d = parseEventDate(event.event_date)
+  if (!d) return false
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  d.setHours(0, 0, 0, 0)
+  return d >= today
+}
+
   async function loadEvents() {
     setLoading(true)
     try {
@@ -184,7 +206,7 @@ export default function EventsPage() {
           max_results: 500,
         } as any) as { data: any[] | null; error: any }
         if (!result.error && result.data) {
-          allData = result.data.filter((e: any) => !e.event_date || e.event_date >= today)
+          allData = result.data.filter((e: any) => isEventOnOrAfterToday(e))
         }
 
         // Also fetch events WITHOUT geometry that have city/state/zip
@@ -200,7 +222,7 @@ export default function EventsPage() {
         if (!supplementary.error && supplementary.data) {
           // Deduplicate by id
           const existingIds = new Set(allData.map((e: any) => e.id))
-          const additional = supplementary.data.filter((e: any) => !existingIds.has(e.id))
+          const additional = supplementary.data.filter((e: any) => !existingIds.has(e.id) && isEventOnOrAfterToday(e))
           allData = [...allData, ...additional]
         }
       } else {
@@ -214,7 +236,7 @@ export default function EventsPage() {
           .limit(500)
 
         const result = await query
-        if (!result.error && result.data) allData = result.data
+        if (!result.error && result.data) allData = result.data.filter((e: any) => isEventOnOrAfterToday(e)).filter((e: any) => isEventOnOrAfterToday(e))
       }
 
       // Apply category filter client-side (works for both RPC and standard queries)
