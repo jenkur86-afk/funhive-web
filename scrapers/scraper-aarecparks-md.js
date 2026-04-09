@@ -19,7 +19,7 @@
  */
 
 const puppeteer = require('puppeteer-core');
-const chromium = require('@sparticuz/chromium');
+// chromium loaded lazily in launchBrowser() — not available locally
 const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { categorizeEvent } = require('./event-categorization-helper');
@@ -59,20 +59,25 @@ async function launchBrowser() {
   const isCloud = process.env.FUNCTION_TARGET || process.env.K_SERVICE;
 
   if (isCloud) {
-    return await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
-      headless: chromium.headless,
-    });
-  } else {
-    // Local development
-    return await puppeteer.launch({
-      headless: 'new',
-      executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
+    try {
+      const chromium = require('@sparticuz/chromium');
+      return await puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath(),
+        headless: chromium.headless,
+      });
+    } catch (e) {
+      console.warn('Cloud chromium not available, falling back to local');
+    }
   }
+
+  // Local development fallback
+  return await puppeteer.launch({
+    headless: 'new',
+    executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
 }
 
 /**

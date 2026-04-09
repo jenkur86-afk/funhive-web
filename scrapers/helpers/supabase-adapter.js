@@ -587,7 +587,7 @@ function createFirestoreCompatibleDB() {
 function mapFieldName(collectionName, firestoreField) {
   const fieldMap = {
     'metadata.scraperName': 'scraper_name',
-    'metadata.sourceName': 'source_url',
+    'metadata.sourceName': 'scraper_name',
     'metadata.sourceUrl': 'source_url',
     'metadata.platform': 'platform',
     'metadata.category': 'category',
@@ -717,7 +717,7 @@ function flattenEvent(data) {
   }
   if (data.metadata) {
     row.source_url = row.source_url || data.metadata.sourceUrl;
-    row.scraper_name = row.scraper_name || data.metadata.scraperName || data.metadata.source;
+    row.scraper_name = row.scraper_name || data.metadata.scraperName || data.metadata.sourceName || data.metadata.source;
     row.platform = row.platform || data.metadata.platform;
     row.scraped_at = row.scraped_at || data.metadata.scrapedAt;
     // Category: metadata.category as fallback if not already set

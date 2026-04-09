@@ -642,13 +642,6 @@ const SCRAPERS = {
     group: 1,
     state: 'VA'
   },
-  'SugarCalendar-Libraries': {
-    file: './scraper-sugarcalendar-libraries-VA.js',
-    exportName: 'scrapeSugarCalendarLibraries',
-    type: 'puppeteer',
-    group: 2,
-    state: 'VA'
-  },
   'WithApps-Libraries': {
     file: './scraper-withapps-libraries-VA.js',
     exportName: 'scrapeWithAppsLibraries',

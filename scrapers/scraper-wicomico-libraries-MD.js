@@ -18,6 +18,8 @@ const { normalizeDateString } = require('./date-normalization-helper');
 const { linkEventToVenue } = require('./venue-matcher');
 
 // Library configuration
+// NOTE: If returning 0 events, the site may have changed its DOM structure.
+// Check https://www.wicomicolibrary.org/events manually to verify.
 const LIBRARY = {
   name: 'Wicomico Public Libraries',
   url: 'https://www.wicomicolibrary.org/events',
