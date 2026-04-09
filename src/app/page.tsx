@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ACTIVE_STATES } from '@/lib/region-filter'
 import { createServerClient } from '@/lib/supabase-server'
 
 export const dynamic = 'force-dynamic' // Render at runtime, not build time
@@ -39,6 +40,7 @@ export default async function HomePage() {
     .from('events')
     .select('*')
     .not('event_date', 'is', null)
+    .in('state', ACTIVE_STATES || [])
     .order('event_date', { ascending: true })
     .limit(200)
   const upcomingEvents = (rawUpcoming || []).filter(e => {

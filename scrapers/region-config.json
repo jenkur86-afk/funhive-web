@@ -1,88 +1,64 @@
 {
-  "description": "Region configuration for FunHive scraper pipeline.",
-  "created": "April 2026",
-  "activeRegions": [
-    "dmv"
-  ],
+  "description": "Region configuration for FunHive scraper pipeline. Controls which states/regions are active.",
+  "created": "April 2026 - Regional Expansion Architecture",
+
+  "activeRegions": ["dmv", "eastern"],
+
   "regions": {
     "dmv": {
       "name": "DC / Maryland / Virginia",
-      "states": [
-        "DC",
-        "MD",
-        "VA"
-      ],
+      "states": ["DC", "MD", "VA"],
       "active": true,
-      "phase": 1
+      "phase": 1,
+      "notes": "Launch region - full coverage with county-level library scrapers + activities"
     },
     "eastern": {
       "name": "Eastern US",
       "states": [
-        "ME",
-        "NH",
-        "VT",
-        "MA",
-        "RI",
-        "CT",
-        "NY",
-        "NJ",
-        "PA",
-        "DE",
-        "WV",
-        "NC",
-        "SC",
-        "GA",
-        "FL",
-        "AL",
-        "MS",
-        "TN",
-        "KY"
+        "ME", "NH", "VT", "MA", "RI", "CT",
+        "NY", "NJ", "PA", "DE",
+        "WV", "NC", "SC", "GA", "FL",
+        "AL", "MS", "TN", "KY"
       ],
       "active": false,
-      "phase": 2
+      "phase": 2,
+      "notes": "Phase 2 expansion - New England, Mid-Atlantic, Southeast"
     },
     "central": {
       "name": "Central US",
       "states": [
-        "OH",
-        "IN",
-        "MI",
-        "IL",
-        "WI",
-        "MN",
-        "IA",
-        "MO",
-        "AR",
-        "LA",
-        "KS",
-        "NE",
-        "SD",
-        "ND",
-        "OK",
-        "TX"
+        "OH", "IN", "MI", "IL", "WI", "MN",
+        "IA", "MO", "AR", "LA",
+        "KS", "NE", "SD", "ND", "OK", "TX"
       ],
       "active": false,
-      "phase": 3
+      "phase": 3,
+      "notes": "Phase 3 expansion - Midwest, South Central, Plains"
     },
     "western": {
       "name": "Western US",
       "states": [
-        "CA",
-        "CO",
-        "WA",
-        "OR",
-        "AZ",
-        "NV",
-        "UT",
-        "NM",
-        "ID",
-        "MT",
-        "WY",
-        "AK",
-        "HI"
+        "CA", "CO", "WA", "OR",
+        "AZ", "NV", "UT", "NM",
+        "ID", "MT", "WY", "AK", "HI"
       ],
       "active": false,
-      "phase": 4
+      "phase": 4,
+      "notes": "Phase 4 expansion - West Coast, Mountain, Pacific"
     }
+  },
+
+  "multiStateScrapers": {
+    "description": "These scrapers cover multiple states. They will only process libraries in active states.",
+    "files": [
+      "scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js",
+      "scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js",
+      "scraper-librarymarket-libraries-CA-CO-FL-MD-TX-VA.js",
+      "scraper-bibliocommons-libraries-CA-CO-IL-MA-TX-VA-WA.js",
+      "scraper-librarycalendar-libraries-MD-VA.js",
+      "scraper-custom-drupal-libraries-GA-NC-SC-WV.js",
+      "scraper-wordpress-events-calendar-libraries-VA-PA.js",
+      "scraper-custom-drupal-multi-state-libraries.js"
+    ]
   }
 }

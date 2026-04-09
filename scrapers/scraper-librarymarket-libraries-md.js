@@ -202,10 +202,19 @@ async function scrapeGenericEvents() {
       // Transform and add to collection with branch address lookup
       for (const event of libraryEvents) {
         // Normalize date format before saving
-        const normalizedDate = normalizeDateString(event.date);
+        let normalizedDate = normalizeDateString(event.date);
+        // If date is time-only (e.g. "10:00am–11:00am"), it normalizes to empty.
+        // Use today's date as fallback so we don't lose the event.
         if (!normalizedDate && event.date) {
-          console.log(`   ⚠️ Skipping event with invalid date: "${event.date}"`);
-          continue;
+          const timeOnly = /^\s*\d{1,2}:\d{2}\s*[ap]m/i.test(event.date.trim());
+          if (timeOnly) {
+            const today = new Date().toISOString().split('T')[0];
+            normalizedDate = today;
+            console.log(`   ℹ️ Date "${event.date}" is time-only — using today (${today})`);
+          } else {
+            console.log(`   ⚠️ Skipping event with invalid date: "${event.date}"`);
+            continue;
+          }
         }
 
         // Try to extract branch name from location field

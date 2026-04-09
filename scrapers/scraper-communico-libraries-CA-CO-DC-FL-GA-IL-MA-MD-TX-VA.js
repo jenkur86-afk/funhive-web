@@ -51,7 +51,7 @@
  * MA (1 library - 185K people):
  * - Worcester Public Library (185K)
  *
- * MD (6 libraries - 2.2M people):
+ * MD (9 libraries - 3.5M people):
  * - Baltimore County Public Library (830K)
  * - Montgomery County Public Library (1.06M)
  * - Harford County Public Library (250K)
@@ -398,7 +398,7 @@ const LIBRARY_SYSTEMS = [
     zipCode: '01608'
   },
 
-  // MARYLAND (6 libraries)
+  // MARYLAND (9 libraries)
   {
     name: 'Baltimore County Public Library',
     url: 'https://events.bcpl.info/events',
@@ -452,6 +452,33 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.stmalib.org',
     city: 'Leonardtown',
     zipCode: '20650'
+  },
+  {
+    name: 'Anne Arundel County Public Library',
+    url: 'https://www.aacpl.net/events',
+    county: 'Anne Arundel',
+    state: 'MD',
+    website: 'https://www.aacpl.net',
+    city: 'Annapolis',
+    zipCode: '21401'
+  },
+  {
+    name: 'Howard County Library System',
+    url: 'https://hclibrary.org/events',
+    county: 'Howard',
+    state: 'MD',
+    website: 'https://www.hclibrary.org',
+    city: 'Columbia',
+    zipCode: '21044'
+  },
+  {
+    name: 'Frederick County Public Libraries',
+    url: 'https://www.fcpl.org/events',
+    county: 'Frederick',
+    state: 'MD',
+    website: 'https://www.fcpl.org',
+    city: 'Frederick',
+    zipCode: '21701'
   },
 
   // NEVADA (1 library)

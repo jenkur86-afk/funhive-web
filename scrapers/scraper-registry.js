@@ -255,8 +255,8 @@ const SCRAPERS = {
     state: 'MA'
   },
   'Communico-MD': {
-    file: './scraper-communico-libraries-md.js',
-    exportName: 'scrapeCommunicoEvents',
+    file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js',
+    exportName: 'scrapeCommunicoMD',
     type: 'puppeteer',
     group: 3,
     state: 'MD'

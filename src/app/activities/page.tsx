@@ -8,6 +8,7 @@ import { haversineDistance, getUserLocation } from '@/lib/geo-utils'
 import { isOpenNow, getTodayHours } from '@/lib/hours-utils'
 import { parseLocationInput, preloadZipData, lookupZipSync, lookupCitySync } from '@/lib/zip-lookup'
 import { getCategoryIcon } from '@/lib/category-icons'
+import { ACTIVE_STATES } from '@/lib/region-filter'
 
 interface HiddenVenue {
   id: string
@@ -194,6 +195,7 @@ export default function VenuesPage() {
         let query = supabase
           .from('activities')
           .select('*')
+          .in('state', ACTIVE_STATES || [])
           .order('name', { ascending: true })
           .limit(500)
 

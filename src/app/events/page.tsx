@@ -9,6 +9,7 @@ import { haversineDistance, getUserLocation } from '@/lib/geo-utils'
 import { parseLocationInput, preloadZipData, lookupZipSync, lookupCitySync } from '@/lib/zip-lookup'
 import { extractTimeFromEventDate } from '@/lib/hours-utils'
 import { getCategoryIcon } from '@/lib/category-icons'
+import { ACTIVE_STATES } from '@/lib/region-filter'
 
 // Leaflet must be loaded client-side only (no SSR)
 const EventMap = dynamic(() => import('@/components/EventMap'), { ssr: false })
@@ -206,7 +207,7 @@ function isEventOnOrAfterToday(event: any): boolean {
           max_results: 500,
         } as any) as { data: any[] | null; error: any }
         if (!result.error && result.data) {
-          allData = result.data.filter((e: any) => isEventOnOrAfterToday(e))
+          allData = result.data.filter((e: any) => isEventOnOrAfterToday(e) && (!ACTIVE_STATES || ACTIVE_STATES.includes(e.state)))
         }
 
         // Also fetch events WITHOUT geometry that have city/state/zip
@@ -217,6 +218,7 @@ function isEventOnOrAfterToday(event: any): boolean {
           .is('location', null)
           .gte('event_date', today)
           .not('event_date', 'is', null)
+          .in('state', ACTIVE_STATES || [])
           .limit(300)
 
         if (!supplementary.error && supplementary.data) {
@@ -232,6 +234,7 @@ function isEventOnOrAfterToday(event: any): boolean {
           .select('*')
           .gte('event_date', today)
           .not('event_date', 'is', null)
+          .in('state', ACTIVE_STATES || [])
           .order('event_date', { ascending: true })
           .limit(500)
 

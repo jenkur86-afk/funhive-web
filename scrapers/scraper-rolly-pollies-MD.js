@@ -454,7 +454,6 @@ async function scrapeRollyPollies(options = {}) {
         const existing = await db.collection('events')
           .where('name', '==', eventDoc.name)
           .where('eventDate', '==', eventDoc.eventDate)
-          .where('scheduleDescription', '==', eventDoc.scheduleDescription)
           .where('metadata.sourceName', '==', VENUE.fullName)
           .limit(1)
           .get();
