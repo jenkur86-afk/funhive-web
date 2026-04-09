@@ -119,12 +119,20 @@ function detectAgeRange(name, description) {
   const text = `${name || ''} ${description || ''}`.toLowerCase();
 
   // Explicit age ranges: "ages 3-5", "age 6 to 12", "ages 0-18"
-  const ageMatch = text.match(/\bages?\s+(\d{1,2})\s*[-–to]+\s*(\d{1,2})\b/);
-  if (ageMatch) return `${ageMatch[1]}-${ageMatch[2]}`;
+  // Check for "months" or "mo" after the range to preserve month-based ages
+  const ageMatch = text.match(/\bages?\s+(\d{1,2})\s*[-–to]+\s*(\d{1,2})\s*(months?|mos?\.?)?\b/);
+  if (ageMatch) {
+    const isMonths = ageMatch[3] || (parseInt(ageMatch[1]) <= 36 && parseInt(ageMatch[2]) <= 36 && /month|mo\b/i.test(text));
+    return isMonths ? `${ageMatch[1]}-${ageMatch[2]} months` : `${ageMatch[1]}-${ageMatch[2]}`;
+  }
 
-  // Parenthetical ages: "(ages 11-18)", "(3-5 yrs)"
-  const parenMatch = text.match(/\((?:ages?\s+)?(\d{1,2})\s*[-–]\s*(\d{1,2})(?:\s*(?:yrs?|years?))?\)/);
-  if (parenMatch) return `${parenMatch[1]}-${parenMatch[2]}`;
+  // Parenthetical ages: "(ages 11-18)", "(3-5 yrs)", "(6-24 months)"
+  const parenMatch = text.match(/\((?:ages?\s+)?(\d{1,2})\s*[-–]\s*(\d{1,2})(?:\s*(?:months?|mos?\.?|yrs?|years?))?\)/);
+  if (parenMatch) {
+    const parenText = text.substring(text.indexOf(parenMatch[0]), text.indexOf(parenMatch[0]) + parenMatch[0].length + 1);
+    const isMonths = /month|mo[\.\)\s]/i.test(parenText);
+    return isMonths ? `${parenMatch[1]}-${parenMatch[2]} months` : `${parenMatch[1]}-${parenMatch[2]}`;
+  }
 
   // Specific group keywords (order matters — check specific before general)
   if (/\b(baby|babies|infant|lap\s*sit)\b/.test(text)) return '0-2';
@@ -347,6 +355,7 @@ async function saveActivity(id, data) {
  */
 async function saveScraperLog(logData) {
   const { error } = await supabase.from('scraper_logs').insert({
+    id: crypto.randomUUID(),
     scraper_name: logData.scraperName,
     status: logData.status || 'success',
     events_found: logData.eventsFound || 0,
@@ -496,7 +505,7 @@ function createFirestoreCompatibleDB() {
           };
         },
         async add(data) {
-          const id = data.id || crypto.randomBytes(15).toString('base64url');
+          const id = data.id || crypto.randomUUID();
           let flattened;
           try {
             flattened = flattenForTable(collectionName, data);
@@ -593,6 +602,7 @@ function mapFieldName(collectionName, firestoreField) {
     'scraperName': 'scraper_name',
     'zipCode': 'zip_code',
     'priceRange': 'price_range',
+    'cost': 'price_range',
     'isFree': 'is_free',
     'ageRange': 'age_range',
     'isSponsored': 'is_sponsored',
