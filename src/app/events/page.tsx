@@ -76,9 +76,20 @@ function InlinePillFilter({
             onClick={() => onToggle(option.value)}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition ${
               isSelected
-                ? 'bg-amber-500 text-white'
+                ? 'text-white'
+                : showIcons && icon
+                ? ''
                 : 'bg-amber-50 text-amber-700 hover:bg-amber-100'
             }`}
+            style={
+              isSelected && icon
+                ? { backgroundColor: icon.color }
+                : !isSelected && icon
+                ? { color: icon.color, backgroundColor: icon.color + '15' }
+                : isSelected
+                ? { backgroundColor: '#f59e0b' }
+                : undefined
+            }
           >
             {icon && (
               <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
