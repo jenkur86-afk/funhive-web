@@ -252,3 +252,13 @@ Require stack:
 - /Users/jenniferkurtz/Desktop/funhive-web/scrapers/scraper-pgparks-md.js
 - /Users/jenniferkurtz/Desktop/funhive-web/scrapers/local-scraper-runner.js
 [2026-04-08T23:26:29.700Z] [INFO] 🚀 Starting Tockify-Horry...
+[2026-04-09T00:00:03.616Z] [INFO] ✅ Tockify-Horry completed in 2013.9s - Found: 0, New: 889, Duplicates: 81
+[2026-04-09T00:00:05.780Z] [INFO] 🚀 Starting Graniculator-Morris...
+[2026-04-09T00:00:05.784Z] [ERROR] ❌ Graniculator-Morris failed after 0.0s: Scraper file not found: /Users/jenniferkurtz/Desktop/funhive-web/scrapers/scraper-graniculator-morris-county.js
+[2026-04-09T00:00:05.921Z] [INFO] 🔄 Completed 35 scrapers, memory cleanup...
+[2026-04-09T00:00:10.943Z] [INFO] 
+============================================================
+[2026-04-09T00:00:10.947Z] [INFO] 🍝 Running Macaroni Kid Group 2 (14 states, ~131 sites)
+[2026-04-09T00:00:10.949Z] [INFO] ============================================================
+
+[2026-04-09T00:00:10.949Z] [INFO] 🚀 Starting MacaroniKid-FL...
