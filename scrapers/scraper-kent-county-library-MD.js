@@ -114,30 +114,44 @@ async function scrapeKentCountyLibrary() {
           const linkEl = card.querySelector('a[href]');
           const url = linkEl ? linkEl.href : '';
 
-          // Get date - LibCal shows month/day in .s-lc-evt-date
-          const monthEl = card.querySelector('.s-lc-evt-date-m');
-          const dayEl = card.querySelector('.s-lc-evt-date-d');
-          const dateEl = card.querySelector('.s-lc-ea-date, .event-date');
-
+          // Get date - try multiple LibCal date formats
           let eventDate = '';
+
+          // Method 1: Date badge elements (newer LibCal)
+          const monthEl = card.querySelector('.s-lc-evt-date-m, .lc-date-icon__item--month');
+          const dayEl = card.querySelector('.s-lc-evt-date-d, .lc-date-icon__item--day');
+          const yearEl = card.querySelector('.lc-date-icon__item--year');
           if (monthEl && dayEl) {
-            eventDate = `${monthEl.textContent.trim()} ${dayEl.textContent.trim()}`;
-          } else if (dateEl) {
-            eventDate = dateEl.textContent.trim();
+            const yearText = yearEl ? yearEl.textContent.trim() : new Date().getFullYear();
+            eventDate = `${monthEl.textContent.trim()} ${dayEl.textContent.trim()}, ${yearText}`;
           }
 
-          // If no date found, try extracting from card text or use today
+          // Method 2: dl.dl-horizontal (common LibCal format)
+          if (!eventDate) {
+            const dlEl = card.querySelector('dl.dl-horizontal');
+            if (dlEl) {
+              const dlText = dlEl.textContent || '';
+              const fromMatch = dlText.match(/From:\s*(.*?)(?:To:|$)/s);
+              if (fromMatch) {
+                eventDate = fromMatch[1].trim();
+              } else {
+                const dateMatch = dlText.match(/((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+\d{1,2},?\s*\d{4})/i);
+                if (dateMatch) eventDate = dateMatch[1];
+              }
+            }
+          }
+
+          // Method 3: Generic date elements
+          if (!eventDate) {
+            const dateEl = card.querySelector('.s-lc-ea-date, .event-date');
+            if (dateEl) eventDate = dateEl.textContent.trim();
+          }
+
+          // Method 4: Regex fallback on card text
           if (!eventDate) {
             const cardText = card.textContent || '';
-            const dateMatch = cardText.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+\d{1,2}/i);
-            if (dateMatch) {
-              eventDate = dateMatch[0];
-            } else {
-              // Use today's date as fallback
-              const now = new Date();
-              const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-              eventDate = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
-            }
+            const dateMatch = cardText.match(/((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+\d{1,2},?\s*\d{4})/i);
+            if (dateMatch) eventDate = dateMatch[1];
           }
 
           // Get time

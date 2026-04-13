@@ -21,7 +21,7 @@ const axios = require('axios');
 const { categorizeEvent } = require('./event-categorization-helper');
 const { logScraperResult } = require('./scraper-logger');
 const { getOrCreateActivity } = require('./event-save-helper');
-const { normalizeDateString } = require('./date-utils');
+const { normalizeDateString } = require('./helpers/date-normalization-helper');
 
 const LIBRARY_NAME = 'Allegany County Library System';
 const EVENTS_URL = 'https://allegany.librarymarket.com/events/upcoming';
@@ -204,7 +204,7 @@ async function scrapeAlleganyCountyLibrary() {
         const normalizedDate = normalizeDateString(rawEvent.eventDate);
         if (!normalizedDate) {
           console.log(`  ⚠️ Skipping event with invalid/missing date: "${rawEvent.title}" (raw: "${rawEvent.eventDate}")`);
-          logger.trackInvalid();
+          skipped++;
           continue;
         }
 

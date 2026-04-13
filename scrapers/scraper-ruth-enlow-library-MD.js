@@ -23,7 +23,7 @@ const { logScraperResult } = require('./scraper-logger');
 const { getOrCreateActivity } = require('./event-save-helper');
 
 const LIBRARY_NAME = 'Ruth Enlow Library of Garrett County';
-const EVENTS_URL = 'https://relib.librarymarket.com/events/upcoming';
+const EVENTS_URL = 'https://relib.librarymarket.com/events/month';
 const SCRAPER_NAME = 'ruth-enlow-library-MD';
 
 // Branch addresses with coordinates

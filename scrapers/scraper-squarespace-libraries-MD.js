@@ -125,9 +125,11 @@ async function scrapeLibraryEvents(library, browser) {
       timeout: 30000
     });
 
-    // Wait extra time for Squarespace JavaScript to render
-    await page.waitForSelector('body', { timeout: 5000 });
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    // Wait for calendar events to render (FullCalendar/LibCal embeds)
+    await page.waitForSelector('a[href*="/event/"]', { timeout: 15000 }).catch(() => {
+      console.log('  ⚠️ Event links not found within 15s, waiting extra time...');
+    });
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
     // Extract events from the page - handle both LibCal and Google Calendar
     const events = await page.evaluate((calendarType) => {

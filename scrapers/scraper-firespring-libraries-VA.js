@@ -101,9 +101,11 @@ async function scrapeLibraryEvents(library, browser) {
       timeout: 30000
     });
 
-    // Wait for Firespring calendar to load
-    await page.waitForSelector('body', { timeout: 5000 });
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    // Wait for Firespring calendar events to render
+    await page.waitForSelector('a[href*="/event/20"]', { timeout: 15000 }).catch(() => {
+      console.log('  ⚠️ Event links not found within 15s, waiting extra time...');
+    });
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
     // Extract events from the page
     const events = await page.evaluate(() => {

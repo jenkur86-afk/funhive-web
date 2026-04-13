@@ -221,18 +221,22 @@ async function scrapeSite(browser, site, maxEvents = 50) {
         ]
       };
 
-      const isPromoEvent =
-        promoPatterns.venues.some(p => p.test(details.venue || '')) ||
-        promoPatterns.names.some(p => p.test(details.name || ''));
+      const hasPhysicalLocation = !!(details.address || details.city);
+      const isPromoName = promoPatterns.names.some(p => p.test(details.name || ''));
+      const isOnlineVenue = promoPatterns.venues.some(p => p.test(details.venue || ''));
 
-      if (isPromoEvent) {
-        console.log(`  ⏭️ Skipping promo/online: ${(details.name || '').substring(0, 40)}...`);
+      if (isPromoName) {
+        console.log(`  ⏭️ Skipping promo: ${(details.name || '').substring(0, 40)}...`);
         continue;
       }
 
-      // Check for online-only indicators in description
+      if (isOnlineVenue && !hasPhysicalLocation) {
+        console.log(`  ⏭️ Skipping online (no address): ${(details.name || '').substring(0, 40)}...`);
+        continue;
+      }
+
       const onlineIndicators = /\b(online\s+only|virtual\s+only|zoom\s+(?:meeting|call|link)|webinar|hosted?\s+(?:online|virtually)|no\s+physical\s+location)\b/i;
-      if (onlineIndicators.test(details.description || '')) {
+      if (!hasPhysicalLocation && onlineIndicators.test(details.description || '')) {
         console.log(`  ⏭️ Skipping online event: ${(details.name || '').substring(0, 40)}...`);
         continue;
       }
