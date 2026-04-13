@@ -265,7 +265,7 @@ async function scrapeHowardCountyLibrary() {
           subcategory,
           ageRange: event.ageRange,
           cost: 'Free',
-          description: event.description.substring(0, 1000),
+          description: (event.description || '').substring(0, 1000),
           moreInfo: '',
           state: 'MD',
           location: {

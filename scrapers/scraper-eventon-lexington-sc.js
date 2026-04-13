@@ -43,26 +43,29 @@ function parseAgeRange(text, classListOrTaxonomies) {
   const lowerText = text.toLowerCase();
   const classList = classListOrTaxonomies ? classListOrTaxonomies.join(' ').toLowerCase() : '';
 
-  // Check for adult-only indicators
-  if (lowerText.match(/adults? only/i) || lowerText.match(/18\+/i) || lowerText.match(/21\+/i)) {
-    return 'Adults';
-  }
-
   // Check class list for age categories
   if (classList.includes('preschool') || classList.includes('event_type_2-1')) return 'Preschool (3-5)';
   if (classList.includes('youth') || classList.includes('grades k') || classList.includes('event_type_2-2')) return 'Children (6-12)';
   if (classList.includes('tweens') || classList.includes('event_type_2-3')) return 'Children (6-12)';
   if (classList.includes('teens') || classList.includes('event_type_2-4')) return 'Teens (13-17)';
-  if (classList.includes('adults') || classList.includes('event_type_2-5')) return 'Adults';
   if (classList.includes('families') || classList.includes('event_type_2-6') || classList.includes('all ages')) return 'All Ages';
 
-  // Age-specific ranges from text
+  // Age-specific ranges from text (check these before adult-only)
   if (lowerText.match(/babies?|infants?|0-2/i)) return 'Babies & Toddlers (0-2)';
   if (lowerText.match(/toddlers?|preschool|3-5/i)) return 'Preschool (3-5)';
   if (lowerText.match(/children|kids|6-12|elementary|grades k/i)) return 'Children (6-12)';
   if (lowerText.match(/teens?|13-17|middle school|high school/i)) return 'Teens (13-17)';
   if (lowerText.match(/family|families|all ages/i)) return 'All Ages';
 
+  // Check for adult-only AFTER age-specific checks
+  if (lowerText.match(/adults? only/i) || lowerText.match(/18\+/i) || lowerText.match(/21\+/i)) {
+    return 'Adults';
+  }
+
+  // Check class list for adults (lower priority than other markers)
+  if (classList.includes('adults') || classList.includes('event_type_2-5')) return 'Adults';
+
+  // Default to All Ages if no specific age markers found
   return 'All Ages';
 }
 
@@ -82,6 +85,68 @@ function extractLocationFromClassList(classList) {
   return null;
 }
 
+// Fallback: Scrape events directly from /programs page if API fails
+async function scrapeEventsProgramsPage(page) {
+  console.log(`   Scraping events from /programs page as fallback...`);
+
+  try {
+    const programsUrl = `${LIBRARY.website}/programs`;
+    await page.goto(programsUrl, {
+      waitUntil: 'domcontentloaded',
+      timeout: 30000
+    });
+
+    await page.waitForSelector('.eventon_list_event', { timeout: 10000 });
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Extract all event elements from the page
+    const events = await page.evaluate(() => {
+      const eventElements = document.querySelectorAll('.eventon_list_event');
+      const results = [];
+
+      eventElements.forEach((element) => {
+        try {
+          const titleEl = element.querySelector('h3, .event-title, .evo-title');
+          const title = titleEl ? titleEl.textContent.trim() : 'Untitled Event';
+
+          const dateEl = element.querySelector('time, .event-date, .evo-date, [class*="date"]');
+          const date = dateEl ? (dateEl.getAttribute('datetime') || dateEl.textContent.trim()) : '';
+
+          const locationEl = element.querySelector('.event-location, .evo-location, .location, [class*="location"]');
+          const location = locationEl ? locationEl.textContent.trim() : '';
+
+          const descEl = element.querySelector('.event-description, .evo-description, p');
+          const description = descEl ? descEl.textContent.trim() : '';
+
+          const linkEl = element.querySelector('a');
+          const link = linkEl ? linkEl.getAttribute('href') : '';
+
+          if (title && date) {
+            results.push({
+              title,
+              date,
+              location,
+              description: description.substring(0, 500),
+              link: link.startsWith('http') ? link : (link.startsWith('/') ? window.location.origin + link : window.location.origin + '/' + link)
+            });
+          }
+        } catch (e) {
+          console.error('Error parsing event element:', e.message);
+        }
+      });
+
+      return results;
+    });
+
+    console.log(`   Found ${events.length} events from /programs page`);
+    return events;
+
+  } catch (error) {
+    console.error(`   ❌ Error scraping /programs page:`, error.message);
+    return [];
+  }
+}
+
 // Fetch events from WordPress REST API
 async function fetchEventsFromAPI() {
   console.log(`   Fetching events from WordPress REST API...`);
@@ -95,7 +160,7 @@ async function fetchEventsFromAPI() {
       const response = await axios.get(`${LIBRARY.apiUrl}?per_page=100&page=${page}&_embed`);
       const events = response.data;
 
-      if (events.length === 0) {
+      if (!Array.isArray(events) || events.length === 0) {
         hasMore = false;
       } else {
         allEvents.push(...events);
@@ -113,10 +178,17 @@ async function fetchEventsFromAPI() {
     }
 
     console.log(`   Found ${allEvents.length} events from API`);
+
+    // If API returned no events or failed, return empty to trigger fallback
+    if (allEvents.length === 0) {
+      console.warn(`   ⚠️  API returned no events - will attempt fallback scraping`);
+    }
+
     return allEvents;
 
   } catch (error) {
     console.error(`   ❌ Error fetching from API:`, error.message);
+    console.warn(`   ⚠️  API request failed - will attempt fallback scraping`);
     return [];
   }
 }
@@ -244,11 +316,42 @@ async function processLexingtonEvents() {
   let failed = 0;
 
   // Fetch events from API
-  const apiEvents = await fetchEventsFromAPI();
+  let apiEvents = await fetchEventsFromAPI();
 
+  // If API returns no events, use fallback scraper
   if (apiEvents.length === 0) {
-    console.log('   No events found from API');
-    return { imported, skipped, failed };
+    console.log('   ℹ️  API returned no events, using fallback /programs page scraper...');
+
+    const browser = await launchBrowser();
+    try {
+      const page = await browser.newPage();
+      await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
+
+      const fallbackEvents = await scrapeEventsProgramsPage(page);
+      await page.close();
+
+      if (fallbackEvents.length > 0) {
+        // Convert fallback events to API-like format
+        apiEvents = fallbackEvents.map(event => ({
+          title: { rendered: event.title },
+          content: { rendered: event.description },
+          link: event.link,
+          class_list: [],
+          meta: {},
+          modified: new Date().toISOString()
+        }));
+        console.log(`   Using ${apiEvents.length} events from fallback scraper`);
+      }
+    } catch (fallbackError) {
+      console.error('   ❌ Fallback scraper also failed:', fallbackError.message);
+    } finally {
+      await browser.close();
+    }
+
+    if (apiEvents.length === 0) {
+      console.log('   ❌ No events found from either API or fallback scraper');
+      return { imported, skipped, failed };
+    }
   }
 
   const browser = await launchBrowser();
@@ -272,22 +375,50 @@ async function processLexingtonEvents() {
         // Parse age range from API data
         const ageRange = parseAgeRange(title + ' ' + description, classList);
 
+        // Log adult events but don't skip them (libraries host adult events)
         if (ageRange === 'Adults') {
-          skipped++;
-          continue;
+          console.log(`  ℹ️  Adult event: ${title.substring(0, 40)}...`);
         }
 
         // Try to get date from API first (check meta fields or content)
         let eventDate = '';
         let eventDetails = { date: '', time: '', location: '', description: '' };
 
-        // Try to extract date from content first (avoid page visit if possible)
-        const dateMatch = tempDiv.match(/(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}(?:,?\s+\d{4})?/i);
-        if (dateMatch) {
-          eventDate = dateMatch[0];
-          // Also try to find time in content
-          const timeMatch = tempDiv.match(/\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)/i);
-          if (timeMatch) eventDate = `${eventDate} ${timeMatch[0]}`;
+        // Try to extract date from API meta fields first (EventON stores dates in meta)
+        let eventDateFromMeta = '';
+        if (apiEvent.meta) {
+          // Try common EventON meta field names
+          const metaFields = [
+            'eventon_event_date',
+            'eventon_start_date',
+            'event_date',
+            '_event_date',
+            'event_start_date'
+          ];
+
+          for (const field of metaFields) {
+            if (apiEvent.meta[field]) {
+              eventDateFromMeta = apiEvent.meta[field];
+              if (Array.isArray(eventDateFromMeta)) {
+                eventDateFromMeta = eventDateFromMeta[0];
+              }
+              if (eventDateFromMeta) break;
+            }
+          }
+        }
+
+        // Use meta date if found, otherwise try content extraction
+        if (eventDateFromMeta) {
+          eventDate = eventDateFromMeta;
+        } else {
+          // Try to extract date from content first (avoid page visit if possible)
+          const dateMatch = tempDiv.match(/(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}(?:,?\s+\d{4})?/i);
+          if (dateMatch) {
+            eventDate = dateMatch[0];
+            // Also try to find time in content
+            const timeMatch = tempDiv.match(/\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)/i);
+            if (timeMatch) eventDate = `${eventDate} ${timeMatch[0]}`;
+          }
         }
 
         // Only scrape event page if we don't have a date
@@ -299,12 +430,8 @@ async function processLexingtonEvents() {
               eventDate = `${eventDate} ${eventDetails.time}`;
             }
           } catch (scrapeError) {
-            // If scrape fails, try to use API date from modified field
-            const modDate = new Date(apiEvent.modified);
-            if (!isNaN(modDate.getTime())) {
-              eventDate = modDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-              console.log(`  ⚠️ Using modified date for: ${title.substring(0, 40)}...`);
-            }
+            // If scrape fails, don't use modified date - mark event as having no date
+            console.log(`  ⚠️  Could not extract date from page for: ${title.substring(0, 40)}...`);
           }
         }
 

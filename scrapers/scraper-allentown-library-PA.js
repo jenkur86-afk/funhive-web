@@ -293,7 +293,7 @@ async function scrapeAllentownLibrary() {
           subcategory,
           ageRange: ageRange,
           cost: 'Free',
-          description: event.description.substring(0, 1000),
+          description: (event.description || '').substring(0, 1000),
           moreInfo: '',
           location: {
             name: event.location || LIBRARY.name,
@@ -409,7 +409,7 @@ async function scrapeAllentownLibrary() {
             subcategory,
             ageRange: ageRange,
             cost: 'Free',
-            description: event.description.substring(0, 1000),
+            description: (event.description || '').substring(0, 1000),
             moreInfo: '',
             location: {
               name: event.location || LIBRARY.name,

@@ -301,7 +301,7 @@ async function scrapeBerksLibrary() {
           subcategory,
           ageRange: ageRange,
           cost: 'Free',
-          description: event.description.substring(0, 1000),
+          description: (event.description || '').substring(0, 1000),
           moreInfo: event.categoryInfo || '',
           location: {
             name: event.location || LIBRARY.name,

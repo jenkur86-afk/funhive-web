@@ -113,6 +113,7 @@ export default function EventsPage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [showMap, setShowMap] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [freeOnly, setFreeOnly] = useState(false)
   const [selectedDateFilter, setSelectedDateFilter] = useState('All')
@@ -125,9 +126,15 @@ export default function EventsPage() {
   const [locationError, setLocationError] = useState('')
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE)
 
+  // Debounce search query so DB queries don't fire on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 300)
+    return () => clearTimeout(timer)
+  }, [searchQuery])
+
   useEffect(() => {
     preloadZipData().then(() => loadEvents())
-  }, [selectedCategories, locationCoords, selectedRadius])
+  }, [selectedCategories, locationCoords, selectedRadius, debouncedSearch])
 
   // Parse location input whenever it changes
   useEffect(() => {
@@ -212,14 +219,22 @@ function isEventOnOrAfterToday(event: any): boolean {
 
         // Also fetch events WITHOUT geometry that have city/state/zip
         // so client-side fallback can compute distance
-        const supplementary = await supabase
+        let suppQuery = supabase
           .from('events')
           .select('*')
           .is('location', null)
-          .gte('event_date', today)
           .not('event_date', 'is', null)
           .in('state', ACTIVE_STATES || [])
           .limit(300)
+
+        if (debouncedSearch) {
+          const term = `%${debouncedSearch}%`
+          suppQuery = suppQuery.or(
+            `name.ilike.${term},venue.ilike.${term},city.ilike.${term},description.ilike.${term},category.ilike.${term},address.ilike.${term}`
+          )
+        }
+
+        const supplementary = await suppQuery
 
         if (!supplementary.error && supplementary.data) {
           // Deduplicate by id
@@ -232,14 +247,22 @@ function isEventOnOrAfterToday(event: any): boolean {
         let query = supabase
           .from('events')
           .select('*')
-          .gte('event_date', today)
           .not('event_date', 'is', null)
           .in('state', ACTIVE_STATES || [])
           .order('event_date', { ascending: true })
           .limit(500)
 
+        // When searching, add database-level text filter so relevant results
+        // aren't crowded out by the 500-row limit
+        if (debouncedSearch) {
+          const term = `%${debouncedSearch}%`
+          query = query.or(
+            `name.ilike.${term},venue.ilike.${term},city.ilike.${term},description.ilike.${term},category.ilike.${term},address.ilike.${term}`
+          )
+        }
+
         const result = await query
-        if (!result.error && result.data) allData = result.data.filter((e: any) => isEventOnOrAfterToday(e)).filter((e: any) => isEventOnOrAfterToday(e))
+        if (!result.error && result.data) allData = result.data.filter((e: any) => isEventOnOrAfterToday(e))
       }
 
       // Apply category filter client-side (works for both RPC and standard queries)

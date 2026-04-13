@@ -473,7 +473,7 @@ const SCRAPERS = {
     state: 'TX'
   },
   'LA-Public-Library': {
-    file: './scraper-la-public-library.js',
+    file: './scraper-la-public-library-CA.js',
     exportName: 'scrapeLAPublicLibrary',
     type: 'puppeteer',
     group: 2,
@@ -487,7 +487,7 @@ const SCRAPERS = {
     state: 'IA'
   },
   'Brooklyn-Library': {
-    file: './scraper-brooklyn-library.js',
+    file: './scraper-brooklyn-library-NY.js',
     exportName: 'scrapeBrooklynLibrary',
     type: 'puppeteer',
     group: 2,
@@ -695,13 +695,13 @@ const SCRAPERS = {
     group: 1,
     state: 'PA'
   },
-  'CustomDrupal-MultiState': {
-    file: './scraper-custom-drupal-multi-state-libraries.js',
-    exportName: 'scrapeCustomDrupalMultiStateLibraries',
-    type: 'puppeteer',
-    group: 2,
-    state: 'Multi'
-  },
+  // 'CustomDrupal-MultiState': {  // DISABLED - scraper file not yet created
+  //   file: './scraper-custom-drupal-multi-state-libraries.js',
+  //   exportName: 'scrapeCustomDrupalMultiStateLibraries',
+  //   type: 'puppeteer',
+  //   group: 2,
+  //   state: 'Multi'
+  // },
   'LibraryMarket-MD': {
     file: './scraper-librarymarket-libraries-md.js',
     exportName: 'scrapeLibraryMarketEvents',
@@ -767,8 +767,8 @@ const SCRAPERS = {
     state: 'SC'
   },
   'Graniculator-Morris': {
-    file: './scraper-graniculator-morris-county.js',
-    exportName: 'scrapeGraniculatorMorrisCounty',
+    file: './scraper-granicus-morris-county-nj.js',
+    exportName: 'scrapeGranicusMorrisCounty',
     type: 'axios',
     group: 2,
     state: 'NJ'

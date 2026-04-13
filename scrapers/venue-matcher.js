@@ -432,10 +432,15 @@ async function getOrCreateActivity(activityData, options = {}) {
     if (activityData.hours) updateData.hours = activityData.hours;
     if (activityData.website) updateData.website = activityData.website;
     if (activityData.phone) updateData.phone = activityData.phone;
-    if (activityData.cost) updateData.cost = activityData.cost;
-    if (activityData.amenities) updateData.amenities = activityData.amenities;
+    if (activityData.cost) updateData.priceRange = activityData.cost;
+    if (activityData.priceRange) updateData.priceRange = activityData.priceRange;
     if (activityData.description) updateData.description = activityData.description;
-    if (activityData.filters) updateData.filters = activityData.filters;
+    // Extract individual filter fields instead of writing 'filters' object
+    if (activityData.filters) {
+      if (activityData.filters.isFree != null) updateData.isFree = activityData.filters.isFree;
+      if (activityData.filters.ageRange) updateData.ageRange = activityData.filters.ageRange;
+    }
+    if (activityData.isFree != null) updateData.isFree = activityData.isFree;
 
     await db.collection('activities').doc(existingVenue.id).update(updateData);
     return { id: existingVenue.id, isNew: false, updated: true };
@@ -455,10 +460,15 @@ async function getOrCreateActivity(activityData, options = {}) {
     if (activityData.hours) updateData.hours = activityData.hours;
     if (activityData.website) updateData.website = activityData.website;
     if (activityData.phone) updateData.phone = activityData.phone;
-    if (activityData.cost) updateData.cost = activityData.cost;
-    if (activityData.amenities) updateData.amenities = activityData.amenities;
+    if (activityData.cost) updateData.priceRange = activityData.cost;
+    if (activityData.priceRange) updateData.priceRange = activityData.priceRange;
     if (activityData.description) updateData.description = activityData.description;
-    if (activityData.filters) updateData.filters = activityData.filters;
+    // Extract individual filter fields instead of writing 'filters' object
+    if (activityData.filters) {
+      if (activityData.filters.isFree != null) updateData.isFree = activityData.filters.isFree;
+      if (activityData.filters.ageRange) updateData.ageRange = activityData.filters.ageRange;
+    }
+    if (activityData.isFree != null) updateData.isFree = activityData.isFree;
 
     await activityRef.update(updateData);
     return { id: activityId, isNew: false, updated: true };

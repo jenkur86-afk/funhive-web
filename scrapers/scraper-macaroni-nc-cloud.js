@@ -147,6 +147,52 @@ async function extractEventDetails(url) {
       result.name = h1.text().trim();
     }
 
+    // === DOM-based address extraction (reliable — uses structured elements) ===
+    const locationNameEl = $('.location-name').first();
+    const locationAddressEl = $('.location-address').first();
+    if (locationNameEl.length) {
+      result.venue = locationNameEl.text().trim();
+    }
+    if (locationAddressEl.length) {
+      const addressLines = [];
+      locationAddressEl.children('span').each(function() {
+        const text = $(this).text().trim();
+        if (text && !text.includes('Google Map')) addressLines.push(text);
+      });
+
+      for (const line of addressLines) {
+        const cityStateZip = line.match(/^([\w\s.'-]+)\s+([A-Z]{2})\s+(\d{5})(?:-\d{4})?$/);
+        if (cityStateZip) {
+          result.city = cityStateZip[1].trim();
+          result.zipCode = cityStateZip[3];
+          continue;
+        }
+        if (/^\d+\s+/.test(line) && !result.address) {
+          result.address = line;
+          continue;
+        }
+        if (/^(STE|Suite|Unit|Apt|#)\s/i.test(line)) {
+          if (result.address) result.address += ', ' + line;
+          continue;
+        }
+      }
+
+      // Fallback: parse from Google Maps link URL
+      if (!result.address || !result.city) {
+        const mapLink = locationAddressEl.find('a.gmaplink').attr('href') || '';
+        const qParam = mapLink.match(/[?&]q=([^&]+)/);
+        if (qParam) {
+          const mapAddr = decodeURIComponent(qParam[1].replace(/\+/g, ' '));
+          const mapMatch = mapAddr.match(/^(.+?)\s+([\w\s.'-]+)\s+([A-Z]{2})\s+(\d{5})$/);
+          if (mapMatch) {
+            if (!result.address) result.address = mapMatch[1].trim();
+            if (!result.city) result.city = mapMatch[2].trim();
+            if (!result.zipCode) result.zipCode = mapMatch[4];
+          }
+        }
+      }
+    }
+
     // Extract all text and split into lines for parsing
     const bodyText = $('body').text();
     const lines = bodyText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
@@ -186,27 +232,30 @@ async function extractEventDetails(url) {
         idx++;
       }
 
-      // Skip empty lines
-      while (idx < lines.length && lines[idx].length === 0) idx++;
+      // Only use text-based address parsing as fallback if DOM extraction didn't work
+      if (!result.venue || !result.address || !result.city) {
+        // Skip empty lines
+        while (idx < lines.length && lines[idx].length === 0) idx++;
 
-      // Venue name (not starting with digit, short line)
-      if (idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100) {
-        result.venue = lines[idx];
-        idx++;
-      }
+        // Venue name (not starting with digit, short line)
+        if (!result.venue && idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100) {
+          result.venue = lines[idx];
+          idx++;
+        }
 
-      // Address (starts with digit)
-      if (idx < lines.length && /^\d+\s+[\w\s]+/.test(lines[idx])) {
-        result.address = lines[idx];
-        idx++;
-      }
+        // Address (starts with digit)
+        if (!result.address && idx < lines.length && /^\d+\s+[\w\s]+/.test(lines[idx])) {
+          result.address = lines[idx];
+          idx++;
+        }
 
-      // City, State, Zip
-      if (idx < lines.length) {
-        const cityZipMatch = lines[idx].match(/^([\w\s]+)\s+NC\s+(\d{5})/);
-        if (cityZipMatch) {
-          result.city = cityZipMatch[1].trim();
-          result.zipCode = cityZipMatch[2];
+        // City, State, Zip
+        if (!result.city && idx < lines.length) {
+          const cityZipMatch = lines[idx].match(/^([\w\s]+)\s+[A-Z]{2}\s+(\d{5})/);
+          if (cityZipMatch) {
+            result.city = cityZipMatch[1].trim();
+            result.zipCode = cityZipMatch[2];
+          }
         }
       }
     }
@@ -287,7 +336,7 @@ async function scrapeSite(site, maxEvents = 50) {
     const eventUrls = await extractEventUrls(site.url);
     console.log(`  Found ${eventUrls.length} URLs`);
 
-    let imported = 0, skippedPast = 0, skippedFuture = 0, noLocation = 0;
+    let imported = 0, updated = 0, skippedPast = 0, skippedFuture = 0, noLocation = 0;
 
     for (const url of eventUrls) {
 
@@ -433,15 +482,23 @@ async function scrapeSite(site, maxEvents = 50) {
       // Check if event already exists
       const existing = await db.collection('events').where('url', '==', url).limit(1).get();
       if (existing.empty) {
-        events.push(eventDoc);
-        imported++;
+        events.push(eventDoc); imported++;
+      } else {
+        // Update existing event with fresh data (address, venue, coordinates, etc.)
+        const existingDoc = existing.docs[0];
+        try {
+          await db.collection('events').doc(existingDoc.id).set(eventDoc);
+          updated++;
+        } catch (updateErr) {
+          console.log(`  ⚠️ Update failed for ${url}: ${updateErr.message}`);
+        }
       }
 
       // Rate limiting - wait 1 second between requests
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
-    console.log(`  ✅ ${imported} new | ⏭️ ${skippedPast} past | ⚠️ ${noLocation} no coords`);
+    console.log(`  ✅ ${imported} new | 🔄 ${updated} updated | ⏭️ ${skippedPast} past | ⚠️ ${noLocation} no coords`);
   } catch (error) {
     console.error(`  ❌ Error: ${error.message}`);
   }
@@ -457,6 +514,7 @@ async function scrapeMacaroniKidNorthCarolina() {
   console.log(`Scraping ${NC_MK_SITES.length} NC sites without Puppeteer\n`);
 
   let imported = 0;
+  let updated = 0;
   let failed = 0;
   const startTime = Date.now();
 

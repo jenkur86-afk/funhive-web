@@ -109,15 +109,28 @@ async function scrapeRuthEnlowLibrary() {
           const fullText = card.textContent;
           let eventDate = '';
 
-          // Match full date with time
-          const dateTimeMatch = fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+\w+\s+\d{1,2},?\s+\d{4}\s+(?:at\s+)?(\d{1,2}:\d{2}\s*(?:am|pm))/i);
-          if (dateTimeMatch) {
-            eventDate = dateTimeMatch[0];
-          } else {
-            // Try just date
-            const dateMatch = fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+\w+\s+\d{1,2},?\s+\d{4}/i) ||
-                             fullText.match(/\w+\s+\d{1,2},?\s+\d{4}/i);
-            if (dateMatch) eventDate = dateMatch[0];
+          // Try lc-date-icon elements first (LibraryMarket date icon structure)
+          const lcMonthEl = card.querySelector('.lc-date-icon__item--month');
+          const lcDayEl = card.querySelector('.lc-date-icon__item--day');
+          const lcYearEl = card.querySelector('.lc-date-icon__item--year');
+          if (lcMonthEl && lcDayEl) {
+            const month = lcMonthEl.textContent.trim();
+            const day = lcDayEl.textContent.trim();
+            const year = lcYearEl ? lcYearEl.textContent.trim() : new Date().getFullYear();
+            eventDate = `${month} ${day}, ${year}`;
+          }
+
+          // Fallback: Match full date with time
+          if (!eventDate) {
+            const dateTimeMatch = fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+\w+\s+\d{1,2},?\s+\d{4}\s+(?:at\s+)?(\d{1,2}:\d{2}\s*(?:am|pm))/i);
+            if (dateTimeMatch) {
+              eventDate = dateTimeMatch[0];
+            } else {
+              // Try just date
+              const dateMatch = fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+\w+\s+\d{1,2},?\s+\d{4}/i) ||
+                               fullText.match(/\w+\s+\d{1,2},?\s+\d{4}/i);
+              if (dateMatch) eventDate = dateMatch[0];
+            }
           }
 
           // Get branch/location
@@ -157,9 +170,10 @@ async function scrapeRuthEnlowLibrary() {
         }
       });
 
-      // Deduplicate by title + date
+      // Deduplicate by title + date (skip events without dates)
       const seen = new Set();
       return events.filter(e => {
+        if (!e.eventDate) return false; // Skip events without dates
         const key = `${e.title}|${e.eventDate}`.toLowerCase();
         if (seen.has(key)) return false;
         seen.add(key);

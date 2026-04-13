@@ -364,7 +364,7 @@ async function scrapeLAPublicLibrary() {
           subcategory,
           ageRange,
           cost: 'Free',
-          description: eventData.description.substring(0, 1000),
+          description: (eventData.description || '').substring(0, 1000),
           moreInfo: eventData.tags.join(', '),
           state: LIBRARY.state,
           location: {

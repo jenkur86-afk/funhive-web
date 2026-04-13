@@ -90,17 +90,33 @@ async function scrapeLibCalEvents() {
             // Try multiple title selectors
             const titleEl = card.querySelector('.s-lc-c-evt-title, .s-lc-eventcard-title, .s-lc-ea-ttl, h2, h3');
 
-            // Try multiple date selectors
-            const monthEl = card.querySelector('.s-lc-evt-date-m');
-            const dayEl = card.querySelector('.s-lc-evt-date-d');
-            const dateEl = card.querySelector('.s-lc-ea-date, .event-date');
-
-            // Build date string
+            // Try multiple date selectors - PRIMARY: dl.dl-horizontal format (From/To dates)
             let dateStr = '';
-            if (monthEl && dayEl) {
-              dateStr = `${monthEl.textContent.trim()} ${dayEl.textContent.trim()}`;
-            } else if (dateEl) {
-              dateStr = dateEl.textContent.trim();
+            const dlElement = card.querySelector('dl.dl-horizontal');
+            if (dlElement) {
+              const dlText = dlElement.textContent || '';
+              // Extract "From: Wednesday, April 1, 2026" format
+              const fromMatch = dlText.match(/From:\s*(.*?)(?:To:|$)/i);
+              if (fromMatch) {
+                dateStr = fromMatch[1].trim();
+              }
+            }
+
+            // FALLBACK 1: Try .s-lc-evt-date-m and .s-lc-evt-date-d selectors
+            if (!dateStr) {
+              const monthEl = card.querySelector('.s-lc-evt-date-m');
+              const dayEl = card.querySelector('.s-lc-evt-date-d');
+              if (monthEl && dayEl) {
+                dateStr = `${monthEl.textContent.trim()} ${dayEl.textContent.trim()}`;
+              }
+            }
+
+            // FALLBACK 2: Try other date element selectors
+            if (!dateStr) {
+              const dateEl = card.querySelector('.s-lc-ea-date, .event-date');
+              if (dateEl) {
+                dateStr = dateEl.textContent.trim();
+              }
             }
 
             const timeEl = card.querySelector('.s-lc-eventcard-heading-text, .s-lc-ea-time, .event-time');

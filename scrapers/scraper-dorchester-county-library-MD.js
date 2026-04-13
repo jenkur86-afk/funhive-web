@@ -313,7 +313,7 @@ async function scrapeDorchesterEvents() {
           subcategory,
           ageRange: ageRange,
           cost: 'Free',
-          description: event.description.substring(0, 1000),
+          description: (event.description || '').substring(0, 1000),
           moreInfo: '',
           state: LIBRARY.state,
           geohash: ngeohash.encode(defaultCoords.latitude, defaultCoords.longitude, 7),

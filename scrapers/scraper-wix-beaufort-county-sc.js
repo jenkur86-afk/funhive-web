@@ -240,6 +240,7 @@ async function scrapeWixBeaufortCounty() {
             name: event.venue || LIBRARY.name,
             address: '',
             city: LIBRARY.city,
+            state: LIBRARY.state,
             zipCode: LIBRARY.zipCode,
             coordinates: coordinates
           },

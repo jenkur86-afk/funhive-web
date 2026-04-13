@@ -18,12 +18,13 @@
  * Schedule: Every 3 days
  */
 
-const puppeteer = require('puppeteer-core');
-const chromium = require('@sparticuz/chromium');
+const { launchBrowser } = require('./puppeteer-config');
 const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { categorizeEvent } = require('./event-categorization-helper');
 const { generateEventId } = require('./event-id-helper');
+const { logScraperResult } = require('./scraper-logger');
+const { linkEventToVenue } = require('./venue-matcher');
 
 const SCRAPER_NAME = 'PGParks-MD';
 const BASE_URL = 'https://pgparks.com';
@@ -68,43 +69,7 @@ function getLocationCoordinates(venueName) {
   return PG_COUNTY_CENTER;
 }
 
-/**
- * Get browser launch options
- */
-async function getBrowserOptions() {
-  const isCloud = process.env.FUNCTION_TARGET || process.env.K_SERVICE;
-
-  if (isCloud) {
-    return {
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
-      headless: chromium.headless,
-    };
-  }
-
-  // Local development - try common Chrome paths
-  const possiblePaths = [
-    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    '/usr/bin/google-chrome',
-    '/usr/bin/chromium-browser',
-  ];
-
-  const fs = require('fs');
-const { logScraperResult } = require('./scraper-logger');
-const { linkEventToVenue } = require('./venue-matcher');
-  for (const p of possiblePaths) {
-    if (fs.existsSync(p)) {
-      return {
-        executablePath: p,
-        headless: 'new',
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      };
-    }
-  }
-
-  throw new Error('No Chrome executable found');
-}
+// Browser launch handled by puppeteer-config.js
 
 /**
  * Parse age range from event text
@@ -168,8 +133,7 @@ async function fetchEvents(maxEvents = 100) {
 
   let browser;
   try {
-    const browserOptions = await getBrowserOptions();
-    browser = await puppeteer.launch(browserOptions);
+    browser = await launchBrowser();
     const page = await browser.newPage();
 
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
@@ -179,7 +143,7 @@ async function fetchEvents(maxEvents = 100) {
     await page.goto(CALENDAR_URL, { waitUntil: 'networkidle2', timeout: 60000 });
 
     // Wait for events to load
-    await page.waitForSelector('.tribe-events-calendar-list__event, .tribe-common-g-row, article[class*="event"], .event-card, [class*="event-item"]', { timeout: 15000 }).catch(() => {
+    await page.waitForSelector('article, .tribe-events-calendar-list__event, .tribe-common-g-row, article[class*="event"], .event-card, [class*="event-item"]', { timeout: 15000 }).catch(() => {
       console.log('  ⚠️ No standard event selectors found, checking for other content...');
     });
 
@@ -192,6 +156,7 @@ async function fetchEvents(maxEvents = 100) {
 
       // Try multiple selector strategies for Tribe Events and WordPress calendars
       const eventSelectors = [
+        'article',  // Photo view layout (bare article elements)
         '.tribe-events-calendar-list__event',
         '.tribe-common-g-row.tribe-events-calendar-list__event-row',
         'article.tribe-events-calendar-list__event-row',
@@ -239,7 +204,7 @@ async function fetchEvents(maxEvents = 100) {
       eventElements.slice(0, maxEventsLimit).forEach(el => {
         try {
           // Title
-          const titleEl = el.querySelector('.tribe-events-calendar-list__event-title a, .tribe-events-list-event-title a, h3 a, h2 a, .event-title a, a[class*="title"]');
+          const titleEl = el.querySelector('.tribe-events-pro-photo__event-title-link, .tribe-events-pro-photo__event-title a, .tribe-events-calendar-list__event-title a, .tribe-events-list-event-title a, h3 a, h2 a, .event-title a, a[class*="title"]');
           const title = titleEl ? titleEl.textContent.trim() : '';
           if (!title || title.length < 3) return;
 
@@ -250,19 +215,19 @@ async function fetchEvents(maxEvents = 100) {
           }
 
           // Date
-          const dateEl = el.querySelector('.tribe-events-calendar-list__event-datetime, time, .tribe-event-date-start, [datetime], .event-date');
+          const dateEl = el.querySelector('.tribe-events-pro-photo__event-date-tag-datetime, .tribe-events-pro-photo__event-datetime, .tribe-events-calendar-list__event-datetime, time, .tribe-event-date-start, [datetime], .event-date');
           const dateText = dateEl?.getAttribute('datetime') || dateEl?.textContent?.trim() || '';
 
           // Venue
-          const venueEl = el.querySelector('.tribe-events-calendar-list__event-venue, .tribe-events-venue, .tribe-venue, .event-venue, .location');
+          const venueEl = el.querySelector('.tribe-events-pro-photo__event-venue, .tribe-events-calendar-list__event-venue, .tribe-events-venue, .tribe-venue, .event-venue, .location');
           const venue = venueEl?.textContent?.trim() || '';
 
           // Description
-          const descEl = el.querySelector('.tribe-events-calendar-list__event-description, .tribe-events-list-event-description, .event-description, p');
+          const descEl = el.querySelector('.event-summary, .tribe-events-calendar-list__event-description, .tribe-events-list-event-description, .event-description, p');
           const description = (descEl?.textContent?.trim() || '').substring(0, 500);
 
           // Time
-          const timeEl = el.querySelector('.tribe-events-calendar-list__event-datetime-time, .tribe-event-time, .event-time');
+          const timeEl = el.querySelector('.tribe-events-pro-photo__event-datetime, .tribe-events-calendar-list__event-datetime-time, .tribe-event-time, .event-time');
           const timeText = timeEl?.textContent?.trim() || '';
 
           events.push({

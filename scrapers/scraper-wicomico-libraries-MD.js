@@ -258,7 +258,7 @@ async function scrapeWicomicoEvents() {
           subcategory,
           ageRange: ageRange,
           cost: 'Free',
-          description: event.description.substring(0, 1000),
+          description: (event.description || '').substring(0, 1000),
           moreInfo: event.programType || '',
           geohash: ngeohash.encode(coordinates.latitude, coordinates.longitude, 7), // Always add geohash
           location: {

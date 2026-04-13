@@ -468,7 +468,14 @@ function createFirestoreCompatibleDB() {
               const { error } = await supabase
                 .from(mapCollectionName(table))
                 .upsert(row, { onConflict: 'id' });
-              if (error) throw error;
+              if (error) {
+                // Gracefully handle duplicate content constraint violations
+                if (error.code === '23505' || error.message?.includes('duplicate key') || error.message?.includes('unique constraint')) {
+                  console.log(`  ℹ️ Duplicate content for ${table}/${docId}, skipping`);
+                  return;
+                }
+                throw error;
+              }
             },
             async get() {
               const { data, error } = await supabase
@@ -521,7 +528,13 @@ function createFirestoreCompatibleDB() {
             .insert(row)
             .select()
             .single();
-          if (error) throw error;
+          if (error) {
+            // Handle duplicate key constraint gracefully (event already exists)
+            if (error.code === '23505' || error.message?.includes('duplicate key') || error.message?.includes('unique constraint')) {
+              return { id, duplicate: true };
+            }
+            throw error;
+          }
           return { id: result.id };
         },
       };
@@ -559,11 +572,19 @@ function createFirestoreCompatibleDB() {
             }
           }
 
-          // Execute upserts
+          // Execute upserts (deduplicate by ID to avoid "cannot affect row a second time" error)
           for (const [table, rows] of Object.entries(upsertByTable)) {
+            const deduped = {};
+            for (const row of rows) {
+              deduped[row.id] = row; // last occurrence wins
+            }
+            const uniqueRows = Object.values(deduped);
+            if (uniqueRows.length < rows.length) {
+              console.log(`  ℹ️ Deduplicated batch for ${table}: ${rows.length} → ${uniqueRows.length} rows`);
+            }
             const { error } = await supabase
               .from(mapCollectionName(table))
-              .upsert(rows, { onConflict: 'id' });
+              .upsert(uniqueRows, { onConflict: 'id' });
             if (error) throw error;
           }
 
@@ -607,6 +628,7 @@ function mapFieldName(collectionName, firestoreField) {
     'ageRange': 'age_range',
     'isSponsored': 'is_sponsored',
     'metadata.lastSeen': 'scraped_at',
+    'website': 'url',
   };
   if (firestoreField in fieldMap) return fieldMap[firestoreField];
   // Auto-convert camelCase to snake_case for unmapped fields

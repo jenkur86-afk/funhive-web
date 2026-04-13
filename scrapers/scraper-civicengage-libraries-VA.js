@@ -192,6 +192,20 @@ async function scrapeLibraryEvents(library, browser) {
     // Additional wait for AJAX content
     await new Promise(resolve => setTimeout(resolve, 3000));
 
+    // Diagnostic: log page title and key selectors found
+    const pageTitle = await page.title();
+    const diagnostics = await page.evaluate(() => {
+      return {
+        monthItems: document.querySelectorAll('.monthItem').length,
+        listItems: document.querySelectorAll('.listItem').length,
+        calItems: document.querySelectorAll('[class*="calItem"]').length,
+        tableEvents: document.querySelectorAll('td.hasEvent, td[class*="event"]').length,
+        anyLinks: document.querySelectorAll('a[href*="calendar"], a[href*="Calendar"]').length,
+        bodySnippet: document.body?.textContent?.substring(0, 200) || 'empty'
+      };
+    });
+    console.log(`   Page: "${pageTitle}" | monthItem:${diagnostics.monthItems} listItem:${diagnostics.listItems} calItem:${diagnostics.calItems} tableEvents:${diagnostics.tableEvents} links:${diagnostics.anyLinks}`);
+
     // Extract events from the page - CivicEngage calendar structure
     const events = await page.evaluate(() => {
       const results = [];

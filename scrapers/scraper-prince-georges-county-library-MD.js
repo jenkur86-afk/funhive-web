@@ -248,7 +248,7 @@ async function scrapePGCMLSEvents() {
           subcategory,
           ageRange: ageRange,
           cost: 'Free',
-          description: event.description.substring(0, 1000),
+          description: (event.description || '').substring(0, 1000),
           moreInfo: event.eventType || '',
           geohash: ngeohash.encode(coordinates.latitude, coordinates.longitude, 7), // Always add geohash
           location: {

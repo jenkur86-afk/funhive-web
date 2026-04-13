@@ -683,13 +683,15 @@ async function scrapeLibraryEvents(library, browser) {
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
 
-    // LibNet/Communico defaults to showing only today's events
+    // Communico/LibNet defaults to showing only today's events
     // Add ?r=thismonth to get all events for the current month
     let url = library.url;
-    if (url.includes('libnet.info') && !url.includes('?')) {
-      url = `${url}?r=thismonth`;
-    } else if (url.includes('libnet.info') && !url.includes('r=')) {
-      url = `${url}&r=thismonth`;
+    if (!url.includes('r=thismonth') && !url.includes('r=nextmonth')) {
+      if (!url.includes('?')) {
+        url = `${url}?r=thismonth`;
+      } else if (!url.includes('r=')) {
+        url = `${url}&r=thismonth`;
+      }
     }
 
     // Wait for full page + AJAX to load (Communico loads events via AJAX)
@@ -698,8 +700,15 @@ async function scrapeLibraryEvents(library, browser) {
       timeout: 30000
     });
 
-    // Wait for Communico event elements to appear
-    await page.waitForSelector('.eelistevent, .em-event-list-item, article', { timeout: 10000 }).catch(() => null);
+    // Wait for Communico event elements to appear (specific selectors only, not generic 'article')
+    try {
+      await page.waitForSelector('.eelistevent, .em-event-list-item', { timeout: 10000 });
+      console.log('   ✓ Event selectors found');
+    } catch (error) {
+      console.log('   ⚠ Event selectors timeout - waiting additional 5 seconds for AJAX render');
+      // Fallback wait for slow AJAX rendering
+      await new Promise(resolve => setTimeout(resolve, 5000));
+    }
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     // Scroll to load lazy-loaded content
@@ -709,7 +718,7 @@ async function scrapeLibraryEvents(library, browser) {
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     // Extract events from the page
-    const events = await page.evaluate(() => {
+    let events = await page.evaluate(() => {
       const results = [];
 
       // Communico uses various selectors
@@ -840,6 +849,130 @@ async function scrapeLibraryEvents(library, browser) {
     });
 
     console.log(`   Found ${events.length} events`);
+
+    // RETRY: If no events found, wait longer and try again
+    // This handles AJAX-heavy sites that render events later
+    if (events.length === 0) {
+      console.log('   ⚠ No events found - waiting 5 more seconds and retrying extraction');
+      await new Promise(resolve => setTimeout(resolve, 5000));
+
+      events = await page.evaluate(() => {
+        const results = [];
+        const selectors = [
+          '.eelistevent',
+          '.em-event-list-item',
+          '.event-item',
+          'article',
+          '.program-item',
+          '[data-event-id]'
+        ];
+
+        let eventElements = [];
+        for (const selector of selectors) {
+          eventElements = document.querySelectorAll(selector);
+          if (eventElements.length > 0) break;
+        }
+
+        eventElements.forEach(el => {
+          try {
+            let titleEl = el.querySelector('h1, h2, h3, h4, .event-title, .program-title, .eelistevent-name, a');
+            let title = '';
+
+            if (titleEl) {
+              title = titleEl.textContent.trim();
+            } else {
+              const lines = el.innerText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+              if (lines.length > 0) {
+                for (const line of lines) {
+                  if (!line.match(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|January|February|March|April|May|June|July|August|September|October|November|December|\d{1,2}:\d{2})/i) &&
+                      line.length > 3 && line.length < 150) {
+                    title = line;
+                    break;
+                  }
+                }
+              }
+            }
+
+            if (!title || title.length < 3) return;
+
+            const fullText = el.textContent;
+
+            let eventDate = '';
+            const dateEl = el.querySelector('.event-date, .date, time, .eelistevent-date, [class*="date"]');
+            if (dateEl) {
+              eventDate = dateEl.textContent.trim();
+            } else {
+              const dateMatch = fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+\w{3,9}\s+\d{1,2}(?::?\s*\d{1,2}:\d{2}\s*(?:am|pm)(?:\s*-\s*\d{1,2}:\d{2}\s*(?:am|pm))?)?/i) ||
+                               fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+\w{3,9}\s+\d{1,2}(?:,?\s+\d{4})?/i) ||
+                               fullText.match(/\w{3,9}\s+\d{1,2},?\s+\d{4}/i);
+              if (dateMatch) eventDate = dateMatch[0];
+            }
+
+            let time = '';
+            const timeEl = el.querySelector('.event-time, .time, .eelisttime, [class*="time"]');
+            if (timeEl) {
+              time = timeEl.textContent.trim();
+            } else {
+              const timeMatch = fullText.match(/\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)/i);
+              if (timeMatch) time = timeMatch[0];
+            }
+
+            let location = '';
+            const locationEl = el.querySelector('.location, .branch, [class*="location"]');
+            if (locationEl) {
+              location = locationEl.textContent.trim();
+            }
+
+            if (!location && fullText) {
+              const textLines = fullText.split('\n').filter(t => t.trim().length > 5 && t.trim().length < 60);
+              const locationLine = textLines.find(t => t.match(/Library|Branch|Room|Hall|Center/i));
+              if (locationLine) {
+                location = locationLine.trim();
+              }
+            }
+
+            let description = '';
+            const descEl = el.querySelector('.description, .eelistdesc, p, [class*="description"]');
+            if (descEl) {
+              description = descEl.textContent.trim();
+            }
+
+            let audience = '';
+            const audienceEl = el.querySelector('.audience, [class*="age"]');
+            if (audienceEl) {
+              audience = audienceEl.textContent.trim();
+            } else {
+              const audienceMatch = fullText.match(/(?:Age|Audience|Grade)s?:\s*([^\n|]+)/i);
+              if (audienceMatch) audience = audienceMatch[1].trim();
+            }
+
+            let url = '';
+            const linkEl = el.querySelector('a[href*="event"], a[href*="program"]');
+            if (linkEl && linkEl.href) {
+              url = linkEl.href;
+            }
+
+            if (title && eventDate) {
+              const rawDate = time ? `${eventDate} ${time}` : eventDate;
+
+              results.push({
+                name: title,
+                eventDate: rawDate,
+                venue: location,
+                description: description,
+                url: url,
+                audience: audience
+              });
+            }
+          } catch (err) {
+            console.log('Error parsing event on retry:', err);
+          }
+        });
+
+        return results;
+      });
+      console.log(`   After retry: found ${events.length} events`);
+    }
 
     // Process each event
     for (const event of events) {

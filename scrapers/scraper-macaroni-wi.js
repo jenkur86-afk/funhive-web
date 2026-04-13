@@ -88,6 +88,58 @@ async function extractEventDetails(page, url) {
       const h1 = document.querySelector('h1');
       if (h1) result.name = h1.textContent.trim();
 
+      // === DOM-based address extraction (reliable — uses structured elements) ===
+      const locationName = document.querySelector('.location-name');
+      const locationAddress = document.querySelector('.location-address');
+      if (locationName) {
+        result.venue = locationName.textContent.trim();
+      }
+      if (locationAddress) {
+        const spans = Array.from(locationAddress.querySelectorAll(':scope > span'));
+        const addressLines = spans
+          .map(s => s.textContent.trim())
+          .filter(t => t.length > 0 && !t.includes('Google Map'));
+
+        for (const line of addressLines) {
+          // Match city/state/zip: "Wyomissing PA 19610" or "Frederick MD 21701"
+          const cityStateZip = line.match(/^([\w\s.'-]+)\s+([A-Z]{2})\s+(\d{5})(?:-\d{4})?$/);
+          if (cityStateZip) {
+            result.city = cityStateZip[1].trim();
+            result.zipCode = cityStateZip[3];
+            continue;
+          }
+          // Match street address: starts with a number
+          if (/^\d+\s+/.test(line) && !result.address) {
+            result.address = line;
+            continue;
+          }
+          // Suite/unit line (starts with STE, Suite, Unit, Apt, #)
+          if (/^(STE|Suite|Unit|Apt|#)\s/i.test(line)) {
+            if (result.address) result.address += ', ' + line;
+            continue;
+          }
+        }
+
+        // Fallback: parse from Google Maps link URL if DOM spans didn't work
+        if (!result.address || !result.city) {
+          const mapLink = locationAddress.querySelector('a.gmaplink');
+          if (mapLink) {
+            const mapUrl = mapLink.href || '';
+            const qParam = mapUrl.match(/[?&]q=([^&]+)/);
+            if (qParam) {
+              const mapAddr = decodeURIComponent(qParam[1].replace(/\+/g, ' '));
+              const mapMatch = mapAddr.match(/^(.+?)\s+([\w\s.'-]+)\s+([A-Z]{2})\s+(\d{5})$/);
+              if (mapMatch) {
+                if (!result.address) result.address = mapMatch[1].trim();
+                if (!result.city) result.city = mapMatch[2].trim();
+                if (!result.zipCode) result.zipCode = mapMatch[4];
+              }
+            }
+          }
+        }
+      }
+
+
       let eventsIndex = -1, descIndex = -1, moreInfoIndex = -1, whoIndex = -1, costIndex = -1;
       for (let i = 0; i < lines.length; i++) {
         if (lines[i] === 'EVENTS') eventsIndex = i;
@@ -106,11 +158,11 @@ async function extractEventDetails(page, url) {
         while (idx < lines.length && lines[idx].length === 0) idx++;
         // Skip invalid venue values (time-related phrases, placeholders)
         const invalidVenuePatterns = /^(all[\s-]*day|see website|n\/a|various|tbd|tba|online|virtual|zoom|webinar|microsoft teams|google meet|skype|teams meeting|check website|contact for details|\d{1,2}:\d{2}\s*(am|pm)?)$/i;
-        if (idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100 && !invalidVenuePatterns.test(lines[idx])) { result.venue = lines[idx]; idx++; }
+        if (idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100 && !invalidVenuePatterns.test(lines[idx])) { if (!result.venue) result.venue = lines[idx]; idx++; }
         // If venue was invalid, try the next line
-        else if (idx < lines.length && invalidVenuePatterns.test(lines[idx])) { idx++; if (idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100 && !invalidVenuePatterns.test(lines[idx])) { result.venue = lines[idx]; idx++; }}
-        if (idx < lines.length && /^\d+\s+[\w\s]+/.test(lines[idx])) { result.address = lines[idx]; idx++; }
-        if (idx < lines.length) { const cityZipMatch = lines[idx].match(/^([\w\s]+)\s+WI\s+(\d{5})/); if (cityZipMatch) { result.city = cityZipMatch[1].trim(); result.zipCode = cityZipMatch[2]; }}
+        else if (idx < lines.length && invalidVenuePatterns.test(lines[idx])) { idx++; if (idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100 && !invalidVenuePatterns.test(lines[idx])) { if (!result.venue) result.venue = lines[idx]; idx++; }}
+        if (idx < lines.length && /^\d+\s+[\w\s]+/.test(lines[idx])) { if (!result.address) result.address = lines[idx]; idx++; }
+        if (idx < lines.length) { const cityZipMatch = lines[idx].match(/^([\w\s]+)\s+[A-Z]{2}\s+(\d{5})/); if (cityZipMatch && !result.city) { result.city = cityZipMatch[1].trim(); result.zipCode = cityZipMatch[2]; }}
       }
 
       if (descIndex > -1) { const descLines = []; for (let i = descIndex + 1; i < lines.length; i++) { if (lines[i] === 'More Info' || lines[i] === 'Who' || lines[i] === 'Cost' || lines[i].includes('Add to')) break; descLines.push(lines[i]); } result.description = descLines.join('\n\n'); }
@@ -140,7 +192,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
     const eventUrls = await extractEventUrls(page);
     console.log(`  Found ${eventUrls.length} URLs`);
 
-    let imported = 0, skippedPast = 0, skippedFuture = 0, failedGeocode = 0, noLocation = 0;
+    let imported = 0, updated = 0, skippedPast = 0, skippedFuture = 0, failedGeocode = 0, noLocation = 0;
 
     for (const url of eventUrls) {
       const details = await extractEventDetails(page, url);
@@ -353,11 +405,22 @@ async function scrapeSite(browser, site, maxEvents = 50) {
 
 
       const existing = await db.collection('events').where('url', '==', url).limit(1).get();
-      if (existing.empty) { events.push(eventDoc); imported++; }
+      if (existing.empty) {
+        events.push(eventDoc); imported++;
+      } else {
+        // Update existing event with fresh data (address, venue, coordinates, etc.)
+        const existingDoc = existing.docs[0];
+        try {
+          await db.collection('events').doc(existingDoc.id).set(eventDoc);
+          updated++;
+        } catch (updateErr) {
+          console.log(`  ⚠️ Update failed for ${url}: ${updateErr.message}`);
+        }
+      }
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
-    console.log(`  ✅ ${imported} new | ⏭️ ${skippedPast} past | ⚠️ ${noLocation} no coords`);
+    console.log(`  ✅ ${imported} new | 🔄 ${updated} updated | ⏭️ ${skippedPast} past | ⚠️ ${noLocation} no coords`);
     await page.close();
   } catch (error) {
     console.error(`  ❌ Error: ${error.message}`);
@@ -378,6 +441,7 @@ async function scrapeMacaroniKidWisconsin() {
 
   let browser = null;
   let imported = 0;
+  let updated = 0;
   let skipped = 0;
   let failed = 0;
   const startTime = Date.now();

@@ -240,19 +240,32 @@ async function scrapeLibraryEvents(library, browser) {
           let container = linkEl.closest('article') || linkEl.parentElement?.parentElement?.parentElement;
           const fullText = container ? container.textContent.replace(/\s+/g, ' ').trim() : '';
 
-          // Extract date - look for patterns like "12/15" or "January 15, 2025"
+          // Extract date - try lc-date-icon elements first (LibraryMarket date icon structure)
           let eventDate = '';
-          const datePatterns = [
-            /(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)/,           // "12/15" or "12/15/25"
-            /(\w{3,9}\s+\d{1,2},?\s+\d{4})/i,             // "December 15, 2025"
-            /(\w{3,9}\s+\d{1,2})/i                         // "December 15"
-          ];
+          const lcMonthEl = container?.querySelector('.lc-date-icon__item--month');
+          const lcDayEl = container?.querySelector('.lc-date-icon__item--day');
+          const lcYearEl = container?.querySelector('.lc-date-icon__item--year');
+          if (lcMonthEl && lcDayEl) {
+            const month = lcMonthEl.textContent.trim();
+            const day = lcDayEl.textContent.trim();
+            const year = lcYearEl ? lcYearEl.textContent.trim() : new Date().getFullYear();
+            eventDate = `${month} ${day}, ${year}`;
+          }
 
-          for (const pattern of datePatterns) {
-            const match = fullText.match(pattern);
-            if (match) {
-              eventDate = match[1];
-              break;
+          // Fallback: look for patterns like "12/15" or "January 15, 2025"
+          if (!eventDate) {
+            const datePatterns = [
+              /(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)/,           // "12/15" or "12/15/25"
+              /(\w{3,9}\s+\d{1,2},?\s+\d{4})/i,             // "December 15, 2025"
+              /(\w{3,9}\s+\d{1,2})/i                         // "December 15"
+            ];
+
+            for (const pattern of datePatterns) {
+              const match = fullText.match(pattern);
+              if (match) {
+                eventDate = match[1];
+                break;
+              }
             }
           }
 
@@ -287,9 +300,6 @@ async function scrapeLibraryEvents(library, browser) {
           else if (lowerText.match(/teen|13-17/)) ageRange = 'Teens (13-17)';
           else if (lowerText.match(/adult only|seniors only|21\+|18\+/)) ageRange = 'Adults';
 
-          // Skip adult-only events
-          if (ageRange === 'Adults') return;
-
           // Extract description from sibling p elements
           let description = '';
           const nextP = linkEl.closest('h3')?.nextElementSibling;
@@ -297,6 +307,7 @@ async function scrapeLibraryEvents(library, browser) {
             description = nextP.textContent.trim();
           }
 
+          // Only add events with both title and date
           if (title && eventDate) {
             const rawDate = time ? `${eventDate} ${time}` : eventDate;
 
@@ -371,7 +382,7 @@ async function scrapeLibraryEvents(library, browser) {
           subcategory,
           ageRange: event.ageRange,
           cost: 'Free',
-          description: event.description.substring(0, 1000),
+          description: (event.description || '').substring(0, 1000),
           moreInfo: '',
           location: {
             name: event.venue || library.name,

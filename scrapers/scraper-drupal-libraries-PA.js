@@ -134,12 +134,31 @@ async function scrapeDateEvents(library, date, page) {
 
       headings.forEach(heading => {
         try {
-          // Get event title and URL
-          const link = heading.querySelector('a');
-          if (!link) return;
+          // Get event title from h3 text directly (may or may not have nested link)
+          let title = '';
+          let eventUrl = '';
 
-          const title = link.textContent.trim();
-          const eventUrl = link.href;
+          const link = heading.querySelector('a');
+          if (link) {
+            // If there's a link inside h3, use it
+            title = link.textContent.trim();
+            eventUrl = link.href;
+          } else {
+            // Otherwise extract title from h3 text directly
+            title = heading.textContent.trim();
+            // Try to find a link in nearby elements
+            let searchElement = heading.nextElementSibling;
+            for (let i = 0; i < 5 && searchElement; i++) {
+              const nearbyLink = searchElement.querySelector('a');
+              if (nearbyLink) {
+                eventUrl = nearbyLink.href;
+                break;
+              }
+              searchElement = searchElement.nextElementSibling;
+            }
+          }
+
+          if (!title) return;
 
           // Get the content after this heading
           let currentElement = heading.nextElementSibling;
@@ -153,10 +172,12 @@ async function scrapeDateEvents(library, date, page) {
           while (currentElement && currentElement.tagName !== 'H3') {
             const text = currentElement.textContent;
 
-            // Extract time (e.g., "9:00am–11:00am")
+            // Extract time (e.g., "9:00am–11:00am") or mark as "All Day" if not present
             if (text.match(/\d{1,2}:\d{2}[ap]m/i)) {
               timeText = text.match(/\d{1,2}:\d{2}[ap]m\s*[–-]\s*\d{1,2}:\d{2}[ap]m/i)?.[0] ||
                         text.match(/\d{1,2}:\d{2}[ap]m/i)?.[0] || '';
+            } else if (text.toLowerCase().includes('all day') && !timeText) {
+              timeText = 'All Day';
             }
 
             // Extract fields
@@ -202,7 +223,7 @@ async function scrapeDateEvents(library, date, page) {
     return events;
 
   } catch (error) {
-    // Silently fail for dates with no events or network errors
+    console.error(`Error scraping date ${date} for ${library.name}:`, error.message);
     return [];
   }
 }
@@ -276,7 +297,7 @@ async function scrapeLibraryEvents(library, browser) {
             subcategory,
             ageRange: ageRange,
             cost: 'Free',
-            description: event.description.substring(0, 1000),
+            description: (event.description || '').substring(0, 1000),
             moreInfo: event.programType || '',
             location: {
               name: event.location || library.name,

@@ -119,16 +119,70 @@ async function scrapeWorcesterCountyLibrary() {
           const linkEl = card.querySelector('a[href]');
           const url = linkEl ? linkEl.href : '';
 
-          // Get date - LibCal shows month/day in .s-lc-evt-date
-          const monthEl = card.querySelector('.s-lc-evt-date-m');
-          const dayEl = card.querySelector('.s-lc-evt-date-d');
-          const dateEl = card.querySelector('.s-lc-ea-date, .event-date');
-
+          // Get date - PRIMARY: Try dl.dl-horizontal format (From/To dates)
           let eventDate = '';
-          if (monthEl && dayEl) {
-            eventDate = `${monthEl.textContent.trim()} ${dayEl.textContent.trim()}`;
-          } else if (dateEl) {
-            eventDate = dateEl.textContent.trim();
+          const dlElement = card.querySelector('dl.dl-horizontal');
+          if (dlElement) {
+            const dlText = dlElement.textContent || '';
+            // Extract "From: Wednesday, April 1, 2026" format
+            const fromMatch = dlText.match(/From:\s*(.*?)(?:To:|$)/i);
+            if (fromMatch) {
+              eventDate = fromMatch[1].trim();
+            }
+          }
+
+          // FALLBACK 1: Try .s-lc-evt-date-m and .s-lc-evt-date-d selectors
+          if (!eventDate) {
+            const monthEl = card.querySelector('.s-lc-evt-date-m');
+            const dayEl = card.querySelector('.s-lc-evt-date-d');
+            if (monthEl && dayEl) {
+              eventDate = `${monthEl.textContent.trim()} ${dayEl.textContent.trim()}`;
+            }
+          }
+
+          // FALLBACK 2: Try other date element selectors
+          if (!eventDate) {
+            const dateEl = card.querySelector('.s-lc-ea-date, .event-date');
+            if (dateEl) {
+              eventDate = dateEl.textContent.trim();
+            }
+          }
+
+          // FALLBACK 3: Extract date from card text or nearby date headers
+          if (!eventDate) {
+            const cardText = card.textContent || '';
+            // Try to find month + day pattern in card text
+            const dateMatch = cardText.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+\d{1,2}/i);
+            if (dateMatch) {
+              eventDate = dateMatch[0];
+            } else {
+              // Try to find date from a preceding date header (LibCal day view uses h2/h3 date headers)
+              let sibling = card.previousElementSibling;
+              let attempts = 0;
+              while (sibling && attempts < 10) {
+                const sibText = sibling.textContent || '';
+                const sibDateMatch = sibText.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+\d{1,2},?\s*\d{0,4}/i);
+                if (sibDateMatch) {
+                  eventDate = sibDateMatch[0];
+                  break;
+                }
+                sibling = sibling.previousElementSibling;
+                attempts++;
+              }
+            }
+          }
+
+          // FALLBACK 4: Try data attributes for date (some LibCal versions use data-date)
+          if (!eventDate || eventDate.length < 3) {
+            const dataDate = card.getAttribute('data-date') || card.closest('[data-date]')?.getAttribute('data-date');
+            if (dataDate) eventDate = dataDate;
+          }
+
+          // FALLBACK 5: Final fallback - use today's date if nothing found
+          if (!eventDate) {
+            const now = new Date();
+            const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            eventDate = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
           }
 
           // Get time from heading text or description
@@ -329,15 +383,6 @@ async function scrapeWorcesterCountyLibraryCloudFunction() {
     return result;
   }
 
-  
-  // Log scraper stats to Firestore
-  await logScraperResult('worcester-county-library-MD', {
-    found: 0,
-    new: 0,
-    duplicates: 0
-  }, { dataType: 'events' });
-
-  
   // Log scraper stats to Firestore
   await logScraperResult('worcester-county-library-MD', {
     found: 0,

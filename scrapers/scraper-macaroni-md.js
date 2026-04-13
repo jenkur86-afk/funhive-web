@@ -133,31 +133,58 @@ async function extractEventDetails(page, url) {
       const h1 = document.querySelector('h1');
       if (h1) result.name = h1.textContent.trim();
 
-      // --- Extract location from structured HTML (locationbox) ---
+      // === DOM-based address extraction (reliable — uses structured elements) ===
       const locationName = document.querySelector('.location-name');
-      if (locationName) result.venue = locationName.textContent.trim();
-
       const locationAddress = document.querySelector('.location-address');
+      if (locationName) {
+        result.venue = locationName.textContent.trim();
+      }
       if (locationAddress) {
-        const spans = locationAddress.querySelectorAll(':scope > span');
-        for (const span of spans) {
-          const text = span.textContent.trim().replace(/,\s*$/, ''); // strip trailing comma
-          if (!text || span.querySelector('a')) continue; // skip Google Map link
-          // Check for city/state/zip pattern (e.g., "Arnold  MD 21012" or "Arnold, MD 21012")
-          const cityZipMatch = text.match(/^([\w\s]+?),?\s+MD\s+(\d{5})/);
-          if (cityZipMatch) {
-            result.city = cityZipMatch[1].trim();
-            result.zipCode = cityZipMatch[2];
-          } else if (/^\d+\s+/.test(text)) {
-            // Street address starts with a number
-            result.address = result.address ? result.address + ', ' + text : text;
+        const spans = Array.from(locationAddress.querySelectorAll(':scope > span'));
+        const addressLines = spans
+          .map(s => s.textContent.trim())
+          .filter(t => t.length > 0 && !t.includes('Google Map'));
+
+        for (const line of addressLines) {
+          // Match city/state/zip: "Wyomissing PA 19610" or "Frederick MD 21701"
+          const cityStateZip = line.match(/^([\w\s.'-]+)\s+([A-Z]{2})\s+(\d{5})(?:-\d{4})?$/);
+          if (cityStateZip) {
+            result.city = cityStateZip[1].trim();
+            result.zipCode = cityStateZip[3];
+            continue;
           }
-          // Skip non-address lines like "2nd Floor", "Suite 100" (append to address)
-          else if (result.address && !result.city) {
-            result.address = result.address + ', ' + text;
+          // Match street address: starts with a number
+          if (/^\d+\s+/.test(line) && !result.address) {
+            result.address = line;
+            continue;
+          }
+          // Suite/unit line (starts with STE, Suite, Unit, Apt, #)
+          if (/^(STE|Suite|Unit|Apt|#)\s/i.test(line)) {
+            if (result.address) result.address += ', ' + line;
+            continue;
+          }
+        }
+
+        // Fallback: parse from Google Maps link URL if DOM spans didn't work
+        if (!result.address || !result.city) {
+          const mapLink = locationAddress.querySelector('a.gmaplink');
+          if (mapLink) {
+            const mapUrl = mapLink.href || '';
+            const qParam = mapUrl.match(/[?&]q=([^&]+)/);
+            if (qParam) {
+              const mapAddr = decodeURIComponent(qParam[1].replace(/\+/g, ' '));
+              const mapMatch = mapAddr.match(/^(.+?)\s+([\w\s.'-]+)\s+([A-Z]{2})\s+(\d{5})$/);
+              if (mapMatch) {
+                if (!result.address) result.address = mapMatch[1].trim();
+                if (!result.city) result.city = mapMatch[2].trim();
+                if (!result.zipCode) result.zipCode = mapMatch[4];
+              }
+            }
           }
         }
       }
+
+      // (Old location extraction removed — DOM-based extraction above handles this)
 
       // --- Extract date/time from structured HTML (meta) ---
       const weekday = document.querySelector('.meta .weekday');
@@ -188,9 +215,9 @@ async function extractEventDetails(page, url) {
         while (idx < lines.length && lines[idx].length === 0) idx++;
         // Skip invalid venue values (time-related phrases, placeholders, online platforms)
         const invalidVenuePatterns = /^(all[\s-]*day|see website|n\/a|various|tbd|tba|online|virtual|zoom|webinar|microsoft teams|google meet|skype|teams meeting|check website|contact for details|\d{1,2}:\d{2}\s*(am|pm)?)$/i;
-        if (!result.venue && idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100 && !invalidVenuePatterns.test(lines[idx])) { result.venue = lines[idx]; idx++; }
-        else if (!result.venue && idx < lines.length && invalidVenuePatterns.test(lines[idx])) { idx++; if (idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100 && !invalidVenuePatterns.test(lines[idx])) { result.venue = lines[idx]; idx++; }}
-        if (!result.address && idx < lines.length && /^\d+\s+[\w\s]+/.test(lines[idx])) { result.address = lines[idx]; idx++; }
+        if (!result.venue && idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100 && !invalidVenuePatterns.test(lines[idx])) { if (!result.venue) result.venue = lines[idx]; idx++; }
+        else if (!result.venue && idx < lines.length && invalidVenuePatterns.test(lines[idx])) { idx++; if (idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100 && !invalidVenuePatterns.test(lines[idx])) { if (!result.venue) result.venue = lines[idx]; idx++; }}
+        if (!result.address && idx < lines.length && /^\d+\s+[\w\s]+/.test(lines[idx])) { if (!result.address) result.address = lines[idx]; idx++; }
         if (!result.city && idx < lines.length) { const cityZipMatch = lines[idx].match(/^([\w\s]+?),?\s+MD\s+(\d{5})/); if (cityZipMatch) { result.city = cityZipMatch[1].trim(); result.zipCode = cityZipMatch[2]; idx++; }}
         if (!result.city && idx < lines.length) { const cityZipMatch2 = lines[idx].match(/^([\w\s]+?),?\s+MD\s+(\d{5})/); if (cityZipMatch2) { result.city = cityZipMatch2[1].trim(); result.zipCode = cityZipMatch2[2]; }}
       }
@@ -228,7 +255,7 @@ async function scrapeSite(browser, site, logger, maxEvents = 50) {
     console.log(`  Found ${eventUrls.length} URLs`);
     logger.trackFound(eventUrls.length);
 
-    let imported = 0, skippedPast = 0, skippedFuture = 0, noLocation = 0, skippedDuplicate = 0;
+    let imported = 0, updated = 0, skippedPast = 0, skippedFuture = 0, noLocation = 0, skippedDuplicate = 0;
 
     for (const url of eventUrls) {
       // No maxEvents limit - only limit by date (60 days)
@@ -287,17 +314,10 @@ async function scrapeSite(browser, site, logger, maxEvents = 50) {
 
       // --- EARLY DUPLICATE CHECKS (before any geocoding) ---
 
-      // Check 1: Does this exact event already exist in DB with coordinates?
+      // Check 1: Does this exact event already exist in DB?
       const eventId = generateEventId(url);
       const existingDoc = await db.collection('events').doc(eventId).get();
-      if (existingDoc.exists) {
-        const existing = existingDoc.data();
-        if (existing.geohash) {
-          skippedDuplicate++;
-          logger.trackDuplicate();
-          continue;
-        }
-      }
+      const isExistingEvent = existingDoc.exists;
 
       // Check 2: Cross-site duplicate (same event posted to multiple MK sites)
       const duplicateCheck = await isDuplicateEvent(
@@ -460,13 +480,23 @@ async function scrapeSite(browser, site, logger, maxEvents = 50) {
         eventDoc.activityId = activityId;
       }
 
-      events.push(eventDoc);
-      imported++;
-      logger.trackNew();
+      if (isExistingEvent) {
+        // Update existing event with fresh data (address, venue, coordinates, etc.)
+        try {
+          await db.collection('events').doc(eventId).set(eventDoc);
+          updated++;
+        } catch (updateErr) {
+          console.log(`  ⚠️ Update failed for ${url}: ${updateErr.message}`);
+        }
+      } else {
+        events.push(eventDoc);
+        imported++;
+        logger.trackNew();
+      }
       await new Promise(resolve => setTimeout(resolve, 200));
     }
 
-    console.log(`  ✅ ${imported} new | 🔄 ${skippedDuplicate} dup | ⏭️ ${skippedPast} past | ⏩ ${skippedFuture} future | ⚠️ ${noLocation} no coords`);
+    console.log(`  ✅ ${imported} new | 🔄 ${updated} updated | 🔁 ${skippedDuplicate} dup | ⏭️ ${skippedPast} past | ⏩ ${skippedFuture} future | ⚠️ ${noLocation} no coords`);
     await page.close();
   } catch (error) {
     console.error(`  ❌ Error: ${error.message}`);

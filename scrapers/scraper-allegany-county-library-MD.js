@@ -113,27 +113,31 @@ async function scrapeAlleganyCountyLibrary() {
 
           const lcMonthEl = card.querySelector('.lc-date-icon__item--month');
           const lcDayEl = card.querySelector('.lc-date-icon__item--day');
+          const lcYearEl = card.querySelector('.lc-date-icon__item--year');
           if (lcMonthEl && lcDayEl) {
-            const yr = fullText.match(/\d{4}/);
-            eventDate = lcMonthEl.textContent.trim() + ' ' + lcDayEl.textContent.trim() + ', ' + (yr ? yr[0] : new Date().getFullYear());
-            const timeEl = card.querySelector('.lc-event-info-item--time, [class*="time"]');
+            const month = lcMonthEl.textContent.trim();
+            const day = lcDayEl.textContent.trim();
+            const year = lcYearEl ? lcYearEl.textContent.trim() : new Date().getFullYear();
+            eventDate = `${month} ${day}, ${year}`;
+
+            // Extract time from .lc-event__time or similar
+            const timeEl = card.querySelector('.lc-event__time, .lc-event-info-item--time, [class*="time"]');
             if (timeEl) eventTime = timeEl.textContent.trim();
           }
 
           // Fallback: LibraryMarket format: "Thursday, December 4, 2025 at 10:00am - 6:00pm"
           if (!eventDate) {
-
-          // Match full date with time
-          const dateTimeMatch = fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+\w+\s+\d{1,2},?\s+\d{4}\s+(?:at\s+)?(\d{1,2}:\d{2}\s*(?:am|pm))/i);
-          if (dateTimeMatch) {
-            eventDate = dateTimeMatch[0];
-          } else {
-            // Try just date
-            const dateMatch = fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+\w+\s+\d{1,2},?\s+\d{4}/i) ||
-                             fullText.match(/\w+\s+\d{1,2},?\s+\d{4}/i);
-            if (dateMatch) eventDate = dateMatch[0];
+            // Match full date with time
+            const dateTimeMatch = fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+\w+\s+\d{1,2},?\s+\d{4}\s+(?:at\s+)?(\d{1,2}:\d{2}\s*(?:am|pm))/i);
+            if (dateTimeMatch) {
+              eventDate = dateTimeMatch[0];
+            } else {
+              // Try just date
+              const dateMatch = fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+\w+\s+\d{1,2},?\s+\d{4}/i) ||
+                               fullText.match(/\w+\s+\d{1,2},?\s+\d{4}/i);
+              if (dateMatch) eventDate = dateMatch[0];
+            }
           }
-          } // end fallback
 
           // Get branch/location - LibraryMarket shows "Library Branch:" or location field
           let branch = '';
@@ -172,9 +176,10 @@ async function scrapeAlleganyCountyLibrary() {
         }
       });
 
-      // Deduplicate by title + date
+      // Deduplicate by title + date (skip events without dates)
       const seen = new Set();
       return events.filter(e => {
+        if (!e.eventDate) return false; // Skip events without dates
         const key = `${e.title}|${e.eventDate}`.toLowerCase();
         if (seen.has(key)) return false;
         seen.add(key);
@@ -197,6 +202,11 @@ async function scrapeAlleganyCountyLibrary() {
 
         // Normalize the date format
         const normalizedDate = normalizeDateString(rawEvent.eventDate);
+        if (!normalizedDate) {
+          console.log(`  ⚠️ Skipping event with invalid/missing date: "${rawEvent.title}" (raw: "${rawEvent.eventDate}")`);
+          logger.trackInvalid();
+          continue;
+        }
 
         const eventDoc = {
           name: rawEvent.title,

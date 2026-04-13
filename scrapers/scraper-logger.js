@@ -32,7 +32,8 @@
  *   - Includes siteStats object with per-site breakdown for multi-site scrapers
  */
 
-const admin = require('firebase-admin');
+// Use Supabase adapter instead of firebase-admin for proper UUID generation
+const { admin, db: adapterDb } = require('./helpers/supabase-adapter');
 
 class ScraperLogger {
   /**
@@ -280,7 +281,6 @@ class ScraperLogger {
     // Build log entry
     const logEntry = {
       scraperName: this.scraperName,
-      dataType: this.dataType,
       success: success,
       status: status,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
@@ -365,10 +365,9 @@ class ScraperLogger {
     console.log(`   ⏱️  ${executionTime.toFixed(1)}s`);
     console.log('─'.repeat(50));
 
-    // Write to Firestore
+    // Write to Supabase via adapter
     try {
-      const db = admin.firestore();
-      await db.collection('scraperLogs').add(logEntry);
+      await adapterDb.collection('scraperLogs').add(logEntry);
     } catch (error) {
       console.error('Failed to write scraper log:', error.message);
     }
@@ -394,15 +393,11 @@ class ScraperLogger {
  *   });
  */
 async function logScraperResult(scraperName, stats, options = {}) {
-  const db = admin.firestore();
-
   const logEntry = {
     scraperName,
     success: true,
     status: 'success',
     timestamp: admin.firestore.FieldValue.serverTimestamp(),
-    dataType: options.dataType || 'events',
-
     // Stats
     found: stats.found || 0,
     imported: stats.new || stats.imported || 0,
@@ -427,7 +422,7 @@ async function logScraperResult(scraperName, stats, options = {}) {
     logEntry.executionTime = stats.executionTime;
   }
 
-  await db.collection('scraperLogs').add(logEntry);
+  await adapterDb.collection('scraperLogs').add(logEntry);
 
   console.log(`📊 ${scraperName}: ✅ ${logEntry.new} new | ⏭️ ${logEntry.skippedPast} past | ⚠️ ${logEntry.noCoords} no coords`);
 

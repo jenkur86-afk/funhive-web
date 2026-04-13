@@ -230,7 +230,7 @@ async function scrapeInterceptEvents(browser) {
           subcategory,
           ageRange: ageRange,
           cost: 'Free',
-          description: event.description.substring(0, 1000),
+          description: (event.description || '').substring(0, 1000),
           state: LIBRARY.state,
           location: {
             name: event.venue || LIBRARY.name,

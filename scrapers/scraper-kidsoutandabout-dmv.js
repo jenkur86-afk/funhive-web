@@ -26,6 +26,7 @@ const { normalizeDateString } = require('./date-normalization-helper');
 const { generateEventId } = require('./event-id-helper');
 const { logScraperResult } = require('./scraper-logger');
 const { linkEventToVenue } = require('./venue-matcher');
+const { launchBrowser, createStealthPage } = require('./puppeteer-config');
 
 const SCRAPER_NAME = 'KidsOutAndAbout-DMV';
 const BASE_URL = 'https://dmv.kidsoutandabout.com';
@@ -100,22 +101,36 @@ function parseAgeRange(ageStr) {
   return ageStr.substring(0, 50);
 }
 
+// Shared browser instance for stealth browsing (avoids 403 blocks)
+let _sharedBrowser = null;
+async function getSharedBrowser() {
+  if (!_sharedBrowser) {
+    _sharedBrowser = await launchBrowser({ stealth: true });
+  }
+  return _sharedBrowser;
+}
+async function closeSharedBrowser() {
+  if (_sharedBrowser) {
+    await _sharedBrowser.close();
+    _sharedBrowser = null;
+  }
+}
+
 /**
- * Fetch event list page for a specific date
+ * Fetch event list page for a specific date (using Puppeteer to bypass 403)
  */
 async function fetchEventListPage(date) {
   const dateStr = formatDateForUrl(date);
   const url = `${BASE_URL}/event-list/${dateStr}`;
 
   try {
-    const response = await axios.get(url, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-        'Accept': 'text/html,application/xhtml+xml',
-      },
-      timeout: 30000,
-    });
-    return response.data;
+    const browser = await getSharedBrowser();
+    const page = await createStealthPage(browser);
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    const html = await page.content();
+    await page.close();
+    return html;
   } catch (error) {
     console.log(`  ⚠️ Failed to fetch ${dateStr}: ${error.message}`);
     return null;
@@ -142,19 +157,18 @@ function extractEventUrls(html) {
 }
 
 /**
- * Fetch and parse individual event page
+ * Fetch and parse individual event page (using Puppeteer to bypass 403)
  */
 async function fetchEventDetails(url) {
   try {
-    const response = await axios.get(url, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-        'Accept': 'text/html,application/xhtml+xml',
-      },
-      timeout: 30000,
-    });
+    const browser = await getSharedBrowser();
+    const page = await createStealthPage(browser);
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    const html = await page.content();
+    await page.close();
 
-    const $ = cheerio.load(response.data);
+    const $ = cheerio.load(html);
 
     // Try to extract JSON-LD data first
     let jsonLdData = null;
@@ -493,6 +507,9 @@ async function scrapeKidsOutAndAboutDMV(options = {}) {
   } catch (error) {
     console.error('Failed to log scraper run:', error.message);
   }
+
+  // Close the shared browser
+  await closeSharedBrowser();
 
   return { imported: saved, failed, total: allEvents.length };
 }

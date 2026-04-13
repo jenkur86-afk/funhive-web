@@ -36,10 +36,10 @@ function normalizeDateString(dateString) {
   let cleaned = dateString;
 
   // Remove time range patterns first (e.g., "6:00pm - 7:00pm", "10:30am–12:00pm")
-  cleaned = cleaned.replace(/\s+\d{1,2}:\d{2}\s*[ap]m\s*[-–—]\s*\d{1,2}:\d{2}\s*[ap]m/gi, '');
+  cleaned = cleaned.replace(/\s*\d{1,2}:\d{2}\s*[ap]m\s*[-–—]\s*\d{1,2}:\d{2}\s*[ap]m/gi, '');
 
   // Remove single time patterns (e.g., "9:00am", "6:00pm")
-  cleaned = cleaned.replace(/\s+\d{1,2}:\d{2}\s*[ap]m/gi, '');
+  cleaned = cleaned.replace(/\s*\d{1,2}:\d{2}\s*[ap]m/gi, '');
 
   // Remove standalone weekday names/abbreviations (full names first to avoid partial matches)
   cleaned = cleaned.replace(/\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|Mon|Tue|Wed|Thu|Fri|Sat|Sun)\b,?\s*/gi, '');
@@ -50,8 +50,38 @@ function normalizeDateString(dateString) {
   // Remove commas for easier parsing (we'll add back in the right place)
   cleaned = cleaned.replace(/,/g, ' ');
 
+  // Remove "All Day" or "all day" text
+  cleaned = cleaned.replace(/\ball\s*day\b/gi, '');
+
+  // Remove trailing numeric date ranges like "4/1–4/22" when a text date is already present
+  cleaned = cleaned.replace(/\s+\d{1,2}\/\d{1,2}[-–—]\d{1,2}\/\d{1,2}(?:\/\d{2,4})?\s*$/, '');
+
   // Normalize whitespace
   cleaned = cleaned.replace(/\s+/g, ' ').trim();
+
+  // === Pattern 0: Date range formats — extract start date ===
+  // Handles: "Apr 1 - 22, 2026", "Apr 20 - 25, 2026", "April 1 - May 3, 2026", "Apr 1 - 22 2026"
+  // Also handles: "4/1–4/22" style ranges
+  const dateRangeMatch = cleaned.match(/^([A-Za-z]{3,9})\s+(\d{1,2})\s*[-–—]\s*(?:[A-Za-z]{3,9}\s+)?\d{1,2}\s*,?\s*(\d{4})?/i);
+  if (dateRangeMatch) {
+    const [, month, day, year] = dateRangeMatch;
+    const fullMonthName = monthNames[month];
+    if (fullMonthName) {
+      const resolvedYear = year || inferYear(fullMonthName, parseInt(day));
+      return `${fullMonthName} ${parseInt(day)}, ${resolvedYear}`;
+    }
+  }
+
+  // Handles numeric date ranges: "4/1–4/22", "4/1-4/22/2026"
+  const numericRangeMatch = cleaned.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?\s*[-–—]\s*\d{1,2}\/\d{1,2}/);
+  if (numericRangeMatch) {
+    const [, month, day, year] = numericRangeMatch;
+    const monthIndex = parseInt(month) - 1;
+    if (monthIndex >= 0 && monthIndex < 12) {
+      const resolvedYear = year || inferYear(monthNamesArray[monthIndex], parseInt(day));
+      return `${monthNamesArray[monthIndex]} ${parseInt(day)}, ${resolvedYear}`;
+    }
+  }
 
   // === Pattern 1: ISO date format "YYYY-MM-DD" (with optional time) ===
   const isoMatch = cleaned.match(/(\d{4})-(\d{2})-(\d{2})/);

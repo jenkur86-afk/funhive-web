@@ -221,6 +221,7 @@ async function scrapeGranicusMorrisCounty() {
               name: event.venue || LIBRARY.name,
               address: '',
               city: LIBRARY.city,
+              state: LIBRARY.state,
               zipCode: LIBRARY.zipCode,
               coordinates: coordinates
             },

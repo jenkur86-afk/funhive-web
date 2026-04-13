@@ -605,6 +605,29 @@ async function scrapeLibraryEvents(library, browser) {
           const dateEl = el.querySelector('.cp-event-date, .event-date, [class*="date"], time');
           if (dateEl) {
             eventDate = dateEl.textContent.trim();
+
+            // Clean up BiblioCommons date format
+            // Handle "All day, Sunday, March 29 to Sunday, May 03from March 29, 2026 to May 3, 2026"
+            // Priority: extract the "from X to Y" portion if it exists (cleaner format)
+            if (eventDate.includes('from')) {
+              const fromMatch = eventDate.match(/from\s+(.+?)(?:\s+to\s+(.+?))?$/i);
+              if (fromMatch) {
+                // Extract the "from X to Y" portion
+                eventDate = fromMatch[0].substring(5).trim(); // Remove "from " prefix
+              }
+            }
+
+            // Strip "All day, " prefix and weekday prefixes
+            eventDate = eventDate.replace(/^all\s+day,?\s*/i, '');
+
+            // If eventDate contains "to" (range), keep it as-is for the normalization function
+            // Otherwise, remove weekday names that precede the date
+            if (!eventDate.includes(' to ')) {
+              // Remove weekday names (e.g., "Sunday, March 29" -> "March 29")
+              eventDate = eventDate.replace(/^(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s*/i, '');
+            }
+
+            eventDate = eventDate.trim();
           }
 
           // Fallback to regex patterns
@@ -731,7 +754,9 @@ async function scrapeLibraryEvents(library, browser) {
         // Normalize date format and get Date object for Timestamp
         const normalizedDate = normalizeDateString(event.eventDate);
         if (!normalizedDate) {
-          console.log(`  ⚠️ Skipping event with invalid date: "${event.eventDate}"`);
+          console.log(`  ⚠️ Skipping event: "${event.name}"`);
+          console.log(`     Raw date from page: "${event.eventDate}"`);
+          console.log(`     Could not normalize to "Month Day, Year" format`);
           skipped++;
           continue;
         }
@@ -751,7 +776,7 @@ async function scrapeLibraryEvents(library, browser) {
           subcategory,
           ageRange: ageRange,
           cost: 'Free',
-          description: event.description.substring(0, 1000),
+          description: (event.description || '').substring(0, 1000),
           moreInfo: '',
           location: {
             name: event.venue || library.name,

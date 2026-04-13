@@ -301,7 +301,7 @@ async function scrapeSomersetEvents() {
           subcategory,
           ageRange: ageRange,
           cost: 'Free',
-          description: event.description.substring(0, 1000),
+          description: (event.description || '').substring(0, 1000),
           moreInfo: '',
           geohash: ngeohash.encode(defaultCoords.latitude, defaultCoords.longitude, 7), // Add geohash
           location: {

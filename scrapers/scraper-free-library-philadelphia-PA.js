@@ -312,12 +312,13 @@ async function scrapeFreeLibraryPhiladelphia() {
           subcategory,
           ageRange: ageRange,
           cost: 'Free',
-          description: event.description.substring(0, 1000),
+          description: (event.description || '').substring(0, 1000),
           moreInfo: event.ageInfo || '',
           location: {
             name: event.location || LIBRARY.name,
             address: '',
             city: LIBRARY.city,
+            state: LIBRARY.state,
             zipCode: LIBRARY.zipCode,
             coordinates: coordinates
           },
@@ -425,12 +426,13 @@ async function scrapeFreeLibraryPhiladelphia() {
             subcategory,
             ageRange: ageRange,
             cost: 'Free',
-            description: event.description.substring(0, 1000),
+            description: (event.description || '').substring(0, 1000),
             moreInfo: event.ageInfo || '',
             location: {
               name: event.location || LIBRARY.name,
               address: '',
               city: LIBRARY.city,
+              state: LIBRARY.state,
               zipCode: LIBRARY.zipCode,
               coordinates: coordinates
             },

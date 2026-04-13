@@ -560,7 +560,7 @@ async function scrapeLibraryEvents(library, browser) {
           subcategory,
           ageRange: ageRange,
           cost: 'Free',
-          description: event.description.substring(0, 1000),
+          description: (event.description || '').substring(0, 1000),
           moreInfo: event.programType || '',
           state: library.state,
           location: {

@@ -158,12 +158,12 @@ async function runScraper(name, config) {
 
     const duration = ((Date.now() - startTime) / 1000).toFixed(1);
 
-    // Normalize result
+    // Normalize result (handle various return shapes from different scrapers)
     const stats = {
-      found: result?.found || result?.total || 0,
-      new: result?.new || result?.imported || 0,
-      duplicates: result?.duplicates || result?.skipped || 0,
-      errors: result?.errors || 0
+      found: result?.found || result?.total || result?.saved + result?.updated + result?.failed || 0,
+      new: result?.new || result?.imported || result?.saved || 0,
+      duplicates: result?.duplicates || result?.skipped || result?.updated || 0,
+      errors: result?.errors || result?.failed || 0
     };
 
     log(`✅ ${name} completed in ${duration}s - Found: ${stats.found}, New: ${stats.new}, Duplicates: ${stats.duplicates}`);

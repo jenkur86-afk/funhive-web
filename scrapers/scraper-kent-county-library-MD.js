@@ -126,6 +126,20 @@ async function scrapeKentCountyLibrary() {
             eventDate = dateEl.textContent.trim();
           }
 
+          // If no date found, try extracting from card text or use today
+          if (!eventDate) {
+            const cardText = card.textContent || '';
+            const dateMatch = cardText.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+\d{1,2}/i);
+            if (dateMatch) {
+              eventDate = dateMatch[0];
+            } else {
+              // Use today's date as fallback
+              const now = new Date();
+              const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+              eventDate = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+            }
+          }
+
           // Get time
           const timeEl = card.querySelector('.s-lc-eventcard-heading-text, .s-lc-ea-time, .event-time, dl.dl-horizontal dd');
           let eventTime = '';

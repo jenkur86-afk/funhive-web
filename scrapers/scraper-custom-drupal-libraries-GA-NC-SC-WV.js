@@ -344,6 +344,15 @@ async function scrapeLibraryEvents(library, browser) {
             description = descEl.textContent.trim();
           }
 
+          // If eventDate is still time-only (no actual date found), use today's date
+          const stillTimeOnly = eventDate && /^\d{1,2}:\d{2}\s*(?:am|pm)/i.test(eventDate) &&
+                               !/(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|\d{4}|\d{1,2}\/\d{1,2})/i.test(eventDate);
+          if (stillTimeOnly) {
+            const today = new Date();
+            const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            eventDate = `${monthNames[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()} ${eventDate}`;
+          }
+
           if (title && eventDate) {
             const rawDate = time ? `${eventDate} ${time}` : eventDate;
 

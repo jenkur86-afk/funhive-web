@@ -107,6 +107,7 @@ export default function VenuesPage() {
   const [loading, setLoading] = useState(true)
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
   const [freeOnly, setFreeOnly] = useState(false)
   const [openNowOnly, setOpenNowOnly] = useState(false)
   const [selectedAgeRanges, setSelectedAgeRanges] = useState<string[]>([])
@@ -116,9 +117,15 @@ export default function VenuesPage() {
   const [locationError, setLocationError] = useState('')
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE)
 
+  // Debounce search query so DB queries don't fire on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 300)
+    return () => clearTimeout(timer)
+  }, [searchQuery])
+
   useEffect(() => {
     preloadZipData().then(() => loadVenues())
-  }, [selectedCategories, locationCoords, selectedRadius])
+  }, [selectedCategories, locationCoords, selectedRadius, debouncedSearch])
 
   // Parse location input whenever it changes
   useEffect(() => {
@@ -179,11 +186,20 @@ export default function VenuesPage() {
         }
 
         // Also fetch venues without geometry that have city/state/zip
-        const supplementary = await supabase
+        let suppQuery = supabase
           .from('activities')
           .select('*')
           .is('location', null)
           .limit(300)
+
+        if (debouncedSearch) {
+          const term = `%${debouncedSearch}%`
+          suppQuery = suppQuery.or(
+            `name.ilike.${term},city.ilike.${term},description.ilike.${term},category.ilike.${term},address.ilike.${term}`
+          )
+        }
+
+        const supplementary = await suppQuery
 
         if (!supplementary.error && supplementary.data) {
           const existingIds = new Set(allData.map((v: any) => v.id))
@@ -198,6 +214,15 @@ export default function VenuesPage() {
           .in('state', ACTIVE_STATES || [])
           .order('name', { ascending: true })
           .limit(500)
+
+        // When searching, add database-level text filter so relevant results
+        // aren't crowded out by the 500-row limit
+        if (debouncedSearch) {
+          const term = `%${debouncedSearch}%`
+          query = query.or(
+            `name.ilike.${term},city.ilike.${term},description.ilike.${term},category.ilike.${term},address.ilike.${term}`
+          )
+        }
 
         const result = await query
         if (!result.error && result.data) allData = result.data

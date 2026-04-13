@@ -19,7 +19,7 @@
 
 const axios = require('axios');
 const cheerio = require('cheerio');
-const xml2js = require('xml2js');
+// xml2js replaced with cheerio XML parsing (cheerio already loaded)
 const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { categorizeEvent } = require('./event-categorization-helper');
@@ -116,13 +116,21 @@ async function fetchRssFeed() {
       timeout: 30000,
     });
 
-    const parser = new xml2js.Parser({ explicitArray: false });
-    const result = await parser.parseStringPromise(response.data);
+    // Parse XML with cheerio instead of xml2js
+    const $ = cheerio.load(response.data, { xmlMode: true });
+    const items = [];
+    $('item').each((i, el) => {
+      items.push({
+        title: $(el).find('title').text(),
+        link: $(el).find('link').text(),
+        description: $(el).find('description').text(),
+        'content:encoded': $(el).find('content\\:encoded').text(),
+        pubDate: $(el).find('pubDate').text(),
+      });
+    });
+    console.log(`  Found ${items.length} events in RSS feed`);
 
-    const items = result.rss?.channel?.item || [];
-    console.log(`  Found ${Array.isArray(items) ? items.length : 1} events in RSS feed`);
-
-    return Array.isArray(items) ? items : [items];
+    return items;
 
   } catch (error) {
     console.log(`  ⚠️ Error fetching RSS feed: ${error.message}`);

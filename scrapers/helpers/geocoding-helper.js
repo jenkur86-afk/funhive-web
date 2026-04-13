@@ -9,20 +9,63 @@
  */
 
 const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
 const { getLibraryAddress } = require('./library-addresses');
 const { getCountyCentroid } = require('../utils/county-centroids');
 
-// Simple in-memory cache for geocoding results
+// Persistent file-based geocoding cache
+// Stores results across runs to avoid re-geocoding the same addresses
+const CACHE_FILE = path.join(__dirname, '..', '.geocode-cache.json');
+let persistentCache = {};
+
+// Load persistent cache from disk on startup
+try {
+  if (fs.existsSync(CACHE_FILE)) {
+    persistentCache = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8'));
+    console.log(`📍 Loaded ${Object.keys(persistentCache).length} cached geocode results`);
+  }
+} catch (e) {
+  console.warn('⚠️ Failed to load geocode cache, starting fresh:', e.message);
+  persistentCache = {};
+}
+
+// Save persistent cache to disk (debounced)
+let savePending = false;
+function savePersistentCache() {
+  if (savePending) return;
+  savePending = true;
+  setTimeout(() => {
+    try {
+      fs.writeFileSync(CACHE_FILE, JSON.stringify(persistentCache, null, 0));
+    } catch (e) {
+      console.warn('⚠️ Failed to save geocode cache:', e.message);
+    }
+    savePending = false;
+  }, 5000); // Batch saves every 5 seconds
+}
+
+// Force-save cache (call at end of scraper run)
+function flushGeocodeCache() {
+  try {
+    fs.writeFileSync(CACHE_FILE, JSON.stringify(persistentCache, null, 0));
+    console.log(`📍 Saved ${Object.keys(persistentCache).length} geocode results to cache`);
+  } catch (e) {
+    console.warn('⚠️ Failed to flush geocode cache:', e.message);
+  }
+}
+
+// Simple in-memory cache for geocoding results (per-run, fast lookups)
 const geocodeCache = new Map();
 const failedAddresses = new Set();
 
-// Rate limiter for Nominatim (max 1 request per second)
+// Rate limiter for Nominatim (max 1 request per second, with extra buffer)
 let lastNominatimCall = 0;
 async function rateLimitedDelay() {
   const now = Date.now();
   const elapsed = now - lastNominatimCall;
-  if (elapsed < 1100) { // 1.1s to be safe
-    await new Promise(resolve => setTimeout(resolve, 1100 - elapsed));
+  if (elapsed < 1500) { // 1.5s to be safe (Nominatim aggressively rate limits)
+    await new Promise(resolve => setTimeout(resolve, 1500 - elapsed));
   }
   lastNominatimCall = Date.now();
 }
@@ -107,9 +150,16 @@ async function geocodeWithFallback(address, options = {}) {
     useCache = true
   } = options;
 
-  // Check cache first
+  // Check in-memory cache first
   if (useCache && geocodeCache.has(address)) {
     return geocodeCache.get(address);
+  }
+
+  // Check persistent file cache (survives across runs)
+  if (useCache && persistentCache[address]) {
+    const cached = persistentCache[address];
+    geocodeCache.set(address, cached); // Promote to in-memory
+    return cached;
   }
 
   // Strategy 0: Try library-addresses.js lookup first
@@ -130,6 +180,8 @@ async function geocodeWithFallback(address, options = {}) {
         if (useCache) {
           geocodeCache.set(libraryKey, coords);
           geocodeCache.set(address, coords);
+          persistentCache[address] = coords;
+          savePersistentCache();
         }
         return coords;
       }
@@ -147,9 +199,11 @@ async function geocodeWithFallback(address, options = {}) {
     const coords = await geocodeAddress(address);
 
     if (coords) {
-      // Cache successful result
+      // Cache successful result (in-memory + persistent)
       if (useCache) {
         geocodeCache.set(address, coords);
+        persistentCache[address] = coords;
+        savePersistentCache();
       }
       return coords;
     }
@@ -274,10 +328,14 @@ async function geocodeAddress(address, retries = 3) {
       });
 
       if (response.data && response.data.length > 0) {
-        return {
+        const result = {
           latitude: parseFloat(response.data[0].lat),
           longitude: parseFloat(response.data[0].lon)
         };
+        // Save to persistent cache for future runs
+        persistentCache[address] = result;
+        savePersistentCache();
+        return result;
       }
 
       return null;
@@ -335,5 +393,6 @@ module.exports = {
   geocodeWithFallback,
   geocodeAddress,
   clearGeocodeCache,
-  getCacheStats
+  getCacheStats,
+  flushGeocodeCache
 };
