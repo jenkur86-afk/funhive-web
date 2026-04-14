@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
@@ -112,7 +113,19 @@ function InlinePillFilter({
 
 const ITEMS_PER_PAGE = 24
 
-export default function EventsPage() {
+function EventsPageFallback() {
+  return <div className="max-w-6xl mx-auto px-4 py-12 text-center text-gray-500">Loading events...</div>
+}
+
+export default function EventsPageWrapper() {
+  return (
+    <Suspense fallback={<EventsPageFallback />}>
+      <EventsPageInner />
+    </Suspense>
+  )
+}
+
+function EventsPageInner() {
   const [events, setEvents] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
@@ -130,6 +143,24 @@ export default function EventsPage() {
   const [showCustomDate, setShowCustomDate] = useState(false)
   const [locationError, setLocationError] = useState('')
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE)
+
+  const searchParams = useSearchParams()
+
+  // Initialize filters from URL query parameters on first load
+  useEffect(() => {
+    const categoryParam = searchParams.get('category')
+    const queryParam = searchParams.get('q')
+    const dateParam = searchParams.get('date')
+    if (categoryParam) {
+      setSelectedCategories(categoryParam.split(',').map(c => c.trim()).filter(Boolean))
+    }
+    if (queryParam) {
+      setSearchQuery(queryParam)
+    }
+    if (dateParam && DATE_FILTERS.includes(dateParam)) {
+      setSelectedDateFilter(dateParam)
+    }
+  }, [])
 
   // Debounce search query so DB queries don't fire on every keystroke
   useEffect(() => {
