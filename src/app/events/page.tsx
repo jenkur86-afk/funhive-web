@@ -41,9 +41,11 @@ const CATEGORIES = [
 ]
 
 const AGE_RANGES = [
-  { label: 'Toddlers (0-3)', value: 'toddlers' },
-  { label: 'Kids (4-12)', value: 'kids' },
-  { label: 'Teens (13-18)', value: 'teens' },
+  { label: 'Babies & Toddlers (0-2)', value: 'babies', min: 0, max: 2 },
+  { label: 'Preschool (3-5)', value: 'preschool', min: 3, max: 5 },
+  { label: 'Kids (6-8)', value: 'kids', min: 6, max: 8 },
+  { label: 'Tweens (9-12)', value: 'tweens', min: 9, max: 12 },
+  { label: 'Teens (13-18)', value: 'teens', min: 13, max: 18 },
 ]
 
 const DATE_FILTERS = ['All', 'Today', 'This Week', 'This Weekend', 'Next Week', 'Custom']
@@ -302,26 +304,43 @@ function isEventOnOrAfterToday(event: any): boolean {
     return name.includes('free') || description.includes('free') || event.is_free === true
   }
 
-  // Helper function to check age range match (multi-select)
+  // Extract numeric age range from event text, returning {min, max} or null
+  const extractAgeRange = (event: any): { min: number; max: number } | null => {
+    const ageStr = event.age_range?.toLowerCase() || ''
+    const content = `${event.name || ''} ${event.description || ''} ${ageStr}`.toLowerCase()
+
+    // Try numeric range: "3-5", "ages 0-12", "(6-8 yrs)"
+    const numMatch = ageStr.match(/(\d{1,2})\s*[-–to]+\s*(\d{1,2})/) ||
+                     content.match(/ages?\s+(\d{1,2})\s*[-–to]+\s*(\d{1,2})/) ||
+                     content.match(/\((\d{1,2})\s*[-–]\s*(\d{1,2})/)
+    if (numMatch) {
+      const a = parseInt(numMatch[1]), b = parseInt(numMatch[2])
+      if (a <= 18 && b <= 18) return { min: Math.min(a, b), max: Math.max(a, b) }
+    }
+
+    // Keyword-based inference
+    if (/\b(baby|babies|infant|lap\s*sit)\b/.test(content)) return { min: 0, max: 2 }
+    if (/\btoddler/.test(content)) return { min: 0, max: 3 }
+    if (/\b(preschool|pre-k|prek)\b/.test(content)) return { min: 3, max: 5 }
+    if (/\belementary/.test(content)) return { min: 5, max: 11 }
+    if (/\btween/.test(content)) return { min: 9, max: 12 }
+    if (/\bteen\b/.test(content) && !/\bfamil/.test(content)) return { min: 13, max: 18 }
+    if (/\b(kids?|children)\b/.test(content) && !/\bfamil/.test(content)) return { min: 4, max: 12 }
+    if (/\ball\s*ages\b/.test(content) || /\bfamil/.test(content)) return { min: 0, max: 18 }
+    return null
+  }
+
+  // Check if event's age range overlaps with any selected filter bracket
   const matchesAgeRange = (event: any): boolean => {
     if (selectedAgeRanges.length === 0) return true
-
-    const name = event.name?.toLowerCase() || ''
-    const description = event.description?.toLowerCase() || ''
-    const ageRange = event.age_range?.toLowerCase() || ''
-    const content = `${name} ${description} ${ageRange}`
-
-    return selectedAgeRanges.some((range) => {
-      switch (range) {
-        case 'toddlers':
-          return content.includes('toddler') || content.includes('0-3') || content.includes('baby') || content.includes('infant') || content.includes('preschool')
-        case 'kids':
-          return content.includes('kid') || content.includes('4-12') || content.includes('child') || content.includes('elementary') || content.includes('children')
-        case 'teens':
-          return content.includes('teen') || content.includes('13-18') || content.includes('adolescent') || content.includes('young adult')
-        default:
-          return true
-      }
+    const eventRange = extractAgeRange(event)
+    // If no age info, include it (don't hide events with unknown age range)
+    if (!eventRange) return true
+    // Check overlap: event range intersects with at least one selected bracket
+    return selectedAgeRanges.some((rangeValue) => {
+      const bracket = AGE_RANGES.find(r => r.value === rangeValue)
+      if (!bracket) return false
+      return eventRange.min <= bracket.max && eventRange.max >= bracket.min
     })
   }
 

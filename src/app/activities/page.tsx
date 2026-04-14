@@ -38,9 +38,11 @@ const CATEGORIES = [
 ]
 
 const AGE_RANGES = [
-  { label: 'Toddlers (0-3)', value: 'toddlers' },
-  { label: 'Kids (4-12)', value: 'kids' },
-  { label: 'Teens (13-18)', value: 'teens' },
+  { label: 'Babies & Toddlers (0-2)', value: 'babies', min: 0, max: 2 },
+  { label: 'Preschool (3-5)', value: 'preschool', min: 3, max: 5 },
+  { label: 'Kids (6-8)', value: 'kids', min: 6, max: 8 },
+  { label: 'Tweens (9-12)', value: 'tweens', min: 9, max: 12 },
+  { label: 'Teens (13-18)', value: 'teens', min: 13, max: 18 },
 ]
 
 const RADIUS_OPTIONS = [
@@ -249,38 +251,41 @@ export default function VenuesPage() {
     return venue.is_free === true
   }
 
-  // Helper function to check age range match (multi-select)
+  // Extract numeric age range from venue, returning {min, max} or null
+  const extractVenueAgeRange = (venue: any): { min: number; max: number } | null => {
+    // Use numeric min/max if available
+    if (venue.min_age !== null && venue.min_age !== undefined && venue.max_age !== null && venue.max_age !== undefined) {
+      return { min: venue.min_age, max: venue.max_age }
+    }
+    const ageStr = venue.age_range?.toLowerCase() || ''
+    const content = `${venue.name || ''} ${venue.description || ''} ${ageStr}`.toLowerCase()
+
+    const numMatch = ageStr.match(/(\d{1,2})\s*[-–to]+\s*(\d{1,2})/) ||
+                     content.match(/ages?\s+(\d{1,2})\s*[-–to]+\s*(\d{1,2})/)
+    if (numMatch) {
+      const a = parseInt(numMatch[1]), b = parseInt(numMatch[2])
+      if (a <= 18 && b <= 18) return { min: Math.min(a, b), max: Math.max(a, b) }
+    }
+
+    if (/\b(baby|babies|infant)\b/.test(content)) return { min: 0, max: 2 }
+    if (/\btoddler/.test(content)) return { min: 0, max: 3 }
+    if (/\b(preschool|pre-k)\b/.test(content)) return { min: 3, max: 5 }
+    if (/\belementary/.test(content)) return { min: 5, max: 11 }
+    if (/\btween/.test(content)) return { min: 9, max: 12 }
+    if (/\bteen\b/.test(content)) return { min: 13, max: 18 }
+    if (/\ball\s*ages\b/.test(content) || /\bfamil/.test(content)) return { min: 0, max: 18 }
+    return null
+  }
+
+  // Check if venue's age range overlaps with any selected filter bracket
   const matchesAgeRange = (venue: any): boolean => {
     if (selectedAgeRanges.length === 0) return true
-
-    const ageRange = venue.age_range?.toLowerCase() || ''
-
-    return selectedAgeRanges.some((range) => {
-      switch (range) {
-        case 'toddlers':
-          return (
-            ageRange.includes('toddler') ||
-            ageRange.includes('0-3') ||
-            ageRange.includes('baby') ||
-            ageRange.includes('infant')
-          )
-        case 'kids':
-          return (
-            ageRange.includes('kid') ||
-            ageRange.includes('4-12') ||
-            ageRange.includes('child') ||
-            (venue.min_age !== null && venue.max_age !== null && venue.min_age <= 12)
-          )
-        case 'teens':
-          return (
-            ageRange.includes('teen') ||
-            ageRange.includes('13-18') ||
-            ageRange.includes('adolescent') ||
-            (venue.min_age !== null && venue.min_age <= 18)
-          )
-        default:
-          return true
-      }
+    const venueRange = extractVenueAgeRange(venue)
+    if (!venueRange) return true
+    return selectedAgeRanges.some((rangeValue) => {
+      const bracket = AGE_RANGES.find(r => r.value === rangeValue)
+      if (!bracket) return false
+      return venueRange.min <= bracket.max && venueRange.max >= bracket.min
     })
   }
 
