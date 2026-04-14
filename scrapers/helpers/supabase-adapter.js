@@ -35,6 +35,45 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 console.log('✅ Supabase client initialized');
 
 // ============================================================================
+// VENUE NAME CLEANING
+// ============================================================================
+
+/**
+ * Strip room/department/floor suffixes from venue names to prevent duplicates.
+ * "Aberdeen Library - Meeting Room" → "Aberdeen Library"
+ * "Pratt Library - Teen Department Floor" → "Pratt Library"
+ * "Main Library - Zoom Program 2" → "Main Library"
+ */
+const ROOM_KEYWORDS = /\b(room|meeting|conference|study|program|children|teen|makerspace|lab|studio|space|area|floor|auditorium|gallery|caf[eé]|parking|outdoor|outside|public|department|zoom|virtual|online|computer|board|storytime|story\s*time|large|small|grounds|lounge|lobby|patio|terrace|garden|courtyard|annex|wing|level|basement|lower)\b/i;
+
+function cleanVenueName(venue) {
+  if (!venue || typeof venue !== 'string') return venue;
+  let cleaned = venue.trim();
+
+  // If venue contains " - " and anything after the first " - " has a room keyword,
+  // keep only the part before the first " - "
+  const dashIndex = cleaned.search(/\s+[-–—]\s+/);
+  if (dashIndex > 0) {
+    const suffix = cleaned.substring(dashIndex);
+    if (ROOM_KEYWORDS.test(suffix)) {
+      cleaned = cleaned.substring(0, dashIndex);
+    }
+  }
+
+  // Also handle repeated name patterns like "Porter BranchPorter Branch"
+  if (cleaned.length > 10) {
+    const half = Math.floor(cleaned.length / 2);
+    const first = cleaned.substring(0, half);
+    const second = cleaned.substring(half);
+    if (first === second) {
+      cleaned = first;
+    }
+  }
+
+  return cleaned.trim();
+}
+
+// ============================================================================
 // TIME EXTRACTION HELPER
 // ============================================================================
 
@@ -274,7 +313,7 @@ async function saveEvent(id, data) {
     description: data.description || null,
     url: data.url || null,
     image_url: data.imageUrl || null,
-    venue: data.venue || null,
+    venue: cleanVenueName(data.venue) || null,
     category: data.metadata?.category || data.category || null,
     city: data.location?.city || null,
     state: data.state || data.location?.state || null,
@@ -696,7 +735,7 @@ function flattenEvent(data) {
   if (data.description) row.description = data.description;
   if (data.url) row.url = data.url;
   if (data.imageUrl) row.image_url = data.imageUrl;
-  if (data.venue) row.venue = data.venue;
+  if (data.venue) row.venue = cleanVenueName(data.venue);
   if (data.state) row.state = data.state;
   if (data.geohash) row.geohash = data.geohash;
   if (data.activityId) row.activity_id = data.activityId;
