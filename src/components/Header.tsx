@@ -45,6 +45,15 @@ export default function Header() {
       <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
+          <svg className="w-8 h-8" viewBox="0 0 100 100" fill="none">
+            <path d="M50 5L93.3 27.5V72.5L50 95L6.7 72.5V27.5L50 5Z" fill="#FDE68A" stroke="#F59E0B" strokeWidth="3"/>
+            <ellipse cx="50" cy="55" rx="16" ry="20" fill="#F59E0B"/>
+            <path d="M34 50h32" stroke="#92400E" strokeWidth="4" strokeLinecap="round"/>
+            <path d="M36 58h28" stroke="#92400E" strokeWidth="4" strokeLinecap="round"/>
+            <circle cx="50" cy="33" r="10" fill="#F59E0B"/>
+            <circle cx="46" cy="31" r="2.5" fill="#1C1917"/>
+            <circle cx="54" cy="31" r="2.5" fill="#1C1917"/>
+          </svg>
           <span className="text-2xl font-bold text-amber-600">FunHive</span>
         </Link>
 
