@@ -281,6 +281,16 @@ function isNonFamilyEvent(name, description) {
 }
 
 // ============================================================================
+// CANCELLED/CLOSED EVENT DETECTION
+// ============================================================================
+
+function isCancelledEvent(name, description) {
+  const text = `${name || ''} ${description || ''}`;
+  return /\b(cancelled|canceled|postponed|closed|suspended|rescheduled)\b/i.test(text) &&
+    !/\b(not\s+cancelled|not\s+canceled|rain\s+or\s+shine|unless\s+cancelled)\b/i.test(text);
+}
+
+// ============================================================================
 // DIRECT SUPABASE FUNCTIONS (recommended for new code)
 // ============================================================================
 
@@ -293,6 +303,12 @@ async function saveEvent(id, data) {
   const nonFamilyReason = isNonFamilyEvent(data.name, data.description);
   if (nonFamilyReason) {
     console.log(`  ⏭️ Skipping non-family event: "${data.name}" [${nonFamilyReason}]`);
+    return null;
+  }
+
+  // Reject cancelled/closed events
+  if (isCancelledEvent(data.name, data.description)) {
+    console.log(`  ⏭️ Skipping cancelled/closed event: "${data.name}"`);
     return null;
   }
 
@@ -707,6 +723,11 @@ function flattenEvent(data) {
   const nonFamilyReason = isNonFamilyEvent(data.name, data.description);
   if (nonFamilyReason) {
     throw new Error(`Skipping non-family event: "${data.name}" [${nonFamilyReason}]`);
+  }
+
+  // Reject cancelled/closed events
+  if (isCancelledEvent(data.name, data.description)) {
+    throw new Error(`Skipping cancelled/closed event: "${data.name}"`);
   }
 
   // Reject past events — parse date from eventDate string or date field
