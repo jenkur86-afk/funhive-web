@@ -251,22 +251,32 @@ function isEventOnOrAfterToday(event: any): boolean {
           .from('events')
           .select('*')
           .not('event_date', 'is', null)
-          .gte('date', today)
           .in('state', ACTIVE_STATES || [])
-          .order('date', { ascending: true })
-          .limit(500)
 
-        // When searching, add database-level text filter so relevant results
-        // aren't crowded out by the 500-row limit
         if (debouncedSearch) {
+          // When searching, skip .gte('date') because some events have event_date
+          // (TEXT) but no parsed date (TIMESTAMPTZ) — filter dates client-side instead
           const term = `%${debouncedSearch}%`
-          query = query.or(
-            `name.ilike.${term},venue.ilike.${term},city.ilike.${term},description.ilike.${term},category.ilike.${term},address.ilike.${term}`
-          )
+          query = query
+            .or(
+              `name.ilike.${term},venue.ilike.${term},city.ilike.${term},description.ilike.${term},category.ilike.${term},address.ilike.${term}`
+            )
+            .order('date', { ascending: true, nullsFirst: false })
+            .limit(500)
+        } else {
+          // No search — filter future events at DB level for speed
+          query = query
+            .gte('date', today)
+            .order('date', { ascending: true })
+            .limit(500)
         }
 
         const result = await query
-        if (!result.error && result.data) allData = result.data
+        if (!result.error && result.data) {
+          allData = debouncedSearch
+            ? result.data.filter((e: any) => isEventOnOrAfterToday(e))
+            : result.data
+        }
       }
 
       // Apply category filter client-side (works for both RPC and standard queries)
