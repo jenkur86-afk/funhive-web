@@ -52,6 +52,9 @@ const RADIUS_OPTIONS = [
   { label: '10 mi', value: 10 },
   { label: '25 mi', value: 25 },
   { label: '50 mi', value: 50 },
+  { label: '100 mi', value: 100 },
+  { label: '150 mi', value: 150 },
+  { label: '200 mi', value: 200 },
 ]
 
 // Inline always-visible pill toggle filter
