@@ -94,11 +94,13 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
 
           setUpcoming(futureEvents.slice(0, 6))
 
-          // Filter for weekend
+          // Filter for weekend — try TIMESTAMPTZ date first, fall back to parsing event_date text
+          const weekendStart = new Date(weekendRange.start)
+          const weekendEnd = new Date(weekendRange.end)
           const weekendFiltered = futureEvents.filter((e: any) => {
-            if (!e.date) return false
-            const d = new Date(e.date)
-            return d >= new Date(weekendRange.start) && d <= new Date(weekendRange.end)
+            const d = e.date ? new Date(e.date) : parseEventDate(e.event_date)
+            if (!d || isNaN(d.getTime())) return false
+            return d >= weekendStart && d <= weekendEnd
           })
           setWeekend(weekendFiltered.slice(0, 6))
         }
