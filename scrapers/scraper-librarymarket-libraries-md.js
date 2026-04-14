@@ -101,102 +101,127 @@ async function scrapeGenericEvents() {
         timeout: 30000
       });
 
-      // Wait for any event-like content
+      // Wait for platform-specific event containers
+      await page.waitForSelector('.em-card, .lc-event, article.event-card', { timeout: 15000 }).catch(() => null);
       await new Promise(resolve => setTimeout(resolve, 3000));
 
       const libraryEvents = await page.evaluate((libName) => {
         const events = [];
 
-        // Generic selectors for event cards/items
+        // Platform-specific selectors (not generic)
         const eventSelectors = [
-          '[class*="event"]',
-          '[class*="program"]',
-          '[class*="calendar"]',
-          '[id*="event"]',
-          'article',
-          '.post',
-          '.item'
+          '.em-card',                    // EventManager (Enoch Pratt)
+          '.lc-event',                   // LibraryMarket (Allegany, Ruth Enlow, Carroll)
+          '.lc-event--upcoming',         // LibraryMarket upcoming variant
+          'article.event-card',          // Alternative LibraryMarket format
         ];
 
-        const foundElements = new Set();
+        let foundElements = [];
+        for (const selector of eventSelectors) {
+          const elements = document.querySelectorAll(selector);
+          if (elements.length > 0) {
+            foundElements = Array.from(elements);
+            break;
+          }
+        }
 
-        // Try each selector
-        eventSelectors.forEach(selector => {
-          document.querySelectorAll(selector).forEach(card => {
-            if (foundElements.has(card)) return;
-            foundElements.add(card);
+        foundElements.forEach(card => {
+          try {
+            // --- TITLE ---
+            const titleEl =
+              card.querySelector('.em-card_title a') ||       // EventManager
+              card.querySelector('h2 a, h3 a') ||             // LibraryMarket headings
+              card.querySelector('.em-card_title') ||          // EventManager (no link)
+              card.querySelector('h2, h3, h4') ||             // Generic heading
+              card.querySelector('a[href*="event"]');          // Fallback link
+            if (!titleEl) return;
+            const title = titleEl.textContent.trim();
+            if (!title || title.length < 3) return;
 
-            try {
-              // Try to find title, date, description
-              const possibleTitles = [
-                card.querySelector('h1, h2, h3, h4, h5'),
-                card.querySelector('[class*="title"]'),
-                card.querySelector('[class*="name"]'),
-                card.querySelector('a')
-              ].filter(el => el && el.textContent.trim().length > 0);
+            // --- DATE ---
+            let dateStr = '';
 
-              // Extract date from lc-date-icon (LibraryMarket) or fallback
-              let lcDateStr = '';
+            // Method 1: EventManager format ("Mon, Apr 13, 2026 10am" in .em-card_event-text)
+            const emDateEl = card.querySelector('.em-card_event-text, .em-card_text p');
+            if (emDateEl) {
+              const emText = emDateEl.textContent.trim();
+              // Match "Mon, Apr 13, 2026" or "April 13, 2026" patterns
+              const emDateMatch = emText.match(/((?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)[a-z]*,?\s+)?(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+\d{1,2},?\s*\d{4}/i);
+              if (emDateMatch) {
+                dateStr = emDateMatch[0];
+              }
+            }
+
+            // Method 2: LibraryMarket lc-date-icon elements
+            if (!dateStr) {
               const lcMonth = card.querySelector('.lc-date-icon__item--month');
               const lcDay = card.querySelector('.lc-date-icon__item--day');
               if (lcMonth && lcDay) {
-                const yr = (card.closest('.lc-event--upcoming') || card).textContent.match(/\d{4}/);
-                lcDateStr = lcMonth.textContent.trim() + ' ' + lcDay.textContent.trim() + ', ' + (yr ? yr[0] : new Date().getFullYear());
+                const yearEl = card.querySelector('.lc-date-icon__item--year');
+                const year = yearEl ? yearEl.textContent.trim() : new Date().getFullYear();
+                dateStr = lcMonth.textContent.trim() + ' ' + lcDay.textContent.trim() + ', ' + year;
               }
-              const possibleDates = [
-                lcDateStr ? { textContent: lcDateStr, trim() { return lcDateStr; } } : null,
-                card.querySelector('[class*="date"]'),
-                card.querySelector('[class*="time"]'),
-                card.querySelector('time'),
-              ].filter(el => el && (el.textContent || '').trim().length > 0);
-
-              const possibleDescs = [
-                card.querySelector('[class*="description"]'),
-                card.querySelector('[class*="summary"]'),
-                card.querySelector('p')
-              ].filter(el => el && el.textContent.trim().length > 20);
-
-              const linkEl = card.querySelector('a[href]');
-              const imageEl = card.querySelector('img');
-
-              // Look for age/audience info on the event card
-              const ageEl = [
-                card.querySelector('[class*="audience"]'),
-                card.querySelector('[class*="age-range"]'),
-                card.querySelector('[class*="age_range"]'),
-                card.querySelector('[class*="ages"]'),
-                card.querySelector('[class*="age-group"]'),
-                card.querySelector('[class*="category"]')
-              ].find(el => el && el.textContent.trim().length > 0 && el.textContent.trim().length < 80);
-
-              if (possibleTitles.length > 0) {
-                const event = {
-                  title: possibleTitles[0].textContent.trim(),
-                  date: possibleDates.length > 0 ? possibleDates[0].textContent.trim() : '',
-                  time: possibleDates.length > 1 ? possibleDates[1].textContent.trim() : '',
-                  description: possibleDescs.length > 0 ? possibleDescs[0].textContent.trim() : '',
-                  url: linkEl ? linkEl.href : window.location.href,
-                  imageUrl: imageEl ? imageEl.src : '',
-                  ageRange: ageEl ? ageEl.textContent.trim() : '',
-                  location: libName,
-                  venueName: libName
-                };
-
-                // Only add if it looks like an event (has title and some other field)
-                if (event.title && (event.date || event.description)) {
-                  events.push(event);
-                }
-              }
-            } catch (e) {
-              // Skip problematic elements
             }
-          });
+
+            // Method 3: Generic date pattern search in card text
+            if (!dateStr) {
+              const cardText = card.textContent || '';
+              const dateMatch = cardText.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+\d{1,2},?\s*\d{4}/i);
+              if (dateMatch) dateStr = dateMatch[0];
+            }
+
+            // --- TIME ---
+            let timeStr = '';
+            if (emDateEl) {
+              const timeMatch = (emDateEl.textContent || '').match(/\d{1,2}(?::\d{2})?\s*(?:am|pm)/i);
+              if (timeMatch) timeStr = timeMatch[0];
+            }
+
+            // --- DESCRIPTION ---
+            const descEl = card.querySelector('.em-card_event-text, [class*="description"], [class*="summary"], p');
+            const description = descEl ? descEl.textContent.trim().substring(0, 500) : '';
+
+            // --- URL ---
+            const linkEl = card.querySelector('a[href]');
+            const url = linkEl ? linkEl.href : window.location.href;
+
+            // --- IMAGE ---
+            const imageEl = card.querySelector('img');
+            const imageUrl = imageEl ? imageEl.src : '';
+
+            // --- AGE RANGE ---
+            const ageEl = [
+              card.querySelector('[class*="audience"]'),
+              card.querySelector('[class*="age"]'),
+              card.querySelector('[class*="category"]')
+            ].find(el => el && el.textContent.trim().length > 0 && el.textContent.trim().length < 80);
+
+            // --- LOCATION ---
+            const locEl = card.querySelector('.em-card_event-text a, [class*="location"], [class*="branch"]');
+            const location = locEl ? locEl.textContent.trim() : libName;
+
+            if (title && dateStr) {
+              events.push({
+                title,
+                date: timeStr ? dateStr + ' ' + timeStr : dateStr,
+                time: timeStr,
+                description,
+                url,
+                imageUrl,
+                ageRange: ageEl ? ageEl.textContent.trim() : '',
+                location,
+                venueName: libName
+              });
+            }
+          } catch (e) {
+            // Skip problematic elements
+          }
         });
 
-        // Deduplicate by title
+        // Deduplicate by title + date
         const seen = new Set();
         return events.filter(evt => {
-          const key = evt.title.toLowerCase();
+          const key = (evt.title + '|' + evt.date).toLowerCase();
           if (seen.has(key)) return false;
           seen.add(key);
           return true;

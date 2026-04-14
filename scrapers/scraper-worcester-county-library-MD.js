@@ -136,7 +136,9 @@ async function scrapeWorcesterCountyLibrary() {
             const monthEl = card.querySelector('.s-lc-evt-date-m');
             const dayEl = card.querySelector('.s-lc-evt-date-d');
             if (monthEl && dayEl) {
-              eventDate = `${monthEl.textContent.trim()} ${dayEl.textContent.trim()}`;
+              const yearEl = card.querySelector('.s-lc-evt-date-y, .lc-date-icon__item--year');
+              const year = yearEl ? yearEl.textContent.trim() : new Date().getFullYear();
+              eventDate = `${monthEl.textContent.trim()} ${dayEl.textContent.trim()}, ${year}`;
             }
           }
 

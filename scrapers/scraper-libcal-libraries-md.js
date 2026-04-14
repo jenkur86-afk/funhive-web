@@ -60,7 +60,7 @@ async function scrapeLibCalEvents() {
       });
 
       // Wait for LibCal events container (multiple possible selectors)
-      await page.waitForSelector('.s-lc-c-evt, .s-lc-eventcard, .s-lc-ea-e', { timeout: 15000 }).catch(() => null);
+      await page.waitForSelector('.s-lc-c-evt, .s-lc-eventcard, .s-lc-ea-e, .s-lc-mc-evt', { timeout: 15000 }).catch(() => null);
 
       // Extra wait for dynamic content to load
       await new Promise(resolve => setTimeout(resolve, 3000));
@@ -73,7 +73,8 @@ async function scrapeLibCalEvents() {
           '.s-lc-c-evt',           // List view events
           '.s-lc-eventcard',       // Card view events
           '.s-lc-ea-e',            // Older LibCal format
-          '.s-lc-whw-row'          // Week/day view
+          '.s-lc-whw-row',         // Week/day view
+          '.s-lc-mc-evt'           // Monthly calendar view events (Kent County format)
         ];
 
         let foundElements = [];
@@ -88,7 +89,11 @@ async function scrapeLibCalEvents() {
         foundElements.forEach(card => {
           try {
             // Try multiple title selectors
-            const titleEl = card.querySelector('.s-lc-c-evt-title, .s-lc-eventcard-title, .s-lc-ea-ttl, h2, h3');
+            let titleEl = card.querySelector('.s-lc-c-evt-title, .s-lc-eventcard-title, .s-lc-ea-ttl, h2, h3');
+            // For monthly calendar view, title is in the link directly
+            if (!titleEl) {
+              titleEl = card.querySelector('a[href*="/event/"]');
+            }
 
             // Try multiple date selectors - PRIMARY: dl.dl-horizontal format (From/To dates)
             let dateStr = '';
@@ -107,7 +112,9 @@ async function scrapeLibCalEvents() {
               const monthEl = card.querySelector('.s-lc-evt-date-m');
               const dayEl = card.querySelector('.s-lc-evt-date-d');
               if (monthEl && dayEl) {
-                dateStr = `${monthEl.textContent.trim()} ${dayEl.textContent.trim()}`;
+                const yearEl = card.querySelector('.s-lc-evt-date-y, .lc-date-icon__item--year');
+                const year = yearEl ? yearEl.textContent.trim() : new Date().getFullYear();
+                dateStr = `${monthEl.textContent.trim()} ${dayEl.textContent.trim()}, ${year}`;
               }
             }
 
@@ -116,6 +123,28 @@ async function scrapeLibCalEvents() {
               const dateEl = card.querySelector('.s-lc-ea-date, .event-date');
               if (dateEl) {
                 dateStr = dateEl.textContent.trim();
+              }
+            }
+
+            // FALLBACK 3: For monthly calendar view (.s-lc-mc-evt), get date from parent day cell
+            if (!dateStr && card.classList.contains('s-lc-mc-evt')) {
+              // Navigate up to find the day container
+              let dayCell = card.parentElement;
+              let depth = 0;
+              while (dayCell && depth < 3) {
+                if (dayCell.classList.contains('s-lc-mc-day')) {
+                  // Get the date from the day cell header
+                  const dateHeader = dayCell.querySelector('[class*="s-lc-mc-day-header"], .s-lc-mc-day-date');
+                  if (dateHeader) {
+                    dateStr = dateHeader.textContent.trim();
+                  } else {
+                    // Try to extract from the cell's aria-label or data attributes
+                    dateStr = dayCell.getAttribute('aria-label') || dayCell.getAttribute('data-date') || '';
+                  }
+                  break;
+                }
+                dayCell = dayCell.parentElement;
+                depth++;
               }
             }
 
