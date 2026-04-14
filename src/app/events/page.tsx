@@ -224,6 +224,7 @@ function isEventOnOrAfterToday(event: any): boolean {
           .select('*')
           .is('location', null)
           .not('event_date', 'is', null)
+          .gte('date', today)
           .in('state', ACTIVE_STATES || [])
           .limit(300)
 
@@ -244,12 +245,15 @@ function isEventOnOrAfterToday(event: any): boolean {
         }
       } else {
         // No location — use standard query, ordered by date
+        // Use the TIMESTAMPTZ `date` column for filtering & sorting
+        // (the TEXT `event_date` column sorts alphabetically, not chronologically)
         let query = supabase
           .from('events')
           .select('*')
           .not('event_date', 'is', null)
+          .gte('date', today)
           .in('state', ACTIVE_STATES || [])
-          .order('event_date', { ascending: true })
+          .order('date', { ascending: true })
           .limit(500)
 
         // When searching, add database-level text filter so relevant results
@@ -262,7 +266,7 @@ function isEventOnOrAfterToday(event: any): boolean {
         }
 
         const result = await query
-        if (!result.error && result.data) allData = result.data.filter((e: any) => isEventOnOrAfterToday(e))
+        if (!result.error && result.data) allData = result.data
       }
 
       // Apply category filter client-side (works for both RPC and standard queries)
@@ -427,8 +431,8 @@ function isEventOnOrAfterToday(event: any): boolean {
     })
     .sort((a, b) => {
       // Always sort by date first
-      const dateA = a.event_date ? new Date(a.event_date).getTime() : Infinity
-      const dateB = b.event_date ? new Date(b.event_date).getTime() : Infinity
+      const dateA = a.date ? new Date(a.date).getTime() : a.event_date ? new Date(a.event_date).getTime() : Infinity
+      const dateB = b.date ? new Date(b.date).getTime() : b.event_date ? new Date(b.event_date).getTime() : Infinity
       if (dateA !== dateB) return dateA - dateB
 
       // Secondary sort: distance if location search active
