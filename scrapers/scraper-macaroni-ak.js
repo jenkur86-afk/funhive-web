@@ -271,13 +271,29 @@ async function scrapeSite(browser, site, maxEvents = 50) {
         }
       } else {
         failedGeocode++;
-        // Try county centroid as fallback
+        // Try city-level geocoding first
+        if (details.city) {
+          coords = await tryGeocode(`${details.city}, AK ${details.zipCode || ''}`);
+          if (coords) {
+            locationObj = {
+              address: details.address || '',
+              city: details.city,
+              zipCode: details.zipCode || '',
+              coordinates: coords,
+              name: details.venue || 'See website',
+              note: 'Geocoded to city level'
+            };
+            console.log(`  📍 Using city-level geocode for: ${details.name?.substring(0, 30)}`);
+          }
+        }
+
+        // If city geocode also failed, try county centroid as fallback
         const countyCentroid = getCountyCentroid(site.county, 'AK');
         if (countyCentroid) {
           coords = { latitude: countyCentroid.lat, longitude: countyCentroid.lng };
           locationObj = {
             address: details.address || '',
-            city: countyCentroid.city,
+            city: details.city || countyCentroid.city,
             zipCode: details.zipCode || '',
             coordinates: coords,
             name: details.venue || 'See website',

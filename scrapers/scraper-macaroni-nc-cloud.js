@@ -371,13 +371,29 @@ async function scrapeSite(site, maxEvents = 50) {
           locationObj.name = details.venue;
         }
       } else {
-        // Try county centroid as fallback
+        // Try city-level geocoding first
+        if (details.city) {
+          coords = await tryGeocode(`${details.city}, NC ${details.zipCode || ''}`);
+          if (coords) {
+            locationObj = {
+              address: details.address || '',
+              city: details.city,
+              zipCode: details.zipCode || '',
+              coordinates: coords,
+              name: details.venue || 'See website',
+              note: 'Geocoded to city level'
+            };
+            console.log(`  📍 Using city-level geocode for: ${details.name?.substring(0, 30)}`);
+          }
+        }
+
+        // If city geocode also failed, try county centroid as fallback
         const countyCentroid = getCountyCentroid(site.county, 'NC');
         if (countyCentroid) {
           coords = { latitude: countyCentroid.lat, longitude: countyCentroid.lng };
           locationObj = {
             address: details.address || '',
-            city: countyCentroid.city,
+            city: details.city || countyCentroid.city,
             state: 'NC',
             zipCode: details.zipCode || '',
             coordinates: coords,

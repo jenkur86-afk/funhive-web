@@ -298,14 +298,30 @@ async function scrapeSite(browser, site, maxEvents = 50) {
           }
         }
 
-        // If venue cache didn't provide coords, try county centroid
+        // If venue cache didn't provide coords, try city-level geocoding first
+        if (!coords && details.city) {
+          coords = await tryGeocode(`${details.city}, SC ${details.zipCode || ''}`);
+          if (coords) {
+            locationObj = {
+              address: details.address || '',
+              city: details.city,
+              zipCode: details.zipCode || '',
+              coordinates: coords,
+              name: details.venue || 'See website',
+              note: 'Geocoded to city level'
+            };
+            console.log(`  📍 Using city-level geocode for: ${details.name?.substring(0, 30)}`);
+          }
+        }
+
+        // If city geocode also failed, try county centroid
         if (!coords) {
           const countyCentroid = getCountyCentroid(site.county, 'SC');
           if (countyCentroid) {
             coords = { latitude: countyCentroid.lat, longitude: countyCentroid.lng };
             locationObj = {
               address: details.address || '',
-              city: countyCentroid.city,
+              city: details.city || countyCentroid.city,
               zipCode: details.zipCode || '',
               coordinates: coords,
               name: details.venue || 'See website',
