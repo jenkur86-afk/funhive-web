@@ -128,6 +128,20 @@ export default function VenuesPage() {
     return () => clearTimeout(timer)
   }, [searchQuery])
 
+  // Restore saved location from homepage "Use My Location"
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('funhive_location')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (parsed.lat && parsed.lng) {
+          setLocationCoords(parsed)
+          setLocationInput(`${parsed.lat.toFixed(4)}, ${parsed.lng.toFixed(4)}`)
+        }
+      }
+    } catch {}
+  }, [])
+
   useEffect(() => {
     preloadZipData().then(() => loadVenues())
   }, [selectedCategories, locationCoords, selectedRadius, debouncedSearch])

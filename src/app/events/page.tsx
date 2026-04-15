@@ -146,7 +146,7 @@ function EventsPageInner() {
 
   const searchParams = useSearchParams()
 
-  // Initialize filters from URL query parameters on first load
+  // Initialize filters from URL query parameters and saved location on first load
   useEffect(() => {
     const categoryParam = searchParams.get('category')
     const queryParam = searchParams.get('q')
@@ -160,6 +160,17 @@ function EventsPageInner() {
     if (dateParam && DATE_FILTERS.includes(dateParam)) {
       setSelectedDateFilter(dateParam)
     }
+    // Restore saved location from homepage "Use My Location"
+    try {
+      const saved = localStorage.getItem('funhive_location')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (parsed.lat && parsed.lng) {
+          setLocationCoords(parsed)
+          setLocationInput(`${parsed.lat.toFixed(4)}, ${parsed.lng.toFixed(4)}`)
+        }
+      }
+    } catch {}
   }, [])
 
   // Debounce search query so DB queries don't fire on every keystroke
@@ -208,6 +219,7 @@ function EventsPageInner() {
       setLocationCoords(location)
       setLocationInput(`${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}`)
       setLocationError('')
+      try { localStorage.setItem('funhive_location', JSON.stringify(location)) } catch {}
     } else {
       setLocationError('Could not get your location. Please allow location access or enter a zip code.')
     }
@@ -619,7 +631,7 @@ function isEventOnOrAfterToday(event: any): boolean {
           </button>
           {locationCoords && (
             <button
-              onClick={() => { setLocationCoords(null); setLocationInput(''); setLocationError('') }}
+              onClick={() => { setLocationCoords(null); setLocationInput(''); setLocationError(''); try { localStorage.removeItem('funhive_location') } catch {} }}
               className="px-4 py-2 rounded-lg border border-amber-300 text-amber-700 text-sm hover:bg-amber-50 transition"
             >
               Clear Location

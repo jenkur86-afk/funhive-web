@@ -114,6 +114,20 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
     fetchNearby()
   }, [coords])
 
+  // On mount, check if user previously granted location
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('funhive_location')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (parsed.lat && parsed.lng) {
+          setCoords(parsed)
+          setLocationName(`${parsed.lat.toFixed(2)}, ${parsed.lng.toFixed(2)}`)
+        }
+      }
+    } catch {}
+  }, [])
+
   const handleUseLocation = () => {
     if (!navigator.geolocation) {
       alert('Geolocation is not supported by your browser.')
@@ -123,9 +137,12 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords
-        setCoords({ lat: latitude, lng: longitude })
+        const loc = { lat: latitude, lng: longitude }
+        setCoords(loc)
         setLocationName(`${latitude.toFixed(2)}, ${longitude.toFixed(2)}`)
         setLocating(false)
+        // Persist so category links and events page can use it
+        try { localStorage.setItem('funhive_location', JSON.stringify(loc)) } catch {}
       },
       () => {
         alert('Unable to get your location. Please allow location access.')
@@ -138,6 +155,7 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
   const handleClearLocation = () => {
     setCoords(null)
     setLocationName('')
+    try { localStorage.removeItem('funhive_location') } catch {}
   }
 
   return (
