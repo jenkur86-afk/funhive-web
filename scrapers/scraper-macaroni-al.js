@@ -298,6 +298,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
         }
 
         // If city geocode also failed, try county centroid as fallback
+        if (!coords) {
         const countyCentroid = getCountyCentroid(site.county, 'AL');
         if (countyCentroid) {
           coords = { latitude: countyCentroid.lat, longitude: countyCentroid.lng };
@@ -318,6 +319,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
             name: details.venue || 'See website'
           };
           noLocation++;
+        }
         }
       }
 

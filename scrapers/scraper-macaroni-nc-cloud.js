@@ -388,28 +388,30 @@ async function scrapeSite(site, maxEvents = 50) {
         }
 
         // If city geocode also failed, try county centroid as fallback
-        const countyCentroid = getCountyCentroid(site.county, 'NC');
-        if (countyCentroid) {
-          coords = { latitude: countyCentroid.lat, longitude: countyCentroid.lng };
-          locationObj = {
-            address: details.address || '',
-            city: details.city || countyCentroid.city,
-            state: 'NC',
-            zipCode: details.zipCode || '',
-            coordinates: coords,
-            name: details.venue || 'See website',
-            note: `Approximate location (${site.county} County center)`
-          };
-          console.log(`  📍 Using county centroid for: ${details.name?.substring(0, 30)}`);
-        } else {
-          noLocation++;
-          locationObj = {
-            address: details.address || '',
-            city: details.city || '',
-            state: 'NC',
-            zipCode: details.zipCode || '',
-            name: details.venue || 'See website'
-          };
+        if (!coords) {
+          const countyCentroid = getCountyCentroid(site.county, 'NC');
+          if (countyCentroid) {
+            coords = { latitude: countyCentroid.lat, longitude: countyCentroid.lng };
+            locationObj = {
+              address: details.address || '',
+              city: details.city || countyCentroid.city,
+              state: 'NC',
+              zipCode: details.zipCode || '',
+              coordinates: coords,
+              name: details.venue || 'See website',
+              note: `Approximate location (${site.county} County center)`
+            };
+            console.log(`  📍 Using county centroid for: ${details.name?.substring(0, 30)}`);
+          } else {
+            noLocation++;
+            locationObj = {
+              address: details.address || '',
+              city: details.city || '',
+              state: 'NC',
+              zipCode: details.zipCode || '',
+              name: details.venue || 'See website'
+            };
+          }
         }
       }
 
