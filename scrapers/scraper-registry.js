@@ -883,6 +883,13 @@ const SCRAPERS = {
   // EASTERN US VENUE/ACTIVITY SCRAPER (data-driven)
   // ============================================================================
   'Activities-Eastern-US': { file: './scraper-activities-eastern-us.js', exportName: 'scrapeEasternUSActivities', type: 'puppeteer', group: 2, state: 'Multi' },
+
+  // ============================================================================
+  // PHASE 4: MAJOR VENUE EVENT SCRAPERS (data-driven, multi-state)
+  // ============================================================================
+  'Venue-Events-ChildrensMuseums': { file: './scraper-venue-events-childrens-museums.js', exportName: 'scrapeChildrensMuseumEvents', type: 'puppeteer', group: 2, state: 'Multi' },
+  'Venue-Events-ZoosAquariums': { file: './scraper-venue-events-zoos-aquariums.js', exportName: 'scrapeZooAquariumEvents', type: 'puppeteer', group: 3, state: 'Multi' },
+  'Venue-Events-ScienceArts': { file: './scraper-venue-events-science-arts.js', exportName: 'scrapeScienceArtsEvents', type: 'puppeteer', group: 1, state: 'Multi' },
 };
 
 // ============================================================================
