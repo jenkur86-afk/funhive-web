@@ -1,374 +1,486 @@
 #!/usr/bin/env node
 
 /**
- * BROOKLYN PUBLIC LIBRARY SCRAPER
+ * BROOKLYN PUBLIC LIBRARY EVENTS SCRAPER
  *
- * Scrapes events from Brooklyn Public Library's JSON API
- * Second largest public library system in the United States
+ * Scrapes real-time events from Brooklyn Public Library website using Puppeteer
+ * Covers all 60+ BPL branches across Brooklyn
  *
- * COVERAGE:
- * NY:
- * - Brooklyn Public Library (2.7M people)
- * - 60+ library locations throughout Brooklyn
- *
- * Platform: Custom Solr-based JSON API
- * URL: https://discover.bklynlibrary.org/api/search/index.php?event=true
+ * Source: https://www.bklynlibrary.org/calendar/list
+ * Alternative: https://discover.bklynlibrary.org/?event=true
  *
  * Usage:
- *   node functions/scrapers/scraper-brooklyn-library-NY.js
+ *   node scripts/scraper-brooklyn-library-NY.js
  */
 
 const { admin, db } = require('./helpers/supabase-adapter');
-const axios = require('axios');
-const ngeohash = require('ngeohash');
-const { categorizeEvent } = require('./event-categorization-helper');
-const { parseDateToObject, normalizeDateString } = require('./date-normalization-helper');
+const { launchBrowser, createStealthPage } = require('./puppeteer-config');
+const { saveEventsWithGeocoding } = require('./helpers/event-save-helper');
 const { logScraperResult } = require('./scraper-logger');
-const { linkEventToVenue } = require('./venue-matcher');
+const ngeohash = require('ngeohash');
 
-// Brooklyn Public Library
-const LIBRARY = {
+// Brooklyn Public Library branches with coordinates (representative sample)
+const BROOKLYN_LIBRARY_BRANCHES = {
+  'Central Library': {
+    address: '10 Flatbush Avenue, Brooklyn, NY 11217',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11217',
+    lat: 40.6807,
+    lng: -73.9898
+  },
+  'Bay Ridge': {
+    address: '7414 20th Avenue, Brooklyn, NY 11204',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11204',
+    lat: 40.5995,
+    lng: -74.0101
+  },
+  'Bensonhurst': {
+    address: '1901 86th Street, Brooklyn, NY 11214',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11214',
+    lat: 40.5903,
+    lng: -74.0035
+  },
+  'Brooklyn Heights': {
+    address: '280 Cadman Plaza West, Brooklyn, NY 11201',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11201',
+    lat: 40.6952,
+    lng: -73.9909
+  },
+  'Brownsville': {
+    address: '61 Glenmore Avenue, Brooklyn, NY 11212',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11212',
+    lat: 40.6484,
+    lng: -73.9410
+  },
+  'Bushwick': {
+    address: '104 Onderdonk Avenue, Brooklyn, NY 11237',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11237',
+    lat: 40.6796,
+    lng: -73.8905
+  },
+  'Carroll Gardens': {
+    address: '396 Clinton Street, Brooklyn, NY 11231',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11231',
+    lat: 40.6760,
+    lng: -73.9849
+  },
+  'Coney Island': {
+    address: '1901 Mermaid Avenue, Brooklyn, NY 11224',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11224',
+    lat: 40.5760,
+    lng: -73.9878
+  },
+  'Downtown Brooklyn': {
+    address: '33 Flatbush Avenue, Brooklyn, NY 11217',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11217',
+    lat: 40.6858,
+    lng: -73.9743
+  },
+  'East Flatbush': {
+    address: '9402 Church Lane, Brooklyn, NY 11236',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11236',
+    lat: 40.6393,
+    lng: -73.9416
+  },
+  'Flatbush': {
+    address: '22 Snediker Avenue, Brooklyn, NY 11226',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11226',
+    lat: 40.6340,
+    lng: -73.9656
+  },
+  'Greenpoint': {
+    address: '107 Norman Avenue, Brooklyn, NY 11222',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11222',
+    lat: 40.7451,
+    lng: -73.9526
+  },
+  'Park Slope': {
+    address: '431 15th Street, Brooklyn, NY 11215',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11215',
+    lat: 40.6619,
+    lng: -73.9860
+  },
+  'Prospect Heights': {
+    address: '393 Eastern Parkway, Brooklyn, NY 11238',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11238',
+    lat: 40.6692,
+    lng: -73.9736
+  },
+  'Sunset Park': {
+    address: '5445 5th Avenue, Brooklyn, NY 11220',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11220',
+    lat: 40.6408,
+    lng: -74.0188
+  },
+  'Williamsburg': {
+    address: '240 Division Avenue, Brooklyn, NY 11211',
+    city: 'Brooklyn',
+    state: 'NY',
+    county: 'Kings',
+    zipCode: '11211',
+    lat: 40.7092,
+    lng: -73.9597
+  }
+};
+
+// Default Brooklyn reference
+const DEFAULT_BRANCH = {
   name: 'Brooklyn Public Library',
-  baseUrl: 'https://discover.bklynlibrary.org',
-  // Use select API with pagination (search API limits to 20 results)
-  selectApiBase: 'https://discover.bklynlibrary.org/api/select/index.php',
-  county: 'Kings',
-  state: 'NY',
-  website: 'https://www.bklynlibrary.org',
+  address: '10 Flatbush Avenue, Brooklyn, NY 11217',
   city: 'Brooklyn',
-  zipCode: '11238'
+  state: 'NY',
+  county: 'Kings',
+  zipCode: '11217',
+  lat: 40.6807,
+  lng: -73.9898
 };
 
-// Pagination settings
-const PAGE_SIZE = 100;
-const MAX_PAGES = 10; // Limit to 1000 events per run to avoid timeouts
+/**
+ * Find matching library branch by name
+ */
+function findBranch(eventVenueOrTitle, eventTitle = '') {
+  if (!eventVenueOrTitle) return DEFAULT_BRANCH;
 
-// Map Brooklyn API age ranges to our format
-const AGE_RANGE_MAP = {
-  'Birth to Five Years': 'Babies & Toddlers (0-2)',
-  'Children': 'Children (6-12)',
-  'Tweens': 'Tweens (9-12)',
-  'Teens': 'Teens (13-17)',
-  'Young Adults': 'Teens (13-17)',
-  'Adults': 'Adults',
-  'All Ages': 'All Ages',
-  'Families': 'All Ages'
-};
+  const combinedText = `${eventVenueOrTitle} ${eventTitle}`.toLowerCase();
 
-// Map age range to our standard format
-function mapAgeRange(apiAge) {
-  if (!apiAge) return 'All Ages';
-
-  // Direct mapping
-  if (AGE_RANGE_MAP[apiAge]) {
-    return AGE_RANGE_MAP[apiAge];
-  }
-
-  // Fuzzy matching
-  const lowerAge = apiAge.toLowerCase();
-  if (lowerAge.includes('birth') || lowerAge.includes('baby') || lowerAge.includes('toddler')) {
-    return 'Babies & Toddlers (0-2)';
-  }
-  if (lowerAge.includes('preschool')) {
-    return 'Preschool (3-5)';
-  }
-  if (lowerAge.includes('children') || lowerAge.includes('kids')) {
-    return 'Children (6-12)';
-  }
-  if (lowerAge.includes('tween')) {
-    return 'Tweens (9-12)';
-  }
-  if (lowerAge.includes('teen') || lowerAge.includes('young adult')) {
-    return 'Teens (13-17)';
-  }
-  if (lowerAge.includes('adult')) {
-    return 'Adults';
-  }
-  if (lowerAge.includes('all') || lowerAge.includes('famil')) {
-    return 'All Ages';
-  }
-
-  return 'All Ages';
-}
-
-// Geocode Brooklyn library locations (we can build a cache of known locations)
-const LOCATION_COORDINATES = {
-  'Central Library': { latitude: 40.6724, longitude: -73.9682 },
-  'Red Hook Library': { latitude: 40.6754, longitude: -74.0051 },
-  'Red Hook Interim Library': { latitude: 40.6754, longitude: -74.0051 },
-  'Williamsburg Library': { latitude: 40.7141, longitude: -73.9571 },
-  'Park Slope Library': { latitude: 40.6732, longitude: -73.9794 },
-  'Brooklyn Heights Library': { latitude: 40.6943, longitude: -73.9927 },
-  'Carroll Gardens Library': { latitude: 40.6774, longitude: -73.9985 },
-  // Add more as discovered
-};
-
-// Get coordinates for a location
-function getLocationCoordinates(locationName) {
-  if (!locationName) return null;
-
-  // Check exact match
-  if (LOCATION_COORDINATES[locationName]) {
-    return LOCATION_COORDINATES[locationName];
-  }
-
-  // Check partial match
-  for (const [name, coords] of Object.entries(LOCATION_COORDINATES)) {
-    if (locationName.includes(name) || name.includes(locationName)) {
-      return coords;
+  for (const [branchName, branchData] of Object.entries(BROOKLYN_LIBRARY_BRANCHES)) {
+    const branchNameLower = branchName.toLowerCase();
+    if (combinedText.includes(branchNameLower)) {
+      return { name: branchName, ...branchData };
     }
   }
 
-  // Default to Central Library coordinates
-  return LOCATION_COORDINATES['Central Library'];
+  return { name: 'Brooklyn Public Library', ...DEFAULT_BRANCH };
 }
 
-// Scrape events from Brooklyn Public Library
+/**
+ * Scrape Brooklyn Public Library events using Puppeteer
+ */
 async function scrapeBrooklynLibrary() {
-  console.log(`\n📚 BROOKLYN PUBLIC LIBRARY SCRAPER`);
+  console.log('\n📚 BROOKLYN PUBLIC LIBRARY EVENTS SCRAPER');
   console.log('='.repeat(60));
-  console.log(`📍 ${LIBRARY.name} (${LIBRARY.county} County, NY)`);
-  console.log(`   Using Select API with pagination\n`);
+  console.log('Source: https://www.bklynlibrary.org/calendar/list\n');
 
-  let totalImported = 0;
-  let totalSkipped = 0;
-  let totalFailed = 0;
+  let imported = 0;
+  let skipped = 0;
+  let failed = 0;
+  const events = [];
 
+  let browser;
   try {
-    // Build API URL with future events filter
-    // Use date format without milliseconds, and properly escape Solr query syntax
-    const now = new Date().toISOString().split('.')[0] + 'Z'; // Remove milliseconds
-    // Note: Solr range query syntax requires escaping brackets and colons
-    const dateFilter = `ds_event_start_date:[${now} TO *]`;
-    const baseUrl = `${LIBRARY.selectApiBase}?fq=ss_type:event&fq=is_event_canceled:0&fq=${encodeURIComponent(dateFilter)}&sort=ds_event_start_date asc&rows=${PAGE_SIZE}`;
+    browser = await launchBrowser();
+    const page = await createStealthPage(browser);
 
-    // Fetch first page to get total count
-    console.log('   Fetching events from API...\n');
-
-    const firstResponse = await axios.get(baseUrl + '&start=0', {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-        'Accept': 'application/json',
-        'Referer': 'https://discover.bklynlibrary.org/?event=true'
-      },
-      timeout: 30000
-    });
-
-    if (!firstResponse.data || !firstResponse.data.response) {
-      throw new Error('Invalid API response structure');
+    // Navigate to BPL events calendar
+    console.log('📅 Loading events calendar...');
+    try {
+      await page.goto('https://www.bklynlibrary.org/calendar/list', {
+        waitUntil: 'networkidle2',
+        timeout: 30000
+      });
+    } catch (navErr) {
+      console.log('⚠️ Primary URL timeout, trying discover endpoint...');
+      await page.goto('https://discover.bklynlibrary.org/?event=true', {
+        waitUntil: 'networkidle2',
+        timeout: 30000
+      });
     }
 
-    const totalAvailable = firstResponse.data.response.numFound;
-    const pagesToFetch = Math.min(MAX_PAGES, Math.ceil(totalAvailable / PAGE_SIZE));
+    // Wait for event cards to render (React SPA)
+    console.log('⏳ Waiting for events to load...');
+    try {
+      await Promise.race([
+        page.waitForSelector('[class*="event"]', { timeout: 15000 }),
+        page.waitForSelector('article', { timeout: 15000 }),
+        page.waitForSelector('[class*="card"]', { timeout: 15000 })
+      ]).catch(() => {
+        console.log('⚠️ Event selectors not found, proceeding with page evaluation');
+      });
+    } catch (e) {
+      console.log('⚠️ Timeout waiting for events, proceeding');
+    }
 
-    console.log(`   Found ${totalAvailable} upcoming events (fetching up to ${pagesToFetch * PAGE_SIZE})\n`);
+    // Additional wait for React rendering
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
-    // Process all pages
-    for (let page = 0; page < pagesToFetch; page++) {
-      const start = page * PAGE_SIZE;
-      let events;
+    // Extract events from page
+    console.log('📖 Extracting event data...\n');
+    const pageEvents = await page.evaluate(() => {
+      const results = [];
 
-      if (page === 0) {
-        events = firstResponse.data.response.docs;
-      } else {
-        const response = await axios.get(baseUrl + '&start=' + start, {
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-            'Accept': 'application/json',
-            'Referer': 'https://discover.bklynlibrary.org/?event=true'
-          },
-          timeout: 30000
-        });
-        events = response.data.response.docs;
+      // Try multiple selector strategies
+      let eventElements = [];
+
+      // Strategy 1: Look for article tags
+      eventElements = Array.from(document.querySelectorAll('article'));
+
+      // Strategy 2: Look for divs with event-like classes
+      if (eventElements.length === 0) {
+        eventElements = Array.from(document.querySelectorAll('[class*="event"], [class*="card"]'));
       }
 
-      console.log(`   Processing page ${page + 1}/${pagesToFetch} (${events.length} events)...`);
+      // Strategy 3: Look for links with event-like paths
+      if (eventElements.length === 0) {
+        eventElements = Array.from(document.querySelectorAll('a[href*="/event"], a[href*="/events"]'));
+      }
 
-      // Process each event
-      for (const event of events) {
+      eventElements.forEach(el => {
         try {
+          const fullText = el.textContent || '';
+          if (!fullText.trim()) return;
 
-        if (!event || !event.ts_title) {
-          totalSkipped++;
-          continue;
+          // Extract title
+          let title = '';
+          const titleEl = el.querySelector('h2, h3, h4, .title, [class*="title"]');
+          if (titleEl) {
+            title = titleEl.textContent.trim();
+          } else {
+            const parts = fullText.split(/\d{1,2}[\/-]\d{1,2}/);
+            if (parts[0]) {
+              title = parts[0].trim().substring(0, 100);
+            }
+          }
+
+          // Extract URL
+          let url = '';
+          const linkEl = el.querySelector('a[href*="/event"], a[href*="/calendar"]');
+          if (linkEl) {
+            url = linkEl.href || '';
+          } else if (el.tagName === 'A') {
+            url = el.href || '';
+          }
+
+          // Extract date and time
+          let eventDate = '';
+          let startTime = '';
+          let endTime = '';
+
+          const dateMatch = fullText.match(
+            /(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4}|\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2},?\s+\d{4})/i
+          );
+          if (dateMatch) {
+            eventDate = dateMatch[0];
+          }
+
+          const timeMatch = fullText.match(/(\d{1,2}):(\d{2})\s*(am|pm)/gi);
+          if (timeMatch && timeMatch.length >= 1) {
+            startTime = timeMatch[0].toUpperCase().replace(/([AP])M/, ' $1M');
+          }
+          if (timeMatch && timeMatch.length >= 2) {
+            endTime = timeMatch[1].toUpperCase().replace(/([AP])M/, ' $1M');
+          }
+
+          // Extract location/branch
+          let venue = '';
+          const locationMatch = fullText.match(/(?:at|location|branch):\s*([^,\n]+)/i);
+          if (locationMatch) {
+            venue = locationMatch[1].trim();
+          }
+
+          // Extract description
+          let description = '';
+          const descEl = el.querySelector('[class*="description"], [class*="desc"], p');
+          if (descEl) {
+            description = descEl.textContent.trim().substring(0, 500);
+          }
+
+          // Extract age range if present
+          let ageRange = '';
+          if (fullText.match(/baby|infant|toddler|0[–-]?2/i)) ageRange = 'Babies & Toddlers (0-2)';
+          else if (fullText.match(/preschool|3[–-]?5|ages 3-5/i)) ageRange = 'Preschool (3-5)';
+          else if (fullText.match(/children|kids|6[–-]?8|ages 6-8/i)) ageRange = 'Kids (6-8)';
+          else if (fullText.match(/tween|9[–-]?12|ages 9-12/i)) ageRange = 'Tweens (9-12)';
+          else if (fullText.match(/teen|13[–-]?18|ages 13-18/i)) ageRange = 'Teens (13-18)';
+
+          if (title && eventDate) {
+            results.push({
+              title: title.substring(0, 150),
+              date: eventDate,
+              startTime: startTime,
+              endTime: endTime,
+              venue: venue,
+              description: description,
+              url: url,
+              ageRange: ageRange
+            });
+          }
+        } catch (err) {
+          // Skip malformed elements silently
         }
+      });
 
-        // Map age range
-        const ageRange = mapAgeRange(event.ss_event_age);
+      return results;
+    });
 
-        // Skip adult-only events unless family-friendly
-        if (ageRange === 'Adults' &&
-            !(event.ts_body && event.ts_body.toLowerCase().includes('famil'))) {
-          totalSkipped++;
-          continue;
-        }
+    console.log(`  ✅ Found ${pageEvents.length} events\n`);
 
-        // Skip canceled events
-        if (event.is_event_canceled === 1) {
-          totalSkipped++;
-          continue;
-        }
+    // Process extracted events
+    for (const event of pageEvents) {
+      try {
+        const branch = findBranch(event.venue, event.title);
 
-        // Use categorization helper
-        const { parentCategory, displayCategory, subcategory } = categorizeEvent({
-          name: event.ts_title,
-          description: event.ts_body
-        });
-
-        // Parse dates
-        const startDateObj = event.ds_event_start_date
-          ? new Date(event.ds_event_start_date)
-          : null;
-
-        const startTimestamp = startDateObj
-          ? admin.firestore.Timestamp.fromDate(startDateObj)
-          : null;
-
-        // Format event date string
-        const eventDateStr = startDateObj
-          ? startDateObj.toLocaleDateString('en-US', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              hour: 'numeric',
-              minute: '2-digit'
-            })
-          : 'Date TBD';
-
-        // Normalize date format
-        const normalizedDate = normalizeDateString(eventDateStr);
-        if (!normalizedDate) {
-          console.log(`  ⚠️ Skipping event with invalid date: "${eventDateStr}"`);
-          totalSkipped++;
-          continue;
-        }
-
-        // Get location coordinates
-        const locationName = event.ss_event_location || event.ss_event_location_master || LIBRARY.name;
-        const coordinates = getLocationCoordinates(locationName);
-
-        // Build event document
-        const eventDoc = {
-          name: event.ts_title.trim(),
-          venue: locationName,
-          eventDate: normalizedDate,
-          date: startTimestamp,
-          startDate: startTimestamp,
-          scheduleDescription: eventDateStr,
-          state: LIBRARY.state,
-          parentCategory,
-          displayCategory,
-          subcategory,
-          ageRange,
-          cost: 'Free',
-          description: (event.ts_body || '').substring(0, 1000),
-          moreInfo: event.sm_event_tags ? event.sm_event_tags.join(', ') : '',
-          location: {
-            name: locationName,
-            address: '',
-            city: LIBRARY.city,
-            state: LIBRARY.state,
-            zipCode: LIBRARY.zipCode,
-            coordinates: coordinates
-          },
-          contact: {
-            website: `${LIBRARY.website}/events`,
-            phone: ''
-          },
-          url: `${LIBRARY.website}/events`,
-          imageUrl: event.ss_image_url || '',
+        const processedEvent = {
+          title: event.title,
+          name: event.title,
+          venueName: branch.name || 'Brooklyn Public Library',
+          venue: branch.name || 'Brooklyn Public Library',
+          location: event.venue || branch.name,
+          date: event.date,
+          eventDate: event.date,
+          startTime: event.startTime || '',
+          endTime: event.endTime || '',
+          description: event.description || `Event at ${branch.name}`,
+          url: event.url || 'https://www.bklynlibrary.org/calendar/list',
+          ageRange: event.ageRange || 'All Ages',
           metadata: {
-            source: 'Brooklyn Public Library Scraper',
-            sourceName: LIBRARY.name,
-            county: LIBRARY.county,
-            addedDate: admin.firestore.FieldValue.serverTimestamp(),
-            eventId: event.id,
-            virtual: event.is_virtual === 1,
-            hybrid: event.is_hybrid === 1
-          },
-          filters: {
-            isFree: true,
-            ageRange: ageRange
+            source: 'Brooklyn Public Library',
+            sourceName: branch.name || 'Brooklyn Public Library'
           }
         };
 
-        // Add geohash if we have coordinates
-        if (coordinates) {
-          eventDoc.geohash = ngeohash.encode(coordinates.latitude, coordinates.longitude, 7);
-        }
-
-        // Check for duplicates
-        const existing = await db.collection('events')
-          .where('metadata.eventId', '==', event.id)
-          .limit(1)
-          .get();
-
-        if (existing.empty) {
-          
-        // Link event to venue using venue-matcher
-        const activityId = await linkEventToVenue(eventDoc);
-        if (activityId) {
-          eventDoc.activityId = activityId;
-        }
-
-        await db.collection('events').add(eventDoc);
-          console.log(`  ✅ ${event.ts_title.substring(0, 60)}${event.ts_title.length > 60 ? '...' : ''}`);
-          totalImported++;
-        } else {
-          totalSkipped++;
-        }
-
-          // Rate limiting
-          await new Promise(resolve => setTimeout(resolve, 50));
-
-        } catch (error) {
-          console.error(`  ❌ Error processing event:`, error.message);
-          totalFailed++;
-        }
-      }
-
-      // Small delay between pages
-      if (page < pagesToFetch - 1) {
-        await new Promise(resolve => setTimeout(resolve, 500));
+        events.push(processedEvent);
+      } catch (error) {
+        console.error(`  ❌ Error processing event: ${error.message}`);
+        failed++;
       }
     }
 
+    console.log(`📊 Processed ${events.length} events for saving\n`);
+
   } catch (error) {
-    console.error(`\n❌ Error scraping Brooklyn Public Library:`, error.message);
-    throw error;
+    console.error('❌ Fatal scraping error:', error.message);
+    failed++;
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
   }
 
-  // Print summary
+  // Save events using helper
+  try {
+    const libraryList = Object.values(BROOKLYN_LIBRARY_BRANCHES).map(branch => ({
+      name: Object.keys(BROOKLYN_LIBRARY_BRANCHES).find(k => BROOKLYN_LIBRARY_BRANCHES[k] === branch),
+      city: branch.city,
+      state: branch.state,
+      zipCode: branch.zipCode,
+      address: branch.address,
+      county: branch.county,
+      url: 'https://www.bklynlibrary.org'
+    }));
+
+    const result = await saveEventsWithGeocoding(events, libraryList, {
+      scraperName: 'scraper-brooklyn-library-NY',
+      state: 'NY',
+      category: 'library',
+      platform: 'bpl-website'
+    });
+
+    imported = result.saved;
+    skipped = result.skipped;
+    failed += result.errors;
+
+  } catch (saveError) {
+    console.error('❌ Error saving events:', saveError.message);
+    failed++;
+  }
+
+  // Log results
   console.log('\n' + '='.repeat(60));
-  console.log(`✅ BROOKLYN PUBLIC LIBRARY SCRAPER COMPLETE!`);
-  console.log(`📊 Summary:`);
-  console.log(`   Imported: ${totalImported}`);
-  console.log(`   Skipped (duplicates/adults): ${totalSkipped}`);
-  console.log(`   Failed: ${totalFailed}`);
+  console.log('✅ BROOKLYN PUBLIC LIBRARY SCRAPER COMPLETE!\n');
+  console.log('📊 Summary:');
+  console.log(`   Imported: ${imported} events`);
+  console.log(`   Skipped: ${skipped} events`);
+  console.log(`   Failed: ${failed} events`);
   console.log('='.repeat(60) + '\n');
 
-  // Log scraper stats to Firestore
-  await logScraperResult('Brooklyn Public Library NY', {
-    found: totalImported + totalSkipped,
-    new: totalImported,
-    duplicates: totalSkipped
-  }, { dataType: 'events' });
+  // Log for monitoring
+  await logScraperResult({
+    scraperName: 'Brooklyn Public Library',
+    state: 'NY',
+    city: 'Brooklyn',
+    imported,
+    skipped,
+    failed,
+    status: failed > 0 ? 'warning' : 'success'
+  });
 
-  return { totalImported, totalSkipped, totalFailed };
+  return { imported, skipped, failed };
 }
 
-// Run scraper if called directly
+/**
+ * Cloud Function wrapper
+ */
+async function scrapeBrooklynLibraryCloudFunction(req, res) {
+  try {
+    const result = await scrapeBrooklynLibrary();
+    res.json({
+      success: true,
+      result: result
+    });
+  } catch (error) {
+    console.error('Cloud function error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+}
+
+// Run if executed directly
 if (require.main === module) {
   scrapeBrooklynLibrary()
-    .then(() => {
-      console.log('Scraper completed successfully');
-      process.exit(0);
-    })
+    .then(() => process.exit(0))
     .catch(error => {
-      console.error('Scraper failed:', error);
+      console.error('❌ Scraper failed:', error);
       process.exit(1);
     });
 }
 
-module.exports = { scrapeBrooklynLibrary };
+module.exports = {
+  scrapeBrooklynLibrary,
+  scrapeBrooklynLibraryCloudFunction
+};

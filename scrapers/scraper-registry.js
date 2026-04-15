@@ -866,6 +866,23 @@ const SCRAPERS = {
   'PortDiscovery-MD': { file: './scraper-port-discovery-md.js', exportName: 'scrapePortDiscovery', type: 'puppeteer', group: 1, state: 'MD' },
   // REMOVED: WordPress-NH - All 16 NH libraries use incompatible platforms (Assabet Interactive iframes, LibCal, Wix)
   // Scraper file archived to functions/scrapers/archived/scraper-wordpress-libraries-nh.js
+
+  // ============================================================================
+  // PHASE 2: DEDICATED LIBRARY SCRAPERS (custom platforms)
+  // ============================================================================
+  'Louisville-Library': { file: './scraper-louisville-library-KY.js', exportName: 'scrapeLouisvilleLibrary', type: 'puppeteer', group: 2, state: 'KY' },
+  'Miami-Dade-Library': { file: './scraper-miami-dade-library-FL.js', exportName: 'scrapeMiamiDadeLibrary', type: 'puppeteer', group: 1, state: 'FL' },
+  'Orange-County-Library-FL': { file: './scraper-orange-county-library-FL.js', exportName: 'scrapeOrangeCountyLibraryFL', type: 'puppeteer', group: 3, state: 'FL' },
+
+  // ============================================================================
+  // PHASE 3: PARKS & RECREATION EVENT SCRAPERS
+  // ============================================================================
+  'State-Parks-Events': { file: './scraper-state-parks-events.js', exportName: 'scrapeStateParksEvents', type: 'puppeteer', group: 1, state: 'Multi' },
+
+  // ============================================================================
+  // EASTERN US VENUE/ACTIVITY SCRAPER (data-driven)
+  // ============================================================================
+  'Activities-Eastern-US': { file: './scraper-activities-eastern-us.js', exportName: 'scrapeEasternUSActivities', type: 'puppeteer', group: 2, state: 'Multi' },
 };
 
 // ============================================================================
