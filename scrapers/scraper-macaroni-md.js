@@ -121,7 +121,7 @@ async function extractEventUrls(page) {
 
 async function extractEventDetails(page, url) {
   try {
-    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
     await page.waitForSelector('body', { timeout: 5000 });
     await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -248,7 +248,7 @@ async function scrapeSite(browser, site, logger, maxEvents = 50) {
   try {
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
-    await page.goto(`${site.url}/events/calendar`, { waitUntil: 'domcontentloaded', timeout: 15000 });
+    await page.goto(`${site.url}/events/calendar`, { waitUntil: 'domcontentloaded', timeout: 45000 });
     await new Promise(resolve => setTimeout(resolve, 500));
 
     const eventUrls = await extractEventUrls(page);

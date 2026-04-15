@@ -70,10 +70,13 @@ async function geocodeAddress(address, city, zipCode) {
 }
 
 async function tryGeocode(address) {
+  // Rate limit: wait 1.5s between Nominatim requests
+  await new Promise(r => setTimeout(r, 1500));
   try {
     const response = await axios.get('https://nominatim.openstreetmap.org/search', {
       params: { q: address, format: 'json', limit: 1, countrycodes: 'us' },
-      headers: { 'User-Agent': 'SocialSpot/1.0' }
+      headers: { 'User-Agent': 'FunHive/1.0 (family-events)' },
+      timeout: 10000
     });
     if (response.data && response.data.length > 0) {
       return {
@@ -81,7 +84,12 @@ async function tryGeocode(address) {
         longitude: parseFloat(response.data[0].lon)
       };
     }
-  } catch (error) {}
+  } catch (error) {
+    if (error.response && error.response.status === 429) {
+      console.log('Geocoding rate limited — waiting 5s...');
+      await new Promise(r => setTimeout(r, 5000));
+    }
+  }
   return null;
 }
 
@@ -101,7 +109,7 @@ async function extractEventUrls(page) {
 
 async function extractEventDetails(page, url) {
   try {
-    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
     await page.waitForSelector('body', { timeout: 5000 });
     await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -211,7 +219,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
   try {
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
-    await page.goto(`${site.url}/events/calendar`, { waitUntil: 'domcontentloaded', timeout: 15000 });
+    await page.goto(`${site.url}/events/calendar`, { waitUntil: 'domcontentloaded', timeout: 45000 });
     await new Promise(resolve => setTimeout(resolve, 500));
 
     const eventUrls = await extractEventUrls(page);
