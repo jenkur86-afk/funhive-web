@@ -54,7 +54,11 @@ async function geocodeAddress(address, city, zipCode) {
   return await tryGeocode(`${streetOnly}, IL ${zipCode}`);
 }
 
+const _geocodeMemCache = {};
 async function tryGeocode(address) {
+  // Check in-memory cache first (avoids re-geocoding same venue 10+ times per run)
+  if (_geocodeMemCache[address]) return _geocodeMemCache[address];
+  if (_geocodeMemCache[address] === null) return null; // cached failure
   // Rate limit: wait 1.5s between Nominatim requests
   await new Promise(r => setTimeout(r, 1500));
   try {
@@ -64,11 +68,14 @@ async function tryGeocode(address) {
       timeout: 10000
     });
     if (response.data && response.data.length > 0) {
-      return {
+      const result = {
         latitude: parseFloat(response.data[0].lat),
         longitude: parseFloat(response.data[0].lon)
       };
+      _geocodeMemCache[address] = result;
+      return result;
     }
+    _geocodeMemCache[address] = null; // cache miss
   } catch (error) {
     if (error.response && error.response.status === 429) {
       console.log('Geocoding rate limited — waiting 5s...');
