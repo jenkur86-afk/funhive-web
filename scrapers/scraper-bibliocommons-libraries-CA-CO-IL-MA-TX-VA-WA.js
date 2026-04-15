@@ -5,7 +5,7 @@
  *
  * Scrapes events from libraries using BiblioCommons platform
  *
- * COVERAGE (38 library systems across 16 states):
+ * COVERAGE (41 library systems across 22 states):
  *
  * AZ (1 library - 1M people):
  * - Pima County Public Library (Tucson) (1M)
@@ -23,6 +23,9 @@
  * - Arapahoe Libraries (210K)
  * - Jefferson County Public Library (334K)
  *
+ * CT (1 library):
+ * - Hartford Public Library
+ *
  * GA (1 library - 1M people):
  * - Fulton County Library System (1M)
  *
@@ -30,6 +33,12 @@
  * - Chicago Public Library
  * - Aurora Public Library (200K)
  * - Evanston Public Library (75K)
+ *
+ * IN (1 library):
+ * - Indianapolis Public Library
+ *
+ * KY (1 library):
+ * - Kenton County Public Library
  *
  * MA (1 library):
  * - Boston Public Library
@@ -47,8 +56,10 @@
  * NC (1 library - 900K people):
  * - Charlotte Mecklenburg Library (900K)
  *
- * OH (1 library - 800K people):
- * - Cincinnati & Hamilton County Public Library (800K)
+ * OH (3 libraries):
+ * - Cincinnati & Hamilton County Public Library
+ * - Cleveland Public Library
+ * - Cuyahoga County Public Library
  *
  * TX (4 libraries - 6.3M people):
  * - Harris County Public Library (5M)
@@ -68,6 +79,9 @@
  * - Fort Vancouver Regional Library (500K)
  * - Timberland Regional Library (380K)
  *
+ * WI (1 library):
+ * - Madison Public Library
+ *
  * NJ (1 library - 450K people):
  * - Burlington County Library System (450K)
  *
@@ -76,7 +90,7 @@
  * - Brooklyn Public Library (2.6M) (NEW)
  * - Queens Public Library (2.3M) (NEW)
  *
- * Total: 38 libraries serving ~33.7M people
+ * Total: 41 active libraries serving ~40M+ people
  *
  * Usage:
  *   node functions/scrapers/scraper-bibliocommons-libraries-CA-CO-IL-MA-TX-VA-WA.js
@@ -200,6 +214,17 @@ const LIBRARY_SYSTEMS = [
     zipCode: '80226'
   },
 
+  // CONNECTICUT (1 library)
+  {
+    name: 'Hartford Public Library',
+    url: 'https://hartfordlibrary.bibliocommons.com/v2/events',
+    county: 'Hartford',
+    state: 'CT',
+    website: 'https://www.hplct.org',
+    city: 'Hartford',
+    zipCode: '06103'
+  },
+
   // GEORGIA (1 library)
   {
     name: 'Fulton County Library System',
@@ -238,6 +263,28 @@ const LIBRARY_SYSTEMS = [
     website: 'https://epl.org',
     city: 'Evanston',
     zipCode: '60201'
+  },
+
+  // INDIANA (1 library)
+  {
+    name: 'Indianapolis Public Library',
+    url: 'https://indypl.bibliocommons.com/v2/events',
+    county: 'Marion',
+    state: 'IN',
+    website: 'https://www.indypl.org',
+    city: 'Indianapolis',
+    zipCode: '46204'
+  },
+
+  // KENTUCKY (1 library)
+  {
+    name: 'Kenton County Public Library',
+    url: 'https://kentonlibrary.bibliocommons.com/v2/events',
+    county: 'Kenton',
+    state: 'KY',
+    website: 'https://www.kentonlibrary.org',
+    city: 'Covington',
+    zipCode: '41011'
   },
 
   // MASSACHUSETTS (1 library)
@@ -319,7 +366,7 @@ const LIBRARY_SYSTEMS = [
     zipCode: '28202'
   },
 
-  // OHIO (1 library)
+  // OHIO (3 libraries)
   {
     name: 'Cincinnati & Hamilton County Public Library',
     url: 'https://cincinnatilibrary.bibliocommons.com/v2/events',
@@ -328,6 +375,24 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.cincinnatilibrary.org',
     city: 'Cincinnati',
     zipCode: '45202'
+  },
+  {
+    name: 'Cleveland Public Library',
+    url: 'https://cpl.bibliocommons.com/v2/events',
+    county: 'Cuyahoga',
+    state: 'OH',
+    website: 'https://cpl.org',
+    city: 'Cleveland',
+    zipCode: '44114'
+  },
+  {
+    name: 'Cuyahoga County Public Library',
+    url: 'https://cuyahoga.bibliocommons.com/v2/events',
+    county: 'Cuyahoga',
+    state: 'OH',
+    website: 'https://cuyahogalibrary.org',
+    city: 'Parma',
+    zipCode: '44134'
   },
 
   // TEXAS (4 libraries)
@@ -444,6 +509,17 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.trl.org',
     city: 'Olympia',
     zipCode: '98501'
+  },
+
+  // WISCONSIN (1 library)
+  {
+    name: 'Madison Public Library',
+    url: 'https://madisonpubliclibrary.bibliocommons.com/v2/events',
+    county: 'Dane',
+    state: 'WI',
+    website: 'https://www.madisonpubliclibrary.org',
+    city: 'Madison',
+    zipCode: '53703'
   }
 ];
 

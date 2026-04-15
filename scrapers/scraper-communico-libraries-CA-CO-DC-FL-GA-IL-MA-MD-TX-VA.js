@@ -6,7 +6,7 @@
  * Scrapes events from libraries using Communico platform (HTML method)
  * API requires authentication, so we scrape the HTML pages directly
  *
- * COVERAGE (50 libraries across 19 states):
+ * COVERAGE (62 libraries across 24 states):
  *
  * CA (4 libraries - 4.39M people):
  * - Berkeley Public Library (120K)
@@ -14,8 +14,9 @@
  * - LA County Library (3.5M)
  * - Sacramento Public Library (525K)
  *
- * CO (1 library - 380K people):
+ * CO (2 libraries - 1.1M people):
  * - Aurora Public Library (380K)
+ * - Douglas County Libraries (725K)
  *
  * DC (1 library - 700K people):
  * - DC Public Library (700K)
@@ -32,8 +33,8 @@
  * GA (4 libraries - 2.276M people):
  * - Gwinnett County Public Library (950K)
  * - DeKalb County Public Library (750K)
- * - Chattahoochee Valley Libraries (Columbus) (325K) (NEW)
- * - Forsyth County Public Library (Cumming) (251K) (NEW)
+ * - Chattahoochee Valley Libraries (Columbus) (325K)
+ * - Forsyth County Public Library (Cumming) (251K)
  *
  * IL (4 libraries - 427K people):
  * - Joliet Public Library (147K)
@@ -41,12 +42,17 @@
  * - Champaign Public Library (90K)
  * - Mount Prospect Public Library (55K)
  *
- * IN (1 library - 970K people):
+ * IN (3 libraries - 1.54M people):
  * - Indianapolis Public Library (970K)
+ * - Evansville Vanderburgh Public Library (290K) (NEW)
+ * - Allen County Public Library (407K) (NEW)
  *
  * IA (2 libraries - 201K people):
  * - Cedar Rapids Public Library (134K)
  * - Waterloo Public Library (67K)
+ *
+ * KY (1 library - 321K people) (NEW):
+ * - Lexington Public Library (321K)
  *
  * MA (1 library - 185K people):
  * - Worcester Public Library (185K)
@@ -58,6 +64,18 @@
  * - Calvert Library (92K)
  * - Charles County Public Library (160K)
  * - St. Mary's County Library (113K)
+ * - Anne Arundel County Public Library (580K)
+ * - Howard County Library System (830K)
+ * - Frederick County Public Libraries (240K)
+ *
+ * NC (2 libraries - 1.2M people) (NEW):
+ * - Wake County Public Libraries (1M)
+ * - Forsyth County Public Library (200K)
+ *
+ * NJ (3 libraries - 1.805M people):
+ * - Ocean County Library (600K)
+ * - Somerset County Library System (345K)
+ * - Middlesex County Library (860K)
  *
  * NV (1 library - 2.3M people):
  * - Las Vegas-Clark County Library District (2.3M)
@@ -78,6 +96,14 @@
  * PA (1 library - 420K people):
  * - Reading Public Library (420K)
  *
+ * SC (2 libraries - 1.4M people) (NEW):
+ * - Richland Library (500K)
+ * - Greenville County Library System (520K)
+ *
+ * TN (2 libraries - 1.25M people) (NEW):
+ * - Nashville Public Library (715K)
+ * - Chattanooga Public Library (540K)
+ *
  * TX (3 libraries - 511K people):
  * - McAllen Public Library (143K)
  * - Plano Public Library (288K)
@@ -87,18 +113,13 @@
  * - Loudoun County Public Library (420K)
  * - Prince William Public Library (410K)
  *
- * WI (1 library - 925K people):
- * - Milwaukee Public Library (925K)
- *
- * NJ (3 libraries - 1.805M people):
- * - Ocean County Library (600K)
- * - Somerset County Library System (345K) (NEW)
- * - Middlesex County Library (860K) (NEW)
- *
  * WA (1 library - 925K people):
  * - Pierce County Library System (925K)
  *
- * Total: 52 libraries serving ~33.0 million people
+ * WI (1 library - 925K people):
+ * - Milwaukee Public Library (925K)
+ *
+ * Total: 62 libraries serving ~45+ million people
  *
  * Usage:
  *   node functions/scrapers/scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js
@@ -356,7 +377,7 @@ const LIBRARY_SYSTEMS = [
     zipCode: '60056'
   },
 
-  // INDIANA (1 library)
+  // INDIANA (3 libraries)
   {
     name: 'Indianapolis Public Library',
     url: 'https://indianapolis.libnet.info/events',
@@ -365,6 +386,24 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.indypl.org',
     city: 'Indianapolis',
     zipCode: '46204'
+  },
+  {
+    name: 'Allen County Public Library',
+    url: 'https://acpl.libnet.info/events',
+    county: 'Allen',
+    state: 'IN',
+    website: 'https://www.acpl.info',
+    city: 'Fort Wayne',
+    zipCode: '46802'
+  },
+  {
+    name: 'Evansville Vanderburgh Public Library',
+    url: 'https://evansville.libnet.info/events',
+    county: 'Vanderburgh',
+    state: 'IN',
+    website: 'https://www.evpl.org',
+    city: 'Evansville',
+    zipCode: '47708'
   },
 
   // IOWA (2 libraries)
@@ -385,6 +424,17 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.waterloopubliclibrary.org',
     city: 'Waterloo',
     zipCode: '50703'
+  },
+
+  // KENTUCKY (1 library)
+  {
+    name: 'Lexington Public Library',
+    url: 'https://lexpublib.libnet.info/events',
+    county: 'Fayette',
+    state: 'KY',
+    website: 'https://www.lexpublib.org',
+    city: 'Lexington',
+    zipCode: '40507'
   },
 
   // MASSACHUSETTS (1 library)
@@ -479,6 +529,26 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.fcpl.org',
     city: 'Frederick',
     zipCode: '21701'
+  },
+
+  // NORTH CAROLINA (2 libraries)
+  {
+    name: 'Forsyth County Public Library',
+    url: 'https://forsyth.libnet.info/events',
+    county: 'Forsyth',
+    state: 'NC',
+    website: 'https://www.forsyth.cc/library',
+    city: 'Winston-Salem',
+    zipCode: '27101'
+  },
+  {
+    name: 'Wake County Public Libraries',
+    url: 'https://wake.libnet.info/events',
+    county: 'Wake',
+    state: 'NC',
+    website: 'https://www.wake.gov/libraries',
+    city: 'Raleigh',
+    zipCode: '27601'
   },
 
   // NEVADA (1 library)
@@ -599,6 +669,46 @@ const LIBRARY_SYSTEMS = [
     website: 'https://readingpubliclibrary.org',
     city: 'Reading',
     zipCode: '19602'
+  },
+
+  // SOUTH CAROLINA (2 libraries)
+  {
+    name: 'Greenville County Library System',
+    url: 'https://greenville.libnet.info/events',
+    county: 'Greenville',
+    state: 'SC',
+    website: 'https://www.greenvillelibrary.org',
+    city: 'Greenville',
+    zipCode: '29601'
+  },
+  {
+    name: 'Richland Library',
+    url: 'https://richland.libnet.info/events',
+    county: 'Richland',
+    state: 'SC',
+    website: 'https://www.richlandlibrary.com',
+    city: 'Columbia',
+    zipCode: '29201'
+  },
+
+  // TENNESSEE (2 libraries)
+  {
+    name: 'Chattanooga Public Library',
+    url: 'https://chattanooga.libnet.info/events',
+    county: 'Hamilton',
+    state: 'TN',
+    website: 'https://chattlibrary.org',
+    city: 'Chattanooga',
+    zipCode: '37402'
+  },
+  {
+    name: 'Nashville Public Library',
+    url: 'https://nashville.libnet.info/events',
+    county: 'Davidson',
+    state: 'TN',
+    website: 'https://www.library.nashville.org',
+    city: 'Nashville',
+    zipCode: '37219'
   },
 
   // VIRGINIA (2 libraries)

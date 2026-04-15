@@ -5,7 +5,7 @@
  *
  * Scrapes events from libraries using LibCal/Springshare platform
  *
- * COVERAGE (88 library systems across 21 states):
+ * COVERAGE (101 library systems across 26 states):
  * CA:
  * - Orange County Public Library
  * - Riverside County Library System
@@ -27,12 +27,17 @@
  * - Bridgeport Public Library
  * - New Haven Free Public Library
  * - Stratford Library
+ * - Hartford Public Library (NEW)
+ * - East Hartford Public Library (NEW)
  *
  * DE:
  * - Delaware Libraries (all counties via unified calendar)
  *
  * FL:
  * - Lakeland Public Library (Polk County)
+ * - Palm Beach County Library System (NEW)
+ * - St. Johns County Public Library (NEW)
+ * - Seminole County Library (NEW)
  *
  * LA:
  * - Lafayette Public Library
@@ -95,6 +100,8 @@
  *
  * TN:
  * - Clarksville-Montgomery County Public Library
+ * - Memphis Public Libraries (NEW)
+ * - Knox County Public Library (NEW)
  *
  * TX:
  * - Arlington Public Library
@@ -131,6 +138,20 @@
  * - Spokane County Library District (NEW)
  * - NCW Libraries (NEW)
  * - Whatcom County Library System (NEW)
+ *
+ * AL (NEW):
+ * - Huntsville-Madison County Public Library
+ *
+ * KY (NEW):
+ * - Kenton County Public Library
+ * - Boone County Public Library
+ *
+ * MI (NEW):
+ * - Monroe County Library System
+ *
+ * NH (NEW):
+ * - Nashua Public Library
+ * - Keene Public Library
  *
  * Usage:
  *   node scripts/scraper-libcal-libraries.js
@@ -308,6 +329,24 @@ const LIBRARY_SYSTEMS = [
     city: 'Stratford',
     zipCode: '06615'
   },
+  {
+    name: 'Hartford Public Library',
+    url: 'https://hplct.libcal.com/calendar?cid=-1&t=d',
+    county: 'Hartford',
+    state: 'CT',
+    website: 'https://hplct.org',
+    city: 'Hartford',
+    zipCode: '06103'
+  },
+  {
+    name: 'East Hartford Public Library',
+    url: 'https://easthartfordct.libcal.com/calendar?cid=-1&t=d',
+    county: 'Hartford',
+    state: 'CT',
+    website: 'https://www.easthartfordlibrary.org',
+    city: 'East Hartford',
+    zipCode: '06108'
+  },
 
   // DELAWARE - All Counties (unfiltered)
   {
@@ -329,6 +368,33 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.lakelandgov.net/departments/library/',
     city: 'Lakeland',
     zipCode: '33801'
+  },
+  {
+    name: 'Palm Beach County Library System',
+    url: 'https://pbclibrary.libcal.com/calendar?cid=-1&t=d',
+    county: 'Palm Beach',
+    state: 'FL',
+    website: 'https://www.pbclibrary.org',
+    city: 'West Palm Beach',
+    zipCode: '33401'
+  },
+  {
+    name: 'St. Johns County Public Library',
+    url: 'https://sjcpls.libcal.com/calendar?cid=-1&t=d',
+    county: 'St. Johns',
+    state: 'FL',
+    website: 'https://www.sjcpls.org',
+    city: 'St. Augustine',
+    zipCode: '32084'
+  },
+  {
+    name: 'Seminole County Library',
+    url: 'https://seminolecountylibrary.libcal.com/calendar?cid=-1&t=d',
+    county: 'Seminole',
+    state: 'FL',
+    website: 'https://www.seminolecountylibrary.org',
+    city: 'Sanford',
+    zipCode: '32771'
   },
 
   // IOWA
@@ -897,6 +963,24 @@ const LIBRARY_SYSTEMS = [
     city: 'Clarksville',
     zipCode: '37040'
   },
+  {
+    name: 'Memphis Public Libraries',
+    url: 'https://memphislibrary.libcal.com/calendar?cid=-1&t=d',
+    county: 'Shelby',
+    state: 'TN',
+    website: 'https://www.memphislibrary.org',
+    city: 'Memphis',
+    zipCode: '38103'
+  },
+  {
+    name: 'Knox County Public Library',
+    url: 'https://knoxlib.libcal.com/calendar?cid=-1&t=d',
+    county: 'Knox',
+    state: 'TN',
+    website: 'https://www.knoxlibrary.org',
+    city: 'Knoxville',
+    zipCode: '37902'
+  },
 
   // TEXAS
   {
@@ -948,6 +1032,68 @@ const LIBRARY_SYSTEMS = [
     website: 'https://librarycommission.wv.gov',
     city: 'Charleston',
     zipCode: '25305'
+  },
+
+  // ALABAMA
+  {
+    name: 'Huntsville-Madison County Public Library',
+    url: 'https://hmcpl.libcal.com/calendar?cid=-1&t=d',
+    county: 'Madison',
+    state: 'AL',
+    website: 'https://www.hmcpl.org',
+    city: 'Huntsville',
+    zipCode: '35801'
+  },
+
+  // KENTUCKY
+  {
+    name: 'Kenton County Public Library',
+    url: 'https://kentonlibrary.libcal.com/calendar?cid=-1&t=d',
+    county: 'Kenton',
+    state: 'KY',
+    website: 'https://www.kentonlibrary.org',
+    city: 'Covington',
+    zipCode: '41011'
+  },
+  {
+    name: 'Boone County Public Library',
+    url: 'https://bcpl.libcal.com/calendar?cid=-1&t=d',
+    county: 'Boone',
+    state: 'KY',
+    website: 'https://www.bcpl.org',
+    city: 'Burlington',
+    zipCode: '41005'
+  },
+
+  // MICHIGAN
+  {
+    name: 'Monroe County Library System',
+    url: 'https://mymcls.libcal.com/calendar?cid=-1&t=d',
+    county: 'Monroe',
+    state: 'MI',
+    website: 'https://www.mymcls.org',
+    city: 'Monroe',
+    zipCode: '48161'
+  },
+
+  // NEW HAMPSHIRE
+  {
+    name: 'Nashua Public Library',
+    url: 'https://nashualibrary.libcal.com/calendar/events',
+    county: 'Hillsborough',
+    state: 'NH',
+    website: 'https://www.nashunh.gov/library',
+    city: 'Nashua',
+    zipCode: '03060'
+  },
+  {
+    name: 'Keene Public Library',
+    url: 'https://keenenh.libcal.com/calendar',
+    county: 'Cheshire',
+    state: 'NH',
+    website: 'https://www.ci.keene.nh.us/library',
+    city: 'Keene',
+    zipCode: '03431'
   },
 
   // WASHINGTON
