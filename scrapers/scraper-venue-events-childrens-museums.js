@@ -22,9 +22,8 @@
  */
 
 const { launchBrowser } = require('./puppeteer-config');
-const { ScraperLogger } = require('./scraper-logger');
-const { saveEventsWithGeocoding } = require('./helpers/event-save-helper');
-const ngeohash = require('ngeohash');
+const { ScraperLogger, logScraperResult } = require('./scraper-logger');
+const { saveEventsWithGeocoding } = require('./event-save-helper');
 
 const SCRAPER_NAME = 'ChildrensMuseums-Events-Eastern';
 

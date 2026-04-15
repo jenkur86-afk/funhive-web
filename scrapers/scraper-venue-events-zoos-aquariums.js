@@ -42,10 +42,9 @@
  * Schedule: 3-day rotation (ZooAquariums-Group1/2/3)
  */
 
-const { launchBrowser } = require('./helpers/puppeteer-config');
-const { saveEventsWithGeocoding } = require('./helpers/event-save-helper');
-const { ScraperLogger, logScraperResult } = require('./helpers/scraper-logger');
-const ngeohash = require('ngeohash');
+const { launchBrowser } = require('./puppeteer-config');
+const { saveEventsWithGeocoding } = require('./event-save-helper');
+const { ScraperLogger, logScraperResult } = require('./scraper-logger');
 
 const SCRAPER_NAME = 'ZooAquariums-Eastern';
 const BATCH_SIZE = 3000; // Events batch size for DB writes

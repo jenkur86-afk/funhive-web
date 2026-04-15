@@ -36,16 +36,11 @@
  * Schedule: Every 3 days
  */
 
-const axios = require('axios');
-const cheerio = require('cheerio');
-const ngeohash = require('ngeohash');
-const { launchBrowser, createStealthPage } = require('./helpers/puppeteer-config');
-const { admin, db } = require('./helpers/supabase-adapter');
+const { launchBrowser, createStealthPage } = require('./puppeteer-config');
+const { saveEventsWithGeocoding } = require('./event-save-helper');
 const { categorizeEvent } = require('./event-categorization-helper');
 const { normalizeDateString } = require('./date-normalization-helper');
-const { generateEventId } = require('./event-id-helper');
 const { logScraperResult } = require('./scraper-logger');
-const { linkEventToVenue } = require('./venue-matcher');
 
 const SCRAPER_NAME = 'ScienceArtsVenues';
 
@@ -258,6 +253,7 @@ async function processAndSaveVenueEvents(venue, extractedEvents) {
   if (extractedEvents.length === 0) return { saved: 0, skipped: 0, failed: 0 };
 
   let saved = 0, skipped = 0, failed = 0;
+  const allEvents = [];
   const seenEvents = new Set();
 
   for (const event of extractedEvents) {
@@ -346,9 +342,6 @@ async function processAndSaveVenueEvents(venue, extractedEvents) {
         ageRange: 'All Ages',
         cost: 'Included with admission',
         url: event.url || venue.eventsUrl,
-        contact: {
-          website: venue.eventsUrl
-        },
         metadata: {
           sourceName: venue.name,
           sourceUrl: venue.eventsUrl,
@@ -356,40 +349,30 @@ async function processAndSaveVenueEvents(venue, extractedEvents) {
           scraperName: SCRAPER_NAME,
           platform: 'museum-arts-venue',
           state: venue.state,
-          addedDate: admin.firestore.FieldValue.serverTimestamp()
-        },
-        geohash: '', // Will be populated if coordinates available
-        filters: {
-          ageRange: 'All Ages'
+          category: parentCategory
         }
       };
 
-      // Generate event ID
-      const eventId = generateEventId(eventDoc.url + eventDoc.name + eventDoc.eventDate);
-
-      // Check for existing event
-      const existingDoc = await db.collection('events').doc(eventId).get();
-      if (existingDoc.exists) {
-        skipped++;
-        continue;
-      }
-
-      // Link event to venue using venue-matcher if possible
-      const activityId = await linkEventToVenue(eventDoc);
-      if (activityId) {
-        eventDoc.activityId = activityId;
-      }
-
-      // Save event
-      await db.collection('events').doc(eventId).set(eventDoc);
+      allEvents.push(eventDoc);
       saved++;
-
-      // Rate limiting: 100ms between saves
-      await new Promise(resolve => setTimeout(resolve, 100));
 
     } catch (error) {
       console.error(`    Error saving event: ${error.message}`);
       failed++;
+    }
+  }
+
+  // Batch save all events for this venue
+  if (allEvents.length > 0) {
+    try {
+      await saveEventsWithGeocoding(allEvents, [{ name: venue.name, city: venue.city, state: venue.state, zipCode: venue.zip }], {
+        scraperName: SCRAPER_NAME,
+        state: venue.state,
+        category: 'learning-culture',
+        platform: 'museum-arts-venue'
+      });
+    } catch (err) {
+      console.error(`    Error batch saving: ${err.message}`);
     }
   }
 
@@ -465,24 +448,7 @@ async function scrapeVenueEvents(options = {}) {
     console.log(`   Duration: ${duration}s`);
     console.log(`${'='.repeat(70)}\n`);
 
-    // Log to scraperLogs
-    try {
-      await db.collection('scraperLogs').add({
-        scraperName: SCRAPER_NAME,
-        timestamp: admin.firestore.FieldValue.serverTimestamp(),
-        eventsImported: totalSaved,
-        eventsSkipped: totalSkipped,
-        eventsFailed: totalFailed,
-        eventsFound: totalSaved + totalSkipped,
-        venuesProcessed: venuesProcessed,
-        duration: parseFloat(duration),
-        status: totalFailed === 0 ? 'success' : 'partial'
-      });
-    } catch (error) {
-      console.error('Failed to log scraper run:', error.message);
-    }
-
-    // Log to scraperResults collection for monitoring
+    // Log scraper results for monitoring
     try {
       await logScraperResult(SCRAPER_NAME, {
         found: totalSaved + totalSkipped,
