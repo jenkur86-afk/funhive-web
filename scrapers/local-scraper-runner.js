@@ -280,65 +280,19 @@ async function runScraperGroup(group, options = {}) {
   return results;
 }
 
+// NOTE: MacaroniKid scrapers have been separated into their own runners
+// See macaroni-runner-group1.js, macaroni-runner-group2.js, macaroni-runner-group3.js
+// These runners should be invoked separately on their own schedule
+// This avoids memory and timing issues when running alongside other scrapers
+//
+// Usage for MacaroniKid runners:
+//   node macaroni-runner-group1.js   # Days 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31
+//   node macaroni-runner-group2.js   # Days 2, 5, 8, 11, 14, 17, 20, 23, 26, 29
+//   node macaroni-runner-group3.js   # Days 3, 6, 9, 12, 15, 18, 21, 24, 27, 30
 async function runMacaroniGroup(group, options = {}) {
-  const scrapers = getMacaroniScrapersForGroup(group);
-  const scraperNames = Object.keys(scrapers);
-
-  if (scraperNames.length === 0) {
-    log(`ℹ️  No Macaroni Kid scrapers for group ${group}`);
-    return { success: [], failed: [], skipped: [] };
-  }
-
-  const siteCounts = getMacaroniSiteCounts();
-
-  log(`\n${'='.repeat(60)}`);
-  log(`🍝 Running Macaroni Kid Group ${group} (${scraperNames.length} states, ~${siteCounts[group]} sites)`);
-  log(`${'='.repeat(60)}\n`);
-
-  const results = {
-    success: [],
-    failed: [],
-    skipped: []
-  };
-
-  let scraperCount = 0;
-
-  for (let i = 0; i < scraperNames.length; i++) {
-    const name = scraperNames[i];
-    const config = scrapers[name];
-
-    if (options.dryRun) {
-      log(`[DRY RUN] Would run: ${name} (${config.state}, ${config.sites} sites)`);
-      continue;
-    }
-
-    // Run the scraper
-    const result = await runScraper(name, config);
-
-    if (result.success) {
-      results.success.push(result);
-    } else {
-      results.failed.push(result);
-    }
-
-    scraperCount++;
-
-    // Add delay between scrapers (Macaroni Kid scrapers need more time)
-    if (i < scraperNames.length - 1) {
-      await new Promise(resolve => setTimeout(resolve, CONFIG.DELAY_BETWEEN_SCRAPERS * 2));
-    }
-
-    // Memory cleanup every 5 scrapers (Macaroni Kid is memory-intensive)
-    if (scraperCount % CONFIG.BROWSER_RESTART_INTERVAL === 0) {
-      log(`🔄 Completed ${scraperCount} Macaroni Kid states, memory cleanup...`);
-      if (global.gc) {
-        global.gc();
-      }
-      await new Promise(resolve => setTimeout(resolve, 10000));
-    }
-  }
-
-  return results;
+  log(`ℹ️  MacaroniKid scrapers have been moved to separate runners.`);
+  log(`   Use: node macaroni-runner-group${group}.js`);
+  return { success: [], failed: [], skipped: [] };
 }
 
 async function runOSMScrapers(options = {}) {

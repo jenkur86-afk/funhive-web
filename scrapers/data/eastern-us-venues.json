@@ -1,0 +1,1584 @@
+[
+  {
+    "name": "Please Touch Museum",
+    "city": "Philadelphia",
+    "state": "PA",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Carnegie Museum of Natural History",
+    "city": "Pittsburgh",
+    "state": "PA",
+    "category": "Children's Museums",
+    "subcategory": "Natural History Museum"
+  },
+  {
+    "name": "Pennsbury Manor",
+    "city": "Morrisville",
+    "state": "PA",
+    "category": "Children's Museums",
+    "subcategory": "Historic Site"
+  },
+  {
+    "name": "The Rittenhouse Museum",
+    "city": "Norriton",
+    "state": "PA",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Discovery Science Center",
+    "city": "Harrisburg",
+    "state": "PA",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Center"
+  },
+  {
+    "name": "Hershey's Chocolate World",
+    "city": "Hershey",
+    "state": "PA",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Educational Center"
+  },
+  {
+    "name": "Sky Zone Trampoline Park",
+    "city": "Philadelphia",
+    "state": "PA",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Trampoline Park",
+    "city": "Pittsburgh",
+    "state": "PA",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Launch Trampoline Park",
+    "city": "King of Prussia",
+    "state": "PA",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Altitude Trampoline Park",
+    "city": "Allentown",
+    "state": "PA",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Ezone Indoor Playground",
+    "city": "Philadelphia",
+    "state": "PA",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Grand Central Station",
+    "city": "Pittsburgh",
+    "state": "PA",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Allegheny Gymnastics Academy",
+    "city": "Pittsburgh",
+    "state": "PA",
+    "category": "Gymnastics Centers",
+    "subcategory": "Gymnastics"
+  },
+  {
+    "name": "Great Skate",
+    "city": "Philadelphia",
+    "state": "PA",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Skating"
+  },
+  {
+    "name": "Clearview Ice Rinks",
+    "city": "Hamburg",
+    "state": "PA",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Skating"
+  },
+  {
+    "name": "Skateland",
+    "city": "Philadelphia",
+    "state": "PA",
+    "category": "Roller Skating Rinks",
+    "subcategory": "Roller Skating"
+  },
+  {
+    "name": "Skate Zone",
+    "city": "Pittsburgh",
+    "state": "PA",
+    "category": "Roller Skating Rinks",
+    "subcategory": "Roller Skating"
+  },
+  {
+    "name": "AMF Bowling",
+    "city": "Philadelphia",
+    "state": "PA",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
+  },
+  {
+    "name": "Bowlmor Lanes",
+    "city": "Pittsburgh",
+    "state": "PA",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
+  },
+  {
+    "name": "Putt-Putt Golf & Games",
+    "city": "Philadelphia",
+    "state": "PA",
+    "category": "Mini Golf & Batting Cages",
+    "subcategory": "Mini Golf"
+  },
+  {
+    "name": "Golf Quest",
+    "city": "Pittsburgh",
+    "state": "PA",
+    "category": "Mini Golf & Batting Cages",
+    "subcategory": "Mini Golf"
+  },
+  {
+    "name": "Art Studio 4",
+    "city": "Philadelphia",
+    "state": "PA",
+    "category": "Art Studios & Pottery",
+    "subcategory": "Art Studio"
+  },
+  {
+    "name": "Clay Fest",
+    "city": "Pittsburgh",
+    "state": "PA",
+    "category": "Art Studios & Pottery",
+    "subcategory": "Pottery Studio"
+  },
+  {
+    "name": "Sandcastle Water Park",
+    "city": "Pittsburgh",
+    "state": "PA",
+    "category": "Swimming & Splash Pads",
+    "subcategory": "Water Park"
+  },
+  {
+    "name": "Dorney Park & Wildwater Kingdom",
+    "city": "Allentown",
+    "state": "PA",
+    "category": "Swimming & Splash Pads",
+    "subcategory": "Water Park"
+  },
+  {
+    "name": "Regal Cinemas",
+    "city": "Philadelphia",
+    "state": "PA",
+    "category": "Movie Theaters",
+    "subcategory": "Movie Theater"
+  },
+  {
+    "name": "AMC Theaters",
+    "city": "Pittsburgh",
+    "state": "PA",
+    "category": "Movie Theaters",
+    "subcategory": "Movie Theater"
+  },
+  {
+    "name": "Top Rope Climbing Gym",
+    "city": "Philadelphia",
+    "state": "PA",
+    "category": "Climbing Gyms",
+    "subcategory": "Climbing Gym"
+  },
+  {
+    "name": "Pittsburgh Climbing Co.",
+    "city": "Pittsburgh",
+    "state": "PA",
+    "category": "Climbing Gyms",
+    "subcategory": "Climbing Gym"
+  },
+  {
+    "name": "Dave & Buster's",
+    "city": "Philadelphia",
+    "state": "PA",
+    "category": "Family Entertainment Centers",
+    "subcategory": "Entertainment Center"
+  },
+  {
+    "name": "Main Event",
+    "city": "Pittsburgh",
+    "state": "PA",
+    "category": "Family Entertainment Centers",
+    "subcategory": "Entertainment Center"
+  },
+  {
+    "name": "Philadelphia Zoo",
+    "city": "Philadelphia",
+    "state": "PA",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Phipps Conservatory",
+    "city": "Pittsburgh",
+    "state": "PA",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Nature Center"
+  },
+  {
+    "name": "Elmwood Park Zoo",
+    "city": "Norriton",
+    "state": "PA",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Liberty Science Center",
+    "city": "Jersey City",
+    "state": "NJ",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Center"
+  },
+  {
+    "name": "New Jersey Children's Museum",
+    "city": "Paramus",
+    "state": "NJ",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Meadowlands Museum",
+    "city": "Lyndhurst",
+    "state": "NJ",
+    "category": "Children's Museums",
+    "subcategory": "Museum"
+  },
+  {
+    "name": "Adventure Aquarium",
+    "city": "Camden",
+    "state": "NJ",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Aquarium"
+  },
+  {
+    "name": "Sky Zone Paramus",
+    "city": "Paramus",
+    "state": "NJ",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air North Bergen",
+    "city": "North Bergen",
+    "state": "NJ",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Altitude Trampoline Edison",
+    "city": "Edison",
+    "state": "NJ",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "iPlay America",
+    "city": "Bloomfield",
+    "state": "NJ",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Grand Central Station",
+    "city": "Paramus",
+    "state": "NJ",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Elite Gymnastics Academy",
+    "city": "New Jersey",
+    "state": "NJ",
+    "category": "Gymnastics Centers",
+    "subcategory": "Gymnastics"
+  },
+  {
+    "name": "Ice World Skating Rink",
+    "city": "Paramus",
+    "state": "NJ",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Skating"
+  },
+  {
+    "name": "Ice Castle Arena",
+    "city": "Hackensack",
+    "state": "NJ",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Skating"
+  },
+  {
+    "name": "Palisades Roller Skating Rink",
+    "city": "Jersey City",
+    "state": "NJ",
+    "category": "Roller Skating Rinks",
+    "subcategory": "Roller Skating"
+  },
+  {
+    "name": "Bowlmor Lanes Princeton",
+    "city": "Princeton",
+    "state": "NJ",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
+  },
+  {
+    "name": "AMF Bowling Paramus",
+    "city": "Paramus",
+    "state": "NJ",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
+  },
+  {
+    "name": "Putt-Putt Golf",
+    "city": "Paramus",
+    "state": "NJ",
+    "category": "Mini Golf & Batting Cages",
+    "subcategory": "Mini Golf"
+  },
+  {
+    "name": "Art Studio New Jersey",
+    "city": "Princeton",
+    "state": "NJ",
+    "category": "Art Studios & Pottery",
+    "subcategory": "Art Studio"
+  },
+  {
+    "name": "Pottery Place Studio",
+    "city": "Montclair",
+    "state": "NJ",
+    "category": "Art Studios & Pottery",
+    "subcategory": "Pottery Studio"
+  },
+  {
+    "name": "Hyper Hub Water Park",
+    "city": "Secaucus",
+    "state": "NJ",
+    "category": "Swimming & Splash Pads",
+    "subcategory": "Water Park"
+  },
+  {
+    "name": "Regal Cinemas New Jersey",
+    "city": "Paramus",
+    "state": "NJ",
+    "category": "Movie Theaters",
+    "subcategory": "Movie Theater"
+  },
+  {
+    "name": "AMC Theaters New Jersey",
+    "city": "Jersey City",
+    "state": "NJ",
+    "category": "Movie Theaters",
+    "subcategory": "Movie Theater"
+  },
+  {
+    "name": "Climb NJ",
+    "city": "East Rutherford",
+    "state": "NJ",
+    "category": "Climbing Gyms",
+    "subcategory": "Climbing Gym"
+  },
+  {
+    "name": "Quest Climbing Gym",
+    "city": "Montclair",
+    "state": "NJ",
+    "category": "Climbing Gyms",
+    "subcategory": "Climbing Gym"
+  },
+  {
+    "name": "Dave & Buster's New Jersey",
+    "city": "New Jersey",
+    "state": "NJ",
+    "category": "Family Entertainment Centers",
+    "subcategory": "Entertainment Center"
+  },
+  {
+    "name": "Main Event New Jersey",
+    "city": "Paramus",
+    "state": "NJ",
+    "category": "Family Entertainment Centers",
+    "subcategory": "Entertainment Center"
+  },
+  {
+    "name": "Philadelphia Zoo Extension",
+    "city": "Cherry Hill",
+    "state": "NJ",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Cohanzick Zoo",
+    "city": "Bridgeton",
+    "state": "NJ",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Six Flags Great Adventure",
+    "city": "Jackson",
+    "state": "NJ",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Amusement Park"
+  },
+  {
+    "name": "Delaware Children's Museum",
+    "city": "Wilmington",
+    "state": "DE",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "First State Heritage Park",
+    "city": "Dover",
+    "state": "DE",
+    "category": "Children's Museums",
+    "subcategory": "Historic Site"
+  },
+  {
+    "name": "Delaware Science Center",
+    "city": "Wilmington",
+    "state": "DE",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Center"
+  },
+  {
+    "name": "Urban Air Wilmington",
+    "city": "Wilmington",
+    "state": "DE",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Altitude Trampoline Newark",
+    "city": "Newark",
+    "state": "DE",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Wilmington",
+    "city": "Wilmington",
+    "state": "DE",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Gymnastics Plus",
+    "city": "Wilmington",
+    "state": "DE",
+    "category": "Gymnastics Centers",
+    "subcategory": "Gymnastics"
+  },
+  {
+    "name": "Coral Street Arts Center",
+    "city": "Wilmington",
+    "state": "DE",
+    "category": "Art Studios & Pottery",
+    "subcategory": "Art Studio"
+  },
+  {
+    "name": "Delaware Zoo",
+    "city": "Wilmington",
+    "state": "DE",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Brandywine Zoo",
+    "city": "Wilmington",
+    "state": "DE",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Bronx Zoo",
+    "city": "Bronx",
+    "state": "NY",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Central Park Zoo",
+    "city": "New York",
+    "state": "NY",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Shedd Aquarium",
+    "city": "New York",
+    "state": "NY",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Aquarium"
+  },
+  {
+    "name": "Museum of Mathematics",
+    "city": "New York",
+    "state": "NY",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "American Museum of Natural History",
+    "city": "New York",
+    "state": "NY",
+    "category": "Children's Museums",
+    "subcategory": "Natural History Museum"
+  },
+  {
+    "name": "Children's Museum of Manhattan",
+    "city": "New York",
+    "state": "NY",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Intrepid Sea, Air & Space Museum",
+    "city": "New York",
+    "state": "NY",
+    "category": "Children's Museums",
+    "subcategory": "Museum"
+  },
+  {
+    "name": "New York Hall of Science",
+    "city": "Flushing",
+    "state": "NY",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Center"
+  },
+  {
+    "name": "Sky Zone Manhattan",
+    "city": "New York",
+    "state": "NY",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Queens",
+    "city": "Queens",
+    "state": "NY",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Altitude Trampoline Brooklyn",
+    "city": "Brooklyn",
+    "state": "NY",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Terminal Play",
+    "city": "New York",
+    "state": "NY",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Manhattan Gymnastics Academy",
+    "city": "New York",
+    "state": "NY",
+    "category": "Gymnastics Centers",
+    "subcategory": "Gymnastics"
+  },
+  {
+    "name": "Sky Rink",
+    "city": "New York",
+    "state": "NY",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Skating"
+  },
+  {
+    "name": "Rockefeller Center Ice Rink",
+    "city": "New York",
+    "state": "NY",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Skating"
+  },
+  {
+    "name": "Roller Skating New York",
+    "city": "New York",
+    "state": "NY",
+    "category": "Roller Skating Rinks",
+    "subcategory": "Roller Skating"
+  },
+  {
+    "name": "AMF Bowling New York",
+    "city": "New York",
+    "state": "NY",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
+  },
+  {
+    "name": "Bowlmor Lanes New York",
+    "city": "New York",
+    "state": "NY",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
+  },
+  {
+    "name": "Mini Golf New York",
+    "city": "New York",
+    "state": "NY",
+    "category": "Mini Golf & Batting Cages",
+    "subcategory": "Mini Golf"
+  },
+  {
+    "name": "Art Studio New York",
+    "city": "New York",
+    "state": "NY",
+    "category": "Art Studios & Pottery",
+    "subcategory": "Art Studio"
+  },
+  {
+    "name": "Pottery Studio Manhattan",
+    "city": "New York",
+    "state": "NY",
+    "category": "Art Studios & Pottery",
+    "subcategory": "Pottery Studio"
+  },
+  {
+    "name": "Splash Pad New York",
+    "city": "New York",
+    "state": "NY",
+    "category": "Swimming & Splash Pads",
+    "subcategory": "Water Park"
+  },
+  {
+    "name": "AMC Theaters New York",
+    "city": "New York",
+    "state": "NY",
+    "category": "Movie Theaters",
+    "subcategory": "Movie Theater"
+  },
+  {
+    "name": "Regal Cinemas New York",
+    "city": "New York",
+    "state": "NY",
+    "category": "Movie Theaters",
+    "subcategory": "Movie Theater"
+  },
+  {
+    "name": "Cliff Climbing Gym",
+    "city": "New York",
+    "state": "NY",
+    "category": "Climbing Gyms",
+    "subcategory": "Climbing Gym"
+  },
+  {
+    "name": "Quest Climbing New York",
+    "city": "Brooklyn",
+    "state": "NY",
+    "category": "Climbing Gyms",
+    "subcategory": "Climbing Gym"
+  },
+  {
+    "name": "Dave & Buster's New York",
+    "city": "New York",
+    "state": "NY",
+    "category": "Family Entertainment Centers",
+    "subcategory": "Entertainment Center"
+  },
+  {
+    "name": "Main Event New York",
+    "city": "Queens",
+    "state": "NY",
+    "category": "Family Entertainment Centers",
+    "subcategory": "Entertainment Center"
+  },
+  {
+    "name": "Boston Children's Museum",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Museum of Science",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Center"
+  },
+  {
+    "name": "Franklin Park Zoo",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "New England Aquarium",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Aquarium"
+  },
+  {
+    "name": "Isabella Stewart Gardner Museum",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Children's Museums",
+    "subcategory": "Art Museum"
+  },
+  {
+    "name": "Sky Zone Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Altitude Trampoline Worcester",
+    "city": "Worcester",
+    "state": "MA",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Boston Gymnastics Academy",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Gymnastics Centers",
+    "subcategory": "Gymnastics"
+  },
+  {
+    "name": "Skating Club of Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Skating"
+  },
+  {
+    "name": "Roller Skating Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Roller Skating Rinks",
+    "subcategory": "Roller Skating"
+  },
+  {
+    "name": "AMF Bowling Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
+  },
+  {
+    "name": "Bowlmor Lanes Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
+  },
+  {
+    "name": "Mini Golf Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Mini Golf & Batting Cages",
+    "subcategory": "Mini Golf"
+  },
+  {
+    "name": "Art Studio Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Art Studios & Pottery",
+    "subcategory": "Art Studio"
+  },
+  {
+    "name": "Pottery Place Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Art Studios & Pottery",
+    "subcategory": "Pottery Studio"
+  },
+  {
+    "name": "Water Park Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Swimming & Splash Pads",
+    "subcategory": "Water Park"
+  },
+  {
+    "name": "AMC Theaters Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Movie Theaters",
+    "subcategory": "Movie Theater"
+  },
+  {
+    "name": "Regal Cinemas Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Movie Theaters",
+    "subcategory": "Movie Theater"
+  },
+  {
+    "name": "Boston Climbing Gym",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Climbing Gyms",
+    "subcategory": "Climbing Gym"
+  },
+  {
+    "name": "Quest Climbing Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Climbing Gyms",
+    "subcategory": "Climbing Gym"
+  },
+  {
+    "name": "Dave & Buster's Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Family Entertainment Centers",
+    "subcategory": "Entertainment Center"
+  },
+  {
+    "name": "Main Event Boston",
+    "city": "Boston",
+    "state": "MA",
+    "category": "Family Entertainment Centers",
+    "subcategory": "Entertainment Center"
+  },
+  {
+    "name": "Providence Children's Museum",
+    "city": "Providence",
+    "state": "RI",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Roger Williams Zoo",
+    "city": "Bristol",
+    "state": "RI",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Sky Zone Providence",
+    "city": "Providence",
+    "state": "RI",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Warwick",
+    "city": "Warwick",
+    "state": "RI",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Providence",
+    "city": "Providence",
+    "state": "RI",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Connecticut Science Center",
+    "city": "Hartford",
+    "state": "CT",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Center"
+  },
+  {
+    "name": "Yale Peabody Museum",
+    "city": "New Haven",
+    "state": "CT",
+    "category": "Children's Museums",
+    "subcategory": "Natural History Museum"
+  },
+  {
+    "name": "Beardsley Zoo",
+    "city": "Bridgeport",
+    "state": "CT",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Sky Zone Hartford",
+    "city": "Hartford",
+    "state": "CT",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air New Haven",
+    "city": "New Haven",
+    "state": "CT",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Hartford",
+    "city": "Hartford",
+    "state": "CT",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Children's Museum of NH",
+    "city": "Dover",
+    "state": "NH",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Squam Lakes Natural Science Center",
+    "city": "Holderness",
+    "state": "NH",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Nature Center"
+  },
+  {
+    "name": "Sky Zone Manchester",
+    "city": "Manchester",
+    "state": "NH",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Nashua",
+    "city": "Nashua",
+    "state": "NH",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Children's Museum & Theatre of Maine",
+    "city": "Portland",
+    "state": "ME",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Maine Wildlife Park",
+    "city": "Gray",
+    "state": "ME",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Wildlife Park"
+  },
+  {
+    "name": "Sky Zone Portland",
+    "city": "Portland",
+    "state": "ME",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Marbles Kids Museum",
+    "city": "Raleigh",
+    "state": "NC",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Discovery Place",
+    "city": "Charlotte",
+    "state": "NC",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Center"
+  },
+  {
+    "name": "North Carolina Zoo",
+    "city": "Asheboro",
+    "state": "NC",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Sky Zone Raleigh",
+    "city": "Raleigh",
+    "state": "NC",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Charlotte",
+    "city": "Charlotte",
+    "state": "NC",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Altitude Trampoline Greensboro",
+    "city": "Greensboro",
+    "state": "NC",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Raleigh",
+    "city": "Raleigh",
+    "state": "NC",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "EdVenture Children's Museum",
+    "city": "Columbia",
+    "state": "SC",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Riverbanks Zoo",
+    "city": "Columbia",
+    "state": "SC",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Sky Zone Columbia",
+    "city": "Columbia",
+    "state": "SC",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Greenville",
+    "city": "Greenville",
+    "state": "SC",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Charleston",
+    "city": "Charleston",
+    "state": "SC",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Children's Museum of Atlanta",
+    "city": "Atlanta",
+    "state": "GA",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Zoo Atlanta",
+    "city": "Atlanta",
+    "state": "GA",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Georgia Aquarium",
+    "city": "Atlanta",
+    "state": "GA",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Aquarium"
+  },
+  {
+    "name": "Sky Zone Atlanta",
+    "city": "Atlanta",
+    "state": "GA",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Savannah",
+    "city": "Savannah",
+    "state": "GA",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Altitude Trampoline Augusta",
+    "city": "Augusta",
+    "state": "GA",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Atlanta",
+    "city": "Atlanta",
+    "state": "GA",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Miami Children's Museum",
+    "city": "Miami",
+    "state": "FL",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Orlando Science Center",
+    "city": "Orlando",
+    "state": "FL",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Center"
+  },
+  {
+    "name": "ZooTampa",
+    "city": "Tampa",
+    "state": "FL",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Miami Seaquarium",
+    "city": "Miami",
+    "state": "FL",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Aquarium"
+  },
+  {
+    "name": "Sky Zone Miami",
+    "city": "Miami",
+    "state": "FL",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Tampa",
+    "city": "Tampa",
+    "state": "FL",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Altitude Trampoline Orlando",
+    "city": "Orlando",
+    "state": "FL",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Miami",
+    "city": "Miami",
+    "state": "FL",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "McWane Science Center",
+    "city": "Birmingham",
+    "state": "AL",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Center"
+  },
+  {
+    "name": "Birmingham Zoo",
+    "city": "Birmingham",
+    "state": "AL",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Sky Zone Birmingham",
+    "city": "Birmingham",
+    "state": "AL",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Montgomery",
+    "city": "Montgomery",
+    "state": "AL",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Birmingham",
+    "city": "Birmingham",
+    "state": "AL",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Adventure Science Center",
+    "city": "Nashville",
+    "state": "TN",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Center"
+  },
+  {
+    "name": "Nashville Zoo",
+    "city": "Nashville",
+    "state": "TN",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Sky Zone Nashville",
+    "city": "Nashville",
+    "state": "TN",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Memphis",
+    "city": "Memphis",
+    "state": "TN",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Nashville",
+    "city": "Nashville",
+    "state": "TN",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Mississippi Children's Museum",
+    "city": "Jackson",
+    "state": "MS",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Mississippi Zoo",
+    "city": "Pearl",
+    "state": "MS",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Sky Zone Jackson",
+    "city": "Jackson",
+    "state": "MS",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Gulfport",
+    "city": "Gulfport",
+    "state": "MS",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Kentucky Science Center",
+    "city": "Louisville",
+    "state": "KY",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Center"
+  },
+  {
+    "name": "Louisville Zoo",
+    "city": "Louisville",
+    "state": "KY",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Sky Zone Louisville",
+    "city": "Louisville",
+    "state": "KY",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Lexington",
+    "city": "Lexington",
+    "state": "KY",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Louisville",
+    "city": "Louisville",
+    "state": "KY",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "COSI",
+    "city": "Columbus",
+    "state": "OH",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Center"
+  },
+  {
+    "name": "Cincinnati Zoo",
+    "city": "Cincinnati",
+    "state": "OH",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Columbus Zoo",
+    "city": "Columbus",
+    "state": "OH",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Sky Zone Columbus",
+    "city": "Columbus",
+    "state": "OH",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Cincinnati",
+    "city": "Cincinnati",
+    "state": "OH",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Altitude Trampoline Cleveland",
+    "city": "Cleveland",
+    "state": "OH",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Columbus",
+    "city": "Columbus",
+    "state": "OH",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Children's Museum of Indianapolis",
+    "city": "Indianapolis",
+    "state": "IN",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Indianapolis Zoo",
+    "city": "Indianapolis",
+    "state": "IN",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Sky Zone Indianapolis",
+    "city": "Indianapolis",
+    "state": "IN",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Fort Wayne",
+    "city": "Fort Wayne",
+    "state": "IN",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Indianapolis",
+    "city": "Indianapolis",
+    "state": "IN",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Michigan Science Center",
+    "city": "Detroit",
+    "state": "MI",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Center"
+  },
+  {
+    "name": "Detroit Zoo",
+    "city": "Detroit",
+    "state": "MI",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Sky Zone Detroit",
+    "city": "Detroit",
+    "state": "MI",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Grand Rapids",
+    "city": "Grand Rapids",
+    "state": "MI",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Detroit",
+    "city": "Detroit",
+    "state": "MI",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Chicago Children's Museum",
+    "city": "Chicago",
+    "state": "IL",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Museum of Science and Industry",
+    "city": "Chicago",
+    "state": "IL",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Shedd Aquarium Chicago",
+    "city": "Chicago",
+    "state": "IL",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Aquarium"
+  },
+  {
+    "name": "Lincoln Park Zoo",
+    "city": "Chicago",
+    "state": "IL",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Sky Zone Chicago",
+    "city": "Chicago",
+    "state": "IL",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Aurora",
+    "city": "Aurora",
+    "state": "IL",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Altitude Trampoline Springfield",
+    "city": "Springfield",
+    "state": "IL",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Chicago",
+    "city": "Chicago",
+    "state": "IL",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Madison Children's Museum",
+    "city": "Madison",
+    "state": "WI",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Henry Vilas Zoo",
+    "city": "Madison",
+    "state": "WI",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Milwaukee County Zoo",
+    "city": "Milwaukee",
+    "state": "WI",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Sky Zone Madison",
+    "city": "Madison",
+    "state": "WI",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Milwaukee",
+    "city": "Milwaukee",
+    "state": "WI",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Grand Central Station Madison",
+    "city": "Madison",
+    "state": "WI",
+    "category": "Indoor Playgrounds",
+    "subcategory": "Indoor Play"
+  },
+  {
+    "name": "West Virginia Children's Museum",
+    "city": "Charleston",
+    "state": "WV",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Oglebay's Good Zoo",
+    "city": "Wheeling",
+    "state": "WV",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Sky Zone Charleston",
+    "city": "Charleston",
+    "state": "WV",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Huntington",
+    "city": "Huntington",
+    "state": "WV",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "VT Children's Museum",
+    "city": "Bennington",
+    "state": "VT",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Vermont Zoo",
+    "city": "Waterbury",
+    "state": "VT",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Nature Center"
+  },
+  {
+    "name": "Sky Zone Montpelier",
+    "city": "Montpelier",
+    "state": "VT",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  }
+]
