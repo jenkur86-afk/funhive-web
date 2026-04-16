@@ -132,7 +132,7 @@ async function extractEventDetails(page, url) {
 
         for (const line of addressLines) {
           // Match city/state/zip: "Wyomissing PA 19610" or "Frederick MD 21701"
-          const cityStateZip = line.match(/^([\w\s.'-]+)\s+([A-Z]{2})\s+(\d{5})(?:-\d{4})?$/);
+          const cityStateZip = line.match(/^([\w\s.,'"-]+?)\s*,?\s+([A-Z]{2})\s+(\d{5})(?:-\d{4})?$/);
           if (cityStateZip) {
             result.city = cityStateZip[1].trim();
             result.zipCode = cityStateZip[3];
@@ -267,6 +267,11 @@ async function scrapeSite(browser, site, maxEvents = 50) {
       }
 
 
+
+      // Debug: log what was extracted from the event page
+      if (!details.address || !details.city || !details.zipCode) {
+        console.log(`  🔍 DEBUG ${details.name?.substring(0, 30)}: addr="${details.address}" city="${details.city}" zip="${details.zipCode}" venue="${details.venue}"`);
+      }
 
       let coords = null;
       let locationObj = null;
