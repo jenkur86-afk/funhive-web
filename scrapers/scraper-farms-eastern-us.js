@@ -955,10 +955,15 @@ async function saveFarmEvents(stateObj, rawEvents) {
       if (event.isFree) cost = 'Free';
       else if (event.price) cost = `$${event.price}`;
 
+      // Link event to farm venue (activity) by generating the same ID format
+      const venueName = event.venue || event.name.trim();
+      const farmActivityId = `farm-${stateCode}-${venueName.toLowerCase().replace(/[^a-z0-9]+/g, '-').substring(0, 60)}`;
+
       // Build event document
       const eventDoc = {
         name: event.name.trim(),
-        venue: event.venue || event.name.trim(),
+        venue: venueName,
+        activityId: farmActivityId,
         eventDate: normalizedDate,
         date: parsedDate,
         startTime: extractTime(event.eventDate),
