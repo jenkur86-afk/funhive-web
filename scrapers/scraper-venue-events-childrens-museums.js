@@ -283,7 +283,7 @@ async function scrapeVenue(browser, venue, logger) {
     await page.goto(venue.eventsUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
 
     // Wait for content to load
-    await page.waitForTimeout(2000);
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     // Extract HTML
     const html = await page.content();

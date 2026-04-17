@@ -27,7 +27,7 @@ async function scrapeGenericEvents() {
       });
 
       // Wait for any event-like content
-      await page.waitForTimeout(3000);
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
       const libraryEvents = await page.evaluate((libName) => {
         const events = [];

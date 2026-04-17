@@ -61,9 +61,19 @@ const failedAddresses = new Set();
 
 // Rate limiter for Nominatim (max 1 request per second, with extra buffer)
 let lastNominatimCall = 0;
+// Global 429 cooldown — when ANY call gets rate-limited, ALL calls pause
+let rateLimitedUntil = 0;
+
 async function rateLimitedDelay() {
+  // Respect global 429 cooldown first
   const now = Date.now();
-  const elapsed = now - lastNominatimCall;
+  if (now < rateLimitedUntil) {
+    const cooldownRemaining = rateLimitedUntil - now;
+    console.log(`  ⏳ Global 429 cooldown: waiting ${Math.ceil(cooldownRemaining / 1000)}s...`);
+    await new Promise(resolve => setTimeout(resolve, cooldownRemaining));
+  }
+
+  const elapsed = Date.now() - lastNominatimCall;
   if (elapsed < 1500) { // 1.5s to be safe (Nominatim aggressively rate limits)
     await new Promise(resolve => setTimeout(resolve, 1500 - elapsed));
   }
@@ -340,12 +350,13 @@ async function geocodeAddress(address, retries = 3) {
 
       return null;
     } catch (error) {
-      // Handle 429 rate limiting with exponential backoff
+      // Handle 429 rate limiting with global cooldown + exponential backoff
       if (error.response && error.response.status === 429) {
-        const backoffMs = Math.min(2000 * Math.pow(2, attempt), 30000); // 2s, 4s, 8s... max 30s
-        console.log(`  ⏳ Nominatim rate limited (429), retrying in ${backoffMs / 1000}s (attempt ${attempt + 1}/${retries})...`);
-        await new Promise(resolve => setTimeout(resolve, backoffMs));
-        // Reset the rate limiter timer so we wait again after backoff
+        // Set global cooldown so ALL concurrent geocode calls also pause
+        const cooldownMs = Math.min(60000 * Math.pow(2, attempt), 180000); // 60s, 120s, 180s
+        rateLimitedUntil = Date.now() + cooldownMs;
+        console.log(`  ⏳ Nominatim rate limited (429), global cooldown ${cooldownMs / 1000}s (attempt ${attempt + 1}/${retries})...`);
+        await new Promise(resolve => setTimeout(resolve, cooldownMs));
         lastNominatimCall = Date.now();
         continue;
       }

@@ -80,56 +80,75 @@ const ngeohash = require('ngeohash');
 
 const LIBRARIES = [
   {
-    "name": "Charles County Public Library",
-    "url": "https://www.ccplonline.org",
-    "platform": "wordpress",
-    "eventsUrl": "https://www.ccplonline.org/events", county: 'Charles'},
-  {
-    "name": "St. Mary's County Library",
-    "url": "https://www.stmalib.org",
-    "platform": "wordpress",
-    "eventsUrl": "https://www.stmalib.org/events", county: 'Baltimore City'},
-  {
-    "name": "Washington County Free Library",
-    "url": "https://www.washcolibrary.org",
-    "platform": "wordpress",
-    "eventsUrl": "https://www.washcolibrary.org/events", county: 'Washington'},
-  {
-    "name": "Wicomico Public Libraries",
-    "url": "https://www.wicomicolibrary.org",
-    "platform": "wordpress",
-    "eventsUrl": "https://www.wicomicolibrary.org/events", county: 'Wicomico'},
-  {
-    "name": "Cecil County Public Library",
-    "url": "https://www.cecilcountylibrary.org",
-    "platform": "wordpress",
-    "eventsUrl": "https://cecilcountylibrary.org/events"
+    name: "Charles County Public Library",
+    url: "https://www.ccplonline.org",
+    platform: "wordpress",
+    eventsUrl: "https://www.ccplonline.org/events",
+    city: "La Plata", state: "MD", zipCode: "20646", county: "Charles"
   },
   {
-    "name": "Dorchester County Public Library",
-    "url": "https://www.dorchesterlibrary.org",
-    "platform": "wordpress",
-    "eventsUrl": "https://www.dorchesterlibrary.org/events", county: 'Dorchester'},
+    name: "St. Mary's County Library",
+    url: "https://www.stmalib.org",
+    platform: "wordpress",
+    eventsUrl: "https://www.stmalib.org/events",
+    city: "Leonardtown", state: "MD", zipCode: "20650", county: "St. Mary's"
+  },
   {
-    "name": "Somerset County Library",
-    "url": "https://www.somelibrary.org",
-    "platform": "wordpress",
-    "eventsUrl": "https://www.somelibrary.org/events", county: 'Somerset'},
+    name: "Washington County Free Library",
+    url: "https://www.washcolibrary.org",
+    platform: "wordpress",
+    eventsUrl: "https://www.washcolibrary.org/events",
+    city: "Hagerstown", state: "MD", zipCode: "21740", county: "Washington"
+  },
   {
-    "name": "Queen Anne's County Library",
-    "url": "https://www.qaclibrary.org",
-    "platform": "wordpress",
-    "eventsUrl": "https://www.qaclibrary.org/events", county: 'Baltimore City'},
+    name: "Wicomico Public Libraries",
+    url: "https://www.wicomicolibrary.org",
+    platform: "wordpress",
+    eventsUrl: "https://www.wicomicolibrary.org/events",
+    city: "Salisbury", state: "MD", zipCode: "21801", county: "Wicomico"
+  },
   {
-    "name": "Talbot County Free Library",
-    "url": "https://www.tcfl.org",
-    "platform": "wordpress",
-    "eventsUrl": "https://www.tcfl.org/events", county: 'Talbot'},
+    name: "Cecil County Public Library",
+    url: "https://www.cecilcountylibrary.org",
+    platform: "wordpress",
+    eventsUrl: "https://cecilcountylibrary.org/events",
+    city: "Elkton", state: "MD", zipCode: "21921", county: "Cecil"
+  },
   {
-    "name": "Worcester County Library",
-    "url": "https://worcesterlibrary.org",
-    "platform": "libcal",
-    "eventsUrl": "https://worcesterlibrary.libcal.com/calendar/Library_Events", county: 'Worcester'}
+    name: "Dorchester County Public Library",
+    url: "https://www.dorchesterlibrary.org",
+    platform: "wordpress",
+    eventsUrl: "https://www.dorchesterlibrary.org/events",
+    city: "Cambridge", state: "MD", zipCode: "21613", county: "Dorchester"
+  },
+  {
+    name: "Somerset County Library",
+    url: "https://www.somelibrary.org",
+    platform: "wordpress",
+    eventsUrl: "https://www.somelibrary.org/events",
+    city: "Princess Anne", state: "MD", zipCode: "21853", county: "Somerset"
+  },
+  {
+    name: "Queen Anne's County Library",
+    url: "https://www.qaclibrary.org",
+    platform: "wordpress",
+    eventsUrl: "https://www.qaclibrary.org/events",
+    city: "Centreville", state: "MD", zipCode: "21617", county: "Queen Anne's"
+  },
+  {
+    name: "Talbot County Free Library",
+    url: "https://www.tcfl.org",
+    platform: "wordpress",
+    eventsUrl: "https://www.tcfl.org/events",
+    city: "Easton", state: "MD", zipCode: "21601", county: "Talbot"
+  },
+  {
+    name: "Worcester County Library",
+    url: "https://worcesterlibrary.org",
+    platform: "libcal",
+    eventsUrl: "https://worcesterlibrary.libcal.com/calendar/Library_Events",
+    city: "Snow Hill", state: "MD", zipCode: "21863", county: "Worcester"
+  }
   // Note: Garrett County (Ruth Enlow Library) is covered by scraper-librarymarket-libraries-md.js
 ];
 
