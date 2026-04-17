@@ -157,11 +157,11 @@ const LIBRARY_SYSTEMS = [
     city: 'Marietta',
     zipCode: '30060',
     selectors: {
-      eventContainer: '.views-row, [class*="event"]',
-      title: 'h4, a',
-      date: 'time, .event-date',
-      location: '.field-location, [class*="location"]',
-      description: 'p, .description',
+      eventContainer: '[class*="border-accent-1"][class*="border-t"]',
+      title: 'h3',
+      date: 'span.text-primary-1',
+      location: 'span.text-primary-1',
+      description: 'span.text-primary-1',
       url: 'a[href*="/events/"]'
     }
   },

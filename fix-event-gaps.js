@@ -249,6 +249,44 @@ async function main() {
       if (v?.state && VALID_STATES.includes(v.state)) fixedState = v.state;
     }
 
+    // DMV-specific: infer state from city
+    if (!fixedState && (evt.state === 'DMV' || evt.scraper_name?.includes('DMV'))) {
+      const DMV_CITY_MAP = {
+        'washington': 'DC', 'silver spring': 'MD', 'bethesda': 'MD', 'rockville': 'MD',
+        'gaithersburg': 'MD', 'columbia': 'MD', 'frederick': 'MD', 'bowie': 'MD',
+        'arlington': 'VA', 'fairfax': 'VA', 'alexandria': 'VA', 'burke': 'VA',
+        'chantilly': 'VA', 'manassas': 'VA', 'ashburn': 'VA', 'reston': 'VA',
+        'herndon': 'VA', 'leesburg': 'VA', 'sterling': 'VA', 'vienna': 'VA',
+        'mclean': 'VA', 'tysons': 'VA', 'falls church': 'VA', 'springfield': 'VA',
+        'clarksburg': 'MD', 'germantown': 'MD', 'laurel': 'MD', 'takoma park': 'MD',
+        'college park': 'MD', 'hyattsville': 'MD', 'greenbelt': 'MD',
+        'centreville': 'VA', 'annandale': 'VA', 'woodbridge': 'VA', 'dale city': 'VA',
+      };
+      const cityLower = (evt.city || '').toLowerCase().trim();
+      if (DMV_CITY_MAP[cityLower]) fixedState = DMV_CITY_MAP[cityLower];
+
+      // Try from zip
+      if (!fixedState && evt.zip_code) {
+        const zip3 = evt.zip_code.substring(0, 3);
+        if (['200', '202', '203', '204', '205'].includes(zip3)) fixedState = 'DC';
+        else if (['206', '207', '208', '209', '210', '211', '212', '214', '215', '216', '217', '218', '219'].includes(zip3)) fixedState = 'MD';
+        else if (['220', '221', '222', '223', '224', '225', '226', '227', '228', '229', '230', '231'].includes(zip3)) fixedState = 'VA';
+      }
+
+      // Try from venue/address text
+      if (!fixedState) {
+        const text = `${evt.venue || ''} ${evt.address || ''}`;
+        const stateMatch = text.match(/\b(DC|MD|VA|Virginia|Maryland|Washington\s*D\.?C\.?)\b/i);
+        if (stateMatch) {
+          const s = stateMatch[1].toUpperCase();
+          if (s.includes('VIRGINIA')) fixedState = 'VA';
+          else if (s.includes('MARYLAND')) fixedState = 'MD';
+          else if (s.includes('WASHINGTON') || s === 'DC') fixedState = 'DC';
+          else fixedState = s;
+        }
+      }
+    }
+
     if (fixedState) {
       console.log(`  ✅ ${(evt.name || '').substring(0, 40)}: "${evt.state}" → "${fixedState}"`);
       stateFixUpdates.push({ id: evt.id, state: fixedState });
@@ -307,11 +345,52 @@ async function main() {
       }
     }
 
+    // Strategy 4: Fuzzy venue match (normalize venue name)
+    if (!geohash && evt.venue) {
+      const normalized = evt.venue.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
+      // Try partial matches against venue lookup
+      for (const [key, val] of Object.entries(venueLookup)) {
+        if (val.geohash && (key.includes(normalized) || normalized.includes(key))) {
+          geohash = val.geohash;
+          break;
+        }
+      }
+      if (!geohash) {
+        for (const [key, val] of Object.entries(eventVenueLookup)) {
+          if (val.geohash && (key.includes(normalized) || normalized.includes(key))) {
+            geohash = val.geohash;
+            break;
+          }
+        }
+      }
+    }
+
+    // Strategy 5: Zip code → state centroid (last resort gives approximate location)
+    if (!geohash && evt.zip_code) {
+      const coords = await forwardGeocode(evt.zip_code);
+      if (coords) {
+        geohash = ngeohash.encode(coords.latitude, coords.longitude, 7);
+      }
+    }
+
+    // Strategy 6: Scraper-name state → state centroid (very last resort)
+    if (!geohash && evt.scraper_name) {
+      let scraperState = null;
+      const m = evt.scraper_name.match(/[-_]([A-Z]{2})(?:\d|$|-|_)/i) || evt.scraper_name.match(/\b([A-Z]{2})$/);
+      if (m && VALID_STATES.includes(m[1].toUpperCase())) scraperState = m[1].toUpperCase();
+      if (scraperState) {
+        const coords = await forwardGeocode(`${scraperState}, United States`);
+        if (coords) {
+          geohash = ngeohash.encode(coords.latitude, coords.longitude, 7);
+        }
+      }
+    }
+
     if (geohash) {
       geohashUpdates.push({ id: evt.id, geohash });
     }
 
-    if (apiCalls > 400) {
+    if (apiCalls > 800) {
       console.log(`  ⚠️ API call limit reached (${apiCalls}), stopping geocoding`);
       break;
     }
@@ -372,11 +451,46 @@ async function main() {
       } catch {}
     }
 
+    // Strategy 5: Fuzzy venue match for city
+    if (!city && evt.venue) {
+      const normalized = evt.venue.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
+      for (const [key, val] of Object.entries(venueLookup)) {
+        if (val.city && (key.includes(normalized) || normalized.includes(key))) {
+          city = val.city;
+          break;
+        }
+      }
+      if (!city) {
+        for (const [key, val] of Object.entries(eventVenueLookup)) {
+          if (val.city && (key.includes(normalized) || normalized.includes(key))) {
+            city = val.city;
+            break;
+          }
+        }
+      }
+    }
+
+    // Strategy 6: Infer from scraper name (scraper often targets a specific city/region)
+    if (!city && evt.scraper_name) {
+      // Many scrapers are named after cities/counties
+      const scraperCityMap = {
+        'Cobb': 'Marietta', 'Richland': 'Columbia', 'Greenville': 'Greenville',
+        'Anderson': 'Anderson', 'Florence': 'Florence', 'Kanawha': 'Charleston',
+        'Rowan': 'Salisbury',
+      };
+      for (const [key, val] of Object.entries(scraperCityMap)) {
+        if (evt.scraper_name.includes(key)) {
+          city = val;
+          break;
+        }
+      }
+    }
+
     if (city) {
       cityUpdates.push({ id: evt.id, city });
     }
 
-    if (apiCalls > 600) {
+    if (apiCalls > 1000) {
       console.log(`  ⚠️ API limit, stopping city lookups`);
       break;
     }

@@ -428,6 +428,37 @@ async function scrapeKidsOutAndAboutDMV(options = {}) {
         continue;
       }
 
+      // Infer state from available data if extractState() failed
+      if (!details.state) {
+        // Try from city name
+        const cityStateMap = {
+          'washington': 'DC', 'silver spring': 'MD', 'bethesda': 'MD', 'rockville': 'MD',
+          'gaithersburg': 'MD', 'columbia': 'MD', 'frederick': 'MD', 'bowie': 'MD',
+          'clarksburg': 'MD', 'aberdeen': 'MD', 'germantown': 'MD', 'laurel': 'MD',
+          'college park': 'MD', 'hyattsville': 'MD', 'takoma park': 'MD', 'greenbelt': 'MD',
+          'arlington': 'VA', 'fairfax': 'VA', 'alexandria': 'VA', 'burke': 'VA',
+          'chantilly': 'VA', 'manassas': 'VA', 'ashburn': 'VA', 'reston': 'VA',
+          'herndon': 'VA', 'leesburg': 'VA', 'sterling': 'VA', 'vienna': 'VA',
+          'mclean': 'VA', 'tysons': 'VA', 'falls church': 'VA', 'woodbridge': 'VA',
+          'centreville': 'VA', 'springfield': 'VA', 'annandale': 'VA', 'dale city': 'VA',
+        };
+        const cityLower = (details.city || '').toLowerCase().trim();
+        if (cityStateMap[cityLower]) {
+          details.state = cityStateMap[cityLower];
+        }
+        // Try from zip code prefix
+        if (!details.state && details.zipCode) {
+          const zip3 = details.zipCode.substring(0, 3);
+          if (['200', '202', '203', '204', '205'].includes(zip3)) details.state = 'DC';
+          else if (['206', '207', '208', '209', '210', '211', '212', '214', '215', '216', '217', '218', '219'].includes(zip3)) details.state = 'MD';
+          else if (['220', '221', '222', '223', '224', '225', '226', '227', '228', '229', '230', '231', '232', '233', '234', '235', '236', '237', '238', '239', '240', '241', '242', '243', '244', '245', '246'].includes(zip3)) details.state = 'VA';
+        }
+        // Try from address/venue text
+        if (!details.state) {
+          details.state = extractState(details.address || '') || extractState(details.venue || '') || '';
+        }
+      }
+
       const event = {
         name: details.name,
         eventDate: normalizedDate,
@@ -459,7 +490,7 @@ async function scrapeKidsOutAndAboutDMV(options = {}) {
           scrapedAt: new Date().toISOString(),
           scraperName: SCRAPER_NAME,
           platform: 'kidsoutandabout',
-          state: details.state || 'DMV',
+          state: details.state || '',
           addedDate: new Date().toISOString(),
         },
       };
