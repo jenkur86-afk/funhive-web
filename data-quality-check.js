@@ -22,6 +22,15 @@
 
 const { supabase } = require('./scrapers/helpers/supabase-adapter');
 
+// Import scraper registry to know which scrapers are currently active
+let ACTIVE_SCRAPERS = {};
+try {
+  const { SCRAPERS } = require('./scrapers/scraper-registry');
+  ACTIVE_SCRAPERS = SCRAPERS || {};
+} catch (e) {
+  // Registry not available — skip active scraper filtering
+}
+
 // ==========================================
 // CONFIG
 // ==========================================
@@ -443,7 +452,17 @@ async function checkScrapers(eventScraperCounts) {
     const totalEventsFound = runs.reduce((sum, r) => sum + (r.events_found || 0), 0);
     const totalEventsSaved = runs.reduce((sum, r) => sum + (r.events_saved || 0), 0);
     if (totalEventsFound === 0 && totalEventsSaved === 0) {
-      zeroEventScrapers.push({ name, runs: runs.length });
+      // Only flag as zero-event if the scraper is currently active in the registry
+      // Strip "Local-" prefix to match registry keys
+      const registryName = name.replace(/^Local-/, '');
+      const isActiveInRegistry = ACTIVE_SCRAPERS[registryName] || ACTIVE_SCRAPERS[name];
+      // Also skip one-off import scripts (they have year suffixes or known import names)
+      const isOneOffImport = /\d{4}$/.test(name) || /^(MarylandKid|DMV-|Pennsylvania-|Waterparks-|Summer-|Gyms-|add-|fix-|backfill-)/.test(name);
+
+      if (isActiveInRegistry && !isOneOffImport) {
+        zeroEventScrapers.push({ name, runs: runs.length });
+      }
+      // else: disabled or one-off, silently skip
     } else {
       healthyScrapers.push(name);
     }
@@ -470,7 +489,10 @@ async function checkScrapers(eventScraperCounts) {
           // Check if the scraper actually saved 0 events in its logs too
           const runs = scraperMap[scraperName] || [];
           const totalSaved = runs.reduce((sum, r) => sum + (r.events_saved || 0), 0);
-          if (totalSaved === 0) {
+          // Only flag if active in registry and not a one-off import
+          const isActiveInRegistry = ACTIVE_SCRAPERS[withoutLocal] || ACTIVE_SCRAPERS[scraperName];
+          const isOneOffImport = /\d{4}$/.test(scraperName) || /^(MarylandKid|DMV-|Pennsylvania-|Waterparks-|Summer-|Gyms-|add-|fix-|backfill-)/.test(scraperName);
+          if (totalSaved === 0 && isActiveInRegistry && !isOneOffImport) {
             zeroInDB.push(scraperName);
           }
         }
@@ -488,8 +510,13 @@ async function checkScrapers(eventScraperCounts) {
     }
   }
 
+  // Count active scrapers in registry for accurate totals
+  const activeRegistryCount = Object.keys(ACTIVE_SCRAPERS).length;
+  const activeTotal = activeRegistryCount || scraperNames.length; // fallback if registry unavailable
+
   // Print results
   console.log(`\n  Summary:`);
+  console.log(`    Active scrapers (registry): ${activeRegistryCount}`);
   console.log(`    Healthy scrapers:     ${healthyScrapers.length}`);
   console.log(`    Zero-event scrapers:  ${zeroEventScrapers.length}`);
   console.log(`    Failed (latest run):  ${failedScrapers.length}`);
@@ -509,7 +536,7 @@ async function checkScrapers(eventScraperCounts) {
     }
   }
 
-  return { total: scraperNames.length, healthy: healthyScrapers.length, zeroEvent: zeroEventScrapers.length, failed: failedScrapers.length };
+  return { total: activeTotal, healthy: healthyScrapers.length, zeroEvent: zeroEventScrapers.length, failed: failedScrapers.length };
 }
 
 // Alternate scraper log format (scraperLogs collection via Firestore compat layer)
@@ -535,7 +562,13 @@ async function checkScraperLogsAlt(logs, eventScraperCounts) {
     const hasFailure = runs.some(r => r.status === 'error' || r.status === 'failed' || (r.activitiesFailed || 0) > 0);
 
     if (totalSaved === 0 && totalLocations === 0) {
-      zeroEventScrapers.push({ name, runs: runs.length });
+      // Only flag if active in registry and not a one-off import
+      const registryName = name.replace(/^Local-/, '');
+      const isActiveInRegistry = ACTIVE_SCRAPERS[registryName] || ACTIVE_SCRAPERS[name];
+      const isOneOffImport = /\d{4}$/.test(name) || /^(MarylandKid|DMV-|Pennsylvania-|Waterparks-|Summer-|Gyms-|add-|fix-|backfill-)/.test(name);
+      if (isActiveInRegistry && !isOneOffImport) {
+        zeroEventScrapers.push({ name, runs: runs.length });
+      }
     }
     if (hasFailure) {
       failedScrapers.push({ name });
