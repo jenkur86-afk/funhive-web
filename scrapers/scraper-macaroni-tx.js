@@ -22,6 +22,7 @@ const { getCountyCentroid } = require('./utils/county-centroids');
 const { getOrCreateVenue, findMatchingVenue } = require('./venue-matcher');
 const { normalizeDateString } = require('./date-normalization-helper');
 const { logScraperResult } = require('./scraper-logger');
+const { tryGeocode: _sharedTryGeocode, geocodeAddress: _sharedGeocodeAddress, getCityCenterCoords, flushMacaroniGeocodeCache } = require('./helpers/macaroni-geocoding-helper');
 
 // All 17 Texas Macaroni Kid Sites
 const TX_MK_SITES = [
@@ -45,49 +46,11 @@ const TX_MK_SITES = [
 ];
 
 async function geocodeAddress(address, city, zipCode) {
-  const fullAddress = `${address}, ${city}, TX ${zipCode}`;
-  let result = await tryGeocode(fullAddress);
-  if (result) return result;
-
-  const cleaned = address.replace(/,?\s*Suite\s+[A-Z0-9-]+/i, '').replace(/,?\s*#\s*[A-Z0-9-]+/i, '');
-  if (cleaned !== address) {
-    result = await tryGeocode(`${cleaned}, ${city}, TX ${zipCode}`);
-    if (result) return result;
-  }
-
-  const streetOnly = cleaned.split(',')[0];
-  return await tryGeocode(`${streetOnly}, TX ${zipCode}`);
+  return _sharedGeocodeAddress(address, city, 'TX', zipCode);
 }
 
-const _geocodeMemCache = {};
 async function tryGeocode(address) {
-  // Check in-memory cache first (avoids re-geocoding same venue 10+ times per run)
-  if (_geocodeMemCache[address]) return _geocodeMemCache[address];
-  if (_geocodeMemCache[address] === null) return null; // cached failure
-  // Rate limit: wait 1.5s between Nominatim requests
-  await new Promise(r => setTimeout(r, 1500));
-  try {
-    const response = await axios.get('https://nominatim.openstreetmap.org/search', {
-      params: { q: address, format: 'json', limit: 1, countrycodes: 'us' },
-      headers: { 'User-Agent': 'FunHive/1.0 (family-events)' },
-      timeout: 10000
-    });
-    if (response.data && response.data.length > 0) {
-      const result = {
-        latitude: parseFloat(response.data[0].lat),
-        longitude: parseFloat(response.data[0].lon)
-      };
-      _geocodeMemCache[address] = result;
-      return result;
-    }
-    _geocodeMemCache[address] = null; // cache miss
-  } catch (error) {
-    if (error.response && error.response.status === 429) {
-      console.log('Geocoding rate limited — waiting 5s...');
-      await new Promise(r => setTimeout(r, 5000));
-    }
-  }
-  return null;
+  return _sharedTryGeocode(address);
 }
 
 async function extractEventUrls(page) {
@@ -268,11 +231,6 @@ async function scrapeSite(browser, site, maxEvents = 50) {
 
 
 
-      // Debug: log what was extracted from the event page
-      if (!details.address || !details.city || !details.zipCode) {
-        console.log(`  🔍 DEBUG ${details.name?.substring(0, 30)}: addr="${details.address}" city="${details.city}" zip="${details.zipCode}" venue="${details.venue}"`);
-      }
-
       let coords = null;
       let locationObj = null;
 
@@ -320,7 +278,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
 
         // If venue cache didn't provide coords, try city-level geocoding first
         if (!coords && details.city) {
-          coords = await tryGeocode(`${details.city}, TX ${details.zipCode || ''}`);
+          coords = await getCityCenterCoords(details.city, 'TX', details.zipCode);
           if (coords) {
             locationObj = {
               address: details.address || '',

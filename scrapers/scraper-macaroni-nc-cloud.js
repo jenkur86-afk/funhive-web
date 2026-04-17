@@ -21,6 +21,7 @@ const { getCountyCentroid } = require('./utils/county-centroids');
 const { normalizeDateString } = require('./date-normalization-helper');
 const { logScraperResult } = require('./scraper-logger');
 const { linkEventToVenue } = require('./venue-matcher');
+const { tryGeocode: _sharedTryGeocode, geocodeAddress: _sharedGeocodeAddress, getCityCenterCoords, flushMacaroniGeocodeCache } = require('./helpers/macaroni-geocoding-helper');
 
 // All 14 North Carolina Macaroni Kid Sites
 const NC_MK_SITES = [
@@ -44,39 +45,11 @@ const NC_MK_SITES = [
  * Geocode an address using OpenStreetMap Nominatim
  */
 async function geocodeAddress(address, city, zipCode) {
-  const fullAddress = `${address}, ${city}, NC ${zipCode}`;
-  let result = await tryGeocode(fullAddress);
-  if (result) return result;
-
-  // Try without suite/unit numbers
-  const cleaned = address.replace(/,?\s*Suite\s+[A-Z0-9-]+/i, '').replace(/,?\s*#\s*[A-Z0-9-]+/i, '');
-  if (cleaned !== address) {
-    result = await tryGeocode(`${cleaned}, ${city}, NC ${zipCode}`);
-    if (result) return result;
-  }
-
-  // Try street only
-  const streetOnly = cleaned.split(',')[0];
-  return await tryGeocode(`${streetOnly}, NC ${zipCode}`);
+  return _sharedGeocodeAddress(address, city, 'NC', zipCode);
 }
 
 async function tryGeocode(address) {
-  try {
-    const response = await axios.get('https://nominatim.openstreetmap.org/search', {
-      params: { q: address, format: 'json', limit: 1, countrycodes: 'us' },
-      headers: { 'User-Agent': 'SocialSpot/1.0' },
-      timeout: 10000
-    });
-    if (response.data && response.data.length > 0) {
-      return {
-        latitude: parseFloat(response.data[0].lat),
-        longitude: parseFloat(response.data[0].lon)
-      };
-    }
-  } catch (error) {
-    // Silent fail for geocoding errors
-  }
-  return null;
+  return _sharedTryGeocode(address);
 }
 
 /**
@@ -373,7 +346,7 @@ async function scrapeSite(site, maxEvents = 50) {
       } else {
         // Try city-level geocoding first
         if (details.city) {
-          coords = await tryGeocode(`${details.city}, NC ${details.zipCode || ''}`);
+          coords = await getCityCenterCoords(details.city, 'NC', details.zipCode);
           if (coords) {
             locationObj = {
               address: details.address || '',

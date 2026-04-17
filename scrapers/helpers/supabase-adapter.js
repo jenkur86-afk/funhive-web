@@ -218,13 +218,36 @@ const NON_FAMILY_PATTERNS = [
 
   // Alcohol / nightlife
   /\bwine\s+tasting\b/i,
+  /\bwine\s+fest(ival)?\b/i,
+  /\bwine\s+walk\b/i,
+  /\bwine\s+trail\b/i,
+  /\bwine\s+crawl\b/i,
+  /\bwine\s+at\s+sunset\b/i,
+  /\bwine\s+(and|&)\s+music\b/i,
+  /\bwine\s+cup\b/i,
   /\bbeer\s+tasting\b/i,
-  /\bcocktail\s+(class|hour|making|tasting)\b/i,
+  /\bbeer\s+fest(ival)?\b/i,
+  /\bbrews?\s*fest\b/i,
+  /\bbrews?\b.*\bfest\b/i,
+  /\bcraft\s+beer\b/i,
+  /\b(rhythm|r)\s*(and|&|n)\s*brews?\b/i,
+  /\bbourbon\s+fest(ival)?\b/i,
+  /\bbourbon\s+trail\b/i,
+  /\bwhiskey\s+fest(ival)?\b/i,
+  /\bspirits?\s+fest(ival)?\b/i,
+  /\bmimosa\s+(crawl|fest|brunch)\b/i,
+  /\bcocktail\s+(class|hour|making|tasting|fest)\b/i,
   /\bhappy\s+hour\b/i,
   /\bbar\s+crawl\b/i,
   /\bpub\s+crawl\b/i,
   /\bbrewery\s+tour\b/i,
   /\bbyob\b/i,
+  /\bvineyard\s+fest(ival)?\b/i,
+  /\bwinery\s+tour\b/i,
+  /\bcider\s+fest(ival)?\b/i,
+  /\bmead(ery)?\s+fest(ival)?\b/i,
+  /\bbeer\s*(,|&|and)\s*bourbon\b/i,
+  /\bbeer\s*(,|&|and)\s*bbq\b/i,
 
   // Dating / adult social
   /\bsingles?\s+night\b/i,
@@ -514,7 +537,7 @@ function createFirestoreCompatibleDB() {
               try {
                 flattened = flattenForTable(table, data);
               } catch (e) {
-                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event')) {
+                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event')) {
                   return; // silently skip
                 }
                 throw e;
@@ -572,7 +595,7 @@ function createFirestoreCompatibleDB() {
           try {
             flattened = flattenForTable(collectionName, data);
           } catch (e) {
-            if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event')) {
+            if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event')) {
               return { id }; // silently skip
             }
             throw e;
@@ -616,7 +639,7 @@ function createFirestoreCompatibleDB() {
                 upsertByTable[table].push({ id: op.id, ...flattenForTable(table, op.data) });
               } catch (e) {
                 // Skip past events and invalid events gracefully
-                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event')) {
+                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event')) {
                   continue;
                 }
                 throw e;
@@ -727,6 +750,7 @@ function flattenEvent(data) {
 
   // Reject cancelled/closed events
   if (isCancelledEvent(data.name, data.description)) {
+    console.log(`  ⏭️ Skipping cancelled/closed event: "${data.name}"`);
     throw new Error(`Skipping cancelled/closed event: "${data.name}"`);
   }
 
@@ -806,6 +830,26 @@ function flattenEvent(data) {
     row.category = row.category || data.metadata.category;
     // State: metadata.state as additional fallback
     row.state = row.state || data.metadata.state;
+  }
+
+  // Additional scraper_name fallbacks (top-level fields some scrapers use)
+  row.scraper_name = row.scraper_name || data.source || data.sourceName || data.source_url || null;
+
+  // SAFETY NET: if scraper_name is still empty, derive one from the URL so we never
+  // silently bucket events into "unknown". Logs a warning so the offending scraper
+  // can be fixed.
+  if (!row.scraper_name) {
+    const urlForDerive = row.url || row.source_url || data.url || data.sourceUrl;
+    if (urlForDerive) {
+      try {
+        const host = new URL(urlForDerive).hostname.replace(/^www\./, '');
+        row.scraper_name = `auto:${host}`;
+      } catch (_) { /* not a valid URL, fall through */ }
+    }
+    if (!row.scraper_name) {
+      row.scraper_name = 'auto:unidentified';
+    }
+    console.warn(`  ⚠️  scraper_name missing for event "${(row.name || '').substring(0, 50)}" — derived as "${row.scraper_name}". Set metadata.scraperName in the scraper.`);
   }
 
   // Auto-detect age range from event name/description
