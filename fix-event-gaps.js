@@ -183,7 +183,7 @@ async function main() {
 
   // Load all events with the columns that actually exist in the schema
   const allEvents = await fetchAll('events',
-    'id, name, state, venue, city, address, zip_code, scraper_name, geohash, description, event_date, start_time'
+    'id, name, state, venue, city, address, zip_code, scraper_name, geohash, description, event_date, date, start_time'
   );
   console.log(`  Total events loaded: ${allEvents.length}\n`);
 
@@ -273,9 +273,9 @@ async function main() {
         else if (['220', '221', '222', '223', '224', '225', '226', '227', '228', '229', '230', '231'].includes(zip3)) fixedState = 'VA';
       }
 
-      // Try from venue/address text
+      // Try from venue/address/name text (catches "DC Power Football Club" etc.)
       if (!fixedState) {
-        const text = `${evt.venue || ''} ${evt.address || ''}`;
+        const text = `${evt.name || ''} ${evt.venue || ''} ${evt.address || ''}`;
         const stateMatch = text.match(/\b(DC|MD|VA|Virginia|Maryland|Washington\s*D\.?C\.?)\b/i);
         if (stateMatch) {
           const s = stateMatch[1].toUpperCase();
@@ -284,6 +284,12 @@ async function main() {
           else if (s.includes('WASHINGTON') || s === 'DC') fixedState = 'DC';
           else fixedState = s;
         }
+      }
+
+      // Last resort for DMV events with no location clues: default to DC
+      if (!fixedState) {
+        fixedState = 'DC';
+        console.log(`    ℹ️ Defaulting "${(evt.name || '').substring(0, 40)}" to DC (DMV scraper, no location clues)`);
       }
     }
 
@@ -558,6 +564,43 @@ async function main() {
     }
     console.log(`  💾 Set description for ${descUpdates.length} events`);
     totalFixed += descUpdates.length;
+  }
+
+  // ── 6. PAST EVENTS CLEANUP ──────────────────────────────
+  console.log('\n🗑️ PAST EVENTS CLEANUP');
+  console.log('─'.repeat(50));
+
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const pastEvents = allEvents.filter(e => {
+    if (e.date) {
+      const d = new Date(e.date);
+      return !isNaN(d.getTime()) && d < today;
+    }
+    return false;
+  });
+  console.log(`  Past events found: ${pastEvents.length}`);
+
+  // Group by scraper for summary
+  const pastBySource = {};
+  for (const evt of pastEvents) {
+    const src = evt.scraper_name || 'unknown';
+    pastBySource[src] = (pastBySource[src] || 0) + 1;
+  }
+  const topPastSources = Object.entries(pastBySource).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  for (const [src, count] of topPastSources) {
+    console.log(`    ${src}: ${count}`);
+  }
+
+  if (!DRY_RUN && pastEvents.length > 0) {
+    let deleted = 0;
+    for (let i = 0; i < pastEvents.length; i++) {
+      const { error } = await supabase.from('events').delete().eq('id', pastEvents[i].id);
+      if (!error) deleted++;
+      if ((i + 1) % 200 === 0) console.log(`    ...${i + 1}/${pastEvents.length} deleted`);
+    }
+    console.log(`  💾 Deleted ${deleted} past events`);
+    totalFixed += deleted;
   }
 
   // ── DONE ────────────────────────────────────────────────
