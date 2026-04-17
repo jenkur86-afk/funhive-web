@@ -890,6 +890,12 @@ const SCRAPERS = {
   'Venue-Events-ChildrensMuseums': { file: './scraper-venue-events-childrens-museums.js', exportName: 'scrapeChildrensMuseumEvents', type: 'puppeteer', group: 2, state: 'Multi' },
   'Venue-Events-ZoosAquariums': { file: './scraper-venue-events-zoos-aquariums.js', exportName: 'scrapeZooAquariumEvents', type: 'puppeteer', group: 3, state: 'Multi' },
   'Venue-Events-ScienceArts': { file: './scraper-venue-events-science-arts.js', exportName: 'scrapeScienceArtsEvents', type: 'puppeteer', group: 1, state: 'Multi' },
+
+  // ============================================================================
+  // PHASE 5: FESTIVALS & FAIRS (all eastern states)
+  // ============================================================================
+  'Festivals-Eastern-US': { file: './scraper-festivals-eastern-us.js', exportName: 'scrapeFestivalsEasternUSCloudFunction', type: 'puppeteer', group: 2, state: 'Multi' },
+  'Farms-Eastern-US': { file: './scraper-farms-eastern-us.js', exportName: 'scrapeFarmsEasternUSCloudFunction', type: 'puppeteer', group: 3, state: 'Multi' },
 };
 
 // ============================================================================

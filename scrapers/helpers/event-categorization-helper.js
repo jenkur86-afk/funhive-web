@@ -62,6 +62,32 @@ function categorizeEvent(event) {
     else newSubcategory = 'Library Program';
   }
   
+  // FARMS & OUTDOOR (check BEFORE festivals — farm events often contain "fair", "festival", "halloween", etc.)
+  else if (text.includes('pumpkin patch') ||
+           text.includes('corn maze') ||
+           text.includes('hayride') || text.includes('hay ride') ||
+           text.includes('u-pick') || text.includes('u pick') || text.includes('pick your own') ||
+           text.includes('berry picking') || text.includes('apple picking') ||
+           text.includes('sunflower field') || text.includes('sunflower maze') ||
+           text.includes('petting zoo') || text.includes('petting farm') ||
+           text.includes('farm fest') || text.includes('farm day') ||
+           text.includes('harvest fest') ||
+           (text.includes('farm') && (text.includes('family') || text.includes('kids') || text.includes('fun'))) ||
+           subcategory.includes('farm') ||
+           parentCategory.includes('farm')) {
+    newCategory = 'Outdoor & Nature';
+
+    if (text.includes('pumpkin')) newSubcategory = 'Pumpkin Patch';
+    else if (text.includes('corn maze')) newSubcategory = 'Corn Maze';
+    else if (text.includes('hayride') || text.includes('hay ride')) newSubcategory = 'Hayride';
+    else if (text.includes('berry') || text.includes('strawberr') || text.includes('blueberr')) newSubcategory = 'Berry Picking';
+    else if (text.includes('apple') && text.includes('pick')) newSubcategory = 'Apple Picking';
+    else if (text.includes('sunflower')) newSubcategory = 'Sunflower Field';
+    else if (text.includes('petting zoo') || text.includes('petting farm')) newSubcategory = 'Petting Zoo';
+    else if (text.includes('harvest')) newSubcategory = 'Harvest Festival';
+    else newSubcategory = 'Farm Event';
+  }
+
   // FESTIVALS & CELEBRATIONS
   else if (text.includes('festival') ||
            text.includes('fair') ||
@@ -76,7 +102,7 @@ function categorizeEvent(event) {
            subcategory.includes('celebration') ||
            text.includes('seasonal event')) {
     newCategory = 'Festivals & Celebrations';
-    
+
     if (text.includes('holiday') || text.includes('halloween') || text.includes('christmas') || subcategory.includes('holiday')) {
       newSubcategory = 'Holiday Event';
     } else if (text.includes('festival') || subcategory.includes('festival')) {
@@ -154,7 +180,7 @@ function categorizeEvent(event) {
            subcategory.includes('aquarium') ||
            text.includes('farm event')) {
     newCategory = 'Animals & Wildlife';
-    
+
     if (text.includes('zoo') || subcategory.includes('zoo')) newSubcategory = 'Zoo Event';
     else if (text.includes('aquarium') || subcategory.includes('aquarium')) newSubcategory = 'Aquarium Event';
     else newSubcategory = 'Animal Event';

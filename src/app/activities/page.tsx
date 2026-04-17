@@ -225,6 +225,25 @@ export default function VenuesPage() {
           const additional = supplementary.data.filter((v: any) => !existingIds.has(v.id))
           allData = [...allData, ...additional]
         }
+
+        // When searching, also search the full database so venues outside the
+        // radius can be found by name/city/keyword
+        if (debouncedSearch) {
+          const term = `%${debouncedSearch}%`
+          const searchResult = await supabase
+            .from('activities')
+            .select('*')
+            .in('state', ACTIVE_STATES || [])
+            .or(
+              `name.ilike.${term},city.ilike.${term},description.ilike.${term},category.ilike.${term},address.ilike.${term}`
+            )
+            .limit(200)
+          if (!searchResult.error && searchResult.data) {
+            const existingIds = new Set(allData.map((v: any) => v.id))
+            const additional = searchResult.data.filter((v: any) => !existingIds.has(v.id))
+            allData = [...allData, ...additional]
+          }
+        }
       } else {
         // No location — use standard query
         let query = supabase
@@ -343,8 +362,9 @@ export default function VenuesPage() {
       const matchesOpenNow = !openNowOnly || isOpenNow(venue.hours)
       const matchesAge = matchesAgeRange(venue)
 
-      // Filter by radius if location is active
-      if (locationCoords) {
+      // Filter by radius if location is active — but skip the radius check
+      // when the user is actively searching (so they can find venues anywhere)
+      if (locationCoords && !searchQuery) {
         const coords = getCoords(venue)
         if (!coords) return false
         const dist = haversineDistance(locationCoords.lat, locationCoords.lng, coords.lat, coords.lng)
