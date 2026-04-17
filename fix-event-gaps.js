@@ -570,28 +570,34 @@ async function main() {
   console.log('\n🗑️ PAST EVENTS CLEANUP');
   console.log('─'.repeat(50));
 
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const pastEvents = allEvents.filter(e => {
-    // Check parsed date (TIMESTAMPTZ) first
-    if (e.date) {
-      const d = new Date(e.date);
-      if (!isNaN(d.getTime()) && d < today) return true;
-    }
-    // Fall back to parsing event_date TEXT
-    if (e.event_date) {
-      try {
-        const d = new Date(e.event_date);
-        if (!isNaN(d.getTime()) && d < today) return true;
-      } catch {}
-    }
-    return false;
-  });
-  console.log(`  Past events found: ${pastEvents.length}`);
+  // Use the exact same logic as data-quality-check.js
+  function isDateInPast(dateStr) {
+    if (!dateStr) return false;
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return false;
+      return d < new Date();
+    } catch { return false; }
+  }
+
+  // Approach 1: Server-side delete where TIMESTAMPTZ date < today
+  const todayISO = new Date().toISOString().split('T')[0];
+  const { count: serverPastCount } = await supabase
+    .from('events')
+    .select('id', { count: 'exact', head: true })
+    .lt('date', todayISO);
+  console.log(`  Past events (server-side, date < ${todayISO}): ${serverPastCount || 0}`);
+
+  // Approach 2: Client-side check on event_date TEXT (same as quality check)
+  const textPastEvents = allEvents.filter(e => isDateInPast(e.event_date));
+  console.log(`  Past events (client-side, event_date TEXT): ${textPastEvents.length}`);
+
+  // Combine both: use server-side for bulk, then catch any remaining via client-side
+  const pastEventIds = new Set(textPastEvents.map(e => e.id));
 
   // Group by scraper for summary
   const pastBySource = {};
-  for (const evt of pastEvents) {
+  for (const evt of textPastEvents) {
     const src = evt.scraper_name || 'unknown';
     pastBySource[src] = (pastBySource[src] || 0) + 1;
   }
@@ -600,14 +606,32 @@ async function main() {
     console.log(`    ${src}: ${count}`);
   }
 
-  if (!DRY_RUN && pastEvents.length > 0) {
+  if (!DRY_RUN) {
     let deleted = 0;
-    for (let i = 0; i < pastEvents.length; i++) {
-      const { error } = await supabase.from('events').delete().eq('id', pastEvents[i].id);
-      if (!error) deleted++;
-      if ((i + 1) % 200 === 0) console.log(`    ...${i + 1}/${pastEvents.length} deleted`);
+
+    // Server-side bulk delete (fast, handles events with parsed date)
+    if (serverPastCount > 0) {
+      const { error } = await supabase.from('events').delete().lt('date', todayISO);
+      if (!error) {
+        deleted += serverPastCount;
+        console.log(`  💾 Server-side deleted ${serverPastCount} events (date < ${todayISO})`);
+      } else {
+        console.log(`  ⚠️ Server-side delete error: ${error.message}`);
+      }
     }
-    console.log(`  💾 Deleted ${deleted} past events`);
+
+    // Client-side delete for events caught by TEXT parsing but not server-side
+    const remainingPast = textPastEvents.filter(e => !e.date || !isDateInPast(e.date));
+    if (remainingPast.length > 0) {
+      console.log(`  Cleaning ${remainingPast.length} additional events (TEXT date only)...`);
+      for (let i = 0; i < remainingPast.length; i++) {
+        const { error } = await supabase.from('events').delete().eq('id', remainingPast[i].id);
+        if (!error) deleted++;
+        if ((i + 1) % 200 === 0) console.log(`    ...${i + 1}/${remainingPast.length} deleted`);
+      }
+    }
+
+    console.log(`  💾 Total deleted: ${deleted} past events`);
     totalFixed += deleted;
   }
 
