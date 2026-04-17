@@ -159,10 +159,12 @@ async function runScraper(name, config) {
     const duration = ((Date.now() - startTime) / 1000).toFixed(1);
 
     // Normalize result (handle various return shapes from different scrapers)
+    // Note: activity scrapers return { saved (new only), updated, failed }
+    // We count both saved + updated as "new" for logging, since updated means the record exists and was refreshed
     const stats = {
-      found: result?.found || result?.total || result?.saved + result?.updated + result?.failed || 0,
-      new: result?.new || result?.imported || result?.saved || 0,
-      duplicates: result?.duplicates || result?.skipped || result?.updated || 0,
+      found: result?.found || result?.total || (result?.saved || 0) + (result?.updated || 0) + (result?.failed || 0) || 0,
+      new: result?.new || result?.imported || (result?.saved || 0) + (result?.updated || 0) || 0,
+      duplicates: result?.duplicates || result?.skipped || 0,
       errors: result?.errors || result?.failed || 0
     };
 

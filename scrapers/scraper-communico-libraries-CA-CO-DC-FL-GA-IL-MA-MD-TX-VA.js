@@ -810,9 +810,11 @@ async function scrapeLibraryEvents(library, browser) {
       timeout: 30000
     });
 
-    // Wait for Communico event elements to appear (specific selectors only, not generic 'article')
+    // Wait for Communico event elements to appear
+    // Some libraries use standard Communico selectors, others (custom domains) use different ones
+    const waitSelectors = '.eelistevent, .em-event-list-item, .event-item, [data-event-id], .program-item, article.node--type-event';
     try {
-      await page.waitForSelector('.eelistevent, .em-event-list-item', { timeout: 10000 });
+      await page.waitForSelector(waitSelectors, { timeout: 10000 });
       console.log('   ✓ Event selectors found');
     } catch (error) {
       console.log('   ⚠ Event selectors timeout - waiting additional 5 seconds for AJAX render');

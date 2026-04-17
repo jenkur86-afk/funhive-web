@@ -89,13 +89,9 @@ const SCRAPERS = {
     group: 2,
     state: 'MA'
   },
-  'LibCal-MD': {
-    file: './scraper-libcal-libraries-md.js',
-    exportName: 'scrapeLibCalEvents',
-    type: 'puppeteer',
-    group: 3,
-    state: 'MD'
-  },
+  // DISABLED: kent-md + worcester already covered by Kent-County and Worcester-County dedicated scrapers,
+  // and those are also disabled since multi-state LibCal covers them. 0 saved across 4 runs.
+  // 'LibCal-MD': { file: './scraper-libcal-libraries-md.js', exportName: 'scrapeLibCalEvents', type: 'puppeteer', group: 3, state: 'MD' },
   'LibCal-NC': {
     file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js',
     exportName: 'scrapeLibCalNC',
@@ -546,34 +542,14 @@ const SCRAPERS = {
     group: 3,
     state: 'MD'
   },
-  'Allegany-County': {
-    file: './scraper-allegany-county-library-MD.js',
-    exportName: 'scrapeAlleganyCountyLibrary',
-    type: 'puppeteer',
-    group: 1,
-    state: 'MD'
-  },
-  'Kent-County': {
-    file: './scraper-kent-county-library-MD.js',
-    exportName: 'scrapeKentCountyLibrary',
-    type: 'puppeteer',
-    group: 2,
-    state: 'MD'
-  },
-  'Worcester-County': {
-    file: './scraper-worcester-county-library-MD.js',
-    exportName: 'scrapeWorcesterCountyLibrary',
-    type: 'puppeteer',
-    group: 3,
-    state: 'MD'
-  },
-  'Ruth-Enlow': {
-    file: './scraper-ruth-enlow-library-MD.js',
-    exportName: 'scrapeRuthEnlowLibrary',
-    type: 'puppeteer',
-    group: 1,
-    state: 'MD'
-  },
+  // DISABLED: Redundant with multi-state LibraryMarket scraper (saved=7356 events)
+  // 'Allegany-County': { file: './scraper-allegany-county-library-MD.js', exportName: 'scrapeAlleganyCountyLibrary', type: 'puppeteer', group: 1, state: 'MD' },
+  // DISABLED: Redundant with LibCal-MD scraper (kent-md.libcal.com already covered)
+  // 'Kent-County': { file: './scraper-kent-county-library-MD.js', exportName: 'scrapeKentCountyLibrary', type: 'puppeteer', group: 2, state: 'MD' },
+  // DISABLED: Redundant with LibCal-MD scraper (worcesterlibrary.libcal.com already covered)
+  // 'Worcester-County': { file: './scraper-worcester-county-library-MD.js', exportName: 'scrapeWorcesterCountyLibrary', type: 'puppeteer', group: 3, state: 'MD' },
+  // DISABLED: Redundant with multi-state LibraryMarket scraper (relib.librarymarket.com already covered)
+  // 'Ruth-Enlow': { file: './scraper-ruth-enlow-library-MD.js', exportName: 'scrapeRuthEnlowLibrary', type: 'puppeteer', group: 1, state: 'MD' },
 
   // ============================================================================
   // PENNSYLVANIA LIBRARIES
@@ -702,13 +678,8 @@ const SCRAPERS = {
   //   group: 2,
   //   state: 'Multi'
   // },
-  'LibraryMarket-MD': {
-    file: './scraper-librarymarket-libraries-md.js',
-    exportName: 'scrapeLibraryMarketEvents',
-    type: 'puppeteer',
-    group: 3,
-    state: 'MD'
-  },
+  // DISABLED: Redundant with multi-state LibraryMarket scraper. 0 saved across 4 runs.
+  // 'LibraryMarket-MD': { file: './scraper-librarymarket-libraries-md.js', exportName: 'scrapeLibraryMarketEvents', type: 'puppeteer', group: 3, state: 'MD' },
 
   // ============================================================================
   // DMV PARKS & ACTIVITIES
@@ -840,7 +811,8 @@ const SCRAPERS = {
   'WordPress-AK': { file: './scraper-wordpress-libraries-ak.js', exportName: 'scrapeWordpressAKCloudFunction', type: 'puppeteer', group: 2, state: 'AK' },
   'WordPress-HI': { file: './scraper-wordpress-libraries-hi.js', exportName: 'scrapeWordpressHICloudFunction', type: 'puppeteer', group: 1, state: 'HI' },
   'WordPress-RI': { file: './scraper-wordpress-libraries-ri.js', exportName: 'scrapeWordpressRICloudFunction', type: 'puppeteer', group: 3, state: 'RI' },
-  'ModernEventsCalendar-VA': { file: './scraper-wordpress-modern-events-calendar-libraries-VA.js', exportName: 'scrapeModernEventsCalendarLibraries', type: 'puppeteer', group: 2, state: 'VA' },
+  // DISABLED: lprlibrary.org uses Google Calendar embeds which cannot be scraped. 0 saved across 2 runs.
+  // 'ModernEventsCalendar-VA': { file: './scraper-wordpress-modern-events-calendar-libraries-VA.js', exportName: 'scrapeModernEventsCalendarLibraries', type: 'puppeteer', group: 2, state: 'VA' },
 
   // ============================================================================
   // DMV ACTIVITY SCRAPERS + PARKS
