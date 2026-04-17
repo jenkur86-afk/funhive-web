@@ -573,9 +573,17 @@ async function main() {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const pastEvents = allEvents.filter(e => {
+    // Check parsed date (TIMESTAMPTZ) first
     if (e.date) {
       const d = new Date(e.date);
-      return !isNaN(d.getTime()) && d < today;
+      if (!isNaN(d.getTime()) && d < today) return true;
+    }
+    // Fall back to parsing event_date TEXT
+    if (e.event_date) {
+      try {
+        const d = new Date(e.event_date);
+        if (!isNaN(d.getTime()) && d < today) return true;
+      } catch {}
     }
     return false;
   });
