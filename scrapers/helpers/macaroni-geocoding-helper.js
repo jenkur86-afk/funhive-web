@@ -126,6 +126,86 @@ async function geocodeAddress(address, city, state, zipCode) {
   return null;
 }
 
+// ── Clean venue name for geocoding ─────────────────────────────────────────
+function cleanVenueForGeocoding(venue) {
+  if (!venue) return null;
+  let cleaned = venue;
+
+  // Extract venue from pipe-delimited names: "Baby Storytime | Denver Public Libraries" → "Denver Public Libraries"
+  if (cleaned.includes('|')) {
+    const parts = cleaned.split('|').map(p => p.trim());
+    // The part AFTER the pipe is usually the venue; the part before is the event name
+    // Pick the last part that looks like a place name (not an event description)
+    cleaned = parts[parts.length - 1];
+  }
+
+  // Strip leading emojis and whitespace
+  cleaned = cleaned.replace(/^[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE00}-\u{FE0F}\u{200D}\s]+/u, '');
+
+  // Strip event-name prefixes that got mixed into venue: "Kids Workshop at The Home Depot" → "The Home Depot"
+  const atMatch = cleaned.match(/\bat\s+(the\s+)?(.{4,})$/i);
+  if (atMatch && atMatch[2]) {
+    const afterAt = (atMatch[1] || '') + atMatch[2];
+    // Only use the "at X" extraction if the result looks like a place name (>= 4 chars, not all lowercase generic words)
+    if (afterAt.length >= 4) {
+      cleaned = afterAt.trim();
+    }
+  }
+
+  // Strip trailing event descriptions: "Home Depot - Kids Workshop" → "Home Depot"
+  cleaned = cleaned.replace(/\s*[-–—]\s*(kids?|family|free|summer|spring|fall|winter)\b.*/i, '');
+
+  // Strip "Kids Workshop" / "Kids Workshops" suffix
+  cleaned = cleaned.replace(/\s+kids?\s+workshops?$/i, '');
+
+  // Normalize whitespace
+  cleaned = cleaned.replace(/\s+/g, ' ').trim();
+
+  return cleaned.length >= 3 ? cleaned : null;
+}
+
+// ── Venue-name geocoding (searches for named places, NOT street addresses) ──
+async function geocodeVenue(venue, city, state, zipCode) {
+  if (!venue) return null;
+
+  // Skip venue names that are clearly not geocodable places
+  const skipPatterns = /^(see website|n\/a|various|tbd|tba|online|virtual|everywhere|your home|contact for|check website|play at a|earth day|discover pass|free state|kids eat free|a local|local park|looking for)/i;
+  if (skipPatterns.test(venue)) return null;
+
+  // Clean the venue name (handle pipes, emoji prefixes, event-name contamination)
+  const cleaned = cleanVenueForGeocoding(venue);
+  if (!cleaned) return null;
+
+  // Try with cleaned venue name first, then fall back to original if different
+  const candidates = [cleaned];
+  if (cleaned !== venue && venue.length >= 3) candidates.push(venue);
+
+  for (const venueName of candidates) {
+    // Try "Venue, City, State ZipCode" (most specific)
+    if (city) {
+      const withCityZip = zipCode
+        ? `${venueName}, ${city}, ${state} ${zipCode}`
+        : `${venueName}, ${city}, ${state}`;
+      let result = await tryGeocode(withCityZip);
+      if (result) return result;
+
+      // Try without zip if we had one
+      if (zipCode) {
+        result = await tryGeocode(`${venueName}, ${city}, ${state}`);
+        if (result) return result;
+      }
+    }
+
+    // Try "Venue, State" (less specific — only for well-known places)
+    if (!city) {
+      const result = await tryGeocode(`${venueName}, ${state}`);
+      if (result) return result;
+    }
+  }
+
+  return null;
+}
+
 // ── City-center lookup (uses persistent cache from prior runs) ──────────────
 async function getCityCenterCoords(city, state, zipCode) {
   if (!city) return null;
@@ -155,6 +235,7 @@ async function getCityCenterCoords(city, state, zipCode) {
 module.exports = {
   tryGeocode,
   geocodeAddress,
+  geocodeVenue,
   getCityCenterCoords,
   flushMacaroniGeocodeCache
 };

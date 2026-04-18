@@ -22,7 +22,7 @@ const { getCountyCentroid } = require('./utils/county-centroids');
 const { getOrCreateVenue, findMatchingVenue } = require('./venue-matcher');
 const { normalizeDateString } = require('./date-normalization-helper');
 const { logScraperResult } = require('./scraper-logger');
-const { tryGeocode: _sharedTryGeocode, geocodeAddress: _sharedGeocodeAddress, getCityCenterCoords, flushMacaroniGeocodeCache } = require('./helpers/macaroni-geocoding-helper');
+const { tryGeocode: _sharedTryGeocode, geocodeAddress: _sharedGeocodeAddress, getCityCenterCoords, geocodeVenue: _sharedGeocodeVenue, flushMacaroniGeocodeCache } = require('./helpers/macaroni-geocoding-helper');
 
 // All 7 Ohio Macaroni Kid Sites
 const OH_MK_SITES = [
@@ -37,6 +37,10 @@ const OH_MK_SITES = [
 
 async function geocodeAddress(address, city, zipCode) {
   return _sharedGeocodeAddress(address, city, 'OH', zipCode);
+}
+
+async function geocodeVenue(venue, city, zipCode) {
+  return _sharedGeocodeVenue(venue, city, 'OH', zipCode);
 }
 
 async function tryGeocode(address) {
@@ -195,9 +199,16 @@ async function scrapeSite(browser, site, maxEvents = 50) {
           /\bonline\s*event\b/i  // Matches "Online Event" anywhere in venue
         ],
         names: [
-          /^📅?\s*find more family fun/i,
+          /^📅\s*find more family fun/i,
+          /^find more family fun/i,
           /submit your event/i,
+          /insert your event/i,                      // "Insert Your Event into Calendar"
           /^📆/,
+          /^📚\s*looking for/i,                      // "📚 Looking for Library Story Times"
+          /^📧/i,                                     // "📧 e-Newsletter Publishes"
+          /register for summer camps/i,               // "Register for Summer Camps"
+          /^looking for\b.*\?$/i,                    // "Looking for Storytimes?"
+          /e-newsletter publishes/i,                  // "e-Newsletter Publishes Every..."
           /\b(webinar|zoom|virtual|online)\b.*:/i,  // "Webinar: Topic"
           /:\s*(webinar|virtual|online)\b/i,         // "Topic: Virtual"
           /^virtual\s+/i,                             // "Virtual Storytime"
@@ -234,6 +245,13 @@ async function scrapeSite(browser, site, maxEvents = 50) {
 
       if (details.address && details.city && details.zipCode) {
         coords = await geocodeAddress(details.address, details.city, details.zipCode);
+      }
+      // Try venue name geocoding when address geocode failed or no address available
+      if (!coords && details.venue) {
+        coords = await geocodeVenue(details.venue, details.city, details.zipCode);
+        if (coords) {
+          console.log(`  📍 Venue geocoded: ${details.venue?.substring(0, 35)} → ${coords.latitude.toFixed(4)},${coords.longitude.toFixed(4)}`);
+        }
       }
 
       if (coords) {

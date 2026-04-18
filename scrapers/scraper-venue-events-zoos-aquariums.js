@@ -206,11 +206,10 @@ const EVENT_SELECTORS = {
  * Extract events from a single venue page with Puppeteer
  */
 async function scrapeVenueEvents(venue, browser) {
-  const logger = new ScraperLogger(venue.name, `${venue.city}, ${venue.state}`);
   let events = [];
 
   try {
-    logger.log(`🌐 Fetching events page...`);
+    console.log(`   🌐 Fetching events page...`);
 
     const page = await browser.newPage();
     await page.setViewport({ width: 1920, height: 1080 });
@@ -227,7 +226,7 @@ async function scrapeVenueEvents(venue, browser) {
       } catch (error) {
         retries--;
         if (retries === 0) throw error;
-        logger.warn(`Navigation failed, retrying...`);
+        console.log(`   ⚠️ Navigation failed, retrying...`);
         await new Promise(resolve => setTimeout(resolve, 2000));
       }
     }
@@ -236,7 +235,7 @@ async function scrapeVenueEvents(venue, browser) {
     try {
       await page.waitForSelector('body', { timeout: 5000 });
     } catch (e) {
-      logger.warn('Body element timeout');
+      console.log('   ⚠️ Body element timeout');
     }
 
     // Allow JavaScript to fully render
@@ -336,11 +335,11 @@ async function scrapeVenueEvents(venue, browser) {
       return results;
     }, EVENT_SELECTORS, venue.name);
 
-    logger.log(`✅ Extracted ${events.length} events`);
+    console.log(`   ✅ Extracted ${events.length} events`);
     await page.close();
 
   } catch (error) {
-    logger.error(`Failed to scrape: ${error.message}`);
+    console.error(`   ❌ Failed to scrape: ${error.message}`);
   }
 
   // Format events for database
@@ -442,11 +441,13 @@ async function scrapeZooAquariumEvents(filterState = null) {
     await browser.close();
   }
 
-  // Log final results
-  logScraperResult({
-    scraperName: SCRAPER_NAME,
-    results,
-    startTime: Date.now(),
+  // Log final results — count totals across all venue results
+  const totalNew = Object.values(results).reduce((sum, r) => sum + (r?.new || r?.imported || 0), 0);
+  const totalDuplicates = Object.values(results).reduce((sum, r) => sum + (r?.duplicates || 0), 0);
+  logScraperResult(SCRAPER_NAME, {
+    found: totalNew + totalDuplicates,
+    new: totalNew,
+    duplicates: totalDuplicates,
   });
 
   return results;

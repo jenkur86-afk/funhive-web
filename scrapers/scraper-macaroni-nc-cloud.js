@@ -21,7 +21,7 @@ const { getCountyCentroid } = require('./utils/county-centroids');
 const { normalizeDateString } = require('./date-normalization-helper');
 const { logScraperResult } = require('./scraper-logger');
 const { linkEventToVenue } = require('./venue-matcher');
-const { tryGeocode: _sharedTryGeocode, geocodeAddress: _sharedGeocodeAddress, getCityCenterCoords, flushMacaroniGeocodeCache } = require('./helpers/macaroni-geocoding-helper');
+const { tryGeocode: _sharedTryGeocode, geocodeAddress: _sharedGeocodeAddress, getCityCenterCoords, geocodeVenue: _sharedGeocodeVenue, flushMacaroniGeocodeCache } = require('./helpers/macaroni-geocoding-helper');
 
 // All 14 North Carolina Macaroni Kid Sites
 const NC_MK_SITES = [
@@ -46,6 +46,10 @@ const NC_MK_SITES = [
  */
 async function geocodeAddress(address, city, zipCode) {
   return _sharedGeocodeAddress(address, city, 'NC', zipCode);
+}
+
+async function geocodeVenue(venue, city, zipCode) {
+  return _sharedGeocodeVenue(venue, city, 'NC', zipCode);
 }
 
 async function tryGeocode(address) {
@@ -330,6 +334,13 @@ async function scrapeSite(site, maxEvents = 50) {
 
       if (details.address && details.city && details.zipCode) {
         coords = await geocodeAddress(details.address, details.city, details.zipCode);
+      }
+      // Try venue name geocoding when address geocode failed or no address available
+      if (!coords && details.venue) {
+        coords = await geocodeVenue(details.venue, details.city, details.zipCode);
+        if (coords) {
+          console.log(`  📍 Venue geocoded: ${details.venue?.substring(0, 35)} → ${coords.latitude.toFixed(4)},${coords.longitude.toFixed(4)}`);
+        }
       }
 
       if (coords) {

@@ -22,6 +22,15 @@ const { getOrCreateVenue, findMatchingVenue } = require('./venue-matcher');
 const { normalizeDateString } = require('./date-normalization-helper');
 const { parseTimeString } = require('./helpers/date-time-utils');
 const { ScraperLogger } = require('./scraper-logger');
+const { geocodeAddress: _sharedGeocodeAddress, geocodeVenue: _sharedGeocodeVenue, getCityCenterCoords, flushMacaroniGeocodeCache } = require('./helpers/macaroni-geocoding-helper');
+
+async function geocodeAddress(address, city, zipCode) {
+  return _sharedGeocodeAddress(address, city, 'MD', zipCode);
+}
+
+async function geocodeVenue(venue, city, zipCode) {
+  return _sharedGeocodeVenue(venue, city, 'MD', zipCode);
+}
 
 /**
  * Normalize text for comparison - removes punctuation, extra spaces, lowercases
@@ -276,9 +285,16 @@ async function scrapeSite(browser, site, logger, maxEvents = 50) {
           /\bonline\s*event\b/i  // Matches "Online Event" anywhere in venue
         ],
         names: [
-          /^📅?\s*find more family fun/i,
+          /^📅\s*find more family fun/i,
+          /^find more family fun/i,
           /submit your event/i,
+          /insert your event/i,                      // "Insert Your Event into Calendar"
           /^📆/,
+          /^📚\s*looking for/i,                      // "📚 Looking for Library Story Times"
+          /^📧/i,                                     // "📧 e-Newsletter Publishes"
+          /register for summer camps/i,               // "Register for Summer Camps"
+          /^looking for\b.*\?$/i,                    // "Looking for Storytimes?"
+          /e-newsletter publishes/i,                  // "e-Newsletter Publishes Every..."
           /\b(webinar|zoom|virtual|online)\b.*:/i,  // "Webinar: Topic"
           /:\s*(webinar|virtual|online)\b/i,         // "Topic: Virtual"
           /^virtual\s+/i,                             // "Virtual Storytime"
@@ -372,36 +388,77 @@ async function scrapeSite(browser, site, logger, maxEvents = 50) {
         continue;
       }
 
-      // --- GEOCODING (no Nominatim — venue cache + centroid only) ---
+      // --- GEOCODING (address → venue name → venue cache → city → county centroid) ---
 
       let coords = null;
       let locationObj = null;
 
-      // Step 1: Check venue cache (no API calls)
-      const matchedVenue = await findMatchingVenue({
-        venue: details.venue,
-        city: details.city,
-        state: 'MD',
-        address: details.address
-      });
+      // Step 1: Try address geocoding (if we have a street address)
+      if (details.address && details.city && details.zipCode) {
+        coords = await geocodeAddress(details.address, details.city, details.zipCode);
+      }
 
-      if (matchedVenue) {
-        const venueLat = matchedVenue.location?.coordinates?.latitude || matchedVenue.location?.latitude;
-        const venueLng = matchedVenue.location?.coordinates?.longitude || matchedVenue.location?.longitude;
-
-        if (venueLat && venueLng) {
-          coords = { latitude: venueLat, longitude: venueLng };
-          locationObj = {
-            address: details.address || matchedVenue.location?.address || '',
-            city: details.city || matchedVenue.city || matchedVenue.location?.city || '',
-            zipCode: details.zipCode || matchedVenue.location?.zipCode || '',
-            coordinates: coords,
-            name: details.venue || matchedVenue.name || 'See website'
-          };
+      // Step 2: Try venue name geocoding (if address failed or no address)
+      if (!coords && details.venue) {
+        coords = await geocodeVenue(details.venue, details.city, details.zipCode);
+        if (coords) {
+          console.log(`  📍 Venue geocoded: ${details.venue?.substring(0, 35)} → ${coords.latitude.toFixed(4)},${coords.longitude.toFixed(4)}`);
         }
       }
 
-      // Step 2: County centroid fallback (no API calls)
+      if (coords) {
+        locationObj = {
+          address: details.address || '',
+          city: details.city || '',
+          zipCode: details.zipCode || '',
+          coordinates: coords,
+          name: details.venue || 'See website'
+        };
+      }
+
+      // Step 3: Check venue cache
+      if (!coords) {
+        const matchedVenue = await findMatchingVenue({
+          venue: details.venue,
+          city: details.city,
+          state: 'MD',
+          address: details.address
+        });
+
+        if (matchedVenue) {
+          const venueLat = matchedVenue.location?.coordinates?.latitude || matchedVenue.location?.latitude;
+          const venueLng = matchedVenue.location?.coordinates?.longitude || matchedVenue.location?.longitude;
+
+          if (venueLat && venueLng) {
+            coords = { latitude: venueLat, longitude: venueLng };
+            locationObj = {
+              address: details.address || matchedVenue.location?.address || '',
+              city: details.city || matchedVenue.city || matchedVenue.location?.city || '',
+              zipCode: details.zipCode || matchedVenue.location?.zipCode || '',
+              coordinates: coords,
+              name: details.venue || matchedVenue.name || 'See website'
+            };
+          }
+        }
+      }
+
+      // Step 4: City-level geocoding
+      if (!coords && details.city) {
+        coords = await getCityCenterCoords(details.city, 'MD', details.zipCode);
+        if (coords) {
+          locationObj = {
+            address: details.address || '',
+            city: details.city,
+            zipCode: details.zipCode || '',
+            coordinates: coords,
+            name: details.venue || 'See website',
+            note: 'Geocoded to city level'
+          };
+          console.log(`  📍 Using city-level geocode for: ${details.name?.substring(0, 30)}`);
+        }
+      }
+
+      // Step 5: County centroid fallback
       if (!coords) {
         const countyCentroid = getCountyCentroid(site.county, 'MD');
         if (countyCentroid) {
