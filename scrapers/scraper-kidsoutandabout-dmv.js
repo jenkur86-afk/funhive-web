@@ -459,6 +459,19 @@ async function scrapeKidsOutAndAboutDMV(options = {}) {
         }
       }
 
+      // Skip promo/meta events with no real location data
+      if (!details.venue && !details.address && !details.city && !details.state) {
+        console.log(`  ⏭️ Skipping no-location: ${(details.name || '').substring(0, 50)}`);
+        continue;
+      }
+
+      // Skip promotional/listing-type events
+      const promoNames = /^(how to list|free things to do|free places to take|things to do this|top \d+ things|best things to do|submit your event|add your event)/i;
+      if (promoNames.test(details.name || '')) {
+        console.log(`  ⏭️ Skipping promo: ${(details.name || '').substring(0, 50)}`);
+        continue;
+      }
+
       const event = {
         name: details.name,
         eventDate: normalizedDate,

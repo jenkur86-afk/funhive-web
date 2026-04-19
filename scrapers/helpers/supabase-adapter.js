@@ -335,6 +335,15 @@ async function saveEvent(id, data) {
     return null;
   }
 
+  // Reject events with placeholder venues and no real location data
+  const venueLower = (data.venue || '').toLowerCase().trim();
+  if (/^(see event page|see website|visit website|check website|see details|see link|tbd|tba|various|various locations|online\/virtual)$/i.test(venueLower)) {
+    if (!data.location?.city && !data.address && !data.city) {
+      console.log(`  ⏭️ Skipping placeholder-venue event: "${data.name}" [venue="${data.venue}"]`);
+      return null;
+    }
+  }
+
   // Reject past events
   const evtDateStr = data.eventDate || '';
   if (evtDateStr && _isDateInPast(evtDateStr)) {
@@ -537,7 +546,7 @@ function createFirestoreCompatibleDB() {
               try {
                 flattened = flattenForTable(table, data);
               } catch (e) {
-                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event')) {
+                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue')) {
                   return; // silently skip
                 }
                 throw e;
@@ -595,7 +604,7 @@ function createFirestoreCompatibleDB() {
           try {
             flattened = flattenForTable(collectionName, data);
           } catch (e) {
-            if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event')) {
+            if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue')) {
               return { id }; // silently skip
             }
             throw e;
@@ -639,7 +648,7 @@ function createFirestoreCompatibleDB() {
                 upsertByTable[table].push({ id: op.id, ...flattenForTable(table, op.data) });
               } catch (e) {
                 // Skip past events and invalid events gracefully
-                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event')) {
+                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue')) {
                   continue;
                 }
                 throw e;
@@ -752,6 +761,14 @@ function flattenEvent(data) {
   if (isCancelledEvent(data.name, data.description)) {
     console.log(`  ⏭️ Skipping cancelled/closed event: "${data.name}"`);
     throw new Error(`Skipping cancelled/closed event: "${data.name}"`);
+  }
+
+  // Reject events with placeholder venues and no real location data
+  const venueLower = (data.venue || '').toLowerCase().trim();
+  if (/^(see event page|see website|visit website|check website|see details|see link|tbd|tba|various|various locations|online\/virtual)$/i.test(venueLower)) {
+    if (!data.location?.city && !data.address && !data.city) {
+      throw new Error(`Skipping placeholder-venue event: "${data.name}" [venue="${data.venue}"]`);
+    }
   }
 
   // Reject past events — parse date from eventDate string or date field
