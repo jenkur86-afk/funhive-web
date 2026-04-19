@@ -373,8 +373,10 @@ async function getOrCreateActivity(library, coordinates, state, eventDate = null
       source: 'event-scraper',
       eventCount: 1,
       lastEventDate: eventDate,
+      scraperName: 'Event Save Helper',
       metadata: {
         source: 'Event Save Helper',
+        scraperName: 'Event Save Helper',
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
         lastSeen: admin.firestore.FieldValue.serverTimestamp()
       },

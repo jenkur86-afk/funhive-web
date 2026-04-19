@@ -478,9 +478,11 @@ async function getOrCreateActivity(activityData, options = {}) {
   const newActivity = {
     ...activityData,
     id: activityId,
+    scraperName: activityData.scraperName || source || 'unknown',
     metadata: {
       ...(activityData.metadata || {}),
       source: source,
+      scraperName: activityData.scraperName || activityData.metadata?.scraperName || source || 'unknown',
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       lastSeen: admin.firestore.FieldValue.serverTimestamp(),
       scrapedAt: admin.firestore.FieldValue.serverTimestamp(),
