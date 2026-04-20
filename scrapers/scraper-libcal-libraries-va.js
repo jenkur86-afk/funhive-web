@@ -60,6 +60,87 @@ const LIBRARIES = [
     state: "VA",
     zipCode: "22192",
     county: "Prince William"
+  },
+  // ── Added: LibCal libraries previously in wordpress-VA ──
+  {
+    name: "Richmond Public Library",
+    url: "https://rvalibrary.org",
+    platform: "libcal",
+    eventsUrl: "https://rvalibrary.libcal.com/calendar/main",
+    city: "Richmond",
+    state: "VA",
+    zipCode: "23219",
+    county: "Richmond"
+  },
+  {
+    name: "Norfolk Public Library",
+    url: "https://www.norfolkpubliclibrary.org",
+    platform: "libcal",
+    eventsUrl: "https://norfolk.libcal.com/calendars",
+    city: "Norfolk",
+    state: "VA",
+    zipCode: "23510",
+    county: "Norfolk"
+  },
+  {
+    name: "Newport News Public Library System",
+    url: "https://www.nnva.gov/library",
+    platform: "libcal",
+    eventsUrl: "https://newportnews.libcal.com/calendar",
+    city: "Newport News",
+    state: "VA",
+    zipCode: "23606",
+    county: "Newport News"
+  },
+  {
+    name: "Hampton Public Library",
+    url: "https://www.hamptonpubliclibrary.org",
+    platform: "libcal",
+    eventsUrl: "https://hampton.libcal.com/calendar",
+    city: "Hampton",
+    state: "VA",
+    zipCode: "23669",
+    county: "Hampton"
+  },
+  {
+    name: "Roanoke Public Libraries",
+    url: "https://www.roanokeva.gov/library",
+    platform: "libcal",
+    eventsUrl: "https://roanokeva.libcal.com/calendar",
+    city: "Roanoke",
+    state: "VA",
+    zipCode: "24011",
+    county: "Roanoke"
+  },
+  {
+    name: "Suffolk Public Library",
+    url: "https://www.suffolkpubliclibrary.com",
+    platform: "libcal",
+    eventsUrl: "https://suffolkpubliclibrary.libcal.com/calendar",
+    city: "Suffolk",
+    state: "VA",
+    zipCode: "23434",
+    county: "Suffolk"
+  },
+  {
+    name: "Williamsburg Regional Library",
+    url: "https://www.wrl.org",
+    platform: "libcal",
+    eventsUrl: "https://libcal.wrl.org/calendar",
+    city: "Williamsburg",
+    state: "VA",
+    zipCode: "23185",
+    county: "Williamsburg"
+  },
+  {
+    name: "Library of Virginia",
+    url: "https://www.lva.virginia.gov",
+    platform: "libcal",
+    eventsUrl: "https://lva-virginia.libcal.com/calendar",
+    city: "Richmond",
+    state: "VA",
+    zipCode: "23219",
+    county: "Richmond"
   }
 ];
 

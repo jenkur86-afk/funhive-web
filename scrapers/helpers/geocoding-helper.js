@@ -74,8 +74,8 @@ async function rateLimitedDelay() {
   }
 
   const elapsed = Date.now() - lastNominatimCall;
-  if (elapsed < 1500) { // 1.5s to be safe (Nominatim aggressively rate limits)
-    await new Promise(resolve => setTimeout(resolve, 1500 - elapsed));
+  if (elapsed < 2000) { // 2s between requests — Nominatim rate limits aggressively at 1/s
+    await new Promise(resolve => setTimeout(resolve, 2000 - elapsed));
   }
   lastNominatimCall = Date.now();
 }
