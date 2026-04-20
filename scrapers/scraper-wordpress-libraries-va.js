@@ -61,7 +61,25 @@ async function scrapeGenericEvents() {
         const seen = new Set();
         return events.filter(e => { if (seen.has(e.title.toLowerCase())) return false; seen.add(e.title.toLowerCase()); return true; });
       }, library.name);
-      libraryEvents.forEach(event => events.push({ ...event, state: 'VA', metadata: { sourceName: library.name, sourceUrl: library.url, scrapedAt: new Date().toISOString(), scraperName: SCRAPER_NAME, category: 'library', state: 'VA', city: library.city, zipCode: library.zipCode }}));
+      // Filter out junk: error messages, category headers, UI elements scraped as event names
+      const JUNK_PATTERNS = [
+        /^sorry\b/i, /^but don't give up/i, /^details:?$/i, /^event details:?$/i,
+        /^export outlook/i, /^download \.ics/i, /^add to calendar/i, /^share this/i,
+        /^no events/i, /^there are no/i, /^no results/i, /^nothing found/i,
+        /^loading/i, /^please wait/i, /^search results/i, /^filter/i,
+      ];
+      // Also reject titles that are just a single common word (category headers)
+      const SINGLE_WORD_JUNK = /^(family|adults?|teens?|tweens?|children|kids|seniors?|all|events?|programs?|calendar|home|library|details|info|more)$/i;
+
+      const validEvents = libraryEvents.filter(event => {
+        const t = (event.title || '').trim();
+        if (!t || t.length < 3) return false;
+        if (!event.date) return false;  // Must have a date
+        if (JUNK_PATTERNS.some(p => p.test(t))) return false;
+        if (SINGLE_WORD_JUNK.test(t)) return false;
+        return true;
+      });
+      validEvents.forEach(event => events.push({ ...event, state: 'VA', metadata: { sourceName: library.name, sourceUrl: library.url, scrapedAt: new Date().toISOString(), scraperName: SCRAPER_NAME, category: 'library', state: 'VA', city: library.city, zipCode: library.zipCode }}));
       await page.close();
       await new Promise(resolve => setTimeout(resolve, 500));
     } catch (error) { console.error(`Error: ${library.name}:`, error.message); }

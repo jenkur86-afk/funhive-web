@@ -271,6 +271,41 @@ async function fetchEventDetails(url) {
       }
     }
 
+    // Parse address components from venue field if it contains a full address blob
+    // e.g., "Shipgarten, 7581 Colshire Dr, McLean, VA 22102, United States \n See map: Google Maps"
+    if (venue && !address && !city) {
+      let cleanedVenue = venue.replace(/\s*See\s*map:\s*Google\s*Maps\s*/gi, '').trim();
+      cleanedVenue = cleanedVenue.replace(/,?\s*(United States|USA)\s*$/i, '').trim();
+
+      // Try: "Name, Street, City, ST ZIP"
+      const fullAddrMatch = cleanedVenue.match(/^(.+?),\s*(\d+[^,]+),\s*([^,]+),\s*([A-Z]{2})\s*(\d{5})?/);
+      if (fullAddrMatch) {
+        venue = fullAddrMatch[1].trim();
+        address = fullAddrMatch[2].trim();
+        city = fullAddrMatch[3].trim();
+        state = state || fullAddrMatch[4];
+        zipCode = zipCode || (fullAddrMatch[5] || '').trim();
+      } else {
+        // Try: "Name, Street Name, City, ST" (no number, e.g., "Baker Park, North Bentz Street, Frederick, MD")
+        const streetMatch = cleanedVenue.match(/^(.+?),\s*([^,]+(?:Street|Road|Avenue|Drive|Boulevard|Blvd|Lane|Way|Pike|Pkwy|Parkway|Hwy|Highway|Rd|Dr|Ave|St|Ln|Ct|Pl|Circle|Trail|Tr)[^,]*),\s*([^,]+),\s*([A-Z]{2})/i);
+        if (streetMatch) {
+          venue = streetMatch[1].trim();
+          address = streetMatch[2].trim();
+          city = streetMatch[3].trim();
+          state = state || streetMatch[4];
+        } else {
+          // Try: "Name, City, ST ZIP"
+          const nStreetMatch = cleanedVenue.match(/^(.+?),\s*([^,]+),\s*([A-Z]{2})\s*(\d{5})?/);
+          if (nStreetMatch) {
+            venue = nStreetMatch[1].trim();
+            city = nStreetMatch[2].trim();
+            state = state || nStreetMatch[3];
+            zipCode = zipCode || (nStreetMatch[4] || '').trim();
+          }
+        }
+      }
+    }
+
     // Determine state for DMV filtering
     const eventState = state || extractState(venue + ' ' + address + ' ' + city);
 
