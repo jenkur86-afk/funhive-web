@@ -269,10 +269,15 @@ async function scrapeLibraryEvents(library, browser) {
             }
           }
 
-          // Extract time
+          // Extract time — try range first, then single time
           let time = '';
-          const timeMatch = fullText.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm|a\.m\.|p\.m\.))/i);
-          if (timeMatch) time = timeMatch[1];
+          const timeRangeMatch = fullText.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*[-–—]+\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm))/i);
+          if (timeRangeMatch) {
+            time = `${timeRangeMatch[1].trim()} - ${timeRangeMatch[2].trim()}`;
+          } else {
+            const timeMatch = fullText.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm|a\.m\.|p\.m\.))/i);
+            if (timeMatch) time = timeMatch[1];
+          }
 
           // Extract location/branch - look for "Library" in text
           let location = '';
@@ -370,12 +375,50 @@ async function scrapeLibraryEvents(library, browser) {
           description: event.description
         });
 
+        // Extract start/end time from raw date string before normalization stripped it
+        let startTime = null;
+        let endTime = null;
+        const rawForTime = event.eventDate || '';
+        // Range with minutes "9:00am - 10:30pm"
+        const trm = rawForTime.match(/(\d{1,2}):(\d{2})\s*(am|pm)?\s*[-–—]+\s*(\d{1,2}):(\d{2})\s*(am|pm)/i);
+        if (trm) {
+          const sap = (trm[3] || (parseInt(trm[1]) >= 7 && parseInt(trm[1]) < 12 ? 'AM' : 'PM')).toUpperCase();
+          const eap = trm[6].toUpperCase();
+          const fmtT = (h, m, ap) => { if (h > 12) h -= 12; if (h === 0) h = 12; return `${h}:${String(m).padStart(2, '0')} ${ap}`; };
+          startTime = fmtT(parseInt(trm[1]), trm[2], sap);
+          endTime = fmtT(parseInt(trm[4]), trm[5], eap);
+        } else {
+          // Range without minutes "10am-2pm"
+          const trn = rawForTime.match(/(\d{1,2})\s*(am|pm)\s*[-–—]+\s*(\d{1,2})\s*(am|pm)/i);
+          if (trn) {
+            const fmtT = (h, m, ap) => { if (h > 12) h -= 12; if (h === 0) h = 12; return `${h}:${String(m).padStart(2, '0')} ${ap}`; };
+            startTime = fmtT(parseInt(trn[1]), '00', trn[2].toUpperCase());
+            endTime = fmtT(parseInt(trn[3]), '00', trn[4].toUpperCase());
+          } else {
+            // Single time "3:00 PM"
+            const tsm = rawForTime.match(/(\d{1,2}):(\d{2})\s*(am|pm)/i);
+            if (tsm) {
+              const fmtT = (h, m, ap) => { if (h > 12) h -= 12; if (h === 0) h = 12; return `${h}:${String(m).padStart(2, '0')} ${ap}`; };
+              startTime = fmtT(parseInt(tsm[1]), tsm[2], tsm[3].toUpperCase());
+            } else {
+              // Single time no minutes "6pm"
+              const tsn = rawForTime.match(/\b(\d{1,2})\s*(am|pm)\b/i);
+              if (tsn) {
+                const fmtT = (h, m, ap) => { if (h > 12) h -= 12; if (h === 0) h = 12; return `${h}:${String(m).padStart(2, '0')} ${ap}`; };
+                startTime = fmtT(parseInt(tsn[1]), '00', tsn[2].toUpperCase());
+              }
+            }
+          }
+        }
+
         // Build event document
         const eventDoc = {
           name: event.name,
           venue: event.venue || library.name,
           eventDate: normalizedDate,
           scheduleDescription: event.eventDate,
+          startTime: startTime,
+          endTime: endTime,
           state: library.state,
           parentCategory,
           displayCategory,

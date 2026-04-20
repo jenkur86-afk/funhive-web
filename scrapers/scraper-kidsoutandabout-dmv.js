@@ -221,12 +221,37 @@ async function fetchEventDetails(url) {
     let startDate = jsonLdData?.startDate || '';
     let endDate = jsonLdData?.endDate || '';
 
-    // Get time info
+    // Get time info — try multiple sources
     let time = '';
+    // Source 1: "Time:" label on page
     const timeText = $('*:contains("Time:")').first().parent().text();
     const timeMatch = timeText.match(/Time:\s*(.+?)(?:\n|$)/i);
     if (timeMatch) {
       time = timeMatch[1].trim();
+    }
+    // Source 2: JSON-LD startDate/endDate ISO timestamps (e.g., "2026-04-20T14:00:00-04:00")
+    if (!time && startDate && startDate.includes('T')) {
+      const isoTimeMatch = startDate.match(/T(\d{2}):(\d{2})/);
+      if (isoTimeMatch) {
+        let h = parseInt(isoTimeMatch[1]); const m = isoTimeMatch[2];
+        if (!(h === 0 && m === '00')) { // Skip midnight (no real time)
+          const ap = h >= 12 ? 'PM' : 'AM';
+          if (h > 12) h -= 12; if (h === 0) h = 12;
+          time = `${h}:${m} ${ap}`;
+          // Also extract end time if available
+          if (endDate && endDate.includes('T')) {
+            const endMatch = endDate.match(/T(\d{2}):(\d{2})/);
+            if (endMatch) {
+              let eh = parseInt(endMatch[1]); const em = endMatch[2];
+              if (!(eh === 0 && em === '00')) {
+                const eap = eh >= 12 ? 'PM' : 'AM';
+                if (eh > 12) eh -= 12; if (eh === 0) eh = 12;
+                time = `${time} - ${eh}:${em} ${eap}`;
+              }
+            }
+          }
+        }
+      }
     }
 
     // Get age range
@@ -507,11 +532,25 @@ async function scrapeKidsOutAndAboutDMV(options = {}) {
         continue;
       }
 
+      // Parse start/end time from details.time (e.g., "3:00 PM - 5:00 PM" or "3:00 PM")
+      let parsedStartTime = '';
+      let parsedEndTime = '';
+      if (details.time) {
+        const trm = details.time.match(/(\d{1,2}:\d{2}\s*(?:am|pm)?)\s*[-–—]+\s*(\d{1,2}:\d{2}\s*(?:am|pm))/i);
+        if (trm) {
+          parsedStartTime = trm[1].trim().toUpperCase();
+          parsedEndTime = trm[2].trim().toUpperCase();
+        } else {
+          const tsm = details.time.match(/(\d{1,2}:\d{2}\s*(?:am|pm))/i);
+          if (tsm) parsedStartTime = tsm[1].trim().toUpperCase();
+        }
+      }
+
       const event = {
         name: details.name,
         eventDate: normalizedDate,
-        startTime: details.time || '',
-        endTime: '',
+        startTime: parsedStartTime,
+        endTime: parsedEndTime,
         description: details.description,
         venue: details.venue || 'See event page',
         address: details.address || '',
