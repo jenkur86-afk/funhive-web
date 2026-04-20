@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Header from '@/components/Header'
+import SuggestButton from '@/components/SuggestButton'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { FavoritesProvider } from '@/contexts/FavoritesContext'
 import './globals.css'
@@ -22,6 +23,7 @@ export default function RootLayout({
           <FavoritesProvider>
             <Header />
             {children}
+            <SuggestButton />
           </FavoritesProvider>
         </AuthProvider>
       </body>
