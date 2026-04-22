@@ -501,6 +501,17 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
       let extractedStartTime = event.startTime || null;
       let extractedEndTime = event.endTime || null;
       const rawDateStr = event.date || event.eventDate;
+
+      // Many scrapers (WordPress per-state, etc.) capture time in a separate event.time field
+      // that was previously ignored. Check it before falling back to date string extraction.
+      if (!extractedStartTime && event.time) {
+        const timeFromField = _extractTimeFromRaw(event.time);
+        if (timeFromField) {
+          extractedStartTime = timeFromField.startTime;
+          extractedEndTime = timeFromField.endTime;
+        }
+      }
+
       if (!extractedStartTime && rawDateStr) {
         const timeInfo = _extractTimeFromRaw(rawDateStr);
         if (timeInfo) {
@@ -578,7 +589,7 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
         startTime: extractedStartTime,
         endTime: extractedEndTime,
         date: dateTimestamp,
-        description: (event.description || '').substring(0, 2000),
+        description: (event.description || '').substring(0, 1500),
         url: event.url || library.url,
         imageUrl: event.imageUrl || '',
         state: library.state || state,

@@ -96,17 +96,57 @@ async function scrapeEventsProgramsPage(page) {
       timeout: 30000
     });
 
-    await page.waitForSelector('.eventon_list_event', { timeout: 10000 });
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Wait for EventON elements, or any content
+    await page.waitForSelector('.eventon_list_event, .evo-event, .tribe-events-list, article, .event-item', { timeout: 10000 }).catch(() => {
+      console.log('   Note: EventON selector timeout — will try broader extraction');
+    });
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     // Extract all event elements from the page
     const events = await page.evaluate(() => {
-      const eventElements = document.querySelectorAll('.eventon_list_event');
-      const results = [];
+      // Try EventON selectors first
+      const evoSelectors = ['.eventon_list_event', '.evo-event', '[class*="eventon"]'];
+      let eventElements = [];
+      for (const sel of evoSelectors) {
+        eventElements = document.querySelectorAll(sel);
+        if (eventElements.length > 0) break;
+      }
 
+      // Fallback: look for generic event card patterns
+      if (eventElements.length === 0) {
+        const fallbackSelectors = ['.tribe-events-list .tribe-events-calendar-list__event', '.event-item', 'article.type-ajde_events', 'article[class*="event"]', '.wp-block-post'];
+        for (const sel of fallbackSelectors) {
+          eventElements = document.querySelectorAll(sel);
+          if (eventElements.length > 0) break;
+        }
+      }
+
+      // Last resort: link-based extraction
+      if (eventElements.length === 0) {
+        const results = [];
+        const seen = new Set();
+        const links = document.querySelectorAll('a[href*="event"], a[href*="program"]');
+        links.forEach(link => {
+          const href = link.getAttribute('href') || '';
+          const title = link.textContent.trim();
+          if (!title || title.length < 5 || title.length > 200 || seen.has(title)) return;
+          // Skip nav/filter links
+          if (href.endsWith('/events') || href.endsWith('/events/') || href.endsWith('/programs') || href.endsWith('/programs/')) return;
+          seen.add(title);
+          const cardText = (link.closest('li, article, div.event-item, div[class*="event"]') || link.parentElement).textContent || '';
+          const dateMatch = cardText.match(/((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}(?:,?\s+\d{4})?)/i);
+          const date = dateMatch ? dateMatch[1].trim() : '';
+          if (title && date) {
+            results.push({ title, date, location: '', description: '', link: href.startsWith('http') ? href : window.location.origin + href });
+          }
+        });
+        return results;
+      }
+
+      const results = [];
       eventElements.forEach((element) => {
         try {
-          const titleEl = element.querySelector('h3, .event-title, .evo-title');
+          const titleEl = element.querySelector('h3, h2, .event-title, .evo-title, a');
           const title = titleEl ? titleEl.textContent.trim() : 'Untitled Event';
 
           const dateEl = element.querySelector('time, .event-date, .evo-date, [class*="date"]');
@@ -187,8 +227,36 @@ async function fetchEventsFromAPI() {
     return allEvents;
 
   } catch (error) {
-    console.error(`   ❌ Error fetching from API:`, error.message);
-    console.warn(`   ⚠️  API request failed - will attempt fallback scraping`);
+    console.error(`   ❌ EventON API error: ${error.message}`);
+
+    // Try The Events Calendar (TEC) API as fallback — libraries sometimes migrate from EventON to TEC
+    try {
+      console.log(`   Trying The Events Calendar API fallback...`);
+      const tecResponse = await axios.get(`${LIBRARY.website}/wp-json/tribe/events/v1/events`, {
+        params: { per_page: 50, start_date: new Date().toISOString().split('T')[0] },
+        timeout: 15000,
+        headers: { 'User-Agent': 'FunHive/1.0 (+https://funhive.com; family-events)' }
+      });
+      if (tecResponse.data && tecResponse.data.events && tecResponse.data.events.length > 0) {
+        const tecEvents = tecResponse.data.events.map(e => ({
+          title: { rendered: e.title || '' },
+          content: { rendered: e.description || '' },
+          link: e.url || '',
+          class_list: [],
+          meta: {
+            _start_date: e.start_date,
+            _end_date: e.end_date,
+          },
+          modified: e.modified || new Date().toISOString()
+        }));
+        console.log(`   Found ${tecEvents.length} events from TEC API`);
+        return tecEvents;
+      }
+    } catch (tecError) {
+      console.log(`   TEC API also not available: ${tecError.message}`);
+    }
+
+    console.warn(`   ⚠️  All API methods failed - will attempt fallback scraping`);
     return [];
   }
 }

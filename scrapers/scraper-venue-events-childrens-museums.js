@@ -261,7 +261,13 @@ function extractEventsFromPage(html, baseUrl) {
     if (events.length > 0) break; // Stop if we found events
   }
 
-  return events;
+  // Filter out navigation elements and page chrome (entries without dates are almost always junk)
+  return events.filter(e => {
+    if (!e.eventDate || e.eventDate.trim().length < 3) return false;
+    if (!e.name || e.name.trim().length < 4) return false;
+    if (/^(visit|plan your|get ticket|buy ticket|membership|explore|animals?|exhibits?|learn|support|about|contact|404|page not found|oops|search|login|sign up|my account|footer|header|menu|nav)/i.test(e.name.trim())) return false;
+    return true;
+  });
 }
 
 /**

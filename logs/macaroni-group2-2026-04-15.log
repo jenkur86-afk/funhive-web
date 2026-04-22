@@ -1,0 +1,33 @@
+[2026-04-15T12:54:48.151Z] [INFO] 
+======================================================================
+[2026-04-15T12:54:48.154Z] [INFO] 🍝 FunHive MacaroniKid Runner - Group 2
+[2026-04-15T12:54:48.290Z] [INFO] 📅 4/15/2026, 8:54:48 AM EST
+[2026-04-15T12:54:48.291Z] [INFO] ======================================================================
+
+[2026-04-15T12:54:48.292Z] [INFO] 📋 Running 14 state(s) - ~131 total sites
+[2026-04-15T12:54:48.292Z] [INFO] ======================================================================
+
+[2026-04-15T12:54:48.293Z] [INFO] [DRY RUN] Would run: FL (31 sites) from ./scraper-macaroni-fl.js
+[2026-04-15T12:54:48.293Z] [INFO] [DRY RUN] Would run: NY (24 sites) from ./scraper-macaroni-ny.js
+[2026-04-15T12:54:48.294Z] [INFO] [DRY RUN] Would run: GA (17 sites) from ./scraper-macaroni-ga.js
+[2026-04-15T12:54:48.294Z] [INFO] [DRY RUN] Would run: MI (12 sites) from ./scraper-macaroni-mi.js
+[2026-04-15T12:54:48.295Z] [INFO] [DRY RUN] Would run: CT (8 sites) from ./scraper-macaroni-ct.js
+[2026-04-15T12:54:48.295Z] [INFO] [DRY RUN] Would run: MD (8 sites) from ./scraper-macaroni-md.js
+[2026-04-15T12:54:48.295Z] [INFO] [DRY RUN] Would run: AZ (7 sites) from ./scraper-macaroni-az.js
+[2026-04-15T12:54:48.295Z] [INFO] [DRY RUN] Would run: OR (6 sites) from ./scraper-macaroni-or.js
+[2026-04-15T12:54:48.296Z] [INFO] [DRY RUN] Would run: LA (5 sites) from ./scraper-macaroni-la.js
+[2026-04-15T12:54:48.296Z] [INFO] [DRY RUN] Would run: KS (4 sites) from ./scraper-macaroni-ks.js
+[2026-04-15T12:54:48.296Z] [INFO] [DRY RUN] Would run: AR (3 sites) from ./scraper-macaroni-ar.js
+[2026-04-15T12:54:48.297Z] [INFO] [DRY RUN] Would run: NH (3 sites) from ./scraper-macaroni-nh.js
+[2026-04-15T12:54:48.297Z] [INFO] [DRY RUN] Would run: NM (2 sites) from ./scraper-macaroni-nm.js
+[2026-04-15T12:54:48.297Z] [INFO] [DRY RUN] Would run: ME (1 sites) from ./scraper-macaroni-me.js
+[2026-04-15T12:54:48.299Z] [INFO] 
+======================================================================
+[2026-04-15T12:54:48.300Z] [INFO] 📊 SUMMARY - Group 2
+[2026-04-15T12:54:48.303Z] [INFO] ======================================================================
+[2026-04-15T12:54:48.303Z] [INFO] ✅ Success: 0
+[2026-04-15T12:54:48.303Z] [INFO] ❌ Failed: 0
+[2026-04-15T12:54:48.303Z] [INFO] ⏱️  Total time: 0.0 minutes
+[2026-04-15T12:54:48.304Z] [INFO] 
+======================================================================
+

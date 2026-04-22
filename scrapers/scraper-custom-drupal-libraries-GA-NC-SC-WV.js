@@ -192,17 +192,27 @@ function parseAgeRange(text) {
 
   const lowerText = text.toLowerCase();
 
-  // Check for adult-only indicators
-  if (lowerText.match(/adults? only/i) || lowerText.match(/18\+/i)) {
+  // Check for adult-only indicators — explicit labels
+  // Catches: "Adults", "Adults Only", "18+", "21+", "Adult", "Audience: Adults"
+  // But NOT: "Young Adult" (= teens), "Adults and Children", "Families and Adults"
+  if (/\badults?\b/i.test(lowerText) && !/\byoung\s+adults?\b/i.test(lowerText) && !/\b(and\s+)?adults?\s+(and\s+)?(children|kids|families|family|teens?|all\s*ages)/i.test(lowerText) && !/\b(children|kids|families|family|teens?|all\s*ages)\s+(and\s+)?adults?\b/i.test(lowerText)) {
+    return 'Adults';
+  }
+  if (/\b18\+/.test(lowerText) || /\b21\+/.test(lowerText)) {
+    return 'Adults';
+  }
+
+  // Check for adult-oriented event keywords (career, professional, senior services, etc.)
+  if (/\b(career\s*coach|career\s*fair|career\s*services|job\s*fair|job\s*search|resume\s*(workshop|writing|review|help|clinic)|interview\s*(prep|skills|workshop)|networking\s*(event|mixer|session)|professional\s*development|linkedin|salary\s*negoti|cover\s*letter|workforce|employment\s*(workshop|services)|tax\s*(prep|help|assistance|clinic)|estate\s*planning|retirement\s*planning|medicare|social\s*security|caregiver\s*support|grief\s*support|divorce|legal\s*clinic|legal\s*aid|blood\s*pressure|health\s*screening|AA\s*meeting|al-anon|narcotics\s*anonymous|book\s*club\s*for\s*adults|adult\s*book\s*club|adult\s*craft|adult\s*coloring|adult\s*program|for\s*adults|seniors?\s*only)\b/i.test(lowerText)) {
     return 'Adults';
   }
 
   // Age-specific ranges
-  if (lowerText.match(/babies?|infants?|0-2/i)) return 'Babies & Toddlers (0-2)';
-  if (lowerText.match(/toddlers?|preschool|3-5/i)) return 'Preschool (3-5)';
-  if (lowerText.match(/children|kids|6-12|elementary/i)) return 'Children (6-12)';
-  if (lowerText.match(/teens?|13-17|middle school|high school/i)) return 'Teens (13-17)';
-  if (lowerText.match(/family|families|all ages/i)) return 'All Ages';
+  if (/\b(babies?|infants?|0\s*[-–]\s*2)\b/i.test(lowerText)) return 'Babies & Toddlers (0-2)';
+  if (/\b(toddlers?|preschool|pre-school|3\s*[-–]\s*5)\b/i.test(lowerText)) return 'Preschool (3-5)';
+  if (/\b(children|kids|6\s*[-–]\s*12|elementary)\b/i.test(lowerText)) return 'Children (6-12)';
+  if (/\b(teens?|13\s*[-–]\s*17|middle\s*school|high\s*school)\b/i.test(lowerText)) return 'Teens (13-17)';
+  if (/\b(family|families|all\s*ages)\b/i.test(lowerText)) return 'All Ages';
 
   return 'All Ages';
 }
@@ -353,6 +363,18 @@ async function scrapeLibraryEvents(library, browser) {
             eventDate = `${monthNames[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()} ${eventDate}`;
           }
 
+          // Extract audience/age info from page elements
+          let audience = '';
+          const audienceEl = el.querySelector('[class*="audience"], [class*="age-group"], [class*="event-type"], .taxonomy-term, [class*="category"]');
+          if (audienceEl) {
+            audience = audienceEl.textContent.replace(/[\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
+          }
+          // Also check for audience in full text patterns
+          if (!audience) {
+            const audMatch = fullText.match(/(?:Audience|Age Group|For|Who):\s*([^\n]+)/i);
+            if (audMatch) audience = audMatch[1].trim();
+          }
+
           if (title && eventDate) {
             const rawDate = time ? `${eventDate} ${time}` : eventDate;
 
@@ -362,7 +384,8 @@ async function scrapeLibraryEvents(library, browser) {
               venue: location,
               description: description,
               url: url,
-              fullText: fullText
+              fullText: fullText,
+              audience: audience
             });
           }
         } catch (err) {
@@ -375,13 +398,67 @@ async function scrapeLibraryEvents(library, browser) {
 
     console.log(`   Found ${events.length} events`);
 
+    // Visit detail pages to extract audience info when not found on listing card
+    for (let i = 0; i < events.length; i++) {
+      const event = events[i];
+      if (!event.audience && event.url) {
+        try {
+          await page.goto(event.url, { waitUntil: 'domcontentloaded', timeout: 10000 });
+          await new Promise(resolve => setTimeout(resolve, 500));
+
+          const detailAudience = await page.evaluate(() => {
+            // Look for audience/age-group fields on the detail page
+            // Richland Library uses field labels like "Audience:" with taxonomy terms
+            const selectors = [
+              // Drupal field label + value pattern
+              '.field--name-field-audience .field__item',
+              '.field--name-field-age-group .field__item',
+              '[class*="audience"] .field__item',
+              '[class*="age-group"] .field__item',
+              // Generic taxonomy terms near "Audience" label
+              '.taxonomy-term',
+              '[class*="event-type"] .field__item',
+              '[class*="category"] .field__item',
+            ];
+
+            for (const sel of selectors) {
+              const el = document.querySelector(sel);
+              if (el) {
+                const text = el.textContent.trim();
+                if (text && /\b(adults?|children|kids|teens?|families|all\s*ages|baby|toddler|preschool|tween|senior)\b/i.test(text)) {
+                  return text;
+                }
+              }
+            }
+
+            // Fallback: search entire page text for "Audience: ..." pattern
+            const bodyText = document.body ? document.body.innerText : '';
+            const audMatch = bodyText.match(/(?:Audience|Age\s*Group|For|Who|Intended\s*for):\s*([^\n]+)/i);
+            if (audMatch) return audMatch[1].trim();
+
+            return '';
+          });
+
+          if (detailAudience) {
+            events[i].audience = detailAudience;
+            console.log(`   🏷️ Detail page audience for "${event.name.substring(0, 40)}": ${detailAudience}`);
+          }
+        } catch (err) {
+          // Detail page failed — continue with what we have
+        }
+      }
+    }
+
+    // Navigate back isn't needed since we process events from stored data
+
     // Process each event
     for (const event of events) {
       try {
-        // Parse age range from description and title
-        const ageRange = parseAgeRange(event.name + ' ' + event.description);
+        // Parse age range from description, title, and audience tag
+        const ageRange = parseAgeRange(event.name + ' ' + event.description + ' ' + (event.audience || ''));
 
         if (ageRange === 'Adults') {
+          console.log(`   ⛔ Skipping adult event: "${event.name.substring(0, 50)}" (audience: ${event.audience || 'keyword match'})`);
           skipped++;
           continue;
         }

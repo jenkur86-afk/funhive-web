@@ -18,7 +18,6 @@
  * - Appomattox Regional Library
  * - Bedford Public Library System
  * - Essex Public Library
- * - Gloucester County Library System
  * - Lynchburg Public Library
  * - Petersburg Public Library
  * - Poquoson Public Library
@@ -44,7 +43,6 @@
 
 const { admin, db } = require('./helpers/supabase-adapter');
 const { launchBrowser } = require('./puppeteer-config');
-const axios = require('axios');
 const ngeohash = require('ngeohash');
 const { categorizeEvent } = require('./event-categorization-helper');
 const { generateEventId, generateEventIdFromDetails } = require('./event-id-helper');
@@ -201,15 +199,9 @@ const LIBRARY_SYSTEMS = [
     city: 'Tappahannock',
     zipCode: '22560'
   },
-  {
-    name: 'Gloucester County Library System',
-    url: 'https://gcls.librarycalendar.com/events/month',
-    county: 'Gloucester',
-    state: 'VA',
-    website: 'https://www.gloucesterlibrary.org',
-    city: 'Gloucester',
-    zipCode: '23061'
-  },
+  // Gloucester County VA REMOVED — gcls.librarycalendar.com belongs to NJ Gloucester County
+  // VA Gloucester (gloucesterlibrary.org) does not appear to use LibraryCalendar platform
+  // If they do, the subdomain would likely be 'gloucester', not 'gcls'
   {
     name: 'Lynchburg Public Library',
     url: 'https://lynchburg.librarycalendar.com/events/month',
@@ -326,32 +318,9 @@ const LIBRARY_SYSTEMS = [
   }
 ];
 
-// Geocode address
-async function geocodeAddress(address) {
-  try {
-    const response = await axios.get('https://nominatim.openstreetmap.org/search', {
-      params: {
-        q: address,
-        format: 'json',
-        limit: 1,
-        countrycodes: 'us'
-      },
-      headers: {
-        'User-Agent': 'FunHive/1.0'
-      }
-    });
-
-    if (response.data && response.data.length > 0) {
-      return {
-        latitude: parseFloat(response.data[0].lat),
-        longitude: parseFloat(response.data[0].lon)
-      };
-    }
-  } catch (error) {
-    console.error('Geocoding error:', error.message);
-  }
-  return null;
-}
+// Use shared geocoding helper with persistent file cache + rate limiting
+// This eliminates redundant Nominatim calls that caused massive 429 errors
+const { geocodeWithFallback } = require('./helpers/geocoding-helper');
 
 // Parse age range from audience text
 function parseAgeRange(audienceText) {
@@ -530,13 +499,27 @@ async function scrapeLibraryEvents(library, browser) {
             } else if (branchInfo.needsGeocoding && branchInfo.address) {
               // Branch found in library-addresses.js but needs geocoding
               const fullAddress = `${branchInfo.address}, ${branchInfo.city}, ${library.state} ${branchInfo.zipCode}`;
-              coordinates = await geocodeAddress(fullAddress);
+              coordinates = await geocodeWithFallback(fullAddress, {
+                city: branchInfo.city || library.city,
+                zipCode: branchInfo.zipCode || library.zipCode,
+                state: library.state,
+                county: library.county,
+                venueName: event.venue,
+                sourceName: library.name
+              });
             }
           }
 
           // Fall back to generic geocoding if no branch match or geocoding failed
           if (!coordinates) {
-            coordinates = await geocodeAddress(`${event.venue}, ${library.city}, ${library.county} County, ${library.state}`);
+            coordinates = await geocodeWithFallback(`${event.venue}, ${library.city}, ${library.county} County, ${library.state}`, {
+              city: library.city,
+              zipCode: library.zipCode,
+              state: library.state,
+              county: library.county,
+              venueName: event.venue,
+              sourceName: library.name
+            });
           }
         }
 

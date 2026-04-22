@@ -74,8 +74,9 @@ async function rateLimitedDelay() {
   }
 
   const elapsed = Date.now() - lastNominatimCall;
-  if (elapsed < 2000) { // 2s between requests — Nominatim rate limits aggressively at 1/s
-    await new Promise(resolve => setTimeout(resolve, 2000 - elapsed));
+  const minDelay = 2500; // 2.5s between requests — generous buffer over Nominatim's 1/s limit
+  if (elapsed < minDelay) {
+    await new Promise(resolve => setTimeout(resolve, minDelay - elapsed));
   }
   lastNominatimCall = Date.now();
 }
@@ -247,15 +248,21 @@ async function tryFallbackGeocode(city, zipCode, state, county) {
   if (city && zipCode && state) {
     const fallbackAddress1 = `${city}, ${state} ${zipCode}`;
 
-    // Check cache for fallback
+    // Check in-memory + persistent cache for fallback
     if (geocodeCache.has(fallbackAddress1)) {
       return geocodeCache.get(fallbackAddress1);
+    }
+    if (persistentCache[fallbackAddress1]) {
+      geocodeCache.set(fallbackAddress1, persistentCache[fallbackAddress1]);
+      return persistentCache[fallbackAddress1];
     }
 
     const coords1 = await geocodeAddress(fallbackAddress1);
     if (coords1) {
       console.log(`✅ Fallback geocoding succeeded: ${fallbackAddress1}`);
       geocodeCache.set(fallbackAddress1, coords1);
+      persistentCache[fallbackAddress1] = coords1;
+      savePersistentCache();
       return coords1;
     }
   }
@@ -267,11 +274,17 @@ async function tryFallbackGeocode(city, zipCode, state, county) {
     if (geocodeCache.has(fallbackAddress2)) {
       return geocodeCache.get(fallbackAddress2);
     }
+    if (persistentCache[fallbackAddress2]) {
+      geocodeCache.set(fallbackAddress2, persistentCache[fallbackAddress2]);
+      return persistentCache[fallbackAddress2];
+    }
 
     const coords2 = await geocodeAddress(fallbackAddress2);
     if (coords2) {
       console.log(`✅ Fallback geocoding succeeded: ${fallbackAddress2}`);
       geocodeCache.set(fallbackAddress2, coords2);
+      persistentCache[fallbackAddress2] = coords2;
+      savePersistentCache();
       return coords2;
     }
   }
@@ -283,11 +296,17 @@ async function tryFallbackGeocode(city, zipCode, state, county) {
     if (geocodeCache.has(fallbackAddress3)) {
       return geocodeCache.get(fallbackAddress3);
     }
+    if (persistentCache[fallbackAddress3]) {
+      geocodeCache.set(fallbackAddress3, persistentCache[fallbackAddress3]);
+      return persistentCache[fallbackAddress3];
+    }
 
     const coords3 = await geocodeAddress(fallbackAddress3);
     if (coords3) {
       console.log(`✅ Fallback geocoding succeeded (county): ${fallbackAddress3}`);
       geocodeCache.set(fallbackAddress3, coords3);
+      persistentCache[fallbackAddress3] = coords3;
+      savePersistentCache();
       return coords3;
     }
   }
@@ -332,7 +351,7 @@ async function geocodeAddress(address, retries = 3) {
           countrycodes: 'us'
         },
         headers: {
-          'User-Agent': 'SocialSpot/1.0'
+          'User-Agent': 'FunHive-EventAggregator/1.0 (family-events; contact@funhive.com)'
         },
         timeout: 10000 // 10 second timeout
       });

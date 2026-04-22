@@ -16,6 +16,7 @@
     "@stripe/stripe-js": "^5.5.0",
     "@supabase/ssr": "^0.6.0",
     "@supabase/supabase-js": "^2.102.1",
+    "jsdom": "^29.0.2",
     "leaflet": "^1.9.4",
     "next": "^15.3.0",
     "react": "^19.1.0",
@@ -38,13 +39,14 @@
     "typescript": "^5.8.0"
   },
   "scraperDependencies": {
-    "_comment": "Install these separately for local scraper runner: npm install puppeteer cheerio axios moment ngeohash node-ical xlsx",
+    "_comment": "Install these separately for local scraper runner: npm install puppeteer cheerio axios moment ngeohash node-ical xlsx jsdom",
     "puppeteer": "^24.0.0",
     "cheerio": "^1.0.0",
     "axios": "^1.7.0",
     "moment": "^2.30.0",
     "ngeohash": "^0.6.0",
     "node-ical": "^0.20.0",
-    "xlsx": "^0.18.0"
+    "xlsx": "^0.18.0",
+    "jsdom": "^24.0.0"
   }
 }

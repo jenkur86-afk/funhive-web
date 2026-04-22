@@ -344,8 +344,8 @@ async function scrapeAARecParks(options = {}) {
       const activity = {
         name: raw.title,
         eventDate: normalizedDate,
-        startTime: '',
-        endTime: '',
+        startTime: null,  // Source page has no time info
+        endTime: null,
         description: raw.description || '',
         venue: raw.location || 'Anne Arundel County Recreation',
         address: '',

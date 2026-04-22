@@ -32,14 +32,35 @@ function normalizeDateString(dateString) {
   const monthNamesArray = ['January', 'February', 'March', 'April', 'May', 'June',
                            'July', 'August', 'September', 'October', 'November', 'December'];
 
+  // Case-insensitive month name lookup helper
+  // Handles "APR", "apr", "Apr", "APRIL", etc.
+  function lookupMonth(str) {
+    if (!str) return undefined;
+    // Title-case the input: "APR" → "Apr", "APRIL" → "April", "april" → "April"
+    const tc = str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    return monthNames[tc];
+  }
+
   // Clean the input: remove times and extra formatting
   let cleaned = dateString;
 
-  // Remove time range patterns first (e.g., "6:00pm - 7:00pm", "10:30am–12:00pm")
-  cleaned = cleaned.replace(/\s*\d{1,2}:\d{2}\s*[ap]m\s*[-–—]\s*\d{1,2}:\d{2}\s*[ap]m/gi, '');
+  // Remove timezone abbreviations (EST, EDT, CST, CDT, PST, PDT, etc.)
+  cleaned = cleaned.replace(/\s+(?:E[SD]T|C[SD]T|M[SD]T|P[SD]T|[A-Z]{2,4}T)\b/g, '');
 
-  // Remove single time patterns (e.g., "9:00am", "6:00pm")
-  cleaned = cleaned.replace(/\s*\d{1,2}:\d{2}\s*[ap]m/gi, '');
+  // Remove the "@" separator used in WordPress Events Calendar (e.g., "April 21 @ 10:00 am")
+  cleaned = cleaned.replace(/\s*@\s*/g, ' ');
+
+  // Remove localized day abbreviations (e.g., "Sá." for Saturday in Portuguese/Spanish)
+  // Only remove if followed by comma+space or if the abbreviation contains non-ASCII chars
+  // Avoids stripping month abbreviations like "Apr." or "Sep."
+  cleaned = cleaned.replace(/^[A-Za-zÀ-ÿ]*[À-ÿ][A-Za-zÀ-ÿ]*\.,?\s*/i, '');  // Must contain a non-ASCII char
+  cleaned = cleaned.replace(/^[A-Za-z]{2,3}\.\s*,\s*/i, '');  // Or ASCII abbrev followed by period+comma (e.g., "Sat., ")
+
+  // Remove time range patterns first (e.g., "6:00pm - 7:00pm", "10:30am–12:00pm")
+  cleaned = cleaned.replace(/\s*\d{1,2}:\d{2}\s*[ap]\.?m\.?\s*[-–—]\s*\d{1,2}:\d{2}\s*[ap]\.?m\.?/gi, '');
+
+  // Remove single time patterns (e.g., "9:00am", "6:00pm", "9:00 a.m.")
+  cleaned = cleaned.replace(/\s*\d{1,2}:\d{2}\s*[ap]\.?m\.?/gi, '');
 
   // Remove standalone weekday names/abbreviations (full names first to avoid partial matches)
   cleaned = cleaned.replace(/\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|Mon|Tue|Wed|Thu|Fri|Sat|Sun)\b,?\s*/gi, '');
@@ -56,8 +77,20 @@ function normalizeDateString(dateString) {
   // Remove trailing numeric date ranges like "4/1–4/22" when a text date is already present
   cleaned = cleaned.replace(/\s+\d{1,2}\/\d{1,2}[-–—]\d{1,2}\/\d{1,2}(?:\/\d{2,4})?\s*$/, '');
 
+  // Remove periods from abbreviated month names (e.g., "Sep." → "Sep", "Apr." → "Apr")
+  cleaned = cleaned.replace(/\b([A-Za-z]{3,4})\./g, '$1');
+
+  // Remove trailing dashes/hyphens left over after time stripping (e.g., "April 21 -")
+  cleaned = cleaned.replace(/\s*[-–—]\s*$/, '');
+
+  // Remove leading dashes/hyphens left over after time stripping
+  cleaned = cleaned.replace(/^\s*[-–—]\s*/, '');
+
   // Normalize whitespace
   cleaned = cleaned.replace(/\s+/g, ' ').trim();
+
+  // If after all cleaning only whitespace or empty, it was a time-only string
+  if (!cleaned || cleaned.length < 3) return null;
 
   // === Pattern 0: Date range formats — extract start date ===
   // Handles: "Apr 1 - 22, 2026", "Apr 20 - 25, 2026", "April 1 - May 3, 2026", "Apr 1 - 22 2026"
@@ -65,7 +98,7 @@ function normalizeDateString(dateString) {
   const dateRangeMatch = cleaned.match(/^([A-Za-z]{3,9})\s+(\d{1,2})\s*[-–—]\s*(?:[A-Za-z]{3,9}\s+)?\d{1,2}\s*,?\s*(\d{4})?/i);
   if (dateRangeMatch) {
     const [, month, day, year] = dateRangeMatch;
-    const fullMonthName = monthNames[month];
+    const fullMonthName = lookupMonth(month);
     if (fullMonthName) {
       const resolvedYear = year || inferYear(fullMonthName, parseInt(day));
       return `${fullMonthName} ${parseInt(day)}, ${resolvedYear}`;
@@ -97,7 +130,7 @@ function normalizeDateString(dateString) {
   const monthDayYearMatch = cleaned.match(/([A-Za-z]{3,9})\s+(\d{1,2})\s+(\d{4})/i);
   if (monthDayYearMatch) {
     const [, month, day, year] = monthDayYearMatch;
-    const fullMonthName = monthNames[month];
+    const fullMonthName = lookupMonth(month);
     if (fullMonthName) {
       return `${fullMonthName} ${parseInt(day)}, ${year}`;
     }
@@ -107,7 +140,7 @@ function normalizeDateString(dateString) {
   const compactMonthDayMatch = cleaned.match(/^([A-Za-z]{3,9})(\d{1,2})$/i);
   if (compactMonthDayMatch) {
     const [, month, day] = compactMonthDayMatch;
-    const fullMonthName = monthNames[month];
+    const fullMonthName = lookupMonth(month);
     if (fullMonthName) {
       const year = inferYear(fullMonthName, parseInt(day));
       return `${fullMonthName} ${parseInt(day)}, ${year}`;
@@ -118,7 +151,7 @@ function normalizeDateString(dateString) {
   const monthDayNoYearMatch = cleaned.match(/^([A-Za-z]{3,9})\s+(\d{1,2})$/i);
   if (monthDayNoYearMatch) {
     const [, month, day] = monthDayNoYearMatch;
-    const fullMonthName = monthNames[month];
+    const fullMonthName = lookupMonth(month);
     if (fullMonthName) {
       const year = inferYear(fullMonthName, parseInt(day));
       return `${fullMonthName} ${parseInt(day)}, ${year}`;
@@ -139,7 +172,7 @@ function normalizeDateString(dateString) {
   const dayMonthYearMatch = cleaned.match(/(\d{1,2})\s+([A-Za-z]{3,9})\s+(\d{4})/i);
   if (dayMonthYearMatch) {
     const [, day, month, year] = dayMonthYearMatch;
-    const fullMonthName = monthNames[month];
+    const fullMonthName = lookupMonth(month);
     if (fullMonthName) {
       return `${fullMonthName} ${parseInt(day)}, ${year}`;
     }

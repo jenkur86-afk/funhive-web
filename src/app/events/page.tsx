@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import FavoriteButton from '@/components/FavoriteButton'
+import ReportButton from '@/components/ReportButton'
 import { haversineDistance, getUserLocation } from '@/lib/geo-utils'
 import { parseLocationInput, preloadZipData, lookupZipSync, lookupCitySync } from '@/lib/zip-lookup'
 import { extractTimeFromEventDate } from '@/lib/hours-utils'
@@ -262,7 +263,7 @@ function isEventOnOrAfterToday(event: any): boolean {
           max_results: 500,
         } as any) as { data: any[] | null; error: any }
         if (!result.error && result.data) {
-          allData = result.data.filter((e: any) => isEventOnOrAfterToday(e) && (!ACTIVE_STATES || ACTIVE_STATES.includes(e.state)))
+          allData = result.data.filter((e: any) => isEventOnOrAfterToday(e) && !e.reported && (!ACTIVE_STATES || ACTIVE_STATES.includes(e.state)))
         }
 
         // Also fetch events WITHOUT geometry that have city/state/zip
@@ -272,6 +273,7 @@ function isEventOnOrAfterToday(event: any): boolean {
           .select('*')
           .is('location', null)
           .not('event_date', 'is', null)
+          .eq('reported', false)
           .gte('date', today)
           .in('state', ACTIVE_STATES || [])
           .limit(300)
@@ -299,6 +301,7 @@ function isEventOnOrAfterToday(event: any): boolean {
           .from('events')
           .select('*')
           .not('event_date', 'is', null)
+          .eq('reported', false)
           .in('state', ACTIVE_STATES || [])
 
         if (debouncedSearch) {
@@ -835,8 +838,9 @@ function isEventOnOrAfterToday(event: any): boolean {
                       )}
                     </div>
                   </Link>
-                  <div className="absolute top-4 right-4" onClick={(e) => e.stopPropagation()}>
+                  <div className="absolute top-4 right-4 flex flex-col gap-1.5" onClick={(e) => e.stopPropagation()}>
                     <FavoriteButton eventId={event.id} itemName={event.name} size="sm" />
+                    <ReportButton eventId={event.id} itemName={event.name} itemType="event" size="sm" />
                   </div>
                 </div>
               )

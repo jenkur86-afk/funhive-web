@@ -239,8 +239,8 @@ async function scrapeMontgomeryParks(options = {}) {
       const event = {
         name: title,
         eventDate: normalizedDate,
-        startTime: '',
-        endTime: '',
+        startTime: null,  // RSS pubDate has no time info
+        endTime: null,
         description: description.substring(0, 1000),
         venue,
         address: '',

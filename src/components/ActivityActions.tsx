@@ -1,6 +1,7 @@
 'use client'
 
 import FavoriteButton from '@/components/FavoriteButton'
+import ReportButton from '@/components/ReportButton'
 import ShareButton from '@/components/ShareButton'
 import DirectionsButton from '@/components/DirectionsButton'
 import HideVenueButton from '@/components/HideVenueButton'
@@ -80,6 +81,14 @@ export default function ActivityActions({
           Call
         </a>
       )}
+
+      <ReportButton
+        activityId={activityId}
+        itemName={name}
+        itemType="venue"
+        size="md"
+        className="border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200"
+      />
     </div>
   )
 }

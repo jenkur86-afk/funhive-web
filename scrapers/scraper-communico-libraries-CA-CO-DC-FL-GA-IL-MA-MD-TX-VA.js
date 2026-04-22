@@ -406,16 +406,9 @@ const LIBRARY_SYSTEMS = [
     zipCode: '47708'
   },
 
-  // IOWA (2 libraries)
-  {
-    name: 'Cedar Rapids Public Library',
-    url: 'https://crlibrary.org/events',
-    county: 'Linn',
-    state: 'IA',
-    website: 'https://www.crlibrary.org',
-    city: 'Cedar Rapids',
-    zipCode: '52401'
-  },
+  // IOWA (1 library)
+  // NOTE: Cedar Rapids Public Library (crlibrary.org) removed — NOT a Communico/LibNet site.
+  // It's a custom website. Needs its own scraper or a WordPress scraper if applicable.
   {
     name: 'Waterloo Public Library',
     url: 'https://wpl.libnet.info/events',
@@ -512,24 +505,8 @@ const LIBRARY_SYSTEMS = [
     city: 'Annapolis',
     zipCode: '21401'
   },
-  {
-    name: 'Howard County Library System',
-    url: 'https://hclibrary.org/events',
-    county: 'Howard',
-    state: 'MD',
-    website: 'https://www.hclibrary.org',
-    city: 'Columbia',
-    zipCode: '21044'
-  },
-  {
-    name: 'Frederick County Public Libraries',
-    url: 'https://www.fcpl.org/events',
-    county: 'Frederick',
-    state: 'MD',
-    website: 'https://www.fcpl.org',
-    city: 'Frederick',
-    zipCode: '21701'
-  },
+  // Howard County Library System and Frederick County Public Libraries removed —
+  // they use LibraryCalendar.com, not Communico. Covered by scraper-librarycalendar-libraries-MD-VA.js
 
   // NORTH CAROLINA (2 libraries)
   {
@@ -554,7 +531,7 @@ const LIBRARY_SYSTEMS = [
   // NEVADA (1 library)
   {
     name: 'Las Vegas-Clark County Library District',
-    url: 'https://events.thelibrarydistrict.org',
+    url: 'https://events.thelibrarydistrict.org/events',
     county: 'Clark',
     state: 'NV',
     website: 'https://thelibrarydistrict.org',
@@ -1084,6 +1061,61 @@ async function scrapeLibraryEvents(library, browser) {
         return results;
       });
       console.log(`   After retry: found ${events.length} events`);
+
+      // FALLBACK 2: Link-based extraction — find event links and extract text from parent cards
+      if (events.length === 0) {
+        console.log('   ⚠ Still no events — trying link-based extraction');
+        events = await page.evaluate(() => {
+          const results = [];
+          // Look for any links to event/program detail pages
+          const links = document.querySelectorAll('a[href*="/event/"], a[href*="/program/"], a[href*="/events/"], a[href*="event_id="]');
+          const seen = new Set();
+
+          links.forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href || seen.has(href)) return;
+            seen.add(href);
+
+            // Walk up to find the event card container (up to 5 levels)
+            let card = link;
+            for (let i = 0; i < 5; i++) {
+              if (!card.parentElement) break;
+              card = card.parentElement;
+              // Stop at list-level containers
+              if (card.tagName === 'UL' || card.tagName === 'OL' || card.tagName === 'MAIN' || card.id === 'main-content') {
+                card = link.parentElement;
+                break;
+              }
+            }
+
+            const title = link.textContent.trim();
+            if (!title || title.length < 3 || title.length > 200) return;
+
+            const cardText = card.textContent || '';
+            // Try to extract a date from the card text
+            const dateMatch = cardText.match(/((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}(?:,?\s+\d{4})?)/i)
+              || cardText.match(/(\d{1,2}\/\d{1,2}\/\d{2,4})/);
+            const timeMatch = cardText.match(/(\d{1,2}:\d{2}\s*(?:am|pm)(?:\s*[-–]\s*\d{1,2}:\d{2}\s*(?:am|pm))?)/i);
+
+            const eventDate = dateMatch ? dateMatch[1].trim() : '';
+            const time = timeMatch ? timeMatch[1].trim() : '';
+            const rawDate = time ? `${eventDate} ${time}` : eventDate;
+
+            if (title && eventDate) {
+              results.push({
+                name: title,
+                eventDate: rawDate,
+                venue: '',
+                description: '',
+                url: href.startsWith('http') ? href : (href.startsWith('/') ? window.location.origin + href : ''),
+                audience: ''
+              });
+            }
+          });
+          return results;
+        });
+        console.log(`   Link-based fallback: found ${events.length} events`);
+      }
     }
 
     // Process each event

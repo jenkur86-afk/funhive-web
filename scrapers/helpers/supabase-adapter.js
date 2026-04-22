@@ -21,6 +21,7 @@
 const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config();
 const crypto = require('crypto');
+const { normalizeAgeRange } = require('./age-range-normalizer');
 
 // Initialize Supabase client with service role key (bypasses RLS)
 const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -237,6 +238,7 @@ const NON_FAMILY_PATTERNS = [
   /\bspirits?\s+fest(ival)?\b/i,
   /\bmimosa\s+(crawl|fest|brunch)\b/i,
   /\bcocktail\s+(class|hour|making|tasting|fest)\b/i,
+  /(?:and|&)\s*cocktails?\b/i,  // "Creatures & Cocktails", "Tacos & Cocktails"
   /\bhappy\s+hour\b/i,
   /\bbar\s+crawl\b/i,
   /\bpub\s+crawl\b/i,
@@ -263,9 +265,18 @@ const NON_FAMILY_PATTERNS = [
   /\bmahjong\b/i,
   /\bbridge\s+club\b/i,
   /\bjob\s+(search|seeker|fair|workshop)\b/i,
-  /\bresume\s+(writing|workshop|help|review)\b/i,
-  /\btax\s+(prep|help|assistance|filing)\b/i,
+  /\bresume\s+(writing|workshop|help|review|clinic)\b/i,
+  /\bcareer\s+(coach|counseli?ng|fair|services|workshop)\b/i,
+  /\binterview\s+(prep|skills|workshop|tips)\b/i,
+  /\bnetworking\s+(event|mixer|session|group)\b/i,
+  /\bprofessional\s+development\b/i,
+  /\blinkedin\s+(workshop|profile|class)\b/i,
+  /\bcover\s+letter\b/i,
+  /\bworkforce\s+(development|training)\b/i,
+  /\btax\s+(prep|help|assistance|filing|clinic)\b/i,
   /\bestate\s+planning\b/i,
+  /\bretirement\s+planning\b/i,
+  /\bsocial\s+security\s+(workshop|info|seminar)\b/i,
   /\bscam[\s-]proof/i,
   /\bfraud\s+prevention\b/i,
   /\bgenealogy\b/i,
@@ -289,9 +300,47 @@ const FAMILY_RESCUE_PATTERNS = [
   /\bjunior\b/i,
   /\bpreschool/i,
   /\belementary/i,
+  /\bexplorer/i,
+  /\bmagic\s+(show|trick|class|camp|workshop|explorers?)\b/i,
+  /\bfarmers?\s*market\b/i,
+  /\bcarnival\b/i,
+  /\bmusical\b/i,
+  /\btheater\b/i,
+  /\btheatre\b/i,
+  /\bswim\b/i,
+  /\bkaraoke\b/i,
+  /\bbingo\b/i,
+  /\bspring\s*fest\b/i,
+  /\bfood\s+truck/i,
+  /\bhome\s+game\b/i,
+  /\bsoccer\b|rugby|football/i,
+  /\bfirst\s+friday\b/i,
+  /\bfirst\s+thursday\b/i,
+  /\bgarden\b/i,
+  /\bbotanical\b/i,
 ];
 
-function isNonFamilyEvent(name, description) {
+// Venue-name patterns that indicate non-family venues (checked separately)
+// These only trigger if the EVENT name+description does NOT have a family rescue pattern
+const NON_FAMILY_VENUE_PATTERNS = [
+  /\bbrewing\s*(co\.?|company)?\b/i,
+  /\bbrewery\b/i,
+  /\bbrew\s*(pub|house|works)\b/i,
+  /\btaproom\b/i,
+  /\btap\s*house\b/i,
+  /\bwinery\b/i,
+  /\bvineyards?\b/i,
+  /\bdistillery\b/i,
+  /\btavern\b/i,
+  /\bsaloon\b/i,
+  /\bale\s*house\b/i,
+  /\breal\s+ale\b/i,
+  /\bbeer\s*(garden|hall|bar)\b/i,
+  /\bcocktail\s*(bar|lounge)\b/i,
+  /\bspeakeasy\b/i,
+];
+
+function isNonFamilyEvent(name, description, venue) {
   const text = `${name || ''} ${description || ''}`;
 
   for (const pattern of NON_FAMILY_PATTERNS) {
@@ -300,6 +349,20 @@ function isNonFamilyEvent(name, description) {
       if (!rescued) return pattern.source;
     }
   }
+
+  // Check venue name for bar/brewery patterns (only if event itself isn't obviously family)
+  if (venue) {
+    const eventText = `${name || ''} ${description || ''}`;
+    const isRescued = FAMILY_RESCUE_PATTERNS.some(fp => fp.test(eventText));
+    if (!isRescued) {
+      for (const pattern of NON_FAMILY_VENUE_PATTERNS) {
+        if (pattern.test(venue)) {
+          return `venue: ${pattern.source}`;
+        }
+      }
+    }
+  }
+
   return null;
 }
 
@@ -323,7 +386,7 @@ function isCancelledEvent(name, description) {
  */
 async function saveEvent(id, data) {
   // Reject non-family events
-  const nonFamilyReason = isNonFamilyEvent(data.name, data.description);
+  const nonFamilyReason = isNonFamilyEvent(data.name, data.description, data.venue);
   if (nonFamilyReason) {
     console.log(`  ⏭️ Skipping non-family event: "${data.name}" [${nonFamilyReason}]`);
     return null;
@@ -351,32 +414,43 @@ async function saveEvent(id, data) {
     return null;
   }
 
+  // Truncate fields to prevent btree index overflow (max row size ~2704 bytes for idx_events_unique_content)
+  // Total budget must stay under 2704. Using conservative limits:
+  // name(300) + event_date(100) + venue(200) + description(1000) + source_url(400) + city(100) + address(200) = 2300
+  const truncate = (str, maxLen) => str && str.length > maxLen ? str.substring(0, maxLen) : str;
+
   const row = {
     id,
-    name: data.name,
-    event_date: evtDateStr,
+    name: truncate(data.name, 300),
+    event_date: truncate(evtDateStr, 100),
     date: data.date instanceof Date ? data.date.toISOString()
       : (typeof data.date?.toDate === 'function') ? data.date.toDate().toISOString()
       : data.date || null,
-    description: data.description || null,
-    url: data.url || null,
-    image_url: data.imageUrl || null,
-    venue: cleanVenueName(data.venue) || null,
+    description: truncate(data.description, 1000) || null,
+    url: truncate(data.url, 400) || null,
+    image_url: truncate(data.imageUrl, 500) || null,
+    venue: truncate(cleanVenueName(data.venue), 200) || null,
     category: data.metadata?.category || data.category || null,
-    city: data.location?.city || null,
+    city: truncate(data.location?.city, 100) || null,
     state: data.state || data.location?.state || null,
     zip_code: data.location?.zipCode || null,
-    address: data.location?.address || null,
+    address: truncate(data.location?.address, 200) || null,
     geohash: data.geohash || null,
     activity_id: data.activityId || null,
-    source_url: data.metadata?.sourceUrl || null,
+    source_url: truncate(data.metadata?.sourceUrl, 400) || null,
     scraper_name: data.metadata?.scraperName || null,
     platform: data.metadata?.platform || null,
     scraped_at: data.metadata?.scrapedAt || new Date().toISOString(),
     start_time: data.startTime || null,
     end_time: data.endTime || null,
-    age_range: data.ageRange || detectAgeRange(data.name, data.description) || null,
+    age_range: null,  // set below after normalization
   };
+
+  // Normalize age_range: use scraper-provided value or auto-detect, then normalize to standard brackets
+  const rawAgeRange = data.ageRange || detectAgeRange(data.name, data.description) || null;
+  if (rawAgeRange) {
+    row.age_range = normalizeAgeRange(rawAgeRange);
+  }
 
   // Auto-extract time from event_date if not explicitly set
   if (!row.start_time && row.event_date) {
@@ -672,7 +746,34 @@ function createFirestoreCompatibleDB() {
             const { error } = await supabase
               .from(mapCollectionName(table))
               .upsert(uniqueRows, { onConflict: 'id' });
-            if (error) throw error;
+            if (error) {
+              // If batch fails due to a secondary unique constraint (e.g. idx_events_unique_content),
+              // fall back to row-by-row upserts so one bad row doesn't block the entire batch
+              if (error.code === '23505' || error.message?.includes('duplicate key') || error.message?.includes('unique constraint')) {
+                console.log(`  ⚠️ Batch upsert hit unique constraint on ${table}, falling back to row-by-row...`);
+                let rowErrors = 0;
+                for (const row of uniqueRows) {
+                  const { error: rowErr } = await supabase
+                    .from(mapCollectionName(table))
+                    .upsert(row, { onConflict: 'id', ignoreDuplicates: true });
+                  if (rowErr) {
+                    if (rowErr.code === '23505' || rowErr.message?.includes('duplicate key') || rowErr.message?.includes('unique constraint')) {
+                      // Silently skip content-duplicate rows
+                      continue;
+                    }
+                    console.error(`  ❌ Row upsert error (${row.id}): ${rowErr.message}`);
+                    rowErrors++;
+                  }
+                }
+                if (rowErrors > 0) {
+                  console.log(`  ⚠️ Row-by-row fallback completed with ${rowErrors} errors`);
+                } else {
+                  console.log(`  ✅ Row-by-row fallback completed successfully (skipped duplicates)`);
+                }
+              } else {
+                throw error;
+              }
+            }
           }
 
           // Execute deletes
@@ -752,7 +853,7 @@ function flattenEvent(data) {
   }
 
   // Reject non-family events
-  const nonFamilyReason = isNonFamilyEvent(data.name, data.description);
+  const nonFamilyReason = isNonFamilyEvent(data.name, data.description, data.venue);
   if (nonFamilyReason) {
     throw new Error(`Skipping non-family event: "${data.name}" [${nonFamilyReason}]`);
   }
@@ -786,18 +887,23 @@ function flattenEvent(data) {
     }
   }
 
+  // Truncate fields to prevent btree index overflow (max row size ~2704 bytes for idx_events_unique_content)
+  // Total budget must stay under 2704. Using conservative limits:
+  // name(300) + event_date(100) + venue(200) + description(1000) + source_url(400) + city(100) + address(200) = 2300
+  const trunc = (str, maxLen) => str && str.length > maxLen ? str.substring(0, maxLen) : str;
+
   const row = {};
-  row.name = data.name.trim();
-  if (data.eventDate) row.event_date = data.eventDate;
+  row.name = trunc(data.name.trim(), 300);
+  if (data.eventDate) row.event_date = trunc(data.eventDate, 100);
   if (data.date) {
     if (data.date instanceof Date) row.date = data.date.toISOString();
     else if (typeof data.date.toDate === 'function') row.date = data.date.toDate().toISOString();
     else row.date = data.date;
   }
-  if (data.description) row.description = data.description;
-  if (data.url) row.url = data.url;
-  if (data.imageUrl) row.image_url = data.imageUrl;
-  if (data.venue) row.venue = cleanVenueName(data.venue);
+  if (data.description) row.description = trunc(data.description, 1000);
+  if (data.url) row.url = trunc(data.url, 400);
+  if (data.imageUrl) row.image_url = trunc(data.imageUrl, 500);
+  if (data.venue) row.venue = trunc(cleanVenueName(data.venue), 200);
   if (data.state) row.state = data.state;
   if (data.geohash) row.geohash = data.geohash;
   if (data.activityId) row.activity_id = data.activityId;
@@ -830,16 +936,16 @@ function flattenEvent(data) {
   if (data.scraperName) row.scraper_name = data.scraperName;
 
   if (data.location) {
-    row.city = data.location.city;
+    row.city = trunc(data.location.city, 100);
     row.state = row.state || data.location.state;
     row.zip_code = data.location.zipCode;
-    row.address = data.location.address;
+    row.address = trunc(data.location.address, 200);
     const lat = data.location.latitude || data.location.coordinates?.latitude;
     const lng = data.location.longitude || data.location.coordinates?.longitude;
     if (lat && lng) row.location = `SRID=4326;POINT(${lng} ${lat})`;
   }
   if (data.metadata) {
-    row.source_url = row.source_url || data.metadata.sourceUrl;
+    row.source_url = row.source_url || trunc(data.metadata.sourceUrl, 500);
     row.scraper_name = row.scraper_name || data.metadata.scraperName || data.metadata.sourceName || data.metadata.source;
     row.platform = row.platform || data.metadata.platform;
     row.scraped_at = row.scraped_at || data.metadata.scrapedAt;
@@ -869,12 +975,10 @@ function flattenEvent(data) {
     console.warn(`  ⚠️  scraper_name missing for event "${(row.name || '').substring(0, 50)}" — derived as "${row.scraper_name}". Set metadata.scraperName in the scraper.`);
   }
 
-  // Auto-detect age range from event name/description
-  if (!data.ageRange && !data.age_range) {
-    const detectedAge = detectAgeRange(data.name, data.description);
-    if (detectedAge) row.age_range = detectedAge;
-  } else {
-    row.age_range = data.ageRange || data.age_range;
+  // Auto-detect age range from event name/description, then normalize to standard brackets
+  const rawAge = data.ageRange || data.age_range || detectAgeRange(data.name, data.description) || null;
+  if (rawAge) {
+    row.age_range = normalizeAgeRange(rawAge);
   }
 
   // Clean up nulls — don't write null values that overwrite existing data

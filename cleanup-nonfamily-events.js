@@ -32,6 +32,7 @@ const AUTO_DELETE_PATTERNS = [
   { pattern: /\bsingles?\s*(night|mixer|mingle|event)\b/i, label: 'singles event' },
   { pattern: /\bspeed\s*dating\b/i, label: 'speed dating' },
   { pattern: /\bnight\s*club\b/i, label: 'nightclub' },
+  { pattern: /\badults?\s*only\s*(night|event|party|swim|hours?|session)?\b/i, label: 'adults only' },
   { pattern: /\b21\s*\+\s*(only|event|night|party)\b/i, label: '21+ event' },
   { pattern: /\bgambling\b/i, label: 'gambling' },
   { pattern: /\bgun\s*show\b/i, label: 'gun show' },
@@ -53,7 +54,7 @@ function isFalsePositive(name, description, venue) {
   if (/speed\s*date?\s*books?/i.test(nameLower)) return 'speed date books (library)';
 
   // "After Dark" nature programs at parks/libraries
-  if (/after\s*dark/i.test(nameLower) && /\b(amphibian|nature|park|library|printing|3d|animal|wildlife|hike|astronomy|star|owl)\b/i.test(text)) return 'nature/library after dark';
+  if (/after\s*dark/i.test(nameLower) && /\b(amphibian|nature|park|library|printing|3d|animal|wildlife|hike|astronomy|star|owl|garden|botanical|museum|zoo|aquarium)\b/i.test(text)) return 'nature/garden after dark';
 
   // "Glow Night" / "Glow Jump" at trampoline parks — family
   if (/glow\s*(night|jump|party)/i.test(nameLower) && /sky\s*zone|trampoline|bounce/i.test(text)) return 'glow night (trampoline park)';

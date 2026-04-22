@@ -82,7 +82,14 @@ function isDateInPast(dateStr) {
   try {
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return false;
-    return d < new Date();
+    // Compare date-only (ignore time component) so today's events are never flagged as past.
+    // Without this, events at midnight UTC on the current day get incorrectly flagged
+    // when the check runs later in the day.
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const eventDay = new Date(d);
+    eventDay.setHours(0, 0, 0, 0);
+    return eventDay < today;
   } catch { return false; }
 }
 
@@ -283,7 +290,7 @@ async function checkEvents() {
   printSection('EVENTS', '📅');
 
   const data = await fetchAll('events',
-    'id, name, event_date, date, description, venue, state, city, address, geohash, url, scraper_name, start_time, end_time, age_range, category, location, source_url, platform'
+    'id, name, event_date, date, description, venue, state, city, address, geohash, url, scraper_name, start_time, end_time, age_range, category, location, source_url, platform, created_at'
   );
 
   if (data.length === 0) {
@@ -292,6 +299,42 @@ async function checkEvents() {
   }
 
   console.log(`  Total events: ${data.length}`);
+
+  // Non-family detection patterns (subset of what scrapers use)
+  const ADULT_PATTERNS = [
+    /\badults?\s*only\b/i,
+    /\bfor\s+(older\s+)?adults\b/i,
+    /\badult\s+(program|workshop|class|craft|event|coloring|book\s*club)\b/i,
+    /\bcareer\s+(coach|counseli?ng|fair|services|workshop)\b/i,
+    /\bjob\s+(search|seeker|fair|workshop)\b/i,
+    /\bresume\s+(writing|workshop|help|review|clinic)\b/i,
+    /\bnetworking\s+(event|mixer|session|group)\b/i,
+    /\bseniors?\s+only\b/i,
+    /\bfor\s+seniors\b/i,
+    /\b(50|55|60|65)\s*\+/i,
+    /\bwine\s+tasting\b/i,
+    /\bbeer\s+tasting\b/i,
+    /\bhappy\s+hour\b/i,
+    /\bbar\s+crawl\b/i,
+    /\bpub\s+crawl\b/i,
+    /\bspeed\s+dating\b/i,
+    /\bburlesque\b/i,
+  ];
+  const FAMILY_RESCUE = [
+    /\bfamil(y|ies)\b/i, /\bkid/i, /\bchild/i, /\btoddler/i,
+    /\ball\s*ages\b/i, /\bstorytime/i, /\bteen/i, /\byouth\b/i,
+    /\bexplorer/i, /\bmagic\s+(show|trick|class|camp|workshop|explorers?)\b/i,
+  ];
+  function isAdultEvent(name, desc) {
+    const text = `${name || ''} ${desc || ''}`;
+    for (const p of ADULT_PATTERNS) {
+      if (p.test(text) && !FAMILY_RESCUE.some(fp => fp.test(text))) return true;
+    }
+    return false;
+  }
+
+  // Cancelled/postponed detection
+  const CANCELLED_PATTERN = /\b(cancelled|canceled|postponed|closed permanently|no longer)\b/i;
 
   const stats = {
     total: data.length,
@@ -305,16 +348,28 @@ async function checkEvents() {
     missingCity: 0,
     missingUrl: 0,
     missingStartTime: 0,
+    missingEndTime: 0,
     missingCategory: 0,
+    missingAgeRange: 0,
+    missingParsedDate: 0,
     pastEvents: 0,
     missingLocation: 0,
     malformedDate: 0,
+    adultEvents: 0,
+    cancelledEvents: 0,
+    junkTitles: 0,
+    duplicateEvents: 0,
   };
 
   const stateCounts = {};
   const scraperCounts = {};
   const categoryCounts = {};
+  const ageRangeCounts = {};
   const pastBySource = {};
+  const adultEventSamples = [];
+  const cancelledSamples = [];
+  const junkSamples = [];
+  const duplicateCheck = {};
 
   for (const row of data) {
     // Critical
@@ -336,14 +391,47 @@ async function checkEvents() {
     if (!row.city) stats.missingCity++;
     if (!row.url && !row.source_url) stats.missingUrl++;
     if (!row.start_time) stats.missingStartTime++;
+    if (!row.end_time) stats.missingEndTime++;
     if (!row.category) stats.missingCategory++;
+    if (!row.age_range) stats.missingAgeRange++;
+    if (!row.date) stats.missingParsedDate++;
+
+    // Age range distribution
+    ageRangeCounts[row.age_range || 'NULL'] = (ageRangeCounts[row.age_range || 'NULL'] || 0) + 1;
 
     // Past events check
-    if (row.event_date && isDateInPast(row.event_date)) {
+    if (row.date && isDateInPast(row.date)) {
+      stats.pastEvents++;
+      const src = row.scraper_name || 'unknown';
+      pastBySource[src] = (pastBySource[src] || 0) + 1;
+    } else if (!row.date && row.event_date && isDateInPast(row.event_date)) {
       stats.pastEvents++;
       const src = row.scraper_name || 'unknown';
       pastBySource[src] = (pastBySource[src] || 0) + 1;
     }
+
+    // Non-family/adult event detection
+    if (isAdultEvent(row.name, row.description)) {
+      stats.adultEvents++;
+      if (adultEventSamples.length < 15) adultEventSamples.push({ name: row.name, scraper: row.scraper_name });
+    }
+
+    // Cancelled events
+    if (row.name && CANCELLED_PATTERN.test(row.name)) {
+      stats.cancelledEvents++;
+      if (cancelledSamples.length < 10) cancelledSamples.push(row.name);
+    }
+
+    // Junk titles (very short, all caps gibberish, or suspicious patterns)
+    if (row.name && (row.name.trim().length < 5 || /^[A-Z\s\d]{3,}$/.test(row.name.trim()) && row.name.trim().length < 8)) {
+      stats.junkTitles++;
+      if (junkSamples.length < 10) junkSamples.push(row.name);
+    }
+
+    // Duplicate detection (same name + same date + same venue)
+    const dupeKey = `${(row.name || '').toLowerCase().trim()}|${(row.event_date || '').toLowerCase().trim()}|${(row.venue || '').toLowerCase().trim()}`;
+    if (!duplicateCheck[dupeKey]) duplicateCheck[dupeKey] = [];
+    duplicateCheck[dupeKey].push(row.id);
 
     // Distributions
     stateCounts[row.state || 'MISSING'] = (stateCounts[row.state || 'MISSING'] || 0) + 1;
@@ -351,6 +439,10 @@ async function checkEvents() {
     scraperCounts[scraper] = (scraperCounts[scraper] || 0) + 1;
     categoryCounts[row.category || 'Uncategorized'] = (categoryCounts[row.category || 'Uncategorized'] || 0) + 1;
   }
+
+  // Count duplicates
+  const duplicates = Object.entries(duplicateCheck).filter(([, ids]) => ids.length > 1);
+  stats.duplicateEvents = duplicates.reduce((sum, [, ids]) => sum + ids.length - 1, 0); // extra copies
 
   const criticalCount = stats.missingName + stats.missingEventDate + stats.missingState + stats.invalidState + stats.missingGeohash;
   const completenessScore = pct(stats.total - criticalCount, stats.total);
@@ -372,7 +464,30 @@ async function checkEvents() {
   console.log(`    Missing city:        ${stats.missingCity}`);
   console.log(`    Missing URL:         ${stats.missingUrl}`);
   console.log(`    Missing start_time:  ${stats.missingStartTime}`);
+  console.log(`    Missing end_time:    ${stats.missingEndTime}`);
   console.log(`    Missing category:    ${stats.missingCategory}`);
+  console.log(`    Missing age_range:   ${stats.missingAgeRange}`);
+  console.log(`    Missing parsed date: ${stats.missingParsedDate} (TIMESTAMPTZ column)`);
+
+  console.log(`\n  Content Quality:`);
+  console.log(`    Adult/non-family:    ${stats.adultEvents}`);
+  console.log(`    Cancelled/postponed: ${stats.cancelledEvents}`);
+  console.log(`    Junk titles:         ${stats.junkTitles}`);
+  console.log(`    Duplicate events:    ${stats.duplicateEvents} extra copies (${duplicates.length} groups)`);
+
+  if (stats.adultEvents > 0 && adultEventSamples.length > 0) {
+    console.log(`\n    Adult event samples:`);
+    for (const s of adultEventSamples.slice(0, 10)) {
+      console.log(`      ❌ [${s.scraper || '?'}] "${(s.name || '').substring(0, 55)}"`);
+    }
+  }
+
+  if (stats.cancelledEvents > 0 && cancelledSamples.length > 0) {
+    console.log(`\n    Cancelled event samples:`);
+    for (const s of cancelledSamples.slice(0, 5)) {
+      console.log(`      🚫 "${s.substring(0, 60)}"`);
+    }
+  }
 
   if (stats.pastEvents > 0) {
     console.log(`\n  ⚠️  Past events still in DB: ${stats.pastEvents}`);
@@ -380,6 +495,20 @@ async function checkEvents() {
     for (const [src, c] of Object.entries(pastBySource).sort((a, b) => b[1] - a[1]).slice(0, 10)) {
       console.log(`      ${src.padEnd(40)} ${c}`);
     }
+  }
+
+  if (duplicates.length > 0) {
+    console.log(`\n  ⚠️  Duplicate event groups: ${duplicates.length}`);
+    for (const [key, ids] of duplicates.slice(0, 10)) {
+      const [name] = key.split('|');
+      console.log(`    "${name.substring(0, 50)}" — ${ids.length} copies`);
+    }
+    if (duplicates.length > 10) console.log(`    ... and ${duplicates.length - 10} more`);
+  }
+
+  console.log(`\n  By age range:`);
+  for (const [ar, c] of Object.entries(ageRangeCounts).sort((a, b) => b[1] - a[1])) {
+    console.log(`    ${ar.padEnd(25)} ${String(c).padStart(5)}  (${pct(c, stats.total)}%)`);
   }
 
   console.log(`\n  By state:`);
@@ -432,81 +561,78 @@ async function checkScrapers(eventScraperCounts) {
   }
 
   const scraperNames = Object.keys(scraperMap);
-  console.log(`  Unique scrapers: ${scraperNames.length}`);
+  console.log(`  Unique scrapers in logs: ${scraperNames.length}`);
 
-  // Analyze each scraper
+  // Helper: check if a log name maps to an active registry scraper
+  function isActiveInRegistry(logName) {
+    const registryName = logName.replace(/^Local-/, '');
+    return !!(ACTIVE_SCRAPERS[registryName] || ACTIVE_SCRAPERS[logName]);
+  }
+
+  function isOneOffImport(name) {
+    return /\d{4}$/.test(name) || /^(MarylandKid|DMV-|Pennsylvania-|Waterparks-|Summer-|Gyms-|add-|fix-|backfill-)/.test(name);
+  }
+
+  // Build a set of registry keys we've already accounted for, to avoid double-counting
+  // when both "Local-Foo" and "Foo" appear in logs for the same registry entry
+  const accountedRegistryKeys = new Set();
+
+  // Classify each scraper from logs into exactly one category:
+  //   healthy, zeroEvent, or ignored (not in registry / one-off import)
+  // A scraper can also independently be "failed" (latest run errored)
   const zeroEventScrapers = [];
   const failedScrapers = [];
   const healthyScrapers = [];
 
   for (const [name, runs] of Object.entries(scraperMap)) {
-    // Latest run is last entry (no reliable timestamp column)
-    const latest = runs[runs.length - 1];
+    const registryName = name.replace(/^Local-/, '');
+
+    // Skip if not active in registry or is a one-off import
+    if (!isActiveInRegistry(name) || isOneOffImport(name)) continue;
+
+    // Skip if we already counted this registry entry via a different log name
+    const registryKey = ACTIVE_SCRAPERS[registryName] ? registryName : name;
+    if (accountedRegistryKeys.has(registryKey)) continue;
+    accountedRegistryKeys.add(registryKey);
 
     // Check latest run status
+    const latest = runs[runs.length - 1];
     if (latest.status === 'error' || latest.status === 'failed') {
       failedScrapers.push({ name, error: latest.error_message });
     }
 
-    // Check for zero events
+    // Check for zero events across all runs
     const totalEventsFound = runs.reduce((sum, r) => sum + (r.events_found || 0), 0);
     const totalEventsSaved = runs.reduce((sum, r) => sum + (r.events_saved || 0), 0);
-    if (totalEventsFound === 0 && totalEventsSaved === 0) {
-      // Only flag as zero-event if the scraper is currently active in the registry
-      // Strip "Local-" prefix to match registry keys
-      const registryName = name.replace(/^Local-/, '');
-      const isActiveInRegistry = ACTIVE_SCRAPERS[registryName] || ACTIVE_SCRAPERS[name];
-      // Also skip one-off import scripts (they have year suffixes or known import names)
-      const isOneOffImport = /\d{4}$/.test(name) || /^(MarylandKid|DMV-|Pennsylvania-|Waterparks-|Summer-|Gyms-|add-|fix-|backfill-)/.test(name);
 
-      if (isActiveInRegistry && !isOneOffImport) {
-        zeroEventScrapers.push({ name, runs: runs.length });
-      }
-      // else: disabled or one-off, silently skip
+    // Also check if this scraper has events in the DB (cross-reference)
+    let hasEventsInDB = false;
+    if (eventScraperCounts) {
+      hasEventsInDB = (eventScraperCounts[name] > 0) || (eventScraperCounts[registryName] > 0);
+    }
+
+    if (totalEventsFound === 0 && totalEventsSaved === 0 && !hasEventsInDB) {
+      zeroEventScrapers.push({ name, runs: runs.length });
     } else {
       healthyScrapers.push(name);
     }
   }
 
-  // Also check event counts by scraper from the events table
+  // Check for registry scrapers that have NO log entries at all (never ran)
+  const neverRanScrapers = [];
+  for (const registryKey of Object.keys(ACTIVE_SCRAPERS)) {
+    if (accountedRegistryKeys.has(registryKey)) continue;
+    // Check if it appeared under a "Local-" prefix
+    if (accountedRegistryKeys.has(`Local-${registryKey}`)) continue;
+    neverRanScrapers.push(registryKey);
+  }
+
+  // Print event counts by scraper from DB
   if (eventScraperCounts) {
     console.log(`\n  Scrapers by event count in DB:`);
-    const zeroInDB = [];
     const sorted = Object.entries(eventScraperCounts).sort((a, b) => b[1] - a[1]);
     for (const [name, count] of sorted.slice(0, 15)) {
       console.log(`    ${name.padEnd(40)} ${String(count).padStart(5)} events`);
-    }
-
-    // Find scrapers that exist in logs but have 0 events in the events table
-    // Note: local runner logs as "Local-{name}" but scrapers save events under
-    // different names (library names, platform names, etc.). We only flag scrapers
-    // that ALSO had 0 events_saved in their logs — those are truly broken.
-    for (const scraperName of scraperNames) {
-      if (!eventScraperCounts[scraperName] || eventScraperCounts[scraperName] === 0) {
-        // Also check without "Local-" prefix
-        const withoutLocal = scraperName.replace(/^Local-/, '');
-        if (!eventScraperCounts[withoutLocal] || eventScraperCounts[withoutLocal] === 0) {
-          // Check if the scraper actually saved 0 events in its logs too
-          const runs = scraperMap[scraperName] || [];
-          const totalSaved = runs.reduce((sum, r) => sum + (r.events_saved || 0), 0);
-          // Only flag if active in registry and not a one-off import
-          const isActiveInRegistry = ACTIVE_SCRAPERS[withoutLocal] || ACTIVE_SCRAPERS[scraperName];
-          const isOneOffImport = /\d{4}$/.test(scraperName) || /^(MarylandKid|DMV-|Pennsylvania-|Waterparks-|Summer-|Gyms-|add-|fix-|backfill-)/.test(scraperName);
-          if (totalSaved === 0 && isActiveInRegistry && !isOneOffImport) {
-            zeroInDB.push(scraperName);
-          }
-        }
-      }
-    }
-
-    if (zeroInDB.length > 0) {
-      console.log(`\n  ⚠️  Scrapers with 0 events saved (truly broken) (${zeroInDB.length}):`);
-      for (const name of zeroInDB.slice(0, 30)) {
-        const runs = scraperMap[name] || [];
-        const totalRuns = runs.length;
-        console.log(`    - ${name} (${totalRuns} runs)`);
-      }
-      if (zeroInDB.length > 30) console.log(`    ... and ${zeroInDB.length - 30} more`);
     }
   }
 
@@ -517,16 +643,19 @@ async function checkScrapers(eventScraperCounts) {
   // Print results
   console.log(`\n  Summary:`);
   console.log(`    Active scrapers (registry): ${activeRegistryCount}`);
-  console.log(`    Healthy scrapers:     ${healthyScrapers.length}`);
-  console.log(`    Zero-event scrapers:  ${zeroEventScrapers.length}`);
+  console.log(`    Healthy:              ${healthyScrapers.length}`);
+  console.log(`    Zero-event:           ${zeroEventScrapers.length}`);
   console.log(`    Failed (latest run):  ${failedScrapers.length}`);
+  if (neverRanScrapers.length > 0) {
+    console.log(`    Never ran (no logs):  ${neverRanScrapers.length}`);
+  }
 
   if (zeroEventScrapers.length > 0) {
     console.log(`\n  🔴 Zero-event scrapers (${zeroEventScrapers.length}):`);
-    for (const s of zeroEventScrapers.slice(0, 20)) {
+    for (const s of zeroEventScrapers.slice(0, 30)) {
       console.log(`    ${s.name.padEnd(40)} ${s.runs} runs`);
     }
-    if (zeroEventScrapers.length > 20) console.log(`    ... and ${zeroEventScrapers.length - 20} more`);
+    if (zeroEventScrapers.length > 30) console.log(`    ... and ${zeroEventScrapers.length - 30} more`);
   }
 
   if (failedScrapers.length > 0) {
@@ -536,7 +665,15 @@ async function checkScrapers(eventScraperCounts) {
     }
   }
 
-  return { total: activeTotal, healthy: healthyScrapers.length, zeroEvent: zeroEventScrapers.length, failed: failedScrapers.length };
+  if (neverRanScrapers.length > 0) {
+    console.log(`\n  ⚠️  Registered but never ran (${neverRanScrapers.length}):`);
+    for (const name of neverRanScrapers.slice(0, 20)) {
+      console.log(`    - ${name}`);
+    }
+    if (neverRanScrapers.length > 20) console.log(`    ... and ${neverRanScrapers.length - 20} more`);
+  }
+
+  return { total: activeTotal, healthy: healthyScrapers.length, zeroEvent: zeroEventScrapers.length, failed: failedScrapers.length, neverRan: neverRanScrapers.length };
 }
 
 // Alternate scraper log format (scraperLogs collection via Firestore compat layer)
@@ -551,56 +688,64 @@ async function checkScraperLogsAlt(logs, eventScraperCounts) {
   }
 
   const scraperNames = Object.keys(scraperMap);
-  console.log(`  Unique scrapers: ${scraperNames.length}`);
+  console.log(`  Unique scrapers in logs: ${scraperNames.length}`);
 
+  function isOneOffImport(name) {
+    return /\d{4}$/.test(name) || /^(MarylandKid|DMV-|Pennsylvania-|Waterparks-|Summer-|Gyms-|add-|fix-|backfill-)/.test(name);
+  }
+
+  const accountedRegistryKeys = new Set();
   const zeroEventScrapers = [];
   const failedScrapers = [];
+  const healthyScrapers = [];
 
   for (const [name, runs] of Object.entries(scraperMap)) {
+    const registryName = name.replace(/^Local-/, '');
+    const isActive = !!(ACTIVE_SCRAPERS[registryName] || ACTIVE_SCRAPERS[name]);
+
+    // Skip if not active in registry or is a one-off import
+    if (!isActive || isOneOffImport(name)) continue;
+
+    // Skip if we already counted this registry entry via a different log name
+    const registryKey = ACTIVE_SCRAPERS[registryName] ? registryName : name;
+    if (accountedRegistryKeys.has(registryKey)) continue;
+    accountedRegistryKeys.add(registryKey);
+
     const totalSaved = runs.reduce((sum, r) => sum + (r.activitiesSaved || r.events_saved || 0), 0);
     const totalLocations = runs.reduce((sum, r) => sum + (r.totalLocations || 0), 0);
     const hasFailure = runs.some(r => r.status === 'error' || r.status === 'failed' || (r.activitiesFailed || 0) > 0);
 
-    if (totalSaved === 0 && totalLocations === 0) {
-      // Only flag if active in registry and not a one-off import
-      const registryName = name.replace(/^Local-/, '');
-      const isActiveInRegistry = ACTIVE_SCRAPERS[registryName] || ACTIVE_SCRAPERS[name];
-      const isOneOffImport = /\d{4}$/.test(name) || /^(MarylandKid|DMV-|Pennsylvania-|Waterparks-|Summer-|Gyms-|add-|fix-|backfill-)/.test(name);
-      if (isActiveInRegistry && !isOneOffImport) {
-        zeroEventScrapers.push({ name, runs: runs.length });
-      }
+    // Cross-reference with events table
+    let hasEventsInDB = false;
+    if (eventScraperCounts) {
+      hasEventsInDB = (eventScraperCounts[name] > 0) || (eventScraperCounts[registryName] > 0);
+    }
+
+    if (totalSaved === 0 && totalLocations === 0 && !hasEventsInDB) {
+      zeroEventScrapers.push({ name, runs: runs.length });
+    } else {
+      healthyScrapers.push(name);
     }
     if (hasFailure) {
       failedScrapers.push({ name });
     }
   }
 
-  // Check which scrapers have events in the DB
-  if (eventScraperCounts) {
-    const zeroInDB = [];
-    for (const scraperName of scraperNames) {
-      if (!eventScraperCounts[scraperName] || eventScraperCounts[scraperName] === 0) {
-        zeroInDB.push(scraperName);
-      }
-    }
-    if (zeroInDB.length > 0) {
-      console.log(`\n  ⚠️  Scrapers with 0 items in events/activities tables (${zeroInDB.length}):`);
-      for (const name of zeroInDB.slice(0, 20)) console.log(`    - ${name}`);
-      if (zeroInDB.length > 20) console.log(`    ... and ${zeroInDB.length - 20} more`);
-    }
-  }
+  const activeRegistryCount = Object.keys(ACTIVE_SCRAPERS).length;
+  const activeTotal = activeRegistryCount || scraperNames.length;
 
   console.log(`\n  Summary:`);
-  console.log(`    Total scrapers:      ${scraperNames.length}`);
-  console.log(`    Zero-event scrapers: ${zeroEventScrapers.length}`);
-  console.log(`    Had failures:        ${failedScrapers.length}`);
+  console.log(`    Active scrapers (registry): ${activeRegistryCount}`);
+  console.log(`    Healthy:              ${healthyScrapers.length}`);
+  console.log(`    Zero-event scrapers:  ${zeroEventScrapers.length}`);
+  console.log(`    Had failures:         ${failedScrapers.length}`);
 
   if (zeroEventScrapers.length > 0) {
-    console.log(`\n  🔴 Zero-event scrapers:`);
+    console.log(`\n  🔴 Zero-event scrapers (${zeroEventScrapers.length}):`);
     for (const s of zeroEventScrapers.slice(0, 20)) console.log(`    - ${s.name} (${s.runs} runs)`);
   }
 
-  return { total: scraperNames.length, zeroEvent: zeroEventScrapers.length, failed: failedScrapers.length };
+  return { total: activeTotal, healthy: healthyScrapers.length, zeroEvent: zeroEventScrapers.length, failed: failedScrapers.length };
 }
 
 // ==========================================
@@ -625,14 +770,22 @@ function printOverallSummary(activitiesResult, eventsResult, scraperResult) {
     console.log(`║  ${badge} Events:      ${String(eventsResult.total).padStart(6)} total, ${eventsResult.completenessScore}% complete`.padEnd(59) + '║');
     console.log(`║     Critical issues: ${String(eventsResult.criticalCount).padStart(5)}`.padEnd(59) + '║');
     console.log(`║     Past events:     ${String(eventsResult.pastEvents).padStart(5)}`.padEnd(59) + '║');
+    console.log(`║     Missing age_range:${String(eventsResult.stats?.missingAgeRange || 0).padStart(5)}`.padEnd(59) + '║');
+    console.log(`║     Adult/non-family: ${String(eventsResult.stats?.adultEvents || 0).padStart(5)}`.padEnd(59) + '║');
+    console.log(`║     Duplicates:       ${String(eventsResult.stats?.duplicateEvents || 0).padStart(5)}`.padEnd(59) + '║');
   }
 
   if (scraperResult && scraperResult.total > 0) {
-    const scraperHealthPct = pct(scraperResult.healthy || (scraperResult.total - (scraperResult.zeroEvent || 0)), scraperResult.total);
+    const healthyCount = scraperResult.healthy || 0;
+    const scraperHealthPct = pct(healthyCount, scraperResult.total);
     const badge = healthBadge(scraperHealthPct);
-    console.log(`║  ${badge} Scrapers:    ${String(scraperResult.total).padStart(6)} total, ${scraperHealthPct}% healthy`.padEnd(59) + '║');
-    console.log(`║     Zero-event:      ${String(scraperResult.zeroEvent || 0).padStart(5)}`.padEnd(59) + '║');
-    console.log(`║     Failed:          ${String(scraperResult.failed || 0).padStart(5)}`.padEnd(59) + '║');
+    console.log(`║  ${badge} Scrapers:    ${String(scraperResult.total).padStart(6)} registered, ${scraperHealthPct}% healthy`.padEnd(59) + '║');
+    console.log(`║     Healthy:          ${String(healthyCount).padStart(5)}`.padEnd(59) + '║');
+    console.log(`║     Zero-event:       ${String(scraperResult.zeroEvent || 0).padStart(5)}`.padEnd(59) + '║');
+    console.log(`║     Failed:           ${String(scraperResult.failed || 0).padStart(5)}`.padEnd(59) + '║');
+    if (scraperResult.neverRan) {
+      console.log(`║     Never ran:        ${String(scraperResult.neverRan).padStart(5)}`.padEnd(59) + '║');
+    }
   }
 
   // Overall health

@@ -678,7 +678,7 @@ function isFamilyFriendlyFarm(name, description) {
 // GEOCODING
 // ============================================================================
 
-async function geocodeFarm(address, city, state, zipCode) {
+async function geocodeFarm(address, city, state, zipCode, farmName) {
   // Try full address
   if (address && city) {
     const fullAddr = `${address}, ${city}, ${state} ${zipCode || ''}`.trim();
@@ -701,6 +701,14 @@ async function geocodeFarm(address, city, state, zipCode) {
   if (zipCode) {
     try {
       const coords = await geocodeAddress(`${zipCode}, ${state}`);
+      if (coords) return coords;
+    } catch (_) {}
+  }
+
+  // Last resort: try farm name + state (many farms are well-known landmarks)
+  if (farmName) {
+    try {
+      const coords = await geocodeAddress(`${farmName}, ${state}`);
       if (coords) return coords;
     } catch (_) {}
   }
@@ -744,7 +752,7 @@ async function saveFarmVenues(stateObj, farms) {
       }
 
       // Geocode the farm
-      const coords = await geocodeFarm(farm.address, farm.city, stateObj.code, farm.zip);
+      const coords = await geocodeFarm(farm.address, farm.city, stateObj.code, farm.zip, farm.name);
       let geohash = '';
       if (coords) {
         geohash = ngeohash.encode(coords.lat || coords.latitude, coords.lon || coords.longitude, 7);
@@ -909,7 +917,8 @@ async function saveFarmEvents(stateObj, rawEvents) {
       const stateCode = event.stateCode || stateObj.code;
 
       // Geocode
-      const coords = await geocodeFarm(address, city, stateCode, zip);
+      const venueName = event.venue || event.name.trim();
+      const coords = await geocodeFarm(address, city, stateCode, zip, venueName);
       let geohash = '';
       if (coords) {
         geohash = ngeohash.encode(coords.lat || coords.latitude, coords.lon || coords.longitude, 7);
@@ -956,7 +965,6 @@ async function saveFarmEvents(stateObj, rawEvents) {
       else if (event.price) cost = `$${event.price}`;
 
       // Link event to farm venue (activity) by generating the same ID format
-      const venueName = event.venue || event.name.trim();
       const farmActivityId = `farm-${stateCode}-${venueName.toLowerCase().replace(/[^a-z0-9]+/g, '-').substring(0, 60)}`;
 
       // Build event document
@@ -996,7 +1004,17 @@ async function saveFarmEvents(stateObj, rawEvents) {
         }
       };
 
-      await db.collection('events').add(eventDoc);
+      try {
+        await db.collection('events').add(eventDoc);
+      } catch (saveErr) {
+        // If foreign key constraint fails (activity doesn't exist), retry without activity_id
+        if (saveErr.message?.includes('activity_id_fkey') || saveErr.message?.includes('foreign key constraint')) {
+          delete eventDoc.activityId;
+          await db.collection('events').add(eventDoc);
+        } else {
+          throw saveErr;
+        }
+      }
       process.stdout.write(`    ✅ ${event.name.substring(0, 50)}\n`);
       saved++;
 

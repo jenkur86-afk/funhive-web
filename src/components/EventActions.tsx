@@ -1,6 +1,7 @@
 'use client'
 
 import FavoriteButton from '@/components/FavoriteButton'
+import ReportButton from '@/components/ReportButton'
 import ShareButton from '@/components/ShareButton'
 import AddToCalendarButton from '@/components/AddToCalendarButton'
 import DirectionsButton from '@/components/DirectionsButton'
@@ -76,6 +77,14 @@ export default function EventActions({
           View Original Event
         </a>
       )}
+
+      <ReportButton
+        eventId={eventId}
+        itemName={title}
+        itemType="event"
+        size="md"
+        className="border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200"
+      />
     </div>
   )
 }

@@ -7,25 +7,30 @@
  * and arts/culture venues across 15+ eastern US states.
  *
  * Coverage:
- *   - Connecticut (3 venues)
+ *   - Connecticut (2 venues)
  *   - DC (3 venues)
- *   - Florida (5 venues)
- *   - Georgia (3 venues)
+ *   - Florida (4 venues)
+ *   - Georgia (2 venues)
  *   - Illinois (4 venues)
  *   - Indiana (2 venues)
- *   - Massachusetts (3 venues)
+ *   - Maryland (1 venue)
+ *   - Massachusetts (2 venues)
  *   - Michigan (3 venues)
- *   - New Hampshire (2 venues)
- *   - New Jersey (1 venue)
+ *   - New Hampshire (1 venue)
  *   - New York (4 venues)
- *   - North Carolina (2 venues)
+ *   - North Carolina (1 venue)
  *   - Ohio (2 venues)
  *   - Pennsylvania (3 venues)
  *   - Tennessee (1 venue)
  *   - Virginia (2 venues)
  *   - Wisconsin (1 venue)
  *
- * Total: 45 venues across 17 states
+ * Total: 38 venues across 17 states
+ *
+ * Removed (no scrapable events page):
+ *   Maritime Aquarium (ticketing platform), Orlando Science Center (static page),
+ *   Fernbank Science Center (timeouts), New England Aquarium (no events page),
+ *   Liberty Science Center (redirects), Greensboro Science Center (404)
  *
  * Usage:
  *   node scraper-venue-events-science-arts.js          # Test mode (all states)
@@ -47,63 +52,64 @@ const SCRAPER_NAME = 'ScienceArtsVenues';
 const VENUES = [
   // Connecticut
   { name: "Connecticut Science Center", eventsUrl: "https://ctsciencecenter.org/events/", city: "Hartford", state: "CT", zip: "06103" },
-  { name: "Maritime Aquarium at Norwalk", eventsUrl: "https://www.maritimeaquarium.org/calendar", city: "Norwalk", state: "CT", zip: "06854" },
+  // Maritime Aquarium: ticketing platform at my.maritimeaquarium.org, not scrapable
   { name: "Yale Peabody Museum", eventsUrl: "https://peabody.yale.edu/events", city: "New Haven", state: "CT", zip: "06511" },
   // DC
   { name: "Smithsonian Air & Space Museum", eventsUrl: "https://airandspace.si.edu/events", city: "Washington", state: "DC", zip: "20560" },
   { name: "Smithsonian Natural History Museum", eventsUrl: "https://naturalhistory.si.edu/events", city: "Washington", state: "DC", zip: "20560" },
   { name: "National Building Museum", eventsUrl: "https://www.nbm.org/events/", city: "Washington", state: "DC", zip: "20001" },
   // Florida
-  { name: "Frost Science Museum", eventsUrl: "https://www.frostscience.org/events/", city: "Miami", state: "FL", zip: "33132" },
-  { name: "Orlando Science Center", eventsUrl: "https://www.osc.org/events/", city: "Orlando", state: "FL", zip: "32803" },
+  { name: "Frost Science Museum", eventsUrl: "https://www.frostscience.org/calendar-events/", city: "Miami", state: "FL", zip: "33132" },  // WordPress / The Events Calendar plugin
+  // Orlando Science Center: static page listing event types, no dated events
   { name: "Museum of Science & Industry", eventsUrl: "https://www.mosi.org/events/", city: "Tampa", state: "FL", zip: "33613" },
   { name: "Bishop Museum of Science & Nature", eventsUrl: "https://bishopscience.org/events/", city: "Sarasota", state: "FL", zip: "34236" },
-  { name: "Kennedy Space Center Visitor Complex", eventsUrl: "https://www.kennedyspacecenter.com/events", city: "Merritt Island", state: "FL", zip: "32953" },
+  { name: "Kennedy Space Center Visitor Complex", eventsUrl: "https://www.kennedyspacecenter.com/launches-and-events/featured-events", city: "Merritt Island", state: "FL", zip: "32953" },
   // Georgia
-  { name: "Fernbank Museum of Natural History", eventsUrl: "https://www.fernbankmuseum.org/events/", city: "Atlanta", state: "GA", zip: "30307" },
-  { name: "Fernbank Science Center", eventsUrl: "https://fernbank.edu/events", city: "Atlanta", state: "GA", zip: "30307" },
+  { name: "Fernbank Museum of Natural History", eventsUrl: "https://www.fernbankmuseum.org/events/calendar-of-events/", city: "Atlanta", state: "GA", zip: "30307" },  // Bootstrap grid, .col-md-4.mb-4 cards
+  // Fernbank Science Center: fernbank.edu times out, separate from Fernbank Museum
   { name: "Tellus Science Museum", eventsUrl: "https://tellusmuseum.org/events/", city: "Cartersville", state: "GA", zip: "30120" },
   // Illinois
-  { name: "Museum of Science and Industry", eventsUrl: "https://www.msichicago.org/visit/events/", city: "Chicago", state: "IL", zip: "60637" },
-  { name: "Adler Planetarium", eventsUrl: "https://www.adlerplanetarium.org/events/", city: "Chicago", state: "IL", zip: "60605" },
-  { name: "Field Museum", eventsUrl: "https://www.fieldmuseum.org/visit/events", city: "Chicago", state: "IL", zip: "60605" },
-  { name: "Art Institute of Chicago", eventsUrl: "https://www.artic.edu/visit/events", city: "Chicago", state: "IL", zip: "60603" },
+  { name: "Griffin Museum of Science and Industry", eventsUrl: "https://www.griffinmsi.org/events", city: "Chicago", state: "IL", zip: "60637" },
+  { name: "Adler Planetarium", eventsUrl: "https://www.adlerplanetarium.org/explore/events/", city: "Chicago", state: "IL", zip: "60605" },
+  { name: "Field Museum", eventsUrl: "https://www.fieldmuseum.org/events", city: "Chicago", state: "IL", zip: "60605" },
+  { name: "Art Institute of Chicago", eventsUrl: "https://www.artic.edu/events", city: "Chicago", state: "IL", zip: "60603" },
   // Indiana
   { name: "Indiana State Museum", eventsUrl: "https://www.indianamuseum.org/events/", city: "Indianapolis", state: "IN", zip: "46204" },
   { name: "Conner Prairie Living History", eventsUrl: "https://www.connerprairie.org/visit/events/", city: "Fishers", state: "IN", zip: "46038" },
+  // Maryland
+  { name: "Maryland Science Center", eventsUrl: "https://www.mdsci.org/whats-happening/events/", city: "Baltimore", state: "MD", zip: "21230" },  // WordPress, article.event-list-item cards
   // Massachusetts
   { name: "Museum of Science Boston", eventsUrl: "https://www.mos.org/events", city: "Boston", state: "MA", zip: "02114" },
   { name: "EcoTarium", eventsUrl: "https://ecotarium.org/events/", city: "Worcester", state: "MA", zip: "01604" },
-  { name: "New England Aquarium", eventsUrl: "https://www.neaq.org/visit/programs-and-events/", city: "Boston", state: "MA", zip: "02110" },
+  // New England Aquarium: no public events page found
   // Michigan
   { name: "Michigan Science Center", eventsUrl: "https://www.mi-sci.org/calendar/", city: "Detroit", state: "MI", zip: "48202" },
   { name: "Impression 5 Science Center", eventsUrl: "https://impression5.org/events/", city: "Lansing", state: "MI", zip: "48933" },
   { name: "Henry Ford Museum", eventsUrl: "https://www.thehenryford.org/visit/events/", city: "Dearborn", state: "MI", zip: "48124" },
   // New Hampshire
-  { name: "SEE Science Center", eventsUrl: "https://see-sciencecenter.org/events/", city: "Manchester", state: "NH", zip: "03101" },
   { name: "McAuliffe-Shepard Discovery Center", eventsUrl: "https://www.starhop.com/events/", city: "Concord", state: "NH", zip: "03301" },
   // New Jersey
-  { name: "Liberty Science Center", eventsUrl: "https://lsc.org/visit/events", city: "Jersey City", state: "NJ", zip: "07305" },
+  // Liberty Science Center: /visit/events redirects to /visit/directions, no events page
   // New York
   { name: "American Museum of Natural History", eventsUrl: "https://www.amnh.org/calendar", city: "New York", state: "NY", zip: "10024" },
-  { name: "New York Hall of Science", eventsUrl: "https://nysci.org/visit/calendar/", city: "Queens", state: "NY", zip: "11368" },
-  { name: "Intrepid Sea Air & Space Museum", eventsUrl: "https://www.intrepidmuseum.org/events", city: "New York", state: "NY", zip: "10036" },
-  { name: "Corning Museum of Glass", eventsUrl: "https://www.cmog.org/events", city: "Corning", state: "NY", zip: "14830" },
+  { name: "New York Hall of Science", eventsUrl: "https://nysci.org/nysci-events", city: "Queens", state: "NY", zip: "11368" },  // div.calander_card_block cards
+  { name: "Intrepid Sea Air & Space Museum", eventsUrl: "https://www.intrepidmuseum.org/events/calendar", city: "New York", state: "NY", zip: "10036" },
+  { name: "Corning Museum of Glass", eventsUrl: "https://whatson.cmog.org/events-programs", city: "Corning", state: "NY", zip: "14830" },
   // North Carolina
   { name: "NC Museum of Natural Sciences", eventsUrl: "https://naturalsciences.org/calendar", city: "Raleigh", state: "NC", zip: "27601" },
-  { name: "Greensboro Science Center", eventsUrl: "https://www.greensboroscience.org/events/", city: "Greensboro", state: "NC", zip: "27455" },
+  // Greensboro Science Center: events page 404, no alternate found
   // Ohio
-  { name: "Great Lakes Science Center", eventsUrl: "https://www.glsc.org/events", city: "Cleveland", state: "OH", zip: "44114" },
-  { name: "Imagination Station", eventsUrl: "https://www.imaginationstationtoledo.org/events", city: "Toledo", state: "OH", zip: "43604" },
+  { name: "Great Lakes Science Center", eventsUrl: "https://greatscience.com/explore/events-programs", city: "Cleveland", state: "OH", zip: "44114" },  // Program cards with Learn More links
+  { name: "Imagination Station", eventsUrl: "https://www.imaginationstationtoledo.org/visit/events", city: "Toledo", state: "OH", zip: "43604" },  // Framer-hosted, 50+ events
   // Pennsylvania
-  { name: "Franklin Institute", eventsUrl: "https://www.fi.edu/en/visit/events", city: "Philadelphia", state: "PA", zip: "19103" },
-  { name: "Academy of Natural Sciences", eventsUrl: "https://ansp.org/visit/events/", city: "Philadelphia", state: "PA", zip: "19103" },
-  { name: "Carnegie Science Center", eventsUrl: "https://carnegiesciencecenter.org/events/", city: "Pittsburgh", state: "PA", zip: "15212" },
+  { name: "Franklin Institute", eventsUrl: "https://www.fi.edu/en/events-calendar", city: "Philadelphia", state: "PA", zip: "19103" },
+  { name: "Academy of Natural Sciences", eventsUrl: "https://ansp.org/experience/events", city: "Philadelphia", state: "PA", zip: "19103" },
+  { name: "Kamin Science Center", eventsUrl: "https://kaminsciencecenter.org/plan-a-visit/?filter_exhibit=events", city: "Pittsburgh", state: "PA", zip: "15212" },
   // Tennessee
   { name: "Tennessee State Museum", eventsUrl: "https://tnmuseum.org/calendar-of-events", city: "Nashville", state: "TN", zip: "37243" },
   // Virginia
-  { name: "Science Museum of Virginia", eventsUrl: "https://smv.org/events/", city: "Richmond", state: "VA", zip: "23220" },
-  { name: "Virginia Museum of Natural History", eventsUrl: "https://www.vmnh.net/events", city: "Martinsville", state: "VA", zip: "24112" },
+  { name: "Science Museum of Virginia", eventsUrl: "https://smv.org/explore/things-to-do/?things_to_do_type=eventpage", city: "Richmond", state: "VA", zip: "23220" },
+  { name: "Virginia Museum of Natural History", eventsUrl: "https://www.vmnh.net/calendar", city: "Martinsville", state: "VA", zip: "24112" },
   // Wisconsin
   { name: "Milwaukee Art Museum", eventsUrl: "https://mam.org/events/", city: "Milwaukee", state: "WI", zip: "53202" },
 ];
@@ -212,38 +218,21 @@ async function extractEventsFromPage(page, venue) {
 }
 
 /**
- * Normalize date text using basic heuristics
+ * Check if a normalized date string is in the future (not past) and within range.
+ * @param {string} normalizedDate - "Month Day, Year" format from normalizeDateString()
+ * @param {number} maxDays - Maximum days in future (default 90)
+ * @returns {boolean}
  */
-function normalizeVenueDate(dateText) {
-  if (!dateText) return null;
-
-  const text = dateText.trim();
-
-  // Try ISO format first
-  if (text.includes('T') || /^\d{4}-\d{2}-\d{2}/.test(text)) {
-    const parsed = new Date(text);
-    if (!isNaN(parsed.getTime())) return parsed;
-  }
-
-  // Try parsing via Date constructor with common formats
-  // Remove extra whitespace and normalize
-  const normalized = text
-    .replace(/\s+/g, ' ')
-    .replace(/,\s+/g, ', ')
-    .trim();
-
-  const parsed = new Date(normalized);
-  if (!isNaN(parsed.getTime())) return parsed;
-
-  // Fallback: try extracting date pattern
-  const dateMatch = text.match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
-  if (dateMatch) {
-    const [, m, d, y] = dateMatch;
-    const fullYear = y.length === 2 ? (parseInt(y) < 50 ? 2000 + parseInt(y) : 1900 + parseInt(y)) : y;
-    return new Date(`${fullYear}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`);
-  }
-
-  return null;
+function isDateInRange(normalizedDate, maxDays = 90) {
+  if (!normalizedDate) return false;
+  const parsed = new Date(normalizedDate);
+  if (isNaN(parsed.getTime())) return false;
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  if (parsed < now) return false;
+  const max = new Date();
+  max.setDate(max.getDate() + maxDays);
+  return parsed <= max;
 }
 
 /**
@@ -266,33 +255,28 @@ async function processAndSaveVenueEvents(venue, extractedEvents) {
       }
       seenEvents.add(eventKey);
 
-      // Parse and validate date
-      const parsedDate = normalizeVenueDate(event.eventDate);
-      if (!parsedDate) {
+      // Normalize date using the robust date-normalization-helper
+      // This handles "April 22, 2026", "APR 22 - APR 30", "Sat, Apr 26 10:00 AM", etc.
+      const normalizedDate = normalizeDateString(event.eventDate);
+
+      // If we can't parse the date at all and there's no URL, skip
+      if (!normalizedDate && !event.url) {
         skipped++;
         continue;
       }
 
-      // Skip past events
-      const now = new Date();
-      if (parsedDate < now) {
-        skipped++;
-        continue;
-      }
-
-      // Skip events more than 90 days in future (capacity limit)
-      const maxDate = new Date();
-      maxDate.setDate(maxDate.getDate() + 90);
-      if (parsedDate > maxDate) {
-        skipped++;
-        continue;
-      }
-
-      // Normalize date for database
-      const normalizedDate = normalizeDateString(parsedDate.toISOString());
-      if (!normalizedDate) {
-        skipped++;
-        continue;
+      // If the date is parseable, check if it's in range; if not parseable, keep it
+      // (the downstream save pipeline will handle date validation)
+      if (normalizedDate && isDateInRange(normalizedDate, 90) === false) {
+        // Only skip if we can definitively say it's out of range
+        const parsed = new Date(normalizedDate);
+        if (!isNaN(parsed.getTime())) {
+          // Date parsed fine but is out of range — skip
+          skipped++;
+          continue;
+        }
+        // If Date() can't parse the normalized string, keep the event
+        // (the save pipeline has additional date parsing logic)
       }
 
       // Categorize event
@@ -317,25 +301,17 @@ async function processAndSaveVenueEvents(venue, extractedEvents) {
       const eventDoc = {
         name: event.name,
         venue: venue.name,
-        eventDate: normalizedDate,
+        venueName: venue.name,
+        eventDate: normalizedDate || event.eventDate,
         startTime: startTime,
         endTime: '',
         scheduleDescription: event.eventDate,
         description: event.description || `Family event at ${venue.name}`,
-        address: '', // Will be populated if geocoding available
+        address: '',
         city: venue.city,
         state: venue.state,
         zipCode: venue.zip,
-        location: {
-          name: venue.name,
-          city: venue.city,
-          state: venue.state,
-          zipCode: venue.zip,
-          coordinates: {
-            latitude: null,
-            longitude: null
-          }
-        },
+        location: venue.name,
         parentCategory,
         displayCategory,
         subcategory,

@@ -101,20 +101,40 @@ async function tryGeocode(address) {
 
 // ── Full geocode with address cleaning (replaces geocodeAddress) ────────────
 async function geocodeAddress(address, city, state, zipCode) {
-  const fullAddress = `${address}, ${city}, ${state} ${zipCode}`;
+  // Build the best full address string we can from available parts
+  const parts = [address];
+  if (city) parts.push(city);
+  parts.push(zipCode ? `${state} ${zipCode}` : state);
+  const fullAddress = parts.join(', ');
+
   let result = await tryGeocode(fullAddress);
   if (result) return result;
 
   // Strip suite/unit numbers
   const cleaned = address.replace(/,?\s*Suite\s+[A-Z0-9-]+/i, '').replace(/,?\s*#\s*[A-Z0-9-]+/i, '');
   if (cleaned !== address) {
-    result = await tryGeocode(`${cleaned}, ${city}, ${state} ${zipCode}`);
+    const cleanedParts = [cleaned];
+    if (city) cleanedParts.push(city);
+    cleanedParts.push(zipCode ? `${state} ${zipCode}` : state);
+    result = await tryGeocode(cleanedParts.join(', '));
+    if (result) return result;
+  }
+
+  // Street + city + state (no zip) — try if we haven't already
+  if (city && zipCode) {
+    result = await tryGeocode(`${cleaned}, ${city}, ${state}`);
     if (result) return result;
   }
 
   // Street name only + state + zip
   const streetOnly = cleaned.split(',')[0];
-  result = await tryGeocode(`${streetOnly}, ${state} ${zipCode}`);
+  if (zipCode) {
+    result = await tryGeocode(`${streetOnly}, ${state} ${zipCode}`);
+    if (result) return result;
+  }
+
+  // Street + state only (last resort for address-based geocoding)
+  result = await tryGeocode(`${streetOnly}, ${state}`);
   if (result) return result;
 
   // ZIP-code only (accurate to ~2-5 miles)

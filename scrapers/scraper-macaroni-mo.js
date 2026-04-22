@@ -23,6 +23,7 @@ const { getOrCreateVenue, findMatchingVenue } = require('./venue-matcher');
 const { normalizeDateString } = require('./date-normalization-helper');
 const { logScraperResult } = require('./scraper-logger');
 const { tryGeocode: _sharedTryGeocode, geocodeAddress: _sharedGeocodeAddress, getCityCenterCoords, geocodeVenue: _sharedGeocodeVenue, flushMacaroniGeocodeCache } = require('./helpers/macaroni-geocoding-helper');
+const { detectYodel, scrapeYodelEventUrls, extractYodelEventDetails } = require('./helpers/yodel-helper');
 
 // All 5 Missouri Macaroni Kid Sites
 const MO_MK_SITES = [
@@ -43,6 +44,21 @@ async function geocodeVenue(venue, city, zipCode) {
 
 async function tryGeocode(address) {
   return _sharedTryGeocode(address);
+}
+
+// Parse time range from scraper's details.time into startTime/endTime
+function parseTimeRange(timeStr) {
+  if (!timeStr || /^all[\s-]*day$/i.test(timeStr)) return { startTime: null, endTime: null };
+  // "10:00 AM - 12:00 PM" or "10:00am-12:00pm"
+  const range = timeStr.match(/(\d{1,2}:\d{2}\s*(?:am|pm))\s*[-\u2013\u2014]+\s*(\d{1,2}:\d{2}\s*(?:am|pm))/i);
+  if (range) return { startTime: range[1].trim(), endTime: range[2].trim() };
+  // "10am - 2pm" (no minutes)
+  const shortRange = timeStr.match(/(\d{1,2}\s*(?:am|pm))\s*[-\u2013\u2014]+\s*(\d{1,2}\s*(?:am|pm))/i);
+  if (shortRange) return { startTime: shortRange[1].trim(), endTime: shortRange[2].trim() };
+  // Single time "10:00 AM" or "3pm"
+  const single = timeStr.match(/(\d{1,2}(?::\d{2})?\s*(?:am|pm))/i);
+  if (single) return { startTime: single[1].trim(), endTime: null };
+  return { startTime: null, endTime: null };
 }
 
 async function extractEventUrls(page) {
@@ -171,16 +187,32 @@ async function scrapeSite(browser, site, maxEvents = 50) {
   try {
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
-    await page.goto(`${site.url}/events/calendar`, { waitUntil: 'domcontentloaded', timeout: 45000 });
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await page.goto(`${site.url}/events/calendar`, { waitUntil: 'networkidle2', timeout: 45000 });
+    // Wait for client-side JS to render event links (MacaroniKid is SPA)
+    await page.waitForSelector('a[href*="/events/"]', { timeout: 10000 }).catch(() => {});
 
     const eventUrls = await extractEventUrls(page);
     console.log(`  Found ${eventUrls.length} URLs`);
 
+    // --- Yodel platform fallback ---
+    // Some MK sites have migrated to Yodel (events.yodel.today iframe widget).
+    // When no old-format event URLs are found, check for Yodel and scrape from widget.
+    let isYodel = false;
+    if (eventUrls.length === 0) {
+      const yid = await detectYodel(page);
+      if (yid) {
+        isYodel = true;
+        console.log(`  🔄 Yodel platform detected (yid: ${yid}) — scraping widget`);
+        const yodelUrls = await scrapeYodelEventUrls(page, yid);
+        eventUrls.push(...yodelUrls);
+        console.log(`  Found ${yodelUrls.length} Yodel event URLs`);
+      }
+    }
+
     let imported = 0, updated = 0, skippedPast = 0, skippedFuture = 0, failedGeocode = 0, noLocation = 0;
 
     for (const url of eventUrls) {
-      const details = await extractEventDetails(page, url);
+      const details = isYodel ? await extractYodelEventDetails(page, url) : await extractEventDetails(page, url);
       if (!details || !details.eventDate) continue;
       const eventDate = new Date(details.eventDate);
       if (eventDate < today) { skippedPast++; continue; }
@@ -223,9 +255,9 @@ async function scrapeSite(browser, site, maxEvents = 50) {
         continue;
       }
 
-      // Check for online-only indicators in description
+      // Check for online-only indicators in description — only skip if event also has no venue/address
       const onlineIndicators = /\b(online\s+only|virtual\s+only|zoom\s+(?:meeting|call|link)|webinar|hosted?\s+(?:online|virtually)|no\s+physical\s+location)\b/i;
-      if (onlineIndicators.test(details.description || '')) {
+      if (onlineIndicators.test(details.description || '') && !details.venue && !details.address) {
         console.log(`  ⏭️ Skipping online event: ${(details.name || '').substring(0, 40)}...`);
         continue;
       }
@@ -241,7 +273,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
       let coords = null;
       let locationObj = null;
 
-      if (details.address && details.city && details.zipCode) {
+      if (details.address && (details.city || details.zipCode)) {
         coords = await geocodeAddress(details.address, details.city, details.zipCode);
       }
       // Try venue name geocoding when address geocode failed or no address available
@@ -387,6 +419,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
 
         name: details.name, venue: details.venue || 'See website', eventDate: normalizedDate,
         scheduleDescription: `${details.dayOfWeek}, ${details.eventDate}${details.time ? ' at ' + details.time : ''}`,
+        ...parseTimeRange(details.time),  // startTime, endTime
         parentCategory, displayCategory, subcategory,
         ageRange: details.ageRange, cost: details.cost, description: details.description, moreInfo: details.moreInfo || '',
         location: locationObj,

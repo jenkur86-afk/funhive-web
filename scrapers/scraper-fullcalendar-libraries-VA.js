@@ -15,7 +15,6 @@
 
 const { admin, db } = require('./helpers/supabase-adapter');
 const { launchBrowser } = require('./puppeteer-config');
-const axios = require('axios');
 const ngeohash = require('ngeohash');
 const { categorizeEvent } = require('./event-categorization-helper');
 const { generateEventId, generateEventIdFromDetails } = require('./event-id-helper');
@@ -37,32 +36,8 @@ const LIBRARY_SYSTEMS = [
   }
 ];
 
-// Geocode address
-async function geocodeAddress(address) {
-  try {
-    const response = await axios.get('https://nominatim.openstreetmap.org/search', {
-      params: {
-        q: address,
-        format: 'json',
-        limit: 1,
-        countrycodes: 'us'
-      },
-      headers: {
-        'User-Agent': 'FunHive/1.0'
-      }
-    });
-
-    if (response.data && response.data.length > 0) {
-      return {
-        latitude: parseFloat(response.data[0].lat),
-        longitude: parseFloat(response.data[0].lon)
-      };
-    }
-  } catch (error) {
-    console.error('Geocoding error:', error.message);
-  }
-  return null;
-}
+// Use shared geocoding helper with caching + rate limiting
+const { geocodeWithFallback } = require('./helpers/geocoding-helper');
 
 // Parse age range from text
 function parseAgeRange(text) {
@@ -228,7 +203,14 @@ async function scrapeLibraryEvents(library, browser) {
 
         let coordinates = null;
         if (event.venue) {
-          coordinates = await geocodeAddress(`${event.venue}, ${library.city}, ${library.county} County, ${library.state}`);
+          coordinates = await geocodeWithFallback(`${event.venue}, ${library.city}, ${library.county} County, ${library.state}`, {
+            city: library.city,
+            zipCode: library.zipCode,
+            state: library.state,
+            county: library.county,
+            venueName: event.venue,
+            sourceName: library.name
+          });
         }
 
         // Extract time BEFORE normalization strips it

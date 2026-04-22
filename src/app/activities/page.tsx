@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import FavoriteButton from '@/components/FavoriteButton'
+import ReportButton from '@/components/ReportButton'
 import { haversineDistance, getUserLocation } from '@/lib/geo-utils'
 import { isOpenNow, getTodayHours } from '@/lib/hours-utils'
 import { parseLocationInput, preloadZipData, lookupZipSync, lookupCitySync } from '@/lib/zip-lookup'
@@ -201,7 +202,7 @@ export default function VenuesPage() {
           max_results: 500,
         } as any) as { data: any[] | null; error: any }
         if (!result.error && result.data) {
-          allData = result.data
+          allData = result.data.filter((v: any) => !v.reported)
         }
 
         // Also fetch venues without geometry that have city/state/zip
@@ -209,6 +210,7 @@ export default function VenuesPage() {
           .from('activities')
           .select('*')
           .is('location', null)
+          .eq('reported', false)
           .limit(300)
 
         if (debouncedSearch) {
@@ -234,6 +236,7 @@ export default function VenuesPage() {
             .from('activities')
             .select('*')
             .in('state', ACTIVE_STATES || [])
+            .eq('reported', false)
             .or(
               `name.ilike.${term},city.ilike.${term},description.ilike.${term},category.ilike.${term},address.ilike.${term}`
             )
@@ -250,6 +253,7 @@ export default function VenuesPage() {
           .from('activities')
           .select('*')
           .in('state', ACTIVE_STATES || [])
+          .eq('reported', false)
           .order('name', { ascending: true })
           .limit(500)
 
@@ -637,8 +641,9 @@ export default function VenuesPage() {
                       )}
                     </div>
                   </Link>
-                  <div className="absolute top-4 right-4" onClick={(e) => e.stopPropagation()}>
+                  <div className="absolute top-4 right-4 flex flex-col gap-1.5" onClick={(e) => e.stopPropagation()}>
                     <FavoriteButton activityId={venue.id} itemName={venue.name} size="sm" />
+                    <ReportButton activityId={venue.id} itemName={venue.name} itemType="venue" size="sm" />
                   </div>
                 </div>
               )

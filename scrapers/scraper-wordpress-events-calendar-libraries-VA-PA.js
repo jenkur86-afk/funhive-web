@@ -236,17 +236,27 @@ async function scrapeLibraryEvents(library, browser) {
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
 
-    await page.goto(library.url, {
-      waitUntil: 'networkidle2',
-      timeout: 30000
-    });
+    // Try list view first (shows all upcoming events), fall back to default URL
+    const listViewUrl = library.url.replace(/\/?$/, '/').replace(/events\/?$/, 'events/list/');
+    const urlsToTry = [library.url];
+    // Add list view URL if it's different from the base URL
+    if (listViewUrl !== library.url && !library.url.includes('/list')) {
+      urlsToTry.unshift(listViewUrl);
+    }
 
-    // Wait for events to load
-    await page.waitForSelector('body', { timeout: 5000 });
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    let events = [];
+    for (const tryUrl of urlsToTry) {
+      await page.goto(tryUrl, {
+        waitUntil: 'networkidle2',
+        timeout: 30000
+      });
 
-    // Extract events from the page
-    const events = await page.evaluate(() => {
+      // Wait for events to load
+      await page.waitForSelector('body', { timeout: 5000 });
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      // Extract events from the page
+      events = await page.evaluate(() => {
       const results = [];
 
       // The Events Calendar uses specific classes
@@ -340,6 +350,63 @@ async function scrapeLibraryEvents(library, browser) {
 
       return results;
     });
+
+      // If we found events, stop trying alternative URLs
+      if (events.length > 0) break;
+    }
+
+    // If still 0 events, try clicking "Next Month" to navigate forward
+    if (events.length === 0) {
+      const nextBtnSelectors = [
+        '.tribe-events-c-nav__next',
+        '.tribe-events-nav-next a',
+        'a[rel="next"]',
+        '.mec-load-more-button',
+        'a[class*="next"]',
+        '.tribe-events-sub-nav .tribe-events-nav-next a'
+      ];
+      for (const sel of nextBtnSelectors) {
+        try {
+          const nextBtn = await page.$(sel);
+          if (nextBtn) {
+            await nextBtn.click();
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            events = await page.evaluate(() => {
+              const results = [];
+              const sels = ['.tribe-events-calendar-list__event', '.tribe-event', '.mec-event-article', 'article[class*="tribe"]', 'article[class*="event"]'];
+              let els = [];
+              for (const s of sels) { els = document.querySelectorAll(s); if (els.length) break; }
+              els.forEach(el => {
+                const titleEl = el.querySelector('.tribe-events-calendar-list__event-title, .tribe-event-title, .mec-event-title, h1, h2, h3, h4, a');
+                if (!titleEl) return;
+                const title = titleEl.textContent.trim();
+                const fullText = el.textContent;
+                let eventDate = '';
+                const dm = fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+\w{3,9}\s+\d{1,2}(?:,?\s+\d{4})?/i) || fullText.match(/\w{3,9}\s+\d{1,2},?\s+\d{4}/i);
+                if (dm) eventDate = dm[0];
+                let time = '';
+                const tm = fullText.match(/\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)\s*[–-]\s*\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)/i) || fullText.match(/\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)/i);
+                if (tm) time = tm[0];
+                const descEl = el.querySelector('.tribe-events-calendar-list__event-description, .tribe-event-description, .mec-event-description, p');
+                const locationEl = el.querySelector('.tribe-events-venue-title, .mec-event-venue, [class*="venue"]');
+                if (title && eventDate) {
+                  results.push({
+                    name: title,
+                    eventDate: time ? eventDate + ' ' + time : eventDate,
+                    venue: locationEl?.textContent?.trim() || '',
+                    description: descEl?.textContent?.trim() || '',
+                    url: el.querySelector('a[href*="event"]')?.href || '',
+                    audience: ''
+                  });
+                }
+              });
+              return results;
+            });
+            if (events.length > 0) break;
+          }
+        } catch (e) { /* next selector */ }
+      }
+    }
 
     console.log(`   Found ${events.length} events`);
 

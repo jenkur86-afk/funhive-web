@@ -6,17 +6,19 @@
  * Scrapes events from libraries using CivicEngage calendar system
  * CivicEngage is a government website platform with built-in event calendars
  *
- * COVERAGE (8 library systems in VA & NC):
+ * ACTIVE (2 library systems):
  * VA:
- * - Newport News Public Library System (Newport News, VA) - 180,000 population
- * - Danville Public Library (Danville, VA) - 45,000 population
  * - Colonial Heights Public Library (Colonial Heights, VA) - 17,000 population
- * - Culpeper County Library (Culpeper, VA) - 55,000 population
- * - Hampton Public Library (Hampton, VA) - 135,000 population
- * - Mary Riley Styles Public Library (Falls Church, VA) - 15,000 population
- * - Radford Public Library (Radford, VA) - 18,000 population
  * NC:
- * - Onslow County Public Library (Jacksonville, NC) - 216,000 population (NEW)
+ * - Onslow County Public Library (Jacksonville, NC) - 216,000 population
+ *
+ * DISABLED:
+ * - Newport News (moved to library.nnva.gov — now in WordPress-VA scraper)
+ * - Danville (calendar deactivated)
+ * - Culpeper (moved to cclva.org — now in WordPress-VA scraper)
+ * - Hampton (Cloudflare block, no library CID — covered by libcal-VA)
+ * - Falls Church / Mary Riley Styles (no family events)
+ * - Radford (no library CID, returns general city calendar)
  *
  * Usage:
  *   node functions/scrapers/scraper-civicengage-libraries-VA.js
@@ -44,15 +46,16 @@ const LIBRARY_SYSTEMS = [
   //   city: 'Newport News',
   //   zipCode: '23601'
   // },
-  {
-    name: 'Danville Public Library',
-    url: 'https://www.danville-va.gov/calendar.aspx?CID=66',
-    county: 'Danville',
-    state: 'VA',
-    website: 'https://www.danville-va.gov/2467/Public-Library',
-    city: 'Danville',
-    zipCode: '24541'
-  },
+  // Danville Public Library: DISABLED — library calendar deactivated
+  // {
+  //   name: 'Danville Public Library',
+  //   url: 'https://www.danville-va.gov/calendar.aspx?CID=66',
+  //   county: 'Danville',
+  //   state: 'VA',
+  //   website: 'https://www.danville-va.gov/2467/Public-Library',
+  //   city: 'Danville',
+  //   zipCode: '24541'
+  // },
   {
     name: 'Colonial Heights Public Library',
     url: 'https://colonialheightsva.gov/calendar.aspx?CID=25',
@@ -62,47 +65,54 @@ const LIBRARY_SYSTEMS = [
     city: 'Colonial Heights',
     zipCode: '23834'
   },
-  {
-    name: 'Culpeper County Library',
-    url: 'https://www.culpepercounty.gov/calendar.aspx?CID=47',
-    county: 'Culpeper',
-    state: 'VA',
-    website: 'https://www.culpepercounty.gov/204/Library',
-    city: 'Culpeper',
-    zipCode: '22701'
-  },
-  {
-    name: 'Hampton Public Library',
-    url: 'https://www.hampton.gov/calendar.aspx',
-    county: 'Hampton',
-    state: 'VA',
-    website: 'https://www.hampton.gov/1264/Public-Library',
-    city: 'Hampton',
-    zipCode: '23669'
-  },
-  {
-    name: 'Mary Riley Styles Public Library',
-    url: 'https://www.fallschurchva.gov/calendar.aspx?CID=26',
-    county: 'Falls Church',
-    state: 'VA',
-    website: 'https://www.fallschurchva.gov/239/Library',
-    city: 'Falls Church',
-    zipCode: '22046'
-  },
-  {
-    name: 'Radford Public Library',
-    url: 'https://www.radfordva.gov/calendar.aspx',
-    county: 'Radford',
-    state: 'VA',
-    website: 'https://www.radfordva.gov/189/Public-Library',
-    city: 'Radford',
-    zipCode: '24141'
-  },
+  // Culpeper County Library: MOVED to cclva.org — no longer on CivicEngage
+  // Now scraped by WordPress-VA scraper at https://www.cclva.org/events/upcoming
+  // {
+  //   name: 'Culpeper County Library',
+  //   url: 'https://www.culpepercounty.gov/calendar.aspx?CID=47',
+  //   county: 'Culpeper',
+  //   state: 'VA',
+  //   website: 'https://www.culpepercounty.gov/204/Library',
+  //   city: 'Culpeper',
+  //   zipCode: '22701'
+  // },
+  // Hampton Public Library: DISABLED — hampton.gov/calendar.aspx returns Cloudflare block
+  // and has no library-specific CID. Hampton libraries are covered by libcal-VA scraper.
+  // {
+  //   name: 'Hampton Public Library',
+  //   url: 'https://www.hampton.gov/calendar.aspx',
+  //   county: 'Hampton',
+  //   state: 'VA',
+  //   website: 'https://www.hampton.gov/1264/Public-Library',
+  //   city: 'Hampton',
+  //   zipCode: '23669'
+  // },
+  // Mary Riley Styles / Falls Church: DISABLED — no family events (adult programming only)
+  // {
+  //   name: 'Mary Riley Styles Public Library',
+  //   url: 'https://www.fallschurchva.gov/calendar.aspx?CID=26',
+  //   county: 'Falls Church',
+  //   state: 'VA',
+  //   website: 'https://www.fallschurchva.gov/239/Library',
+  //   city: 'Falls Church',
+  //   zipCode: '22046'
+  // },
+  // Radford Public Library: DISABLED — no library-specific CID, returns 0 events
+  // radfordva.gov/calendar.aspx loads general city calendar, not library events
+  // {
+  //   name: 'Radford Public Library',
+  //   url: 'https://www.radfordva.gov/calendar.aspx',
+  //   county: 'Radford',
+  //   state: 'VA',
+  //   website: 'https://www.radfordva.gov/189/Public-Library',
+  //   city: 'Radford',
+  //   zipCode: '24141'
+  // },
 
   // NORTH CAROLINA
   {
     name: 'Onslow County Public Library',
-    url: 'https://www.onslowcountync.gov/calendar.aspx?CID=58',
+    url: 'https://www.onslowcountync.gov/1640/Family-Programs-Events',
     county: 'Onslow',
     state: 'NC',
     website: 'https://www.onslowcountync.gov/library',
@@ -111,32 +121,8 @@ const LIBRARY_SYSTEMS = [
   }
 ];
 
-// Geocode address
-async function geocodeAddress(address) {
-  try {
-    const response = await axios.get('https://nominatim.openstreetmap.org/search', {
-      params: {
-        q: address,
-        format: 'json',
-        limit: 1,
-        countrycodes: 'us'
-      },
-      headers: {
-        'User-Agent': 'FunHive/1.0'
-      }
-    });
-
-    if (response.data && response.data.length > 0) {
-      return {
-        latitude: parseFloat(response.data[0].lat),
-        longitude: parseFloat(response.data[0].lon)
-      };
-    }
-  } catch (error) {
-    console.error('Geocoding error:', error.message);
-  }
-  return null;
-}
+// Use shared geocoding helper with caching + rate limiting instead of raw Nominatim calls
+const { geocodeWithFallback } = require('./helpers/geocoding-helper');
 
 // Parse age range from audience text
 function parseAgeRange(audienceText) {
@@ -358,10 +344,17 @@ async function scrapeLibraryEvents(library, browser) {
           continue;
         }
 
-        // Try to geocode location
+        // Try to geocode location using shared helper (cached + rate-limited)
         let coordinates = null;
         if (event.venue) {
-          coordinates = await geocodeAddress(`${event.venue}, ${library.city}, ${library.county} County, ${library.state}`);
+          coordinates = await geocodeWithFallback(`${event.venue}, ${library.city}, ${library.county} County, ${library.state}`, {
+            city: library.city,
+            zipCode: library.zipCode,
+            state: library.state,
+            county: library.county,
+            venueName: event.venue,
+            sourceName: library.name
+          });
         }
 
         // Extract time BEFORE normalization strips it
@@ -485,7 +478,7 @@ async function scrapeLibraryEvents(library, browser) {
 async function scrapeCivicEngageLibraries() {
   console.log('\n📚 CIVICENGAGE PLATFORM SCRAPER');
   console.log('='.repeat(60));
-  console.log('Coverage: 7 libraries in VA\n');
+  console.log(`Coverage: ${LIBRARY_SYSTEMS.length} libraries in VA & NC\n`);
 
   let totalImported = 0;
   let totalSkipped = 0;

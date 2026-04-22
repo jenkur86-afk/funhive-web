@@ -25,8 +25,10 @@ const LIBRARIES = [
   { name: 'Henrico County Public Library', url: 'https://www.henricolibrary.org', eventsUrl: 'https://www.henricolibrary.org/events', city: 'Henrico', state: 'VA', zipCode: '23228', county: 'Henrico' },
   { name: 'Jefferson-Madison Regional Library', url: 'https://jmrl.org', eventsUrl: 'https://jmrl.org/events', city: 'Charlottesville', state: 'VA', zipCode: '22902', county: 'Charlottesville' },
   { name: 'Manassas Park City Library', url: 'https://www.manassasparkcitylibrary.org', eventsUrl: 'https://www.manassasparkcitylibrary.org/events', city: 'Manassas Park', state: 'VA', zipCode: '20111', county: 'Manassas Park' },
-  { name: 'Falls Church Library', url: 'https://www.fallschurchva.gov/library', eventsUrl: 'https://www.fallschurchva.gov/library/events', city: 'Falls Church', state: 'VA', zipCode: '22046', county: 'Falls Church' },
-  { name: 'Harrisonburg-Rockingham Public Library', url: 'https://www.hrbpl.org', eventsUrl: 'https://www.hrbpl.org/events', city: 'Harrisonburg', state: 'VA', zipCode: '22801', county: 'Harrisonburg' },
+  { name: 'Newport News Public Library', url: 'https://library.nnva.gov', eventsUrl: 'https://library.nnva.gov/264/Events-Calendar', city: 'Newport News', state: 'VA', zipCode: '23601', county: 'Newport News' },
+  { name: 'Culpeper County Library', url: 'https://www.cclva.org', eventsUrl: 'https://www.cclva.org/events/upcoming', city: 'Culpeper', state: 'VA', zipCode: '22701', county: 'Culpeper' },
+  // Falls Church: no family events (adult programming only)
+  // Harrisonburg-Rockingham: DNS failure (ERR_NAME_NOT_RESOLVED) — hrbpl.org appears defunct
 ];
 
 const SCRAPER_NAME = 'wordpress-VA';
@@ -111,47 +113,78 @@ async function scrapeGenericEvents() {
         const events = [];
         const seen = new Set();
 
-        // Strategy 1: Look for structured event containers with BOTH title AND date
-        const eventCards = document.querySelectorAll(
-          '.event-card, .event-item, .event-listing, .event-row, ' +
-          '[class*="event-card"], [class*="event-item"], [class*="event-listing"], ' +
-          '.views-row, .view-content .views-row, ' +
-          'article.event, article[class*="event"], ' +
-          '.tribe-events-single, .tribe_events, .type-tribe_events'
-        );
+        function addEvent(title, date, description, url, ageRange) {
+          if (!title || title.length < 4) return;
+          const key = title.toLowerCase().trim();
+          if (seen.has(key)) return;
+          seen.add(key);
+          events.push({
+            title: title.trim(),
+            date: date || '',
+            description: (description || '').substring(0, 500),
+            url: url || '',
+            ageRange: ageRange || '',
+            location: libName,
+            venueName: libName
+          });
+        }
 
-        eventCards.forEach(card => {
-          const titleEl = card.querySelector('h2, h3, h4, [class*="title"] a, [class*="title"], .field-name-title a, .field-name-title');
-          const dateEl = card.querySelector('time, [class*="date"], .field-name-field-date, [datetime]');
-          const descEl = card.querySelector('[class*="description"], [class*="summary"], [class*="teaser"], .field-name-body p');
-          const linkEl = card.querySelector('a[href*="event"], a[href*="program"], h2 a, h3 a, [class*="title"] a');
-          const ageEl = [
-            card.querySelector('[class*="audience"]'),
-            card.querySelector('[class*="age-group"]'),
-            card.querySelector('[class*="category"]')
-          ].find(el => el && el.textContent.trim().length > 0 && el.textContent.trim().length < 80);
-
-          if (titleEl && titleEl.textContent.trim()) {
-            const title = titleEl.textContent.trim();
-            const key = title.toLowerCase();
-            if (seen.has(key)) return;
-            seen.add(key);
-            events.push({
-              title: title,
-              date: dateEl ? dateEl.textContent.trim() : (dateEl && dateEl.getAttribute('datetime') ? dateEl.getAttribute('datetime') : ''),
-              description: descEl ? descEl.textContent.trim().substring(0, 500) : '',
-              url: linkEl ? linkEl.href : '',
-              ageRange: ageEl ? ageEl.textContent.trim() : '',
-              location: libName,
-              venueName: libName
-            });
+        // Strategy 1: Tribe Events (The Events Calendar WordPress plugin - very common)
+        document.querySelectorAll(
+          '.tribe-events-single, .tribe_events, .type-tribe_events, ' +
+          '.tribe-events-list .tribe-events-loop .type-tribe_events, ' +
+          '.tribe-events-calendar td[class*="tribe-events-has-events"], ' +
+          '.tribe-common-g-row'
+        ).forEach(card => {
+          const titleEl = card.querySelector('.tribe-events-list-event-title a, .tribe-event-url a, h2 a, h3 a, .tribe-events-title a, [class*="title"] a');
+          const dateEl = card.querySelector('.tribe-event-schedule-details, time, [datetime], abbr[class*="tribe"]');
+          if (titleEl) {
+            const date = dateEl ? (dateEl.getAttribute('datetime') || dateEl.textContent.trim()) : '';
+            addEvent(titleEl.textContent, date, '', titleEl.href, '');
           }
         });
 
-        // Strategy 2: If strategy 1 found very few events, try broader but still paired title+date
+        // Strategy 2: Look for structured event containers with BOTH title AND date
+        if (events.length < 3) {
+          const eventCards = document.querySelectorAll(
+            '.event-card, .event-item, .event-listing, .event-row, ' +
+            '[class*="event-card"], [class*="event-item"], [class*="event-listing"], ' +
+            '.views-row, .view-content .views-row, ' +
+            'article.event, article[class*="event"]'
+          );
+
+          eventCards.forEach(card => {
+            const titleEl = card.querySelector('h2, h3, h4, [class*="title"] a, [class*="title"], .field-name-title a, .field-name-title');
+            const dateEl = card.querySelector('time, [class*="date"], .field-name-field-date, [datetime]');
+            const descEl = card.querySelector('[class*="description"], [class*="summary"], [class*="teaser"], .field-name-body p');
+            const linkEl = card.querySelector('a[href*="event"], a[href*="program"], h2 a, h3 a, [class*="title"] a');
+            const ageEl = [
+              card.querySelector('[class*="audience"]'),
+              card.querySelector('[class*="age-group"]'),
+              card.querySelector('[class*="category"]')
+            ].find(el => el && el.textContent.trim().length > 0 && el.textContent.trim().length < 80);
+
+            if (titleEl && titleEl.textContent.trim()) {
+              const date = dateEl ? (dateEl.getAttribute('datetime') || dateEl.textContent.trim()) : '';
+              addEvent(titleEl.textContent, date, descEl ? descEl.textContent.trim() : '', linkEl ? linkEl.href : '', ageEl ? ageEl.textContent.trim() : '');
+            }
+          });
+        }
+
+        // Strategy 3: LibCal-style widgets (some libraries embed LibCal on WordPress pages)
+        if (events.length < 3) {
+          document.querySelectorAll('.s-lc-ea-tbd, .s-lc-ea-ebd, [id*="s-lc-ea"], .lc_calendar_event').forEach(card => {
+            const titleEl = card.querySelector('.s-lc-ea-ttl a, .s-lc-ea-ttl, a[class*="title"]');
+            const dateEl = card.querySelector('.s-lc-ea-dt, .s-lc-ea-dtb, [class*="date"]');
+            if (titleEl) {
+              addEvent(titleEl.textContent, dateEl ? dateEl.textContent.trim() : '', '', titleEl.href || '', '');
+            }
+          });
+        }
+
+        // Strategy 4: Broader search — any container with paired title + date
         if (events.length < 3) {
           document.querySelectorAll('[class*="event"]:not(nav):not(header):not(footer)').forEach(card => {
-            // Skip cards that are clearly navigation, filters, or calendar grids
             if (card.closest('nav, header, footer, [class*="filter"], [class*="search"], [class*="calendar-grid"], [class*="mini-cal"]')) return;
             if (card.tagName === 'NAV' || card.tagName === 'HEADER' || card.tagName === 'FOOTER') return;
 
@@ -159,19 +192,22 @@ async function scrapeGenericEvents() {
             const dateEl = card.querySelector('time, [datetime], [class*="date"]:not([class*="calendar"])');
 
             if (titleEl && dateEl && titleEl.textContent.trim().length > 4) {
-              const title = titleEl.textContent.trim();
-              const key = title.toLowerCase();
-              if (seen.has(key)) return;
-              seen.add(key);
-              events.push({
-                title: title,
-                date: dateEl.getAttribute('datetime') || dateEl.textContent.trim(),
-                description: '',
-                url: titleEl.querySelector('a') ? titleEl.querySelector('a').href : '',
-                ageRange: '',
-                location: libName,
-                venueName: libName
-              });
+              addEvent(titleEl.textContent, dateEl.getAttribute('datetime') || dateEl.textContent.trim(), '', titleEl.querySelector('a') ? titleEl.querySelector('a').href : '', '');
+            }
+          });
+        }
+
+        // Strategy 5: Last resort — scan all links that look like event detail pages
+        if (events.length < 3) {
+          document.querySelectorAll('a[href*="/event"], a[href*="/program"], a[href*="/calendar/"]').forEach(link => {
+            if (link.closest('nav, header, footer')) return;
+            const title = link.textContent.trim();
+            if (title.length > 4 && title.length < 200) {
+              // Look for a nearby date element
+              const parent = link.closest('li, tr, div, article');
+              const dateEl = parent ? parent.querySelector('time, [datetime], [class*="date"]') : null;
+              const date = dateEl ? (dateEl.getAttribute('datetime') || dateEl.textContent.trim()) : '';
+              addEvent(title, date, '', link.href, '');
             }
           });
         }
@@ -179,12 +215,14 @@ async function scrapeGenericEvents() {
         return events;
       }, library.name);
 
-      // Server-side filtering: apply strict junk and date validation
+      // Server-side filtering: apply junk title check; accept events even without date
+      // (saveEventsWithGeocoding will handle date normalization/rejection downstream)
       const validEvents = libraryEvents.filter(event => {
         if (isJunkTitle(event.title)) {
           return false;
         }
-        if (!isValidDateString(event.date)) {
+        // Accept events with any date string OR a valid URL (detail pages have dates)
+        if (!event.date && !event.url) {
           return false;
         }
         return true;

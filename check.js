@@ -1,0 +1,1 @@
+pbpaste > check.js && node check.js && rm check.js

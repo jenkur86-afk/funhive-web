@@ -1,0 +1,643 @@
+diff --git a/scrapers/local-scraper-runner.js b/scrapers/local-scraper-runner.js
+index 6f91883..326be88 100644
+--- a/scrapers/local-scraper-runner.js
++++ b/scrapers/local-scraper-runner.js
+@@ -33,7 +33,14 @@ const {
+   getOSMScrapersForDay,
+   getGroupCounts,
+   getMacaroniGroupCounts,
+-  getMacaroniSiteCounts
++  getMacaroniSiteCounts,
++  // Region-aware functions
++  getActiveStates,
++  getScrapersForGroupByRegion,
++  getMacaroniScrapersForGroupByRegion,
++  getOSMScrapersForDayByRegion,
++  getRegionSummary,
++  loadRegionConfig
+ } = require('./scraper-registry');
+ 
+ // ============================================================================
+@@ -204,11 +211,18 @@ async function logToFirestore(scraperName, status, stats, error, executionTime)
+ // ============================================================================
+ 
+ async function runScraperGroup(group, options = {}) {
+-  const scrapers = getScrapersForGroup(group);
++  // Use region filtering if active (respects --region flag or region-config.json)
++  const regionFilter = options.regionFilter || undefined;
++  const scrapers = regionFilter
++    ? getScrapersForGroupByRegion(group, { regionFilter })
++    : getScrapersForGroupByRegion(group);
+   const scraperNames = Object.keys(scrapers);
+ 
++  const activeStates = regionFilter || getActiveStates();
++  const regionLabel = activeStates ? ` [${activeStates.join(', ')}]` : ' [ALL STATES]';
++
+   log(`\n${'='.repeat(60)}`);
+-  log(`📋 Running Group ${group} scrapers (${scraperNames.length} total)`);
++  log(`📋 Running Group ${group} scrapers (${scraperNames.length} total)${regionLabel}`);
+   log(`${'='.repeat(60)}\n`);
+ 
+   const results = {
+@@ -279,7 +293,10 @@ async function runScraperGroup(group, options = {}) {
+ }
+ 
+ async function runMacaroniGroup(group, options = {}) {
+-  const scrapers = getMacaroniScrapersForGroup(group);
++  const regionFilter = options.regionFilter || undefined;
++  const scrapers = regionFilter
++    ? getMacaroniScrapersForGroupByRegion(group, { regionFilter })
++    : getMacaroniScrapersForGroupByRegion(group);
+   const scraperNames = Object.keys(scrapers);
+ 
+   if (scraperNames.length === 0) {
+@@ -421,6 +438,8 @@ async function main() {
+   const options = {
+     group: null,
+     scraper: null,
++    region: null,        // Region filter: 'dmv', 'eastern', 'central', 'western'
++    regionFilter: null,  // Resolved state codes for the region
+     osm: false,
+     macaroni: false,
+     macaroniOnly: false,
+@@ -436,6 +455,8 @@ async function main() {
+       options.group = parseInt(args[++i]);
+     } else if (arg === '--scraper' && args[i + 1]) {
+       options.scraper = args[++i];
++    } else if (arg === '--region' && args[i + 1]) {
++      options.region = args[++i].toLowerCase();
+     } else if (arg === '--osm') {
+       options.osm = true;
+     } else if (arg === '--macaroni') {
+@@ -448,15 +469,33 @@ async function main() {
+       options.resume = true;
+     } else if (arg === '--dry-run') {
+       options.dryRun = true;
++    } else if (arg === '--regions' || arg === '--list-regions') {
++      // Show region summary and exit
++      const summary = getRegionSummary();
++      const activeStates = getActiveStates();
++      console.log('\n🌎 FunHive Region Configuration\n');
++      console.log(`Active states: ${activeStates ? activeStates.join(', ') : 'ALL'}\n`);
++      for (const [key, info] of Object.entries(summary)) {
++        const status = info.active ? '✅ ACTIVE' : '⏸️  INACTIVE';
++        console.log(`  ${status}  ${key.toUpperCase()} - ${info.name}`);
++        console.log(`           Phase ${info.phase} | ${info.states} states | ${info.scrapers} scrapers + ${info.macaroni} Macaroni Kid = ${info.total} total`);
++      }
++      console.log('');
++      process.exit(0);
+     } else if (arg === '--help' || arg === '-h') {
+       const mkCounts = getMacaroniGroupCounts();
+       const mkSites = getMacaroniSiteCounts();
++      const activeStates = getActiveStates();
+       console.log(`
+ FunHive Local Scraper Runner
+ 
+ Usage:
+-  node local-scraper-runner.js                     # Run today's group (including Macaroni Kid)
+-  node local-scraper-runner.js --group 1           # Run specific group (1, 2, or 3)
++  node local-scraper-runner.js                     # Run today's group (active regions only)
++  node local-scraper-runner.js --group 1           # Run specific group (active regions only)
++  node local-scraper-runner.js --region dmv        # Run only DMV scrapers (DC, MD, VA)
++  node local-scraper-runner.js --region eastern    # Run only Eastern US scrapers
++  node local-scraper-runner.js --region all        # Override: run ALL states regardless of config
++  node local-scraper-runner.js --regions           # Show region configuration summary
+   node local-scraper-runner.js --scraper LibCal-MD # Run specific scraper
+   node local-scraper-runner.js --macaroni          # Run only Macaroni Kid for today's group
+   node local-scraper-runner.js --no-macaroni       # Run today's group WITHOUT Macaroni Kid
+@@ -465,6 +504,8 @@ Usage:
+   node local-scraper-runner.js --resume            # Resume from last checkpoint
+   node local-scraper-runner.js --dry-run           # Preview without running
+ 
++Active Regions: ${activeStates ? activeStates.join(', ') : 'ALL STATES'}
++
+ Groups (each scraper runs every 3rd day):
+   Group 1: Days 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31
+   Group 2: Days 2, 5, 8, 11, 14, 17, 20, 23, 26, 29
+@@ -478,6 +519,23 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
+     }
+   }
+ 
++  // Resolve --region flag into state filter
++  if (options.region) {
++    if (options.region === 'all') {
++      options.regionFilter = null; // null = no filtering
++      log('🌎 Region override: running ALL states');
++    } else {
++      const config = loadRegionConfig();
++      if (config && config.regions[options.region]) {
++        options.regionFilter = config.regions[options.region].states;
++        log(`🌎 Region filter: ${options.region.toUpperCase()} → ${options.regionFilter.join(', ')}`);
++      } else {
++        log(`❌ Unknown region '${options.region}'. Use --regions to see available regions.`, 'error');
++        process.exit(1);
++      }
++    }
++  }
++
+   const startTime = Date.now();
+ 
+   log(`\n${'='.repeat(60)}`);
+diff --git a/scrapers/scraper-registry.js b/scrapers/scraper-registry.js
+index 0f33f2f..7418e47 100644
+--- a/scrapers/scraper-registry.js
++++ b/scrapers/scraper-registry.js
+@@ -4,8 +4,75 @@
+  * Used by local-scraper-runner.js to execute scrapers locally
+  *
+  * Created: January 2026 - Cloud-to-Local Migration
++ * Updated: April 2026 - Regional expansion support (DMV → Eastern → Central → Western)
+  */
+ 
++const fs = require('fs');
++const path = require('path');
++
++// ============================================================================
++// REGION CONFIGURATION
++// ============================================================================
++
++const REGION_CONFIG_PATH = path.join(__dirname, 'region-config.json');
++
++function loadRegionConfig() {
++  try {
++    return JSON.parse(fs.readFileSync(REGION_CONFIG_PATH, 'utf-8'));
++  } catch (err) {
++    console.warn('[WARN] Could not load region-config.json, defaulting to all states active');
++    return null;
++  }
++}
++
++/**
++ * Get the list of currently active states based on region-config.json
++ * @returns {string[]} Array of active state codes (e.g., ['DC', 'MD', 'VA'])
++ */
++function getActiveStates() {
++  const config = loadRegionConfig();
++  if (!config) return null; // null means "run everything" (backwards compatible)
++
++  const activeStates = [];
++  for (const regionKey of config.activeRegions || []) {
++    const region = config.regions[regionKey];
++    if (region && region.active) {
++      activeStates.push(...region.states);
++    }
++  }
++  return activeStates;
++}
++
++/**
++ * Get the region name for a given state code
++ * @param {string} stateCode - Two-letter state code
++ * @returns {string|null} Region key (dmv, eastern, central, western) or null
++ */
++function getRegionForState(stateCode) {
++  const config = loadRegionConfig();
++  if (!config) return null;
++
++  for (const [regionKey, region] of Object.entries(config.regions)) {
++    if (region.states.includes(stateCode)) {
++      return regionKey;
++    }
++  }
++  return null;
++}
++
++/**
++ * Check if a scraper should run based on active regions
++ * @param {Object} scraperConfig - Scraper config object with state field
++ * @param {string[]|null} activeStates - Active states (null = run all)
++ * @returns {boolean}
++ */
++function isScraperActive(scraperConfig, activeStates) {
++  if (!activeStates) return true; // No region filtering
++  if (!scraperConfig.state) return true; // No state info = run it
++  if (scraperConfig.state === 'Multi') return true; // Multi-state scrapers always run (they filter internally)
++  return activeStates.includes(scraperConfig.state);
++}
++
+ // Day groups for 3-day rotation schedule
+ // Group 1: Days 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31
+ // Group 2: Days 2, 5, 8, 11, 14, 17, 20, 23, 26, 29
+@@ -1343,6 +1410,102 @@ function getMacaroniSiteCounts() {
+   return counts;
+ }
+ 
++// ============================================================================
++// REGION-AWARE GETTERS
++// ============================================================================
++
++/**
++ * Get scrapers for a group, filtered by active regions
++ * @param {number} group - Group number (1, 2, or 3)
++ * @param {Object} options - { regionFilter: string[]|null } override active states
++ * @returns {Object} Filtered scrapers
++ */
++function getScrapersForGroupByRegion(group, options = {}) {
++  const activeStates = options.regionFilter || getActiveStates();
++  const result = {};
++  for (const [name, config] of Object.entries(SCRAPERS)) {
++    if (config.group === group && isScraperActive(config, activeStates)) {
++      result[name] = config;
++    }
++  }
++  return result;
++}
++
++/**
++ * Get Macaroni Kid scrapers for a group, filtered by active regions
++ * @param {number} group - Group number (1, 2, or 3)
++ * @param {Object} options - { regionFilter: string[]|null } override active states
++ * @returns {Object} Filtered Macaroni Kid scrapers
++ */
++function getMacaroniScrapersForGroupByRegion(group, options = {}) {
++  const activeStates = options.regionFilter || getActiveStates();
++  const result = {};
++  for (const [name, config] of Object.entries(MACARONI_SCRAPERS)) {
++    if (config.group === group && isScraperActive(config, activeStates)) {
++      result[name] = config;
++    }
++  }
++  return result;
++}
++
++/**
++ * Get OSM scrapers for a day, filtered by active regions
++ * @param {number} dayOfMonth - Day of the month (1-10)
++ * @param {Object} options - { regionFilter: string[]|null } override active states
++ * @returns {Object} Filtered OSM scrapers
++ */
++function getOSMScrapersForDayByRegion(dayOfMonth, options = {}) {
++  const activeStates = options.regionFilter || getActiveStates();
++  if (!activeStates) return getOSMScrapersForDay(dayOfMonth);
++
++  const result = {};
++  for (const [name, config] of Object.entries(OSM_SCRAPERS)) {
++    if (config.day === dayOfMonth) {
++      // OSM batches have a states array - check if any overlap with active states
++      const batchStates = config.states || [];
++      const activeInBatch = batchStates.filter(s => activeStates.includes(s));
++      if (activeInBatch.length > 0) {
++        result[name] = { ...config, activeStates: activeInBatch };
++      }
++    }
++  }
++  return result;
++}
++
++/**
++ * Get a summary of scrapers by region for display
++ * @returns {Object} { dmv: { scrapers: N, macaroni: N }, eastern: { ... }, ... }
++ */
++function getRegionSummary() {
++  const config = loadRegionConfig();
++  if (!config) return null;
++
++  const summary = {};
++  for (const [regionKey, region] of Object.entries(config.regions)) {
++    const states = region.states;
++    let scraperCount = 0;
++    let macaroniCount = 0;
++
++    for (const cfg of Object.values(SCRAPERS)) {
++      if (states.includes(cfg.state)) scraperCount++;
++    }
++    for (const cfg of Object.values(MACARONI_SCRAPERS)) {
++      if (states.includes(cfg.state)) macaroniCount++;
++    }
++
++    summary[regionKey] = {
++      name: region.name,
++      active: region.active,
++      phase: region.phase,
++      states: states.length,
++      scrapers: scraperCount,
++      macaroni: macaroniCount,
++      total: scraperCount + macaroniCount
++    };
++  }
++  return summary;
++}
++
+ module.exports = {
+   SCRAPERS,
+   MACARONI_SCRAPERS,
+@@ -1355,5 +1518,14 @@ module.exports = {
+   getAllMacaroniScraperNames,
+   getGroupCounts,
+   getMacaroniGroupCounts,
+-  getMacaroniSiteCounts
++  getMacaroniSiteCounts,
++  // Region-aware functions
++  getActiveStates,
++  getRegionForState,
++  isScraperActive,
++  getScrapersForGroupByRegion,
++  getMacaroniScrapersForGroupByRegion,
++  getOSMScrapersForDayByRegion,
++  getRegionSummary,
++  loadRegionConfig
+ };
+diff --git a/scrapers/helpers/supabase-adapter.js b/scrapers/helpers/supabase-adapter.js
+index b832c98..50621ef 100644
+--- a/scrapers/helpers/supabase-adapter.js
++++ b/scrapers/helpers/supabase-adapter.js
+@@ -21,6 +21,7 @@
+ const { createClient } = require('@supabase/supabase-js');
+ require('dotenv').config();
+ const crypto = require('crypto');
++const { normalizeDateString } = require('./date-normalization-helper');
+ 
+ // Initialize Supabase client with service role key (bypasses RLS)
+ const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+@@ -98,8 +99,16 @@ function _fmt12(h, m, ap) {
+  */
+ function _isDateInPast(dateStr) {
+   if (!dateStr || typeof dateStr !== 'string') return false;
+-  const parsed = new Date(dateStr);
+-  if (isNaN(parsed.getTime())) return false; // can't parse → don't reject
++  // Try direct parse first
++  let parsed = new Date(dateStr);
++  if (isNaN(parsed.getTime())) {
++    // Try normalizing fuzzy dates like "Sat, Apr 12 10am-2pm" → "April 12, 2026"
++    const normalized = normalizeDateString(dateStr);
++    if (normalized) {
++      parsed = new Date(normalized);
++    }
++    if (isNaN(parsed.getTime())) return false; // can't parse → don't reject
++  }
+   return _isDateObjInPast(parsed);
+ }
+ 
+diff --git a/src/app/activities/page.tsx b/src/app/activities/page.tsx
+index 1c70976..0789db5 100644
+--- a/src/app/activities/page.tsx
++++ b/src/app/activities/page.tsx
+@@ -69,11 +69,22 @@ function InlinePillFilter({
+           <button
+             key={option.value}
+             onClick={() => onToggle(option.value)}
+-            className={`flex items-center gap-1.5 px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition ${
++            className={`flex items-center gap-1.5 px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition border ${
+               isSelected
+-                ? 'bg-amber-500 text-white'
+-                : 'bg-amber-50 text-amber-700 hover:bg-amber-100'
++                ? 'text-white border-transparent'
++                : showIcons && icon
++                ? 'bg-white border-gray-200 hover:border-current'
++                : 'bg-amber-50 text-amber-700 hover:bg-amber-100 border-transparent'
+             }`}
++            style={
++              isSelected && icon
++                ? { backgroundColor: icon.color }
++                : !isSelected && icon
++                ? { color: icon.color }
++                : isSelected
++                ? { backgroundColor: '#f59e0b' }
++                : undefined
++            }
+           >
+             {icon && (
+               <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+@@ -208,38 +219,44 @@ export default function VenuesPage() {
+     return venue.is_free === true
+   }
+ 
++  // Helper: extract a numeric [low, high] from an age string like "3-5", "Ages 6 to 12", "0-2 yrs"
++  const parseAgeNumbers = (text: string): [number, number] | null => {
++    const m = text.match(/(\d{1,2})\s*[-–to]+\s*(\d{1,2})/)
++    if (m) return [parseInt(m[1]), parseInt(m[2])]
++    const s = text.match(/(\d{1,2})\s*\+/)
++    if (s) return [parseInt(s[1]), 18]
++    return null
++  }
++
++  const AGE_BUCKETS: Record<string, { low: number; high: number; keywords: string[] }> = {
++    toddlers: { low: 0, high: 3, keywords: ['toddler', 'baby', 'babies', 'infant', 'preschool', 'pre-k', 'prek', 'lap sit', 'newborn'] },
++    kids: { low: 4, high: 12, keywords: ['kid', 'kids', 'child', 'children', 'elementary', 'tween', 'grade'] },
++    teens: { low: 13, high: 18, keywords: ['teen', 'teens', 'adolescent', 'young adult', 'middle school', 'high school'] },
++  }
++
+   // Helper function to check age range match (multi-select)
+   const matchesAgeRange = (venue: any): boolean => {
+     if (selectedAgeRanges.length === 0) return true
+ 
+     const ageRange = venue.age_range?.toLowerCase() || ''
++    const content = `${venue.name || ''} ${venue.description || ''} ${ageRange}`.toLowerCase()
++
++    // "All Ages" or "Family" matches every filter
++    if (ageRange.includes('all ages') || ageRange.includes('family')) return true
+ 
+-    return selectedAgeRanges.some((range) => {
+-      switch (range) {
+-        case 'toddlers':
+-          return (
+-            ageRange.includes('toddler') ||
+-            ageRange.includes('0-3') ||
+-            ageRange.includes('baby') ||
+-            ageRange.includes('infant')
+-          )
+-        case 'kids':
+-          return (
+-            ageRange.includes('kid') ||
+-            ageRange.includes('4-12') ||
+-            ageRange.includes('child') ||
+-            (venue.min_age !== null && venue.max_age !== null && venue.min_age <= 12)
+-          )
+-        case 'teens':
+-          return (
+-            ageRange.includes('teen') ||
+-            ageRange.includes('13-18') ||
+-            ageRange.includes('adolescent') ||
+-            (venue.min_age !== null && venue.min_age <= 18)
+-          )
+-        default:
+-          return true
++    return selectedAgeRanges.some((filterKey) => {
++      const bucket = AGE_BUCKETS[filterKey]
++      if (!bucket) return true
++
++      // 1) Try numeric overlap: does the venue's age range overlap the filter bucket?
++      const nums = parseAgeNumbers(ageRange) || parseAgeNumbers(content)
++      if (nums) {
++        const [evtLow, evtHigh] = nums
++        return evtLow <= bucket.high && evtHigh >= bucket.low
+       }
++
++      // 2) Keyword fallback
++      return bucket.keywords.some((kw) => content.includes(kw))
+     })
+   }
+ 
+diff --git a/src/app/events/[id]/page.tsx b/src/app/events/[id]/page.tsx
+index f704f57..1247a9c 100644
+--- a/src/app/events/[id]/page.tsx
++++ b/src/app/events/[id]/page.tsx
+@@ -120,6 +120,19 @@ export default async function EventDetailPage({ params }: EventDetailProps) {
+             </div>
+           </div>
+ 
++          {/* Age Range */}
++          {event.age_range && (
++            <div className="mb-6">
++              <div className="flex items-center gap-2 mb-2">
++                <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
++                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
++                </svg>
++                <h2 className="text-lg font-semibold text-gray-900">Ages</h2>
++              </div>
++              <p className="text-purple-700 font-medium ml-7">{event.age_range}</p>
++            </div>
++          )}
++
+           {/* About Section */}
+           {event.description && (
+             <div className="mb-6">
+diff --git a/src/app/events/page.tsx b/src/app/events/page.tsx
+index c022263..6c8f043 100644
+--- a/src/app/events/page.tsx
++++ b/src/app/events/page.tsx
+@@ -74,11 +74,22 @@ function InlinePillFilter({
+           <button
+             key={option.value}
+             onClick={() => onToggle(option.value)}
+-            className={`flex items-center gap-1.5 px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition ${
++            className={`flex items-center gap-1.5 px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition border ${
+               isSelected
+-                ? 'bg-amber-500 text-white'
+-                : 'bg-amber-50 text-amber-700 hover:bg-amber-100'
++                ? 'text-white border-transparent'
++                : showIcons && icon
++                ? 'bg-white border-gray-200 hover:border-current'
++                : 'bg-amber-50 text-amber-700 hover:bg-amber-100 border-transparent'
+             }`}
++            style={
++              isSelected && icon
++                ? { backgroundColor: icon.color }
++                : !isSelected && icon
++                ? { color: icon.color }
++                : isSelected
++                ? { backgroundColor: '#f59e0b' }
++                : undefined
++            }
+           >
+             {icon && (
+               <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+@@ -223,26 +234,46 @@ export default function EventsPage() {
+     return name.includes('free') || description.includes('free') || event.is_free === true
+   }
+ 
++  // Helper: extract a numeric [low, high] from an age string like "3-5", "Ages 6 to 12", "0-2 yrs"
++  const parseAgeNumbers = (text: string): [number, number] | null => {
++    const m = text.match(/(\d{1,2})\s*[-–to]+\s*(\d{1,2})/)
++    if (m) return [parseInt(m[1]), parseInt(m[2])]
++    // Single number like "5+" or "Ages 3 and up"
++    const s = text.match(/(\d{1,2})\s*\+/)
++    if (s) return [parseInt(s[1]), 18]
++    return null
++  }
++
++  // Filter age bucket ranges:  toddlers 0-3, kids 4-12, teens 13-18
++  const AGE_BUCKETS: Record<string, { low: number; high: number; keywords: string[] }> = {
++    toddlers: { low: 0, high: 3, keywords: ['toddler', 'baby', 'babies', 'infant', 'preschool', 'pre-k', 'prek', 'lap sit', 'newborn'] },
++    kids: { low: 4, high: 12, keywords: ['kid', 'kids', 'child', 'children', 'elementary', 'tween', 'grade'] },
++    teens: { low: 13, high: 18, keywords: ['teen', 'teens', 'adolescent', 'young adult', 'middle school', 'high school'] },
++  }
++
+   // Helper function to check age range match (multi-select)
+   const matchesAgeRange = (event: any): boolean => {
+     if (selectedAgeRanges.length === 0) return true
+ 
+-    const name = event.name?.toLowerCase() || ''
+-    const description = event.description?.toLowerCase() || ''
+     const ageRange = event.age_range?.toLowerCase() || ''
+-    const content = `${name} ${description} ${ageRange}`
+-
+-    return selectedAgeRanges.some((range) => {
+-      switch (range) {
+-        case 'toddlers':
+-          return content.includes('toddler') || content.includes('0-3') || content.includes('baby') || content.includes('infant') || content.includes('preschool')
+-        case 'kids':
+-          return content.includes('kid') || content.includes('4-12') || content.includes('child') || content.includes('elementary') || content.includes('children')
+-        case 'teens':
+-          return content.includes('teen') || content.includes('13-18') || content.includes('adolescent') || content.includes('young adult')
+-        default:
+-          return true
++    const content = `${event.name || ''} ${event.description || ''} ${ageRange}`.toLowerCase()
++
++    // "All Ages" or "Family" matches every filter
++    if (ageRange.includes('all ages') || ageRange.includes('family')) return true
++
++    return selectedAgeRanges.some((filterKey) => {
++      const bucket = AGE_BUCKETS[filterKey]
++      if (!bucket) return true
++
++      // 1) Try numeric overlap: does the event's age range overlap the filter bucket?
++      const nums = parseAgeNumbers(ageRange) || parseAgeNumbers(content)
++      if (nums) {
++        const [evtLow, evtHigh] = nums
++        return evtLow <= bucket.high && evtHigh >= bucket.low
+       }
++
++      // 2) Keyword fallback
++      return bucket.keywords.some((kw) => content.includes(kw))
+     })
+   }
+ 
+diff --git a/src/app/page.tsx b/src/app/page.tsx
+index 0a03af0..e5b9902 100644
+--- a/src/app/page.tsx
++++ b/src/app/page.tsx
+@@ -115,11 +115,21 @@ export default async function HomePage() {
+                 {(event.city || event.state) && (
+                   <p className="text-sm text-gray-400">{[event.city, event.state].filter(Boolean).join(', ')}</p>
+                 )}
+-                {event.category && (
+-                  <span className="inline-block mt-2 px-2 py-1 bg-amber-50 text-amber-700 text-xs rounded">
+-                    {event.category}
+-                  </span>
+-                )}
++                <div className="flex flex-wrap items-center gap-2 mt-2">
++                  {event.category && (
++                    <span className="inline-block px-2 py-1 bg-amber-50 text-amber-700 text-xs rounded">
++                      {event.category}
++                    </span>
++                  )}
++                  {event.age_range && (
++                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-50 text-purple-700 text-xs rounded border border-purple-100">
++                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
++                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
++                      </svg>
++                      {event.age_range}
++                    </span>
++                  )}
++                </div>
+               </Link>
+             ))
+           ) : (
+@@ -159,11 +169,21 @@ export default async function HomePage() {
+                 {(event.city || event.state) && (
+                   <p className="text-sm text-gray-400">{[event.city, event.state].filter(Boolean).join(', ')}</p>
+                 )}
+-                {event.category && (
+-                  <span className="inline-block mt-2 px-2 py-1 bg-amber-50 text-amber-700 text-xs rounded">
+-                    {event.category}
+-                  </span>
+-                )}
++                <div className="flex flex-wrap items-center gap-2 mt-2">
++                  {event.category && (
++                    <span className="inline-block px-2 py-1 bg-amber-50 text-amber-700 text-xs rounded">
++                      {event.category}
++                    </span>
++                  )}
++                  {event.age_range && (
++                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-50 text-purple-700 text-xs rounded border border-purple-100">
++                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
++                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
++                      </svg>
++                      {event.age_range}
++                    </span>
++                  )}
++                </div>
+               </Link>
+             ))
+           ) : (

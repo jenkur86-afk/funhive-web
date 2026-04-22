@@ -31,6 +31,7 @@ export default async function ActivityDetailPage({ params }: ActivityDetailProps
     .select('id, name, event_date, start_time, end_time, category, city, state')
     .eq('activity_id', activity.id)
     .not('event_date', 'is', null)
+    .eq('reported', false)
     .order('event_date', { ascending: true })
     .limit(20)
 

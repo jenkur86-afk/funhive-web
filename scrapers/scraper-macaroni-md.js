@@ -23,6 +23,7 @@ const { normalizeDateString } = require('./date-normalization-helper');
 const { parseTimeString } = require('./helpers/date-time-utils');
 const { ScraperLogger } = require('./scraper-logger');
 const { geocodeAddress: _sharedGeocodeAddress, geocodeVenue: _sharedGeocodeVenue, getCityCenterCoords, flushMacaroniGeocodeCache } = require('./helpers/macaroni-geocoding-helper');
+const { detectYodel, scrapeYodelEventUrls, extractYodelEventDetails } = require('./helpers/yodel-helper');
 
 async function geocodeAddress(address, city, zipCode) {
   return _sharedGeocodeAddress(address, city, 'MD', zipCode);
@@ -257,18 +258,34 @@ async function scrapeSite(browser, site, logger, maxEvents = 50) {
   try {
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
-    await page.goto(`${site.url}/events/calendar`, { waitUntil: 'domcontentloaded', timeout: 45000 });
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await page.goto(`${site.url}/events/calendar`, { waitUntil: 'networkidle2', timeout: 45000 });
+    // Wait for client-side JS to render event links (MacaroniKid is SPA)
+    await page.waitForSelector('a[href*="/events/"]', { timeout: 10000 }).catch(() => {});
 
     const eventUrls = await extractEventUrls(page);
     console.log(`  Found ${eventUrls.length} URLs`);
+
+    // --- Yodel platform fallback ---
+    // Some MK sites have migrated to Yodel (events.yodel.today iframe widget).
+    // When no old-format event URLs are found, check for Yodel and scrape from widget.
+    let isYodel = false;
+    if (eventUrls.length === 0) {
+      const yid = await detectYodel(page);
+      if (yid) {
+        isYodel = true;
+        console.log(`  🔄 Yodel platform detected (yid: ${yid}) — scraping widget`);
+        const yodelUrls = await scrapeYodelEventUrls(page, yid);
+        eventUrls.push(...yodelUrls);
+        console.log(`  Found ${yodelUrls.length} Yodel event URLs`);
+      }
+    }
     logger.trackFound(eventUrls.length);
 
     let imported = 0, updated = 0, skippedPast = 0, skippedFuture = 0, noLocation = 0, skippedDuplicate = 0;
 
     for (const url of eventUrls) {
       // No maxEvents limit - only limit by date (60 days)
-      const details = await extractEventDetails(page, url);
+      const details = isYodel ? await extractYodelEventDetails(page, url) : await extractEventDetails(page, url);
       if (!details || !details.eventDate) continue;
       const eventDate = new Date(details.eventDate);
       if (eventDate < today) { skippedPast++; logger.trackPastDate(); continue; }
@@ -312,9 +329,9 @@ async function scrapeSite(browser, site, logger, maxEvents = 50) {
         continue;
       }
 
-      // Check for online-only indicators in description
+      // Check for online-only indicators in description — only skip if event also has no venue/address
       const onlineIndicators = /\b(online\s+only|virtual\s+only|zoom\s+(?:meeting|call|link)|webinar|hosted?\s+(?:online|virtually)|no\s+physical\s+location)\b/i;
-      if (onlineIndicators.test(details.description || '')) {
+      if (onlineIndicators.test(details.description || '') && !details.venue && !details.address) {
         console.log(`  ⏭️ Skipping online event: ${(details.name || '').substring(0, 40)}...`);
         logger.trackInvalid();
         continue;
@@ -394,7 +411,7 @@ async function scrapeSite(browser, site, logger, maxEvents = 50) {
       let locationObj = null;
 
       // Step 1: Try address geocoding (if we have a street address)
-      if (details.address && details.city && details.zipCode) {
+      if (details.address && (details.city || details.zipCode)) {
         coords = await geocodeAddress(details.address, details.city, details.zipCode);
       }
 

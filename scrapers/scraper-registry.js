@@ -176,13 +176,7 @@ const SCRAPERS = {
     group: 2,
     state: 'WA'
   },
-  'LibCal-WV': {
-    file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js',
-    exportName: 'scrapeLibCalWV',
-    type: 'puppeteer',
-    group: 1,
-    state: 'WV'
-  },
+  // LibCal-WV removed — WV Library Commission has no events ("No events are scheduled")
 
   // ============================================================================
   // COMMUNICO PLATFORM SCRAPERS (19)

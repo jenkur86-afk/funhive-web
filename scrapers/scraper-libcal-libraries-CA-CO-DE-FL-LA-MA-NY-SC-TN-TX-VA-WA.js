@@ -131,9 +131,6 @@
  * - Arlington County Public Library
  * - Fairfax County Public Library
  *
- * WV:
- * - West Virginia Library Commission
- *
  * WA:
  * - Spokane County Library District (NEW)
  * - NCW Libraries (NEW)
@@ -1023,16 +1020,8 @@ const LIBRARY_SYSTEMS = [
     zipCode: '76102'
   },
 
-  // WEST VIRGINIA
-  {
-    name: 'West Virginia Library Commission',
-    url: 'https://wvlc.libcal.com/calendar?cid=-1&t=d',
-    county: 'Kanawha',
-    state: 'WV',
-    website: 'https://librarycommission.wv.gov',
-    city: 'Charleston',
-    zipCode: '25305'
-  },
+  // WEST VIRGINIA — removed: WV Library Commission has no events ("No events are scheduled")
+  // WV libraries are covered by scraper-wordpress-libraries-wv.js and scraper-custom-drupal-libraries-GA-NC-SC-WV.js
 
   // ALABAMA
   {
@@ -1596,7 +1585,7 @@ async function scrapeLibCalTN() { return scrapeLibCalLibraries('TN'); }
 async function scrapeLibCalTX() { return scrapeLibCalLibraries('TX'); }
 async function scrapeLibCalVA() { return scrapeLibCalLibraries('VA'); }
 async function scrapeLibCalWA() { return scrapeLibCalLibraries('WA'); }
-async function scrapeLibCalWV() { return scrapeLibCalLibraries('WV'); }
+// scrapeLibCalWV removed — WV Library Commission has no events
 
 // Run if executed directly
 if (require.main === module) {
@@ -1631,6 +1620,6 @@ module.exports = {
   scrapeLibCalTN,
   scrapeLibCalTX,
   scrapeLibCalVA,
-  scrapeLibCalWA,
-  scrapeLibCalWV
+  scrapeLibCalWA
+  // scrapeLibCalWV removed — WV Library Commission has no events
 };

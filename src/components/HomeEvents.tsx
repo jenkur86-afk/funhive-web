@@ -85,7 +85,7 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
 
         if (nearbyData) {
           const futureEvents = nearbyData
-            .filter((e: any) => isEventOnOrAfterToday(e) && ACTIVE_STATES?.includes(e.state))
+            .filter((e: any) => isEventOnOrAfterToday(e) && !e.reported && ACTIVE_STATES?.includes(e.state))
             .sort((a: any, b: any) => {
               const da = a.date ? new Date(a.date).getTime() : Infinity
               const db = b.date ? new Date(b.date).getTime() : Infinity

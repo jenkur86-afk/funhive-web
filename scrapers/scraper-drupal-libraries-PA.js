@@ -228,6 +228,83 @@ async function scrapeDateEvents(library, date, page) {
   }
 }
 
+// Fallback: scrape the regular /events page if the feed URL is dead
+async function scrapeEventsPageFallback(library, page) {
+  const eventsUrl = `${library.baseUrl}/events`;
+  console.log(`   Trying fallback: ${eventsUrl}`);
+  try {
+    await page.goto(eventsUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+    await page.waitForSelector('body', { timeout: 5000 });
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    const events = await page.evaluate(() => {
+      const results = [];
+      const seen = new Set();
+
+      // Try various selectors for event listings
+      const selectors = ['.views-row', '.event-item', 'article', '.node--type-event', '.calendar-event', '.event-card', 'li.event'];
+      let elements = [];
+      for (const sel of selectors) {
+        elements = document.querySelectorAll(sel);
+        if (elements.length > 0) break;
+      }
+
+      // Fallback: use links to event detail pages
+      if (elements.length === 0) {
+        const links = document.querySelectorAll('a[href*="/event/"], a[href*="/events/"], a[href*="/node/"]');
+        links.forEach(link => {
+          const title = link.textContent.trim();
+          const href = link.getAttribute('href') || '';
+          if (!title || title.length < 5 || title.length > 200 || seen.has(title)) return;
+          if (href.endsWith('/events') || href.endsWith('/events/')) return;
+          seen.add(title);
+          const card = link.closest('li, article, div, tr') || link.parentElement;
+          const cardText = card.textContent || '';
+          const dateMatch = cardText.match(/((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}(?:,?\s+\d{4})?)/i);
+          const timeMatch = cardText.match(/(\d{1,2}:\d{2}\s*(?:am|pm))/i);
+          if (dateMatch) {
+            results.push({
+              title, url: href.startsWith('http') ? href : window.location.origin + href,
+              time: timeMatch ? timeMatch[1] : '', location: '', ageGroup: '', programType: '',
+              description: '', _date: dateMatch[1]
+            });
+          }
+        });
+        return results;
+      }
+
+      elements.forEach(el => {
+        const titleEl = el.querySelector('h2, h3, h4, .field-name-node-title, .event-title, a');
+        const title = titleEl ? titleEl.textContent.trim() : '';
+        if (!title || title.length < 3 || seen.has(title)) return;
+        seen.add(title);
+
+        const linkEl = el.querySelector('a');
+        const href = linkEl ? linkEl.getAttribute('href') : '';
+        const cardText = el.textContent || '';
+        const dateMatch = cardText.match(/((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}(?:,?\s+\d{4})?)/i);
+        const timeMatch = cardText.match(/(\d{1,2}:\d{2}\s*(?:am|pm)(?:\s*[–-]\s*\d{1,2}:\d{2}\s*(?:am|pm))?)/i);
+
+        const locationEl = el.querySelector('[class*="location"], .branch, .library');
+        const location = locationEl ? locationEl.textContent.trim() : '';
+
+        results.push({
+          title, url: href ? (href.startsWith('http') ? href : window.location.origin + href) : '',
+          time: timeMatch ? timeMatch[1] : '', location, ageGroup: '', programType: '',
+          description: '', _date: dateMatch ? dateMatch[1] : ''
+        });
+      });
+      return results;
+    });
+
+    console.log(`   Fallback found ${events.length} events`);
+    return events;
+  } catch (error) {
+    console.error(`   Fallback failed: ${error.message}`);
+    return [];
+  }
+}
+
 // Scrape all events from library
 async function scrapeLibraryEvents(library, browser) {
   console.log('\n\x1b[36m📍📍📍📍📍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━📍📍📍📍\x1b[0m');
@@ -364,6 +441,73 @@ async function scrapeLibraryEvents(library, browser) {
 
       // Delay between date requests
       await new Promise(resolve => setTimeout(resolve, 500));
+    }
+
+    // If feed-based scraping found 0 events, try the regular events page as fallback
+    if (imported === 0) {
+      console.log(`   ⚠ Feed-based scraping found 0 events — trying regular /events page fallback`);
+      const fallbackEvents = await scrapeEventsPageFallback(library, page);
+      for (const event of fallbackEvents) {
+        try {
+          const ageRange = mapAgeRange(event.ageGroup);
+          if (ageRange === 'Adults') { skipped++; continue; }
+
+          const { parentCategory, displayCategory, subcategory } = categorizeEvent({
+            name: event.title, description: event.description
+          });
+
+          let coordinates = null;
+          if (event.location) {
+            coordinates = await geocodeAddress(`${event.location}, ${library.county} County, PA`);
+          }
+          if (!coordinates) {
+            const defaultCoords = {
+              'Lancaster': { latitude: 40.0379, longitude: -76.3055 },
+              'York': { latitude: 39.9626, longitude: -76.7277 }
+            };
+            coordinates = defaultCoords[library.county] || null;
+          }
+
+          const rawDate = event._date ? `${event._date} ${event.time}` : event.time;
+          const formattedDate = normalizeDateString(rawDate) || rawDate;
+
+          const eventDoc = {
+            name: event.title,
+            venue: event.location || library.name,
+            state: library.state,
+            eventDate: formattedDate,
+            scheduleDescription: formattedDate,
+            parentCategory,
+            displayCategory,
+            subcategory,
+            description: event.description || '',
+            ageRange,
+            source: `Drupal-${library.name}`,
+            sourceUrl: event.url || `${library.baseUrl}/events`,
+            city: library.city,
+            address: event.location || '',
+            zipCode: library.zipCode,
+            ...(coordinates && {
+              latitude: coordinates.latitude,
+              longitude: coordinates.longitude,
+              geohash: ngeohash.encode(coordinates.latitude, coordinates.longitude, 7),
+              location: `SRID=4326;POINT(${coordinates.longitude} ${coordinates.latitude})`
+            }),
+            lastScraped: admin.firestore.Timestamp.now()
+          };
+
+          const activityId = await linkEventToVenue(eventDoc);
+          if (activityId) eventDoc.activityId = activityId;
+
+          await db.collection('events').add(eventDoc);
+          console.log(`  ✅ ${event.title.substring(0, 50)}${event.title.length > 50 ? '...' : ''}`);
+          imported++;
+          await new Promise(resolve => setTimeout(resolve, 100));
+        } catch (error) {
+          console.error(`  ❌ Error processing fallback event:`, error.message);
+          failed++;
+        }
+      }
     }
 
     await page.close();

@@ -133,6 +133,15 @@ async function scrapePrattLibrary() {
     // Process each event
     for (const event of eventList) {
       try {
+        // Skip cancelled events (iCal STATUS:CANCELLED or title contains cancelled/closed)
+        const status = (event.status || '').toUpperCase();
+        const titleLower = (event.summary || '').toLowerCase();
+        if (status === 'CANCELLED' || /\b(cancel+ed|closed|postponed)\b/i.test(titleLower)) {
+          console.log(`  ⏭️ Skipping cancelled: ${(event.summary || '').substring(0, 60)}`);
+          skipped++;
+          continue;
+        }
+
         // Skip past events
         const eventDate = new Date(event.start);
         if (eventDate < today) {

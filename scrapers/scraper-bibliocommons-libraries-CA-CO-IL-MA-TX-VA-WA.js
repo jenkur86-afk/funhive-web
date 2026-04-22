@@ -787,6 +787,66 @@ async function scrapeLibraryEvents(library, browser) {
 
     console.log(`   Found ${events.length} events`);
 
+    // RETRY: BiblioCommons v2 is a React SPA — if no events found, wait longer for hydration
+    if (events.length === 0) {
+      console.log('   ⚠ No events found — waiting 8s for React SPA hydration then retrying');
+      await new Promise(resolve => setTimeout(resolve, 8000));
+
+      // Scroll to trigger lazy rendering
+      await page.evaluate(() => {
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      events = await page.evaluate(() => {
+        const results = [];
+        const seen = new Set();
+
+        // Broad link-based extraction: find all event detail links
+        const eventLinks = document.querySelectorAll('a[href*="/events/"]');
+
+        eventLinks.forEach(link => {
+          const href = link.getAttribute('href') || '';
+          const title = link.textContent.trim();
+          if (!title || title.length < 3 || title.length > 200) return;
+          // Skip navigation/filter links
+          if (href.endsWith('/events') || href.endsWith('/events/') || href.includes('/events/search')) return;
+          if (seen.has(title)) return;
+          seen.add(title);
+
+          // Walk up to find the card container
+          let card = link.parentElement;
+          for (let i = 0; i < 6 && card; i++) {
+            const cn = card.className || '';
+            if (cn.includes('item') || cn.includes('card') || cn.includes('event') || cn.includes('list')) break;
+            if (card.parentElement) card = card.parentElement;
+          }
+
+          const cardText = card ? card.textContent : '';
+          // Extract date
+          let eventDate = '';
+          const dateMatch = cardText.match(/((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}(?:,?\s+\d{4})?)/i);
+          if (dateMatch) eventDate = dateMatch[1].trim();
+
+          // Extract time
+          const timeMatch = cardText.match(/(\d{1,2}:\d{2}\s*(?:am|pm)(?:\s*(?:to|[-–])\s*\d{1,2}:\d{2}\s*(?:am|pm))?)/i);
+          const time = timeMatch ? timeMatch[1].trim() : '';
+          const rawDate = eventDate ? (time ? `${eventDate} ${time}` : eventDate) : 'Date TBD';
+
+          results.push({
+            name: title,
+            eventDate: rawDate,
+            venue: '',
+            description: '',
+            url: href.startsWith('http') ? href : (href.startsWith('/') ? window.location.origin + href : ''),
+            audience: ''
+          });
+        });
+        return results;
+      });
+      console.log(`   After SPA retry: found ${events.length} events`);
+    }
+
     // Process each event
     for (const event of events) {
       try {

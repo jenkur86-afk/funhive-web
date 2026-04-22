@@ -342,8 +342,30 @@ async function scrapeVenueEvents(venue, browser) {
     console.error(`   ❌ Failed to scrape: ${error.message}`);
   }
 
+  // Filter out navigation elements, page chrome, and non-event content
+  // These are picked up by the h2/h3/h4 fallback strategy
+  const NAV_JUNK_PATTERNS = /^(visit|plan your|get ticket|buy ticket|membership|explore|animals?|exhibits?|groups?|learn|support|about|contact|careers|FAQ|hours|directions|parking|donate|shop|gift|login|logout|sign up|sign in|my account|search|footer|header|menu|nav|home|back to|404|page not found|oops|quick links|accredit|connect|sponsor|newsletter|mailing list|copyright|privacy|terms|help|find us|address|phone|recommended|stay up|get the latest|let's get|our mission|upcoming events?|past events?|all events?|featured|event calendar|host an event|all categor|what's happening|calendar view|no events)/i;
+  const filteredEvents = events.filter(e => {
+    // Must have a title
+    if (!e.title || e.title.trim().length < 4) return false;
+    // Must have an actual date (navigation items never have dates)
+    if (!e.eventDate || e.eventDate.trim().length < 3) return false;
+    // Filter out navigation/UI elements by title pattern
+    if (NAV_JUNK_PATTERNS.test(e.title.trim())) return false;
+    // Filter out very short generic titles (likely buttons/links)
+    if (e.title.trim().length < 8 && !/\d/.test(e.title)) return false;
+    return true;
+  });
+
+  if (filteredEvents.length < events.length) {
+    const filtered = events.length - filteredEvents.length;
+    if (filtered > 5) {
+      console.log(`   🧹 Filtered ${filtered} non-event entries (navigation/page chrome)`);
+    }
+  }
+
   // Format events for database
-  return events.map(e => ({
+  return filteredEvents.map(e => ({
     title: e.title,
     description: e.description || `Event at ${venue.name}`,
     eventDate: e.eventDate || '',
