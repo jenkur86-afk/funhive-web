@@ -58,7 +58,7 @@ function isEventOnOrAfterToday(event: any): boolean {
   const nowMinutes = now.getHours() * 60 + now.getMinutes()
 
   if (endMinutes !== null) return nowMinutes <= endMinutes
-  if (startMinutes !== null) return nowMinutes <= startMinutes + 180
+  // No end time — show all day
   return true
 }
 

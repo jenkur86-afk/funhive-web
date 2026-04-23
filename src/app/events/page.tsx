@@ -260,9 +260,7 @@ function isEventOnOrAfterToday(event: any): boolean {
 
   // If we have an end time, hide once it's past
   if (endMinutes !== null) return nowMinutes <= endMinutes
-  // If only start time, hide 3 hours after start
-  if (startMinutes !== null) return nowMinutes <= startMinutes + 180
-  // No time info — show all day
+  // No end time — show all day
   return true
 }
 
