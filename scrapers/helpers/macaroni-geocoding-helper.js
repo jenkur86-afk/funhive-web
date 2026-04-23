@@ -64,7 +64,7 @@ async function tryGeocode(address) {
   }
 
   // 4. Call Nominatim
-  await new Promise(r => setTimeout(r, 1500)); // respect rate limit
+  await new Promise(r => setTimeout(r, 2500)); // Nominatim needs ≥2.5s between requests
   try {
     const response = await axios.get('https://nominatim.openstreetmap.org/search', {
       params: { q: address, format: 'json', limit: 1, countrycodes: 'us' },
@@ -86,8 +86,8 @@ async function tryGeocode(address) {
     return null;
   } catch (error) {
     if (error.response && error.response.status === 429) {
-      console.log(`  ⚠️  Geocoding 429 rate limited for "${address.substring(0, 40)}" — cooling down 60s`);
-      rateLimitedUntil = Date.now() + 60000; // 60-second global cooldown
+      console.log(`  ⚠️  Geocoding 429 rate limited for "${address.substring(0, 40)}" — cooling down 90s`);
+      rateLimitedUntil = Date.now() + 90000; // 90-second global cooldown
       return null; // DON'T cache as null — address might work later
     }
     if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT' || /timeout/i.test(error.message || '')) {

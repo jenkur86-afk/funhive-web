@@ -484,8 +484,8 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
           sourceName: event.metadata?.sourceName || library.name
         });
 
-        // Rate limiting for geocoding API (Nominatim requires max 1 req/sec)
-        await new Promise(resolve => setTimeout(resolve, 1100));
+        // Rate limiting for geocoding API (Nominatim needs ≥2.5s between requests)
+        await new Promise(resolve => setTimeout(resolve, 2500));
       }
 
       if (!coordinates) {
