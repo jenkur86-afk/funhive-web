@@ -282,6 +282,10 @@ const NON_FAMILY_PATTERNS = [
   /\bgenealogy\b/i,
   /\bblood\s+(drive|donation)\b/i,
   /\bnarcan\b/i,
+
+  // Promotional / submit-your-event junk
+  /\bsubmit\s+(it\s+to|your|an?\s+event)\b/i,
+  /\bpost\s+your\s+event\b/i,
 ];
 
 // If event matches a non-family pattern BUT also matches these, keep it
