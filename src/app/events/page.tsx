@@ -395,7 +395,8 @@ function isEventOnOrAfterToday(event: any): boolean {
     if (selectedDateFilter === 'All') return true
     if (!event.event_date) return false
 
-    const eventDate = new Date(event.event_date)
+    const eventDate = parseEventDate(event.event_date)
+    if (!eventDate) return false
     const today = new Date()
     today.setHours(0, 0, 0, 0)
 
@@ -434,8 +435,8 @@ function isEventOnOrAfterToday(event: any): boolean {
 
       case 'Custom': {
         if (!customDateRange) return false
-        const startDate = new Date(customDateRange.start)
-        const endDate = new Date(customDateRange.end)
+        const startDate = new Date(customDateRange.start + 'T00:00:00')
+        const endDate = new Date(customDateRange.end + 'T00:00:00')
         endDate.setHours(23, 59, 59, 999)
         return eventDate >= startDate && eventDate <= endDate
       }
