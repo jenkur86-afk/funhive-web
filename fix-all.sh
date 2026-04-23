@@ -27,6 +27,13 @@ node fix-event-quality.js --save
 
 echo ""
 echo "═══════════════════════════════════════════════════"
+echo "  STEP 4: fix-duplicate-dates.js"
+echo "  (events with doubled date strings from scraper bug)"
+echo "═══════════════════════════════════════════════════"
+node fix-duplicate-dates.js --save
+
+echo ""
+echo "═══════════════════════════════════════════════════"
 echo "  ✅ ALL FIXES COMPLETE"
 echo "  Run: node data-quality-check.js to verify"
 echo "═══════════════════════════════════════════════════"

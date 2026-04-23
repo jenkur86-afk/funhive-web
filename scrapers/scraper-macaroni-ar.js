@@ -171,7 +171,7 @@ async function extractEventDetails(page, url) {
       if (costIndex > -1) { const costLines = []; for (let i = costIndex + 1; i < lines.length; i++) { const line = lines[i]; if (line === 'How' || line === 'More Info' || line.includes('Add to') || line === 'ADVERTISEMENTS' || line.startsWith('http')) break; costLines.push(line); if (costLines.join(' ').length > 150) break; } if (costLines.length > 0) { let costText = costLines.join(' ').substring(0, 150); if (costText.length === 150) { costText = costText.substring(0, costText.lastIndexOf(' ')) + '...'; } result.cost = costText; }}
       return result;
     });
-  } catch (error) { return null; }
+  } catch (error) { if (error.message && (error.message.includes('Connection closed') || error.message.includes('Protocol error'))) throw error; return null; }
 }
 
 async function scrapeSite(browser, site, maxEvents = 50) {
@@ -241,7 +241,17 @@ async function scrapeSite(browser, site, maxEvents = 50) {
           /\b(webinar|zoom|virtual|online)\b.*:/i,  // "Webinar: Topic"
           /:\s*(webinar|virtual|online)\b/i,         // "Topic: Virtual"
           /^virtual\s+/i,                             // "Virtual Storytime"
-          /^online\s+/i                               // "Online Class"
+          /^online\s+/i,                              // "Online Class"
+          /^🗓/,                                     // "🗓 Find MORE Family Fun...",
+          /^📌/,                                     // "📌🗓 Please double check...",
+          /^🚨/,                                     // "🚨🗓️ Be sure to double-check...",
+          /^📵/,                                     // "📵 Screen-Free Week...",
+          /^🛝/,                                     // "🛝 Play Outside Day",
+          /^📚\s*quick links/i,                     // "📚 Quick Links to Library Calendars",
+          /visit a local play/i,                     // "👩🏼‍🤝‍👨🏻Visit a Local Play...",
+          /^please double check/i,                   // "Please double check each event...",
+          /^be sure to double/i,                     // "Be sure to double-check...",
+          /^find more family fun/i,                  // "Find MORE Family Fun..."
         ]
       };
 
@@ -456,7 +466,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
   } catch (error) {
     console.error(`  ❌ Error: ${error.message}`);
     // Re-throw browser/protocol errors so main loop can restart browser
-    if (error.message.includes('Protocol error') || error.message.includes('Connection closed') || error.message.includes('Target closed')) {
+    if (error.message.includes('Protocol error') || error.message.includes('Connection closed') || error.message.includes('Target closed') || error.message.includes('detached')) {
       throw error;
     }
   }
@@ -505,7 +515,7 @@ async function scrapeMacaroniKidArkansas() {
       failed++;
 
       // If we get a protocol error (browser crashed), restart browser
-      if (error.message.includes('Protocol error') || error.message.includes('Connection closed')) {
+      if (error.message.includes('Protocol error') || error.message.includes('Connection closed') || error.message.includes('Target closed') || error.message.includes('detached')) {
         console.log('🔄 Browser crashed, restarting...');
         try { if (browser) await browser.close(); } catch (e) { /* ignore */ }
         browser = null; // Will be recreated on next iteration

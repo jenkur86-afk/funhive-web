@@ -172,7 +172,7 @@ async function extractEventDetails(page, url) {
       if (costIndex > -1) { const costLines = []; for (let i = costIndex + 1; i < lines.length; i++) { const line = lines[i]; if (line === 'How' || line === 'More Info' || line.includes('Add to') || line === 'ADVERTISEMENTS' || line.startsWith('http')) break; costLines.push(line); if (costLines.join(' ').length > 150) break; } if (costLines.length > 0) { let costText = costLines.join(' ').substring(0, 150); if (costText.length === 150) { costText = costText.substring(0, costText.lastIndexOf(' ')) + '...'; } result.cost = costText; }}
       return result;
     });
-  } catch (error) { return null; }
+  } catch (error) { if (error.message && (error.message.includes('Connection closed') || error.message.includes('Protocol error'))) throw error; return null; }
 }
 
 async function scrapeSite(browser, site, maxEvents = 50) {
@@ -187,9 +187,18 @@ async function scrapeSite(browser, site, maxEvents = 50) {
   try {
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
-    await page.goto(`${site.url}/events/calendar`, { waitUntil: 'networkidle2', timeout: 45000 });
+    await page.goto(`${site.url}/events/calendar`, { waitUntil: 'networkidle2', timeout: 60000 });
     // Wait for client-side JS to render event links (MacaroniKid is SPA)
-    await page.waitForSelector('a[href*="/events/"]', { timeout: 10000 }).catch(() => {});
+    // On old jQuery-platform MK sites, event links are injected by an async API call after
+    // jQuery.get() to api.macaronikid.com completes. The generic a[href*="/events/"] selector
+    // matches static nav links immediately (e.g. /events/submit), causing extractEventUrls()
+    // to run before the calendar is populated. Wait for .calendar-eventlist a instead.
+    const isOldPlatform = await page.evaluate(() => !!document.querySelector('script[src*="customscript_events-calendar"]'));
+    if (isOldPlatform) {
+      await page.waitForSelector('.calendar-eventlist a[href*="/events/"]', { timeout: 15000 }).catch(() => {});
+    } else {
+      await page.waitForSelector('a[href*="/events/"]', { timeout: 10000 }).catch(() => {});
+    }
 
     const eventUrls = await extractEventUrls(page);
     console.log(`  Found ${eventUrls.length} URLs`);
@@ -242,7 +251,17 @@ async function scrapeSite(browser, site, maxEvents = 50) {
           /\b(webinar|zoom|virtual|online)\b.*:/i,  // "Webinar: Topic"
           /:\s*(webinar|virtual|online)\b/i,         // "Topic: Virtual"
           /^virtual\s+/i,                             // "Virtual Storytime"
-          /^online\s+/i                               // "Online Class"
+          /^online\s+/i,                              // "Online Class"
+          /^🗓/,                                     // "🗓 Find MORE Family Fun...",
+          /^📌/,                                     // "📌🗓 Please double check...",
+          /^🚨/,                                     // "🚨🗓️ Be sure to double-check...",
+          /^📵/,                                     // "📵 Screen-Free Week...",
+          /^🛝/,                                     // "🛝 Play Outside Day",
+          /^📚\s*quick links/i,                     // "📚 Quick Links to Library Calendars",
+          /visit a local play/i,                     // "👩🏼‍🤝‍👨🏻Visit a Local Play...",
+          /^please double check/i,                   // "Please double check each event...",
+          /^be sure to double/i,                     // "Be sure to double-check...",
+          /^find more family fun/i,                  // "Find MORE Family Fun..."
         ]
       };
 
@@ -473,7 +492,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
   } catch (error) {
     console.error(`  ❌ Error: ${error.message}`);
     // Re-throw browser/protocol errors so main loop can restart browser
-    if (error.message.includes('Protocol error') || error.message.includes('Connection closed') || error.message.includes('Target closed')) {
+    if (error.message.includes('Protocol error') || error.message.includes('Connection closed') || error.message.includes('Target closed') || error.message.includes('detached')) {
       throw error;
     }
   }
@@ -522,7 +541,7 @@ async function scrapeMacaroniKidMissouri() {
       failed++;
 
       // If we get a protocol error (browser crashed), restart browser
-      if (error.message.includes('Protocol error') || error.message.includes('Connection closed')) {
+      if (error.message.includes('Protocol error') || error.message.includes('Connection closed') || error.message.includes('Target closed') || error.message.includes('detached')) {
         console.log('🔄 Browser crashed, restarting...');
         try { if (browser) await browser.close(); } catch (e) { /* ignore */ }
         browser = null; // Will be recreated on next iteration
