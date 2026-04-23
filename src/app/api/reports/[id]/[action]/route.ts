@@ -130,8 +130,10 @@ export async function GET(
   }
 
   if (action === 'remove') {
-    // Delete the item
-    await supabase.from(table).delete().eq('id', itemId)
+    // Soft-delete: keep reported = true so scrapers don't re-insert the event.
+    // The upsert in saveEvent() doesn't include `reported`, so the flag is preserved.
+    // Hard-deleting would let the scraper re-add the event on its next run.
+    await supabase.from(table).update({ reported: true }).eq('id', itemId)
 
     // Mark report as resolved
     await supabase
@@ -140,7 +142,7 @@ export async function GET(
       .eq('id', id)
 
     const itemType = report.event_id ? 'event' : 'venue'
-    return htmlResponse('Item Removed', `The ${itemType} has been permanently removed from FunHive.`, true)
+    return htmlResponse('Item Removed', `The ${itemType} has been removed from FunHive and will not reappear.`, true)
   }
 
   return htmlResponse('Error', 'Something went wrong.', false)
