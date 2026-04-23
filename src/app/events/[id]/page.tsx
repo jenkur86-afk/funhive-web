@@ -20,6 +20,7 @@ export default async function EventDetailPage({ params }: EventDetailProps) {
     .from('events')
     .select('*')
     .eq('id', decodeURIComponent(id))
+    .eq('reported', false)
     .single()
 
   if (error || !event) {

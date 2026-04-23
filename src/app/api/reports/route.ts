@@ -104,9 +104,11 @@ export async function POST(request: Request) {
 
     // Flag the item as reported
     if (event_id) {
-      await supabase.from('events').update({ reported: true }).eq('id', event_id)
+      const { error: updateErr } = await supabase.from('events').update({ reported: true }).eq('id', event_id)
+      if (updateErr) console.error('Failed to flag event as reported:', updateErr.message)
     } else {
-      await supabase.from('activities').update({ reported: true }).eq('id', activity_id)
+      const { error: updateErr } = await supabase.from('activities').update({ reported: true }).eq('id', activity_id)
+      if (updateErr) console.error('Failed to flag activity as reported:', updateErr.message)
     }
 
     // Fetch item name for the email
