@@ -9,7 +9,7 @@ import FavoriteButton from '@/components/FavoriteButton'
 import ReportButton from '@/components/ReportButton'
 import { haversineDistance, getUserLocation } from '@/lib/geo-utils'
 import { parseLocationInput, preloadZipData, lookupZipSync, lookupCitySync } from '@/lib/zip-lookup'
-import { extractTimeFromEventDate } from '@/lib/hours-utils'
+import { extractTimeFromEventDate, parseTime } from '@/lib/hours-utils'
 import { getCategoryIcon } from '@/lib/category-icons'
 import { ACTIVE_STATES } from '@/lib/region-filter'
 
@@ -242,10 +242,28 @@ function isEventOnOrAfterToday(event: any): boolean {
   if (!event.event_date) return false
   const d = parseEventDate(event.event_date)
   if (!d) return false
-  const today = new Date()
+  const now = new Date()
+  const today = new Date(now)
   today.setHours(0, 0, 0, 0)
-  d.setHours(0, 0, 0, 0)
-  return d >= today
+  const eventDay = new Date(d)
+  eventDay.setHours(0, 0, 0, 0)
+
+  // Future days are always visible
+  if (eventDay > today) return true
+  // Past days are always hidden
+  if (eventDay < today) return false
+
+  // Event is today — check if end time (or start time) has passed
+  const endMinutes = event.end_time ? parseTime(event.end_time) : null
+  const startMinutes = event.start_time ? parseTime(event.start_time) : null
+  const nowMinutes = now.getHours() * 60 + now.getMinutes()
+
+  // If we have an end time, hide once it's past
+  if (endMinutes !== null) return nowMinutes <= endMinutes
+  // If only start time, hide 3 hours after start
+  if (startMinutes !== null) return nowMinutes <= startMinutes + 180
+  // No time info — show all day
+  return true
 }
 
   async function loadEvents() {
@@ -509,12 +527,21 @@ function isEventOnOrAfterToday(event: any): boolean {
       return matchesSearch && matchesFree && matchesAge && matchesDate
     })
     .sort((a, b) => {
-      // Always sort by date first
-      const dateA = a.date ? new Date(a.date).getTime() : a.event_date ? new Date(a.event_date).getTime() : Infinity
-      const dateB = b.date ? new Date(b.date).getTime() : b.event_date ? new Date(b.event_date).getTime() : Infinity
-      if (dateA !== dateB) return dateA - dateB
+      // Sort by date first (day only, ignoring time in the timestamp)
+      const dA = a.date ? new Date(a.date) : a.event_date ? parseEventDate(a.event_date) : null
+      const dB = b.date ? new Date(b.date) : b.event_date ? parseEventDate(b.event_date) : null
+      const dayA = dA ? new Date(dA).setHours(0,0,0,0) : Infinity
+      const dayB = dB ? new Date(dB).setHours(0,0,0,0) : Infinity
+      if (dayA !== dayB) return dayA - dayB
 
-      // Secondary sort: distance if location search active
+      // Same day — sort by start_time (events with time before those without)
+      const timeA = a.start_time ? parseTime(a.start_time) : null
+      const timeB = b.start_time ? parseTime(b.start_time) : null
+      if (timeA !== null && timeB !== null) return timeA - timeB
+      if (timeA !== null) return -1
+      if (timeB !== null) return 1
+
+      // Tertiary sort: distance if location search active
       if (locationCoords) {
         const cA = getCoords(a)
         const cB = getCoords(b)

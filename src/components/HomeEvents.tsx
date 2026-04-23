@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { parseTime } from '@/lib/hours-utils'
 import { ACTIVE_STATES } from '@/lib/region-filter'
 
 const CATEGORIES = [
@@ -42,10 +43,23 @@ function isEventOnOrAfterToday(event: any): boolean {
   if (!event.event_date) return false
   const d = parseEventDate(event.event_date)
   if (!d) return false
-  const today = new Date()
+  const now = new Date()
+  const today = new Date(now)
   today.setHours(0, 0, 0, 0)
-  d.setHours(0, 0, 0, 0)
-  return d >= today
+  const eventDay = new Date(d)
+  eventDay.setHours(0, 0, 0, 0)
+
+  if (eventDay > today) return true
+  if (eventDay < today) return false
+
+  // Event is today — check if end time (or start time) has passed
+  const endMinutes = event.end_time ? parseTime(event.end_time) : null
+  const startMinutes = event.start_time ? parseTime(event.start_time) : null
+  const nowMinutes = now.getHours() * 60 + now.getMinutes()
+
+  if (endMinutes !== null) return nowMinutes <= endMinutes
+  if (startMinutes !== null) return nowMinutes <= startMinutes + 180
+  return true
 }
 
 interface Props {
@@ -57,15 +71,15 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null)
   const [locationName, setLocationName] = useState('')
   const [locating, setLocating] = useState(false)
-  const [upcoming, setUpcoming] = useState<any[]>(serverUpcoming)
-  const [weekend, setWeekend] = useState<any[]>(serverWeekend)
+  const [upcoming, setUpcoming] = useState<any[]>(() => serverUpcoming.filter(isEventOnOrAfterToday))
+  const [weekend, setWeekend] = useState<any[]>(() => serverWeekend.filter(isEventOnOrAfterToday))
   const [loading, setLoading] = useState(false)
 
   // When coords change, fetch nearby events
   useEffect(() => {
     if (!coords) {
-      setUpcoming(serverUpcoming)
-      setWeekend(serverWeekend)
+      setUpcoming(serverUpcoming.filter(isEventOnOrAfterToday))
+      setWeekend(serverWeekend.filter(isEventOnOrAfterToday))
       return
     }
 
@@ -87,9 +101,17 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
           const futureEvents = nearbyData
             .filter((e: any) => isEventOnOrAfterToday(e) && !e.reported && ACTIVE_STATES?.includes(e.state))
             .sort((a: any, b: any) => {
-              const da = a.date ? new Date(a.date).getTime() : Infinity
-              const db = b.date ? new Date(b.date).getTime() : Infinity
-              return da - db
+              const dA = a.date ? new Date(a.date) : null
+              const dB = b.date ? new Date(b.date) : null
+              const dayA = dA ? new Date(dA).setHours(0,0,0,0) : Infinity
+              const dayB = dB ? new Date(dB).setHours(0,0,0,0) : Infinity
+              if (dayA !== dayB) return dayA - dayB
+              const timeA = a.start_time ? parseTime(a.start_time) : null
+              const timeB = b.start_time ? parseTime(b.start_time) : null
+              if (timeA !== null && timeB !== null) return timeA - timeB
+              if (timeA !== null) return -1
+              if (timeB !== null) return 1
+              return 0
             })
 
           setUpcoming(futureEvents.slice(0, 6))

@@ -270,10 +270,10 @@ function parseTimeRange(timeStr: string): { start: number; end: number } | null 
 }
 
 /**
- * Parse a single time string like "9am", "9:30am", "09:00", "9:00 AM"
+ * Parse a single time string like "9am", "9:30am", "09:00", "9:00 AM", "10:00 AM"
  * @returns minutes since midnight, or null if unable to parse
  */
-function parseTime(timeStr: string): number | null {
+export function parseTime(timeStr: string): number | null {
   timeStr = timeStr.toLowerCase().trim()
 
   // Handle formats like "9am", "9:30am", "9:00 am", "09:00", etc.
