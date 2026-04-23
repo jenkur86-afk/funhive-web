@@ -79,23 +79,26 @@ async function scrapeCommunicoEvents() {
       const libraryEvents = await page.evaluate((libName) => {
         const events = [];
 
-        // Communico event cards
-        document.querySelectorAll('.eventCardContainer, .eventCard, .event-item').forEach(card => {
+        // Communico event cards — try both old and new Communico selectors
+        document.querySelectorAll('.eventCardContainer, .eventCard, .event-item, .eelistevent').forEach(card => {
           try {
-            const titleEl = card.querySelector('.eventCardTitle, .event-title, h3, h4');
-            const dateEl = card.querySelector('.eventCardDate, .event-date, .date');
-            const timeEl = card.querySelector('.eventCardTime, .event-time, .time');
-            const descEl = card.querySelector('.eventCardDescription, .event-description, .description');
+            const titleEl = card.querySelector('.eventCardTitle, .event-title, .eelisttitle a, h3, h4');
+            const dateEl = card.querySelector('.eventCardDate, .event-date, .eelisttime');
+            const timeEl = card.querySelector('.eventCardTime, .event-time');
+            const descEl = card.querySelector('.eventCardDescription, .event-description, .eelistdesc, .description');
             const linkEl = card.querySelector('a[href]');
             const imageEl = card.querySelector('img');
-            const locationEl = card.querySelector('.eventCardLocation, .event-location, .location');
-            const ageEl = card.querySelector('.eventCardAudience, .audience, .age-range');
+            const locationEl = card.querySelector('.eventCardLocation, .event-location, .eelocation, .location');
+            const ageEl = card.querySelector('.eventCardAudience, .eelisttags, .audience, .age-range');
 
             if (titleEl && (dateEl || timeEl)) {
+              // Communico .eelisttime contains full date+time, so don't double up
+              const dateText = dateEl ? dateEl.textContent.trim() : '';
+              const timeText = timeEl ? timeEl.textContent.trim() : '';
               const event = {
                 title: titleEl.textContent.trim(),
-                date: dateEl ? dateEl.textContent.trim() : '',
-                time: timeEl ? timeEl.textContent.trim() : '',
+                date: dateText,
+                time: (timeText && !dateText.includes(timeText)) ? timeText : '',
                 description: descEl ? descEl.textContent.trim() : '',
                 url: linkEl ? (linkEl.href.startsWith('http') ? linkEl.href : new URL(linkEl.href, window.location.origin).href) : window.location.href,
                 imageUrl: imageEl ? imageEl.src : '',

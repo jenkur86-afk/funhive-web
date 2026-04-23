@@ -136,6 +136,19 @@ async function main() {
     brackets[newVal] = (brackets[newVal] || 0) + 1;
 
     if (newVal === 'Adults') {
+      // Don't delete events whose name is clearly for kids/families — the age_range was mislabeled
+      const nameLower = (e.name || '').toLowerCase();
+      if (/\b(toddler|baby|babies|infant|preschool|kid|kids|children|child|youth|teen|family|families|storytime|story\s*time|lego|playgroup|play\s*group|mommy|daddy|parent|nursery|kindergarten)\b/i.test(nameLower)) {
+        // Fix the mislabeled age_range instead of deleting
+        const fixedAge = /\b(toddler|baby|babies|infant|nursery)\b/i.test(nameLower) ? 'Babies & Toddlers (0-2)'
+          : /\b(preschool|kindergarten)\b/i.test(nameLower) ? 'Preschool (3-5)'
+          : /\b(teen)\b/i.test(nameLower) ? 'Teens (13-18)'
+          : 'All Ages';
+        toUpdate.push({ id: e.id, newAgeRange: fixedAge });
+        if (!normalizations[oldVal]) normalizations[oldVal] = { to: fixedAge, count: 0 };
+        normalizations[oldVal].count++;
+        continue;
+      }
       toDelete.push(e);
       continue;
     }

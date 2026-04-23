@@ -35,6 +35,7 @@ const AUTO_DELETE_PATTERNS = [
   { pattern: /\badults?\s*only\s*(night|event|party|swim|hours?|session)?\b/i, label: 'adults only' },
   { pattern: /\b21\s*\+\s*(only|event|night|party)\b/i, label: '21+ event' },
   { pattern: /\bgambling\b/i, label: 'gambling' },
+  { pattern: /\bdrug\s*take\s*back\b/i, label: 'drug take back' },
   { pattern: /\bgun\s*show\b/i, label: 'gun show' },
   { pattern: /\bfirearms?\s*(show|expo|sale)\b/i, label: 'firearms' },
 ];
@@ -43,6 +44,9 @@ const AUTO_DELETE_PATTERNS = [
 function isFalsePositive(name, description, venue) {
   const text = `${name || ''} ${description || ''} ${venue || ''}`.toLowerCase();
   const nameLower = (name || '').toLowerCase();
+
+  // If the event name explicitly says "family", "kids", "children", "toddler", "youth", "all ages" — it's family-friendly
+  if (/\b(family|families|kid|kids|children|toddler|preschool|youth|all\s*ages|child|infant|baby|babies|mommy|daddy|parent)\b/i.test(nameLower)) return 'family keyword in title';
 
   // Library trivia nights are family events
   if (/trivia/i.test(nameLower) && (/library|teen|family|kid|all ages|children/i.test(text))) return 'library/family trivia';
@@ -71,35 +75,58 @@ function isFalsePositive(name, description, venue) {
   // "Mocktail" — non-alcoholic
   if (/mocktail/i.test(nameLower)) return 'mocktail (non-alcoholic)';
 
+  // Brewery/pub/winery venues hosting family events (kids' storytime at brewery, etc.)
+  if (/\b(storytime|story\s*time|craft|lego|kids?\s*night|open\s*play|play\s*date|sensory|music\s*class)\b/i.test(nameLower) && /\b(brewery|brew|pub|winery|taproom)\b/i.test(text)) return 'family event at brewery/pub';
+
+  // "Trivia Night" at libraries, museums, community centers
+  if (/trivia/i.test(nameLower) && /\b(library|museum|community|recreation|school|church)\b/i.test(text)) return 'trivia at family venue';
+
   // Events about weed removal / gardening
   if (/\bweed\b/i.test(text) && /\b(garden|plant|pull|remov|invasive|native|preserve|service|volunteer)\b/i.test(text)) return 'weed (gardening)';
 
-  // Drug Take Back programs (public safety, not drug use)
-  if (/drug\s*take\s*back/i.test(text)) return 'drug take back (public safety)';
+
 
   // "In The Park After Dark" nature programs
   if (/park\s*after\s*dark/i.test(text) && /moth|nature|animal|firefl|star|astrono/i.test(text)) return 'park after dark (nature)';
+
+  // "Glow Wild", "Wild Nights", "Zoo After Dark" — zoo/nature events
+  if (/\b(glow|wild|zoo|aquarium|museum|botanical|garden|nature|park|conserv)\b/i.test(nameLower) && /\b(after\s*dark|glow|wild|night)\b/i.test(nameLower)) return 'nature/zoo night event';
+
+  // Events at clearly family venues (zoo, museum, library, park, school, church, community center)
+  if (/\b(zoo|museum|library|aquarium|botanical|arboretum|planetarium|school|church|ymca|ywca|community\s*center|rec\s*center|recreation\s*center|children.s|discovery|science\s*center)\b/i.test(text)) return 'family venue';
+
+  // "Beverages" is not "cocktail" — food/beverages workshops, birdhouses & beverages, etc.
+  if (/\bbeverage/i.test(text) && !/\bcocktail/i.test(nameLower)) return 'beverages (not cocktail)';
+
+  // "Pub" as part of "Public", "Published", "Republic" — not an actual pub
+  if (/\bpublic|publish|republic/i.test(text) && /\bpub\b/i.test(text)) return 'pub substring (not a pub)';
+
+  // Dating as in "date night" with kids activities, "save the date", or "update"
+  if (/\b(save\s*the\s*date|update|dated)\b/i.test(text)) return 'date word (not dating)';
+
+  // "Odd Duck" or other venue names containing wine/beer/cocktail words
+  if (/\b(duck|goose|fox|bear|eagle|owl)\b/i.test(nameLower) && /birthday|bash|party|celebration|fest/i.test(nameLower)) return 'animal-themed venue party';
 
   return false;
 }
 
 // ─── TIER 3: BORDERLINE patterns (review needed) ───────────────────────────
 const BORDERLINE_PATTERNS = [
-  { pattern: /\bbrewery\b/i, label: 'brewery mention' },
-  { pattern: /\bbeer\s*(fest|garden|tasting|crawl|pairing)/i, label: 'beer event' },
-  { pattern: /\bwine\s*(tasting|pairing|night|fest)/i, label: 'wine event' },
-  { pattern: /\bcocktail/i, label: 'cocktail mention' },
-  { pattern: /\bhappy\s*hour/i, label: 'happy hour' },
-  { pattern: /\btrivia\s*night/i, label: 'trivia night' },
-  { pattern: /\bafter\s*dark/i, label: 'after dark' },
-  { pattern: /\bdrinks?\s*(night|special)/i, label: 'drinks mention' },
-  { pattern: /\bpub\b/i, label: 'pub mention' },
-  { pattern: /\bdrag\s*(brunch|show|queen|night|bingo)/i, label: 'drag event' },
-  { pattern: /\b21\+/i, label: '21+' },
-  { pattern: /\b18\+/i, label: '18+' },
-  { pattern: /\bdating\b/i, label: 'dating' },
-  { pattern: /\bstrip\b/i, label: 'strip' },
-  { pattern: /\bweed\b/i, label: 'weed' },
+  { pattern: /\bbrewery\b/i, label: 'brewery mention', nameOnly: false },
+  { pattern: /\bbeer\s*(fest|garden|tasting|crawl|pairing)/i, label: 'beer event', nameOnly: false },
+  { pattern: /\bwine\s*(tasting|pairing|night|fest)/i, label: 'wine event', nameOnly: false },
+  { pattern: /\bcocktail\s*(class|hour|making|night|party|pairing)/i, label: 'cocktail event', nameOnly: false },
+  { pattern: /\bhappy\s*hour/i, label: 'happy hour', nameOnly: true },
+  { pattern: /\btrivia\s*night/i, label: 'trivia night', nameOnly: true },
+  { pattern: /\bafter\s*dark/i, label: 'after dark', nameOnly: true },
+  { pattern: /\bdrinks?\s*(night|special)/i, label: 'drinks mention', nameOnly: true },
+  { pattern: /\bpub\b(?!\s*lic)/i, label: 'pub mention', nameOnly: true },
+  { pattern: /\bdrag\s*(brunch|show|queen|night|bingo)/i, label: 'drag event', nameOnly: false },
+  { pattern: /\b21\+/i, label: '21+', nameOnly: true },
+  { pattern: /\b18\+/i, label: '18+', nameOnly: true },
+  { pattern: /\bspeed\s*dating\b/i, label: 'speed dating', nameOnly: true },
+  { pattern: /\bstrip\b(?!\s*(district|mall|steak|chicken|comic))/i, label: 'strip', nameOnly: true },
+  { pattern: /\bweed\b/i, label: 'weed', nameOnly: false },
 ];
 
 async function fetchAll(select, filters) {
@@ -165,8 +192,9 @@ async function main() {
 
     // Check borderline patterns
     let borderlineMatch = null;
-    for (const { pattern, label } of BORDERLINE_PATTERNS) {
-      if (pattern.test(text)) {
+    for (const { pattern, label, nameOnly } of BORDERLINE_PATTERNS) {
+      const searchText = nameOnly ? (e.name || '') : text;
+      if (pattern.test(searchText)) {
         borderlineMatch = label;
         break;
       }

@@ -918,7 +918,10 @@ async function scrapeLibraryEvents(library, browser) {
           }
 
           if (title && eventDate) {
-            const rawDate = time ? `${eventDate} ${time}` : eventDate;
+            // Avoid duplicating date+time when .eelisttime contains the full date string
+            // (e.g. "Wednesday, April 22: 5:45pm - 6:30pm" in both eventDate and time)
+            const rawDate = (time && !eventDate.includes(time) && !time.includes(eventDate))
+              ? `${eventDate} ${time}` : eventDate;
 
             results.push({
               name: title,
@@ -1099,7 +1102,8 @@ async function scrapeLibraryEvents(library, browser) {
 
             const eventDate = dateMatch ? dateMatch[1].trim() : '';
             const time = timeMatch ? timeMatch[1].trim() : '';
-            const rawDate = time ? `${eventDate} ${time}` : eventDate;
+            const rawDate = (time && !eventDate.includes(time) && !time.includes(eventDate))
+              ? `${eventDate} ${time}` : eventDate;
 
             if (title && eventDate) {
               results.push({

@@ -1,7 +1,7 @@
 # FunHive – Claude Instructions
 
 ## Project Overview
-FunHive is a family event and activity discovery platform. It aggregates events from 100+ sources (libraries, parks, museums, MacaroniKid, community centers) across 25+ US states and displays them on a Next.js website with Supabase (PostgreSQL + PostGIS) as the backend.
+FunHive is a family event and activity discovery platform. It aggregates events from 185+ sources (libraries, parks, museums, MacaroniKid, community centers) across 25+ US states and displays them on a Next.js website with Supabase (PostgreSQL + PostGIS) as the backend.
 
 ## Tech Stack
 - **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS
@@ -15,17 +15,19 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 ## Key Architecture Decisions
 
 ### Database Schema
-- `events` table: `event_date` is TEXT (scraper-provided), `date` is TIMESTAMPTZ (parsed). Always use `date` for filtering/sorting, never `event_date` (TEXT sorts alphabetically, not chronologically).
-- `activities` table: venues/places with `location GEOMETRY(Point, 4326)` for PostGIS queries.
-- `nearby_events` RPC: `nearby_events(lng, lat, radius_miles, max_results)` uses `ST_DWithin()`.
+- `events` table: `event_date` is TEXT (scraper-provided), `date` is TIMESTAMPTZ (parsed). Always use `date` for filtering/sorting, never `event_date` (TEXT sorts alphabetically, not chronologically). Has `reported BOOLEAN DEFAULT FALSE` for hiding reported items.
+- `activities` table: venues/places with `location GEOMETRY(Point, 4326)` for PostGIS queries. Also has `reported BOOLEAN DEFAULT FALSE`.
+- `event_reports` table: stores user reports (reason, comment, reporter_ip, status). Defined in `database/migration-reports.sql`.
+- `nearby_events` RPC: `nearby_events(lng, lat, radius_miles, max_results)` uses `ST_DWithin()`. Excludes `reported` items.
+- `nearby_activities` RPC: `nearby_activities(lng, lat, radius_miles, max_results)` — same pattern as `nearby_events` for venues. Excludes `reported` items.
 - Location stored as `SRID=4326;POINT(lng lat)` WKT format.
 - Geohash stored as 7-character string via ngeohash encoding.
 
 ### Scraper System
-- 230+ scrapers in `scrapers/` directory, registered in `scrapers/scraper-registry.js`.
+- 185+ scrapers in `scrapers/` directory, registered in `scrapers/scraper-registry.js`.
 - `SCRAPERS` is an object (not array), keyed by scraper name.
 - 3-day group rotation: Group 1 runs days 1,4,7,10...; Group 2 runs 2,5,8,11...; Group 3 runs 3,6,9,12...
-- MacaroniKid scrapers: 45 state-specific files (`scraper-macaroni-{state}.js`), each with identical structure.
+- MacaroniKid scrapers: 43 state-specific files (`scraper-macaroni-{state}.js`), each with identical structure.
 - All events flow through `supabase-adapter.js` → `saveEvent()` or `flattenEvent()`.
 
 ### Client-Side Patterns
@@ -42,6 +44,7 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - Never add room/department suffixes to venue names (e.g., "Library - Meeting Room"). The `cleanVenueName()` function in `supabase-adapter.js` strips these automatically.
 - Never store county centroid coordinates without the `if (!coords)` guard — always check if geocoding already succeeded before falling back.
 - Never use `order('event_date', { ascending: true })` — it sorts alphabetically ("April 1" before "April 2" before "January 1").
+- Never parse ISO date strings with `new Date("2026-04-23")` — JavaScript treats date-only ISO strings as UTC midnight, which shifts to the previous day in US timezones. Always append `T00:00:00` for local time: `new Date("2026-04-23T00:00:00")`.
 
 ### Always Do
 - Use `date` TIMESTAMPTZ column for all date filtering and sorting in queries.
@@ -49,11 +52,12 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - When geocoding fails, preserve the original `details.city` and `details.address` in the location object (don't overwrite with centroid data).
 - Wrap `useSearchParams()` in a `<Suspense>` boundary (Next.js requirement).
 - Run `node -c filename.js` to syntax-check any modified scraper file before committing.
+- Filter out reported items in queries with `.eq('reported', false)` and client-side `!e.reported` for RPC results.
 
 ### Scraper Conventions
-- All scrapers export a cloud function named `scrape{Name}CloudFunction`.
+- Many scrapers export a cloud function named `scrape{Name}CloudFunction`, but not all — some export plain function names like `scrapeMacaroniKidAlabama`.
 - The `saveEvent()` function automatically: rejects non-family events, rejects past events, rejects cancelled events, cleans venue names, extracts time from date strings, detects age ranges.
-- When modifying MacaroniKid scrapers, remember all 45 files share the same structure — changes often need to be applied to all of them via a script.
+- When modifying MacaroniKid scrapers, remember all 43 files share the same structure — changes often need to be applied to all of them via a script.
 - Geocoding fallback chain: full address → city-level → venue cache → county centroid (each step guarded by `if (!coords)`).
 
 ### Testing Patterns
@@ -74,6 +78,13 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - `src/lib/region-filter.ts` — `ACTIVE_STATES` array
 - `src/lib/supabase.ts` — Client-side Supabase client
 - `src/lib/supabase-server.ts` — Server-side Supabase client
+- `src/lib/report-signing.ts` — HMAC-SHA256 signing for admin action links
+
+### Reporting System
+- `src/components/ReportButton.tsx` — Flag icon button for reporting events/venues
+- `src/components/ReportModal.tsx` — Modal with report form (reason, comment, honeypot)
+- `src/app/api/reports/route.ts` — POST endpoint: submit report, hide item, email admin
+- `src/app/api/reports/[id]/[action]/route.ts` — GET endpoint: admin restore/remove via signed email links
 
 ### Scraper Infrastructure
 - `scrapers/helpers/supabase-adapter.js` — Central save/flatten functions, venue cleaning, age detection, cancelled event filtering
@@ -85,13 +96,18 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - `scrapers/date-normalization-helper.js` — Date string normalization
 
 ### Database
-- `database/schema.sql` — Full PostgreSQL schema with PostGIS
+- `database/schema.sql` — Base PostgreSQL schema with PostGIS
 - `database/schema-fix.sql` — Alternative `nearby_events` function
+- `database/migration-reports.sql` — Adds `event_reports` table, `reported` columns, updates RPCs
 
 ### Data Quality Scripts (run locally)
+- `fix-all.sh` — Runs all fix scripts in order (Steps 1-4)
+- `fix-all-data-quality.js` — Step 1: Normalize age ranges, delete adult-only events, delete past events, backfill parsed dates
+- `cleanup-nonfamily-events.js` — Step 2: Auto-delete non-family events (3-tier: auto-delete, keep, borderline CSV)
+- `fix-event-quality.js` — Step 3: Fix missing geohash, location, city, state, descriptions, times, junk titles
+- `fix-duplicate-dates.js` — Step 4: Fix events with doubled date strings from scraper bug
 - `data-quality-check.js` — Full audit: completeness, duplicates, scraper health
 - `fix-missing-fields.js` — Backfill addresses (reverse geocode) and descriptions
-- `fix-event-quality.js` — Fix missing geohash, location, city, state, descriptions; delete past/dateless events
 - `fix-duplicate-venues.js` — Clean room suffixes from existing venue names
 - `fix-cancelled-events.js` — Remove cancelled/closed/postponed events
 
