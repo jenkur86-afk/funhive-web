@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { randomUUID } from 'crypto'
 import { createServerClient } from '@/lib/supabase-server'
 import { buildActionUrl } from '@/lib/report-signing'
 
@@ -79,21 +80,22 @@ export async function POST(request: Request) {
       )
     }
 
-    // Insert report
-    const { data: report, error: insertError } = await supabase
+    // Insert report — generate UUID server-side so we don't need
+    // SELECT permission back (RLS only grants INSERT on event_reports)
+    const reportId = randomUUID()
+    const { error: insertError } = await supabase
       .from('event_reports')
       .insert({
+        id: reportId,
         event_id: event_id || null,
         activity_id: activity_id || null,
         reason,
         comment: comment?.trim() || null,
         reporter_ip: reporterIp,
       })
-      .select('id')
-      .single()
 
-    if (insertError || !report) {
-      console.error('Failed to insert report:', insertError?.message)
+    if (insertError) {
+      console.error('Failed to insert report:', insertError.message)
       return NextResponse.json(
         { error: 'Failed to submit report' },
         { status: 500 }
@@ -127,8 +129,8 @@ export async function POST(request: Request) {
     if (notificationEmail && process.env.RESEND_API_KEY) {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || `https://${process.env.VERCEL_URL}` || 'https://funhive.com'
-        const restoreUrl = buildActionUrl(baseUrl, report.id, 'restore')
-        const removeUrl = buildActionUrl(baseUrl, report.id, 'remove')
+        const restoreUrl = buildActionUrl(baseUrl, reportId, 'restore')
+        const removeUrl = buildActionUrl(baseUrl, reportId, 'remove')
         const reviewUrl = `${baseUrl}${itemUrl}`
 
         const reasonLabel = REASON_LABELS[reason] || reason

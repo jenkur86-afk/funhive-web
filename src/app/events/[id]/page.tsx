@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import EventDetailHeader from '@/components/EventDetailHeader'
 import EventActions from '@/components/EventActions'
 import ReviewsList from '@/components/ReviewsList'
+import ReportButton from '@/components/ReportButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -170,9 +171,17 @@ export default async function EventDetailPage({ params }: EventDetailProps) {
           </Link>
 
           {/* Metadata footer */}
-          <div className="mt-8 pt-4 border-t border-gray-100 flex flex-wrap gap-4 text-xs text-gray-400">
+          <div className="mt-8 pt-4 border-t border-gray-100 flex flex-wrap items-center gap-4 text-xs text-gray-400">
             {event.scraper_name && <span>Source: {event.scraper_name}</span>}
             {event.scraped_at && <span>Updated: {new Date(event.scraped_at).toLocaleDateString()}</span>}
+            <span className="ml-auto">
+              <ReportButton
+                eventId={event.id}
+                itemName={event.name}
+                itemType="event"
+                size="sm"
+              />
+            </span>
           </div>
         </div>
       </div>
