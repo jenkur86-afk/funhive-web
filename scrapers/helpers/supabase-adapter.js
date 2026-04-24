@@ -286,6 +286,7 @@ const NON_FAMILY_PATTERNS = [
   // Promotional / submit-your-event junk
   /\bsubmit\s+(it\s+to|your|an?\s+event)\b/i,
   /\bpost\s+your\s+event\b/i,
+  /\bcheat\s+sheet\b/i,
 ];
 
 // If event matches a non-family pattern BUT also matches these, keep it

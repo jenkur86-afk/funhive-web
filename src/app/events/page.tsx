@@ -182,7 +182,7 @@ function EventsPageInner() {
 
   useEffect(() => {
     preloadZipData().then(() => loadEvents())
-  }, [selectedCategories, locationCoords, selectedRadius, debouncedSearch])
+  }, [selectedCategories, locationCoords, selectedRadius, debouncedSearch, selectedDateFilter, customDateRange])
 
   // Parse location input whenever it changes
   useEffect(() => {
@@ -264,10 +264,61 @@ function isEventOnOrAfterToday(event: any): boolean {
   return true
 }
 
+  // Compute the DB-level date range from the selected date filter.
+  // Returns { start, end } ISO date strings, or just { start } for open-ended.
+  function getDateRange(): { start: string; end?: string } {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const todayStr = today.toISOString().split('T')[0]
+    const dayOfWeek = today.getDay()
+
+    switch (selectedDateFilter) {
+      case 'Today':
+        return { start: todayStr, end: todayStr }
+
+      case 'This Week': {
+        const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek
+        const endOfWeek = new Date(today)
+        endOfWeek.setDate(endOfWeek.getDate() + daysUntilSunday)
+        return { start: todayStr, end: endOfWeek.toISOString().split('T')[0] }
+      }
+
+      case 'This Weekend': {
+        const daysUntilSaturday = dayOfWeek === 0 ? 6 : (6 - dayOfWeek + 7) % 7
+        const saturday = new Date(today)
+        saturday.setDate(saturday.getDate() + daysUntilSaturday)
+        const sunday = new Date(saturday)
+        sunday.setDate(sunday.getDate() + 1)
+        return { start: saturday.toISOString().split('T')[0], end: sunday.toISOString().split('T')[0] }
+      }
+
+      case 'Next Week': {
+        const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek
+        const nextWeekStart = new Date(today)
+        nextWeekStart.setDate(nextWeekStart.getDate() + daysUntilSunday + 1)
+        const nextWeekEnd = new Date(nextWeekStart)
+        nextWeekEnd.setDate(nextWeekEnd.getDate() + 6)
+        return { start: nextWeekStart.toISOString().split('T')[0], end: nextWeekEnd.toISOString().split('T')[0] }
+      }
+
+      case 'Custom': {
+        if (customDateRange?.start && customDateRange?.end) {
+          // Use the later of today or the custom start, so we don't fetch past events
+          const effectiveStart = customDateRange.start > todayStr ? customDateRange.start : todayStr
+          return { start: effectiveStart, end: customDateRange.end }
+        }
+        return { start: todayStr }
+      }
+
+      default:
+        return { start: todayStr }
+    }
+  }
+
   async function loadEvents() {
     setLoading(true)
     try {
-      const today = new Date().toISOString().split('T')[0]
+      const { start: dateStart, end: dateEnd } = getDateRange()
       let allData: any[] = []
 
       if (locationCoords) {
@@ -290,9 +341,13 @@ function isEventOnOrAfterToday(event: any): boolean {
           .is('location', null)
           .not('event_date', 'is', null)
           .eq('reported', false)
-          .gte('date', today)
+          .gte('date', dateStart)
           .in('state', ACTIVE_STATES || [])
           .limit(300)
+
+        if (dateEnd) {
+          suppQuery = suppQuery.lte('date', dateEnd + 'T23:59:59')
+        }
 
         if (debouncedSearch) {
           const term = `%${debouncedSearch}%`
@@ -331,9 +386,12 @@ function isEventOnOrAfterToday(event: any): boolean {
             .order('date', { ascending: true, nullsFirst: false })
             .limit(500)
         } else {
-          // No search — filter future events at DB level for speed
+          // Filter at DB level using the computed date range
+          query = query.gte('date', dateStart)
+          if (dateEnd) {
+            query = query.lte('date', dateEnd + 'T23:59:59')
+          }
           query = query
-            .gte('date', today)
             .order('date', { ascending: true })
             .limit(500)
         }
