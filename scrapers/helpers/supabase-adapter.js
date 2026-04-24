@@ -287,6 +287,9 @@ const NON_FAMILY_PATTERNS = [
   /\bsubmit\s+(it\s+to|your|an?\s+event)\b/i,
   /\bpost\s+your\s+event\b/i,
   /\bcheat\s+sheet\b/i,
+  /\blooking\s+for\s+library\s+story\s+times\b/i,
+  /\bstart\s+here!?\s*$/i,
+  /\bvisit\s+our\s+(full\s+)?guide\b/i,
 ];
 
 // If event matches a non-family pattern BUT also matches these, keep it

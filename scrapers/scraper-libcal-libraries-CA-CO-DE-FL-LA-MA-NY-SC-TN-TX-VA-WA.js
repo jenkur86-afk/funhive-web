@@ -39,6 +39,10 @@
  * - St. Johns County Public Library (NEW)
  * - Seminole County Library (NEW)
  *
+ * IL:
+ * - Roselle Public Library District (NEW)
+ * - Poplar Creek Public Library District (NEW)
+ *
  * LA:
  * - Lafayette Public Library
  *
@@ -392,6 +396,26 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.seminolecountylibrary.org',
     city: 'Sanford',
     zipCode: '32771'
+  },
+
+  // ILLINOIS
+  {
+    name: 'Roselle Public Library District',
+    url: 'https://rosellepld.libcal.com/calendar?cid=-1&t=d',
+    county: 'DuPage',
+    state: 'IL',
+    website: 'https://www.rosellepld.org',
+    city: 'Roselle',
+    zipCode: '60172'
+  },
+  {
+    name: 'Poplar Creek Public Library District',
+    url: 'https://pclib.libcal.com/calendar?cid=-1&t=d',
+    county: 'Cook',
+    state: 'IL',
+    website: 'https://pclib.org',
+    city: 'Streamwood',
+    zipCode: '60107'
   },
 
   // IOWA

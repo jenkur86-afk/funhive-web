@@ -36,11 +36,13 @@
  * - Chattahoochee Valley Libraries (Columbus) (325K)
  * - Forsyth County Public Library (Cumming) (251K)
  *
- * IL (4 libraries - 427K people):
+ * IL (6 libraries - 497K people):
  * - Joliet Public Library (147K)
  * - Schaumburg Township District Library (135K)
  * - Champaign Public Library (90K)
  * - Mount Prospect Public Library (55K)
+ * - Elk Grove Village Public Library (33K) (NEW)
+ * - Rolling Meadows Library (24K) (NEW)
  *
  * IN (3 libraries - 1.54M people):
  * - Indianapolis Public Library (970K)
@@ -339,7 +341,7 @@ const LIBRARY_SYSTEMS = [
     zipCode: '08901'
   },
 
-  // ILLINOIS (4 libraries)
+  // ILLINOIS (6 libraries)
   {
     name: 'Joliet Public Library',
     url: 'https://jolietpubliclibrary.libnet.info/events',
@@ -375,6 +377,24 @@ const LIBRARY_SYSTEMS = [
     website: 'https://mppl.org',
     city: 'Mount Prospect',
     zipCode: '60056'
+  },
+  {
+    name: 'Elk Grove Village Public Library',
+    url: 'https://egvpl.libnet.info/events',
+    county: 'Cook',
+    state: 'IL',
+    website: 'https://www.egvpl.org',
+    city: 'Elk Grove Village',
+    zipCode: '60007'
+  },
+  {
+    name: 'Rolling Meadows Library',
+    url: 'https://rmlib.libnet.info/events',
+    county: 'Cook',
+    state: 'IL',
+    website: 'https://www.rmlib.org',
+    city: 'Rolling Meadows',
+    zipCode: '60008'
   },
 
   // INDIANA (3 libraries)

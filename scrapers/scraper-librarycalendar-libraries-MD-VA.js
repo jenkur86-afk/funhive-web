@@ -37,6 +37,9 @@
  * SC:
  * - York County Library (NEW)
  *
+ * IL:
+ * - Bloomingdale Public Library (NEW)
+ *
  * Usage:
  *   node scripts/Scraper-event-librarycalendar.js
  */
@@ -315,6 +318,17 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.yclibrary.org',
     city: 'Rock Hill',
     zipCode: '29730'
+  },
+
+  // ILLINOIS
+  {
+    name: 'Bloomingdale Public Library',
+    url: 'https://bloomingdale.librarycalendar.com/events/month',
+    county: 'DuPage',
+    state: 'IL',
+    website: 'https://www.mybpl.org',
+    city: 'Bloomingdale',
+    zipCode: '60108'
   }
 ];
 
