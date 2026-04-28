@@ -24,3 +24,17 @@ Thumbs.db
 # Sensitive
 firebase-service-account.json
 *.pem
+
+# Scraper logs
+logs/
+
+# Spreadsheets, docs, and reports (planning/reference files, not source code)
+*.xlsx
+*.docx
+*.csv
+.~lock.*
+
+# One-off data fetch/export scripts
+fetch-events.js
+events.xlsx
+venues.xlsx
