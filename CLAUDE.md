@@ -116,16 +116,21 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - `database/schema-fix.sql` — Alternative `nearby_events` function
 - `database/migration-reports.sql` — Adds `event_reports` table, `reported` columns, updates RPCs
 
-### Data Quality Scripts (run locally)
-- `fix-all.sh` — Runs all fix scripts in order (Steps 1-4)
-- `fix-all-data-quality.js` — Step 1: Normalize age ranges, delete adult-only events, delete past events, backfill parsed dates
-- `cleanup-nonfamily-events.js` — Step 2: Auto-delete non-family events (3-tier: auto-delete, keep, borderline CSV)
-- `fix-event-quality.js` — Step 3: Fix missing geohash, location, city, state, descriptions, times, junk titles
-- `fix-duplicate-dates.js` — Step 4: Fix events with doubled date strings from scraper bug
-- `data-quality-check.js` — Full audit: completeness, duplicates, scraper health
-- `fix-missing-fields.js` — Backfill addresses (reverse geocode) and descriptions
-- `fix-duplicate-venues.js` — Clean room suffixes from existing venue names
-- `fix-cancelled-events.js` — Remove cancelled/closed/postponed events
+### Data Quality Scripts (`scripts/` — run locally, weekly)
+- `scripts/fix-all.sh` — Runs all fix scripts in order (Steps 1-5). Usage: `bash scripts/fix-all.sh`
+- `scripts/fix-all-data-quality.js` — Step 1: Normalize age ranges, delete adult-only events, delete past events, backfill parsed dates
+- `scripts/cleanup-nonfamily-events.js` — Step 2: Auto-delete non-family events (3-tier: auto-delete, keep, borderline CSV)
+- `scripts/fix-event-quality.js` — Step 3: Fix missing geohash, location, city, state, descriptions, times, junk titles
+- `scripts/fix-duplicate-dates.js` — Step 4: Fix events with doubled date strings from scraper bug
+- `scripts/fix-missing-fields.js` — Step 5: Backfill addresses (reverse geocode) and descriptions
+- `scripts/data-quality-check.js` — Full audit: completeness, duplicates, scraper health
+- `scripts/fix-duplicate-venues.js` — Clean room suffixes from existing venue names
+- `scripts/fix-cancelled-events.js` — Remove cancelled/closed/postponed events
+- `scripts/archive/` — One-off fix scripts (already run, kept for reference)
+
+### Prompts (top-level)
+- `SCRAPER-DIAGNOSIS-PROMPT.md` — Paste into Cowork after running scrapers
+- `DATA-QUALITY-DIAGNOSIS-PROMPT.md` — Paste into Cowork after running data-quality-check.js
 
 ## Age Range Brackets
 The platform uses 5 age brackets with numeric range overlap:

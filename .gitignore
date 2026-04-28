@@ -34,7 +34,8 @@ logs/
 *.csv
 .~lock.*
 
-# One-off data fetch/export scripts
-fetch-events.js
-events.xlsx
-venues.xlsx
+# Data exports (large JSON/spreadsheet dumps)
+scripts/exports/*.json
+
+# Data quality reports
+scripts/data-quality-reports/
