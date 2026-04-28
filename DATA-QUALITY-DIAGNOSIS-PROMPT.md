@@ -20,6 +20,13 @@ There are three fix scripts, all run together via `bash fix-all.sh`:
 
 The combined runner script is `fix-all.sh` — it runs all three in order and stops on any failure.
 
+### Bandwidth management (Supabase free plan — 5.5 GB egress limit)
+
+- Run the data quality pipeline **weekly**, not after every scraper run. The scrapers' `saveEvent()` already handles date parsing, age detection, cancelled event filtering, and venue name cleaning at save time — the fix scripts are a safety net, not a required step.
+- When writing or modifying fix scripts, always use `.select('column1, column2, ...')` with only the columns the script actually reads — never `select('*')`. Each full-table scan of events (~500k rows) with all columns costs ~100-500 MB of egress.
+- The `fetchAll()` pattern in existing scripts already uses selective columns — preserve this when making changes.
+- Prefer batched updates over individual row updates to minimize round-trips.
+
 ### What to look for and fix
 
 **1. Past events still in DB**

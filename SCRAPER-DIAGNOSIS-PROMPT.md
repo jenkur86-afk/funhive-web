@@ -69,6 +69,13 @@ I just ran FunHive scrapers. Analyze the full output I'm pasting below and fix A
 - **The fix** is always in how the scraper builds its `venues` array (or `libraries` array) for `saveEventsWithGeocoding` — it should create one venue entry per unique `event.venueName` or `event.location`, not one per state/source
 - Check that extraction functions actually populate the `location` field from DOM elements (park names, branch names, venue fields) rather than leaving it empty and falling back to the config-level name
 
+### Bandwidth management (Supabase free plan — 5.5 GB egress limit)
+
+- The venue cache in `venue-matcher.js` is the single largest egress source. It loads all activities into memory with a **30-minute TTL** and selective columns (id, name, city, state, address, location, geohash, category). Do NOT reduce the TTL or add more columns to the cache query.
+- When writing new scrapers or fix scripts that read from Supabase, always use `.select('column1, column2, ...')` with only the columns you need — never `select('*')`.
+- If a scraper needs to check for duplicates, use the existing `checkDuplicate()` in `supabase-adapter.js` which selects only `id, name`.
+- Data quality fix scripts should be run **weekly** (not after every scraper run) to minimize egress. The scrapers' `saveEvent()` function already handles date parsing, age detection, cancelled event filtering, and venue name cleaning at save time.
+
 ### How to fix
 
 - Read the relevant scraper file(s) and helper files before making changes
