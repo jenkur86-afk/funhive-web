@@ -282,7 +282,7 @@ async function scrapeTrumbaLibrary() {
   console.log(`   Failed: ${failed}`);
   console.log('='.repeat(60) + '\n');
 
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('Trumba Spartanburg Library', {
     found: imported + skipped,
     new: imported,

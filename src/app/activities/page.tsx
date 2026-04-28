@@ -206,9 +206,13 @@ export default function VenuesPage() {
         }
 
         // Also fetch venues without geometry that have city/state/zip
+        // Select only columns needed for card display and client-side filtering.
+        // Excludes image_url, url, source, scraper_name, phone, price_range,
+        // scraped_at, created_at, updated_at, geohash to reduce Supabase egress.
+        const ACTIVITY_LIST_COLS = 'id, name, city, state, address, location, zip_code, category, description, age_range, min_age, max_age, hours, is_free, reported'
         let suppQuery = supabase
           .from('activities')
-          .select('*')
+          .select(ACTIVITY_LIST_COLS)
           .is('location', null)
           .eq('reported', false)
           .limit(300)
@@ -232,9 +236,10 @@ export default function VenuesPage() {
         // radius can be found by name/city/keyword
         if (debouncedSearch) {
           const term = `%${debouncedSearch}%`
+          const ACTIVITY_SEARCH_COLS = 'id, name, city, state, address, location, zip_code, category, description, age_range, min_age, max_age, hours, is_free, reported'
           const searchResult = await supabase
             .from('activities')
-            .select('*')
+            .select(ACTIVITY_SEARCH_COLS)
             .in('state', ACTIVE_STATES || [])
             .eq('reported', false)
             .or(
@@ -249,9 +254,10 @@ export default function VenuesPage() {
         }
       } else {
         // No location — use standard query
+        const ACTIVITY_STD_COLS = 'id, name, city, state, address, location, zip_code, category, description, age_range, min_age, max_age, hours, is_free, reported'
         let query = supabase
           .from('activities')
-          .select('*')
+          .select(ACTIVITY_STD_COLS)
           .in('state', ACTIVE_STATES || [])
           .eq('reported', false)
           .order('name', { ascending: true })

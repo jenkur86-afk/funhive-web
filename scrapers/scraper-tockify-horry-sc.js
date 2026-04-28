@@ -296,7 +296,7 @@ async function scrapeTockifyLibraryCloudFunction() {
   try {
     const result = await scrapeTockifyLibrary();
 
-    // Log scraper stats to Firestore
+    // Log scraper stats to database
     await logScraperResult('Tockify Horry Library', {
       found: result.imported + result.skipped,
       new: result.imported,

@@ -341,7 +341,7 @@ async function fetchEvents() {
 }
 
 /**
- * Save events to Firestore
+ * Save events to database
  */
 async function saveEvents(events) {
   if (events.length === 0) return { saved: 0, failed: 0 };
@@ -480,7 +480,7 @@ async function scrapeFairfaxParks(options = {}) {
     console.error('Failed to log scraper run:', error.message);
   }
 
-  // Log scraper stats to Firestore (standard format)
+  // Log scraper stats to database (standard format)
   await logScraperResult('FairfaxParks-VA', {
     found: rawEvents.length,
     new: saved,

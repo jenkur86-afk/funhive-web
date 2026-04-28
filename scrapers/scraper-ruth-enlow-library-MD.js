@@ -264,7 +264,7 @@ async function scrapeRuthEnlowLibrary() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   let batch = db.batch();
   let imported = 0;
   let skipped = 0;
@@ -318,7 +318,7 @@ async function saveToFirebase(events) {
   console.log(`   Imported: ${imported}`);
   console.log(`   Skipped (duplicates): ${skipped}`);
 
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('Ruth Enlow Library', {
     found: imported + skipped,
     new: imported,
@@ -333,7 +333,7 @@ async function scrapeRuthEnlowLibraryCloudFunction() {
   const events = await scrapeRuthEnlowLibrary();
 
   if (events.length > 0) {
-    const result = await saveToFirebase(events);
+    const result = await saveToDatabase(events);
     return result;
   }
 
@@ -352,7 +352,7 @@ if (require.main === module) {
   scrapeRuthEnlowLibrary()
     .then(events => {
       if (events.length > 0) {
-        return saveToFirebase(events);
+        return saveToDatabase(events);
       }
       return { imported: 0, skipped: 0 };
     })

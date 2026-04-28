@@ -48,6 +48,36 @@ function encodeGeohash(lat, lng, precision = 7) {
 
 const SAVE = process.argv.includes('--save');
 
+// US state centroids — last-resort fallback when all geocoding fails
+const STATE_CENTROIDS = {
+  'AL': { lat: 32.806671, lng: -86.791130 }, 'AK': { lat: 61.370716, lng: -152.404419 },
+  'AZ': { lat: 33.729759, lng: -111.431221 }, 'AR': { lat: 34.969704, lng: -92.373123 },
+  'CA': { lat: 36.116203, lng: -119.681564 }, 'CO': { lat: 39.059811, lng: -105.311104 },
+  'CT': { lat: 41.597782, lng: -72.755371 }, 'DE': { lat: 39.318523, lng: -75.507141 },
+  'DC': { lat: 38.897438, lng: -77.026817 }, 'FL': { lat: 27.766279, lng: -81.686783 },
+  'GA': { lat: 33.040619, lng: -83.643074 }, 'HI': { lat: 21.094318, lng: -157.498337 },
+  'ID': { lat: 44.240459, lng: -114.478828 }, 'IL': { lat: 40.349457, lng: -88.986137 },
+  'IN': { lat: 39.849426, lng: -86.258278 }, 'IA': { lat: 42.011539, lng: -93.210526 },
+  'KS': { lat: 38.526600, lng: -96.726486 }, 'KY': { lat: 37.668140, lng: -84.670067 },
+  'LA': { lat: 31.169546, lng: -91.867805 }, 'ME': { lat: 44.693947, lng: -69.381927 },
+  'MD': { lat: 39.063946, lng: -76.802101 }, 'MA': { lat: 42.230171, lng: -71.530106 },
+  'MI': { lat: 43.326618, lng: -84.536095 }, 'MN': { lat: 45.694454, lng: -93.900192 },
+  'MS': { lat: 32.741646, lng: -89.678696 }, 'MO': { lat: 38.456085, lng: -92.288368 },
+  'MT': { lat: 46.921925, lng: -110.454353 }, 'NE': { lat: 41.125370, lng: -98.268082 },
+  'NV': { lat: 38.313515, lng: -117.055374 }, 'NH': { lat: 43.452492, lng: -71.563896 },
+  'NJ': { lat: 40.298904, lng: -74.521011 }, 'NM': { lat: 34.840515, lng: -106.248482 },
+  'NY': { lat: 42.165726, lng: -74.948051 }, 'NC': { lat: 35.630066, lng: -79.806419 },
+  'ND': { lat: 47.528912, lng: -99.784012 }, 'OH': { lat: 40.388783, lng: -82.764915 },
+  'OK': { lat: 35.565342, lng: -96.928917 }, 'OR': { lat: 44.572021, lng: -122.070938 },
+  'PA': { lat: 40.590752, lng: -77.209755 }, 'RI': { lat: 41.680893, lng: -71.511780 },
+  'SC': { lat: 33.856892, lng: -80.945007 }, 'SD': { lat: 44.299782, lng: -99.438828 },
+  'TN': { lat: 35.747845, lng: -86.692345 }, 'TX': { lat: 31.054487, lng: -97.563461 },
+  'UT': { lat: 40.150032, lng: -111.862434 }, 'VT': { lat: 44.045876, lng: -72.710686 },
+  'VA': { lat: 37.769337, lng: -78.169968 }, 'WA': { lat: 47.400902, lng: -121.490494 },
+  'WV': { lat: 38.491226, lng: -80.954453 }, 'WI': { lat: 44.268543, lng: -89.616508 },
+  'WY': { lat: 42.755966, lng: -107.302490 },
+};
+
 async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 // ── Paginated fetch with retries ──
@@ -90,16 +120,18 @@ async function fetchAll(table, select, filters = {}) {
 
 // ── Reverse geocode ──
 let consecutiveFails = 0;
+const NOMINATIM_UA = 'FunHive/1.0 (https://funhive.co; jenkur86@gmail.com)';
+const BASE_DELAY = 2500;  // 2.5s between requests (conservative — Nominatim allows 1/s but 429s at 1.5s)
 async function reverseGeocode(lat, lng) {
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1&zoom=12`;
       const response = await fetch(url, {
-        headers: { 'User-Agent': 'FunHive/1.0 (event-fix)' },
+        headers: { 'User-Agent': NOMINATIM_UA },
         signal: AbortSignal.timeout(15000)
       });
-      if (response.status === 429) { console.log(`  ⚠️ 429 rate limit — cooling down ${10 * (attempt + 1)}s`); await sleep(10000 * (attempt + 1)); continue; }
-      if (!response.ok) { await sleep(2000); continue; }
+      if (response.status === 429) { console.log(`  ⚠️ 429 rate limit — cooling down ${30 * (attempt + 1)}s`); await sleep(30000 * (attempt + 1)); continue; }
+      if (!response.ok) { await sleep(3000); continue; }
       const data = await response.json();
       consecutiveFails = 0;
       if (data?.address) {
@@ -113,7 +145,7 @@ async function reverseGeocode(lat, lng) {
       return null;
     } catch (err) {
       consecutiveFails++;
-      if (attempt < 2) await sleep(3000 * (attempt + 1));
+      if (attempt < 2) await sleep(5000 * (attempt + 1));
     }
   }
   return null;
@@ -125,9 +157,10 @@ async function forwardGeocode(city, state) {
     const q = `${city}, ${state}, USA`;
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1&countrycodes=us`;
     const response = await fetch(url, {
-      headers: { 'User-Agent': 'FunHive/1.0 (event-fix)' },
+      headers: { 'User-Agent': NOMINATIM_UA },
       signal: AbortSignal.timeout(15000)
     });
+    if (response.status === 429) { await sleep(30000); return null; }
     if (!response.ok) return null;
     const data = await response.json();
     if (data?.[0]) {
@@ -143,10 +176,10 @@ async function forwardGeocodeQuery(query) {
     try {
       const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=us&addressdetails=1`;
       const response = await fetch(url, {
-        headers: { 'User-Agent': 'FunHive/1.0 (event-fix)' },
+        headers: { 'User-Agent': NOMINATIM_UA },
         signal: AbortSignal.timeout(15000)
       });
-      if (response.status === 429) { await sleep(10000 * (attempt + 1)); continue; }
+      if (response.status === 429) { await sleep(30000 * (attempt + 1)); continue; }
       if (!response.ok) return null;
       const data = await response.json();
       consecutiveFails = 0;
@@ -161,7 +194,7 @@ async function forwardGeocodeQuery(query) {
       }
     } catch (err) {
       consecutiveFails++;
-      if (attempt < 1) await sleep(3000);
+      if (attempt < 1) await sleep(5000);
     }
   }
   return null;
@@ -348,9 +381,14 @@ async function main() {
   const junkEvents = allForJunk.filter(e => {
     if (!e.name) return true;
     const n = e.name.trim();
-    if (n.length < 4) return true;  // Too short to be a real event name
+    if (n.length < 5) return true;  // Too short to be a real event name
     if (n.length < 8 && /^[A-Z\s\d]+$/.test(n)) return true;  // All-caps gibberish
     if (/^(menu|home|about|contact|login|sign\s*up|subscribe|search|nav|header|footer|click\s+here|read\s+more|learn\s+more|view\s+all)$/i.test(n)) return true;  // Navigation junk
+    // HTTP error pages / scraper artifacts
+    if (/\b(page\s+(you\s+requested\s+)?(no\s+longer\s+exists|not\s+found|cannot\s+be\s+found|has\s+been\s+removed|does\s+not\s+exist))\b/i.test(n)) return true;
+    if (/\b(404\s*(error|not\s+found)?|error\s+404)\b/i.test(n)) return true;
+    if (/^(access\s+denied|forbidden|unauthorized|not\s+found|error|page\s+not\s+found)$/i.test(n)) return true;
+    if (/\b(server\s+error|internal\s+error|bad\s+gateway|service\s+unavailable)\b/i.test(n)) return true;
     return false;
   });
   console.log(`  Found ${junkEvents.length} events with junk titles`);
@@ -419,7 +457,10 @@ async function main() {
   // ── 3. Fix missing state (34) ──
   console.log(`\n🏛️  STEP 3: Fix missing state`);
   console.log(`───────────────────────────────────────`);
-  const noState = await fetchAll('events', 'id, name, city, state, venue, address, scraper_name',
+
+  const VALID_STATE_SET = new Set(Object.values(STATE_ABBREVS));
+
+  const noState = await fetchAll('events', 'id, name, city, state, venue, address, scraper_name, location',
     { or: 'state.is.null,state.eq.' });
   console.log(`  Found ${noState.length} events with no state`);
 
@@ -429,8 +470,8 @@ async function main() {
 
     // Try scraper name (e.g. "MacaroniKid-MD", "Communico-VA")
     if (event.scraper_name) {
-      const m = event.scraper_name.match(/[-_ ]([A-Z]{2})$/);
-      if (m && Object.values(STATE_ABBREVS).includes(m[1])) {
+      const m = event.scraper_name.match(/[-_ ]([A-Z]{2})(?:$|\d)/);
+      if (m && VALID_STATE_SET.has(m[1])) {
         inferredState = m[1];
       }
     }
@@ -438,9 +479,24 @@ async function main() {
     // Try address (e.g. "123 Main St, Springfield, VA 22150")
     if (!inferredState && event.address) {
       const m = event.address.match(/\b([A-Z]{2})\s+\d{5}\b/);
-      if (m && Object.values(STATE_ABBREVS).includes(m[1])) {
+      if (m && VALID_STATE_SET.has(m[1])) {
         inferredState = m[1];
       }
+    }
+
+    // Try reverse geocode from coordinates
+    if (!inferredState && event.location) {
+      try {
+        const coordMatch = event.location.match(/POINT\(([-\d.]+)\s+([-\d.]+)\)/);
+        if (coordMatch) {
+          const result = await reverseGeocode(parseFloat(coordMatch[2]), parseFloat(coordMatch[1]));
+          if (result && result.state) {
+            const abbrev = STATE_ABBREVS[(result.state || '').toLowerCase()];
+            if (abbrev) inferredState = abbrev;
+          }
+          await sleep(BASE_DELAY);
+        }
+      } catch (e) { /* skip */ }
     }
 
     if (inferredState) {
@@ -452,6 +508,41 @@ async function main() {
     }
   }
   console.log(`  Fixed: ${stateFixed}/${noState.length}`);
+
+  // 3b. Fix invalid state values
+  const allEvents = await fetchAll('events', 'id, name, state, city, address, scraper_name',
+    { not: ['state', 'is', null] });
+  const invalidStateEvents = allEvents.filter(e => e.state && !VALID_STATE_SET.has(e.state.toUpperCase()));
+  if (invalidStateEvents.length > 0) {
+    console.log(`  3b: ${invalidStateEvents.length} events with invalid state`);
+    let invalidFixed = 0;
+    for (const event of invalidStateEvents) {
+      let fixedState = null;
+      // Check if it's a full state name
+      const abbrev = STATE_ABBREVS[(event.state || '').toLowerCase()];
+      if (abbrev) fixedState = abbrev;
+      // Try scraper name
+      if (!fixedState && event.scraper_name) {
+        const m = event.scraper_name.match(/[-_ ]([A-Z]{2})(?:$|\d)/);
+        if (m && VALID_STATE_SET.has(m[1])) fixedState = m[1];
+      }
+      // Try address
+      if (!fixedState && event.address) {
+        const m = event.address.match(/\b([A-Z]{2})\s+\d{5}\b/);
+        if (m && VALID_STATE_SET.has(m[1])) fixedState = m[1];
+      }
+      if (fixedState) {
+        if (SAVE) {
+          await supabase.from('events').update({ state: fixedState }).eq('id', event.id);
+        }
+        invalidFixed++;
+        if (invalidFixed <= 5) console.log(`  ✅ "${event.name}": "${event.state}" → ${fixedState}`);
+      }
+    }
+    console.log(`  3b fixed: ${invalidFixed}/${invalidStateEvents.length}`);
+    stateFixed += invalidFixed;
+  }
+
   totalFixed += stateFixed;
 
   // ── 4. Fix missing geohash from existing coordinates (2262) ──
@@ -513,7 +604,7 @@ async function main() {
       if (cityFixed <= 5) console.log(`  ✅ "${event.name}" → ${geo.city}`);
       else if (cityFixed % 100 === 0) console.log(`  ... ${cityFixed} cities fixed`);
     }
-    await sleep(2000);
+    await sleep(BASE_DELAY);
   }
   console.log(`  5a fixed: ${cityFixed}/${noCity.length}`);
 
@@ -575,7 +666,7 @@ async function main() {
     if (coords === undefined) {
       coords = await forwardGeocode(event.city, event.state);
       geoCache[cacheKey] = coords || null;
-      await sleep(2000);
+      await sleep(BASE_DELAY);
     }
 
     if (coords) {
@@ -619,7 +710,7 @@ async function main() {
       }
       result = await forwardGeocodeQuery(q);
       geoCache[cacheKey] = result || null;
-      await sleep(2000);
+      await sleep(BASE_DELAY);
       if (result) break;
     }
 
@@ -643,8 +734,33 @@ async function main() {
       else if (fallbackFixed % 50 === 0) console.log(`  ... ${fallbackFixed} fallback locations fixed`);
     }
   }
-  console.log(`  Fixed: ${locFixed} (city+state) + ${fallbackFixed} (address/venue fallback) = ${locFixed + fallbackFixed}/${noLoc.length}`);
-  totalFixed += locFixed + fallbackFixed;
+
+  // 6c. Last resort: state centroid for events that still have no location but have a state
+  let centroidFixed = 0;
+  const stillNoLoc = await fetchAll('events', 'id, name, state, geohash',
+    { is: ['location', null], not: ['state', 'is', null] });
+  if (stillNoLoc.length > 0) {
+    console.log(`  6c: ${stillNoLoc.length} events still without location — trying state centroid fallback`);
+    for (const event of stillNoLoc) {
+      const centroid = STATE_CENTROIDS[event.state];
+      if (centroid) {
+        const hash = encodeGeohash(centroid.lat, centroid.lng, 7);
+        const updates = {
+          location: `SRID=4326;POINT(${centroid.lng} ${centroid.lat})`,
+          geohash: event.geohash || hash
+        };
+        if (SAVE) {
+          await supabase.from('events').update(updates).eq('id', event.id);
+        }
+        centroidFixed++;
+        if (centroidFixed <= 5) console.log(`  ⚠️  [state centroid] "${event.name}" → ${event.state} centroid`);
+      }
+    }
+    console.log(`  6c fixed: ${centroidFixed}/${stillNoLoc.length} (state centroid)`);
+  }
+
+  console.log(`  Fixed: ${locFixed} (city+state) + ${fallbackFixed} (address/venue) + ${centroidFixed} (state centroid) = ${locFixed + fallbackFixed + centroidFixed}/${noLoc.length + stillNoLoc.length}`);
+  totalFixed += locFixed + fallbackFixed + centroidFixed;
 
   // ── 7. Fix missing descriptions (6618) ──
   console.log(`\n📝 STEP 7: Fix missing descriptions`);
@@ -679,6 +795,9 @@ async function main() {
     { is: ['start_time', null], not: ['event_date', 'is', null] });
   console.log(`  Found ${noStartTime.length} events with no start_time`);
 
+  // Sample unparseable event_date values for diagnostics
+  const sampleUnparseable = [];
+
   let startFixed = 0, endFixed = 0;
   const timeUpdates = []; // {id, updates}
 
@@ -695,7 +814,14 @@ async function main() {
       if (startFixed <= 5) {
         console.log(`  ✅ "${event.event_date}" → start: ${times.start}${times.end ? `, end: ${times.end}` : ''}`);
       }
+    } else if (sampleUnparseable.length < 15) {
+      sampleUnparseable.push(`    "${event.event_date}" [${event.name?.substring(0, 40)}]`);
     }
+  }
+
+  if (sampleUnparseable.length > 0) {
+    console.log(`  📋 Sample unparseable event_date values (no time info):`);
+    for (const s of sampleUnparseable) console.log(s);
   }
 
   // Also check events that have start_time but no end_time
@@ -736,6 +862,39 @@ async function main() {
   console.log(`\n\n${'═'.repeat(60)}`);
   console.log(`  FIX ACTIVITIES DATA QUALITY`);
   console.log(`${'═'.repeat(60)}\n`);
+
+  // ── 8c. Fix activities with invalid state ──
+  const allActs2 = await fetchAll('activities', 'id, name, state, city, address, source',
+    { not: ['state', 'is', null] });
+  const invalidActStates = allActs2.filter(a => a.state && !VALID_STATE_SET.has(a.state.toUpperCase()));
+  if (invalidActStates.length > 0) {
+    console.log(`\n🏛️  STEP 8c: Fix activities with invalid state`);
+    console.log(`───────────────────────────────────────`);
+    console.log(`  Found ${invalidActStates.length} activities with invalid state`);
+    let actStateFixed = 0;
+    for (const act of invalidActStates) {
+      let fixedState = null;
+      const abbrev = STATE_ABBREVS[(act.state || '').toLowerCase()];
+      if (abbrev) fixedState = abbrev;
+      if (!fixedState && act.source) {
+        const m = act.source.match(/[-_ ]([A-Z]{2})(?:$|\d)/);
+        if (m && VALID_STATE_SET.has(m[1])) fixedState = m[1];
+      }
+      if (!fixedState && act.address) {
+        const m = act.address.match(/\b([A-Z]{2})\s+\d{5}\b/);
+        if (m && VALID_STATE_SET.has(m[1])) fixedState = m[1];
+      }
+      if (fixedState) {
+        if (SAVE) {
+          await supabase.from('activities').update({ state: fixedState }).eq('id', act.id);
+        }
+        actStateFixed++;
+        if (actStateFixed <= 5) console.log(`  ✅ "${act.name}": "${act.state}" → ${fixedState}`);
+      }
+    }
+    console.log(`  Fixed: ${actStateFixed}/${invalidActStates.length}`);
+    totalFixed += actStateFixed;
+  }
 
   // ── 9. Fix activities missing geohash ──
   console.log(`\n#️⃣  STEP 9: Fix activities missing geohash`);
@@ -792,7 +951,7 @@ async function main() {
       actCityFixed++;
       if (actCityFixed <= 5) console.log(`  ✅ "${act.name}" → ${geo.city}`);
     }
-    await sleep(2000);
+    await sleep(BASE_DELAY);
   }
   console.log(`  10a fixed: ${actCityFixed}/${actNoCity.length}`);
 
@@ -847,7 +1006,7 @@ async function main() {
     if (coords === undefined) {
       coords = await forwardGeocode(act.city, act.state);
       geoCache[cacheKey] = coords || null;
-      await sleep(2000);
+      await sleep(BASE_DELAY);
     }
 
     if (coords) {
@@ -889,7 +1048,7 @@ async function main() {
       }
       result = await forwardGeocodeQuery(q);
       geoCache[cacheKey] = result || null;
-      await sleep(2000);
+      await sleep(BASE_DELAY);
       if (result) break;
     }
 
@@ -911,8 +1070,31 @@ async function main() {
       if (actFallbackFixed <= 5) console.log(`  ✅ [fallback] "${act.name}" → ${result.city || '?'}, ${result.state || '?'}`);
     }
   }
-  console.log(`  Fixed: ${actLocFixed} (city+state) + ${actFallbackFixed} (fallback) = ${actLocFixed + actFallbackFixed}/${actNoLoc.length}`);
-  totalFixed += actLocFixed + actFallbackFixed;
+  // 11c. Last resort: state centroid for activities that still have no location but have a state
+  let actCentroidFixed = 0;
+  const actStillNoLoc = await fetchAll('activities', 'id, name, state, geohash',
+    { is: ['location', null], not: ['state', 'is', null] });
+  if (actStillNoLoc.length > 0) {
+    console.log(`  11c: ${actStillNoLoc.length} activities still without location — trying state centroid fallback`);
+    for (const act of actStillNoLoc) {
+      const centroid = STATE_CENTROIDS[act.state];
+      if (centroid) {
+        const hash = encodeGeohash(centroid.lat, centroid.lng, 7);
+        const updates = {
+          location: `SRID=4326;POINT(${centroid.lng} ${centroid.lat})`,
+          geohash: act.geohash || hash
+        };
+        if (SAVE) {
+          await supabase.from('activities').update(updates).eq('id', act.id);
+        }
+        actCentroidFixed++;
+        if (actCentroidFixed <= 5) console.log(`  ⚠️  [state centroid] "${act.name}" → ${act.state} centroid`);
+      }
+    }
+    console.log(`  11c fixed: ${actCentroidFixed}/${actStillNoLoc.length} (state centroid)`);
+  }
+  console.log(`  Fixed: ${actLocFixed} (city+state) + ${actFallbackFixed} (fallback) + ${actCentroidFixed} (state centroid) = ${actLocFixed + actFallbackFixed + actCentroidFixed}/${actNoLoc.length + actStillNoLoc.length}`);
+  totalFixed += actLocFixed + actFallbackFixed + actCentroidFixed;
 
   // ── 12. Fix activities missing descriptions ──
   console.log(`\n📝 STEP 12: Fix activities missing descriptions`);
@@ -937,6 +1119,58 @@ async function main() {
   }
   console.log(`  Fixed: ${actDescFixed}/${actNoDesc.length}`);
   totalFixed += actDescFixed;
+
+  // ── Step 13: Remove duplicate activities ──
+  console.log(`\n🔄 STEP 13: Remove duplicate activities`);
+  console.log(`───────────────────────────────────────`);
+  const allActs = await fetchAll('activities', 'id, name, city, state, created_at', {});
+  const actGroups = {};
+  for (const a of allActs) {
+    const key = `${(a.name || '').toLowerCase().trim()}|${(a.city || '').toLowerCase().trim()}|${(a.state || '').toLowerCase().trim()}`;
+    if (!actGroups[key]) actGroups[key] = [];
+    actGroups[key].push(a);
+  }
+  const actDupeIds = [];
+  for (const [key, group] of Object.entries(actGroups)) {
+    if (group.length > 1) {
+      // Keep the oldest (first created), delete the rest
+      group.sort((a, b) => (a.created_at || '').localeCompare(b.created_at || ''));
+      for (let i = 1; i < group.length; i++) {
+        actDupeIds.push(group[i].id);
+        console.log(`  🗑️  Duplicate: "${group[i].name}" in ${group[i].city}, ${group[i].state}`);
+      }
+    }
+  }
+  console.log(`  Found ${actDupeIds.length} duplicate activities to remove`);
+  if (SAVE && actDupeIds.length > 0) {
+    for (let i = 0; i < actDupeIds.length; i += 100) {
+      const batch = actDupeIds.slice(i, i + 100);
+      await supabase.from('activities').delete().in('id', batch);
+    }
+    console.log(`  ✅ Deleted ${actDupeIds.length} duplicate activities`);
+  }
+  totalFixed += actDupeIds.length;
+
+  // ── 13. Fix activities with missing/unknown source — backfill from url ──
+  console.log(`\n🏷️  STEP 13: Fix activities with missing source`);
+  console.log(`──────��──────────────────────────────────���─────────────────`);
+  const actNoSource = await fetchAll('activities', 'id, name, url, source', {
+    or: 'source.is.null,source.eq.,source.eq.unknown,source.eq.auto-created-by-scraper,source.eq.event-scraper'
+  });
+  const actSourceFixable = actNoSource.filter(a => a.url && a.url.length > 5);
+  console.log(`  Found ${actNoSource.length} activities with missing/generic source (${actSourceFixable.length} have a url to backfill from)`);
+  if (SAVE && actSourceFixable.length > 0) {
+    for (let i = 0; i < actSourceFixable.length; i += 100) {
+      const batch = actSourceFixable.slice(i, i + 100);
+      for (const act of batch) {
+        await supabase.from('activities').update({ source: act.url }).eq('id', act.id);
+      }
+    }
+    console.log(`  ✅ Updated source for ${actSourceFixable.length} activities`);
+  } else {
+    actSourceFixable.slice(0, 5).forEach(a => console.log(`  - "${a.name}" → ${a.url}`));
+  }
+  totalFixed += actSourceFixable.length;
 
   // ── Summary ──
   console.log(`\n════════════════════════════════════════════════════════════`);

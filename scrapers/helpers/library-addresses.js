@@ -310,11 +310,11 @@ const LIBRARY_ADDRESSES = {
   },
 
   'Appomattox Regional Library': {
-    mainAddress: '119 Library Way, Hopewell, VA 23860',
+    mainAddress: '209 E Cawson St, Hopewell, VA 23860',
     branches: {
-      'Appomattox': '119 Library Way, Hopewell, VA 23860',
-      'Hopewell': '119 Library Way, Hopewell, VA 23860',
-      'Hopewell Library': '119 Library Way, Hopewell, VA 23860',
+      'Appomattox': '209 E Cawson St, Hopewell, VA 23860',
+      'Hopewell': '209 E Cawson St, Hopewell, VA 23860',
+      'Hopewell Library': '209 E Cawson St, Hopewell, VA 23860',
       'Petersburg': '137 S Sycamore St, Petersburg, VA 23803',
       'Prince George': '6605 Courts Dr, Prince George, VA 23875'
     }
@@ -337,7 +337,7 @@ const LIBRARY_ADDRESSES = {
   },
 
   'Loudoun County Public Library': {
-    mainAddress: '1000 Volunteer Way, Sterling, VA 20164',
+    mainAddress: '1000 Volunteer Way, Leesburg, VA 20175',
     branches: {
       'Sterling': '120 Enterprise St, Sterling, VA 20164',
       'Cascades': '21030 Whitfield Pl, Sterling, VA 20165',
@@ -365,7 +365,7 @@ const LIBRARY_ADDRESSES = {
 
   // Delaware Libraries
   'Delaware Libraries': {
-    mainAddress: '43 S Dupont Hwy, Dover, DE 19901',
+    mainAddress: '121 Martin Luther King Jr Blvd N, Dover, DE 19901',
     branches: {
       'Dover Public Library': '35 E Loockerman St, Dover, DE 19901',
       'Lewes Public Library': '111 Adams Ave, Lewes, DE 19958',
@@ -607,7 +607,7 @@ const LIBRARY_ADDRESSES = {
 
   // South Carolina Libraries
   'Horry County Memorial Library': {
-    mainAddress: '2008 Main St, Conway, SC 29526',
+    mainAddress: '801 Main St, Conway, SC 29526',
     branches: {
       'Conway': '801 Main St, Conway, SC 29526',
       'Conway Library': '801 Main St, Conway, SC 29526',
@@ -1479,11 +1479,11 @@ const LIBRARY_ADDRESSES = {
   },
 
   'Contra Costa County Library': {
-    mainAddress: '1750 Oak Park Blvd, Pleasant Hill, CA 94523',
+    mainAddress: '2 Monticello Ave, Pleasant Hill, CA 94523',
     branches: {
-      'Pleasant Hill Library': '1750 Oak Park Blvd, Pleasant Hill, CA 94523',
-      'Pleasant Hill Library - Community Room': '1750 Oak Park Blvd, Pleasant Hill, CA 94523',
-      'Pleasant Hill Library - Story Room': '1750 Oak Park Blvd, Pleasant Hill, CA 94523',
+      'Pleasant Hill Library': '2 Monticello Ave, Pleasant Hill, CA 94523',
+      'Pleasant Hill Library - Community Room': '2 Monticello Ave, Pleasant Hill, CA 94523',
+      'Pleasant Hill Library - Story Room': '2 Monticello Ave, Pleasant Hill, CA 94523',
       'Walnut Creek Library': '1644 N Broadway, Walnut Creek, CA 94596',
       'Walnut Creek Library - Oak View Room': '1644 N Broadway, Walnut Creek, CA 94596',
       'Walnut Creek Library - Story Room': '1644 N Broadway, Walnut Creek, CA 94596',
@@ -1537,7 +1537,7 @@ const LIBRARY_ADDRESSES = {
       'San RamonSan Ramon': '100 Montgomery St, San Ramon, CA 94583',
       'HerculesHercules': '109 Civic Dr, Hercules, CA 94547',
       'PittsburgPittsburg': '80 Power Ave, Pittsburg, CA 94565',
-      'Online event': '1750 Oak Park Blvd, Pleasant Hill, CA 94523',
+      'Online event': '2 Monticello Ave, Pleasant Hill, CA 94523',
       // Additional branch names
       'Prewett': '1501 Danville Blvd, Alamo, CA 94507',
       'Rodeo': '220 Pacific Ave, Rodeo, CA 94572',
@@ -1568,12 +1568,12 @@ const LIBRARY_ADDRESSES = {
   },
 
   'Forsyth County Public Library': {
-    mainAddress: '585 Dahlonega Rd, Cumming, GA 30040',
+    mainAddress: '585 Dahlonega St, Cumming, GA 30040',
     branches: {
-      'Cumming Library': '585 Dahlonega Rd, Cumming, GA 30040',
-      'Cumming Library - Atrium': '585 Dahlonega Rd, Cumming, GA 30040',
-      'Cumming Library - Meeting Room': '585 Dahlonega Rd, Cumming, GA 30040',
-      'Cumming Library - Story Room': '585 Dahlonega Rd, Cumming, GA 30040',
+      'Cumming Library': '585 Dahlonega St, Cumming, GA 30040',
+      'Cumming Library - Atrium': '585 Dahlonega St, Cumming, GA 30040',
+      'Cumming Library - Meeting Room': '585 Dahlonega St, Cumming, GA 30040',
+      'Cumming Library - Story Room': '585 Dahlonega St, Cumming, GA 30040',
       'Hampton Park Library': '5345 Settingdown Rd, Cumming, GA 30041',
       'Hampton Park Library - Story Room': '5345 Settingdown Rd, Cumming, GA 30041',
       'Hampton Park Library - Meeting Room': '5345 Settingdown Rd, Cumming, GA 30041',
@@ -2704,9 +2704,9 @@ const LIBRARY_ADDRESSES = {
   },
 
   'Las Vegas-Clark County Library District': {
-    mainAddress: '833 Las Vegas Blvd N, Las Vegas, NV 89101',
+    mainAddress: '1401 E Flamingo Rd, Las Vegas, NV 89119',
     branches: {
-      'Main Library': '833 Las Vegas Blvd N, Las Vegas, NV 89101',
+      'Main Library': '1401 E Flamingo Rd, Las Vegas, NV 89119',
       'Centennial Hills': '6711 N Buffalo Dr, Las Vegas, NV 89131',
       'Clark County': '1401 E Flamingo Rd, Las Vegas, NV 89119',
       'East Las Vegas': '2851 E Bonanza Rd, Las Vegas, NV 89101',
@@ -2730,7 +2730,7 @@ const LIBRARY_ADDRESSES = {
   },
 
   'Martin County Library System': {
-    mainAddress: '701 E Ocean Blvd, Stuart, FL 34994',
+    mainAddress: '2351 SE Monterey Rd, Stuart, FL 34996',
     branches: {
       'Blake Library': '2351 SE Monterey Rd, Stuart, FL 34996',
       'Elisabeth Lahti Library': '15200 SW Adams Ave, Indiantown, FL 34956',
@@ -3171,9 +3171,9 @@ const LIBRARY_ADDRESSES = {
   },
 
   'Frisco Public Library': {
-    mainAddress: '6101 Frisco Square Blvd, Frisco, TX 75034',
+    mainAddress: '8000 Dallas Pkwy, Frisco, TX 75034',
     branches: {
-      'Main Library': '6101 Frisco Square Blvd, Frisco, TX 75034'
+      'Main Library': '8000 Dallas Pkwy, Frisco, TX 75034'
     }
   },
 
@@ -3820,9 +3820,9 @@ const LIBRARY_ADDRESSES = {
   },
 
   'Northern Onondaga Public Libraries': {
-    mainAddress: '100 Elwood Davis Rd, North Syracuse, NY 13212',
+    mainAddress: '100 Trolley Barn Ln, North Syracuse, NY 13212',
     branches: {
-      'North Syracuse': '100 Elwood Davis Rd, North Syracuse, NY 13212',
+      'North Syracuse': '100 Trolley Barn Ln, North Syracuse, NY 13212',
       'Brewerton': '5437 Library St, Brewerton, NY 13029',
       'Cicero': '8686 Knowledge Ln, Cicero, NY 13039',
       'Liverpool': '310 Tulip St, Liverpool, NY 13088'
@@ -3954,9 +3954,9 @@ const LIBRARY_ADDRESSES = {
   },
 
   'Long Beach Public Library': {
-    mainAddress: '101 Pacific Ave, Long Beach, CA 90802',
+    mainAddress: '200 W Broadway, Long Beach, CA 90802',
     branches: {
-      'Main Library': '101 Pacific Ave, Long Beach, CA 90802',
+      'Main Library': '200 W Broadway, Long Beach, CA 90802',
       'Alamitos': '1836 E 3rd St, Long Beach, CA 90802',
       'Artesia': '18801 Elaine Ave, Artesia, CA 90701',
       'Bay Shore': '195 Bay Shore Ave, Long Beach, CA 90803',
@@ -4343,11 +4343,11 @@ const LIBRARY_ADDRESSES = {
   },
 
   'ABBE Regional Library System': {
-    mainAddress: '314 Chesterfield St S, Aiken, SC 29801',
+    mainAddress: '314 Chesterfield St SW, Aiken, SC 29801',
     branches: {
-      'Aiken County Library': '314 Chesterfield St S, Aiken, SC 29801',
-      'Main Library': '314 Chesterfield St S, Aiken, SC 29801',
-      'Aiken': '314 Chesterfield St S, Aiken, SC 29801',
+      'Aiken County Library': '314 Chesterfield St SW, Aiken, SC 29801',
+      'Main Library': '314 Chesterfield St SW, Aiken, SC 29801',
+      'Aiken': '314 Chesterfield St SW, Aiken, SC 29801',
       'Barnwell County Library': '40 Burr St, Barnwell, SC 29812',
       'Barnwell': '40 Burr St, Barnwell, SC 29812',
       'Blackville': '19688 Solomon Blatt Ave, Blackville, SC 29817',
@@ -4911,10 +4911,10 @@ const LIBRARY_ADDRESSES = {
   // ============================================================================
 
   'Library System of Lancaster County': {
-    mainAddress: '125 N Duke St, Lancaster, PA 17602',
+    mainAddress: '151 N Queen St, Lancaster, PA 17603',
     branches: {
-      'Main Library': '125 N Duke St, Lancaster, PA 17602',
-      'Lancaster': '125 N Duke St, Lancaster, PA 17602',
+      'Main Library': '151 N Queen St, Lancaster, PA 17603',
+      'Lancaster': '151 N Queen St, Lancaster, PA 17603',
       'Columbia': '24 S 6th St, Columbia, PA 17512',
       'Elizabethtown': '10 S Market St, Elizabethtown, PA 17022',
       'Ephrata': '550 S Reading Rd, Ephrata, PA 17522',
@@ -5197,10 +5197,10 @@ const LIBRARY_ADDRESSES = {
   },
 
   'Sarasota County Libraries': {
-    mainAddress: '1600 Ringling Blvd, Sarasota, FL 34236',
+    mainAddress: '1331 First St, Sarasota, FL 34236',
     branches: {
       'Selby Public Library': '1331 First St, Sarasota, FL 34236',
-      'Main Library': '1600 Ringling Blvd, Sarasota, FL 34236',
+      'Main Library': '1331 First St, Sarasota, FL 34236',
       'Elsie Quirk': '100 W Dearborn St, Englewood, FL 34223',
       'Fruitville': '100 Coburn Rd, Sarasota, FL 34240',
       'Gulf Gate': '7112 Curtiss Ave, Sarasota, FL 34231',
@@ -5253,10 +5253,10 @@ const LIBRARY_ADDRESSES = {
   },
 
   'Arlington Public Library': {
-    mainAddress: '101 E Abram St, Arlington, TX 76010',
+    mainAddress: '100 S Center St, Arlington, TX 76010',
     branches: {
-      'Downtown Library': '101 E Abram St, Arlington, TX 76010',
-      'Main Library': '101 E Abram St, Arlington, TX 76010',
+      'Downtown Library': '100 S Center St, Arlington, TX 76010',
+      'Main Library': '100 S Center St, Arlington, TX 76010',
       'East': '1624 New York Ave, Arlington, TX 76010',
       'Lake Arlington': '4000 W Green Oaks Blvd, Arlington, TX 76016',
       'Southeast': '900 SE Green Oaks Blvd, Arlington, TX 76018',
@@ -5316,8 +5316,18 @@ const LIBRARY_ADDRESSES = {
  * @param {string} sourceName - Optional source/library system name
  * @returns {string|null} - Address or null if not found
  */
-function getLibraryAddress(libraryName, sourceName = null) {
+function getLibraryAddress(libraryName, sourceName = null, eventState = null) {
   if (!libraryName && !sourceName) return null;
+
+  // Helper: check if a matched address is in the correct state
+  // Prevents cross-state false positives (e.g., "Downtown" in VA matching Cedar Rapids, IA)
+  const isAddressInState = (address) => {
+    if (!eventState || !address) return true; // No state to check — allow match
+    // Extract state abbreviation from address like "450 5th Ave SE, Cedar Rapids, IA 52401"
+    const stateMatch = address.match(/,\s*([A-Z]{2})\s+\d{5}/);
+    if (!stateMatch) return true; // Can't determine state — allow match
+    return stateMatch[1] === eventState.toUpperCase();
+  };
 
   // Strip room/location designations from venue names
   // e.g., "APL Martin Luther King, Jr. Library - MLK Full Community Room (Akron & Boston)"
@@ -5374,18 +5384,18 @@ function getLibraryAddress(libraryName, sourceName = null) {
       if (branchLower !== 'main' && branchLower.length > 3) {
         // Try original name
         if (lowerName.includes(branchLower) || branchLower.includes(lowerName)) {
-          return branchAddress;
+          if (isAddressInState(branchAddress)) return branchAddress;
         }
         // Try stripped name (without room designation)
         if (lowerStripped !== lowerName && (lowerStripped.includes(branchLower) || branchLower.includes(lowerStripped))) {
-          return branchAddress;
+          if (isAddressInState(branchAddress)) return branchAddress;
         }
       }
     }
 
     // Only return main address if venue is NOT generic (i.e., specifies something different)
     if (!isGenericVenue) {
-      return matchedSystem.mainAddress;
+      if (isAddressInState(matchedSystem.mainAddress)) return matchedSystem.mainAddress;
     }
 
     // For generic venue names that match the system, don't return address
@@ -5411,7 +5421,7 @@ function getLibraryAddress(libraryName, sourceName = null) {
         // Try to find specific branch
         for (const [branchName, branchAddress] of Object.entries(system.branches)) {
           if (nameToMatch.includes(branchName.toLowerCase()) && branchName.toLowerCase() !== 'main') {
-            return branchAddress;
+            if (isAddressInState(branchAddress)) return branchAddress;
           }
         }
       }
@@ -5425,7 +5435,7 @@ function getLibraryAddress(libraryName, sourceName = null) {
               (branchLower + ' library') === nameToMatch ||
               branchLower.includes(nameToMatch) ||
               nameToMatch.includes(branchLower)) {
-            return branchAddress;
+            if (isAddressInState(branchAddress)) return branchAddress;
           }
         }
       }

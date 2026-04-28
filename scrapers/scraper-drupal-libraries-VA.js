@@ -17,6 +17,7 @@ const { admin, db } = require('./helpers/supabase-adapter');
 const { launchBrowser } = require('./puppeteer-config');
 const axios = require('axios');
 const ngeohash = require('ngeohash');
+const { tryGeocode: sharedTryGeocode } = require('./helpers/macaroni-geocoding-helper');
 const { categorizeEvent } = require('./event-categorization-helper');
 const { generateEventId, generateEventIdFromDetails } = require('./event-id-helper');
 const { parseDateToObject, normalizeDateString } = require('./date-normalization-helper');
@@ -37,53 +38,9 @@ const LIBRARY_SYSTEMS = [
   }
 ];
 
-// Cache geocoded addresses to avoid re-querying same location
-const geocodeCache = {};
-let lastGeocodeTime = 0;
-
-// Geocode address with rate limiting (1 req/sec max for Nominatim)
+// Geocode address — uses shared helper with rate limiting, caching, and 429 handling
 async function geocodeAddress(address) {
-  // Check cache first
-  if (geocodeCache[address]) {
-    return geocodeCache[address];
-  }
-
-  try {
-    // Rate limit: wait 1 second between requests
-    const now = Date.now();
-    const timeSinceLastRequest = now - lastGeocodeTime;
-    if (timeSinceLastRequest < 1000) {
-      await new Promise(resolve => setTimeout(resolve, 1000 - timeSinceLastRequest));
-    }
-    lastGeocodeTime = Date.now();
-
-    const response = await axios.get('https://nominatim.openstreetmap.org/search', {
-      params: {
-        q: address,
-        format: 'json',
-        limit: 1,
-        countrycodes: 'us'
-      },
-      headers: {
-        'User-Agent': 'FunHive/1.0'
-      }
-    });
-
-    if (response.data && response.data.length > 0) {
-      const coordinates = {
-        latitude: parseFloat(response.data[0].lat),
-        longitude: parseFloat(response.data[0].lon)
-      };
-      // Cache the result
-      geocodeCache[address] = coordinates;
-      return coordinates;
-    } else {
-      console.log(`   ⚠️  Geocoding: No results for "${address}"`);
-    }
-  } catch (error) {
-    console.error(`   ❌ Geocoding error for "${address}":`, error.message);
-  }
-  return null;
+  return sharedTryGeocode(address);
 }
 
 // Parse age range from audience text
@@ -399,7 +356,7 @@ async function scrapeDrupalVirginiaLibraries() {
     await browser.close();
   }
 
-  // Log to Firestore with aggregate + per-site breakdown
+  // Log to database with aggregate + per-site breakdown
   const result = await logger.finish();
 
   return { imported: result.stats.new, skipped: result.stats.duplicates, failed: result.stats.errors };

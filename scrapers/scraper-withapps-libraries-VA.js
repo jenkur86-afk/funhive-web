@@ -140,6 +140,12 @@ async function scrapeLibraryEvents(browser) {
           }
 
           if (!title || title.length < 5 || processedTitles.has(title)) continue;
+
+          // Filter out registration notices and other non-event junk titles
+          if (/^registration\s+(required|closes|opens|deadline|begins|ends)/i.test(title.trim())) continue;
+          if (/^(sign up|rsvp|register)\s+(by|before|now|today|here)/i.test(title.trim())) continue;
+          if (/^(free|no cost|no charge|open to the public|seating is limited)$/i.test(title.trim())) continue;
+
           processedTitles.add(title);
 
           // Get the time from the next line
@@ -300,7 +306,7 @@ async function scrapeWithAppsLibraries() {
   console.log(`   Failed: ${totalFailed}`);
   console.log('='.repeat(60) + '\n');
 
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('WithApps-VA', {
     found: totalImported + totalSkipped,
     new: totalImported,

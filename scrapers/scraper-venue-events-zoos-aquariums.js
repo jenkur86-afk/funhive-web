@@ -76,7 +76,7 @@ const VENUES = [
   { name: "Zoo Atlanta", eventsUrl: "https://zooatlanta.org/events/", city: "Atlanta", state: "GA", zip: "30315" },
   // Illinois
   { name: "Lincoln Park Zoo", eventsUrl: "https://www.lpzoo.org/events/", city: "Chicago", state: "IL", zip: "60614" },
-  { name: "Brookfield Zoo", eventsUrl: "https://www.czs.org/events", city: "Brookfield", state: "IL", zip: "60513" },
+  { name: "Brookfield Zoo", eventsUrl: "https://www.brookfieldzoo.org/events", city: "Brookfield", state: "IL", zip: "60513" },
   { name: "Shedd Aquarium", eventsUrl: "https://www.sheddaquarium.org/plan-a-visit/events", city: "Chicago", state: "IL", zip: "60605" },
   // Indiana
   { name: "Indianapolis Zoo", eventsUrl: "https://www.indianapoliszoo.com/events/", city: "Indianapolis", state: "IN", zip: "46222" },
@@ -278,13 +278,60 @@ async function scrapeVenueEvents(venue, browser) {
 
           if (!event.title || event.title.length < 3) return;
 
-          // Extract date
+          // Extract date — prefer datetime attribute (full ISO date) over textContent
+          // Many <time> elements show just the time ("4:30 pm") but have the full
+          // date in their datetime attribute (e.g., "2026-05-10T16:30:00")
           let dateEl = null;
           for (const selector of selectors.date) {
             dateEl = el.querySelector(selector) || el.parentElement?.querySelector(selector);
             if (dateEl) break;
           }
-          event.eventDate = dateEl?.textContent?.trim() || dateEl?.getAttribute('datetime');
+          const datetimeAttr = dateEl?.getAttribute('datetime');
+          const dateText = dateEl?.textContent?.trim();
+          // Use datetime attribute first if it looks like a date (contains digits with dashes or month names)
+          if (datetimeAttr && /\d{4}-\d{2}/.test(datetimeAttr)) {
+            event.eventDate = datetimeAttr;
+          } else if (dateText) {
+            event.eventDate = dateText;
+          } else {
+            event.eventDate = datetimeAttr || '';
+          }
+
+          // Also search parent/siblings for a date if what we found is time-only
+          // Time-only pattern: just "4:30 pm" or "9:00 am - 10:00 am" with no month/day
+          const TIME_ONLY = /^\s*\d{1,2}(:\d{2})?\s*(am|pm)\s*([-–—]\s*\d{1,2}(:\d{2})?\s*(am|pm))?\s*$/i;
+          if (!event.eventDate || TIME_ONLY.test(event.eventDate)) {
+            // The "date" element might just be showing a time — look wider
+            const container = el.closest('.event, .event-card, .event-item, article, [data-event]') || el.parentElement?.parentElement;
+            if (container) {
+              // Try all date selectors on the container
+              for (const selector of selectors.date) {
+                const altDateEls = container.querySelectorAll(selector);
+                for (const ade of altDateEls) {
+                  if (ade === dateEl) continue;
+                  const altAttr = ade.getAttribute('datetime');
+                  const altText = ade.textContent?.trim();
+                  if (altAttr && /\d{4}-\d{2}/.test(altAttr)) {
+                    if (TIME_ONLY.test(event.eventDate)) event.time = event.eventDate;
+                    event.eventDate = altAttr;
+                    break;
+                  }
+                  if (altText && !TIME_ONLY.test(altText) && /[a-z]/i.test(altText)) {
+                    if (TIME_ONLY.test(event.eventDate)) event.time = event.eventDate;
+                    event.eventDate = altText;
+                    break;
+                  }
+                }
+                if (event.eventDate && !TIME_ONLY.test(event.eventDate)) break;
+              }
+            }
+          }
+
+          // If eventDate is still time-only, move it to time and clear eventDate
+          if (TIME_ONLY.test(event.eventDate)) {
+            event.time = event.eventDate;
+            event.eventDate = '';
+          }
 
           // Extract time
           let timeEl = null;
@@ -292,7 +339,7 @@ async function scrapeVenueEvents(venue, browser) {
             timeEl = el.querySelector(selector) || el.parentElement?.querySelector(selector);
             if (timeEl) break;
           }
-          event.time = timeEl?.textContent?.trim();
+          if (!event.time) event.time = timeEl?.textContent?.trim();
 
           // Extract description
           let descEl = null;

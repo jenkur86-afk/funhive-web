@@ -448,7 +448,7 @@ async function scrapeLAPublicLibrary() {
   console.log(`   Failed: ${totalFailed}`);
   console.log('='.repeat(60) + '\n');
 
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('LA Public Library', {
     found: totalImported + totalSkipped,
     new: totalImported,

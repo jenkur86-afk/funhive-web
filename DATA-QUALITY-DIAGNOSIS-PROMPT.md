@@ -41,10 +41,10 @@ The combined runner script is `fix-all.sh` — it runs all three in order and st
 - Fix the scraper's ID generation or add URL-based dedup. Write a cleanup script to remove extra copies.
 
 **5. Missing critical fields (events)**
-- **Missing geohash / missing location**: These events won't show on the map. `fix-event-quality.js` computes geohash from existing coordinates and geocodes location from city+state.
+- **Missing geohash / missing location**: These events won't show on the map. `fix-event-quality.js` computes geohash from existing coordinates and geocodes location from city+state. **Check the "By scraper" breakdown** — if one scraper dominates, the root cause is in that scraper's geocoding chain. Common causes: (a) missing county in `scrapers/utils/county-centroids.js` so the last-resort fallback fails, (b) the scraper doesn't pass city/address to the location object, (c) the scraper's geocoding helper is broken. Cross-reference each scraper's site list counties against the centroids file.
 - **Missing state / invalid state**: Fix in the scraper that produced them (check the "By scraper/source" section to identify which). Also handled by `fix-event-quality.js`.
 - **Missing event_date**: Events without dates are useless — `fix-event-quality.js` deletes them.
-- **Missing parsed date (TIMESTAMPTZ)**: The `date` column is null but `event_date` text exists. `fix-all-data-quality.js` parses and backfills these.
+- **Missing parsed date (TIMESTAMPTZ)**: The `date` column is null but `event_date` text exists. `fix-all-data-quality.js` parses and backfills these. **Check the "By scraper" breakdown** — if a scraper family (e.g., all MacaroniKid scrapers) dominates, the root cause is that the scraper's eventDoc never sets a `date` field. The correct pattern is `date: admin.firestore.Timestamp.fromDate(dateObj)`. The backfill script is a safety net, not a substitute for fixing the scraper — without `date`, events are invisible to date-filtered queries until the backfill runs.
 
 **6. Missing important fields (events)**
 - **Missing description**: `fix-event-quality.js` generates from name + category + venue + city.
@@ -86,6 +86,7 @@ The combined runner script is `fix-all.sh` — it runs all three in order and st
 - For **scraper code fixes** (prevent future issues): edit the scraper files directly
 - For **database fixes** (clean up existing data): update the appropriate `fix-*.js` script and tell me exactly what to run
 - When fixing MacaroniKid scrapers, remember all 45 files share the same structure — use a script to apply changes to all of them
+- When missing location/geohash is high for a scraper, cross-reference its site list counties against `scrapers/utils/county-centroids.js` and add any missing counties
 - Run `node -c filename.js` syntax check on every modified file
 - At the end, do NOT tell me to run `bash fix-all.sh` or `node data-quality-check.js` — I already run those myself before and after using this prompt. Just list any scraper code fixes or new patterns you added.
 

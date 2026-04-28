@@ -19,7 +19,13 @@ const ngeohash = require('ngeohash');const admin = require('firebase-admin');
  */
 
 const LIBRARIES = [
-  { name: "Jacksonville Public Library", url: "https://jaxpubliclibrary.org", platform: "libcal", eventsUrl: "https://events.jaxpubliclibrary.org", city: "Jacksonville", state: "FL", zipCode: "32202", county: "Duval" }
+  { name: "Jacksonville Public Library", url: "https://jaxpubliclibrary.org", platform: "libcal", eventsUrl: "https://events.jaxpubliclibrary.org", city: "Jacksonville", state: "FL", zipCode: "32202", county: "Duval" },
+  { name: "Collier County Public Library", url: "https://collier-lib.libcal.com", platform: "libcal", eventsUrl: "https://collier-lib.libcal.com/", city: "Naples", state: "FL", zipCode: "34102", county: "Collier" },
+  { name: "Volusia County Public Library", url: "https://volusialibrary.libcal.com", platform: "libcal", eventsUrl: "https://volusialibrary.libcal.com/", city: "Daytona Beach", state: "FL", zipCode: "32114", county: "Volusia" },
+  { name: "Osceola Library System", url: "https://osceolalibrary.libcal.com", platform: "libcal", eventsUrl: "https://osceolalibrary.libcal.com/calendar", city: "Kissimmee", state: "FL", zipCode: "34741", county: "Osceola" },
+  { name: "Leon County Public Library", url: "https://leoncountyfl.libcal.com", platform: "libcal", eventsUrl: "https://leoncountyfl.libcal.com/calendar/events", city: "Tallahassee", state: "FL", zipCode: "32301", county: "Leon" },
+  { name: "Manatee County Public Library", url: "https://manateelibrary.libcal.com", platform: "libcal", eventsUrl: "https://manateelibrary.libcal.com/calendar", city: "Bradenton", state: "FL", zipCode: "34205", county: "Manatee" },
+  { name: "Clay County Public Library", url: "https://claycountygov.libcal.com", platform: "libcal", eventsUrl: "https://claycountygov.libcal.com/calendar/LibraryCalendar", city: "Green Cove Springs", state: "FL", zipCode: "32043", county: "Clay" }
 ];
 
 const SCRAPER_NAME = 'libcal-FL';
@@ -119,7 +125,7 @@ async function scrapeLibCalEvents() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'FL',
@@ -136,10 +142,10 @@ async function main() {
   const events = await scrapeLibCalEvents();
 
   if (events.length > 0) {
-    await saveToFirebase(events);
+    await saveToDatabase(events);
   }
 
-  // Log to Firestore for monitoring
+  // Log to database for monitoring
 
 
   await logScraperResult('Libcal Libraries FL', {
@@ -162,4 +168,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { scrapeLibCalEvents, saveToFirebase };
+module.exports = { scrapeLibCalEvents, saveToDatabase };

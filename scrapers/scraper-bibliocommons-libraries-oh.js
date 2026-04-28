@@ -14,12 +14,33 @@ const ngeohash = require('ngeohash');const admin = require('firebase-admin');
     "url": "https://www.cincinnatilibrary.org",
     "platform": "bibliocommons",
     "eventsUrl": "https://cincinnatilibrary.bibliocommons.com/events"
+  },
+  {
+    "name": "Dayton Metro Library",
+    "url": "https://www.daytonmetrolibrary.org",
+    "platform": "bibliocommons",
+    "eventsUrl": "https://dayton.bibliocommons.com/events"
+  },
+  {
+    "name": "Public Library of Youngstown & Mahoning County",
+    "url": "https://www.libraryvisit.org",
+    "platform": "bibliocommons",
+    "eventsUrl": "https://plymc.bibliocommons.com/events"
+  },
+  {
+    "name": "Westerville Public Library",
+    "url": "https://www.westervillelibrary.org",
+    "platform": "bibliocommons",
+    "eventsUrl": "https://westervillelibrary.bibliocommons.com/events"
   }
 ]
  */
 
 const LIBRARIES = [
-  { name: "Cincinnati & Hamilton County Public Library", url: "https://www.cincinnatilibrary.org", platform: "bibliocommons", eventsUrl: "https://cincinnatilibrary.bibliocommons.com/events", city: "Cincinnati", state: "OH", zipCode: "45202", county: "Hamilton" }
+  { name: "Cincinnati & Hamilton County Public Library", url: "https://www.cincinnatilibrary.org", platform: "bibliocommons", eventsUrl: "https://cincinnatilibrary.bibliocommons.com/events", city: "Cincinnati", state: "OH", zipCode: "45202", county: "Hamilton" },
+  { name: "Dayton Metro Library", url: "https://www.daytonmetrolibrary.org", platform: "bibliocommons", eventsUrl: "https://dayton.bibliocommons.com/events", city: "Dayton", state: "OH", zipCode: "45402", county: "Montgomery" },
+  { name: "Public Library of Youngstown & Mahoning County", url: "https://www.libraryvisit.org", platform: "bibliocommons", eventsUrl: "https://plymc.bibliocommons.com/events", city: "Youngstown", state: "OH", zipCode: "44503", county: "Mahoning" },
+  { name: "Westerville Public Library", url: "https://www.westervillelibrary.org", platform: "bibliocommons", eventsUrl: "https://westervillelibrary.bibliocommons.com/events", city: "Westerville", state: "OH", zipCode: "43081", county: "Franklin" }
 ];
 
 const SCRAPER_NAME = 'bibliocommons-OH';
@@ -166,7 +187,7 @@ async function scrapeBiblioCommonsEvents() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'OH',
@@ -183,10 +204,10 @@ async function main() {
   const events = await scrapeBiblioCommonsEvents();
 
   if (events.length > 0) {
-    await saveToFirebase(events);
+    await saveToDatabase(events);
   }
 
-  // Log to Firestore for monitoring
+  // Log to database for monitoring
 
 
   await logScraperResult('Bibliocommons Libraries OH', {
@@ -209,4 +230,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { scrapeBiblioCommonsEvents, saveToFirebase };
+module.exports = { scrapeBiblioCommonsEvents, saveToDatabase };

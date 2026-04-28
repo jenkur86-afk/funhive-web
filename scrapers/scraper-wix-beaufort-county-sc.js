@@ -323,7 +323,7 @@ async function scrapeWixBeaufortCountyCloudFunction() {
   try {
     const results = await scrapeWixBeaufortCounty();
 
-    // Log scraper stats to Firestore
+    // Log scraper stats to database
     await logScraperResult('Wix Beaufort County Library', {
       found: results.imported + results.skipped,
       new: results.imported,

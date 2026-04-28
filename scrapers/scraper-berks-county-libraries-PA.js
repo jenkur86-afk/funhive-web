@@ -382,7 +382,7 @@ async function scrapeBerksLibrary() {
   console.log(`   Failed: ${failed}`);
   console.log('='.repeat(60) + '\n');
 
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('Berks County Public Libraries', {
     found: imported + skipped,
     new: imported,

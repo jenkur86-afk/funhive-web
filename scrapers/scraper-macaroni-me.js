@@ -155,7 +155,7 @@ async function extractEventDetails(page, url) {
         if (idx < lines.length && (/\d{1,2}:\d{2}\s*(?:am|pm)/i.test(lines[idx]) || /^all[\s-]*day$/i.test(lines[idx]))) { result.time = lines[idx]; idx++; }
         while (idx < lines.length && lines[idx].length === 0) idx++;
         // Skip invalid venue values (time-related phrases, placeholders)
-        const invalidVenuePatterns = /^(all[\s-]*day|see website|n\/a|various|tbd|tba|online|virtual|zoom|webinar|microsoft teams|google meet|skype|teams meeting|check website|contact for details|\d{1,2}:\d{2}\s*(am|pm)?)$/i;
+        const invalidVenuePatterns = /^(all[\s-]*day|see website|n\/a|various|tbd|tba|online|virtual|zoom|webinar|microsoft teams|google meet|skype|teams meeting|check website|contact for details|description|events|\d{1,2}:\d{2}\s*(am|pm)?)$/i;
         if (idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100 && !invalidVenuePatterns.test(lines[idx])) { if (!result.venue) result.venue = lines[idx]; idx++; }
         // If venue was invalid, try the next line
         else if (idx < lines.length && invalidVenuePatterns.test(lines[idx])) { idx++; if (idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100 && !invalidVenuePatterns.test(lines[idx])) { if (!result.venue) result.venue = lines[idx]; idx++; }}
@@ -262,22 +262,18 @@ async function scrapeSite(browser, site, maxEvents = 50) {
         ]
       };
 
-      const hasPhysicalLocation = !!(details.address || details.city);
-      const isPromoName = promoPatterns.names.some(p => p.test(details.name || ''));
-      const isOnlineVenue = promoPatterns.venues.some(p => p.test(details.venue || ''));
+      const isPromoEvent =
+        promoPatterns.venues.some(p => p.test(details.venue || '')) ||
+        promoPatterns.names.some(p => p.test(details.name || ''));
 
-      if (isPromoName) {
-        console.log(`  ⏭️ Skipping promo: ${(details.name || '').substring(0, 40)}...`);
+      if (isPromoEvent) {
+        console.log(`  ⏭️ Skipping promo/online: ${(details.name || '').substring(0, 40)}...`);
         continue;
       }
 
-      if (isOnlineVenue && !hasPhysicalLocation) {
-        console.log(`  ⏭️ Skipping online (no address): ${(details.name || '').substring(0, 40)}...`);
-        continue;
-      }
-
+      // Check for online-only indicators in description — only skip if event also has no venue/address
       const onlineIndicators = /\b(online\s+only|virtual\s+only|zoom\s+(?:meeting|call|link)|webinar|hosted?\s+(?:online|virtually)|no\s+physical\s+location)\b/i;
-      if (!hasPhysicalLocation && onlineIndicators.test(details.description || '')) {
+      if (onlineIndicators.test(details.description || '') && !details.venue && !details.address) {
         console.log(`  ⏭️ Skipping online event: ${(details.name || '').substring(0, 40)}...`);
         continue;
       }
@@ -432,12 +428,17 @@ async function scrapeSite(browser, site, maxEvents = 50) {
 
       const normalizedDate = normalizeDateString(details.eventDate) || details.eventDate;
 
+      // Parse date into a proper Date object for the TIMESTAMPTZ column
+      const parsedDateObj = /^\d{4}-\d{2}-\d{2}$/.test(normalizedDate) ? new Date(normalizedDate + 'T00:00:00') : new Date(normalizedDate);
+      const dateTimestamp = !isNaN(parsedDateObj.getTime()) ? admin.firestore.Timestamp.fromDate(parsedDateObj) : null;
+
 
 
       const eventDoc = {
 
 
         name: details.name, venue: details.venue || 'See website', eventDate: normalizedDate,
+        date: dateTimestamp,
         scheduleDescription: `${details.dayOfWeek}, ${details.eventDate}${details.time ? ' at ' + details.time : ''}`,
         ...parseTimeRange(details.time),  // startTime, endTime
         parentCategory, displayCategory, subcategory,
@@ -566,7 +567,7 @@ async function scrapeMacaroniKidMaine() {
   console.log(`   Time: ${elapsed} minutes`);
   console.log('='.repeat(60) + '\n');
 
-  // Log to Firestore for monitoring
+  // Log to database for monitoring
   await logScraperResult('Macaroni Kid ME', {
     new: imported,
     duplicates: skipped,

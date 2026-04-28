@@ -343,7 +343,7 @@ function createActivityDocument(location) {
 }
 
 /**
- * Save activities to Firestore using venue-matcher for deduplication
+ * Save activities to database using venue-matcher for deduplication
  */
 async function saveActivities(activities) {
   if (activities.length === 0) return { saved: 0, updated: 0, failed: 0 };
@@ -415,8 +415,8 @@ async function scrapeIceRinksDMV() {
 
   console.log(`\n📊 Total activities to save: ${allActivities.length}`);
 
-  // Save to Firestore
-  console.log('\n💾 Saving to Firestore...');
+  // Save to database
+  console.log('\n💾 Saving to database...');
   const { saved, updated, failed } = await saveActivities(allActivities);
 
   const duration = ((Date.now() - startTime) / 1000).toFixed(1);

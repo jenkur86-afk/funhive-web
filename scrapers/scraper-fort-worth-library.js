@@ -380,7 +380,7 @@ async function scrapeFortWorthLibrary() {
   console.log('='.repeat(60) + '\n');
 
   
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('Fort Worth Library', {
     found: totalImported,
     new: totalImported,

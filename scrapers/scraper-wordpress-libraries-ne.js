@@ -131,7 +131,7 @@ async function scrapeGenericEvents() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   return await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'NE',
@@ -142,7 +142,7 @@ async function saveToFirebase(events) {
 
 async function main() {
   const events = await scrapeGenericEvents();
-  if (events.length > 0) await saveToFirebase(events);
+  if (events.length > 0) await saveToDatabase(events);
   process.exit(0);
 }
 
@@ -158,8 +158,8 @@ async function scrapeWordpressNECloudFunction() {
     await logScraperResult('WordPress-NE', { found: 0, new: 0, duplicates: 0 }, { dataType: 'events' });
     return { found: 0, new: 0, duplicates: 0 };
   }
-  const result = await saveToFirebase(events);
-  // Log scraper stats to Firestore
+  const result = await saveToDatabase(events);
+  // Log scraper stats to database
   await logScraperResult('WordPress-NE', {
     found: events.length,
     new: result?.saved || 0,
@@ -173,4 +173,4 @@ async function scrapeWordpressNECloudFunction() {
   };
 }
 
-module.exports = { scrapeGenericEvents, saveToFirebase, scrapeWordpressNECloudFunction };
+module.exports = { scrapeGenericEvents, saveToDatabase, scrapeWordpressNECloudFunction };

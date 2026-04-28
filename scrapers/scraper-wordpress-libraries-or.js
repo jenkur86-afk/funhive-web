@@ -76,7 +76,7 @@ async function scrapeGenericEvents() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   return await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'OR',
@@ -85,7 +85,7 @@ async function saveToFirebase(events) {
   });
 }
 
-async function main() { const events = await scrapeGenericEvents(); if (events.length > 0) await saveToFirebase(events); process.exit(0); }
+async function main() { const events = await scrapeGenericEvents(); if (events.length > 0) await saveToDatabase(events); process.exit(0); }
 if (require.main === module) main();
 
 /**
@@ -98,8 +98,8 @@ async function scrapeWordpressORCloudFunction() {
     await logScraperResult('WordPress-OR', { found: 0, new: 0, duplicates: 0 }, { dataType: 'events' });
     return { found: 0, new: 0, duplicates: 0 };
   }
-  const result = await saveToFirebase(events);
-  // Log scraper stats to Firestore
+  const result = await saveToDatabase(events);
+  // Log scraper stats to database
   await logScraperResult('WordPress-OR', {
     found: events.length,
     new: result?.saved || 0,
@@ -113,4 +113,4 @@ async function scrapeWordpressORCloudFunction() {
   };
 }
 
-module.exports = { scrapeGenericEvents, saveToFirebase, scrapeWordpressORCloudFunction };
+module.exports = { scrapeGenericEvents, saveToDatabase, scrapeWordpressORCloudFunction };

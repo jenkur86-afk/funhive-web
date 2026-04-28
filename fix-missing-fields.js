@@ -15,6 +15,7 @@
  */
 
 const { supabase } = require('./scrapers/helpers/supabase-adapter');
+const LIBRARY_ADDRESSES = require('./scrapers/helpers/library-addresses');
 
 const SAVE = process.argv.includes('--save');
 const ADDRESSES_ONLY = process.argv.includes('--addresses');
@@ -82,6 +83,21 @@ async function fetchAllPaginated(table, select, filters) {
 
 let consecutiveFails = 0;
 
+// US state name → abbreviation lookup
+const STATE_ABBREVS = {
+  'alabama':'AL','alaska':'AK','arizona':'AZ','arkansas':'AR','california':'CA',
+  'colorado':'CO','connecticut':'CT','delaware':'DE','district of columbia':'DC',
+  'florida':'FL','georgia':'GA','hawaii':'HI','idaho':'ID','illinois':'IL',
+  'indiana':'IN','iowa':'IA','kansas':'KS','kentucky':'KY','louisiana':'LA',
+  'maine':'ME','maryland':'MD','massachusetts':'MA','michigan':'MI','minnesota':'MN',
+  'mississippi':'MS','missouri':'MO','montana':'MT','nebraska':'NE','nevada':'NV',
+  'new hampshire':'NH','new jersey':'NJ','new mexico':'NM','new york':'NY',
+  'north carolina':'NC','north dakota':'ND','ohio':'OH','oklahoma':'OK','oregon':'OR',
+  'pennsylvania':'PA','rhode island':'RI','south carolina':'SC','south dakota':'SD',
+  'tennessee':'TN','texas':'TX','utah':'UT','vermont':'VT','virginia':'VA',
+  'washington':'WA','west virginia':'WV','wisconsin':'WI','wyoming':'WY'
+};
+
 async function reverseGeocode(lat, lng) {
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
@@ -111,10 +127,29 @@ async function reverseGeocode(lat, lng) {
         const addr = data.address;
         const houseNumber = addr.house_number || '';
         const road = addr.road || addr.street || '';
-        const streetAddress = houseNumber && road
+        const streetPart = houseNumber && road
           ? `${houseNumber} ${road}`
           : road || data.display_name?.split(',')[0] || '';
-        return streetAddress.trim() || null;
+        const city = addr.city || addr.town || addr.village || addr.hamlet || '';
+        const stateFull = addr.state || '';
+        const stateAbbrev = STATE_ABBREVS[(stateFull).toLowerCase()] || '';
+        const zip = addr.postcode || '';
+
+        // Build full address string
+        const parts = [];
+        if (streetPart.trim()) parts.push(streetPart.trim());
+        if (city) parts.push(city);
+        if (stateAbbrev) parts.push(stateAbbrev);
+        else if (stateFull) parts.push(stateFull);
+        if (zip && parts.length > 0) parts[parts.length - 1] += ` ${zip}`;
+        const fullAddress = parts.join(', ');
+
+        return {
+          address: fullAddress || null,
+          city: city || null,
+          state: stateAbbrev || null,
+          zip: zip || null
+        };
       }
       return null;
     } catch (err) {
@@ -124,6 +159,105 @@ async function reverseGeocode(lat, lng) {
       }
     }
   }
+  return null;
+}
+
+// ============================================================
+// FORWARD GEOCODING (address string → lat/lng + structured address)
+// ============================================================
+
+async function forwardGeocode(query) {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=us&addressdetails=1`;
+      const response = await fetch(url, {
+        headers: { 'User-Agent': 'FunHive/1.0 (data-quality-fix)' },
+        signal: AbortSignal.timeout(15000)
+      });
+
+      if (response.status === 429) {
+        const waitTime = 5000 * (attempt + 1);
+        console.log(`  ⏳ Rate limited — waiting ${waitTime / 1000}s...`);
+        await sleep(waitTime);
+        continue;
+      }
+
+      if (!response.ok) { await sleep(2000); continue; }
+
+      const data = await response.json();
+      consecutiveFails = 0;
+
+      if (data && data[0]) {
+        const addr = data[0].address || {};
+        const houseNumber = addr.house_number || '';
+        const road = addr.road || addr.street || '';
+        const streetPart = houseNumber && road
+          ? `${houseNumber} ${road}`
+          : road || data[0].display_name?.split(',')[0] || '';
+        const city = addr.city || addr.town || addr.village || addr.hamlet || '';
+        const stateFull = addr.state || '';
+        const stateAbbrev = STATE_ABBREVS[(stateFull).toLowerCase()] || '';
+        const zip = addr.postcode || '';
+
+        const parts = [];
+        if (streetPart.trim()) parts.push(streetPart.trim());
+        if (city) parts.push(city);
+        if (stateAbbrev) parts.push(stateAbbrev);
+        else if (stateFull) parts.push(stateFull);
+        if (zip && parts.length > 0) parts[parts.length - 1] += ` ${zip}`;
+        const fullAddress = parts.join(', ');
+
+        return {
+          address: fullAddress || null,
+          city: city || null,
+          state: stateAbbrev || null,
+          zip: zip || null,
+          lat: parseFloat(data[0].lat),
+          lng: parseFloat(data[0].lon)
+        };
+      }
+      return null;
+    } catch (err) {
+      consecutiveFails++;
+      if (attempt < 2) await sleep(3000 * (attempt + 1));
+    }
+  }
+  return null;
+}
+
+// ============================================================
+// LIBRARY ADDRESS LOOKUP
+// ============================================================
+
+function findLibraryAddress(activityName) {
+  const nameLower = (activityName || '').toLowerCase().trim();
+  if (!nameLower.includes('library')) return null;
+
+  // Try exact system name match first
+  for (const [systemName, systemData] of Object.entries(LIBRARY_ADDRESSES)) {
+    if (nameLower === systemName.toLowerCase()) {
+      return systemData.mainAddress;
+    }
+    // Try branch match
+    if (systemData.branches) {
+      for (const [branchName, branchAddr] of Object.entries(systemData.branches)) {
+        if (nameLower === branchName.toLowerCase() ||
+            nameLower === `${branchName} library`.toLowerCase() ||
+            nameLower.includes(branchName.toLowerCase())) {
+          return branchAddr;
+        }
+      }
+    }
+  }
+
+  // Try fuzzy: activity name contains system name or vice versa
+  for (const [systemName, systemData] of Object.entries(LIBRARY_ADDRESSES)) {
+    const sysLower = systemName.toLowerCase();
+    if (nameLower.includes(sysLower) || sysLower.includes(nameLower)) {
+      return systemData.mainAddress;
+    }
+  }
+
   return null;
 }
 
@@ -312,14 +446,19 @@ async function main() {
         continue;
       }
 
-      const address = await reverseGeocode(lat, lng);
+      const result = await reverseGeocode(lat, lng);
       geocodeCount++;
 
-      if (address && address.length > 3) {
+      if (result && result.address && result.address.length > 3) {
+        const updates = { address: result.address, updated_at: new Date().toISOString() };
+        // Also backfill city, state, zip_code if missing
+        if (!activity.city && result.city) updates.city = result.city;
+        if (!activity.state && result.state) updates.state = result.state;
+        if (!activity.zip_code && result.zip) updates.zip_code = result.zip;
         if (SAVE) {
           const { error } = await supabase
             .from('activities')
-            .update({ address, updated_at: new Date().toISOString() })
+            .update(updates)
             .eq('id', activity.id);
           if (error) {
             console.error(`  ❌ Failed to update ${activity.name}: ${error.message}`);
@@ -330,7 +469,7 @@ async function main() {
           addressFixed++;
         }
         if (addressFixed <= 10) {
-          console.log(`  ✅ ${activity.name}: "${address}"`);
+          console.log(`  ✅ ${activity.name}: "${result.address}"`);
         } else if (addressFixed % 100 === 0) {
           console.log(`  ... ${addressFixed} addresses fixed so far`);
         }
@@ -342,14 +481,130 @@ async function main() {
         console.log(`  ⏳ ${geocodeCount}/${allMissing.length} processed, ${addressFixed} fixed, ${addressFailed} failed`);
       }
 
-      // Rate limit: 1.5s between requests (more conservative)
-      await sleep(1500);
+      // Rate limit: 2.5s between requests (conservative — Nominatim 429s at 1.5s)
+      await sleep(2500);
     }
 
-    console.log(`\n  📊 Address Results:`);
+    console.log(`\n  📊 Reverse Geocode Results:`);
     console.log(`     Fixed:  ${addressFixed}`);
     console.log(`     Failed: ${addressFailed}`);
     console.log(`     Total:  ${allMissing.length}`);
+
+    // ─── Pass 2: Library address lookup (no API calls, instant) ───
+    console.log(`\n📚 FIXING MISSING ADDRESSES — Library Lookup`);
+    console.log(`─────────────────────────────────────────`);
+
+    const stillMissing = await fetchAllPaginated('activities',
+      'id, name, address, city, state, zip_code, location',
+      { or: 'address.is.null,address.eq.' }
+    );
+    console.log(`  ${stillMissing.length} activities still missing address after reverse geocode`);
+
+    let libFixed = 0;
+    for (const activity of stillMissing) {
+      const libAddr = findLibraryAddress(activity.name);
+      if (libAddr) {
+        // Parse address string: "123 Main St, City, ST 12345"
+        const parts = libAddr.split(',').map(p => p.trim());
+        const updates = { address: libAddr, updated_at: new Date().toISOString() };
+        if (!activity.city && parts.length >= 2) updates.city = parts[1];
+        if (!activity.state && parts.length >= 3) {
+          const stateZip = parts[parts.length - 1];
+          const stMatch = stateZip.match(/^([A-Z]{2})\s/);
+          if (stMatch) updates.state = stMatch[1];
+        }
+        if (!activity.zip_code) {
+          const zipMatch = libAddr.match(/\b(\d{5})\b/);
+          if (zipMatch) updates.zip_code = zipMatch[1];
+        }
+        if (SAVE) {
+          const { error } = await supabase.from('activities').update(updates).eq('id', activity.id);
+          if (!error) libFixed++;
+        } else {
+          libFixed++;
+        }
+        if (libFixed <= 5) {
+          console.log(`  ✅ ${activity.name}: "${libAddr}"`);
+        } else if (libFixed % 50 === 0) {
+          console.log(`  ... ${libFixed} library addresses fixed`);
+        }
+      }
+    }
+    console.log(`  📊 Library lookup: ${libFixed} fixed out of ${stillMissing.length} remaining`);
+
+    // ─── Pass 3: Forward geocode from name + city + state (slow) ───
+    console.log(`\n🔍 FIXING MISSING ADDRESSES — Forward Geocode`);
+    console.log(`─────────────────────────────────────────`);
+
+    const stillMissing2 = await fetchAllPaginated('activities',
+      'id, name, address, city, state, zip_code, location',
+      { or: 'address.is.null,address.eq.' }
+    );
+    // Only try activities that have city OR name to search with
+    const forwardCandidates = stillMissing2.filter(a =>
+      (a.city || a.name) && (a.city || a.state)
+    );
+    console.log(`  ${stillMissing2.length} activities still missing address`);
+    console.log(`  ${forwardCandidates.length} have enough info for forward geocoding`);
+    console.log(`  ⏱️  ETA: ~${Math.ceil(forwardCandidates.length * 2.5 / 60)} min\n`);
+
+    let fwdFixed = 0;
+    let fwdFailed = 0;
+    for (let i = 0; i < forwardCandidates.length; i++) {
+      const activity = forwardCandidates[i];
+
+      if (consecutiveFails >= 20) {
+        console.log(`\n  ⚠️ 20 consecutive failures — pausing 60s...`);
+        await sleep(60000);
+        consecutiveFails = 0;
+      }
+
+      // Build search query: name + city + state
+      const queryParts = [];
+      if (activity.name) queryParts.push(activity.name);
+      if (activity.city) queryParts.push(activity.city);
+      if (activity.state) queryParts.push(activity.state);
+      const query = queryParts.join(', ');
+
+      const result = await forwardGeocode(query);
+
+      if (result && result.address && result.address.length > 3) {
+        const updates = { address: result.address, updated_at: new Date().toISOString() };
+        if (!activity.city && result.city) updates.city = result.city;
+        if (!activity.state && result.state) updates.state = result.state;
+        if (!activity.zip_code && result.zip) updates.zip_code = result.zip;
+        // Also backfill coordinates if missing
+        if (!activity.location && result.lat && result.lng) {
+          updates.location = `SRID=4326;POINT(${result.lng} ${result.lat})`;
+          const ngeohash = require('ngeohash');
+          updates.geohash = ngeohash.encode(result.lat, result.lng, 7);
+        }
+        if (SAVE) {
+          const { error } = await supabase.from('activities').update(updates).eq('id', activity.id);
+          if (!error) fwdFixed++;
+          else fwdFailed++;
+        } else {
+          fwdFixed++;
+        }
+        if (fwdFixed <= 5) {
+          console.log(`  ✅ ${activity.name}: "${result.address}"`);
+        } else if (fwdFixed % 100 === 0) {
+          console.log(`  ... ${fwdFixed} addresses found`);
+        }
+      } else {
+        fwdFailed++;
+      }
+
+      if ((i + 1) % 100 === 0) {
+        console.log(`  ⏳ ${i + 1}/${forwardCandidates.length} processed, ${fwdFixed} fixed, ${fwdFailed} failed`);
+      }
+
+      await sleep(2500);
+    }
+    console.log(`\n  📊 Forward Geocode Results:`);
+    console.log(`     Fixed:  ${fwdFixed}`);
+    console.log(`     Failed: ${fwdFailed}`);
+    console.log(`     Total:  ${forwardCandidates.length}`);
   }
 
   // ─── Summary ───

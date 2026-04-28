@@ -34,6 +34,13 @@ The project has a CLAUDE.md with full architecture docs — read it first before
 - Brand colors: orange/amber primary (#f97316 → #f59e0b), amber-900 for dark accents, cream backgrounds
 - Logo is an inline SVG bee in a hexagon (no external image file)
 
+**Bandwidth management (Supabase free plan — 5.5 GB egress limit):**
+- Never use `.select('*')` on the events or activities tables in list/search queries. Use selective columns instead.
+- Events list pages use: `id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, min_age, max_age, description, address, location, activity_id, reported, is_free`
+- Activities list pages use: `id, name, city, state, address, location, zip_code, category, description, age_range, min_age, max_age, hours, is_free, reported`
+- Detail pages (`events/[id]` and `activities/[id]`) can use `select('*')` since they fetch a single row.
+- The `nearby_events` and `nearby_activities` RPCs return all columns (SETOF table) — keep result limits reasonable.
+
 **How to fix issues:**
 1. Read the relevant source files before making changes
 2. Make the fix directly — edit the code

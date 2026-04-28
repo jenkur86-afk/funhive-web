@@ -302,7 +302,7 @@ async function scrapeGenericEvents() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'MD',
@@ -319,10 +319,10 @@ async function main() {
   const events = await scrapeGenericEvents();
 
   if (events.length > 0) {
-    await saveToFirebase(events);
+    await saveToDatabase(events);
   }
 
-  // Log to Firestore for monitoring
+  // Log to database for monitoring
 
 
   await logScraperResult('Librarymarket Libraries MD', {
@@ -352,9 +352,9 @@ async function scrapeLibraryMarketMDCloudFunction() {
   console.log('☁️ Running LibraryMarket MD as Cloud Function');
   const events = await scrapeGenericEvents();
   if (events.length > 0) {
-    await saveToFirebase(events);
+    await saveToDatabase(events);
   }
   return { imported: events.length, total: events.length };
 }
 
-module.exports = { scrapeGenericEvents, saveToFirebase, scrapeLibraryMarketMDCloudFunction };
+module.exports = { scrapeGenericEvents, saveToDatabase, scrapeLibraryMarketMDCloudFunction };

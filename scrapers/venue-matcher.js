@@ -9,13 +9,13 @@
  * 4. Geohash proximity match (within ~150m)
  */
 
-const { db } = require('./helpers/supabase-adapter');
+const { db, supabase } = require('./helpers/supabase-adapter');
 const ngeohash = require('ngeohash');
 
 // Cache for venue lookups
 let venueCache = null;
 let venueCacheTime = 0;
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL = 30 * 60 * 1000; // 30 minutes (reduced from 5 min to cut Supabase egress)
 
 /**
  * Normalize a string for matching
@@ -93,7 +93,25 @@ async function loadVenueCache() {
   }
 
   console.log('  📦 Loading venue cache...');
-  const snapshot = await db.collection('activities').get();
+
+  // Use direct Supabase query with selective columns to minimize egress bandwidth.
+  // Only fetch the columns needed for venue matching — skip description, image_url,
+  // url, hours, phone, price_range, etc. which are not used in matching logic.
+  const VENUE_CACHE_COLUMNS = 'id, name, city, state, address, location, geohash, category';
+  let allRows = [];
+  let from = 0;
+  const pageSize = 1000;
+  while (true) {
+    const { data, error } = await supabase
+      .from('activities')
+      .select(VENUE_CACHE_COLUMNS)
+      .range(from, from + pageSize - 1);
+    if (error) throw error;
+    if (!data || data.length === 0) break;
+    allRows = allRows.concat(data);
+    if (data.length < pageSize) break;
+    from += pageSize;
+  }
 
   venueCache = {
     byId: new Map(),
@@ -103,14 +121,13 @@ async function loadVenueCache() {
     all: []
   };
 
-  snapshot.forEach(doc => {
-    const data = { id: doc.id, ...doc.data() };
+  for (const data of allRows) {
 
     // Index by ID
-    venueCache.byId.set(doc.id, data);
+    venueCache.byId.set(data.id, data);
 
     // Index by normalized name + city + state
-    const city = data.city || data.location?.city || '';
+    const city = data.city || '';
     const state = data.state || '';
     const nameKey = normalize(`${data.name} ${city} ${state}`);
     if (!venueCache.byNormalizedName.has(nameKey)) {
@@ -127,10 +144,9 @@ async function loadVenueCache() {
     venueCache.byNormalizedName.get(coreKey).push(data);
 
     // Index by geohash (6 chars = ~1.2km precision)
-    const lat = data.location?.coordinates?.latitude || data.location?.latitude;
-    const lng = data.location?.coordinates?.longitude || data.location?.longitude;
-    if (lat && lng) {
-      const gh = ngeohash.encode(lat, lng, 6);
+    // Use stored geohash column directly, or decode from PostGIS geometry
+    if (data.geohash && data.geohash.length >= 6) {
+      const gh = data.geohash.substring(0, 6);
       if (!venueCache.byGeohash.has(gh)) {
         venueCache.byGeohash.set(gh, []);
       }
@@ -138,7 +154,7 @@ async function loadVenueCache() {
     }
 
     // Index by normalized address
-    const address = normalize(data.location?.address || data.address || '');
+    const address = normalize(data.address || '');
     if (address && address.length > 5) {
       if (!venueCache.byAddress.has(address)) {
         venueCache.byAddress.set(address, []);
@@ -147,7 +163,7 @@ async function loadVenueCache() {
     }
 
     venueCache.all.push(data);
-  });
+  }
 
   venueCacheTime = now;
   console.log(`  📦 Loaded ${venueCache.all.length} venues into cache`);
@@ -289,7 +305,7 @@ async function findMatchingVenue(eventData) {
  */
 async function getOrCreateVenue(eventData, options = {}) {
   const { venue, city, state, address, latitude, longitude, zipCode } = eventData;
-  const { category = 'Entertainment', subcategory = 'Family Entertainment' } = options;
+  const { category = 'Entertainment', subcategory = 'Family Entertainment', sourceUrl = null } = options;
 
   // Skip invalid venues
   const invalidPatterns = [
@@ -350,7 +366,7 @@ async function getOrCreateVenue(eventData, options = {}) {
         state: state,
         zipCode: zipCode || ''
       },
-      source: 'auto-created-by-scraper',
+      source: sourceUrl || 'auto-created-by-scraper',
       active: true
     };
 

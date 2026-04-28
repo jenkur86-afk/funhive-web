@@ -42,20 +42,8 @@ const LIBRARY_SYSTEMS = [
     defaultLat: 39.0418,
     defaultLon: -76.0671
   },
-  {
-    name: 'Dorchester County Public Library',
-    // Uses Google Calendar embed
-    url: 'https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=America%2FNew_York&bgcolor=%23ffffff&src=ZG9yY2hlc3Rlci5saWJyYXJ5LmV2ZW50c0BnbWFpbC5jb20&color=%23039BE5',
-    calendarType: 'google',
-    county: 'Dorchester',
-    state: 'MD',
-    website: 'https://www.dorchesterlibrary.org',
-    city: 'Cambridge',
-    zipCode: '21613',
-    // Default coordinates for main library
-    defaultLat: 38.5632,
-    defaultLon: -76.0788
-  }
+  // Dorchester County removed — scraped by dedicated scraper-dorchester-county-library-MD.js
+  // to avoid duplicate events
 ];
 
 // Geocode address
@@ -120,10 +108,29 @@ async function scrapeLibraryEvents(library, browser) {
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
 
-    await page.goto(library.url, {
+    const response = await page.goto(library.url, {
       waitUntil: 'networkidle2',
       timeout: 30000
     });
+
+    // Check for 404/error pages before parsing
+    if (response && (response.status() === 404 || response.status() >= 500)) {
+      console.log(`  ⚠️ HTTP ${response.status()} for ${library.url}, skipping`);
+      await page.close();
+      return { imported: 0, failed: 1, skipped: 0 };
+    }
+
+    // Detect Squarespace 404 pages (they return 200 but show "page not found" content)
+    const is404Page = await page.evaluate(() => {
+      const bodyText = (document.body?.innerText || '').toLowerCase();
+      return bodyText.includes('page not found') || bodyText.includes('404') ||
+             bodyText.includes('this page doesn\'t exist') || bodyText.includes('nothing here');
+    });
+    if (is404Page) {
+      console.log(`  ⚠️ Squarespace 404 page detected for ${library.url}, skipping`);
+      await page.close();
+      return { imported: 0, failed: 1, skipped: 0 };
+    }
 
     // Wait for calendar events to render (FullCalendar/LibCal embeds)
     await page.waitForSelector('a[href*="/event/"]', { timeout: 15000 }).catch(() => {
@@ -467,7 +474,7 @@ async function scrapeSquarespaceLibraries() {
     await browser.close();
   }
 
-  // Log to Firestore with aggregate + per-site breakdown
+  // Log to database with aggregate + per-site breakdown
   const result = await logger.finish();
 
   return { imported: result.stats.new, skipped: result.stats.duplicates, failed: result.stats.errors };

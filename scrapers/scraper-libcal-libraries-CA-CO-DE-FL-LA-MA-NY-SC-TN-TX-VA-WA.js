@@ -348,6 +348,33 @@ const LIBRARY_SYSTEMS = [
     city: 'East Hartford',
     zipCode: '06108'
   },
+  {
+    name: 'Greenwich Library',
+    url: 'https://greenwichlibrary.libcal.com/calendar/events',
+    county: 'Fairfield',
+    state: 'CT',
+    website: 'https://www.greenwichlibrary.org',
+    city: 'Greenwich',
+    zipCode: '06830'
+  },
+  {
+    name: 'Silas Bronson Library',
+    url: 'https://bronsonlibrary.libcal.com/',
+    county: 'New Haven',
+    state: 'CT',
+    website: 'https://www.bronsonlibrary.org',
+    city: 'Waterbury',
+    zipCode: '06702'
+  },
+  {
+    name: 'Hamden Public Library',
+    url: 'https://hamdenlibrary.libcal.com/calendar/programs/',
+    county: 'New Haven',
+    state: 'CT',
+    website: 'https://www.hamdenlibrary.org',
+    city: 'Hamden',
+    zipCode: '06518'
+  },
 
   // DELAWARE - All Counties (unfiltered)
   {
@@ -396,6 +423,15 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.seminolecountylibrary.org',
     city: 'Sanford',
     zipCode: '32771'
+  },
+  {
+    name: 'Marion County Public Library System',
+    url: 'https://mcpls.libcal.com/',
+    county: 'Marion',
+    state: 'FL',
+    website: 'https://www.mcpls.org',
+    city: 'Ocala',
+    zipCode: '34471'
   },
 
   // ILLINOIS
@@ -760,6 +796,33 @@ const LIBRARY_SYSTEMS = [
   //   city: 'Westampton',
   //   zipCode: '08060'
   // },
+  {
+    name: 'Hunterdon County Library',
+    url: 'https://hclibrary.libcal.com/calendars',
+    county: 'Hunterdon',
+    state: 'NJ',
+    website: 'https://www.hclibrary.us',
+    city: 'Flemington',
+    zipCode: '08822'
+  },
+  {
+    name: 'Sussex County Library',
+    url: 'https://sussexcountylibrary.libcal.com/',
+    county: 'Sussex',
+    state: 'NJ',
+    website: 'https://www.sussexcountylibrary.org',
+    city: 'Newton',
+    zipCode: '07860'
+  },
+  {
+    name: 'Union County Libraries',
+    url: 'https://unioncountylibraries.libcal.com/calendar/UCLSPrograms',
+    county: 'Union',
+    state: 'NJ',
+    website: 'https://www.unioncountylibraries.org',
+    city: 'Elizabeth',
+    zipCode: '07202'
+  },
 
   // NORTH CAROLINA
   {
@@ -826,6 +889,33 @@ const LIBRARY_SYSTEMS = [
     city: 'Bolivia',
     zipCode: '28422'
   },
+  {
+    name: 'Iredell County Public Library',
+    url: 'https://iredell-lib-nc.libcal.com/calendars',
+    county: 'Iredell',
+    state: 'NC',
+    website: 'https://www.iredell.lib.nc.us',
+    city: 'Statesville',
+    zipCode: '28677'
+  },
+  {
+    name: 'Henderson County Public Library',
+    url: 'https://hendersonpl.libcal.com/',
+    county: 'Henderson',
+    state: 'NC',
+    website: 'https://www.hendersoncountync.gov/library',
+    city: 'Hendersonville',
+    zipCode: '28792'
+  },
+  {
+    name: 'Craven-Pamlico Regional Library',
+    url: 'https://cprl.libcal.com/',
+    county: 'Craven',
+    state: 'NC',
+    website: 'https://www.cravencountync.gov/191/Library',
+    city: 'New Bern',
+    zipCode: '28560'
+  },
 
   // GEORGIA
   // REMOVED: Live Oak Public Libraries - now uses Eventpace at spaces.liveoakpl.org
@@ -838,6 +928,24 @@ const LIBRARY_SYSTEMS = [
   //   city: 'Savannah',
   //   zipCode: '31401'
   // },
+  {
+    name: 'Athens-Clarke County Library',
+    url: 'https://athenslibrary.libcal.com/',
+    county: 'Clarke',
+    state: 'GA',
+    website: 'https://www.athenslibrary.org',
+    city: 'Athens',
+    zipCode: '30601'
+  },
+  {
+    name: 'Hall County Library System',
+    url: 'https://hallcountylibrary.libcal.com/',
+    county: 'Hall',
+    state: 'GA',
+    website: 'https://www.hallcountylibrary.org',
+    city: 'Gainesville',
+    zipCode: '30501'
+  },
 
   // OHIO
   {
@@ -848,6 +956,33 @@ const LIBRARY_SYSTEMS = [
     website: 'https://cpl.org',
     city: 'Cleveland',
     zipCode: '44114'
+  },
+  {
+    name: 'Clark County Public Library',
+    url: 'https://ccplohio.libcal.com/',
+    county: 'Clark',
+    state: 'OH',
+    website: 'https://www.ccpl.lib.oh.us',
+    city: 'Springfield',
+    zipCode: '45502'
+  },
+  {
+    name: 'Lorain Public Library System',
+    url: 'https://lorainpubliclibrary.libcal.com/calendar',
+    county: 'Lorain',
+    state: 'OH',
+    website: 'https://www.lorainpubliclibrary.org',
+    city: 'Lorain',
+    zipCode: '44052'
+  },
+  {
+    name: 'Wood County District Public Library',
+    url: 'https://wcdpl.libcal.com/',
+    county: 'Wood',
+    state: 'OH',
+    website: 'https://www.wcdpl.org',
+    city: 'Bowling Green',
+    zipCode: '43402'
   },
 
   // PENNSYLVANIA
@@ -906,6 +1041,24 @@ const LIBRARY_SYSTEMS = [
     city: 'Doylestown',
     zipCode: '18901'
   },
+  {
+    name: 'Dauphin County Library System',
+    url: 'https://dcls.libcal.com/',
+    county: 'Dauphin',
+    state: 'PA',
+    website: 'https://www.dcls.org',
+    city: 'Harrisburg',
+    zipCode: '17101'
+  },
+  {
+    name: 'Easton Area Public Library',
+    url: 'https://eastonpl.libcal.com/calendar',
+    county: 'Northampton',
+    state: 'PA',
+    website: 'https://www.eastonpl.org',
+    city: 'Easton',
+    zipCode: '18042'
+  },
 
   // RHODE ISLAND
   {
@@ -944,6 +1097,51 @@ const LIBRARY_SYSTEMS = [
     city: 'West Warwick',
     zipCode: '02893'
   },
+  {
+    name: 'Pawtucket Public Library',
+    url: 'https://pawtucketlibrary.libcal.com/',
+    county: 'Providence',
+    state: 'RI',
+    website: 'https://www.pawtucketlibrary.org',
+    city: 'Pawtucket',
+    zipCode: '02860'
+  },
+  {
+    name: 'Newport Public Library',
+    url: 'https://newportlibraryri.libcal.com/calendar/NPL-events/',
+    county: 'Newport',
+    state: 'RI',
+    website: 'https://www.newportlibraryri.org',
+    city: 'Newport',
+    zipCode: '02840'
+  },
+  {
+    name: 'North Kingstown Free Library',
+    url: 'https://nklibrary.libcal.com/',
+    county: 'Washington',
+    state: 'RI',
+    website: 'https://www.nklibrary.org',
+    city: 'North Kingstown',
+    zipCode: '02852'
+  },
+  {
+    name: 'Cumberland Public Library',
+    url: 'https://cumberlandlibrary.libcal.com/',
+    county: 'Providence',
+    state: 'RI',
+    website: 'https://www.cumberlandlibrary.org',
+    city: 'Cumberland',
+    zipCode: '02864'
+  },
+  {
+    name: 'Barrington Public Library',
+    url: 'https://barringtonlibrary.libcal.com/calendar/library-events',
+    county: 'Bristol',
+    state: 'RI',
+    website: 'https://www.barringtonlibrary.org',
+    city: 'Barrington',
+    zipCode: '02806'
+  },
 
   // SOUTH CAROLINA
   {
@@ -972,6 +1170,24 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.statelibrary.sc.gov',
     city: 'Columbia',
     zipCode: '29201'
+  },
+  {
+    name: 'Lexington County Public Library',
+    url: 'https://lexcolibrary.libcal.com/',
+    county: 'Lexington',
+    state: 'SC',
+    website: 'https://www.lexcolibrary.org',
+    city: 'Lexington',
+    zipCode: '29072'
+  },
+  {
+    name: 'Dorchester County Library',
+    url: 'https://dorchesterlibrarysc.libcal.com/',
+    county: 'Dorchester',
+    state: 'SC',
+    website: 'https://www.dorchesterlibrarysc.org',
+    city: 'Summerville',
+    zipCode: '29483'
   },
 
   // TENNESSEE
@@ -1044,8 +1260,16 @@ const LIBRARY_SYSTEMS = [
     zipCode: '76102'
   },
 
-  // WEST VIRGINIA — removed: WV Library Commission has no events ("No events are scheduled")
-  // WV libraries are covered by scraper-wordpress-libraries-wv.js and scraper-custom-drupal-libraries-GA-NC-SC-WV.js
+  // WEST VIRGINIA
+  {
+    name: 'Morgantown Public Library',
+    url: 'https://mympls.libcal.com/',
+    county: 'Monongalia',
+    state: 'WV',
+    website: 'https://www.morgantown.org/library',
+    city: 'Morgantown',
+    zipCode: '26505'
+  },
 
   // ALABAMA
   {
@@ -1107,6 +1331,37 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.ci.keene.nh.us/library',
     city: 'Keene',
     zipCode: '03431'
+  },
+
+  // INDIANA
+  {
+    name: 'Muncie Public Library',
+    url: 'https://munciepubliclibrary.libcal.com/',
+    county: 'Delaware',
+    state: 'IN',
+    website: 'https://www.munpl.org',
+    city: 'Muncie',
+    zipCode: '47305'
+  },
+  {
+    name: 'New Albany-Floyd County Library',
+    url: 'https://nafclibrary.libcal.com/',
+    county: 'Floyd',
+    state: 'IN',
+    website: 'https://www.nafclibrary.org',
+    city: 'New Albany',
+    zipCode: '47150'
+  },
+
+  // MAINE
+  {
+    name: 'Bangor Public Library',
+    url: 'https://bangorpubliclibrary.libcal.com/',
+    county: 'Penobscot',
+    state: 'ME',
+    website: 'https://www.bangorpubliclibrary.org',
+    city: 'Bangor',
+    zipCode: '04401'
   },
 
   // WASHINGTON
@@ -1516,7 +1771,7 @@ async function scrapeLibCalLibraries(stateFilter = null, batchNumber = null) {
   if (libraries.length === 0) {
     console.log(`⚠️ No libraries found for: ${stateInfo}`);
 
-    // Log scraper stats to Firestore with state-specific name
+    // Log scraper stats to database with state-specific name
     const scraperName = stateFilter ? `LibCal-${stateFilter}` : 'LibCal-All';
     await logScraperResult(scraperName, {
       found: 0,
@@ -1581,7 +1836,7 @@ async function scrapeLibCalLibraries(stateFilter = null, batchNumber = null) {
   console.log(`   Failed: ${totalFailed}`);
   console.log('='.repeat(60) + '\n');
 
-  // Log scraper stats to Firestore with per-site breakdown
+  // Log scraper stats to database with per-site breakdown
   await logger.finish();
 
   return { imported: totalImported, skipped: totalSkipped, failed: totalFailed };

@@ -335,9 +335,14 @@ function isEventOnOrAfterToday(event: any): boolean {
 
         // Also fetch events WITHOUT geometry that have city/state/zip
         // so client-side fallback can compute distance
+        // Select only the columns needed for card display and client-side filtering.
+        // Excludes image_url, url, source_url, scraper_name, platform, scraped_at,
+        // created_at, updated_at, review_count, is_sponsored, sponsor_expires_at,
+        // geohash, end_date to reduce Supabase egress bandwidth.
+        const EVENT_LIST_COLS = 'id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, min_age, max_age, description, address, location, activity_id, reported, is_free'
         let suppQuery = supabase
           .from('events')
-          .select('*')
+          .select(EVENT_LIST_COLS)
           .is('location', null)
           .not('event_date', 'is', null)
           .eq('reported', false)
@@ -368,9 +373,10 @@ function isEventOnOrAfterToday(event: any): boolean {
         // No location — use standard query, ordered by date
         // Use the TIMESTAMPTZ `date` column for filtering & sorting
         // (the TEXT `event_date` column sorts alphabetically, not chronologically)
+        const EVENT_LIST_COLS_STD = 'id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, min_age, max_age, description, address, location, activity_id, reported, is_free'
         let query = supabase
           .from('events')
-          .select('*')
+          .select(EVENT_LIST_COLS_STD)
           .not('event_date', 'is', null)
           .eq('reported', false)
           .in('state', ACTIVE_STATES || [])

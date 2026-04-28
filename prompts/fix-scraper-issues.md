@@ -57,13 +57,19 @@ FunHive is a family event discovery platform with 185+ scrapers in the `scrapers
 - For date normalization changes, verify against the test cases in the date helper
 - Summarize what you fixed and what I need to do (e.g., npm install, re-run a specific scraper)
 
+**Bandwidth management (Supabase free plan — 5.5 GB egress limit):**
+- The venue cache in `venue-matcher.js` is the single largest egress source. It loads all activities into memory with a 30-minute TTL and selective columns (id, name, city, state, address, location, geohash, category). Do NOT reduce the TTL or add more columns to the cache query.
+- When writing new scrapers or fix scripts that read from Supabase, always use `.select('column1, column2, ...')` with only the columns you need — never `select('*')`.
+- If a scraper needs to check for duplicates, use the existing `checkDuplicate()` in `supabase-adapter.js` which selects only `id, name`.
+- Data quality fix scripts should be run **weekly** (not after every scraper run) to minimize egress. The scrapers' `saveEvent()` function already handles date parsing, age detection, cancelled event filtering, and venue name cleaning at save time.
+
 **Key scraper files:**
 - `scrapers/helpers/supabase-adapter.js` — Central save/flatten functions, venue cleaning, age detection
 - `scrapers/helpers/event-save-helper.js` — Event saving with geocoding
 - `scrapers/helpers/macaroni-geocoding-helper.js` — Shared geocoding for MacaroniKid scrapers
 - `scrapers/helpers/yodel-helper.js` — Yodel platform detection and scraping
 - `scrapers/date-normalization-helper.js` — Date string normalization
-- `scrapers/venue-matcher.js` — Venue deduplication matching
+- `scrapers/venue-matcher.js` — Venue deduplication matching (uses 30-min cached venue data)
 - `scrapers/scraper-registry.js` — All scrapers registered with group/state
 - `scrapers/utils/county-centroids.js` — County centroid fallback coordinates
 

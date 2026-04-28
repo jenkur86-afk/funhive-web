@@ -33,8 +33,10 @@ const SCRAPER_NAME = 'ChildrensMuseums-Events-Eastern';
 
 const VENUES = [
   // Alabama
-  { name: "McWane Science Center", eventsUrl: "https://mcwane.org/explore/events/", city: "Birmingham", state: "AL", zip: "35203" },
-  { name: "EarlyWorks Children's Museum", eventsUrl: "https://earlyworks.com/events/", city: "Huntsville", state: "AL", zip: "35801" },
+  { name: "McWane Science Center", eventsUrl: "https://mcwane.org/events/", city: "Birmingham", state: "AL", zip: "35203",
+    extraction: 'mec' },
+  { name: "EarlyWorks Children's Museum", eventsUrl: "https://earlyworks.com/events/", city: "Huntsville", state: "AL", zip: "35801",
+    extraction: 'mec' },
   // Connecticut
   { name: "Stepping Stones Museum for Children", eventsUrl: "https://steppingstonesmuseum.org/calendar/", city: "Norwalk", state: "CT", zip: "06854" },
   { name: "Imagine Nation Museum", eventsUrl: "https://imaginenation.org/events/", city: "Bristol", state: "CT", zip: "06010" },
@@ -43,38 +45,46 @@ const VENUES = [
   // Delaware
   { name: "Delaware Children's Museum", eventsUrl: "https://delawarechildrensmuseum.org/events/", city: "Wilmington", state: "DE", zip: "19801" },
   // Florida
-  { name: "Miami Children's Museum", eventsUrl: "https://www.miamichildrensmuseum.org/events/", city: "Miami", state: "FL", zip: "33132" },
+  { name: "Miami Children's Museum", eventsUrl: "https://www.miamichildrensmuseum.org/events/", city: "Miami", state: "FL", zip: "33132",
+    extraction: 'webflow' },
   { name: "Glazer Children's Museum", eventsUrl: "https://www.glazermuseum.org/visit/calendar", city: "Tampa", state: "FL", zip: "33602" },
   { name: "Golisano Children's Museum of Naples", eventsUrl: "https://cmonaples.org/events/", city: "Naples", state: "FL", zip: "34110" },
   { name: "Great Explorations", eventsUrl: "https://www.greatexplorations.org/events/", city: "St. Petersburg", state: "FL", zip: "33701" },
   // Georgia
   { name: "Children's Museum of Atlanta", eventsUrl: "https://childrensmuseumatlanta.org/events/", city: "Atlanta", state: "GA", zip: "30313" },
   // Illinois
-  { name: "Chicago Children's Museum", eventsUrl: "https://www.chicagochildrensmuseum.org/program-calendar", city: "Chicago", state: "IL", zip: "60611" },
+  { name: "Chicago Children's Museum", eventsUrl: "https://www.chicagochildrensmuseum.org/program-calendar", city: "Chicago", state: "IL", zip: "60611",
+    extraction: 'squarespace' },
   { name: "Kohl Children's Museum", eventsUrl: "https://www.kohlchildrensmuseum.org/visit/events-and-programs/", city: "Glenview", state: "IL", zip: "60025" },
   // Indiana
   { name: "The Children's Museum of Indianapolis", eventsUrl: "https://www.childrensmuseum.org/visit/calendar", city: "Indianapolis", state: "IN", zip: "46208" },
   // Kentucky
-  { name: "Kentucky Science Center", eventsUrl: "https://kysciencecenter.org/events/", city: "Louisville", state: "KY", zip: "40202" },
+  { name: "Kentucky Science Center", eventsUrl: "https://kysciencecenter.org/events/", city: "Louisville", state: "KY", zip: "40202",
+    extraction: 'tec' },
   // Maine
-  { name: "Children's Museum & Theatre of Maine", eventsUrl: "https://www.kitetails.org/calendar/", city: "Portland", state: "ME", zip: "04101" },
-  { name: "Maine Discovery Museum", eventsUrl: "https://www.mainediscoverymuseum.org/special-events", city: "Bangor", state: "ME", zip: "04401" },
+  { name: "Children's Museum & Theatre of Maine", eventsUrl: "https://www.kitetails.org/calendar/", city: "Portland", state: "ME", zip: "04101",
+    extraction: 'squarespace' },
+  { name: "Maine Discovery Museum", eventsUrl: "https://www.mainediscoverymuseum.org/special-events", city: "Bangor", state: "ME", zip: "04401",
+    extraction: 'squarespace' },
   // Massachusetts
   { name: "Boston Children's Museum", eventsUrl: "https://www.bostonchildrensmuseum.org/programs-events", city: "Boston", state: "MA", zip: "02210" },
   { name: "Discovery Museum", eventsUrl: "https://www.discoveryacton.org/visit/programs", city: "Acton", state: "MA", zip: "01720" },
   // Michigan
   { name: "Grand Rapids Children's Museum", eventsUrl: "https://www.grcm.org/events/", city: "Grand Rapids", state: "MI", zip: "49503" },
   // Mississippi
-  { name: "Mississippi Children's Museum", eventsUrl: "https://mschildrensmuseum.org/events/", city: "Jackson", state: "MS", zip: "39202" },
+  { name: "Mississippi Children's Museum", eventsUrl: "https://mschildrensmuseum.org/events/", city: "Jackson", state: "MS", zip: "39202",
+    extraction: 'tec' },
   // New Hampshire
   { name: "Children's Museum of New Hampshire", eventsUrl: "https://childrens-museum.org/calendar/", city: "Dover", state: "NH", zip: "03820" },
   // New Jersey
   { name: "Garden State Discovery Museum", eventsUrl: "https://discoverymuseum.com/events/", city: "Cherry Hill", state: "NJ", zip: "08003" },
   // New York
   { name: "Children's Museum of Manhattan", eventsUrl: "https://cmom.org/visit/calendar/", city: "New York", state: "NY", zip: "10024" },
-  { name: "Brooklyn Children's Museum", eventsUrl: "https://www.brooklynkids.org/calendar/", city: "Brooklyn", state: "NY", zip: "11213" },
+  { name: "Brooklyn Children's Museum", eventsUrl: "https://www.brooklynkids.org/calendar/", city: "Brooklyn", state: "NY", zip: "11213",
+    extraction: 'events-manager' },
   { name: "Long Island Children's Museum", eventsUrl: "https://www.licm.org/events/", city: "Garden City", state: "NY", zip: "11530" },
-  { name: "Strong National Museum of Play", eventsUrl: "https://www.museumofplay.org/visit/calendar/", city: "Rochester", state: "NY", zip: "14607" },
+  { name: "Strong National Museum of Play", eventsUrl: "https://www.museumofplay.org/visit/calendar/", city: "Rochester", state: "NY", zip: "14607",
+    extraction: 'tec' },
   // North Carolina
   { name: "Marbles Kids Museum", eventsUrl: "https://www.marbleskidsmuseum.org/events", city: "Raleigh", state: "NC", zip: "27601" },
   { name: "Discovery Place Science", eventsUrl: "https://science.discoveryplace.org/events-calendar", city: "Charlotte", state: "NC", zip: "28202" },
@@ -86,25 +96,35 @@ const VENUES = [
   { name: "Please Touch Museum", eventsUrl: "https://www.pleasetouchmuseum.org/visit/events/", city: "Philadelphia", state: "PA", zip: "19131" },
   { name: "Children's Museum of Pittsburgh", eventsUrl: "https://pittsburghkids.org/events", city: "Pittsburgh", state: "PA", zip: "15212" },
   // Rhode Island
-  { name: "Providence Children's Museum", eventsUrl: "https://providencechildrensmuseum.org/events/", city: "Providence", state: "RI", zip: "02903" },
+  { name: "Providence Children's Museum", eventsUrl: "https://providencechildrensmuseum.org/events/", city: "Providence", state: "RI", zip: "02903",
+    extraction: 'eventon' },
   // South Carolina
-  { name: "EdVenture Children's Museum", eventsUrl: "https://edventure.org/events/", city: "Columbia", state: "SC", zip: "29201" },
+  { name: "EdVenture Children's Museum", eventsUrl: "https://edventure.org/events/", city: "Columbia", state: "SC", zip: "29201",
+    extraction: 'eventon' },
   { name: "Children's Museum of the Upstate", eventsUrl: "https://tcmupstate.org/events/", city: "Greenville", state: "SC", zip: "29601" },
   // Tennessee
-  { name: "Adventure Science Center", eventsUrl: "https://www.adventuresci.org/events/", city: "Nashville", state: "TN", zip: "37210" },
-  { name: "Creative Discovery Museum", eventsUrl: "https://www.cdmfun.org/events", city: "Chattanooga", state: "TN", zip: "37402" },
-  { name: "Muse Knoxville", eventsUrl: "https://themuseknoxville.org/events/", city: "Knoxville", state: "TN", zip: "37902" },
+  { name: "Adventure Science Center", eventsUrl: "https://www.adventuresci.org/events/", city: "Nashville", state: "TN", zip: "37210",
+    extraction: 'tec' },
+  { name: "Creative Discovery Museum", eventsUrl: "https://www.cdmfun.org/events", city: "Chattanooga", state: "TN", zip: "37402",
+    extraction: 'webflow' },
+  { name: "Muse Knoxville", eventsUrl: "https://themuseknoxville.org/events/", city: "Knoxville", state: "TN", zip: "37902",
+    extraction: 'eventon' },
   // Vermont
-  { name: "ECHO Leahy Center", eventsUrl: "https://www.echovermont.org/events/", city: "Burlington", state: "VT", zip: "05401" },
-  { name: "Montshire Museum of Science", eventsUrl: "https://montshire.org/events/", city: "Norwich", state: "VT", zip: "05055" },
+  { name: "ECHO Leahy Center", eventsUrl: "https://www.echovermont.org/events/", city: "Burlington", state: "VT", zip: "05401",
+    extraction: 'tec' },
+  { name: "Montshire Museum of Science", eventsUrl: "https://montshire.org/events/", city: "Norwich", state: "VT", zip: "05055",
+    extraction: 'tec' },
   // Virginia
-  { name: "Virginia Discovery Museum", eventsUrl: "https://www.vadm.org/events/", city: "Charlottesville", state: "VA", zip: "22902" },
+  { name: "Virginia Discovery Museum", eventsUrl: "https://www.vadm.org/events/", city: "Charlottesville", state: "VA", zip: "22902",
+    extraction: 'squarespace' },
   { name: "Children's Museum of Richmond", eventsUrl: "https://www.c-mor.org/events", city: "Richmond", state: "VA", zip: "23219" },
   // West Virginia
   { name: "Clay Center / Avampato Discovery Museum", eventsUrl: "https://www.theclaycenter.org/events/", city: "Charleston", state: "WV", zip: "25301" },
   // Wisconsin
-  { name: "Betty Brinn Children's Museum", eventsUrl: "https://bbcmkids.org/events/", city: "Milwaukee", state: "WI", zip: "53202" },
-  { name: "Madison Children's Museum", eventsUrl: "https://madisonchildrensmuseum.org/events/", city: "Madison", state: "WI", zip: "53703" },
+  { name: "Betty Brinn Children's Museum", eventsUrl: "https://bbcmkids.org/events/", city: "Milwaukee", state: "WI", zip: "53202",
+    extraction: 'events-manager' },
+  { name: "Madison Children's Museum", eventsUrl: "https://madisonchildrensmuseum.org/events/", city: "Madison", state: "WI", zip: "53703",
+    extraction: 'tec' },
   { name: "Discovery World", eventsUrl: "https://www.discoveryworld.org/events/", city: "Milwaukee", state: "WI", zip: "53202" },
 ];
 
@@ -115,9 +135,24 @@ const VENUES = [
 const EVENT_SELECTORS = {
   // Generic event card selectors (fallback chain)
   eventContainer: [
+    // TEC (The Events Calendar) — very common on museum sites
+    'article.tribe-events-calendar-list__event',
+    'article.tribe-event',
+    '.tribe-events-calendar-list__event-row',
+    // MEC (Modern Events Calendar)
+    'article.mec-event-article',
+    '.mec-event-article',
+    // EventON
+    '.eventon_list_event',
+    // Events Manager
+    '.event-single',
+    // Squarespace
+    '.eventlist-event',
+    // Webflow CMS collections
+    '.w-dyn-item',
+    // Generic selectors
     '.event-card',
     'article[class*="event"]',
-    '.tribe-events-single-event-title',
     '[class*="event-item"]',
     '[class*="event-listing"]',
     '.event',
@@ -125,15 +160,41 @@ const EVENT_SELECTORS = {
   ],
   // Event title selectors
   title: [
+    // TEC
+    'a.tribe-events-calendar-list__event-title-link',
+    'a.tribe-event-url',
+    // MEC
+    '.mec-event-title a',
+    'h4.mec-event-title',
+    // EventON
+    '.eventon_event_title',
+    // Squarespace
+    '.eventlist-title a',
+    'a.eventlist-title-link',
+    // Events Manager
+    '.event-title a',
+    // Generic
     '.event-title',
     'h3',
     'h2',
     '[class*="event-name"]',
     '[class*="event-title"]',
-    'a[class*="event"]',
   ],
   // Date selectors
   date: [
+    // TEC
+    '.tribe-events-calendar-list__event-datetime',
+    'time[datetime]',
+    // MEC
+    '.mec-start-date-details',
+    '.mec-event-date',
+    '.mec-start-date-label',
+    // EventON
+    '.evcal_desc2 .date',
+    // Squarespace
+    '.eventlist-datetag',
+    '.eventlist-meta-date',
+    // Generic
     '.event-date',
     '[class*="date"]',
     'time',
@@ -142,6 +203,8 @@ const EVENT_SELECTORS = {
   ],
   // Description selectors
   description: [
+    '.tribe-events-calendar-list__event-description p',
+    '.mec-event-description',
     '.event-description',
     '.event-summary',
     '[class*="description"]',
@@ -150,6 +213,10 @@ const EVENT_SELECTORS = {
   ],
   // Link selectors
   link: [
+    'a.tribe-events-calendar-list__event-title-link',
+    'a.tribe-event-url',
+    '.mec-event-title a',
+    '.eventlist-title a',
     'a[href]',
     '[class*="event-link"]',
   ],
@@ -176,12 +243,165 @@ function safeText(elem, selector) {
 }
 
 /**
- * Extract events from page using CSS selectors
+ * Make a URL absolute relative to the base URL.
  */
-function extractEventsFromPage(html, baseUrl) {
+function makeAbsoluteUrl(link, baseUrl) {
+  if (!link) return '';
+  try {
+    if (link.startsWith('/')) return new URL(link, baseUrl).href;
+    if (!link.startsWith('http')) return new URL(link, baseUrl).href;
+    return link;
+  } catch (e) {
+    return link;
+  }
+}
+
+/**
+ * Platform-specific extraction: TEC (The Events Calendar)
+ */
+function extractTEC(document, baseUrl) {
+  const results = [];
+  // List view
+  document.querySelectorAll(
+    'article.tribe-events-calendar-list__event, article.tribe-event, .tribe-events-calendar-list__event-row'
+  ).forEach(el => {
+    const titleEl = el.querySelector('a.tribe-events-calendar-list__event-title-link, a.tribe-event-url, .tribe-events-calendar-list__event-title a');
+    const dateEl = el.querySelector('.tribe-events-calendar-list__event-datetime, time[datetime], .tribe-events-calendar-list__event-date-tag');
+    const descEl = el.querySelector('.tribe-events-calendar-list__event-description p, .tribe-events-content p');
+    const title = titleEl ? titleEl.textContent.trim() : '';
+    const url = titleEl ? makeAbsoluteUrl(titleEl.getAttribute('href'), baseUrl) : '';
+    let dateText = dateEl ? (dateEl.getAttribute('datetime') || dateEl.textContent.trim()) : '';
+    if (title) results.push({ name: title.substring(0, 200), eventDate: dateText.substring(0, 100), url: url || baseUrl, description: (descEl ? descEl.textContent.trim() : '').substring(0, 500) });
+  });
+  // Day/month view fallback
+  if (results.length === 0) {
+    document.querySelectorAll('a.tribe-events-calendar-day__event-title-link, a.tribe-events-calendar-month__calendar-event-title-link').forEach(a => {
+      results.push({ name: a.textContent.trim().substring(0, 200), eventDate: '', url: makeAbsoluteUrl(a.getAttribute('href'), baseUrl) || baseUrl, description: '' });
+    });
+  }
+  return results;
+}
+
+/**
+ * Platform-specific extraction: MEC (Modern Events Calendar)
+ */
+function extractMEC(document, baseUrl) {
+  const results = [];
+  document.querySelectorAll('article.mec-event-article, .mec-event-article').forEach(el => {
+    const titleEl = el.querySelector('.mec-event-title a, h4.mec-event-title');
+    const dateEl = el.querySelector('.mec-start-date-details, .mec-event-date, .mec-start-date-label');
+    const descEl = el.querySelector('.mec-event-description');
+    const linkEl = el.querySelector('.mec-event-title a');
+    const title = titleEl ? titleEl.textContent.trim() : '';
+    const url = linkEl ? makeAbsoluteUrl(linkEl.getAttribute('href'), baseUrl) : '';
+    const dateText = dateEl ? dateEl.textContent.trim() : '';
+    if (title) results.push({ name: title.substring(0, 200), eventDate: dateText.substring(0, 100), url: url || baseUrl, description: (descEl ? descEl.textContent.trim() : '').substring(0, 500) });
+  });
+  return results;
+}
+
+/**
+ * Platform-specific extraction: EventON
+ */
+function extractEventON(document, baseUrl) {
+  const results = [];
+  document.querySelectorAll('.eventon_list_event, .evcal_list_event').forEach(el => {
+    const titleEl = el.querySelector('.eventon_event_title, .evcal_desc_title, .evcal_event_title');
+    const dateEl = el.querySelector('.evcal_desc2 .date, .evcal_date, [class*="date"]');
+    const linkEl = el.querySelector('a[href]');
+    const title = titleEl ? titleEl.textContent.trim() : '';
+    const url = linkEl ? makeAbsoluteUrl(linkEl.getAttribute('href'), baseUrl) : '';
+    const dateText = dateEl ? dateEl.textContent.trim() : '';
+    if (title) results.push({ name: title.substring(0, 200), eventDate: dateText.substring(0, 100), url: url || baseUrl, description: '' });
+  });
+  return results;
+}
+
+/**
+ * Platform-specific extraction: Squarespace
+ */
+function extractSquarespace(document, baseUrl) {
+  const results = [];
+  document.querySelectorAll('.eventlist-event').forEach(el => {
+    const titleEl = el.querySelector('.eventlist-title a, a.eventlist-title-link, .eventlist-title');
+    const dateEl = el.querySelector('.eventlist-datetag, .eventlist-meta-date, time.event-date');
+    const descEl = el.querySelector('.eventlist-description p');
+    const title = titleEl ? titleEl.textContent.trim() : '';
+    const url = titleEl && titleEl.getAttribute('href') ? makeAbsoluteUrl(titleEl.getAttribute('href'), baseUrl) : '';
+    let dateText = '';
+    if (dateEl) {
+      dateText = dateEl.getAttribute('datetime') || dateEl.textContent.trim();
+    }
+    if (title) results.push({ name: title.substring(0, 200), eventDate: dateText.substring(0, 100), url: url || baseUrl, description: (descEl ? descEl.textContent.trim() : '').substring(0, 500) });
+  });
+  return results;
+}
+
+/**
+ * Platform-specific extraction: Webflow CMS collection lists
+ */
+function extractWebflow(document, baseUrl) {
+  const results = [];
+  document.querySelectorAll('.w-dyn-item, .calendar-event').forEach(el => {
+    const titleEl = el.querySelector('h5, h4, h3, .event-title, [class*="title"]');
+    const dateEl = el.querySelector('.meta-tag, .event-date, .start-date, time, [class*="date"]');
+    const linkEl = el.querySelector('a[href]');
+    const descEl = el.querySelector('p, .description');
+    const title = titleEl ? titleEl.textContent.trim() : '';
+    const url = linkEl ? makeAbsoluteUrl(linkEl.getAttribute('href'), baseUrl) : '';
+    const dateText = dateEl ? (dateEl.getAttribute('datetime') || dateEl.textContent.trim()) : '';
+    if (title) results.push({ name: title.substring(0, 200), eventDate: dateText.substring(0, 100), url: url || baseUrl, description: (descEl ? descEl.textContent.trim() : '').substring(0, 500) });
+  });
+  return results;
+}
+
+/**
+ * Platform-specific extraction: WP Events Manager plugin
+ */
+function extractEventsManager(document, baseUrl) {
+  const results = [];
+  document.querySelectorAll('.event-single, .em-item, .event').forEach(el => {
+    const titleEl = el.querySelector('.event-title a, h3 a, h2 a, .event-title');
+    const dateEl = el.querySelector('.event-date, time[datetime], .date');
+    const linkEl = el.querySelector('.event-title a, h3 a, a[href]');
+    const title = titleEl ? titleEl.textContent.trim() : '';
+    const url = linkEl ? makeAbsoluteUrl(linkEl.getAttribute('href'), baseUrl) : '';
+    const dateText = dateEl ? (dateEl.getAttribute('datetime') || dateEl.textContent.trim()) : '';
+    if (title) results.push({ name: title.substring(0, 200), eventDate: dateText.substring(0, 100), url: url || baseUrl, description: '' });
+  });
+  return results;
+}
+
+/**
+ * Extract events from page using platform-specific or generic CSS selectors.
+ * @param {string} html - The page HTML
+ * @param {string} baseUrl - The base URL for resolving relative links
+ * @param {object} venue - The venue object (may have .extraction platform hint)
+ */
+function extractEventsFromPage(html, baseUrl, venue = {}) {
   const { JSDOM } = require('jsdom');
   const dom = new JSDOM(html);
   const document = dom.window.document;
+
+  const platform = venue.extraction || null;
+
+  // Try platform-specific extraction first
+  if (platform) {
+    let platformEvents = [];
+    switch (platform) {
+      case 'tec': platformEvents = extractTEC(document, baseUrl); break;
+      case 'mec': platformEvents = extractMEC(document, baseUrl); break;
+      case 'eventon': platformEvents = extractEventON(document, baseUrl); break;
+      case 'squarespace': platformEvents = extractSquarespace(document, baseUrl); break;
+      case 'webflow': platformEvents = extractWebflow(document, baseUrl); break;
+      case 'events-manager': platformEvents = extractEventsManager(document, baseUrl); break;
+    }
+    if (platformEvents.length > 0) {
+      console.log(`      [${platform}] extracted ${platformEvents.length} events`);
+      return filterJunkEvents(platformEvents);
+    }
+    // Fall through to generic if platform-specific found nothing
+  }
 
   const events = [];
   const seenTitles = new Set();
@@ -212,7 +432,7 @@ function extractEventsFromPage(html, baseUrl) {
         for (const dateSel of EVENT_SELECTORS.date) {
           const dateElem = container.querySelector(dateSel);
           if (dateElem) {
-            eventDate = dateElem.textContent.trim() || dateElem.getAttribute('datetime') || '';
+            eventDate = dateElem.getAttribute('datetime') || dateElem.textContent.trim() || '';
             if (eventDate) break;
           }
         }
@@ -234,12 +454,7 @@ function extractEventsFromPage(html, baseUrl) {
           if (linkElem) {
             link = linkElem.getAttribute('href') || '';
             if (link) {
-              // Make absolute URL
-              if (link.startsWith('/')) {
-                link = new URL(link, baseUrl).href;
-              } else if (!link.startsWith('http')) {
-                link = new URL(link, baseUrl).href;
-              }
+              link = makeAbsoluteUrl(link, baseUrl);
               break;
             }
           }
@@ -261,10 +476,17 @@ function extractEventsFromPage(html, baseUrl) {
     if (events.length > 0) break; // Stop if we found events
   }
 
-  // Filter out navigation elements and page chrome (entries without dates are almost always junk)
+  return filterJunkEvents(events);
+}
+
+/**
+ * Filter out navigation elements and page chrome
+ */
+function filterJunkEvents(events) {
   return events.filter(e => {
-    if (!e.eventDate || e.eventDate.trim().length < 3) return false;
     if (!e.name || e.name.trim().length < 4) return false;
+    // Keep events even without dates (platform-specific extractors may get URL-only entries)
+    // but filter obvious non-event entries
     if (/^(visit|plan your|get ticket|buy ticket|membership|explore|animals?|exhibits?|learn|support|about|contact|404|page not found|oops|search|login|sign up|my account|footer|header|menu|nav)/i.test(e.name.trim())) return false;
     return true;
   });
@@ -296,7 +518,7 @@ async function scrapeVenue(browser, venue, logger) {
     await page.close();
 
     // Parse events from HTML
-    const pageEvents = extractEventsFromPage(html, venue.eventsUrl);
+    const pageEvents = extractEventsFromPage(html, venue.eventsUrl, venue);
     logger.trackFound(pageEvents.length);
 
     // Convert events to FunHive format
@@ -405,20 +627,29 @@ async function scrapeChildrensMuseumEvents(options = {}) {
   // Save events with geocoding
   if (allEvents.length > 0) {
     console.log('💾 Saving events to database...');
-    await saveEventsWithGeocoding(
-      allEvents,
-      VENUES.map(v => ({
-        name: v.name,
-        address: `${v.city}, ${v.state} ${v.zip}`,
-        city: v.city,
-        state: v.state,
-        zipCode: v.zip,
-      })),
-      {
-        scraperName: SCRAPER_NAME,
-        state: filterState,
-      }
-    );
+    const saveOptions = {
+      scraperName: SCRAPER_NAME,
+      state: filterState || 'Multi',
+    };
+    console.log(`   Save options: scraperName=${saveOptions.scraperName}, state=${saveOptions.state}`);
+    try {
+      await saveEventsWithGeocoding(
+        allEvents,
+        VENUES.map(v => ({
+          name: v.name,
+          address: `${v.city}, ${v.state} ${v.zip}`,
+          city: v.city,
+          state: v.state,
+          zipCode: v.zip,
+        })),
+        saveOptions
+      );
+    } catch (saveError) {
+      console.error(`❌ Error saving events: ${saveError.message}`);
+      logger.logError(saveError.message);
+    }
+  } else {
+    console.log('⚠️  No events found across all venues — nothing to save');
   }
 
   // Finish logging

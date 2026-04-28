@@ -416,7 +416,7 @@ async function scrapeCustomDrupalLibrariesCloudFunction() {
   console.log(`   Failed: ${totalFailed}`);
   console.log('='.repeat(60) + '\n');
 
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('Custom Drupal MD Libraries', {
     found: totalImported + totalSkipped,
     new: totalImported,

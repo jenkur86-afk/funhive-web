@@ -147,7 +147,7 @@ async function scrapeGenericEvents() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   if (!admin.apps.length) {
     const serviceAccount = require('../../firebase-service-account.json');
     admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
@@ -184,7 +184,7 @@ async function main() {
   const events = await scrapeGenericEvents();
 
   if (events.length > 0) {
-    await saveToFirebase(events);
+    await saveToDatabase(events);
   }
 
   process.exit(0);
@@ -194,4 +194,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { scrapeGenericEvents, saveToFirebase };
+module.exports = { scrapeGenericEvents, saveToDatabase };

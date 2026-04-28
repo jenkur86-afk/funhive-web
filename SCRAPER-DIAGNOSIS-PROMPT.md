@@ -47,11 +47,33 @@ I just ran FunHive scrapers. Analyze the full output I'm pasting below and fix A
 - Promotional/newsletter events that slipped through filters
 - Events with "See website" as venue when a real venue exists on the page
 
+**8. Missing `date` TIMESTAMPTZ column in eventDoc**
+- Open the scraper file and check if the eventDoc includes a `date` field (not just `eventDate`)
+- `eventDate` maps to the TEXT column — needed for display but sorts alphabetically
+- `date` maps to the TIMESTAMPTZ column — needed for all date filtering and sorting queries
+- The correct pattern is: `date: admin.firestore.Timestamp.fromDate(dateObj)` where dateObj is a parsed Date object
+- If `date` is missing, events won't appear in date-filtered queries (supplementary location queries, non-location queries, custom date ranges)
+- The `nearby_events` RPC only checks `event_date IS NOT NULL`, so events may appear in location searches but vanish when a date range is applied
+- MacaroniKid scrapers were the most common offenders — as of April 2026, all 44 MK scrapers have been fixed with the `dateTimestamp` pattern
+
+**9. Missing county centroids for scraper sites**
+- Open `scrapers/utils/county-centroids.js` and cross-reference against every `county` value used in the scraper's site list
+- If a county is missing, events that fail address/venue/city geocoding have no geometry fallback → invisible to `nearby_events` RPC
+- Look for high `noLocation` counts in the scraper summary — this signals the centroid fallback isn't working
+- Also check that the centroid coordinates are reasonable (not swapped lat/lng, not in the wrong state)
+
+**10. Generic venue fallback (all events geocoded to one location)**
+- Look for geocoding lines like `Geocoding failed for "XYZ State Parks, XYZ State Parks, ST"` where the venue name matches the generic scraper config name rather than a specific park, museum, library branch, etc.
+- This means per-event venue names extracted from the DOM are being discarded at save time — the scraper passes a single generic venue to `saveEventsWithGeocoding` instead of one venue per unique location
+- **Symptoms**: All events from a source share the same coordinates (usually a state centroid). The geocoding log shows the generic source name repeated for every batch. Events cluster at the geographic center of the state on the map instead of spreading across actual venues.
+- **The fix** is always in how the scraper builds its `venues` array (or `libraries` array) for `saveEventsWithGeocoding` — it should create one venue entry per unique `event.venueName` or `event.location`, not one per state/source
+- Check that extraction functions actually populate the `location` field from DOM elements (park names, branch names, venue fields) rather than leaving it empty and falling back to the config-level name
+
 ### How to fix
 
 - Read the relevant scraper file(s) and helper files before making changes
 - Apply fixes directly — edit the code
-- When fixing MacaroniKid scrapers, remember all 45 files share the same structure. Use a script to apply changes to all of them if the fix applies broadly
+- When fixing MacaroniKid scrapers, remember all 44 files share the same structure. Use a script to apply changes to all of them if the fix applies broadly
 - Run `node -c filename.js` syntax check on every modified file
 - For date normalization changes, verify against the test cases in the date helper
 - Summarize what you fixed and what I need to do (e.g., `npm install`, re-run a specific scraper)

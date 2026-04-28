@@ -1,8 +1,7 @@
-const puppeteer = require('puppeteer-core');
-const chromium = require('@sparticuz/chromium');
+const { launchBrowser } = require('./puppeteer-config');
 
 const { saveEventsWithGeocoding } = require('./event-save-helper');
-const ngeohash = require('ngeohash');const admin = require('firebase-admin');
+const ngeohash = require('ngeohash');
 const { logScraperResult } = require('./scraper-logger');
 
 /**
@@ -147,12 +146,7 @@ const LIBRARIES = [
 const SCRAPER_NAME = 'libcal-VA';
 
 async function scrapeLibCalEvents() {
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath(),
-    headless: chromium.headless
-  });
+  const browser = await launchBrowser();
   const events = [];
 
   for (const library of LIBRARIES) {
@@ -206,10 +200,20 @@ async function scrapeLibCalEvents() {
         return events;
       }, library.name);
 
-      console.log(`   ✅ Found ${libraryEvents.length} events`);
+      // Filter out cancelled/postponed/closed events
+      const filteredEvents = libraryEvents.filter(event => {
+        const title = (event.title || '').toLowerCase();
+        if (/\b(cancelled|canceled|postponed|suspended|closed)\b/.test(title)) {
+          console.log(`   ⏭️ Skipping cancelled/postponed event: "${event.title}"`);
+          return false;
+        }
+        return true;
+      });
+
+      console.log(`   ✅ Found ${filteredEvents.length} events (${libraryEvents.length - filteredEvents.length} cancelled/postponed skipped)`);
 
       // Transform and add to collection
-      libraryEvents.forEach(event => {
+      filteredEvents.forEach(event => {
         events.push({
           ...event,
           state: 'VA',
@@ -242,7 +246,7 @@ async function scrapeLibCalEvents() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'VA',
@@ -259,10 +263,10 @@ async function main() {
   const events = await scrapeLibCalEvents();
 
   if (events.length > 0) {
-    await saveToFirebase(events);
+    await saveToDatabase(events);
   }
 
-  // Log to Firestore for monitoring
+  // Log to database for monitoring
   await logScraperResult('LibCal Libraries VA', {
     found: events.length,
     new: events.length,
@@ -275,4 +279,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { scrapeLibCalEvents, saveToFirebase };
+module.exports = { scrapeLibCalEvents, saveToDatabase };

@@ -170,7 +170,7 @@ async function runScraper(name, config) {
 
     log(`✅ ${name} completed in ${duration}s - Found: ${stats.found}, New: ${stats.new}, Duplicates: ${stats.duplicates}`);
 
-    // Log to Firestore
+    // Log to database
     await logToFirestore(name, 'success', stats, null, parseFloat(duration));
 
     return { success: true, name, stats, duration: parseFloat(duration) };
@@ -179,7 +179,7 @@ async function runScraper(name, config) {
     const duration = ((Date.now() - startTime) / 1000).toFixed(1);
     log(`❌ ${name} failed after ${duration}s: ${error.message}`, 'error');
 
-    // Log to Firestore
+    // Log to database
     await logToFirestore(name, 'failed', {}, error.message, parseFloat(duration));
 
     return { success: false, name, error: error.message, duration: parseFloat(duration) };

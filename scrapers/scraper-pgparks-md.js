@@ -302,7 +302,7 @@ async function fetchEvents(maxEvents = 100) {
 }
 
 /**
- * Save events to Firestore
+ * Save events to database
  */
 async function saveEvents(events) {
   if (events.length === 0) return { saved: 0, failed: 0 };

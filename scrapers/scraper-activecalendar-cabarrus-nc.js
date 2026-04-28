@@ -557,7 +557,7 @@ async function scrapeActiveCaendarCabarrusCloudFunction() {
   try {
     const stats = await scrapeActiveCaendarCabarrus();
 
-    // Log scraper stats to Firestore
+    // Log scraper stats to database
     await logScraperResult('ActiveCalendar-Cabarrus-NC', {
       found: stats.imported + stats.skipped,
       new: stats.imported,

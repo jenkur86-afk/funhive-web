@@ -130,7 +130,7 @@ const LIBRARY_SYSTEMS = [
   // MARYLAND
   {
     name: 'Howard County Library System',
-    url: 'https://howardcounty.librarycalendar.com/events/month',
+    url: 'https://howardcounty.librarycalendar.com/events/upcoming',
     county: 'Howard',
     state: 'MD',
     website: 'https://hclibrary.org',
@@ -139,7 +139,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Frederick County Public Libraries',
-    url: 'https://frederick.librarycalendar.com/events/month',
+    url: 'https://frederick.librarycalendar.com/events/upcoming',
     county: 'Frederick',
     state: 'MD',
     website: 'https://www.fcpl.org',
@@ -148,7 +148,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Talbot County Free Library',
-    url: 'https://talbot.librarycalendar.com/events/month',
+    url: 'https://talbot.librarycalendar.com/events/upcoming',
     county: 'Talbot',
     state: 'MD',
     website: 'https://www.tcfl.org',
@@ -157,7 +157,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Caroline County Public Library',
-    url: 'https://carolinecounty.librarycalendar.com/events/month',
+    url: 'https://carolinecounty.librarycalendar.com/events/upcoming',
     county: 'Caroline',
     state: 'MD',
     website: 'https://carolib.org',
@@ -168,7 +168,7 @@ const LIBRARY_SYSTEMS = [
   // VIRGINIA
   {
     name: 'Amherst County Public Library',
-    url: 'https://amherstpl.librarycalendar.com/events/month',
+    url: 'https://amherstpl.librarycalendar.com/events/upcoming',
     county: 'Amherst',
     state: 'VA',
     website: 'https://amherstpubliclibrary.org',
@@ -177,7 +177,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Appomattox Regional Library',
-    url: 'https://appomattox.librarycalendar.com/events/month',
+    url: 'https://appomattox.librarycalendar.com/events/upcoming',
     county: 'Appomattox',
     state: 'VA',
     website: 'https://www.appomattoxlibrary.org',
@@ -186,7 +186,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Bedford Public Library System',
-    url: 'https://bedford.librarycalendar.com/events/month',
+    url: 'https://bedford.librarycalendar.com/events/upcoming',
     county: 'Bedford',
     state: 'VA',
     website: 'https://www.bedfordvalibrary.org',
@@ -195,7 +195,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Essex Public Library',
-    url: 'https://essex.librarycalendar.com/events/month',
+    url: 'https://essex.librarycalendar.com/events/upcoming',
     county: 'Essex',
     state: 'VA',
     website: 'https://www.essexpubliclibrary.org',
@@ -207,7 +207,7 @@ const LIBRARY_SYSTEMS = [
   // If they do, the subdomain would likely be 'gloucester', not 'gcls'
   {
     name: 'Lynchburg Public Library',
-    url: 'https://lynchburg.librarycalendar.com/events/month',
+    url: 'https://lynchburg.librarycalendar.com/events/upcoming',
     county: 'Lynchburg',
     state: 'VA',
     website: 'https://www.lynchburgva.gov/library',
@@ -216,7 +216,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Petersburg Public Library',
-    url: 'https://petersburg.librarycalendar.com/events/month',
+    url: 'https://petersburg.librarycalendar.com/events/upcoming',
     county: 'Petersburg',
     state: 'VA',
     website: 'https://www.petersburgva.gov/481/Library',
@@ -225,7 +225,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Poquoson Public Library',
-    url: 'https://poquoson.librarycalendar.com/events/month',
+    url: 'https://poquoson.librarycalendar.com/events/upcoming',
     county: 'Poquoson',
     state: 'VA',
     website: 'https://www.poquoson-va.gov/government/departments-services/library',
@@ -234,7 +234,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Powhatan County Public Library',
-    url: 'https://powhatancounty.librarycalendar.com/events/month',
+    url: 'https://powhatancounty.librarycalendar.com/events/upcoming',
     county: 'Powhatan',
     state: 'VA',
     website: 'https://www.powhatanva.gov/203/Library',
@@ -243,7 +243,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Waynesboro Public Library',
-    url: 'https://waynesboro.librarycalendar.com/events/month',
+    url: 'https://waynesboro.librarycalendar.com/events/upcoming',
     county: 'Waynesboro',
     state: 'VA',
     website: 'https://www.waynesboro.va.us/government/library',
@@ -252,7 +252,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'York County Public Library',
-    url: 'https://yorkcountyva.librarycalendar.com/events/month',
+    url: 'https://yorkcountyva.librarycalendar.com/events/upcoming',
     county: 'York',
     state: 'VA',
     website: 'https://www.yorkcounty.gov/369/Library',
@@ -261,7 +261,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Portsmouth Public Library',
-    url: 'https://portsmouthpl.librarycalendar.com/events/month',
+    url: 'https://portsmouthpl.librarycalendar.com/events/upcoming',
     county: 'Portsmouth',
     state: 'VA',
     website: 'https://www.portsmouthpubliclibrary.org',
@@ -272,7 +272,7 @@ const LIBRARY_SYSTEMS = [
   // NORTH CAROLINA
   {
     name: 'Forsyth County Public Library',
-    url: 'https://forsythcounty.librarycalendar.com/events/month',
+    url: 'https://forsythcounty.librarycalendar.com/events/upcoming',
     county: 'Forsyth',
     state: 'NC',
     website: 'https://www.forsyth.cc',
@@ -281,7 +281,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Cumberland County Public Library',
-    url: 'https://cumberland.librarycalendar.com/events/month',
+    url: 'https://cumberland.librarycalendar.com/events/upcoming',
     county: 'Cumberland',
     state: 'NC',
     website: 'https://www.cumberland.lib.nc.us',
@@ -292,7 +292,7 @@ const LIBRARY_SYSTEMS = [
   // NEW JERSEY
   {
     name: 'Atlantic County Library System',
-    url: 'https://atlanticcounty.librarycalendar.com/events/month',
+    url: 'https://atlanticcounty.librarycalendar.com/events/upcoming',
     county: 'Atlantic',
     state: 'NJ',
     website: 'https://atlanticlibrary.org',
@@ -301,7 +301,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Gloucester County Library System',
-    url: 'https://gcls.librarycalendar.com/events/month',
+    url: 'https://gcls.librarycalendar.com/events/upcoming',
     county: 'Gloucester',
     state: 'NJ',
     website: 'https://www.gcls.org',
@@ -312,7 +312,7 @@ const LIBRARY_SYSTEMS = [
   // SOUTH CAROLINA
   {
     name: 'York County Library',
-    url: 'https://yorkcounty.librarycalendar.com/events/month',
+    url: 'https://yorkcounty.librarycalendar.com/events/upcoming',
     county: 'York',
     state: 'SC',
     website: 'https://www.yclibrary.org',
@@ -323,7 +323,7 @@ const LIBRARY_SYSTEMS = [
   // ILLINOIS
   {
     name: 'Bloomingdale Public Library',
-    url: 'https://bloomingdale.librarycalendar.com/events/month',
+    url: 'https://bloomingdale.librarycalendar.com/events/upcoming',
     county: 'DuPage',
     state: 'IL',
     website: 'https://www.mybpl.org',
@@ -376,112 +376,104 @@ async function scrapeLibraryEvents(library, browser) {
       timeout: 45000
     });
 
-    // Wait for events to load
-    await page.waitForSelector('body', { timeout: 5000 });
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    // Wait for events to load — the /events/upcoming page renders SSR event cards
+    await page.waitForSelector('.lc-event, article.event-card, body', { timeout: 10000 });
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
-    // Extract events from the page
+    // Extract events from the upcoming view using lc-event selectors
     const events = await page.evaluate(() => {
       const results = [];
+      const seenTitles = new Set();
 
-      // Try different selectors for LibraryCalendar
-      const selectors = [
-        'article',
-        '.event-card',
-        'section',
-        '[class*="event"]'
-      ];
+      // LibraryCalendar upcoming view: div.lc-event > article.event-card
+      const eventCards = document.querySelectorAll('div.lc-event, article.event-card');
 
-      let eventElements = [];
-      for (const selector of selectors) {
-        eventElements = document.querySelectorAll(selector);
-        if (eventElements.length > 5) break; // Find container with substantial events
-      }
-
-      eventElements.forEach(el => {
+      eventCards.forEach(el => {
         try {
-          // Look for title in heading or link
-          const titleEl = el.querySelector('h1, h2, h3, h4, a[href*="event"]');
-          if (!titleEl) return;
+          // Get the article element (may be el itself or a child)
+          const article = el.tagName === 'ARTICLE' ? el : el.querySelector('article.event-card');
+          if (!article) return;
 
+          // Title from h3.lc-event__title > a.lc-event__link
+          const titleEl = article.querySelector('h3.lc-event__title a.lc-event__link, a.lc-event__link, h3 a');
+          if (!titleEl) return;
           const title = titleEl.textContent.trim();
           if (!title || title.length < 3) return;
+          if (seenTitles.has(title)) return;
+          seenTitles.add(title);
 
-          // Extract URL
-          const linkEl = el.querySelector('a[href*="event"]');
-          const url = linkEl ? linkEl.href : '';
+          // URL from the link
+          const url = titleEl.href || '';
 
-          // Get all text content
-          const fullText = el.textContent;
-
-          // Extract date and time - LibraryCalendar format: "Sunday, November 9, 2025 at 2:00pm - 3:30pm"
+          // Date from lc-date-icon spans
           let eventDate = '';
+          const monthEl = article.querySelector('.lc-date-icon__item--month');
+          const dayEl = article.querySelector('.lc-date-icon__item--day');
+          const yearEl = article.querySelector('.lc-date-icon__item--year');
+          const dayNameEl = article.querySelector('.lc-date-icon__item--day-name');
+          if (monthEl && dayEl && yearEl) {
+            const month = monthEl.textContent.trim();
+            const day = dayEl.textContent.trim();
+            const year = yearEl.textContent.trim();
+            const dayName = dayNameEl ? dayNameEl.textContent.trim() : '';
+            eventDate = dayName ? `${dayName}, ${month} ${day}, ${year}` : `${month} ${day}, ${year}`;
+          }
+
+          // Time from lc-event-info-item--time
           let time = '';
-
-          const dateTimeMatch = fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+\w{3,9}\s+\d{1,2},?\s+\d{4}\s+at\s+\d{1,2}:\d{2}(?:am|pm)/i);
-          if (dateTimeMatch) {
-            eventDate = dateTimeMatch[0];
-          } else {
-            const dateMatch = fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+\w{3,9}\s+\d{1,2},?\s+\d{4}/i) ||
-                             fullText.match(/\w{3,9}\s+\d{1,2},?\s+\d{4}/i);
-            if (dateMatch) eventDate = dateMatch[0];
-
-            const timeMatch = fullText.match(/\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)\s*[–-]\s*\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)/i) ||
-                             fullText.match(/\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)/i);
-            if (timeMatch) time = timeMatch[0];
+          const timeEl = article.querySelector('.lc-event-info-item--time, .lc-event-info-item.lc-event-info-item--time');
+          if (timeEl) {
+            time = timeEl.textContent.trim();
           }
 
-          // Extract library branch/location
-          let location = '';
-          const locationMatch = fullText.match(/(?:Library Branch|Branch|Location):\s*([^\n]+)/i);
-          if (locationMatch) {
-            location = locationMatch[1].trim();
-          }
-
-          // Extract age group
+          // Audience/age from color indicators
           let audience = '';
-          const audienceMatch = fullText.match(/(?:Age Group|Audience):\s*([^\n]+)/i);
-          if (audienceMatch) {
-            audience = audienceMatch[1].trim();
+          const colorsEl = article.querySelector('.lc-event-info__item--colors');
+          if (colorsEl) {
+            audience = colorsEl.textContent.trim();
           }
-
-          // Extract program type
-          let programType = '';
-          const programMatch = fullText.match(/(?:Program Type):\s*([^\n]+)/i);
-          if (programMatch) {
-            programType = programMatch[1].trim();
-          }
-
-          // Extract description
-          let description = '';
-          const paragraphs = el.querySelectorAll('p');
-          if (paragraphs.length > 0) {
-            // Get longest paragraph as description
-            let longest = '';
-            paragraphs.forEach(p => {
-              const text = p.textContent.trim();
-              if (text.length > longest.length) {
-                longest = text;
+          // Also check color-indicator classes for age groups
+          if (!audience) {
+            const indicators = article.querySelectorAll('.lc-event__color-indicator');
+            const ages = [];
+            indicators.forEach(ind => {
+              const label = ind.querySelector('.visually-hidden');
+              if (label) {
+                const match = label.textContent.match(/"([^"]+)"/);
+                if (match) ages.push(match[1]);
               }
             });
-            description = longest;
+            if (ages.length > 0) audience = ages.join(', ');
+          }
+
+          // Category from categories item
+          let programType = '';
+          const catEl = article.querySelector('.lc-event-info__item--categories');
+          if (catEl) {
+            programType = catEl.textContent.trim();
+          }
+
+          // Branch/location from lc-event-info__item--locations
+          let location = '';
+          const locEl = article.querySelector('.lc-event-info__item--locations, .lc-event__location');
+          if (locEl) {
+            location = locEl.textContent.trim();
           }
 
           if (title && eventDate) {
             const rawDate = time ? `${eventDate} ${time}` : eventDate;
-
             results.push({
               name: title,
               eventDate: rawDate,
               venue: location,
-              description: description,
+              description: '',
               url: url,
               audience: audience,
               programType: programType
             });
           }
         } catch (err) {
-          console.log('Error parsing event:', err);
+          // Skip malformed entries
         }
       });
 
@@ -672,7 +664,7 @@ async function scrapeLibraryCalendarLibraries() {
     await browser.close();
   }
 
-  // Log to Firestore with aggregate + per-site breakdown
+  // Log to database with aggregate + per-site breakdown
   const result = await logger.finish();
 
   return { imported: result.stats.new, skipped: result.stats.duplicates, failed: result.stats.errors };

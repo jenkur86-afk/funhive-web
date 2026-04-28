@@ -148,8 +148,12 @@ const LIBRARIES = [
     platform: "libcal",
     eventsUrl: "https://worcesterlibrary.libcal.com/calendar/Library_Events",
     city: "Snow Hill", state: "MD", zipCode: "21863", county: "Worcester"
-  }
+  },
   // Note: Garrett County (Ruth Enlow Library) is covered by scraper-librarymarket-libraries-md.js
+  // NOTE: ~130 auto-generated branch URLs were removed (2026-04-27) because none resolved
+  // (ERR_NAME_NOT_RESOLVED). These were fabricated domain names like aberdeenlibrary.org,
+  // abingdonlibrary.org, etc. that don't exist. Real MD library branches use their parent
+  // system's domain (e.g., Harford County branches are on hcplonline.org, not belairlibrary.org).
 ];
 
 const SCRAPER_NAME = 'generic-MD';
@@ -301,7 +305,7 @@ async function scrapeGenericEvents() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   return await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'MD',
@@ -318,7 +322,7 @@ async function main() {
   const events = await scrapeGenericEvents();
 
   if (events.length > 0) {
-    await saveToFirebase(events);
+    await saveToDatabase(events);
   }
 
   process.exit(0);
@@ -339,8 +343,8 @@ async function scrapeWordpressMDCloudFunction() {
     await logScraperResult('WordPress-MD', { found: 0, new: 0, duplicates: 0 }, { dataType: 'events' });
     return { found: 0, new: 0, duplicates: 0 };
   }
-  const result = await saveToFirebase(events);
-  // Log scraper stats to Firestore
+  const result = await saveToDatabase(events);
+  // Log scraper stats to database
   await logScraperResult('WordPress-MD', {
     found: events.length,
     new: result?.saved || 0,
@@ -354,4 +358,4 @@ async function scrapeWordpressMDCloudFunction() {
   };
 }
 
-module.exports = { scrapeGenericEvents, saveToFirebase, scrapeWordpressMDCloudFunction };
+module.exports = { scrapeGenericEvents, saveToDatabase, scrapeWordpressMDCloudFunction };

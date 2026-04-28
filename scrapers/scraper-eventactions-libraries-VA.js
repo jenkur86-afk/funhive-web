@@ -317,7 +317,7 @@ async function scrapeEventActionsLibraries() {
   console.log('='.repeat(60) + '\n');
 
   
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('EventActions-VA', {
     found: totalImported,
     new: totalImported,

@@ -217,7 +217,7 @@ async function scrapeLibCalEvents() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'MD',
@@ -234,7 +234,7 @@ async function main() {
   const events = await scrapeLibCalEvents();
 
   if (events.length > 0) {
-    await saveToFirebase(events);
+    await saveToDatabase(events);
   }
 
   process.exit(0);
@@ -251,10 +251,10 @@ async function scrapeLibCalMDCloudFunction() {
   console.log('☁️ Running LibCal MD as Cloud Function');
   const events = await scrapeLibCalEvents();
   if (events.length > 0) {
-    await saveToFirebase(events);
+    await saveToDatabase(events);
   }
   
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('libcal-MD', {
     found: events.length,
     new: events.length,
@@ -264,4 +264,4 @@ async function scrapeLibCalMDCloudFunction() {
   return { imported: events.length, total: events.length };
 }
 
-module.exports = { scrapeLibCalEvents, saveToFirebase, scrapeLibCalMDCloudFunction };
+module.exports = { scrapeLibCalEvents, saveToDatabase, scrapeLibCalMDCloudFunction };

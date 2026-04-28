@@ -34,6 +34,15 @@ node fix-duplicate-dates.js --save
 
 echo ""
 echo "═══════════════════════════════════════════════════"
+echo "  STEP 5: fix-missing-fields.js"
+echo "  (activities: missing address via reverse geocode,"
+echo "   also backfills city/state/zip from coordinates)"
+echo "  ⏱️  ~80 min for 3000+ venues (Nominatim rate limit)"
+echo "═══════════════════════════════════════════════════"
+node fix-missing-fields.js --save --addresses
+
+echo ""
+echo "═══════════════════════════════════════════════════"
 echo "  ✅ ALL FIXES COMPLETE"
 echo "  Run: node data-quality-check.js to verify"
 echo "═══════════════════════════════════════════════════"

@@ -333,6 +333,8 @@ const COUNTY_DATA = {
     'Delaware': { lat: 40.2787, lng: -83.0048 },
     'Lake': { lat: 41.7090, lng: -81.2459 },
     'Warren': { lat: 39.4277, lng: -84.1697 },
+    'Medina': { lat: 41.1384, lng: -81.8637 },
+    'Erie': { lat: 41.3720, lng: -82.5135 },
   },
   'OR': {
     'Multnomah': { lat: 45.5471, lng: -122.4175 },
@@ -441,6 +443,8 @@ const COUNTY_DATA = {
     'Alexandria City': { lat: 38.8048, lng: -77.0469 },
     'Fredericksburg City': { lat: 38.3032, lng: -77.4605 },
     'Montgomery': { lat: 37.1776, lng: -80.3876 },
+    'Rockbridge': { lat: 37.7832, lng: -79.4428 },
+    'Nelson': { lat: 37.7891, lng: -78.8847 },
   },
   'WA': {
     'King': { lat: 47.4903, lng: -121.8340 },

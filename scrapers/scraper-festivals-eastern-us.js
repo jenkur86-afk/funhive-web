@@ -483,7 +483,7 @@ function deduplicateEvents(events) {
 /**
  * Geocode a festival location — tries full address, then city+state, then state
  */
-async function geocodeFestival(address, city, state, zipCode) {
+async function geocodeFestival(address, city, state, zipCode, venueName) {
   // Try full address first
   if (address && city) {
     const fullAddr = `${address}, ${city}, ${state} ${zipCode || ''}`.trim();
@@ -506,6 +506,14 @@ async function geocodeFestival(address, city, state, zipCode) {
   if (zipCode) {
     try {
       const coords = await geocodeAddress(`${zipCode}, ${state}`);
+      if (coords) return coords;
+    } catch (_) {}
+  }
+
+  // Fallback: try venue name + state (for events missing city/address/zip)
+  if (venueName && state) {
+    try {
+      const coords = await geocodeAddress(`${venueName}, ${state}`);
       if (coords) return coords;
     } catch (_) {}
   }
@@ -572,7 +580,7 @@ async function processAndSaveEvents(stateObj, rawEvents) {
       const stateCode = event.stateCode || stateObj.code;
 
       // Geocode the festival location
-      const coords = await geocodeFestival(address, city, stateCode, zip);
+      const coords = await geocodeFestival(address, city, stateCode, zip, event.venue || event.name);
       let geohash = '';
       if (coords) {
         geohash = ngeohash.encode(coords.lat || coords.latitude, coords.lon || coords.longitude, 7);

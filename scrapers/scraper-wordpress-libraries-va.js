@@ -29,6 +29,10 @@ const LIBRARIES = [
   { name: 'Culpeper County Library', url: 'https://www.cclva.org', eventsUrl: 'https://www.cclva.org/events/upcoming', city: 'Culpeper', state: 'VA', zipCode: '22701', county: 'Culpeper' },
   // Falls Church: no family events (adult programming only)
   // Harrisonburg-Rockingham: DNS failure (ERR_NAME_NOT_RESOLVED) — hrbpl.org appears defunct
+  // NOTE: ~230 fabricated "{city}library.org" entries were removed (Apr 2026).
+  // They were auto-generated from a spreadsheet and most domains don't exist.
+  // Real VA libraries are covered by dedicated scrapers: LibCal-VA, BiblioCommons-VA,
+  // Communico-DC-VA, LibraryCalendar-VA, FullCalendar-VA, and LibraryMarket.
 ];
 
 const SCRAPER_NAME = 'wordpress-VA';
@@ -257,7 +261,7 @@ async function scrapeGenericEvents() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   return await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'VA',
@@ -268,7 +272,7 @@ async function saveToFirebase(events) {
 
 async function main() {
   const events = await scrapeGenericEvents();
-  if (events.length > 0) await saveToFirebase(events);
+  if (events.length > 0) await saveToDatabase(events);
   process.exit(0);
 }
 
@@ -284,7 +288,7 @@ async function scrapeWordpressVACloudFunction() {
     await logScraperResult('WordPress-VA', { found: 0, new: 0, duplicates: 0 }, { dataType: 'events' });
     return { found: 0, new: 0, duplicates: 0 };
   }
-  const result = await saveToFirebase(events);
+  const result = await saveToDatabase(events);
   await logScraperResult('WordPress-VA', {
     found: events.length,
     new: result?.saved || 0,
@@ -298,4 +302,4 @@ async function scrapeWordpressVACloudFunction() {
   };
 }
 
-module.exports = { scrapeGenericEvents, saveToFirebase, scrapeWordpressVACloudFunction };
+module.exports = { scrapeGenericEvents, saveToDatabase, scrapeWordpressVACloudFunction };

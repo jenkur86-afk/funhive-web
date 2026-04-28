@@ -844,6 +844,11 @@ const SCRAPERS = {
   // PHASE 3: PARKS & RECREATION EVENT SCRAPERS
   // ============================================================================
   'State-Parks-Events': { file: './scraper-state-parks-events.js', exportName: 'scrapeStateParksEvents', type: 'puppeteer', group: 1, state: 'Multi' },
+  'Localist-Parks': { file: './scraper-localist-parks.js', exportName: 'scrapeLocalistParks', type: 'api', group: 2, state: 'Multi' },
+  'Drupal-Parks': { file: './scraper-drupal-parks.js', exportName: 'scrapeDrupalParks', type: 'api', group: 1, state: 'Multi' },
+  'WordPressTec-Parks': { file: './scraper-wordpress-tec-parks.js', exportName: 'scrapeWordPressTecParks', type: 'api', group: 3, state: 'Multi' },
+  'NPS-Parks': { file: './scraper-nps-parks.js', exportName: 'scrapeNpsParks', type: 'api', group: 2, state: 'DC' },
+  'RecDesk-Parks': { file: './scraper-recdesk-parks.js', exportName: 'scrapeRecDeskParks', type: 'api', group: 1, state: 'Multi' },
 
   // ============================================================================
   // EASTERN US VENUE/ACTIVITY SCRAPER (data-driven)
@@ -862,6 +867,74 @@ const SCRAPERS = {
   // ============================================================================
   'Festivals-Eastern-US': { file: './scraper-festivals-eastern-us.js', exportName: 'scrapeFestivalsEasternUSCloudFunction', type: 'puppeteer', group: 2, state: 'Multi' },
   'Farms-Eastern-US': { file: './scraper-farms-eastern-us.js', exportName: 'scrapeFarmsEasternUSCloudFunction', type: 'puppeteer', group: 3, state: 'Multi' },
+  'FairsFestivals-Eastern': { file: './scraper-fairs-festivals-eastern.js', exportName: 'scrapeFairsFestivalsCloudFunction', type: 'puppeteer', group: 1, state: 'Multi' },
+  'FestivalGuides-Eastern': { file: './scraper-festival-guides-eastern.js', exportName: 'scrapeFestivalGuidesCloudFunction', type: 'puppeteer', group: 2, state: 'Multi' },
+
+  // ============================================================================
+  // PHASE 6: LIBRARY COVERAGE EXPANSION (141 new library systems)
+  // ============================================================================
+
+  // --- LibCal new state files ---
+  'LibCal-NH': { file: './scraper-libcal-libraries-nh.js', exportName: 'scrapeLibCalNH', type: 'puppeteer', group: 1, state: 'NH' },
+  'LibCal-MN': { file: './scraper-libcal-libraries-mn.js', exportName: 'scrapeLibCalMN', type: 'puppeteer', group: 2, state: 'MN' },
+  // LibCal-WV removed — WV Library Commission has no events ("No events are scheduled")
+
+  // --- Communico new state wrappers (added to multi-state file) ---
+  'Communico-KY': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoKY', type: 'puppeteer', group: 2, state: 'KY' },
+  'Communico-MN': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoMN', type: 'puppeteer', group: 1, state: 'MN' },
+  'Communico-NH': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoNH', type: 'puppeteer', group: 3, state: 'NH' },
+  'Communico-NC': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoNC', type: 'puppeteer', group: 1, state: 'NC' },
+  'Communico-SC': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoSC', type: 'puppeteer', group: 2, state: 'SC' },
+  'Communico-TN': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoTN', type: 'puppeteer', group: 3, state: 'TN' },
+  'Communico-WA': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoWA', type: 'puppeteer', group: 1, state: 'WA' },
+
+  // --- BiblioCommons new state wrapper ---
+  'BiblioCommons-WI': { file: './scraper-bibliocommons-libraries-CA-CO-IL-MA-TX-VA-WA.js', exportName: 'scrapeBiblioCommonsWI', type: 'puppeteer', group: 2, state: 'WI' },
+
+  // --- LibraryMarket new state files ---
+  'LibraryMarket-IA': { file: './scraper-librarymarket-libraries-ia.js', exportName: 'scrapeLibraryMarketIACloudFunction', type: 'puppeteer', group: 1, state: 'IA' },
+  'LibraryMarket-IL': { file: './scraper-librarymarket-libraries-il.js', exportName: 'scrapeLibraryMarketILCloudFunction', type: 'puppeteer', group: 2, state: 'IL' },
+  'LibraryMarket-WI': { file: './scraper-librarymarket-libraries-wi.js', exportName: 'scrapeLibraryMarketWICloudFunction', type: 'puppeteer', group: 3, state: 'WI' },
+  'LibraryMarket-CT': { file: './scraper-librarymarket-libraries-ct.js', exportName: 'scrapeLibraryMarketCTCloudFunction', type: 'puppeteer', group: 1, state: 'CT' },
+  'LibraryMarket-IN': { file: './scraper-librarymarket-libraries-in.js', exportName: 'scrapeLibraryMarketINCloudFunction', type: 'puppeteer', group: 2, state: 'IN' },
+  'LibraryMarket-PA': { file: './scraper-librarymarket-libraries-pa.js', exportName: 'scrapeLibraryMarketPACloudFunction', type: 'puppeteer', group: 3, state: 'PA' },
+  'LibraryMarket-MN': { file: './scraper-librarymarket-libraries-mn.js', exportName: 'scrapeLibraryMarketMNCloudFunction', type: 'puppeteer', group: 1, state: 'MN' },
+  'LibraryMarket-ME-NH-MA': { file: './scraper-librarymarket-libraries-me-nh-ma.js', exportName: 'scrapeLibraryMarketMENHMACloudFunction', type: 'puppeteer', group: 2, state: 'Multi' },
+  'LibraryMarket-NC': { file: './scraper-librarymarket-libraries-nc.js', exportName: 'scrapeLibraryMarketNCCloudFunction', type: 'puppeteer', group: 3, state: 'NC' },
+  'LibraryMarket-SC': { file: './scraper-librarymarket-libraries-sc.js', exportName: 'scrapeLibraryMarketSCCloudFunction', type: 'puppeteer', group: 1, state: 'SC' },
+  'LibraryMarket-GA': { file: './scraper-librarymarket-libraries-ga.js', exportName: 'scrapeLibraryMarketGACloudFunction', type: 'puppeteer', group: 2, state: 'GA' },
+
+  // --- WordPress new state files ---
+  'WordPress-NH': { file: './scraper-wordpress-libraries-nh.js', exportName: 'scrapeWordpressNHCloudFunction', type: 'puppeteer', group: 3, state: 'NH' },
+  'WordPress-IA': { file: './scraper-wordpress-libraries-ia.js', exportName: 'scrapeWordpressIACloudFunction', type: 'puppeteer', group: 1, state: 'IA' },
+  'WordPress-MN': { file: './scraper-wordpress-libraries-mn.js', exportName: 'scrapeWordpressMNCloudFunction', type: 'puppeteer', group: 2, state: 'MN' },
+  'WordPress-RI': { file: './scraper-wordpress-libraries-ri.js', exportName: 'scrapeWordpressRICloudFunction', type: 'puppeteer', group: 1, state: 'RI' },
+
+  // --- Assabet Interactive platform scraper ---
+  'Assabet-NH-MA': { file: './scraper-assabet-libraries-nh-ma.js', exportName: 'scrapeAssabetLibrariesCloudFunction', type: 'puppeteer', group: 3, state: 'Multi' },
+
+  // ============================================================================
+  // PHASE 7: GAP COVERAGE SCRAPERS (non-library family event sources)
+  // ============================================================================
+
+  // --- Aggregator scrapers (single scraper, all states) ---
+  'Eventbrite-Family-Eastern': { file: './scraper-eventbrite-family-eastern.js', exportName: 'scrapeEventbriteFamilyCloudFunction', type: 'puppeteer', group: 1, state: 'Multi' },
+  'BarnesNoble-Eastern': { file: './scraper-barnes-noble-eastern.js', exportName: 'scrapeBarnesNobleCloudFunction', type: 'puppeteer', group: 2, state: 'Multi' },
+  'Patch-Community-Eastern': { file: './scraper-patch-community-eastern.js', exportName: 'scrapePatchCommunityCloudFunction', type: 'puppeteer', group: 3, state: 'Multi' },
+  'KidsOutAndAbout-Eastern': { file: './scraper-kidsoutandabout-eastern.js', exportName: 'scrapeKidsOutAndAboutCloudFunction', type: 'puppeteer', group: 1, state: 'Multi' },
+
+  // --- Parks & Recreation platform scrapers ---
+  'ActiveNet-Parks-Eastern': { file: './scraper-activenet-parks-eastern.js', exportName: 'scrapeActiveNetParksCloudFunction', type: 'puppeteer', group: 2, state: 'Multi' },
+  'CivicRec-Parks-Eastern': { file: './scraper-civicrec-parks-eastern.js', exportName: 'scrapeCivicRecParksCloudFunction', type: 'puppeteer', group: 3, state: 'Multi' },
+
+  // --- Sports & Tourism scrapers ---
+  'SportsEngine-Youth-Eastern': { file: './scraper-sportsengine-youth-eastern.js', exportName: 'scrapeSportsEngineYouthCloudFunction', type: 'puppeteer', group: 1, state: 'Multi' },
+  'Simpleview-Tourism-Eastern': { file: './scraper-simpleview-tourism-eastern.js', exportName: 'scrapeSimpleviewTourismCloudFunction', type: 'puppeteer', group: 2, state: 'Multi' },
+
+  // --- Venue-based scrapers ---
+  'Gardens-Nature-Eastern': { file: './scraper-gardens-nature-eastern.js', exportName: 'scrapeGardensNatureCloudFunction', type: 'puppeteer', group: 3, state: 'Multi' },
+  'ChildrensTheater-Eastern': { file: './scraper-childrens-theater-eastern.js', exportName: 'scrapeChildrensTheaterCloudFunction', type: 'puppeteer', group: 1, state: 'Multi' },
+  'YMCA-Community-Eastern': { file: './scraper-ymca-community-eastern.js', exportName: 'scrapeYMCACommunityCloudFunction', type: 'puppeteer', group: 2, state: 'Multi' },
 };
 
 // ============================================================================
@@ -1023,7 +1096,7 @@ const MACARONI_SCRAPERS = {
     type: 'puppeteer',
     group: 2,
     state: 'MI',
-    sites: 12
+    sites: 6
   },
   'MacaroniKid-CT': {
     file: './scraper-macaroni-ct.js',
@@ -1103,7 +1176,7 @@ const MACARONI_SCRAPERS = {
     type: 'puppeteer',
     group: 2,
     state: 'ME',
-    sites: 1
+    sites: 2
   },
 
   // GROUP 3 (14 states, ~149 sites): Days 3, 6, 9, 12, 15, 18, 21, 24, 27, 30

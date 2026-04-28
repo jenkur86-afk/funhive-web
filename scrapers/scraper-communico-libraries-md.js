@@ -171,7 +171,7 @@ async function scrapeCommunicoEvents() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'MD',
@@ -188,7 +188,7 @@ async function main() {
   const events = await scrapeCommunicoEvents();
 
   if (events.length > 0) {
-    await saveToFirebase(events);
+    await saveToDatabase(events);
   }
 
   process.exit(0);
@@ -198,4 +198,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { scrapeCommunicoEvents, saveToFirebase };
+module.exports = { scrapeCommunicoEvents, saveToDatabase };

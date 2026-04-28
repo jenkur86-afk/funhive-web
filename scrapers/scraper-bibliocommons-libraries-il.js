@@ -14,12 +14,19 @@ const ngeohash = require('ngeohash');const admin = require('firebase-admin');
     "url": "https://www.chipublib.org",
     "platform": "bibliocommons",
     "eventsUrl": "https://chipublib.bibliocommons.com/events"
+  },
+  {
+    "name": "Glenview Public Library",
+    "url": "https://www.glenviewpl.org",
+    "platform": "bibliocommons",
+    "eventsUrl": "https://glenviewpl.bibliocommons.com/events"
   }
 ]
  */
 
 const LIBRARIES = [
-  { name: "Chicago Public Library", url: "https://www.chipublib.org", platform: "bibliocommons", eventsUrl: "https://chipublib.bibliocommons.com/events", city: "Chicago", state: "IL", zipCode: "60602", county: "Cook" }
+  { name: "Chicago Public Library", url: "https://www.chipublib.org", platform: "bibliocommons", eventsUrl: "https://chipublib.bibliocommons.com/events", city: "Chicago", state: "IL", zipCode: "60602", county: "Cook" },
+  { name: "Glenview Public Library", url: "https://www.glenviewpl.org", platform: "bibliocommons", eventsUrl: "https://glenviewpl.bibliocommons.com/events", city: "Glenview", state: "IL", zipCode: "60025", county: "Cook" }
 ];
 
 const SCRAPER_NAME = 'bibliocommons-IL';
@@ -166,7 +173,7 @@ async function scrapeBiblioCommonsEvents() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'IL',
@@ -183,10 +190,10 @@ async function main() {
   const events = await scrapeBiblioCommonsEvents();
 
   if (events.length > 0) {
-    await saveToFirebase(events);
+    await saveToDatabase(events);
   }
 
-  // Log to Firestore for monitoring
+  // Log to database for monitoring
 
 
   await logScraperResult('Bibliocommons Libraries IL', {
@@ -209,4 +216,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { scrapeBiblioCommonsEvents, saveToFirebase };
+module.exports = { scrapeBiblioCommonsEvents, saveToDatabase };

@@ -317,7 +317,7 @@ function convertJsonLdEvent(jsonLdEvent) {
 }
 
 /**
- * Save events to Firestore
+ * Save events to database
  */
 async function saveEvents(events) {
   if (events.length === 0) return { saved: 0, skipped: 0, failed: 0 };
@@ -379,7 +379,7 @@ async function scrapePortDiscovery(options = {}) {
   if (!html) {
     console.error('❌ Failed to fetch calendar page');
     
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('PortDiscovery-MD', {
     found: 0,
     new: 0,
@@ -415,8 +415,8 @@ async function scrapePortDiscovery(options = {}) {
 
   console.log(`\n📊 Total events to save: ${processedEvents.length}`);
 
-  // Save to Firestore
-  console.log('\n💾 Saving to Firestore...');
+  // Save to database
+  console.log('\n💾 Saving to database...');
   const { saved, skipped, failed } = await saveEvents(processedEvents);
 
   const duration = ((Date.now() - startTime) / 1000).toFixed(1);

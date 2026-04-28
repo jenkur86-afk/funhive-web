@@ -496,7 +496,7 @@ async function scrapeRollyPollies(options = {}) {
   console.log(`   Failed: ${failed}`);
   console.log('='.repeat(70) + '\n');
 
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('Rolly Pollies Maryland', {
     found: imported + skipped,
     new: imported,

@@ -325,7 +325,7 @@ async function scrapePGCMLSEvents() {
   console.log(`   Failed: ${failed}`);
   console.log('='.repeat(60) + '\n');
 
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('Prince Georges County Library MD', {
     found: imported + skipped,
     new: imported,

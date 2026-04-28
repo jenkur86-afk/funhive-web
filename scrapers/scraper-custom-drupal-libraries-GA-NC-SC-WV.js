@@ -232,10 +232,17 @@ async function scrapeLibraryEvents(library, browser) {
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
 
     // OPTIMIZED: Faster page load strategy
-    await page.goto(library.url, {
+    const response = await page.goto(library.url, {
       waitUntil: 'domcontentloaded',
       timeout: 15000
     });
+
+    // Check for HTTP errors
+    if (response && (response.status() === 404 || response.status() >= 500)) {
+      console.log(`  ⚠️ HTTP ${response.status()} for ${library.url}, skipping`);
+      await page.close();
+      return { imported: 0, failed: 1, skipped: 0, total: 0 };
+    }
 
     // Wait for page to load - OPTIMIZED: Reduced from 3000ms
     await page.waitForSelector('body', { timeout: 3000 });
@@ -632,7 +639,7 @@ async function scrapeCustomDrupalLibraries() {
     await browser.close();
   }
 
-  // Log to Firestore with aggregate + per-site breakdown
+  // Log to database with aggregate + per-site breakdown
   const result = await logger.finish();
 
   return { imported: result.stats.new, skipped: result.stats.duplicates, failed: result.stats.errors };

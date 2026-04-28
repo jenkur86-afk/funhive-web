@@ -284,7 +284,7 @@ async function scrapeStateByBoundary(statesToScrape) {
 /**
  * Save venues to Firebase using venue-matcher for deduplication
  */
-async function saveToFirebase(venues) {
+async function saveToDatabase(venues) {
   if (!venues || venues.length === 0) {
     console.log('⚠️  No venues to save');
     return;
@@ -366,7 +366,7 @@ async function scrapeAndImportActivities(states) {
   let saveResult = { saved: 0, skipped: 0, total: 0 };
 
   if (venues.length > 0) {
-    saveResult = await saveToFirebase(venues);
+    saveResult = await saveToDatabase(venues);
   } else {
     console.log('⚠️  No venues found to import');
   }
@@ -385,5 +385,5 @@ async function scrapeAndImportActivities(states) {
 module.exports = {
   scrapeAndImportActivities,
   scrapeStateByBoundary,
-  saveToFirebase
+  saveToDatabase
 };

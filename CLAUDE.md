@@ -15,8 +15,9 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 ## Key Architecture Decisions
 
 ### Database Schema
-- `events` table: `event_date` is TEXT (scraper-provided), `date` is TIMESTAMPTZ (parsed). Always use `date` for filtering/sorting, never `event_date` (TEXT sorts alphabetically, not chronologically). Has `reported BOOLEAN DEFAULT FALSE` for hiding reported items.
-- `activities` table: venues/places with `location GEOMETRY(Point, 4326)` for PostGIS queries. Also has `reported BOOLEAN DEFAULT FALSE`.
+- `events` table columns: `id`, `name`, `event_date` (TEXT, scraper-provided), `date` (TIMESTAMPTZ, parsed), `end_date`, `description`, `url`, `image_url`, `venue`, `category`, `city`, `state`, `zip_code`, `address`, `location` (GEOMETRY), `geohash`, `activity_id`, `source_url`, `scraper_name`, `platform`, `scraped_at`, `created_at`, `updated_at`, `review_count`, `is_sponsored`, `sponsor_expires_at`, `reported` (BOOLEAN), `start_time`, `end_time`, `age_range`, `min_age`, `max_age`. **Note:** The column is `source_url` not `source` — the `activities` table has `source` but `events` does not.
+- Always use `date` TIMESTAMPTZ for filtering/sorting, never `event_date` (TEXT sorts alphabetically, not chronologically).
+- `activities` table: venues/places with `location GEOMETRY(Point, 4326)` for PostGIS queries. Has `source TEXT` column. Also has `reported BOOLEAN DEFAULT FALSE`.
 - `event_reports` table: stores user reports (reason, comment, reporter_ip, status). Defined in `database/migration-reports.sql`.
 - `nearby_events` RPC: `nearby_events(lng, lat, radius_miles, max_results)` uses `ST_DWithin()`. Excludes `reported` items.
 - `nearby_activities` RPC: `nearby_activities(lng, lat, radius_miles, max_results)` — same pattern as `nearby_events` for venues. Excludes `reported` items.
@@ -29,6 +30,8 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - 3-day group rotation: Group 1 runs days 1,4,7,10...; Group 2 runs 2,5,8,11...; Group 3 runs 3,6,9,12...
 - MacaroniKid scrapers: 43 state-specific files (`scraper-macaroni-{state}.js`), each with identical structure.
 - All events flow through `supabase-adapter.js` → `saveEvent()` or `flattenEvent()`.
+- **Supabase client import**: Use `const { supabase } = require('./scrapers/helpers/supabase-adapter')` for direct Supabase client access in fix scripts. Do NOT use `db` (that's a Firestore-style reference used internally by scrapers). Pattern: `const { supabase } = require(...)` then `supabase.from('events').select(...)`.
+- Fix scripts follow a `--save` flag pattern: dry run by default, `--save` to write to DB. Always import `supabase` from `supabase-adapter.js`.
 
 ### Client-Side Patterns
 - Location persisted in `localStorage` key `funhive_location` as `{lat, lng}` JSON.
@@ -45,6 +48,10 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - Never store county centroid coordinates without the `if (!coords)` guard — always check if geocoding already succeeded before falling back.
 - Never use `order('event_date', { ascending: true })` — it sorts alphabetically ("April 1" before "April 2" before "January 1").
 - Never parse ISO date strings with `new Date("2026-04-23")` — JavaScript treats date-only ISO strings as UTC midnight, which shifts to the previous day in US timezones. Always append `T00:00:00` for local time: `new Date("2026-04-23T00:00:00")`.
+- Never use `{ db }` or `{ admin, db }` from `supabase-adapter.js` in fix scripts — those are Firestore-compatibility wrappers. Use `{ supabase }` for the Supabase client.
+- Never assume column names — check `database/schema.sql` first. Common gotcha: `events` has `source_url` (not `source`), and `activities` has `source` (not `source_url`).
+- Never use `.select('*')` on the events or activities tables in list/search queries — always specify only the columns needed. Detail pages (single row) are fine.
+- Never reduce the venue cache TTL in `venue-matcher.js` below 30 minutes — it's the largest source of Supabase egress bandwidth.
 
 ### Always Do
 - Use `date` TIMESTAMPTZ column for all date filtering and sorting in queries.
@@ -53,6 +60,15 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - Wrap `useSearchParams()` in a `<Suspense>` boundary (Next.js requirement).
 - Run `node -c filename.js` to syntax-check any modified scraper file before committing.
 - Filter out reported items in queries with `.eq('reported', false)` and client-side `!e.reported` for RPC results.
+- Use selective `.select()` columns in all Supabase queries. Events list: `id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, min_age, max_age, description, address, location, activity_id, reported, is_free`. Activities list: `id, name, city, state, address, location, zip_code, category, description, age_range, min_age, max_age, hours, is_free, reported`.
+- Run data quality fix scripts (`fix-all.sh`) **weekly**, not after every scraper run — they're a safety net, not a required step. The scrapers' `saveEvent()` handles most validation at save time.
+
+### Bandwidth Management (Supabase Free Plan — 5.5 GB egress limit)
+- The venue cache in `venue-matcher.js` loads all activities with a **30-minute TTL** using selective columns (id, name, city, state, address, location, geohash, category). This is the single largest egress source during scraper runs.
+- Frontend list pages use selective `.select()` columns (not `select('*')`) to reduce per-request data.
+- The `nearby_events` and `nearby_activities` RPCs return all columns (SETOF table) — keep `max_results` reasonable.
+- Fix scripts do full-table scans — running them weekly instead of daily saves ~10+ GB/month of egress.
+- When writing new queries or scripts, always use `.select('col1, col2, ...')` with only the columns actually needed.
 
 ### Scraper Conventions
 - Many scrapers export a cloud function named `scrape{Name}CloudFunction`, but not all — some export plain function names like `scrapeMacaroniKidAlabama`.

@@ -40,15 +40,17 @@
  * KY (1 library):
  * - Kenton County Public Library
  *
- * MA (1 library):
+ * MA (2 libraries):
  * - Boston Public Library
+ * - Lawrence Public Library
  *
  * MI (1 library - 200K people):
  * - Grand Rapids Public Library (200K)
  *
- * MN (2 libraries - 1.8M people):
+ * MN (3 libraries - 1.8M+ people):
  * - Hennepin County Library (Minneapolis) (1.26M)
  * - St. Paul Public Library (545K)
+ * - Ramsey County Library (Roseville)
  *
  * MO (1 library - 280K people):
  * - St. Louis Public Library (280K)
@@ -79,8 +81,9 @@
  * - Fort Vancouver Regional Library (500K)
  * - Timberland Regional Library (380K)
  *
- * WI (1 library):
+ * WI (2 libraries):
  * - Madison Public Library
+ * - Kenosha Public Library
  *
  * NJ (1 library - 450K people):
  * - Burlington County Library System (450K)
@@ -90,7 +93,7 @@
  * - Brooklyn Public Library (2.6M) (NEW)
  * - Queens Public Library (2.3M) (NEW)
  *
- * Total: 41 active libraries serving ~40M+ people
+ * Total: 44 active libraries serving ~40M+ people
  *
  * Usage:
  *   node functions/scrapers/scraper-bibliocommons-libraries-CA-CO-IL-MA-TX-VA-WA.js
@@ -287,7 +290,7 @@ const LIBRARY_SYSTEMS = [
     zipCode: '41011'
   },
 
-  // MASSACHUSETTS (1 library)
+  // MASSACHUSETTS (2 libraries)
   {
     name: 'Boston Public Library',
     url: 'https://bpl.bibliocommons.com/v2/events',
@@ -296,6 +299,15 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.bpl.org',
     city: 'Boston',
     zipCode: '02116'
+  },
+  {
+    name: 'Lawrence Public Library',
+    url: 'https://lawrence.bibliocommons.com/v2/events',
+    county: 'Essex',
+    state: 'MA',
+    website: 'https://www.lawrencefreelibrary.org',
+    city: 'Lawrence',
+    zipCode: '01840'
   },
 
   // MICHIGAN (1 library)
@@ -309,7 +321,7 @@ const LIBRARY_SYSTEMS = [
     zipCode: '49503'
   },
 
-  // MINNESOTA (2 libraries)
+  // MINNESOTA (3 libraries)
   {
     name: 'Hennepin County Library',
     url: 'https://hclib.bibliocommons.com/v2/events',
@@ -327,6 +339,15 @@ const LIBRARY_SYSTEMS = [
     website: 'https://sppl.org',
     city: 'St. Paul',
     zipCode: '55102'
+  },
+  {
+    name: 'Ramsey County Library',
+    url: 'https://rclreads.bibliocommons.com/v2/events',
+    county: 'Ramsey',
+    state: 'MN',
+    website: 'https://www.rclreads.org',
+    city: 'Roseville',
+    zipCode: '55113'
   },
 
   // MISSOURI (1 library)
@@ -511,7 +532,7 @@ const LIBRARY_SYSTEMS = [
     zipCode: '98501'
   },
 
-  // WISCONSIN (1 library)
+  // WISCONSIN (2 libraries)
   {
     name: 'Madison Public Library',
     url: 'https://madisonpubliclibrary.bibliocommons.com/v2/events',
@@ -520,6 +541,15 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.madisonpubliclibrary.org',
     city: 'Madison',
     zipCode: '53703'
+  },
+  {
+    name: 'Kenosha Public Library',
+    url: 'https://mykpl.bibliocommons.com/v2/events',
+    county: 'Kenosha',
+    state: 'WI',
+    website: 'https://www.mykpl.info',
+    city: 'Kenosha',
+    zipCode: '53140'
   }
 ];
 
@@ -545,6 +575,144 @@ function parseAgeRange(audienceText) {
   return 'All Ages';
 }
 
+// ─── API-FIRST APPROACH ���────────────────────────────────────────────────────
+// BiblioCommons exposes a gateway API at gateway.bibliocommons.com that returns
+// structured JSON with events, locations (with coordinates!), and audiences.
+// This is far more reliable than Puppeteer for their React SPA.
+async function tryApiScrape(library) {
+  // Extract library slug from URL: https://{slug}.bibliocommons.com/v2/events
+  const slugMatch = library.url.match(/https?:\/\/([^.]+)\.bibliocommons\.com/);
+  if (!slugMatch) return null;
+  const slug = slugMatch[1];
+
+  try {
+    const events = [];
+    let page = 1;
+    const limit = 50;
+    let totalPages = 1;
+
+    while (page <= totalPages && page <= 10) { // Cap at 10 pages (500 events)
+      const apiUrl = `https://gateway.bibliocommons.com/v2/libraries/${slug}/events?page=${page}&limit=${limit}`;
+      const response = await axios.get(apiUrl, {
+        timeout: 15000,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+          'Accept': 'application/json'
+        }
+      });
+
+      const data = response.data;
+      if (!data || !data.events || !data.events.items || data.events.items.length === 0) break;
+
+      // Update total pages from pagination
+      if (data.events.pagination) {
+        totalPages = Math.min(data.events.pagination.pages || 1, 10);
+      }
+
+      const entities = data.entities || {};
+      const eventEntities = entities.events || {};
+      const locations = entities.locations || {};
+      const audiences = entities.eventAudiences || {};
+
+      for (const eventId of data.events.items) {
+        const eventData = eventEntities[eventId];
+        if (!eventData || !eventData.definition) continue;
+        const def = eventData.definition;
+
+        // Skip cancelled events
+        if (def.isCancelled) continue;
+
+        // Build audience string from audience IDs
+        let audienceStr = '';
+        if (def.audienceIds && Array.isArray(def.audienceIds)) {
+          audienceStr = def.audienceIds
+            .map(id => audiences[id] ? audiences[id].name : '')
+            .filter(Boolean)
+            .join(', ');
+        }
+
+        // Get location info
+        let venue = '';
+        let locAddress = '';
+        let locCity = library.city;
+        let locState = library.state;
+        let locZip = library.zipCode;
+        let locLat = null;
+        let locLng = null;
+
+        if (def.branchLocationId && locations[def.branchLocationId]) {
+          const loc = locations[def.branchLocationId];
+          venue = loc.name || '';
+          if (loc.address) {
+            locAddress = [loc.address.number, loc.address.street].filter(Boolean).join(' ');
+            locCity = loc.address.city || locCity;
+            locState = loc.address.state || locState;
+            locZip = loc.address.zip || locZip;
+          }
+          if (loc.mapLocation && loc.mapLocation.centrePoint) {
+            locLat = loc.mapLocation.centrePoint.lat;
+            locLng = loc.mapLocation.centrePoint.lng;
+          }
+        }
+
+        // Build date string from start/end
+        let eventDate = '';
+        let startTime = '';
+        let endTime = '';
+        if (def.start) {
+          // Format: "2026-06-26T10:00" (local time)
+          const startDate = new Date(def.start + ':00'); // Append seconds for parsing
+          eventDate = startDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+          startTime = startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        }
+        if (def.end) {
+          const endDate = new Date(def.end + ':00');
+          endTime = endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        }
+        if (startTime) {
+          eventDate += ` ${startTime}`;
+          if (endTime) eventDate += ` - ${endTime}`;
+        }
+
+        // Clean description (strip HTML tags)
+        const description = (def.description || '').replace(/<[^>]+>/g, '').trim();
+
+        // Build event URL
+        const eventUrl = `https://${slug}.bibliocommons.com/v2/events/${eventId}`;
+
+        events.push({
+          name: (def.title || '').trim(),
+          eventDate: eventDate,
+          venue: venue || library.name,
+          description: description.substring(0, 1000),
+          url: eventUrl,
+          audience: audienceStr,
+          address: locAddress,
+          city: locCity,
+          state: locState,
+          zipCode: locZip,
+          lat: locLat,
+          lng: locLng,
+          startTime: startTime,
+          endTime: endTime,
+          isVirtual: def.isVirtual || false
+        });
+      }
+
+      page++;
+      // Rate limit between pages
+      if (page <= totalPages) await new Promise(r => setTimeout(r, 500));
+    }
+
+    if (events.length === 0) return null;
+    console.log(`   📡 API returned ${events.length} events (${totalPages} pages)`);
+    return events;
+  } catch (error) {
+    console.log(`   ⚠ API scrape failed (${error.message}) — falling back to Puppeteer`);
+    return null;
+  }
+}
+
 // Scrape events from BiblioCommons library
 async function scrapeLibraryEvents(library, browser) {
   console.log('\n\x1b[36m📍📍📍📍📍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━📍📍📍📍\x1b[0m');
@@ -554,6 +722,117 @@ async function scrapeLibraryEvents(library, browser) {
   let imported = 0;
   let skipped = 0;
   let failed = 0;
+
+  // ── TRY API FIRST ────���─────────────────────────────────────────────────
+  const apiEvents = await tryApiScrape(library);
+  if (apiEvents && apiEvents.length > 0) {
+    console.log(`   ✓ Using API data (${apiEvents.length} events)`);
+
+    for (const event of apiEvents) {
+      try {
+        const ageRange = parseAgeRange(event.description + ' ' + event.audience);
+        if (ageRange === 'Adults') { skipped++; continue; }
+
+        // Use coordinates from API if available, otherwise geocode
+        let coordinates = null;
+        if (event.lat && event.lng) {
+          coordinates = { latitude: event.lat, longitude: event.lng };
+        } else if (event.venue && event.venue.trim()) {
+          const countyPart = `, ${library.county} County`;
+          const fullAddress = event.address
+            ? `${event.address}, ${event.city}, ${event.state} ${event.zipCode}`
+            : `${event.venue}, ${library.city}${countyPart}, ${library.state}`;
+          coordinates = await geocodeWithFallback(fullAddress, {
+            city: event.city || library.city,
+            zipCode: event.zipCode || library.zipCode,
+            state: event.state || library.state,
+            county: library.county,
+            venueName: event.venue,
+            sourceName: library.name
+          });
+        } else {
+          coordinates = await geocodeWithFallback(`${library.city}, ${library.state}`, {
+            city: library.city, zipCode: library.zipCode,
+            state: library.state, county: library.county, sourceName: library.name
+          });
+        }
+
+        const { parentCategory, displayCategory, subcategory } = categorizeEvent({
+          name: event.name, description: event.description
+        });
+
+        const normalizedDate = normalizeDateString(event.eventDate) || event.eventDate;
+        const dateObj = parseDateToObject(event.eventDate);
+        const dateTimestamp = dateObj ? admin.firestore.Timestamp.fromDate(dateObj) : null;
+
+        const eventDoc = {
+          name: event.name,
+          venue: event.venue || library.name,
+          eventDate: normalizedDate,
+          date: dateTimestamp,
+          startDate: dateTimestamp,
+          scheduleDescription: event.eventDate,
+          parentCategory, displayCategory, subcategory,
+          ageRange: ageRange,
+          cost: 'Free',
+          description: event.description || '',
+          moreInfo: event.audience || '',
+          location: {
+            name: event.venue || library.name,
+            address: event.address || '',
+            city: event.city || library.city,
+            state: event.state || library.state,
+            zipCode: event.zipCode || library.zipCode,
+            coordinates: coordinates
+          },
+          contact: { website: event.url || library.website, phone: '' },
+          url: event.url || library.website,
+          metadata: {
+            source: 'BiblioCommons Scraper',
+            scraperName: 'BiblioCommons-' + library.state,
+            sourceName: library.name,
+            county: library.county,
+            state: library.state,
+            category: 'Storytimes & Library',
+            scrapedAt: new Date().toISOString(),
+            addedDate: admin.firestore.FieldValue.serverTimestamp()
+          },
+          filters: { isFree: true, ageRange: ageRange }
+        };
+
+        if (coordinates) {
+          eventDoc.geohash = ngeohash.encode(coordinates.latitude, coordinates.longitude, 7);
+        }
+
+        const existing = await db.collection('events')
+          .where('name', '==', eventDoc.name)
+          .where('eventDate', '==', eventDoc.eventDate)
+          .where('metadata.sourceName', '==', library.name)
+          .limit(1)
+          .get();
+
+        if (existing.empty) {
+          const activityId = await linkEventToVenue(eventDoc);
+          if (activityId) { eventDoc.activityId = activityId; }
+          await db.collection('events').add(eventDoc);
+          console.log(`  ✅ ${event.name.substring(0, 60)}${event.name.length > 60 ? '...' : ''}`);
+          imported++;
+        } else {
+          skipped++;
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+      } catch (error) {
+        console.error(`  ❌ Error processing event:`, error.message);
+        failed++;
+      }
+    }
+
+    return { imported, failed, skipped };
+  }
+  // ── END API-FIRST PATH ─────────────────────────────────────────────────
+
+  console.log('   ⚙ Falling back to Puppeteer scraping');
 
   try {
     const page = await browser.newPage();
@@ -1006,7 +1285,7 @@ async function scrapeBiblioCommonsLibraries(stateFilter = null) {
   if (libraries.length === 0) {
     console.log(`⚠️ No libraries found for state: ${stateFilter}`);
 
-    // Log scraper stats to Firestore with state-specific name
+    // Log scraper stats to database with state-specific name
     const scraperName = stateFilter ? `BiblioCommons-${stateFilter}` : 'BiblioCommons-All';
     await logScraperResult(scraperName, {
       found: 0,
@@ -1053,7 +1332,7 @@ async function scrapeBiblioCommonsLibraries(stateFilter = null) {
     await browser.close();
   }
 
-  // Log to Firestore with aggregate + per-site breakdown
+  // Log to database with aggregate + per-site breakdown
   const result = await logger.finish();
 
   return { imported: result.stats.new, skipped: result.stats.duplicates, failed: result.stats.errors };
@@ -1168,6 +1447,7 @@ async function scrapeBiblioCommonsOH() { return scrapeBiblioCommonsLibraries('OH
 async function scrapeBiblioCommonsTX() { return scrapeBiblioCommonsLibraries('TX'); }
 async function scrapeBiblioCommonsVA() { return scrapeBiblioCommonsLibraries('VA'); }
 async function scrapeBiblioCommonsWA() { return scrapeBiblioCommonsLibraries('WA'); }
+async function scrapeBiblioCommonsWI() { return scrapeBiblioCommonsLibraries('WI'); }
 async function scrapeBiblioCommonsAZ() { return scrapeBiblioCommonsLibraries('AZ'); }
 
 // Cloud Function wrapper
@@ -1221,5 +1501,6 @@ module.exports = {
   scrapeBiblioCommonsOH,
   scrapeBiblioCommonsTX,
   scrapeBiblioCommonsVA,
-  scrapeBiblioCommonsWA
+  scrapeBiblioCommonsWA,
+  scrapeBiblioCommonsWI
 };

@@ -261,115 +261,120 @@ async function fetchEventsFromAPI() {
   }
 }
 
-// Scrape event details from individual event page
-async function scrapeEventDetails(event, page) {
+// Extract event details from individual event page HTML — uses axios (no Puppeteer needed)
+// EventON 5.x renders rich structured data in the HTML: JSON-LD, schema.org meta tags,
+// data-time attributes, and rendered date elements.
+async function scrapeEventDetails(event) {
   try {
     const eventUrl = event.link;
+    if (!eventUrl) return { date: '', time: '', location: '', description: '', lat: null, lng: null };
 
-    // Increased timeout for slow server
-    await page.goto(eventUrl, {
-      waitUntil: 'domcontentloaded',
-      timeout: 30000  // Increased from 15s to 30s
+    const response = await axios.get(eventUrl, {
+      timeout: 15000,
+      headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' }
     });
 
-    await page.waitForSelector('body', { timeout: 10000 });
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const html = response.data;
+    if (!html || typeof html !== 'string') return { date: '', time: '', location: '', description: '', lat: null, lng: null };
 
-    // Extract event details from rendered page
-    const details = await page.evaluate(() => {
-      const result = {
-        date: '',
-        time: '',
-        location: '',
-        description: ''
-      };
+    const result = { date: '', time: '', location: '', description: '', lat: null, lng: null };
 
-      // Try to find EventON event container
-      const selectors = [
-        '.eventon_list_event',
-        '.evo-event',
-        '.event-details',
-        '[class*="eventon"]',
-        'article.event',
-        '.entry-content'
-      ];
-
-      let eventContainer = null;
-      for (const selector of selectors) {
-        eventContainer = document.querySelector(selector);
-        if (eventContainer) break;
-      }
-
-      if (!eventContainer) {
-        eventContainer = document.querySelector('.entry-content, main, article');
-      }
-
-      if (eventContainer) {
-        const fullText = eventContainer.textContent;
-
-        // Extract date
-        const dateSelectors = [
-          '.event-date', '.evo-date', 'time', '[class*="date"]',
-          '.event-time-date', '.event_date'
-        ];
-
-        for (const selector of dateSelectors) {
-          const dateEl = eventContainer.querySelector(selector);
-          if (dateEl) {
-            result.date = dateEl.getAttribute('datetime') || dateEl.textContent.trim();
-            break;
+    // 1. Try JSON-LD structured data (most reliable)
+    const jsonLdMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+    if (jsonLdMatch) {
+      try {
+        const jsonLd = JSON.parse(jsonLdMatch[1]);
+        if (jsonLd.startDate) {
+          // Parse ISO-ish date like "2026-8-27T18:00-4:00"
+          const dateStr = jsonLd.startDate;
+          const dParts = dateStr.match(/(\d{4})-(\d{1,2})-(\d{1,2})T(\d{1,2}):(\d{2})/);
+          if (dParts) {
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const monthName = months[parseInt(dParts[2]) - 1];
+            const day = parseInt(dParts[3]);
+            const year = dParts[1];
+            const hour = parseInt(dParts[4]);
+            const minute = dParts[5];
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+            result.date = `${monthName} ${day}, ${year}`;
+            result.time = `${hour12}:${minute} ${ampm}`;
           }
         }
-
-        // Try to extract date from text if not found
-        if (!result.date) {
-          const dateMatch = fullText.match(/(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}(?:,?\s+\d{4})?/i) ||
-                           fullText.match(/\d{1,2}\/\d{1,2}\/\d{2,4}/);
-          if (dateMatch) result.date = dateMatch[0];
-        }
-
-        // Extract time
-        const timeMatch = fullText.match(/\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)/i) ||
-                         fullText.match(/\d{1,2}(?::\d{2})?\s*(?:AM|PM|am|pm)\s*-\s*\d{1,2}(?::\d{2})?\s*(?:AM|PM|am|pm)/i);
-        if (timeMatch) result.time = timeMatch[0];
-
-        // Extract location
-        const locationSelectors = [
-          '.event-location', '.evo-location', '.location',
-          '[class*="location"]', '.venue'
-        ];
-
-        for (const selector of locationSelectors) {
-          const locEl = eventContainer.querySelector(selector);
-          if (locEl && locEl.textContent.trim().length > 2) {
-            result.location = locEl.textContent.trim();
-            break;
+        if (jsonLd.endDate) {
+          const eParts = jsonLd.endDate.match(/T(\d{1,2}):(\d{2})/);
+          if (eParts) {
+            const hour = parseInt(eParts[1]);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+            result.time += ` - ${hour12}:${eParts[2]} ${ampm}`;
           }
         }
+        // Location from JSON-LD
+        if (jsonLd.location && Array.isArray(jsonLd.location) && jsonLd.location[0]) {
+          result.location = jsonLd.location[0].name || '';
+        } else if (jsonLd.location && jsonLd.location.name) {
+          result.location = jsonLd.location.name;
+        }
+        // Description from JSON-LD
+        if (jsonLd.description) {
+          result.description = jsonLd.description.replace(/<[^>]+>/g, '').replace(/<!--.*?-->/g, '').trim();
+        }
+      } catch (e) {
+        // JSON-LD parse failed, continue to fallbacks
+      }
+    }
 
-        // Extract description
-        const descSelectors = [
-          '.event-description', '.evo-description', '.description',
-          '.entry-content p', 'p'
-        ];
+    // 2. Extract lat/lng from data-latlng attribute
+    const latLngMatch = html.match(/data-latlng="([^"]+)"/);
+    if (latLngMatch) {
+      const parts = latLngMatch[1].split(',');
+      if (parts.length === 2) {
+        result.lat = parseFloat(parts[0]);
+        result.lng = parseFloat(parts[1]);
+      }
+    }
 
-        for (const selector of descSelectors) {
-          const descEl = eventContainer.querySelector(selector);
-          if (descEl && descEl.textContent.trim().length > 50) {
-            result.description = descEl.textContent.trim();
-            break;
-          }
+    // 3. Fallback: extract from rendered EventON HTML elements
+    if (!result.date) {
+      // Try schema.org meta tags
+      const startDateMeta = html.match(/itemprop='startDate'\s+content="([^"]+)"/);
+      if (startDateMeta) {
+        const dParts = startDateMeta[1].match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+        if (dParts) {
+          const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+          result.date = `${months[parseInt(dParts[2]) - 1]} ${parseInt(dParts[3])}, ${dParts[1]}`;
         }
       }
+    }
 
-      return result;
-    });
+    if (!result.time) {
+      // Extract from rendered time elements: <em class='time'>6:00 PM</em>
+      const timeMatches = html.match(/<em class='time'>([^<]+)<\/em>/g);
+      if (timeMatches && timeMatches.length >= 1) {
+        const times = timeMatches.map(m => m.match(/>([^<]+)</)[1].trim());
+        result.time = times.join(' - ');
+      }
+    }
 
-    return details;
+    if (!result.location) {
+      const locMatch = html.match(/data-location_name="([^"]+)"/);
+      if (locMatch) result.location = locMatch[1];
+    }
+
+    if (!result.description) {
+      // Try entry-content paragraphs
+      const pMatch = html.match(/<div class="entry-content"[^>]*>([\s\S]*?)<\/div>/);
+      if (pMatch) {
+        result.description = pMatch[1].replace(/<[^>]+>/g, '').replace(/<!--.*?-->/g, '').trim().substring(0, 500);
+      }
+    }
+
+    return result;
 
   } catch (error) {
-    console.error(`  ⚠️  Error scraping event page:`, error.message);
-    return { date: '', time: '', location: '', description: '' };
+    console.error(`  ⚠️  Error fetching event page:`, error.message);
+    return { date: '', time: '', location: '', description: '', lat: null, lng: null };
   }
 }
 
@@ -422,13 +427,8 @@ async function processLexingtonEvents() {
     }
   }
 
-  const browser = await launchBrowser();
-
+  // Process each event (no Puppeteer needed — scrapeEventDetails uses axios)
   try {
-    const page = await browser.newPage();
-    await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
-
-    // Process each event
     for (const apiEvent of apiEvents) {
       try {
         // Get basic info from API
@@ -492,7 +492,7 @@ async function processLexingtonEvents() {
         // Only scrape event page if we don't have a date
         if (!eventDate || eventDate.trim().length < 5) {
           try {
-            eventDetails = await scrapeEventDetails(apiEvent, page);
+            eventDetails = await scrapeEventDetails(apiEvent);
             eventDate = eventDetails.date;
             if (eventDetails.time && eventDate) {
               eventDate = `${eventDate} ${eventDetails.time}`;
@@ -518,9 +518,11 @@ async function processLexingtonEvents() {
           description = eventDetails.description;
         }
 
-        // Geocode with intelligent fallback
+        // Use coordinates from event page if available (EventON embeds lat/lng)
         let coordinates = null;
-        if (venue && venue !== LIBRARY.name) {
+        if (eventDetails.lat && eventDetails.lng) {
+          coordinates = { latitude: eventDetails.lat, longitude: eventDetails.lng };
+        } else if (venue && venue !== LIBRARY.name) {
           const fullAddress = `${venue}, ${LIBRARY.city}, ${LIBRARY.county} County, ${LIBRARY.state}`;
           coordinates = await geocodeWithFallback(fullAddress, {
             city: LIBRARY.city,
@@ -635,13 +637,9 @@ async function processLexingtonEvents() {
       }
     }
 
-    await page.close();
-
   } catch (error) {
     console.error(`  ❌ Error in processing:`, error.message);
     failed++;
-  } finally {
-    await browser.close();
   }
 
   return { imported, skipped, failed };
@@ -675,7 +673,7 @@ async function scrapeEventONLexingtonCloudFunction() {
   try {
     const stats = await scrapeEventONLexington();
     
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('Eventon Lexington Sc', {
     found: stats.imported,
     new: stats.imported,

@@ -126,7 +126,7 @@ async function scrapeLibCalEvents() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'CO',
@@ -143,10 +143,10 @@ async function main() {
   const events = await scrapeLibCalEvents();
 
   if (events.length > 0) {
-    await saveToFirebase(events);
+    await saveToDatabase(events);
   }
 
-  // Log to Firestore for monitoring
+  // Log to database for monitoring
 
 
   await logScraperResult('Libcal Libraries CO', {
@@ -169,4 +169,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { scrapeLibCalEvents, saveToFirebase };
+module.exports = { scrapeLibCalEvents, saveToDatabase };

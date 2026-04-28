@@ -39,6 +39,7 @@ const { generateEventId, generateEventIdFromDetails } = require('./event-id-help
 const { ScraperLogger, logScraperResult } = require('./scraper-logger');
 const { normalizeDateString } = require('./date-normalization-helper');
 const { linkEventToVenue } = require('./venue-matcher');
+const { tryGeocode: sharedTryGeocode } = require('./helpers/macaroni-geocoding-helper');
 
 // Library Systems using The Events Calendar WordPress plugin
 const LIBRARY_SYSTEMS = [
@@ -174,31 +175,9 @@ const LIBRARY_SYSTEMS = [
   }
 ];
 
-// Geocode address
+// Geocode address — uses shared helper with rate limiting, caching, and 429 handling
 async function geocodeAddress(address) {
-  try {
-    const response = await axios.get('https://nominatim.openstreetmap.org/search', {
-      params: {
-        q: address,
-        format: 'json',
-        limit: 1,
-        countrycodes: 'us'
-      },
-      headers: {
-        'User-Agent': 'FunHive/1.0'
-      }
-    });
-
-    if (response.data && response.data.length > 0) {
-      return {
-        latitude: parseFloat(response.data[0].lat),
-        longitude: parseFloat(response.data[0].lon)
-      };
-    }
-  } catch (error) {
-    console.error('Geocoding error:', error.message);
-  }
-  return null;
+  return sharedTryGeocode(address);
 }
 
 // Parse age range from audience text
@@ -563,7 +542,7 @@ async function scrapeWordPressEventsCalendarLibraries() {
     await browser.close();
   }
 
-  // Log to Firestore with aggregate + per-site breakdown
+  // Log to database with aggregate + per-site breakdown
   const result = await logger.finish();
 
   return { imported: result.stats.new, skipped: result.stats.duplicates, failed: result.stats.errors };

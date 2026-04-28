@@ -318,7 +318,7 @@ async function scrapeSanAntonioLibrary() {
   console.log(`   Failed: ${totalFailed}`);
   console.log('='.repeat(60) + '\n');
 
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('San Antonio Public Library', {
     found: totalImported + totalSkipped,
     new: totalImported,

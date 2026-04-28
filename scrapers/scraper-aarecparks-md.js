@@ -261,7 +261,7 @@ async function scrapeActivities(browser, maxActivities = 100) {
 }
 
 /**
- * Save activities to Firestore
+ * Save activities to database
  */
 async function saveActivities(activities) {
   if (activities.length === 0) return { saved: 0, failed: 0 };

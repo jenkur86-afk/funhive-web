@@ -113,116 +113,90 @@ function getDatesToScrape() {
   return dates;
 }
 
-// Scrape events from Drupal HTML feed for a specific date
-async function scrapeDateEvents(library, date, page) {
+// Scrape events from Drupal HTML feed for a specific date — uses axios (no Puppeteer needed)
+async function scrapeDateEvents(library, date) {
   const url = `${library.baseUrl}${library.feedPath}?_wrapper_format=lc_calendar_feed&current_date=${date}`;
 
   try {
-    await page.goto(url, {
-      waitUntil: 'networkidle2',
-      timeout: 30000
+    const response = await axios.get(url, {
+      timeout: 15000,
+      headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' }
     });
 
-    await page.waitForSelector('body', { timeout: 5000 });
+    const html = response.data;
+    if (!html || typeof html !== 'string') return [];
 
-    // Extract events from the page
-    const events = await page.evaluate(() => {
-      const results = [];
+    const results = [];
 
-      // Find all H3 headings (event titles)
-      const headings = document.querySelectorAll('h3');
+    // Parse event-card articles from the HTML feed
+    // Structure: <article class="event-card"> contains:
+    //   <h3 class="lc-event__title"> <a class="lc-event__link">Title</a> </h3>
+    //   <div class="lc-event__date"> <div class="lc-event-info-item--time">9:00am–9:45am</div> </div>
+    //   <div class="lc-event-info__item--colors">Age Group</div>
+    //   <div class="lc-event-info__item--categories">Branch Name</div>
+    //   <span class="lc-date-icon__item--month">Apr</span> <span class="lc-date-icon__item--day">25</span> <span class="lc-date-icon__item--year">2026</span>
 
-      headings.forEach(heading => {
-        try {
-          // Get event title from h3 text directly (may or may not have nested link)
-          let title = '';
-          let eventUrl = '';
+    // Split on article tags to process each event card
+    const articles = html.split(/<article\s+class="event-card/);
 
-          const link = heading.querySelector('a');
-          if (link) {
-            // If there's a link inside h3, use it
-            title = link.textContent.trim();
-            eventUrl = link.href;
-          } else {
-            // Otherwise extract title from h3 text directly
-            title = heading.textContent.trim();
-            // Try to find a link in nearby elements
-            let searchElement = heading.nextElementSibling;
-            for (let i = 0; i < 5 && searchElement; i++) {
-              const nearbyLink = searchElement.querySelector('a');
-              if (nearbyLink) {
-                eventUrl = nearbyLink.href;
-                break;
-              }
-              searchElement = searchElement.nextElementSibling;
-            }
-          }
+    for (let i = 1; i < articles.length; i++) {
+      const card = articles[i];
 
-          if (!title) return;
+      // Extract title from lc-event__link
+      const titleMatch = card.match(/class="lc-event__link"[^>]*>\s*([^<]+)/);
+      if (!titleMatch) continue;
+      const title = titleMatch[1].trim();
+      if (!title || title.length < 3) continue;
 
-          // Get the content after this heading
-          let currentElement = heading.nextElementSibling;
-          let timeText = '';
-          let locationText = '';
-          let ageGroupText = '';
-          let programTypeText = '';
-          let descriptionText = '';
+      // Extract URL
+      const urlMatch = card.match(/href="([^"]*)"[^>]*class="lc-event__link"/);
+      const eventUrl = urlMatch ? `${library.baseUrl}${urlMatch[1]}` : '';
 
-          // Parse content following the heading
-          while (currentElement && currentElement.tagName !== 'H3') {
-            const text = currentElement.textContent;
+      // Extract time
+      const timeMatch = card.match(/lc-event-info-item--time">\s*([^<]+)/);
+      const timeText = timeMatch ? timeMatch[1].trim() : '';
 
-            // Extract time (e.g., "9:00am–11:00am") or mark as "All Day" if not present
-            if (text.match(/\d{1,2}:\d{2}[ap]m/i)) {
-              timeText = text.match(/\d{1,2}:\d{2}[ap]m\s*[–-]\s*\d{1,2}:\d{2}[ap]m/i)?.[0] ||
-                        text.match(/\d{1,2}:\d{2}[ap]m/i)?.[0] || '';
-            } else if (text.toLowerCase().includes('all day') && !timeText) {
-              timeText = 'All Day';
-            }
+      // Extract age group (from color-coding labels)
+      const ageMatches = [...card.matchAll(/lc-event__color-indicator--([a-z-]+)\s/g)];
+      const ageGroups = ageMatches
+        .map(m => m[1])
+        .filter(a => !a.startsWith('tid-') && a !== '')
+        .map(a => a.replace(/-/g, ' '));
+      const ageGroupText = ageGroups.join(', ');
 
-            // Extract fields
-            if (text.includes('Library:') || text.includes('Branch:')) {
-              locationText = text.replace(/^(Library|Branch):\s*/i, '').trim();
-            }
+      // Extract branch/location from categories
+      const locMatch = card.match(/lc-event-info__item--categories">\s*([^<]+)/);
+      const locationText = locMatch ? locMatch[1].trim() : '';
 
-            if (text.includes('Age Group:')) {
-              ageGroupText = text.replace(/^Age Group:\s*/i, '').trim();
-            }
+      // Extract description if present
+      const descMatch = card.match(/lc-event__description[^>]*>\s*([^<]+)/);
+      const description = descMatch ? descMatch[1].trim() : '';
 
-            if (text.includes('Program Type:')) {
-              programTypeText = text.replace(/^Program Type:\s*/i, '').trim();
-            }
-
-            // Collect description paragraphs
-            if (currentElement.tagName === 'P' && text.length > 20 && !text.includes(':')) {
-              descriptionText += text + ' ';
-            }
-
-            currentElement = currentElement.nextElementSibling;
-          }
-
-          if (title) {
-            results.push({
-              title: title,
-              url: eventUrl,
-              time: timeText,
-              location: locationText,
-              ageGroup: ageGroupText,
-              programType: programTypeText,
-              description: descriptionText.trim()
-            });
-          }
-        } catch (err) {
-          console.error('Error parsing event:', err);
-        }
+      results.push({
+        title, url: eventUrl, time: timeText,
+        location: locationText, ageGroup: ageGroupText,
+        programType: '', description
       });
+    }
 
-      return results;
-    });
+    // Fallback: try legacy h3 parsing if no event-card articles found
+    if (results.length === 0) {
+      const h3Matches = [...html.matchAll(/<h3[^>]*>\s*<a[^>]*href="([^"]*)"[^>]*>([^<]+)<\/a>\s*<\/h3>/g)];
+      for (const m of h3Matches) {
+        const eventUrl = m[1].startsWith('http') ? m[1] : `${library.baseUrl}${m[1]}`;
+        const title = m[2].trim();
+        if (title && title.length >= 3) {
+          results.push({ title, url: eventUrl, time: '', location: '', ageGroup: '', programType: '', description: '' });
+        }
+      }
+    }
 
-    return events;
+    return results;
 
   } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return []; // Feed not available for this date
+    }
     console.error(`Error scraping date ${date} for ${library.name}:`, error.message);
     return [];
   }
@@ -316,14 +290,11 @@ async function scrapeLibraryEvents(library, browser) {
   let failed = 0;
 
   try {
-    const page = await browser.newPage();
-    await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
-
     const dates = getDatesToScrape();
-    console.log(`   Scraping ${dates.length} dates...`);
+    console.log(`   Scraping ${dates.length} dates via HTTP (no Puppeteer needed)...`);
 
     for (const date of dates) {
-      const events = await scrapeDateEvents(library, date, page);
+      const events = await scrapeDateEvents(library, date);
 
       for (const event of events) {
         try {
@@ -443,10 +414,13 @@ async function scrapeLibraryEvents(library, browser) {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
 
-    // If feed-based scraping found 0 events, try the regular events page as fallback
-    if (imported === 0) {
+    // If feed-based scraping found 0 events, try the regular events page as fallback (needs Puppeteer)
+    if (imported === 0 && browser) {
       console.log(`   ⚠ Feed-based scraping found 0 events — trying regular /events page fallback`);
+      const page = await browser.newPage();
+      await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
       const fallbackEvents = await scrapeEventsPageFallback(library, page);
+      await page.close();
       for (const event of fallbackEvents) {
         try {
           const ageRange = mapAgeRange(event.ageGroup);
@@ -509,8 +483,6 @@ async function scrapeLibraryEvents(library, browser) {
         }
       }
     }
-
-    await page.close();
 
   } catch (error) {
     console.error(`  ❌ Error scraping ${library.name}:`, error.message);
@@ -592,7 +564,7 @@ async function scrapeDrupalPennsylvaniaLibrariesCloudFunction() {
     await browser.close();
   }
 
-  // Log to Firestore with aggregate + per-site breakdown
+  // Log to database with aggregate + per-site breakdown
   const result = await logger.finish();
 
   return {

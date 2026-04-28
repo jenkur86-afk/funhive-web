@@ -190,7 +190,7 @@ async function extractEventDetails(page, url) {
         // Only fall back to text-based address parsing if DOM extraction didn't find address
         if (!result.venue || !result.address || !result.city) {
           while (idx < lines.length && lines[idx].length === 0) idx++;
-          const invalidVenuePatterns = /^(all[\s-]*day|see website|n\/a|various|tbd|tba|online|virtual|zoom|webinar|microsoft teams|google meet|skype|teams meeting|check website|contact for details|\d{1,2}:\d{2}\s*(am|pm)?)$/i;
+          const invalidVenuePatterns = /^(all[\s-]*day|see website|n\/a|various|tbd|tba|online|virtual|zoom|webinar|microsoft teams|google meet|skype|teams meeting|check website|contact for details|description|events|\d{1,2}:\d{2}\s*(am|pm)?)$/i;
           if (!result.venue && idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100 && !invalidVenuePatterns.test(lines[idx])) { result.venue = lines[idx]; idx++; }
           else if (idx < lines.length && invalidVenuePatterns.test(lines[idx])) { idx++; if (!result.venue && idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100 && !invalidVenuePatterns.test(lines[idx])) { result.venue = lines[idx]; idx++; }}
           if (!result.address && idx < lines.length && /^\d+\s+[\w\s]+/.test(lines[idx])) { result.address = lines[idx]; idx++; }
@@ -463,12 +463,17 @@ async function scrapeSite(browser, site, maxEvents = 50) {
 
       const normalizedDate = normalizeDateString(details.eventDate) || details.eventDate;
 
+      // Parse date into a proper Date object for the TIMESTAMPTZ column
+      const parsedDateObj = /^\d{4}-\d{2}-\d{2}$/.test(normalizedDate) ? new Date(normalizedDate + 'T00:00:00') : new Date(normalizedDate);
+      const dateTimestamp = !isNaN(parsedDateObj.getTime()) ? admin.firestore.Timestamp.fromDate(parsedDateObj) : null;
+
 
 
       const eventDoc = {
 
 
         name: details.name, venue: details.venue || 'See website', eventDate: normalizedDate,
+        date: dateTimestamp,
         scheduleDescription: `${details.dayOfWeek}, ${details.eventDate}${details.time ? ' at ' + details.time : ''}`,
         ...parseTimeRange(details.time),  // startTime, endTime
         parentCategory, displayCategory, subcategory,
@@ -597,7 +602,7 @@ async function scrapeMacaroniKidPennsylvania() {
   console.log(`   Time: ${elapsed} minutes`);
   console.log('='.repeat(60) + '\n');
 
-  // Log to Firestore for monitoring
+  // Log to database for monitoring
   await logScraperResult('Macaroni Kid PA', {
     new: imported,
     duplicates: skipped,

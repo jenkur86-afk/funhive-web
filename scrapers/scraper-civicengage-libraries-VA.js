@@ -25,7 +25,7 @@
  */
 
 const { admin, db } = require('./helpers/supabase-adapter');
-const { launchBrowser } = require('./puppeteer-config');
+const { launchBrowser } = require('./helpers/puppeteer-config');
 const axios = require('axios');
 const ngeohash = require('ngeohash');
 const { categorizeEvent } = require('./event-categorization-helper');
@@ -506,7 +506,7 @@ async function scrapeCivicEngageLibraries() {
   console.log('='.repeat(60) + '\n');
 
   
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('CivicEngage-VA', {
     found: totalImported,
     new: totalImported,

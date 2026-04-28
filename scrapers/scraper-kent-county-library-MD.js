@@ -296,7 +296,7 @@ async function scrapeKentCountyLibrary() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   let batch = db.batch();
   let imported = 0;
   let skipped = 0;
@@ -344,9 +344,9 @@ async function scrapeKentCountyLibraryCloudFunction() {
   const events = await scrapeKentCountyLibrary();
 
   if (events.length > 0) {
-    const result = await saveToFirebase(events);
+    const result = await saveToDatabase(events);
 
-    // Log scraper stats to Firestore
+    // Log scraper stats to database
     await logScraperResult('Kent County Library MD', {
       found: events.length,
       new: result.imported,
@@ -356,7 +356,7 @@ async function scrapeKentCountyLibraryCloudFunction() {
     return result;
   }
 
-  // Log scraper stats to Firestore (no events found)
+  // Log scraper stats to database (no events found)
   await logScraperResult('Kent County Library MD', {
     found: 0,
     new: 0,
@@ -371,7 +371,7 @@ if (require.main === module) {
   scrapeKentCountyLibrary()
     .then(events => {
       if (events.length > 0) {
-        return saveToFirebase(events);
+        return saveToDatabase(events);
       }
       return { imported: 0, skipped: 0 };
     })

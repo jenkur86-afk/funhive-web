@@ -224,7 +224,7 @@ async function extractEventDetails(page, url) {
         if (idx < lines.length && (/\d{1,2}:\d{2}\s*(?:am|pm)/i.test(lines[idx]) || /^all[\s-]*day$/i.test(lines[idx]))) { if (!result.time) result.time = lines[idx]; idx++; }
         while (idx < lines.length && lines[idx].length === 0) idx++;
         // Skip invalid venue values (time-related phrases, placeholders, online platforms)
-        const invalidVenuePatterns = /^(all[\s-]*day|see website|n\/a|various|tbd|tba|online|virtual|zoom|webinar|microsoft teams|google meet|skype|teams meeting|check website|contact for details|\d{1,2}:\d{2}\s*(am|pm)?)$/i;
+        const invalidVenuePatterns = /^(all[\s-]*day|see website|n\/a|various|tbd|tba|online|virtual|zoom|webinar|microsoft teams|google meet|skype|teams meeting|check website|contact for details|description|events|\d{1,2}:\d{2}\s*(am|pm)?)$/i;
         if (!result.venue && idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100 && !invalidVenuePatterns.test(lines[idx])) { if (!result.venue) result.venue = lines[idx]; idx++; }
         else if (!result.venue && idx < lines.length && invalidVenuePatterns.test(lines[idx])) { idx++; if (idx < lines.length && !/^\d/.test(lines[idx]) && lines[idx].length < 100 && !invalidVenuePatterns.test(lines[idx])) { if (!result.venue) result.venue = lines[idx]; idx++; }}
         if (!result.address && idx < lines.length && /^\d+\s+[\w\s]+/.test(lines[idx])) { if (!result.address) result.address = lines[idx]; idx++; }
@@ -523,6 +523,10 @@ async function scrapeSite(browser, site, logger, maxEvents = 50) {
       // --- BUILD EVENT DOC ---
 
       const normalizedDate = normalizeDateString(details.eventDate) || details.eventDate;
+
+      // Parse date into a proper Date object for the TIMESTAMPTZ column
+      const parsedDateObj = /^\d{4}-\d{2}-\d{2}$/.test(normalizedDate) ? new Date(normalizedDate + 'T00:00:00') : new Date(normalizedDate);
+      const dateTimestamp = !isNaN(parsedDateObj.getTime()) ? admin.firestore.Timestamp.fromDate(parsedDateObj) : null;
       const parsedTime = parseTimeString(details.time);
 
       const { parentCategory, displayCategory, subcategory } = categorizeEvent({
@@ -534,6 +538,7 @@ async function scrapeSite(browser, site, logger, maxEvents = 50) {
         name: details.name,
         venue: details.venue || 'See website',
         eventDate: normalizedDate,
+        date: dateTimestamp,
         startTime: parsedTime.startTime || null,
         endTime: parsedTime.endTime || null,
         description: details.description,
@@ -676,7 +681,7 @@ async function scrapeMacaroniKidMaryland() {
   console.log(`   Time: ${elapsed} minutes`);
   console.log('='.repeat(60) + '\n');
 
-  // Log to Firestore with per-site breakdown
+  // Log to database with per-site breakdown
   await logger.finish();
 
   return { imported, failed };

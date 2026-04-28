@@ -484,7 +484,7 @@ async function scrapeAllentownLibrary() {
   console.log(`   Failed: ${failed}`);
   console.log('='.repeat(60) + '\n');
 
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('Allentown Public Library PA', {
     found: imported + skipped,
     new: imported,

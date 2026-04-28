@@ -448,11 +448,16 @@ async function scrapeSite(site, maxEvents = 50) {
       // Normalize the date string for consistent storage
       const normalizedDate = normalizeDateString(details.eventDate) || details.eventDate;
 
+      // Parse date into a proper Date object for the TIMESTAMPTZ column
+      const parsedDateObj = /^\d{4}-\d{2}-\d{2}$/.test(normalizedDate) ? new Date(normalizedDate + 'T00:00:00') : new Date(normalizedDate);
+      const dateTimestamp = !isNaN(parsedDateObj.getTime()) ? admin.firestore.Timestamp.fromDate(parsedDateObj) : null;
+
       // Build event document
       const eventDoc = {
         name: details.name,
         venue: details.venue || 'See website',
         eventDate: normalizedDate,
+        date: dateTimestamp,
         scheduleDescription: `${details.dayOfWeek}, ${details.eventDate}${details.time ? ' at ' + details.time : ''}`,
         parentCategory,
         displayCategory,

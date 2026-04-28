@@ -340,7 +340,7 @@ async function scrapeModernEventsCalendarLibraries() {
   console.log('='.repeat(60) + '\n');
 
   
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('Wordpress Modern Events Calendar Libraries VA', {
     found: totalImported,
     new: totalImported,

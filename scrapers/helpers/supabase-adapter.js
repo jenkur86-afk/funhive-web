@@ -250,6 +250,7 @@ const NON_FAMILY_PATTERNS = [
   /\bmead(ery)?\s+fest(ival)?\b/i,
   /\bbeer\s*(,|&|and)\s*bourbon\b/i,
   /\bbeer\s*(,|&|and)\s*bbq\b/i,
+  /\bbooze\b/i,
 
   // Dating / adult social
   /\bsingles?\s+night\b/i,
@@ -290,6 +291,13 @@ const NON_FAMILY_PATTERNS = [
   /\blooking\s+for\s+library\s+story\s+times\b/i,
   /\bstart\s+here!?\s*$/i,
   /\bvisit\s+our\s+(full\s+)?guide\b/i,
+
+  // Newsletter / mailing list sign-up promo events
+  /\bjoin\s+our\s+e-?newsletter\b/i,
+  /\byou'?re\s+invited\b.*\be-?newsletter\b/i,
+  /\bsign\s+up\s+for\s+(our\s+)?(e-?)?newsletter\b/i,
+  /\bsubscribe\s+to\s+(our\s+)?(e-?)?newsletter\b/i,
+  /\bjoin\s+our\s+(email|mailing)\s+list\b/i,
 ];
 
 // If event matches a non-family pattern BUT also matches these, keep it
@@ -379,9 +387,38 @@ function isNonFamilyEvent(name, description, venue) {
 // ============================================================================
 
 function isCancelledEvent(name, description) {
-  const text = `${name || ''} ${description || ''}`;
-  return /\b(cancelled|canceled|postponed|closed|suspended|rescheduled)\b/i.test(text) &&
-    !/\b(not\s+cancelled|not\s+canceled|rain\s+or\s+shine|unless\s+cancelled)\b/i.test(text);
+  const nameStr = (name || '').trim();
+  const descStr = (description || '').trim();
+  const text = `${nameStr} ${descStr}`;
+
+  // Strong signals in the NAME — these almost always mean the event is cancelled
+  if (/\b(cancelled|canceled|postponed|suspended|rescheduled)\b/i.test(nameStr)) {
+    if (!/\b(not\s+cancelled|not\s+canceled|rain\s+or\s+shine|unless\s+cancelled)\b/i.test(nameStr)) {
+      return true;
+    }
+  }
+
+  // "closed" in the NAME only if it means the event is closed (not "roads closed", "doors closed at 6pm", etc.)
+  // Match: "event closed", "closed for season", "closed permanently", "temporarily closed"
+  // Skip: "road closed", "doors close at", "gates close", "box office closed"
+  if (/\bclosed\b/i.test(nameStr) && /\b(event|season|permanently|temporarily|until\s+further)\b/i.test(nameStr)) {
+    return true;
+  }
+
+  // Strong signals in the DESCRIPTION — only cancelled/postponed/suspended (NOT "closed")
+  // "closed" in descriptions causes too many false positives (gates close, road closed, registration closed, etc.)
+  if (/\b(cancelled|canceled|postponed|suspended)\b/i.test(descStr)) {
+    if (!/\b(not\s+cancelled|not\s+canceled|rain\s+or\s+shine|unless\s+cancelled|if\s+cancelled)\b/i.test(descStr)) {
+      return true;
+    }
+  }
+
+  // Scraper artifacts — error pages, 404s, "page no longer exists"
+  if (/\b(page\s+(you\s+requested\s+)?(no\s+longer\s+exists|not\s+found|cannot\s+be\s+found|has\s+been\s+removed|does\s+not\s+exist))\b/i.test(text)) return true;
+  if (/\b(404\s*(error|not\s+found)?|error\s+404)\b/i.test(nameStr)) return true;
+  if (/\b(access\s+denied|forbidden|unauthorized)\b/i.test(nameStr)) return true;
+
+  return false;
 }
 
 // ============================================================================
@@ -458,6 +495,14 @@ async function saveEvent(id, data) {
   const rawAgeRange = data.ageRange || detectAgeRange(data.name, data.description) || null;
   if (rawAgeRange) {
     row.age_range = normalizeAgeRange(rawAgeRange);
+  } else {
+    row.age_range = 'All Ages';
+  }
+
+  // Reject adult-only events — not family content
+  if (row.age_range === 'Adults') {
+    if (process.env.DEBUG_SAVE) console.log(`  ⛔ Skipping adult-only event: ${row.name}`);
+    return null;
   }
 
   // Auto-extract time from event_date if not explicitly set
@@ -628,7 +673,7 @@ function createFirestoreCompatibleDB() {
               try {
                 flattened = flattenForTable(table, data);
               } catch (e) {
-                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue')) {
+                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event')) {
                   return; // silently skip
                 }
                 throw e;
@@ -686,7 +731,7 @@ function createFirestoreCompatibleDB() {
           try {
             flattened = flattenForTable(collectionName, data);
           } catch (e) {
-            if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue')) {
+            if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event')) {
               return { id }; // silently skip
             }
             throw e;
@@ -730,7 +775,7 @@ function createFirestoreCompatibleDB() {
                 upsertByTable[table].push({ id: op.id, ...flattenForTable(table, op.data) });
               } catch (e) {
                 // Skip past events and invalid events gracefully
-                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue')) {
+                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event')) {
                   continue;
                 }
                 throw e;
@@ -987,6 +1032,13 @@ function flattenEvent(data) {
   const rawAge = data.ageRange || data.age_range || detectAgeRange(data.name, data.description) || null;
   if (rawAge) {
     row.age_range = normalizeAgeRange(rawAge);
+  } else {
+    row.age_range = 'All Ages';
+  }
+
+  // Reject adult-only events — not family content
+  if (row.age_range === 'Adults') {
+    throw new Error(`Skipping adult-only event: "${data.name}"`);
   }
 
   // Clean up nulls — don't write null values that overwrite existing data
@@ -1021,7 +1073,11 @@ function flattenActivity(data) {
     // Pull additional fields from metadata if not at top level
     row.category = row.category || data.metadata.category;
     row.state = row.state || data.metadata.state;
+    // Derive source from metadata sourceUrl if not set (track by site URL)
+    if (!row.source) row.source = data.metadata.sourceUrl || null;
   }
+  // Final fallback: derive source from activity URL (site tracking)
+  if (!row.source) row.source = data.url || data.website || null;
   if (data.location) {
     row.city = row.city || data.location.city;
     row.state = row.state || data.location.state;

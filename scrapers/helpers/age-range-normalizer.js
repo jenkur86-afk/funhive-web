@@ -33,8 +33,10 @@ function getBrackets(lo, hi) {
     }
   }
   if (matches.length === 0) return 'All Ages';
-  if (matches.length === 5) return 'All Ages';  // Spans everything = All Ages
-  return matches.join(', ');
+  if (matches.length >= 4) return 'All Ages';  // Spans 4+ brackets = effectively All Ages
+  if (matches.length === 1) return matches[0];
+  // Multiple brackets: return the lowest (broadest coverage for filtering)
+  return matches[0];
 }
 
 function normalizeAgeRange(raw) {

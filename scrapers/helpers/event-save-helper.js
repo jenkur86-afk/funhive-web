@@ -370,7 +370,7 @@ async function getOrCreateActivity(library, coordinates, state, eventDate = null
         coordinates: coordinates ? { latitude: coordinates.latitude, longitude: coordinates.longitude } : null
       },
       description: `${venue} - Public Library`,
-      source: 'event-scraper',
+      source: library.url || 'event-scraper',
       eventCount: 1,
       lastEventDate: eventDate,
       scraperName: 'Event Save Helper',
@@ -411,7 +411,7 @@ async function getOrCreateActivity(library, coordinates, state, eventDate = null
 }
 
 /**
- * Save events to Firestore with proper geocoding and geohash
+ * Save events to database with proper geocoding and geohash
  *
  * @param {Array} events - Array of event objects from scraper
  * @param {Array} libraries - Array of library objects with city/zipCode/state/county

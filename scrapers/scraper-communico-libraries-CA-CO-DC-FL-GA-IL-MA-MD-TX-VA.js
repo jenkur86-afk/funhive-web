@@ -6,7 +6,7 @@
  * Scrapes events from libraries using Communico platform (HTML method)
  * API requires authentication, so we scrape the HTML pages directly
  *
- * COVERAGE (62 libraries across 24 states):
+ * COVERAGE (87 libraries across 26 states):
  *
  * CA (4 libraries - 4.39M people):
  * - Berkeley Public Library (120K)
@@ -21,7 +21,7 @@
  * DC (1 library - 700K people):
  * - DC Public Library (700K)
  *
- * FL (7 libraries - 8.2M people):
+ * FL (8 libraries):
  * - Miami-Dade Public Library (2.77M)
  * - Broward County Library (1.98M)
  * - Hillsborough County Public Library Cooperative (1.56M)
@@ -29,29 +29,44 @@
  * - Pasco County Libraries (590K)
  * - Martin County Library System (165K)
  * - Largo Public Library (100K)
+ * - Alachua County Library District (Gainesville)
  *
- * GA (4 libraries - 2.276M people):
+ * GA (5 libraries):
  * - Gwinnett County Public Library (950K)
  * - DeKalb County Public Library (750K)
  * - Chattahoochee Valley Libraries (Columbus) (325K)
  * - Forsyth County Public Library (Cumming) (251K)
+ * - Henry County Library System (McDonough)
  *
- * IL (6 libraries - 497K people):
+ * IL (11 libraries):
  * - Joliet Public Library (147K)
  * - Schaumburg Township District Library (135K)
  * - Champaign Public Library (90K)
  * - Mount Prospect Public Library (55K)
- * - Elk Grove Village Public Library (33K) (NEW)
- * - Rolling Meadows Library (24K) (NEW)
+ * - Elk Grove Village Public Library (33K)
+ * - Rolling Meadows Library (24K)
+ * - Rockford Public Library
+ * - Gail Borden Public Library (Elgin)
+ * - Skokie Public Library
+ * - Des Plaines Public Library
+ * - Waukegan Public Library
  *
- * IN (3 libraries - 1.54M people):
+ * IN (6 libraries):
  * - Indianapolis Public Library (970K)
- * - Evansville Vanderburgh Public Library (290K) (NEW)
- * - Allen County Public Library (407K) (NEW)
+ * - Evansville Vanderburgh Public Library (290K)
+ * - Allen County Public Library (407K)
+ * - St. Joseph County Public Library (South Bend)
+ * - Monroe County Public Library (Bloomington)
+ * - Kokomo-Howard County Library
  *
- * IA (2 libraries - 201K people):
- * - Cedar Rapids Public Library (134K)
+ * IA (7 libraries):
  * - Waterloo Public Library (67K)
+ * - Des Moines Public Library
+ * - Cedar Rapids Public Library
+ * - Council Bluffs Public Library
+ * - Ames Public Library
+ * - Bettendorf Public Library
+ * - Fort Dodge Public Library
  *
  * KY (1 library - 321K people) (NEW):
  * - Lexington Public Library (321K)
@@ -74,10 +89,15 @@
  * - Wake County Public Libraries (1M)
  * - Forsyth County Public Library (200K)
  *
- * NJ (3 libraries - 1.805M people):
+ * NJ (8 libraries):
  * - Ocean County Library (600K)
  * - Somerset County Library System (345K)
  * - Middlesex County Library (860K)
+ * - Camden County Library System (Voorhees)
+ * - Montclair Public Library
+ * - Warren County Library (Belvidere)
+ * - Cape May County Library
+ * - Hoboken Public Library
  *
  * NV (1 library - 2.3M people):
  * - Las Vegas-Clark County Library District (2.3M)
@@ -87,10 +107,12 @@
  * - Massapequa Public Library (21K)
  * - Patchogue-Medford Library (38K)
  *
- * OH (3 libraries - 3.0M people):
+ * OH (5 libraries):
  * - Columbus Metropolitan Library (2.1M)
  * - Akron-Summit County Public Library (540K)
  * - Toledo Lucas County Public Library (430K)
+ * - Stark County District Library (Canton)
+ * - Mansfield-Richland County Library
  *
  * OR (1 library - 820K people):
  * - Multnomah County Library (820K)
@@ -98,9 +120,10 @@
  * PA (1 library - 420K people):
  * - Reading Public Library (420K)
  *
- * SC (2 libraries - 1.4M people) (NEW):
+ * SC (3 libraries):
  * - Richland Library (500K)
  * - Greenville County Library System (520K)
+ * - Pickens County Library (Easley)
  *
  * TN (2 libraries - 1.25M people) (NEW):
  * - Nashville Public Library (715K)
@@ -121,7 +144,13 @@
  * WI (1 library - 925K people):
  * - Milwaukee Public Library (925K)
  *
- * Total: 62 libraries serving ~45+ million people
+ * MN (1 library):
+ * - Lake Agassiz Regional Library (Moorhead)
+ *
+ * NH (1 library):
+ * - Peterborough Town Library
+ *
+ * Total: 87 libraries serving ~50+ million people
  *
  * Usage:
  *   node functions/scrapers/scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js
@@ -209,7 +238,7 @@ const LIBRARY_SYSTEMS = [
     zipCode: '20001'
   },
 
-  // FLORIDA (7 libraries)
+  // FLORIDA (8 libraries)
   {
     name: 'Miami-Dade Public Library',
     url: 'https://mdpls.org/events',
@@ -273,8 +302,26 @@ const LIBRARY_SYSTEMS = [
     city: 'Largo',
     zipCode: '33770'
   },
+  {
+    name: 'Alachua County Library District',
+    url: 'https://attend.aclib.us/events',
+    county: 'Alachua',
+    state: 'FL',
+    website: 'https://www.aclib.us',
+    city: 'Gainesville',
+    zipCode: '32601'
+  },
+  {
+    name: 'Hernando County Public Library',
+    url: 'https://hernandocounty.librarycalendar.com/',
+    county: 'Hernando',
+    state: 'FL',
+    website: 'https://hernandocountylibrary.us',
+    city: 'Brooksville',
+    zipCode: '34601'
+  },
 
-  // GEORGIA (2 libraries)
+  // GEORGIA (5 libraries)
   {
     name: 'Gwinnett County Public Library',
     url: 'https://gwinnettpl.libnet.info/events',
@@ -311,8 +358,17 @@ const LIBRARY_SYSTEMS = [
     city: 'Cumming',
     zipCode: '30040'
   },
+  {
+    name: 'Henry County Library System',
+    url: 'https://henrylibraries.libnet.info/events',
+    county: 'Henry',
+    state: 'GA',
+    website: 'https://www.henrylibraries.org',
+    city: 'McDonough',
+    zipCode: '30253'
+  },
 
-  // NEW JERSEY (1 library)
+  // NEW JERSEY (8 libraries)
   {
     name: 'Ocean County Library',
     url: 'https://theoceancountylibrary.libnet.info/ocean-county-library/events',
@@ -340,8 +396,53 @@ const LIBRARY_SYSTEMS = [
     city: 'New Brunswick',
     zipCode: '08901'
   },
+  {
+    name: 'Camden County Library System',
+    url: 'https://events.camdencountylibrary.org/',
+    county: 'Camden',
+    state: 'NJ',
+    website: 'https://www.camdencountylibrary.org',
+    city: 'Voorhees',
+    zipCode: '08043'
+  },
+  {
+    name: 'Montclair Public Library',
+    url: 'https://montclairlibrary.libnet.info/events',
+    county: 'Essex',
+    state: 'NJ',
+    website: 'https://www.montclairlibrary.org',
+    city: 'Montclair',
+    zipCode: '07042'
+  },
+  {
+    name: 'Warren County Library',
+    url: 'https://warrenlib.libnet.info/events',
+    county: 'Warren',
+    state: 'NJ',
+    website: 'https://www.warrenlib.org',
+    city: 'Belvidere',
+    zipCode: '07823'
+  },
+  {
+    name: 'Cape May County Library',
+    url: 'https://events.cmclibrary.org/events',
+    county: 'Cape May',
+    state: 'NJ',
+    website: 'https://www.cmclibrary.org',
+    city: 'Cape May Court House',
+    zipCode: '08210'
+  },
+  {
+    name: 'Hoboken Public Library',
+    url: 'https://hobokenlibrary.libnet.info/events',
+    county: 'Hudson',
+    state: 'NJ',
+    website: 'https://www.hobokenlibrary.org',
+    city: 'Hoboken',
+    zipCode: '07030'
+  },
 
-  // ILLINOIS (6 libraries)
+  // ILLINOIS (11 libraries)
   {
     name: 'Joliet Public Library',
     url: 'https://jolietpubliclibrary.libnet.info/events',
@@ -396,8 +497,53 @@ const LIBRARY_SYSTEMS = [
     city: 'Rolling Meadows',
     zipCode: '60008'
   },
+  {
+    name: 'Rockford Public Library',
+    url: 'https://rockford.libnet.info/events',
+    county: 'Winnebago',
+    state: 'IL',
+    website: 'https://www.rockfordpubliclibrary.org',
+    city: 'Rockford',
+    zipCode: '61101'
+  },
+  {
+    name: 'Gail Borden Public Library',
+    url: 'https://attend.gailborden.info/events',
+    county: 'Kane',
+    state: 'IL',
+    website: 'https://www.gailborden.info',
+    city: 'Elgin',
+    zipCode: '60120'
+  },
+  {
+    name: 'Skokie Public Library',
+    url: 'https://skokie.libnet.info/events',
+    county: 'Cook',
+    state: 'IL',
+    website: 'https://www.skokielibrary.info',
+    city: 'Skokie',
+    zipCode: '60077'
+  },
+  {
+    name: 'Des Plaines Public Library',
+    url: 'https://desplaines.libnet.info/events',
+    county: 'Cook',
+    state: 'IL',
+    website: 'https://www.dppl.org',
+    city: 'Des Plaines',
+    zipCode: '60016'
+  },
+  {
+    name: 'Waukegan Public Library',
+    url: 'https://events.waukeganpl.org/events',
+    county: 'Lake',
+    state: 'IL',
+    website: 'https://www.waukeganpl.org',
+    city: 'Waukegan',
+    zipCode: '60085'
+  },
 
-  // INDIANA (3 libraries)
+  // INDIANA (6 libraries)
   {
     name: 'Indianapolis Public Library',
     url: 'https://indianapolis.libnet.info/events',
@@ -425,8 +571,44 @@ const LIBRARY_SYSTEMS = [
     city: 'Evansville',
     zipCode: '47708'
   },
+  {
+    name: 'St. Joseph County Public Library',
+    url: 'https://sjcpl.libnet.info/events',
+    county: 'St. Joseph',
+    state: 'IN',
+    website: 'https://www.sjcpl.org',
+    city: 'South Bend',
+    zipCode: '46601'
+  },
+  {
+    name: 'Monroe County Public Library',
+    url: 'https://mcplin.libnet.info/events',
+    county: 'Monroe',
+    state: 'IN',
+    website: 'https://www.mcpl.info',
+    city: 'Bloomington',
+    zipCode: '47408'
+  },
+  {
+    name: 'Kokomo-Howard County Library',
+    url: 'https://khcpl.libnet.info/events',
+    county: 'Howard',
+    state: 'IN',
+    website: 'https://www.khcpl.org',
+    city: 'Kokomo',
+    zipCode: '46901'
+  },
+  {
+    name: 'Lake County Public Library',
+    url: 'https://lcplin.libnet.info/events',
+    county: 'Lake',
+    state: 'IN',
+    website: 'https://www.lcplin.org',
+    city: 'Merrillville',
+    zipCode: '46410'
+  },
 
-  // IOWA (1 library)
+  // IOWA (7 libraries)
   // NOTE: Cedar Rapids Public Library (crlibrary.org) removed — NOT a Communico/LibNet site.
   // It's a custom website. Needs its own scraper or a WordPress scraper if applicable.
   {
@@ -437,6 +619,60 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.waterloopubliclibrary.org',
     city: 'Waterloo',
     zipCode: '50703'
+  },
+  {
+    name: 'Des Moines Public Library',
+    url: 'https://www.dmpl.org/events/month',
+    county: 'Polk',
+    state: 'IA',
+    website: 'https://www.dmpl.org',
+    city: 'Des Moines',
+    zipCode: '50309'
+  },
+  {
+    name: 'Cedar Rapids Public Library',
+    url: 'https://crlibrary.libnet.info/events',
+    county: 'Linn',
+    state: 'IA',
+    website: 'https://www.crlibrary.org',
+    city: 'Cedar Rapids',
+    zipCode: '52401'
+  },
+  {
+    name: 'Council Bluffs Public Library',
+    url: 'https://www.councilbluffslibrary.org/events/month',
+    county: 'Pottawattamie',
+    state: 'IA',
+    website: 'https://www.councilbluffslibrary.org',
+    city: 'Council Bluffs',
+    zipCode: '51503'
+  },
+  {
+    name: 'Ames Public Library',
+    url: 'https://www.amespubliclibrary.org/events/month',
+    county: 'Story',
+    state: 'IA',
+    website: 'https://www.amespubliclibrary.org',
+    city: 'Ames',
+    zipCode: '50010'
+  },
+  {
+    name: 'Bettendorf Public Library',
+    url: 'https://events.bettendorflibrary.com/',
+    county: 'Scott',
+    state: 'IA',
+    website: 'https://www.bettendorflibrary.com',
+    city: 'Bettendorf',
+    zipCode: '52722'
+  },
+  {
+    name: 'Fort Dodge Public Library',
+    url: 'https://www.fortdodgelibrary.org/events/month',
+    county: 'Webster',
+    state: 'IA',
+    website: 'https://www.fortdodgelibrary.org',
+    city: 'Fort Dodge',
+    zipCode: '50501'
   },
 
   // KENTUCKY (1 library)
@@ -587,6 +823,15 @@ const LIBRARY_SYSTEMS = [
     city: 'Patchogue',
     zipCode: '11772'
   },
+  {
+    name: 'Poughkeepsie Public Library District',
+    url: 'https://poughkeepsie.librarycalendar.com/events/list',
+    county: 'Dutchess',
+    state: 'NY',
+    website: 'https://www.poklib.org',
+    city: 'Poughkeepsie',
+    zipCode: '12601'
+  },
 
   // TEXAS (3 libraries) - Houston moved to LibCal scraper
   {
@@ -617,7 +862,7 @@ const LIBRARY_SYSTEMS = [
     zipCode: '75028'
   },
 
-  // OHIO (3 libraries)
+  // OHIO (5 libraries)
   {
     name: 'Columbus Metropolitan Library',
     url: 'https://events.columbuslibrary.org/events',
@@ -645,6 +890,24 @@ const LIBRARY_SYSTEMS = [
     city: 'Toledo',
     zipCode: '43604'
   },
+  {
+    name: 'Stark County District Library',
+    url: 'https://events.starklibrary.org/events',
+    county: 'Stark',
+    state: 'OH',
+    website: 'https://www.starklibrary.org',
+    city: 'Canton',
+    zipCode: '44702'
+  },
+  {
+    name: 'Mansfield-Richland County Library',
+    url: 'https://mrcpl.libnet.info/events',
+    county: 'Richland',
+    state: 'OH',
+    website: 'https://www.mrcpl.org',
+    city: 'Mansfield',
+    zipCode: '44902'
+  },
 
   // OREGON (1 library)
   {
@@ -668,7 +931,7 @@ const LIBRARY_SYSTEMS = [
     zipCode: '19602'
   },
 
-  // SOUTH CAROLINA (2 libraries)
+  // SOUTH CAROLINA (3 libraries)
   {
     name: 'Greenville County Library System',
     url: 'https://greenville.libnet.info/events',
@@ -686,6 +949,15 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.richlandlibrary.com',
     city: 'Columbia',
     zipCode: '29201'
+  },
+  {
+    name: 'Pickens County Library',
+    url: 'https://pickenscountylibrarysystem.libnet.info/events',
+    county: 'Pickens',
+    state: 'SC',
+    website: 'https://www.pickenslib.org',
+    city: 'Easley',
+    zipCode: '29640'
   },
 
   // TENNESSEE (2 libraries)
@@ -748,6 +1020,28 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.piercecountylibrary.org',
     city: 'Tacoma',
     zipCode: '98444'
+  },
+
+  // MINNESOTA (1 library)
+  {
+    name: 'Lake Agassiz Regional Library',
+    url: 'https://larl.libnet.info/events',
+    county: 'Clay',
+    state: 'MN',
+    website: 'https://www.larl.org',
+    city: 'Moorhead',
+    zipCode: '56560'
+  },
+
+  // NEW HAMPSHIRE (1 library)
+  {
+    name: 'Peterborough Town Library',
+    url: 'https://peterboroughtownlibrary.libnet.info/events',
+    county: 'Hillsborough',
+    state: 'NH',
+    website: 'https://www.peterboroughtownlibrary.org',
+    city: 'Peterborough',
+    zipCode: '03458'
   }
 ];
 
@@ -774,6 +1068,113 @@ function parseAgeRange(audienceText) {
   return 'All Ages';
 }
 
+// ─── API-FIRST APPROACH ─────────────────────────────────────────────────────
+// Communico/LibNet sites expose a JSON API at /eeventcaldata that returns
+// structured event data without needing Puppeteer. This is faster, more
+// reliable, and avoids AJAX-rendering timing issues.
+async function tryApiScrape(library) {
+  // Extract base URL (origin) from the library URL
+  const urlObj = new URL(library.url);
+  const baseUrl = urlObj.origin;
+
+  // Build date range: today → 30 days out
+  const today = new Date();
+  const endDate = new Date(today);
+  endDate.setDate(endDate.getDate() + 30);
+
+  const formatDate = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+  const reqPayload = JSON.stringify({
+    date: formatDate(today),
+    endDate: formatDate(endDate),
+    search: '',
+    locations: [],
+    ages: [],
+    types: [],
+    private: false
+  });
+
+  const apiUrl = `${baseUrl}/eeventcaldata?event_type=0&req=${encodeURIComponent(reqPayload)}`;
+
+  try {
+    const response = await axios.get(apiUrl, {
+      timeout: 15000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+        'Accept': 'application/json, text/plain, */*',
+        'Referer': library.url
+      }
+    });
+
+    // Response should be a JSON array of events
+    const data = response.data;
+    if (!Array.isArray(data) || data.length === 0) {
+      return null; // No events or unexpected format — fall back to Puppeteer
+    }
+
+    console.log(`   📡 API returned ${data.length} events`);
+
+    // Map API response to the same format used by the Puppeteer extraction
+    const events = data.map(item => {
+      // Build date string from API fields
+      let eventDate = item.datestring || item.date || '';
+      const timeStr = item.time_string || '';
+      if (timeStr && !eventDate.includes(timeStr)) {
+        eventDate = eventDate ? `${eventDate} ${timeStr}` : timeStr;
+      }
+
+      // Extract audience/age from agesArray
+      let audience = '';
+      if (item.agesArray && Array.isArray(item.agesArray)) {
+        audience = item.agesArray.map(a => a.name || a).join(', ');
+      }
+
+      // Build full URL for the event
+      let eventUrl = '';
+      if (item.url) {
+        eventUrl = item.url.startsWith('http') ? item.url : `${baseUrl}${item.url}`;
+      } else if (item.id) {
+        eventUrl = `${baseUrl}/event/${item.id}`;
+      }
+
+      // Get venue/location name
+      let venue = '';
+      if (item.location) {
+        venue = typeof item.location === 'string' ? item.location : (item.location.name || '');
+      } else if (item.library) {
+        venue = typeof item.library === 'string' ? item.library : (item.library.name || '');
+      }
+      if (!venue && item.venues && Array.isArray(item.venues) && item.venues.length > 0) {
+        venue = item.venues[0].name || item.venues[0] || '';
+      }
+
+      // Use long_description if available, otherwise short description
+      const description = (item.long_description || item.description || '').replace(/<[^>]+>/g, '').trim();
+
+      // Build start_time / end_time from raw timestamps
+      const startTime = item.raw_start_time || item.start_time || '';
+      const endTime = item.raw_end_time || item.end_time || '';
+
+      return {
+        name: (item.title || '').trim(),
+        eventDate: eventDate,
+        venue: venue,
+        description: description.substring(0, 1000),
+        url: eventUrl,
+        audience: audience,
+        startTime: startTime,
+        endTime: endTime
+      };
+    }).filter(e => e.name && e.name.length >= 3);
+
+    return events;
+  } catch (error) {
+    // API not available or returned error — fall back to Puppeteer
+    console.log(`   ⚠ API scrape failed (${error.message}) — falling back to Puppeteer`);
+    return null;
+  }
+}
+
 // Scrape events from Communico library
 async function scrapeLibraryEvents(library, browser) {
   // DC is not a county - it's a federal district
@@ -785,6 +1186,109 @@ async function scrapeLibraryEvents(library, browser) {
   let imported = 0;
   let skipped = 0;
   let failed = 0;
+
+  // ── TRY API FIRST ──────────────────────────────────────────────────────
+  // The Communico /eeventcaldata endpoint returns structured JSON without
+  // needing Puppeteer. Try it first; fall back to Puppeteer if it fails.
+  const apiEvents = await tryApiScrape(library);
+  if (apiEvents && apiEvents.length > 0) {
+    console.log(`   ✓ Using API data (${apiEvents.length} events)`);
+
+    for (const event of apiEvents) {
+      try {
+        const ageRange = parseAgeRange(event.description + ' ' + event.audience);
+        if (ageRange === 'Adults') { skipped++; continue; }
+
+        let coordinates = null;
+        if (event.venue && event.venue.trim()) {
+          const countyPart = library.state === 'DC' ? '' : `, ${library.county} County`;
+          const fullAddress = `${event.venue}, ${library.city}${countyPart}, ${library.state}`;
+          coordinates = await geocodeWithFallback(fullAddress, {
+            city: library.city, zipCode: library.zipCode,
+            state: library.state, county: library.county,
+            venueName: event.venue, sourceName: library.name
+          });
+        } else {
+          coordinates = await geocodeWithFallback(`${library.city}, ${library.state}`, {
+            city: library.city, zipCode: library.zipCode,
+            state: library.state, county: library.county, sourceName: library.name
+          });
+        }
+
+        const { parentCategory, displayCategory, subcategory } = categorizeEvent({
+          name: event.name, description: event.description
+        });
+
+        const normalizedDate = normalizeDateString(event.eventDate) || event.eventDate;
+        const dateObj = parseDateToObject(event.eventDate);
+        const dateTimestamp = dateObj ? admin.firestore.Timestamp.fromDate(dateObj) : null;
+
+        const eventDoc = {
+          name: event.name,
+          venue: event.venue || library.name,
+          eventDate: normalizedDate,
+          date: dateTimestamp,
+          startDate: dateTimestamp,
+          scheduleDescription: event.eventDate,
+          parentCategory, displayCategory, subcategory,
+          ageRange: ageRange,
+          cost: 'Free',
+          description: event.description || '',
+          moreInfo: event.audience || '',
+          state: library.state,
+          location: {
+            name: event.venue || library.name,
+            address: '',
+            city: library.city,
+            state: library.state,
+            zipCode: library.zipCode,
+            coordinates: coordinates
+          },
+          contact: { website: event.url || library.website, phone: '' },
+          url: event.url || library.website,
+          metadata: {
+            source: 'Communico Scraper',
+            sourceName: library.name,
+            county: library.county,
+            state: library.state,
+            addedDate: admin.firestore.FieldValue.serverTimestamp()
+          },
+          filters: { isFree: true, ageRange: ageRange }
+        };
+
+        if (coordinates) {
+          eventDoc.geohash = ngeohash.encode(coordinates.latitude, coordinates.longitude, 7);
+        }
+
+        const existing = await db.collection('events')
+          .where('name', '==', eventDoc.name)
+          .where('eventDate', '==', eventDoc.eventDate)
+          .where('metadata.sourceName', '==', library.name)
+          .limit(1)
+          .get();
+
+        if (existing.empty) {
+          const activityId = await linkEventToVenue(eventDoc);
+          if (activityId) { eventDoc.activityId = activityId; }
+          await db.collection('events').add(eventDoc);
+          console.log(`  ✅ ${event.name.substring(0, 60)}${event.name.length > 60 ? '...' : ''}`);
+          imported++;
+        } else {
+          skipped++;
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 300));
+      } catch (error) {
+        console.error(`  ❌ Error processing event:`, error.message);
+        failed++;
+      }
+    }
+
+    return { imported, failed, skipped };
+  }
+  // ── END API-FIRST PATH ─────────────────────────────────────────────────
+
+  console.log('   ⚙ Falling back to Puppeteer scraping');
 
   try {
     const page = await browser.newPage();
@@ -1331,7 +1835,7 @@ async function scrapeCommunicoLibraries(stateFilter = null) {
     await browser.close();
   }
 
-  // Log to Firestore with aggregate + per-site breakdown
+  // Log to database with aggregate + per-site breakdown
   const result = await logger.finish();
 
   return { imported: result.stats.new, skipped: result.stats.duplicates, failed: result.stats.errors };
@@ -1357,6 +1861,13 @@ async function scrapeCommunicoPA() { return scrapeCommunicoLibraries('PA'); }
 async function scrapeCommunicoTX() { return scrapeCommunicoLibraries('TX'); }
 async function scrapeCommunicoVA() { return scrapeCommunicoLibraries('VA'); }
 async function scrapeCommunicoWI() { return scrapeCommunicoLibraries('WI'); }
+async function scrapeCommunicoMN() { return scrapeCommunicoLibraries('MN'); }
+async function scrapeCommunicoNH() { return scrapeCommunicoLibraries('NH'); }
+async function scrapeCommunicoSC() { return scrapeCommunicoLibraries('SC'); }
+async function scrapeCommunicoNC() { return scrapeCommunicoLibraries('NC'); }
+async function scrapeCommunicoKY() { return scrapeCommunicoLibraries('KY'); }
+async function scrapeCommunicoTN() { return scrapeCommunicoLibraries('TN'); }
+async function scrapeCommunicoWA() { return scrapeCommunicoLibraries('WA'); }
 
 // Cloud Function wrapper
 async function scrapeCommunicoLibrariesCloudFunction() {
@@ -1410,5 +1921,12 @@ module.exports = {
   scrapeCommunicoPA,
   scrapeCommunicoTX,
   scrapeCommunicoVA,
-  scrapeCommunicoWI
+  scrapeCommunicoWI,
+  scrapeCommunicoMN,
+  scrapeCommunicoNH,
+  scrapeCommunicoSC,
+  scrapeCommunicoNC,
+  scrapeCommunicoKY,
+  scrapeCommunicoTN,
+  scrapeCommunicoWA
 };

@@ -36,7 +36,14 @@ const LIBRARIES = [
   { name: 'Laurel Public Library', url: 'https://www.laurellibrary.org', eventsUrl: 'https://www.laurellibrary.org/events', city: 'Laurel', state: 'DE', zipCode: '19956', county: 'Laurel County'},
   { name: 'Milton Public Library', url: 'https://www.miltonlibrary.org', eventsUrl: 'https://www.miltonlibrary.org/events', city: 'Milton', state: 'DE', zipCode: '19968', county: 'Milton County'},
   { name: 'Selbyville Public Library', url: 'https://www.selbypubliclibrary.org', eventsUrl: 'https://www.selbypubliclibrary.org/events', city: 'Selbyville', state: 'DE', zipCode: '19975', county: 'Selbyville County'},
-  { name: 'Delmar Public Library', url: 'https://www.delmarlibrary.org', eventsUrl: 'https://www.delmarlibrary.org/events', city: 'Delmar', state: 'DE', zipCode: '19940', county: 'Delmar County'}
+  { name: 'Delmar Public Library', url: 'https://www.delmarlibrary.org', eventsUrl: 'https://www.delmarlibrary.org/events', city: 'Delmar', state: 'DE', zipCode: '19940', county: '' },
+  // Additional libraries from coverage audit
+  { name: 'Delaware City Public Library', url: 'https://www.delawarecitylibrary.org', platform: 'wordpress', eventsUrl: 'https://www.delawarecitylibrary.org/events', city: 'Delaware City', state: 'DE', zipCode: '19706', county: '' },
+  { name: 'Frankford Public Library', url: 'https://www.frankfordlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.frankfordlibrary.org/events', city: 'Frankford', state: 'DE', zipCode: '19945', county: '' },
+  { name: 'Greenwood Public Library', url: 'https://www.greenwoodlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.greenwoodlibrary.org/events', city: 'Greenwood', state: 'DE', zipCode: '19950', county: '' },
+  { name: 'Appoquinimink Public Library', url: 'https://www.nccde.org/appoquinimink', platform: 'wordpress', eventsUrl: 'https://www.nccde.org/appoquinimink/events', city: 'Middletown', state: 'DE', zipCode: '19709', county: '' },
+  { name: 'Millsboro Public Library', url: 'https://www.millsborolibrary.org', platform: 'wordpress', eventsUrl: 'https://www.millsborolibrary.org/events', city: 'Millsboro', state: 'DE', zipCode: '19966', county: '' },
+  { name: 'Corbit-Calloway Memorial Library', url: 'https://www.corbitcalloway.org', platform: 'wordpress', eventsUrl: 'https://www.corbitcalloway.org/events', city: 'Odessa', state: 'DE', zipCode: '19730', county: '' }
 ];
 
 const SCRAPER_NAME = 'wordpress-DE';
@@ -78,7 +85,7 @@ async function scrapeGenericEvents() {
   return events;
 }
 
-async function saveToFirebase(events) {
+async function saveToDatabase(events) {
   return await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'DE',
@@ -87,7 +94,7 @@ async function saveToFirebase(events) {
   });
 }
 
-async function main() { const events = await scrapeGenericEvents(); if (events.length > 0) await saveToFirebase(events); process.exit(0); }
+async function main() { const events = await scrapeGenericEvents(); if (events.length > 0) await saveToDatabase(events); process.exit(0); }
 if (require.main === module) main();
 
 /**
@@ -100,8 +107,8 @@ async function scrapeWordpressDECloudFunction() {
     await logScraperResult('WordPress-DE', { found: 0, new: 0, duplicates: 0 }, { dataType: 'events' });
     return { found: 0, new: 0, duplicates: 0 };
   }
-  const result = await saveToFirebase(events);
-  // Log scraper stats to Firestore
+  const result = await saveToDatabase(events);
+  // Log scraper stats to database
   await logScraperResult('WordPress-DE', {
     found: events.length,
     new: result?.saved || 0,
@@ -115,4 +122,4 @@ async function scrapeWordpressDECloudFunction() {
   };
 }
 
-module.exports = { scrapeGenericEvents, saveToFirebase, scrapeWordpressDECloudFunction };
+module.exports = { scrapeGenericEvents, saveToDatabase, scrapeWordpressDECloudFunction };

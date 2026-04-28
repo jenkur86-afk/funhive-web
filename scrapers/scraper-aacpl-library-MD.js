@@ -437,7 +437,7 @@ async function scrapeAACPLEvents() {
   console.log(`   Failed: ${failed}`);
   console.log('='.repeat(60) + '\n');
 
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('Anne Arundel County Library', {
     found: imported + skipped,
     new: imported,

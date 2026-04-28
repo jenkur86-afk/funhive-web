@@ -50,17 +50,35 @@ function normalizeDateString(dateString) {
   // Remove the "@" separator used in WordPress Events Calendar (e.g., "April 21 @ 10:00 am")
   cleaned = cleaned.replace(/\s*@\s*/g, ' ');
 
+  // Remove pipe separator (e.g., "Tuesday, March 30 | 6:00 pm")
+  cleaned = cleaned.replace(/\s*\|\s*/g, ' ');
+
+  // Remove "Featured" prefix (e.g., "Featured Apr 2 @10:00am")
+  cleaned = cleaned.replace(/^Featured\s+/i, '');
+
+  // Remove "at" before times (e.g., "Apr 30, at 9:00 AM" → "Apr 30, 9:00 AM")
+  cleaned = cleaned.replace(/\s+at\s+(\d{1,2}[:\d]*\s*[ap])/gi, ' $1');
+
   // Remove localized day abbreviations (e.g., "Sá." for Saturday in Portuguese/Spanish)
   // Only remove if followed by comma+space or if the abbreviation contains non-ASCII chars
   // Avoids stripping month abbreviations like "Apr." or "Sep."
   cleaned = cleaned.replace(/^[A-Za-zÀ-ÿ]*[À-ÿ][A-Za-zÀ-ÿ]*\.,?\s*/i, '');  // Must contain a non-ASCII char
   cleaned = cleaned.replace(/^[A-Za-z]{2,3}\.\s*,\s*/i, '');  // Or ASCII abbrev followed by period+comma (e.g., "Sat., ")
 
-  // Remove time range patterns first (e.g., "6:00pm - 7:00pm", "10:30am–12:00pm")
+  // Remove time range with "to" separator (e.g., "7am to 8pm", "10:00am to 12:00pm")
+  cleaned = cleaned.replace(/\s*\d{1,2}(?::\d{2})?\s*[ap]\.?m\.?\s+to\s+\d{1,2}(?::\d{2})?\s*[ap]\.?m\.?/gi, '');
+
+  // Remove time range patterns (e.g., "6:00pm - 7:00pm", "10:30am–12:00pm")
   cleaned = cleaned.replace(/\s*\d{1,2}:\d{2}\s*[ap]\.?m\.?\s*[-–—]\s*\d{1,2}:\d{2}\s*[ap]\.?m\.?/gi, '');
 
-  // Remove single time patterns (e.g., "9:00am", "6:00pm", "9:00 a.m.")
+  // Remove compact time ranges without colons (e.g., "7am - 8pm", "7am–8pm")
+  cleaned = cleaned.replace(/\s*\d{1,2}\s*[ap]\.?m\.?\s*[-–—]\s*\d{1,2}\s*[ap]\.?m\.?/gi, '');
+
+  // Remove single time patterns with colons (e.g., "9:00am", "6:00pm", "9:00 a.m.")
   cleaned = cleaned.replace(/\s*\d{1,2}:\d{2}\s*[ap]\.?m\.?/gi, '');
+
+  // Remove single compact times without colons (e.g., "7am", "8pm")
+  cleaned = cleaned.replace(/\s+\d{1,2}\s*[ap]\.?m\.?/gi, '');
 
   // Remove standalone weekday names/abbreviations (full names first to avoid partial matches)
   cleaned = cleaned.replace(/\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|Mon|Tue|Wed|Thu|Fri|Sat|Sun)\b,?\s*/gi, '');
@@ -79,6 +97,10 @@ function normalizeDateString(dateString) {
 
   // Remove periods from abbreviated month names (e.g., "Sep." → "Sep", "Apr." → "Apr")
   cleaned = cleaned.replace(/\b([A-Za-z]{3,4})\./g, '$1');
+
+  // Remove a trailing second date after a dash (e.g., "Apr 30 – Sun May 03" → "Apr 30")
+  // This handles multi-day ranges where we only want the start date
+  cleaned = cleaned.replace(/\s*[-–—]\s*(?:[A-Za-z]+\s+)?[A-Za-z]{3,9}\s+\d{1,2}(?:\s*\d{4})?\s*$/i, '');
 
   // Remove trailing dashes/hyphens left over after time stripping (e.g., "April 21 -")
   cleaned = cleaned.replace(/\s*[-–—]\s*$/, '');
@@ -174,6 +196,28 @@ function normalizeDateString(dateString) {
     const [, day, month, year] = dayMonthYearMatch;
     const fullMonthName = lookupMonth(month);
     if (fullMonthName) {
+      return `${fullMonthName} ${parseInt(day)}, ${year}`;
+    }
+  }
+
+  // === Pattern 7: Numeric M/D or MM/DD without year (e.g., "1/12", "4/4", "12/1") ===
+  const numericNoYearMatch = cleaned.match(/^(\d{1,2})\/(\d{1,2})$/);
+  if (numericNoYearMatch) {
+    const [, month, day] = numericNoYearMatch;
+    const monthIndex = parseInt(month) - 1;
+    if (monthIndex >= 0 && monthIndex < 12) {
+      const year = inferYear(monthNamesArray[monthIndex], parseInt(day));
+      return `${monthNamesArray[monthIndex]} ${parseInt(day)}, ${year}`;
+    }
+  }
+
+  // === Pattern 8: "DD Month" without year (European-style, e.g., "15 Nov", "29 Apr", "3 May") ===
+  const dayMonthNoYearMatch = cleaned.match(/^(\d{1,2})\s+([A-Za-z]{3,9})$/i);
+  if (dayMonthNoYearMatch) {
+    const [, day, month] = dayMonthNoYearMatch;
+    const fullMonthName = lookupMonth(month);
+    if (fullMonthName) {
+      const year = inferYear(fullMonthName, parseInt(day));
       return `${fullMonthName} ${parseInt(day)}, ${year}`;
     }
   }

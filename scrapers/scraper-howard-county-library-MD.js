@@ -346,7 +346,7 @@ async function scrapeHowardCountyLibrary() {
   console.log(`   Failed: ${failed}`);
   console.log('='.repeat(60) + '\n');
 
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('Howard County Library MD', {
     found: imported + skipped,
     new: imported,

@@ -63,6 +63,8 @@ const failedAddresses = new Set();
 let lastNominatimCall = 0;
 // Global 429 cooldown — when ANY call gets rate-limited, ALL calls pause
 let rateLimitedUntil = 0;
+// Track consecutive 429s to progressively increase base delay
+let consecutive429s = 0;
 
 async function rateLimitedDelay() {
   // Respect global 429 cooldown first
@@ -74,7 +76,8 @@ async function rateLimitedDelay() {
   }
 
   const elapsed = Date.now() - lastNominatimCall;
-  const minDelay = 2500; // 2.5s between requests — generous buffer over Nominatim's 1/s limit
+  // Base 3.5s, but increase by 1s for every 3 consecutive 429s (up to 8s max)
+  const minDelay = Math.min(3500 + Math.floor(consecutive429s / 3) * 1000, 8000);
   if (elapsed < minDelay) {
     await new Promise(resolve => setTimeout(resolve, minDelay - elapsed));
   }
@@ -176,7 +179,7 @@ async function geocodeWithFallback(address, options = {}) {
   // Strategy 0: Try library-addresses.js lookup first
   // This avoids API calls for known library addresses
   if (venueName || sourceName) {
-    const libraryAddress = getLibraryAddress(venueName, sourceName);
+    const libraryAddress = getLibraryAddress(venueName, sourceName, state);
     if (libraryAddress) {
       // Cache the library address lookup key
       const libraryKey = `library:${venueName}:${sourceName}`;
@@ -357,6 +360,7 @@ async function geocodeAddress(address, retries = 3) {
       });
 
       if (response.data && response.data.length > 0) {
+        consecutive429s = Math.max(0, consecutive429s - 1); // Gradually reduce on success
         const result = {
           latitude: parseFloat(response.data[0].lat),
           longitude: parseFloat(response.data[0].lon)
@@ -371,10 +375,12 @@ async function geocodeAddress(address, retries = 3) {
     } catch (error) {
       // Handle 429 rate limiting with global cooldown + exponential backoff
       if (error.response && error.response.status === 429) {
+        consecutive429s++;
         // Set global cooldown so ALL concurrent geocode calls also pause
-        const cooldownMs = Math.min(60000 * Math.pow(2, attempt), 180000); // 60s, 120s, 180s
+        // Start at 90s (was 60s) and scale up: 90s, 180s, 180s cap
+        const cooldownMs = Math.min(90000 * Math.pow(2, attempt), 180000);
         rateLimitedUntil = Date.now() + cooldownMs;
-        console.log(`  ⏳ Nominatim rate limited (429), global cooldown ${cooldownMs / 1000}s (attempt ${attempt + 1}/${retries})...`);
+        console.log(`  ⏳ Nominatim rate limited (429 #${consecutive429s}), global cooldown ${cooldownMs / 1000}s, base delay now ${Math.min(3500 + Math.floor(consecutive429s / 3) * 1000, 8000)}ms (attempt ${attempt + 1}/${retries})...`);
         await new Promise(resolve => setTimeout(resolve, cooldownMs));
         lastNominatimCall = Date.now();
         continue;

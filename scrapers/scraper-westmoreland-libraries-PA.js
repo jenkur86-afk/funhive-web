@@ -408,7 +408,7 @@ async function scrapeWestmorelandLibrary() {
   console.log(`   Failed: ${failed}`);
   console.log('='.repeat(60) + '\n');
 
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('Westmoreland Library Network', {
     found: imported + skipped,
     new: imported,

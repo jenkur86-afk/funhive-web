@@ -165,6 +165,14 @@ async function scrapeLibraryEvents(library, browser) {
     // Process each event
     for (const event of events) {
       try {
+        // Skip cancelled/postponed/suspended events
+        const titleLower = (event.name || '').toLowerCase();
+        if (/\b(cancelled|canceled|postponed|suspended|closed)\b/.test(titleLower)) {
+          console.log(`   ⏭️ Skipping cancelled/postponed event: "${event.name}"`);
+          skipped++;
+          continue;
+        }
+
         const ageRange = parseAgeRange(event.description + ' ' + event.audience);
 
         if (ageRange === 'Adults') {
@@ -305,7 +313,7 @@ async function scrapeFirespringLibraries() {
   console.log('='.repeat(60) + '\n');
 
   
-  // Log scraper stats to Firestore
+  // Log scraper stats to database
   await logScraperResult('Firespring-VA', {
     found: totalImported,
     new: totalImported,
