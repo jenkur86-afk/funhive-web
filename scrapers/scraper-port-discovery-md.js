@@ -220,9 +220,32 @@ function extractHtmlEvents(html) {
 /**
  * Convert JSON-LD event to our format
  */
+/**
+ * Check if an event name is actually operational status junk (not a real event).
+ * Filters out entries like "CLOSED", "OPEN", "OPEN | 10AM-3PM" that appear
+ * in the calendar as day-level status indicators, not actual events.
+ */
+function isOperationalJunk(name) {
+  if (!name || typeof name !== 'string') return true;
+  const t = name.trim().toUpperCase();
+  if (t.length < 3) return true;
+  // Exact matches for operational status
+  if (/^(CLOSED|OPEN|MUSEUM CLOSED|MUSEUM OPEN|WE'RE CLOSED|WE ARE CLOSED|HOLIDAY HOURS?|EARLY CLOSE|LATE OPEN|SPECIAL HOURS?)$/i.test(t)) return true;
+  // "OPEN | 10AM-3PM" or "OPEN 10AM - 3PM" patterns
+  if (/^(OPEN|CLOSED)\s*[\|:]\s*\d/i.test(name.trim())) return true;
+  // Very short names that look like status labels
+  if (t.length < 6 && !/\w+\s+\w+/.test(t)) return true;
+  return false;
+}
+
 function convertJsonLdEvent(jsonLdEvent) {
   const name = jsonLdEvent.name || '';
   const description = jsonLdEvent.description || '';
+
+  // Skip operational status entries (CLOSED, OPEN | 10AM-3PM, etc.)
+  if (isOperationalJunk(name)) {
+    return null;
+  }
   const startDate = jsonLdEvent.startDate || '';
   const endDate = jsonLdEvent.endDate || '';
   const url = jsonLdEvent.url || '';

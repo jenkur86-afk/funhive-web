@@ -272,7 +272,7 @@ async function scrapeFairsFestivals(filterStates = null) {
   console.log(`📍 Target: ${statesToScrape.length} states`);
   console.log(`🌐 Source: FairsAndFestivals.net\n`);
 
-  const browser = await launchBrowser();
+  let browser = await launchBrowser();
   let allEvents = [];
   const stateResults = {};
 
@@ -281,7 +281,31 @@ async function scrapeFairsFestivals(filterStates = null) {
       const stateInfo = statesToScrape[i];
       console.log(`\n[${i + 1}/${statesToScrape.length}] ${stateInfo.name}`);
 
-      const stateEvents = await scrapeState(stateInfo, browser);
+      let stateEvents = [];
+      try {
+        stateEvents = await scrapeState(stateInfo, browser);
+      } catch (err) {
+        // Browser crash detection and recovery
+        if (err.message.includes('Protocol error') || err.message.includes('Connection closed') ||
+            err.message.includes('Target closed') || err.message.includes('detached') ||
+            err.message.includes('main frame too early')) {
+          console.log(`   🔄 Browser crashed on ${stateInfo.name}, restarting...`);
+          try { if (browser) await browser.close(); } catch (e) { /* ignore */ }
+          browser = null;
+          await new Promise(r => setTimeout(r, 3000));
+          browser = await launchBrowser();
+          await new Promise(r => setTimeout(r, 2000));
+          // Retry the state once with the fresh browser
+          try {
+            stateEvents = await scrapeState(stateInfo, browser);
+          } catch (retryErr) {
+            console.error(`   ❌ Retry failed for ${stateInfo.name}: ${retryErr.message}`);
+          }
+        } else {
+          console.error(`   ❌ Failed ${stateInfo.name}: ${err.message}`);
+        }
+      }
+
       allEvents.push(...stateEvents);
       stateResults[stateInfo.abbr] = stateEvents.length;
 
@@ -326,7 +350,7 @@ async function scrapeFairsFestivals(filterStates = null) {
     console.error('❌ Scraper fatal error:', err);
     throw err;
   } finally {
-    await browser.close();
+    try { if (browser) await browser.close(); } catch (e) { /* ignore */ }
   }
 
   // Log summary

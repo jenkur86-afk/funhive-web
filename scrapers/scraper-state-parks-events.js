@@ -177,6 +177,40 @@ const PARKS_CONFIG = [
 ];
 
 // ──────────────────────────────────────────────────────────────────────
+// Venue name cleanup — strips room/department/sublocation suffixes
+// so "Fairy Stone State Park Amphitheater Trailhead" → "Fairy Stone State Park"
+// ──────────────────────────────────────────────────────────────────────
+
+function cleanParkVenueName(raw) {
+  if (!raw || typeof raw !== 'string') return raw;
+  let name = raw.trim();
+
+  // MI prefix: "Location: Outdoor Adventure Center" → "Outdoor Adventure Center"
+  name = name.replace(/^Location:\s*/i, '');
+
+  // If the name contains " State Park", " State Forest", " State Beach", etc.,
+  // keep only up to (and including) the park/forest/beach qualifier.
+  // E.g., "Pocahontas State Park Playground by Aquatic Complex" → "Pocahontas State Park"
+  const parkMatch = name.match(/^(.+?\s+(?:State\s+)?(?:Park|Forest|Beach|Reserve|Recreation\s+Area|Natural\s+Area|Historic\s+Site|Historical\s+Park|Preserve|Monument|Memorial|Battlefield|Seashore|Lakeshore|Heritage\s+Park|Conservation\s+Area))\b/i);
+  if (parkMatch) {
+    name = parkMatch[1].trim();
+  }
+
+  // Strip trailing dash/colon fragments: "Lake James - Paddy Creek" → "Lake James"
+  name = name.replace(/\s*[-–—:]\s+.*$/, '');
+
+  // Remove trailing room/department/sublocation words if still present
+  // Apply repeatedly to strip compound suffixes like "Amphitheater Trailhead"
+  let prevName;
+  do {
+    prevName = name;
+    name = name.replace(/\s+(?:Amphitheater|Pavilion|Shelter|Trailhead|Trail|Visitor\s+Center|Nature\s+Center|Lodge|Campground|Campsite|Boat\s+Ramp|Boat\s+Launch|Picnic\s+Area|Picnic\s+Shelter|Playground|Swimming\s+Pool|Beach\s+House|Meeting\s+Room|Conference\s+Room|Auditorium|Education\s+Center|Environmental\s+Education|Discovery\s+Center|Interpretive\s+Center|Welcome\s+Center|Contact\s+Station|Ranger\s+Station|Museum|Gift\s+Shop|Parking\s+Lot|Parking\s+Area|Day\s+Use\s+Area|Group\s+Camp|Swimming\s+Area|Lake\s+Area|Overlook|Observatory|Pier|Dock|Marina|Amphitheatre|Theater|Theatre|Office|Headquarters|HQ|Entrance|Gate|Pool|Cabin|Cabins|Yurt|Yurts)\s*$/i, '');
+  } while (name !== prevName && name.length > 3);
+
+  return name.trim() || raw.trim();
+}
+
+// ──────────────────────────────────────────────────────────────────────
 // Site-specific extraction functions (run inside page.evaluate)
 // ──────────────────────────────────────────────────────────────────────
 
@@ -195,7 +229,7 @@ async function extractFlorida(page) {
       if (card.closest('nav, header, footer, [class*="menu"], [class*="nav"]')) return;
 
       const titleEl = card.querySelector('.card__title, h3, h2, [class*="title"]');
-      const dateEl = card.querySelector('.date-display-range, .date-display-single, [class*="date"], time');
+      const dateEl = card.querySelector('.date-display-range, .date-display-single, [class*="date"], time, [datetime]');
       const descEl = card.querySelector('.card__summary, .card__body, [class*="summary"], [class*="body"], p');
       const linkEl = card.querySelector('a[href]');
 
@@ -206,9 +240,22 @@ async function extractFlorida(page) {
       if (seen.has(key)) return;
       seen.add(key);
 
+      let date = dateEl?.textContent?.trim()?.substring(0, 100) || '';
+      // Fallback: try datetime attribute
+      if (!date && dateEl) {
+        date = dateEl.getAttribute('datetime')?.substring(0, 30) || '';
+      }
+      // Last resort: look for date-like text in the card itself
+      if (!date) {
+        const cardText = card.textContent || '';
+        const dateMatch = cardText.match(/\b((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2}(?:,?\s*\d{4})?)\b/i)
+          || cardText.match(/\b(\d{1,2}\/\d{1,2}\/\d{4})\b/);
+        if (dateMatch) date = dateMatch[1];
+      }
+
       events.push({
         title: title.substring(0, 200),
-        date: dateEl?.textContent?.trim()?.substring(0, 100) || '',
+        date: date,
         location: '',
         description: descEl?.textContent?.trim()?.substring(0, 500) || '',
         url: linkEl?.href || ''
@@ -220,15 +267,24 @@ async function extractFlorida(page) {
       document.querySelectorAll('article, .views-row').forEach(el => {
         if (el.closest('nav, header, footer')) return;
         const titleEl = el.querySelector('h2 a, h3 a, h2, h3, [class*="title"]');
-        const dateEl = el.querySelector('.date-display-range, .date-display-single, time, [class*="date"]');
+        const dateEl = el.querySelector('.date-display-range, .date-display-single, time, [class*="date"], [datetime]');
         const title = titleEl?.textContent?.trim();
         if (!title || title.length < 4) return;
         const key = title.toLowerCase();
         if (seen.has(key)) return;
         seen.add(key);
+
+        let date = dateEl?.textContent?.trim()?.substring(0, 100) || '';
+        if (!date) {
+          const elText = el.textContent || '';
+          const dateMatch = elText.match(/\b((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2}(?:,?\s*\d{4})?)\b/i)
+            || elText.match(/\b(\d{1,2}\/\d{1,2}\/\d{4})\b/);
+          if (dateMatch) date = dateMatch[1];
+        }
+
         events.push({
           title: title.substring(0, 200),
-          date: dateEl?.textContent?.trim()?.substring(0, 100) || '',
+          date: date,
           location: '',
           description: '',
           url: titleEl?.href || titleEl?.closest('a')?.href || el.querySelector('a')?.href || ''
@@ -690,18 +746,55 @@ async function extractNewYork(page) {
       seen.add(key);
 
       const card = link.closest('[class*="card"]') || link.parentElement?.parentElement;
-      const dateEl = card?.querySelector('.c-card__date:not(.c-card__date-mobile), [class*="card__date"]');
+      let dateText = card?.querySelector('.c-card__date:not(.c-card__date-mobile), [class*="card__date"]')?.textContent?.trim() || '';
       const venueEl = card?.querySelector('.c-card__eyebrow, [class*="eyebrow"]');
-      const descEl = card?.querySelector('.c-card__summary, [class*="summary"]');
+      let descText = card?.querySelector('.c-card__summary, [class*="summary"]')?.textContent?.trim() || '';
+
+      // Broader date fallback
+      if (!dateText) {
+        const dateEl = card?.querySelector('time, [class*="date"], [datetime]');
+        dateText = dateEl?.getAttribute('datetime') || dateEl?.textContent?.trim() || '';
+      }
+
+      // Broader description fallback
+      if (!descText) {
+        descText = card?.querySelector('p, [class*="desc"], [class*="body"]')?.textContent?.trim() || '';
+      }
 
       events.push({
         title: title.substring(0, 200),
-        date: dateEl?.textContent?.trim()?.substring(0, 100) || '',
+        date: dateText.substring(0, 100),
         location: venueEl?.textContent?.trim()?.substring(0, 150) || '',
-        description: descEl?.textContent?.trim()?.substring(0, 500) || '',
+        description: descText.substring(0, 500),
         url: link?.href || ''
       });
     });
+
+    // Fallback: generic extraction if card-based approach found nothing with dates
+    if (events.length === 0 || events.every(e => !e.date)) {
+      const fallbackEvents = [];
+      const fallbackSeen = new Set();
+      document.querySelectorAll('article, .event, [class*="event-card"], [class*="event-list"] > *, .views-row').forEach(el => {
+        if (el.closest('nav, header, footer, [class*="menu"]')) return;
+        const titleEl = el.querySelector('h2 a, h3 a, h4 a, [class*="title"] a, h2, h3');
+        const dateEl = el.querySelector('time, [class*="date"], [datetime]');
+        const title = titleEl?.textContent?.trim();
+        if (!title || title.length < 4) return;
+        const dateText = dateEl?.getAttribute('datetime') || dateEl?.textContent?.trim() || '';
+        if (!dateText) return;
+        const key = title.toLowerCase();
+        if (fallbackSeen.has(key)) return;
+        fallbackSeen.add(key);
+        fallbackEvents.push({
+          title: title.substring(0, 200),
+          date: dateText.substring(0, 100),
+          location: el.querySelector('[class*="location"], [class*="venue"]')?.textContent?.trim()?.substring(0, 150) || '',
+          description: el.querySelector('p, [class*="desc"], [class*="summary"]')?.textContent?.trim()?.substring(0, 500) || '',
+          url: titleEl?.href || el.querySelector('a')?.href || ''
+        });
+      });
+      if (fallbackEvents.length > 0) return fallbackEvents;
+    }
 
     return events;
   });
@@ -933,12 +1026,24 @@ async function extractDelaware(page) {
       const placeEl = card?.querySelector('.spotlight-place');
 
       const spans = dateTimeEl?.querySelectorAll('span') || [];
-      const dateText = spans[0]?.textContent?.trim() || '';
+      let dateText = spans[0]?.textContent?.trim() || '';
       const timeText = spans[1]?.textContent?.trim() || '';
+      let combinedDate = `${dateText} ${timeText}`.trim();
+
+      // Broader date fallback
+      if (!combinedDate || combinedDate.length < 3) {
+        const genericDateEl = card?.querySelector('time, [class*="date"], [datetime]');
+        combinedDate = genericDateEl?.getAttribute('datetime') || genericDateEl?.textContent?.trim() || '';
+      }
+      if (!combinedDate || combinedDate.length < 3) {
+        const cardText = card?.textContent || '';
+        const dateMatch = cardText.match(/\b((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2}(?:,?\s*\d{4})?)\b/i);
+        if (dateMatch) combinedDate = dateMatch[1];
+      }
 
       events.push({
         title: title.substring(0, 200),
-        date: `${dateText} ${timeText}`.trim().substring(0, 100),
+        date: combinedDate.substring(0, 100),
         location: placeEl?.textContent?.trim()?.substring(0, 150) || '',
         description: '',
         url: card?.href || card?.closest('a')?.href || ''
@@ -1005,7 +1110,18 @@ async function extractRhodeIsland(page) {
       const dayEl = dateEl?.querySelector('[class*="start-date"]');
       const month = monthSpan?.textContent?.trim() || '';
       const day = dayEl?.textContent?.trim() || '';
-      const dateStr = `${month} ${day}`.trim();
+      let dateStr = `${month} ${day}`.trim();
+
+      // Broader date fallback
+      if (!dateStr || dateStr.length < 3) {
+        const genericDateEl = card?.querySelector('time, [class*="date"], [datetime]');
+        dateStr = genericDateEl?.getAttribute('datetime') || genericDateEl?.textContent?.trim() || '';
+      }
+      if (!dateStr || dateStr.length < 3) {
+        const cardText = card?.textContent || '';
+        const dateMatch = cardText.match(/\b((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2}(?:,?\s*\d{4})?)\b/i);
+        if (dateMatch) dateStr = dateMatch[1];
+      }
 
       const startTimeEl = card?.querySelector('[class*="start-time"]');
       const endTimeEl = card?.querySelector('[class*="end-time"]');
@@ -1063,6 +1179,19 @@ async function extractMississippi(page) {
           }
         }
         el = el.parentElement;
+      }
+
+      // Broader date fallback: try date-related elements within container
+      if (!dateStr) {
+        const dateEl = container?.querySelector('[class*="date"], time, [class*="when"], [datetime]');
+        dateStr = dateEl?.getAttribute('datetime') || dateEl?.textContent?.trim() || '';
+      }
+
+      // Last resort: look for date-like text in the container
+      if (!dateStr && container) {
+        const containerText = container.textContent || '';
+        const dateMatch = containerText.match(/\b((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2}(?:,?\s*\d{4})?)\b/i);
+        if (dateMatch) dateStr = dateMatch[1];
       }
 
       const locationEl = container?.querySelector('[class*="field-location"], [class*="location"]');
@@ -1156,6 +1285,19 @@ async function extractIllinois(page) {
       if (monthEl && dayEl) {
         date = `${monthEl.textContent.trim()} ${dayEl.textContent.trim()}`;
         if (yearEl) date += `, ${yearEl.textContent.trim()}`;
+      }
+
+      // Broader date fallback: try any element with "date" in class, or time element
+      if (!date) {
+        const dateEl = el.querySelector('[class*="date"], time, [class*="when"]');
+        date = dateEl?.textContent?.trim() || '';
+      }
+
+      // Last resort: look for date-like text in the item itself
+      if (!date) {
+        const itemText = el.textContent || '';
+        const dateMatch = itemText.match(/\b((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2}(?:,?\s*\d{4})?)\b/i);
+        if (dateMatch) date = dateMatch[1];
       }
 
       events.push({
@@ -1285,7 +1427,7 @@ async function scrapeStateParks(config, browser) {
 
       // Skip junk titles (nav items, UI controls, single-word items)
       const titleLower = event.title.toLowerCase();
-      if (/^(skip|rsvp|share|export|calendar|month|week|day|prev|next|home|filter|search|view|more|load|back|accept|reject|cookie|privacy|close|dismiss|allow|manage|settings|menu|select|translate|powered)/i.test(event.title)) continue;
+      if (/^(skip|rsvp|share|export|calendar|month|week|day|prev|next|home|filter|search|view|more|load|back|accept|reject|cookie|privacy|close|dismiss|allow|manage|settings|menu|select|translate|powered|table of contents|breadcrumb|footer|sidebar|navigation|come out & play)/i.test(event.title)) continue;
       if (event.title.length < 5) continue;
       // Skip items that look like park/place names with no date at all
       if (!event.date && !event.description) continue;
@@ -1296,9 +1438,9 @@ async function scrapeStateParks(config, browser) {
         eventDate: event.date || '',
         description: event.description || '',
         url: event.url || url,
-        venue: event.location || config.name,
-        venueName: event.location || config.name,
-        location: event.location || config.name,
+        venue: cleanParkVenueName(event.location) || config.name,
+        venueName: cleanParkVenueName(event.location) || config.name,
+        location: cleanParkVenueName(event.location) || config.name,
         metadata: {
           sourceName: config.name,
           sourceUrl: url,

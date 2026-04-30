@@ -12,7 +12,7 @@ const ngeohash = require('ngeohash');
  * BiblioCommons, LibNet/Communico, or LibraryCalendar — those have dedicated scrapers).
  *
  * Libraries moved to dedicated scrapers:
- *   → libcal-VA:         Richmond, Norfolk, Newport News, Hampton, Roanoke, Suffolk, Williamsburg, Library of VA
+ *   → libcal-VA:         Richmond, Norfolk, Newport News (nnva.gov), Hampton, Roanoke, Suffolk, Williamsburg, Library of VA
  *   → libcal-VA (existing): Fairfax County, Arlington, Prince William
  *   → LibraryMarket:     Virginia Beach
  *   → BiblioCommons:     Staunton, Central Rappahannock
@@ -25,7 +25,7 @@ const LIBRARIES = [
   { name: 'Henrico County Public Library', url: 'https://www.henricolibrary.org', eventsUrl: 'https://www.henricolibrary.org/events', city: 'Henrico', state: 'VA', zipCode: '23228', county: 'Henrico' },
   { name: 'Jefferson-Madison Regional Library', url: 'https://jmrl.org', eventsUrl: 'https://jmrl.org/events', city: 'Charlottesville', state: 'VA', zipCode: '22902', county: 'Charlottesville' },
   { name: 'Manassas Park City Library', url: 'https://www.manassasparkcitylibrary.org', eventsUrl: 'https://www.manassasparkcitylibrary.org/events', city: 'Manassas Park', state: 'VA', zipCode: '20111', county: 'Manassas Park' },
-  { name: 'Newport News Public Library', url: 'https://library.nnva.gov', eventsUrl: 'https://library.nnva.gov/264/Events-Calendar', city: 'Newport News', state: 'VA', zipCode: '23601', county: 'Newport News' },
+  // Newport News: removed — CivicEngage site, already covered by libcal-VA scraper
   { name: 'Culpeper County Library', url: 'https://www.cclva.org', eventsUrl: 'https://www.cclva.org/events/upcoming', city: 'Culpeper', state: 'VA', zipCode: '22701', county: 'Culpeper' },
   // Falls Church: no family events (adult programming only)
   // Harrisonburg-Rockingham: DNS failure (ERR_NAME_NOT_RESOLVED) — hrbpl.org appears defunct
@@ -46,8 +46,12 @@ function isValidDateString(text) {
   const t = text.trim();
   if (t.length < 5) return false;
 
-  // Reject time-only strings like "9:00am–9:30am" or "10:30am"
+  // Reject time-only strings like "9:00am–9:30am", "10:30am", or 24-hour "17:30"
   if (/^\d{1,2}:\d{2}\s*(am|pm)/i.test(t) && !/\b(jan|feb|mar|march|apr|april|may|jun|june|jul|july|aug|sep|oct|nov|dec|january|february|august|september|october|november|december)\b/i.test(t) && !/\d{1,2}\/\d{1,2}/.test(t)) {
+    return false;
+  }
+  // Reject 24-hour time-only strings like "17:30", "09:00", "17:30 - 19:00"
+  if (/^\d{1,2}:\d{2}(\s*[-–—]\s*\d{1,2}:\d{2})?$/.test(t)) {
     return false;
   }
 
@@ -71,6 +75,9 @@ function isJunkTitle(text) {
   if (/^[MTWFS]\n/i.test(t)) return true; // Calendar day headers
   if (/^\d{1,2}\n/.test(t)) return true; // Calendar date cells
 
+  // Notices and announcements (not events)
+  if (/^notice:/i.test(t)) return true;
+
   // UI navigation elements
   const UI_JUNK = /^(skip to|rsvp|google calendar|icalendar|outlook|export|download|add to calendar|share this|list|month|day|week|this month|prev|next|view all|see all|show more|load more|back to|return to|sign up|log in|register|subscribe|more info|learn more|read more|click here|view details|event details|events search|views navigation)\b/i;
   if (UI_JUNK.test(t)) return true;
@@ -82,6 +89,14 @@ function isJunkTitle(text) {
   // Category headers / audience labels (standalone)
   const CATEGORY_JUNK = /^(family|adults?|teens?|tweens?|children|kids|seniors?|all ages?|baby|babies|toddlers?|preschool|storytime|programs?|calendar|home|library|details|info|more|events?|upcoming|featured|popular|new|today|tomorrow|this week|this weekend)$/i;
   if (CATEGORY_JUNK.test(t)) return true;
+
+  // Multi-word category headers: "All Events", "Book Discussion Groups", "Computer & Tech Classes", etc.
+  const CATEGORY_HEADER_JUNK = /^(all events|all programs|book discussion|computer .* class|ell class|english language|tech class|classes & programs|programs & events|events & programs)\b/i;
+  if (CATEGORY_HEADER_JUNK.test(t)) return true;
+
+  // Library navigation elements (JMRL, etc.): "Books & More", "Services", "About Us", "My Account"
+  const NAV_JUNK = /^(books?\s*&|services|about\s*us|my\s*account|get\s*a\s*card|locations?\s*&?\s*hours?|digital\s*resources|databases?|catalog|borrow|donate|volunteer|contact\s*us|hours\s*&|branches|staff|board|policies|faq|help|support|careers?|jobs?|news|blog|newsletter|press)\b/i;
+  if (NAV_JUNK.test(t)) return true;
 
   // Age range headers like "Teen (ages 13-18)", "Children (5-10)", "Adults"
   if (/^(teen|tween|children|kids|adult|senior|baby|toddler|preschool|family)\s*(\(.*\))?$/i.test(t)) return true;
@@ -219,14 +234,15 @@ async function scrapeGenericEvents() {
         return events;
       }, library.name);
 
-      // Server-side filtering: apply junk title check; accept events even without date
-      // (saveEventsWithGeocoding will handle date normalization/rejection downstream)
+      // Server-side filtering: require both a non-junk title AND a valid date string.
+      // Events without dates are invisible to date-filtered queries and get deleted
+      // by fix-event-quality.js anyway — better to reject them upfront.
       const validEvents = libraryEvents.filter(event => {
         if (isJunkTitle(event.title)) {
           return false;
         }
-        // Accept events with any date string OR a valid URL (detail pages have dates)
-        if (!event.date && !event.url) {
+        // Require a recognizable date string — events without dates are useless
+        if (!isValidDateString(event.date)) {
           return false;
         }
         return true;
