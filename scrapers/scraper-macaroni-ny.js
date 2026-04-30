@@ -238,9 +238,22 @@ async function scrapeSite(browser, site, maxEvents = 50) {
     }
 
     let imported = 0, updated = 0, skippedPast = 0, skippedFuture = 0, failedGeocode = 0, noLocation = 0;
+    let consecutiveYodelFailures = 0;
+    const MAX_CONSECUTIVE_YODEL_FAILURES = 10; // Bail out if frame is clearly dead
 
     for (const url of eventUrls) {
+      // If too many consecutive Yodel extractions failed, the page/frame is dead — bail out
+      if (isYodel && consecutiveYodelFailures >= MAX_CONSECUTIVE_YODEL_FAILURES) {
+        console.log(`  ⚠️ ${consecutiveYodelFailures} consecutive Yodel failures — page frame is dead, skipping remaining ${eventUrls.length - eventUrls.indexOf(url)} events`);
+        break;
+      }
+
       const details = isYodel ? await extractYodelEventDetails(page, url) : await extractEventDetails(page, url);
+
+      // Track consecutive Yodel failures to detect dead frames
+      if (isYodel) {
+        if (!details) { consecutiveYodelFailures++; } else { consecutiveYodelFailures = 0; }
+      }
       if (!details || !details.eventDate) continue;
       const eventDate = new Date(details.eventDate);
       if (eventDate < today) { skippedPast++; continue; }
@@ -516,7 +529,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
   } catch (error) {
     console.error(`  ❌ Error: ${error.message}`);
     // Re-throw browser/protocol errors so main loop can restart browser
-    if (error.message.includes('Protocol error') || error.message.includes('Connection closed') || error.message.includes('Target closed') || error.message.includes('detached')) {
+    if (error.message.includes('Protocol error') || error.message.includes('Connection closed') || error.message.includes('Target closed') || error.message.includes('detached') || error.message.includes('main frame too early')) {
       throw error;
     }
   }
@@ -550,6 +563,8 @@ async function scrapeMacaroniKidNewYork() {
           try { await browser.close(); } catch (e) { /* ignore close errors */ }
         }
         browser = await launchBrowser();
+        // Wait for browser to fully initialize (prevents "Requesting main frame too early")
+        await new Promise(resolve => setTimeout(resolve, 2000));
         sitesSinceRestart = 0;
       }
 
@@ -565,11 +580,13 @@ async function scrapeMacaroniKidNewYork() {
       failed++;
 
       // If we get a protocol error (browser crashed), restart browser
-      if (error.message.includes('Protocol error') || error.message.includes('Connection closed') || error.message.includes('Target closed') || error.message.includes('detached')) {
+      if (error.message.includes('Protocol error') || error.message.includes('Connection closed') || error.message.includes('Target closed') || error.message.includes('detached') || error.message.includes('main frame too early')) {
         console.log('🔄 Browser crashed, restarting...');
         try { if (browser) await browser.close(); } catch (e) { /* ignore */ }
         browser = null; // Will be recreated on next iteration
         sitesSinceRestart = 0;
+        // Wait for clean shutdown before restarting
+        await new Promise(resolve => setTimeout(resolve, 3000));
       }
     }
   }
