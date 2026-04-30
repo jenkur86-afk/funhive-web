@@ -15,6 +15,11 @@ const { supabase } = require('../scrapers/helpers/supabase-adapter');
 const fs = require('fs');
 
 const SAVE = process.argv.includes('--save');
+const RECENT_ONLY = process.argv.includes('--recent-only');
+const FIX_WINDOW_HOURS = parseInt(process.env.FIX_WINDOW_HOURS || '72', 10);
+const RECENT_THRESHOLD_ISO = RECENT_ONLY
+  ? new Date(Date.now() - FIX_WINDOW_HOURS * 60 * 60 * 1000).toISOString()
+  : null;
 
 // ─── TIER 1: AUTO-DELETE patterns (clearly not family-friendly) ─────────────
 const AUTO_DELETE_PATTERNS = [
@@ -135,6 +140,7 @@ async function fetchAll(select, filters) {
   while (true) {
     let q = supabase.from('events').select(select);
     if (filters) q = filters(q);
+    if (RECENT_THRESHOLD_ISO) q = q.gte('created_at', RECENT_THRESHOLD_ISO);
     q = q.range(from, from + 999);
     const { data, error } = await q;
     if (error) { console.error(`Error: ${error.message}`); break; }
@@ -149,6 +155,7 @@ async function fetchAll(select, filters) {
 async function main() {
   console.log(`\n${'═'.repeat(60)}`);
   console.log(`  CLEANUP NON-FAMILY EVENTS ${SAVE ? '(SAVING)' : '(DRY RUN)'}`);
+  if (RECENT_ONLY) console.log(`  Mode: --recent-only (last ${FIX_WINDOW_HOURS}h, since ${RECENT_THRESHOLD_ISO})`);
   console.log(`${'═'.repeat(60)}\n`);
 
   // 1. Delete the specific junk "Spring" event

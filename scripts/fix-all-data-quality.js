@@ -18,6 +18,12 @@ const { supabase } = require('../scrapers/helpers/supabase-adapter');
 const { normalizeAgeRange } = require('../scrapers/helpers/age-range-normalizer');
 
 const SAVE = process.argv.includes('--save');
+const RECENT_ONLY = process.argv.includes('--recent-only');
+// Window (hours) for --recent-only mode; defaults to 72h. Override via FIX_WINDOW_HOURS.
+const FIX_WINDOW_HOURS = parseInt(process.env.FIX_WINDOW_HOURS || '72', 10);
+const RECENT_THRESHOLD_ISO = RECENT_ONLY
+  ? new Date(Date.now() - FIX_WINDOW_HOURS * 60 * 60 * 1000).toISOString()
+  : null;
 
 // ============================================================================
 // STANDARD AGE BRACKETS
@@ -41,7 +47,9 @@ async function fetchAll(table, select) {
   let all = [];
   let from = 0;
   while (true) {
-    const { data, error } = await supabase.from(table).select(select).range(from, from + 999);
+    let q = supabase.from(table).select(select);
+    if (RECENT_THRESHOLD_ISO) q = q.gte('created_at', RECENT_THRESHOLD_ISO);
+    const { data, error } = await q.range(from, from + 999);
     if (error) { console.error(`Error: ${error.message}`); break; }
     if (!data || data.length === 0) break;
     all = all.concat(data);
@@ -111,6 +119,7 @@ function parseEventDateToTimestamp(eventDate) {
 async function main() {
   console.log(`\n${'═'.repeat(60)}`);
   console.log(`  FIX ALL DATA QUALITY ISSUES ${SAVE ? '(SAVING)' : '(DRY RUN)'}`);
+  if (RECENT_ONLY) console.log(`  Mode: --recent-only (last ${FIX_WINDOW_HOURS}h, since ${RECENT_THRESHOLD_ISO})`);
   console.log(`${'═'.repeat(60)}\n`);
 
   // Fetch all events

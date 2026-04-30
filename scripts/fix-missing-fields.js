@@ -21,7 +21,13 @@ const SAVE = process.argv.includes('--save');
 const ADDRESSES_ONLY = process.argv.includes('--addresses');
 const DESCRIPTIONS_ONLY = process.argv.includes('--descriptions');
 const DO_ADDRESSES = !DESCRIPTIONS_ONLY;
-const DO_DESCRIPTIONS = !ADDRESSES_ONLY;
+// Per project decision (Apr 2026): description backfill is disabled — leave empty.
+const DO_DESCRIPTIONS = false && !ADDRESSES_ONLY;
+const RECENT_ONLY = process.argv.includes('--recent-only');
+const FIX_WINDOW_HOURS = parseInt(process.env.FIX_WINDOW_HOURS || '72', 10);
+const RECENT_THRESHOLD_ISO = RECENT_ONLY
+  ? new Date(Date.now() - FIX_WINDOW_HOURS * 60 * 60 * 1000).toISOString()
+  : null;
 
 // ============================================================
 // HELPERS
@@ -40,6 +46,9 @@ async function fetchAllPaginated(table, select, filters) {
       let query = supabase.from(table).select(select);
       if (filters.or) query = query.or(filters.or);
       if (filters.not) query = query.not(filters.not[0], filters.not[1], filters.not[2]);
+      // Recent-only: scope address backfill to recent activities (saveActivity now
+      // computes geohash at save time; old gaps are caught by the monthly full run).
+      if (RECENT_THRESHOLD_ISO) query = query.gte('created_at', RECENT_THRESHOLD_ISO);
       query = query.range(from, from + pageSize - 1);
 
       const { data, error } = await query;
