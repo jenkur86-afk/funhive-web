@@ -491,9 +491,14 @@ async function getOrCreateActivity(activityData, options = {}) {
   }
 
   // Create new activity with full data
+  // NOTE: top-level `source` is required so flattenActivity() writes it to the
+  // activities.source column. Without this, scrapers that pass `source` only
+  // via the options arg leave the column blank (showed up in fix-event-quality
+  // as 997 activities with missing/generic source on 2026-04-30).
   const newActivity = {
     ...activityData,
     id: activityId,
+    source: activityData.source || source,
     scraperName: activityData.scraperName || source || 'unknown',
     metadata: {
       ...(activityData.metadata || {}),
