@@ -47,6 +47,11 @@ function encodeGeohash(lat, lng, precision = 7) {
 }
 
 const SAVE = process.argv.includes('--save');
+const RECENT_ONLY = process.argv.includes('--recent-only');
+const FIX_WINDOW_HOURS = parseInt(process.env.FIX_WINDOW_HOURS || '72', 10);
+const RECENT_THRESHOLD_ISO = RECENT_ONLY
+  ? new Date(Date.now() - FIX_WINDOW_HOURS * 60 * 60 * 1000).toISOString()
+  : null;
 
 // US state centroids — last-resort fallback when all geocoding fails
 const STATE_CENTROIDS = {
@@ -97,6 +102,13 @@ async function fetchAll(table, select, filters = {}) {
       if (filters.not) query = query.not(filters.not[0], filters.not[1], filters.not[2]);
       if (filters.eq) query = query.eq(filters.eq[0], filters.eq[1]);
       if (filters.lt) query = query.lt(filters.lt[0], filters.lt[1]);
+      // Recent-only mode: scope every fetch to created_at within the window.
+      // The event-deletion steps (past events, junk titles) intentionally bypass
+      // this — see filters.skipRecentFilter — because we always want to clean
+      // up old data that breaks display, regardless of when it was scraped.
+      if (RECENT_THRESHOLD_ISO && !filters.skipRecentFilter) {
+        query = query.gte('created_at', RECENT_THRESHOLD_ISO);
+      }
       query = query.range(from, from + pageSize - 1);
 
       const result = await query;
@@ -122,6 +134,27 @@ async function fetchAll(table, select, filters = {}) {
 let consecutiveFails = 0;
 const NOMINATIM_UA = 'FunHive/1.0 (https://funhive.co; jenkur86@gmail.com)';
 const BASE_DELAY = 2500;  // 2.5s between requests (conservative — Nominatim allows 1/s but 429s at 1.5s)
+
+// Pick the best "city-like" field from a Nominatim address object.
+// Rural locations frequently lack address.city/town, so we fall through to
+// village/hamlet/municipality/suburb/county. We also strip "Town of" /
+// "City of" / "Village of" / "Township of" prefixes that Nominatim returns
+// for some incorporated places (e.g. "Town of Colonie" → "Colonie") so
+// the displayed city name matches what users expect.
+function pickCityFromNominatim(addr) {
+  if (!addr) return null;
+  const raw = addr.city
+    || addr.town
+    || addr.village
+    || addr.hamlet
+    || addr.municipality
+    || addr.city_district
+    || addr.suburb
+    || addr.county
+    || null;
+  if (!raw) return null;
+  return raw.replace(/^(Town|City|Village|Township|Borough)\s+of\s+/i, '').trim() || null;
+}
 async function reverseGeocode(lat, lng) {
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
@@ -136,7 +169,7 @@ async function reverseGeocode(lat, lng) {
       consecutiveFails = 0;
       if (data?.address) {
         return {
-          city: data.address.city || data.address.town || data.address.village || data.address.hamlet || null,
+          city: pickCityFromNominatim(data.address),
           state: data.address.state || null,
           address: [data.address.house_number, data.address.road || data.address.street].filter(Boolean).join(' ') || null,
           zip: data.address.postcode || null
@@ -188,7 +221,7 @@ async function forwardGeocodeQuery(query) {
         return {
           lat: parseFloat(data[0].lat),
           lng: parseFloat(data[0].lon),
-          city: addr.city || addr.town || addr.village || addr.hamlet || null,
+          city: pickCityFromNominatim(addr),
           state: addr.state || null
         };
       }
@@ -360,7 +393,8 @@ async function main() {
   // ── 1. Delete events with no date (16) ──
   console.log(`\n🗑️  STEP 1: Remove events with no date`);
   console.log(`───────────────────────────────────────`);
-  const noDate = await fetchAll('events', 'id, name', { or: 'event_date.is.null,event_date.eq.' });
+  // Always full-scan: dateless events break display regardless of when they were scraped.
+  const noDate = await fetchAll('events', 'id, name', { or: 'event_date.is.null,event_date.eq.', skipRecentFilter: true });
   console.log(`  Found ${noDate.length} events with no date`);
   if (SAVE && noDate.length > 0) {
     const ids = noDate.map(e => e.id);
@@ -377,7 +411,8 @@ async function main() {
   // ── 1b. Delete junk title events ──
   console.log(`\n🗑️  STEP 1b: Remove events with junk titles`);
   console.log(`───────────────────────────────────────`);
-  const allForJunk = await fetchAll('events', 'id, name', {});
+  // Always full-scan: junk titles must be removed regardless of scrape age.
+  const allForJunk = await fetchAll('events', 'id, name', { skipRecentFilter: true });
   const junkEvents = allForJunk.filter(e => {
     if (!e.name) return true;
     const n = e.name.trim();
@@ -408,7 +443,8 @@ async function main() {
   console.log(`\n🗑️  STEP 2: Remove past events`);
   console.log(`───────────────────────────────────────`);
   const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-  const pastEvents = await fetchAll('events', 'id, name, event_date, date', { lt: ['date', today] });
+  // Always full-scan: past events must be deleted regardless of scrape age.
+  const pastEvents = await fetchAll('events', 'id, name, event_date, date', { lt: ['date', today], skipRecentFilter: true });
   console.log(`  Found ${pastEvents.length} past events`);
   if (SAVE && pastEvents.length > 0) {
     const ids = pastEvents.map(e => e.id);
@@ -425,6 +461,9 @@ async function main() {
   // ── 2b. Remove duplicate events (same name + date + venue) ──
   console.log(`\n🔄 STEP 2b: Remove duplicate events`);
   console.log(`───────────────────────────────────────`);
+  // In --recent-only mode this only dedupes within the window (cheap).
+  // The monthly full run (no flag) catches accumulated drift across the whole table.
+  // The DB-level idx_events_unique_content constraint catches most duplicates at insert.
   const allForDedup = await fetchAll('events', 'id, name, event_date, venue, created_at');
   const dupeGroups = {};
   for (const e of allForDedup) {
@@ -762,31 +801,11 @@ async function main() {
   console.log(`  Fixed: ${locFixed} (city+state) + ${fallbackFixed} (address/venue) + ${centroidFixed} (state centroid) = ${locFixed + fallbackFixed + centroidFixed}/${noLoc.length + stillNoLoc.length}`);
   totalFixed += locFixed + fallbackFixed + centroidFixed;
 
-  // ── 7. Fix missing descriptions (6618) ──
-  console.log(`\n📝 STEP 7: Fix missing descriptions`);
-  console.log(`───────────────────────────────────────`);
-  const noDesc = await fetchAll('events', 'id, name, category, venue, city, state',
-    { or: 'description.is.null,description.eq.' });
-  console.log(`  Found ${noDesc.length} events with no description`);
-
-  let descFixed = 0;
-  for (const event of noDesc) {
-    const description = generateEventDescription(event);
-    if (description && description.length > 20) {
-      if (SAVE) {
-        await supabase.from('events').update({ description }).eq('id', event.id);
-      }
-      descFixed++;
-      if (descFixed <= 5) {
-        console.log(`  ✅ "${event.name}":`);
-        console.log(`     "${description.substring(0, 100)}..."`);
-      } else if (descFixed % 1000 === 0) {
-        console.log(`  ... ${descFixed} descriptions generated`);
-      }
-    }
-  }
-  console.log(`  Fixed: ${descFixed}/${noDesc.length}`);
-  totalFixed += descFixed;
+  // ── 7. Missing descriptions: SKIPPED ──
+  // Per project decision (Apr 2026): descriptions stay empty rather than
+  // being filled with templated boilerplate. Front-end renders empty cleanly.
+  // This step removed to save ~6000 row reads + writes on every run.
+  console.log(`\n📝 STEP 7: Skipping description generation (intentionally left empty)`);
 
   // ── 8. Fix missing start_time / end_time ──
   console.log(`\n⏰ STEP 8: Fix missing start_time / end_time`);
@@ -1096,29 +1115,10 @@ async function main() {
   console.log(`  Fixed: ${actLocFixed} (city+state) + ${actFallbackFixed} (fallback) + ${actCentroidFixed} (state centroid) = ${actLocFixed + actFallbackFixed + actCentroidFixed}/${actNoLoc.length + actStillNoLoc.length}`);
   totalFixed += actLocFixed + actFallbackFixed + actCentroidFixed;
 
-  // ── 12. Fix activities missing descriptions ──
-  console.log(`\n📝 STEP 12: Fix activities missing descriptions`);
-  console.log(`───────────────────────────────────────`);
-  const actNoDesc = await fetchAll('activities', 'id, name, category, city, state',
-    { or: 'description.is.null,description.eq.' });
-  console.log(`  Found ${actNoDesc.length} activities with no description`);
-
-  let actDescFixed = 0;
-  for (const act of actNoDesc) {
-    const description = generateActivityDescription(act);
-    if (description && description.length > 20) {
-      if (SAVE) {
-        await supabase.from('activities').update({ description }).eq('id', act.id);
-      }
-      actDescFixed++;
-      if (actDescFixed <= 5) {
-        console.log(`  ✅ "${act.name}":`);
-        console.log(`     "${description.substring(0, 100)}..."`);
-      }
-    }
-  }
-  console.log(`  Fixed: ${actDescFixed}/${actNoDesc.length}`);
-  totalFixed += actDescFixed;
+  // ── 12. Activities missing descriptions: SKIPPED ──
+  // Per project decision (Apr 2026): descriptions stay empty rather than
+  // being filled with templated boilerplate.
+  console.log(`\n📝 STEP 12: Skipping activity description generation (intentionally left empty)`);
 
   // ── Step 13: Remove duplicate activities ──
   console.log(`\n🔄 STEP 13: Remove duplicate activities`);
