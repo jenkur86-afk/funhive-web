@@ -21,6 +21,7 @@
 const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config();
 const crypto = require('crypto');
+const ngeohash = require('ngeohash');
 const { normalizeAgeRange } = require('./age-range-normalizer');
 
 // Initialize Supabase client with service role key (bypasses RLS)
@@ -34,6 +35,38 @@ if (!supabaseUrl || !supabaseServiceKey) {
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 console.log('✅ Supabase client initialized');
+
+// ============================================================================
+// STATE NORMALIZATION
+// ============================================================================
+
+// Some scrapers (and JSON-LD addressRegion fields on event pages) emit full
+// state names like "Virginia" instead of the 2-letter postal code "VA".
+// `state` is a TEXT column, so the bad values just sit there until a fix
+// script catches them. Normalize at save time so this never reaches the DB.
+const STATE_ABBREVS = {
+  'alabama':'AL','alaska':'AK','arizona':'AZ','arkansas':'AR','california':'CA',
+  'colorado':'CO','connecticut':'CT','delaware':'DE','district of columbia':'DC',
+  'florida':'FL','georgia':'GA','hawaii':'HI','idaho':'ID','illinois':'IL',
+  'indiana':'IN','iowa':'IA','kansas':'KS','kentucky':'KY','louisiana':'LA',
+  'maine':'ME','maryland':'MD','massachusetts':'MA','michigan':'MI','minnesota':'MN',
+  'mississippi':'MS','missouri':'MO','montana':'MT','nebraska':'NE','nevada':'NV',
+  'new hampshire':'NH','new jersey':'NJ','new mexico':'NM','new york':'NY',
+  'north carolina':'NC','north dakota':'ND','ohio':'OH','oklahoma':'OK','oregon':'OR',
+  'pennsylvania':'PA','rhode island':'RI','south carolina':'SC','south dakota':'SD',
+  'tennessee':'TN','texas':'TX','utah':'UT','vermont':'VT','virginia':'VA',
+  'washington':'WA','west virginia':'WV','wisconsin':'WI','wyoming':'WY',
+};
+
+function normalizeState(rawState) {
+  if (!rawState || typeof rawState !== 'string') return rawState || null;
+  const trimmed = rawState.trim();
+  if (!trimmed) return null;
+  // Already a 2-letter code → upper-case it and return
+  if (trimmed.length === 2) return trimmed.toUpperCase();
+  const abbrev = STATE_ABBREVS[trimmed.toLowerCase()];
+  return abbrev || trimmed;
+}
 
 // ============================================================================
 // VENUE NAME CLEANING
@@ -254,9 +287,29 @@ const NON_FAMILY_PATTERNS = [
 
   // Dating / adult social
   /\bsingles?\s+night\b/i,
+  /\bsingles?\s+(mixer|mingle|event)\b/i,
   /\bspeed\s+dating\b/i,
   /\bdate\s+night\b/i,
   /\bburlesque\b/i,
+  /\bnight\s*club\b/i,
+
+  // Explicit adult content
+  /\bsexy\b/i,
+  /\bsensual\b/i,
+  /\berotic\b/i,
+  /\bkink\b/i,
+
+  // Cannabis / drugs
+  /\bcannabis\b/i,
+  /\bmarijuana\b/i,
+  /\b420\b/i,
+  /\bstoner\b/i,
+  /\bdrug\s*take\s*back\b/i,
+
+  // Firearms / gambling
+  /\bgambling\b/i,
+  /\bgun\s*show\b/i,
+  /\bfirearms?\s*(show|expo|sale)\b/i,
 
   // Adult library / community programs
   /\bbook\s+club\b/i,
@@ -422,6 +475,94 @@ function isCancelledEvent(name, description) {
 }
 
 // ============================================================================
+// JUNK TITLE DETECTION — reject scraper-extracted nav/footer/menu junk
+// ============================================================================
+
+/**
+ * Detect titles that are clearly not real event names — extracted nav links,
+ * footer items, all-caps menu strings, gibberish, etc. Used by saveEvent()
+ * to reject these at scrape time so they never hit the DB.
+ *
+ * Returns true if the title is junk and the event should be skipped.
+ */
+function isJunkTitle(name) {
+  if (!name || typeof name !== 'string') return true;
+  const trimmed = name.trim();
+
+  // Empty or extremely short
+  if (trimmed.length < 5) return true;
+
+  // All caps or alphanumeric-only AND short — looks like a menu acronym ("HOME", "FAQ", "ABOUT US")
+  if (trimmed.length < 12 && /^[A-Z0-9\s\-_/&]+$/.test(trimmed)) return true;
+
+  // Common navigation / boilerplate strings
+  const NAV_JUNK = [
+    /^(home|about|contact|menu|search|login|sign\s*in|sign\s*up|register|subscribe)$/i,
+    /^(events?|calendar|schedule|programs?|services?|resources?|news|blog)$/i,
+    /^(faq|faqs|terms|privacy|policy|sitemap|copyright|all\s*rights\s*reserved)$/i,
+    /^(read\s*more|learn\s*more|view\s*all|see\s*all|click\s*here|more\s*info)$/i,
+    /^(next|previous|prev|back|forward|page\s*\d+|»|«|→|←)$/i,
+    /^(loading|please\s*wait|error|404|page\s*not\s*found)$/i,
+    /^(cookies?|gdpr|accept|decline|opt\s*out)$/i,
+    /^(view|browse|filter|sort|reset|clear|apply|submit|cancel|close|save)$/i,
+    /^(skip\s+to\s+(content|main|navigation))$/i,
+    /^(toggle\s+(menu|navigation|search))$/i,
+    /^(rss|feed|share|tweet|like|follow|email)$/i,
+  ];
+  for (const pattern of NAV_JUNK) {
+    if (pattern.test(trimmed)) return true;
+  }
+
+  // Title with no letters (just numbers, punctuation, or whitespace)
+  if (!/[a-zA-Z]/.test(trimmed)) return true;
+
+  // Single repeated character (e.g. "------", "....", "***")
+  if (/^(.)\1{4,}$/.test(trimmed)) return true;
+
+  return false;
+}
+
+// ============================================================================
+// PARSED-DATE FALLBACK — derive TIMESTAMPTZ from event_date text when missing
+// ============================================================================
+
+/**
+ * Try to coerce arbitrary scraper date strings into an ISO timestamp string.
+ * Used by saveEvent() to backfill the `date` column when the scraper supplied
+ * `event_date` text but no parsed Date. Returns null if unparseable.
+ */
+function parseEventDateText(eventDateStr) {
+  if (!eventDateStr || typeof eventDateStr !== 'string') return null;
+  const trimmed = eventDateStr.trim();
+  if (!trimmed) return null;
+
+  // Strip common suffixes that confuse Date.parse
+  let cleaned = trimmed
+    .replace(/\s*\(.*?\)\s*$/, '')                 // trailing "(EDT)"
+    .replace(/\s+(EST|EDT|PST|PDT|CST|CDT|MST|MDT|UTC|GMT)\b/i, '') // tz abbreviations
+    .replace(/\s+at\s+/i, ' ')                     // "April 8 at 10am" → "April 8 10am"
+    .replace(/\s+@\s+/i, ' ')                      // "April 8 @ 10am" → "April 8 10am"
+    .replace(/\s*[-–—]\s*\d{1,2}(:\d{2})?\s*(am|pm)?\s*$/i, '') // "10am - 12pm" → "10am"
+    .trim();
+
+  // ISO date-only ("2026-04-23") — append local midnight to avoid UTC shift
+  if (/^\d{4}-\d{2}-\d{2}$/.test(cleaned)) {
+    cleaned = `${cleaned}T00:00:00`;
+  }
+
+  const parsed = new Date(cleaned);
+  if (isNaN(parsed.getTime())) return null;
+
+  // Sanity check: reject dates more than 5 years in the past or 3 years in the future
+  const now = Date.now();
+  const ts = parsed.getTime();
+  if (ts < now - 5 * 365 * 24 * 60 * 60 * 1000) return null;
+  if (ts > now + 3 * 365 * 24 * 60 * 60 * 1000) return null;
+
+  return parsed.toISOString();
+}
+
+// ============================================================================
 // DIRECT SUPABASE FUNCTIONS (recommended for new code)
 // ============================================================================
 
@@ -430,6 +571,12 @@ function isCancelledEvent(name, description) {
  * Converts Firestore event document format to PostgreSQL columns
  */
 async function saveEvent(id, data) {
+  // Reject junk titles (nav links, footer items, all-caps acronyms, gibberish)
+  if (isJunkTitle(data.name)) {
+    console.log(`  ⏭️ Skipping junk-title event: "${data.name}"`);
+    return null;
+  }
+
   // Reject non-family events
   const nonFamilyReason = isNonFamilyEvent(data.name, data.description, data.venue);
   if (nonFamilyReason) {
@@ -452,9 +599,17 @@ async function saveEvent(id, data) {
     }
   }
 
+  // Reject events with no date string at all — they cannot be filtered or
+  // displayed meaningfully and just get deleted by fix-event-quality.js Step 1.
+  // Catch them here so they never hit the DB.
+  const evtDateStr = (data.eventDate || '').trim();
+  if (!evtDateStr || evtDateStr.length < 4) {
+    console.log(`  ⏭️ Skipping dateless event: "${data.name}"`);
+    return null;
+  }
+
   // Reject past events
-  const evtDateStr = data.eventDate || '';
-  if (evtDateStr && _isDateInPast(evtDateStr)) {
+  if (_isDateInPast(evtDateStr)) {
     console.log(`  ⏭️ Skipping past event: "${data.name}" (${evtDateStr})`);
     return null;
   }
@@ -477,7 +632,7 @@ async function saveEvent(id, data) {
     venue: truncate(cleanVenueName(data.venue), 200) || null,
     category: data.metadata?.category || data.category || null,
     city: truncate(data.location?.city, 100) || null,
-    state: data.state || data.location?.state || null,
+    state: normalizeState(data.state || data.location?.state) || null,
     zip_code: data.location?.zipCode || null,
     address: truncate(data.location?.address, 200) || null,
     geohash: data.geohash || null,
@@ -519,6 +674,21 @@ async function saveEvent(id, data) {
   const lng = data.location?.longitude || data.location?.coordinates?.longitude;
   if (lat && lng) {
     row.location = `SRID=4326;POINT(${lng} ${lat})`;
+    // Compute geohash from coords if scraper didn't supply one
+    // (avoids fix-event-quality.js Step 4 having to backfill it later)
+    if (!row.geohash) {
+      try {
+        row.geohash = ngeohash.encode(lat, lng, 7);
+      } catch (e) { /* ignore — geohash is best-effort */ }
+    }
+  }
+
+  // Backfill parsed date TIMESTAMPTZ from event_date text when missing.
+  // Without this, events are invisible to date-filtered queries until the
+  // weekly fix scripts run. Doing it at save-time eliminates that dependency.
+  if (!row.date && row.event_date) {
+    const parsed = parseEventDateText(row.event_date);
+    if (parsed) row.date = parsed;
   }
 
   const { error } = await supabase.from('events').upsert(row, { onConflict: 'id' });
@@ -545,7 +715,7 @@ async function saveActivity(id, data) {
     age_range: data.ageRange || detectAgeRange(data.name, data.description) || null,
     address: data.address || data.location?.address || null,
     city: data.city || data.location?.city || null,
-    state: data.state || data.location?.state || null,
+    state: normalizeState(data.state || data.location?.state) || null,
     zip_code: data.zipCode || data.location?.zipCode || null,
     geohash: data.geohash || null,
     source: data.source || null,
@@ -557,6 +727,13 @@ async function saveActivity(id, data) {
   const lng = data.location?.longitude || data.longitude;
   if (lat && lng) {
     row.location = `SRID=4326;POINT(${lng} ${lat})`;
+    // Compute geohash from coords if scraper didn't supply one
+    // (eliminates fix-event-quality.js Step 9 backfill for new venues)
+    if (!row.geohash) {
+      try {
+        row.geohash = ngeohash.encode(lat, lng, 7);
+      } catch (e) { /* ignore — geohash is best-effort */ }
+    }
   }
 
   const { error } = await supabase.from('activities').upsert(row, { onConflict: 'id' });
@@ -905,6 +1082,11 @@ function flattenEvent(data) {
     throw new Error('Cannot save event with empty/null name');
   }
 
+  // Reject junk titles (nav links, footer items, all-caps acronyms, gibberish)
+  if (isJunkTitle(data.name)) {
+    throw new Error(`Skipping junk-title event: "${data.name}"`);
+  }
+
   // Reject non-family events
   const nonFamilyReason = isNonFamilyEvent(data.name, data.description, data.venue);
   if (nonFamilyReason) {
@@ -925,9 +1107,15 @@ function flattenEvent(data) {
     }
   }
 
+  // Reject events with no date string at all — they cannot be filtered or
+  // displayed meaningfully and just get deleted by fix-event-quality.js.
+  const eventDateStr = ((data.eventDate || data.event_date) || '').toString().trim();
+  if (!eventDateStr || eventDateStr.length < 4) {
+    throw new Error(`Skipping dateless event: "${data.name}"`);
+  }
+
   // Reject past events — parse date from eventDate string or date field
-  const eventDateStr = data.eventDate || data.event_date;
-  if (eventDateStr && _isDateInPast(eventDateStr)) {
+  if (_isDateInPast(eventDateStr)) {
     throw new Error(`Skipping past event: "${data.name}" (${eventDateStr})`);
   }
   // Also check the date/timestamp field
@@ -957,7 +1145,7 @@ function flattenEvent(data) {
   if (data.url) row.url = trunc(data.url, 400);
   if (data.imageUrl) row.image_url = trunc(data.imageUrl, 500);
   if (data.venue) row.venue = trunc(cleanVenueName(data.venue), 200);
-  if (data.state) row.state = data.state;
+  if (data.state) row.state = normalizeState(data.state);
   if (data.geohash) row.geohash = data.geohash;
   if (data.activityId) row.activity_id = data.activityId;
   if (data.startTime) row.start_time = data.startTime;
@@ -990,12 +1178,18 @@ function flattenEvent(data) {
 
   if (data.location) {
     row.city = trunc(data.location.city, 100);
-    row.state = row.state || data.location.state;
+    row.state = row.state || normalizeState(data.location.state);
     row.zip_code = data.location.zipCode;
     row.address = trunc(data.location.address, 200);
     const lat = data.location.latitude || data.location.coordinates?.latitude;
     const lng = data.location.longitude || data.location.coordinates?.longitude;
-    if (lat && lng) row.location = `SRID=4326;POINT(${lng} ${lat})`;
+    if (lat && lng) {
+      row.location = `SRID=4326;POINT(${lng} ${lat})`;
+      // Compute geohash from coords if scraper didn't supply one
+      if (!row.geohash) {
+        try { row.geohash = ngeohash.encode(lat, lng, 7); } catch (e) { /* ignore */ }
+      }
+    }
   }
   if (data.metadata) {
     row.source_url = row.source_url || trunc(data.metadata.sourceUrl, 500);
@@ -1005,7 +1199,7 @@ function flattenEvent(data) {
     // Category: metadata.category as fallback if not already set
     row.category = row.category || data.metadata.category;
     // State: metadata.state as additional fallback
-    row.state = row.state || data.metadata.state;
+    row.state = row.state || normalizeState(data.metadata.state);
   }
 
   // Additional scraper_name fallbacks (top-level fields some scrapers use)
@@ -1041,6 +1235,15 @@ function flattenEvent(data) {
     throw new Error(`Skipping adult-only event: "${data.name}"`);
   }
 
+  // Backfill parsed date TIMESTAMPTZ from event_date text when missing.
+  // Without this, events end up invisible to date-filtered queries until
+  // the weekly fix scripts backfill them. Doing it at save time removes
+  // that dependency.
+  if (!row.date && row.event_date) {
+    const parsed = parseEventDateText(row.event_date);
+    if (parsed) row.date = parsed;
+  }
+
   // Clean up nulls — don't write null values that overwrite existing data
   Object.keys(row).forEach(k => { if (row[k] === null || row[k] === undefined) delete row[k]; });
 
@@ -1060,7 +1263,7 @@ function flattenActivity(data) {
   if (data.priceRange || data.cost) row.price_range = data.priceRange || data.cost;
   if (data.isFree != null) row.is_free = data.isFree;
   if (data.ageRange) row.age_range = data.ageRange;
-  if (data.state) row.state = data.state;
+  if (data.state) row.state = normalizeState(data.state);
   if (data.city) row.city = data.city;
   if (data.address) row.address = data.address;
   if (data.zipCode) row.zip_code = data.zipCode;
@@ -1072,7 +1275,7 @@ function flattenActivity(data) {
     row.scraped_at = data.metadata.scrapedAt;
     // Pull additional fields from metadata if not at top level
     row.category = row.category || data.metadata.category;
-    row.state = row.state || data.metadata.state;
+    row.state = row.state || normalizeState(data.metadata.state);
     // Derive source from metadata sourceUrl if not set (track by site URL)
     if (!row.source) row.source = data.metadata.sourceUrl || null;
   }
@@ -1080,7 +1283,7 @@ function flattenActivity(data) {
   if (!row.source) row.source = data.url || data.website || null;
   if (data.location) {
     row.city = row.city || data.location.city;
-    row.state = row.state || data.location.state;
+    row.state = row.state || normalizeState(data.location.state);
     row.zip_code = row.zip_code || data.location.zipCode;
     row.address = row.address || data.location.address;
     // Pull phone/url/hours from location if not at top level (some scrapers nest these)
@@ -1089,7 +1292,13 @@ function flattenActivity(data) {
     row.hours = row.hours || data.location.hours;
     const lat = data.location.latitude || data.location.coordinates?.latitude;
     const lng = data.location.longitude || data.location.coordinates?.longitude;
-    if (lat && lng) row.location = `SRID=4326;POINT(${lng} ${lat})`;
+    if (lat && lng) {
+      row.location = `SRID=4326;POINT(${lng} ${lat})`;
+      // Compute geohash from coords if scraper didn't supply one
+      if (!row.geohash) {
+        try { row.geohash = ngeohash.encode(lat, lng, 7); } catch (e) { /* ignore */ }
+      }
+    }
   }
 
   // Clean up nulls
