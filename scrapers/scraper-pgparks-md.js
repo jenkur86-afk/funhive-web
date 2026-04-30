@@ -138,9 +138,11 @@ async function fetchEvents(maxEvents = 100) {
 
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
-    // Navigate to the calendar page
+    // Navigate to the calendar page.
+    // 90s timeout + domcontentloaded — the previous 60s + networkidle2 failed reliably
+    // with "Navigation timeout of 60000 ms exceeded" and yielded zero events.
     console.log('  Navigating to calendar page...');
-    await page.goto(CALENDAR_URL, { waitUntil: 'networkidle2', timeout: 60000 });
+    await page.goto(CALENDAR_URL, { waitUntil: 'domcontentloaded', timeout: 90000 });
 
     // Wait for events to load
     await page.waitForSelector('article, .tribe-events-calendar-list__event, .tribe-common-g-row, article[class*="event"], .event-card, [class*="event-item"]', { timeout: 15000 }).catch(() => {

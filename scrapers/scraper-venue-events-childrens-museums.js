@@ -39,7 +39,9 @@ const VENUES = [
     extraction: 'mec' },
   // Connecticut
   { name: "Stepping Stones Museum for Children", eventsUrl: "https://steppingstonesmuseum.org/calendar/", city: "Norwalk", state: "CT", zip: "06854" },
-  { name: "Imagine Nation Museum", eventsUrl: "https://imaginenation.org/events/", city: "Bristol", state: "CT", zip: "06010" },
+  // Imagine Nation: the bare-domain `imaginenation.org` refuses connections;
+  // the `www.` host responds and the calendar lives at /calendar (not /events).
+  { name: "Imagine Nation Museum", eventsUrl: "https://www.imaginenation.org/calendar", city: "Bristol", state: "CT", zip: "06010" },
   // DC
   { name: "National Children's Museum", eventsUrl: "https://nationalchildrensmuseum.org/events/", city: "Washington", state: "DC", zip: "20004" },
   // Delaware
@@ -48,7 +50,9 @@ const VENUES = [
   { name: "Miami Children's Museum", eventsUrl: "https://www.miamichildrensmuseum.org/events/", city: "Miami", state: "FL", zip: "33132",
     extraction: 'webflow' },
   { name: "Glazer Children's Museum", eventsUrl: "https://www.glazermuseum.org/visit/calendar", city: "Tampa", state: "FL", zip: "33602" },
-  { name: "Golisano Children's Museum of Naples", eventsUrl: "https://cmonaples.org/events/", city: "Naples", state: "FL", zip: "34110" },
+  // The cmonaples.org domain was decommissioned (DNS no longer resolves).
+  // The museum (CMON) now lives at cmon.org. Verified 2026-04-30: HTTP 200.
+  { name: "Golisano Children's Museum of Naples", eventsUrl: "https://www.cmon.org/events/", city: "Naples", state: "FL", zip: "34110" },
   { name: "Great Explorations", eventsUrl: "https://www.greatexplorations.org/events/", city: "St. Petersburg", state: "FL", zip: "33701" },
   // Georgia
   { name: "Children's Museum of Atlanta", eventsUrl: "https://childrensmuseumatlanta.org/events/", city: "Atlanta", state: "GA", zip: "30313" },
@@ -88,7 +92,12 @@ const VENUES = [
   // North Carolina
   { name: "Marbles Kids Museum", eventsUrl: "https://www.marbleskidsmuseum.org/events", city: "Raleigh", state: "NC", zip: "27601" },
   { name: "Discovery Place Science", eventsUrl: "https://science.discoveryplace.org/events-calendar", city: "Charlotte", state: "NC", zip: "28202" },
-  { name: "Kidzu Children's Museum", eventsUrl: "https://kidzuchildrensmuseum.org/events/", city: "Chapel Hill", state: "NC", zip: "27516" },
+  // DISABLED 2026-04-30: Kidzu's main location closed in August 2024 after a
+  // water main break. Both kidzuchildrensmuseum.org and kidzuchildrensmuseum.com
+  // are currently unreachable. They operate from a temporary location at 1712
+  // Willow Dr, Chapel Hill ("The Nest"). Re-enable once the museum publishes a
+  // public events calendar at a reachable URL.
+  // { name: "Kidzu Children's Museum", eventsUrl: "https://kidzuchildrensmuseum.org/events/", city: "Chapel Hill", state: "NC", zip: "27516" },
   // Ohio
   { name: "COSI Columbus", eventsUrl: "https://cosi.org/events/", city: "Columbus", state: "OH", zip: "43215" },
   { name: "Children's Museum of Cleveland", eventsUrl: "https://cmcleveland.org/events/", city: "Cleveland", state: "OH", zip: "44106" },
@@ -117,7 +126,9 @@ const VENUES = [
   // Virginia
   { name: "Virginia Discovery Museum", eventsUrl: "https://www.vadm.org/events/", city: "Charlottesville", state: "VA", zip: "22902",
     extraction: 'squarespace' },
-  { name: "Children's Museum of Richmond", eventsUrl: "https://www.c-mor.org/events", city: "Richmond", state: "VA", zip: "23219" },
+  // www.c-mor.org's TLS cert no longer matches the host. The museum rebranded
+  // to childrensmuseumofrichmond.org (verified 2026-04-30: HTTP 200).
+  { name: "Children's Museum of Richmond", eventsUrl: "https://www.childrensmuseumofrichmond.org/events/", city: "Richmond", state: "VA", zip: "23219" },
   // West Virginia
   { name: "Clay Center / Avampato Discovery Museum", eventsUrl: "https://www.theclaycenter.org/events/", city: "Charleston", state: "WV", zip: "25301" },
   // Wisconsin
@@ -625,6 +636,7 @@ async function scrapeChildrensMuseumEvents(options = {}) {
   console.log(`${'='.repeat(70)}\n`);
 
   // Save events with geocoding
+  let saveStats = { saved: 0, skipped: 0, errors: 0 };
   if (allEvents.length > 0) {
     console.log('💾 Saving events to database...');
     const saveOptions = {
@@ -633,7 +645,7 @@ async function scrapeChildrensMuseumEvents(options = {}) {
     };
     console.log(`   Save options: scraperName=${saveOptions.scraperName}, state=${saveOptions.state}`);
     try {
-      await saveEventsWithGeocoding(
+      const result = await saveEventsWithGeocoding(
         allEvents,
         VENUES.map(v => ({
           name: v.name,
@@ -644,6 +656,12 @@ async function scrapeChildrensMuseumEvents(options = {}) {
         })),
         saveOptions
       );
+      if (result) {
+        saveStats.saved = result.saved || 0;
+        saveStats.skipped = result.skipped || 0;
+        saveStats.errors = result.errors || 0;
+        console.log(`   💾 Saved: ${saveStats.saved} | ⏭️ Skipped: ${saveStats.skipped} | ❌ Errors: ${saveStats.errors}`);
+      }
     } catch (saveError) {
       console.error(`❌ Error saving events: ${saveError.message}`);
       logger.logError(saveError.message);
@@ -653,11 +671,18 @@ async function scrapeChildrensMuseumEvents(options = {}) {
   }
 
   // Finish logging
-  const result = await logger.finish();
+  await logger.finish();
 
   console.log(`${'='.repeat(70)}\n`);
 
-  return result;
+  return {
+    found: allEvents.length,
+    new: saveStats.saved,
+    saved: saveStats.saved,
+    duplicates: saveStats.skipped,
+    skipped: saveStats.skipped,
+    errors: saveStats.errors,
+  };
 }
 
 /**

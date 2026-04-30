@@ -143,8 +143,10 @@ function transformEvent(raw) {
   if (futureDates.length === 0) return [];
 
   const description = stripHtml(raw.description || '').substring(0, 1500);
-  const venue = raw.parkfullname || 'National Park Service';
-  const title = (raw.title || '').substring(0, 200);
+  // Trim trailing whitespace — the NPS API sometimes returns names with trailing
+  // spaces, which produced ugly geocode strings like "The White House , Washington, DC".
+  const venue = (raw.parkfullname || 'National Park Service').replace(/\s+/g, ' ').trim();
+  const title = (raw.title || '').substring(0, 200).replace(/\s+/g, ' ').trim();
   const ageRange = detectAgeRange(title, description);
 
   // Get time info

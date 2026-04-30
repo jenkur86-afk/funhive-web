@@ -233,6 +233,11 @@ async function scrapeCVBSite(site, browser) {
         '[data-type="event"]',
       ];
 
+      // Patterns for titles that are clearly nav links, social-share buttons, or
+      // generic page-chrome strings (we saw 113 of these in the last run for
+      // Travel Wisconsin / Visit X CVB sites).
+      const NAV_JUNK_RE = /^(linkedin|facebook|reddit|twitter|instagram|youtube|tiktok|pinterest|whatsapp|email|share|copy link|home|menu|search|subscribe|login|sign in|sign up|contact us|website|view all|learn more|read more|see more|see all|view more|events|events calendar|programs|all programs|programs for everyone|free events|sporting events|performing arts|festivals|festivals & fairs|food & drink|culture & arts|iconic [a-z ]+|submit (an )?event|submit your event|submit it here!?|sign-?up for our weekly events|submit|find [a-z ]+|your [a-z ]+ adventure awaits)$/i;
+
       for (const selector of cardSelectors) {
         const cards = document.querySelectorAll(selector);
         cards.forEach(card => {
@@ -242,6 +247,9 @@ async function scrapeCVBSite(site, browser) {
             );
             const title = clean(titleEl?.textContent);
             if (!title || title.length < 4) return;
+            if (NAV_JUNK_RE.test(title)) return;
+            // Reject anything inside a nav/header/footer container
+            if (card.closest && card.closest('nav, header, footer, .menu, .nav, .footer, .site-header, .site-footer, .social, .share, .breadcrumb')) return;
 
             const key = title.toLowerCase();
             if (seen.has(key)) return;
@@ -294,7 +302,8 @@ async function scrapeCVBSite(site, browser) {
             const title = clean(link.textContent);
             if (!title || title.length < 6 || title.length > 200) return;
             // Skip nav/menu links
-            if (link.closest('nav, header, footer, .menu, .nav')) return;
+            if (link.closest('nav, header, footer, .menu, .nav, .footer, .site-header, .site-footer, .social, .share, .breadcrumb')) return;
+            if (NAV_JUNK_RE.test(title)) return;
 
             const key = title.toLowerCase();
             if (seen.has(key)) return;
@@ -429,6 +438,9 @@ async function scrapeSimpleviewTourism(filterStates = null) {
   const browser = await launchBrowser();
   let allEvents = [];
   const stateResults = {};
+  let totalSaved = 0;
+  let totalSkipped = 0;
+  let totalErrors = 0;
 
   try {
     for (let i = 0; i < sitesToScrape.length; i++) {
@@ -448,11 +460,22 @@ async function scrapeSimpleviewTourism(filterStates = null) {
         if (allEvents.length > 0 && !DRY_RUN) {
           console.log(`\n💾 Saving batch of ${allEvents.length} events...`);
 
-          const venues = allEvents.map(e => ({
-            name: e.venueName || e.title,
-            city: e.city,
-            state: e.state,
-          }));
+          // One venue entry per UNIQUE (venueName, city, state) so events don't all land at the source centroid.
+          const venueMap = new Map();
+          for (const e of allEvents) {
+            const name = (e.venueName || '').trim();
+            if (!name && !e.address) continue;
+            const key = `${name}|${e.city || ''}|${e.state || ''}`;
+            if (!venueMap.has(key)) {
+              venueMap.set(key, {
+                name: name || `${e.city}, ${e.state}`,
+                address: e.address || '',
+                city: e.city,
+                state: e.state,
+              });
+            }
+          }
+          const venues = Array.from(venueMap.values());
 
           try {
             const result = await saveEventsWithGeocoding(
@@ -466,9 +489,15 @@ async function scrapeSimpleviewTourism(filterStates = null) {
               }
             );
             const saved = result?.saved || result?.new || result?.imported || 0;
-            console.log(`   💾 Saved: ${saved}`);
+            const skipped = result?.skipped || 0;
+            const errors = result?.errors || 0;
+            totalSaved += saved;
+            totalSkipped += skipped;
+            totalErrors += errors;
+            console.log(`   💾 Saved: ${saved} | ⏭️ Skipped: ${skipped} | ❌ Errors: ${errors}`);
           } catch (err) {
             console.error(`   ❌ Save error: ${err.message}`);
+            totalErrors++;
           }
         }
         allEvents = [];
@@ -490,17 +519,26 @@ async function scrapeSimpleviewTourism(filterStates = null) {
   const totalEvents = Object.values(stateResults).reduce((sum, n) => sum + n, 0);
   console.log('\n\x1b[33m━━━━━━━━━━━━━ SUMMARY ━━━━━━━━━━━━━━\x1b[0m');
   console.log(`Total events found: ${totalEvents}`);
+  console.log(`Total saved: ${totalSaved} | Skipped: ${totalSkipped} | Errors: ${totalErrors}`);
   for (const [state, count] of Object.entries(stateResults).sort((a, b) => b[1] - a[1])) {
     console.log(`  ${state}: ${count} events`);
   }
 
   logScraperResult(SCRAPER_NAME, {
     found: totalEvents,
-    new: totalEvents,
-    duplicates: 0,
+    new: totalSaved,
+    duplicates: totalSkipped,
   });
 
-  return stateResults;
+  return {
+    found: totalEvents,
+    new: totalSaved,
+    saved: totalSaved,
+    duplicates: totalSkipped,
+    skipped: totalSkipped,
+    errors: totalErrors,
+    stateResults,
+  };
 }
 
 // ==========================================
@@ -535,7 +573,7 @@ if (require.main === module) {
 async function scrapeSimpleviewTourismCloudFunction() {
   try {
     const result = await scrapeSimpleviewTourism();
-    return { success: true, result };
+    return { success: true, ...result, result };
   } catch (err) {
     console.error('Cloud Function Error:', err);
     return { success: false, error: err.message };

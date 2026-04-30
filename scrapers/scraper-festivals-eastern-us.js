@@ -31,7 +31,7 @@ const { admin, db } = require('./helpers/supabase-adapter');
 const { launchBrowser, createStealthPage } = require('./puppeteer-config');
 const { categorizeEvent } = require('./event-categorization-helper');
 const { generateEventIdFromDetails } = require('./event-id-helper');
-const { normalizeDateString } = require('./date-normalization-helper');
+const { normalizeDateString, parseDateToObject } = require('./date-normalization-helper');
 const { logScraperResult } = require('./scraper-logger');
 const { geocodeAddress } = require('./helpers/geocoding-helper');
 
@@ -428,7 +428,17 @@ function parseFestivalDate(dateStr) {
     if (!isNaN(d.getTime())) return d;
   }
 
-  // MM/DD/YYYY or M/D/YYYY
+  // Delegate to the central date helper, which handles ranges (e.g.
+  // "April 18 - 21, 2026", "4/30/26 – 5/3/26"), dot-format ("5.7.26"),
+  // 2-digit-year slashes, and many other formats. Falling back here means
+  // we no longer skip thousands of festivals just because their date range
+  // didn't match our local regex.
+  const helperParsed = parseDateToObject(text);
+  if (helperParsed && !isNaN(helperParsed.getTime()) && helperParsed.getFullYear() >= 2025) {
+    return helperParsed;
+  }
+
+  // MM/DD/YYYY or M/D/YYYY (fallback if helper missed)
   const slashMatch = text.match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
   if (slashMatch) {
     const [, m, d, y] = slashMatch;

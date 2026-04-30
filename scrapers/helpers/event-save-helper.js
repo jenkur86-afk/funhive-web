@@ -469,10 +469,20 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
           longitude: event.longitude
         };
       } else {
-        // Geocode based on library location
-        const geocodeAddr = library.address
-          ? `${library.address}, ${library.city}, ${library.state}`
-          : `${library.name}, ${library.city}, ${library.state}`;
+        // Geocode based on library location.
+        // Build the address piece-by-piece so empty fields don't produce strings
+        // like "Library, , IN" (which Nominatim can't resolve) or "Park ,Washington, DC"
+        // (caused by trailing-whitespace names in upstream APIs).
+        const _name = (library.name || '').replace(/\s+/g, ' ').trim();
+        const _addr = (library.address || '').replace(/\s+/g, ' ').trim();
+        const _city = (library.city || '').replace(/\s+/g, ' ').trim();
+        const _state = (library.state || '').replace(/\s+/g, ' ').trim();
+        const parts = [];
+        if (_addr) parts.push(_addr);
+        else if (_name) parts.push(_name);
+        if (_city) parts.push(_city);
+        if (_state) parts.push(_state);
+        const geocodeAddr = parts.join(', ');
 
         // Pass venue name and source name for library-addresses.js lookup
         coordinates = await geocodeWithFallback(geocodeAddr, {

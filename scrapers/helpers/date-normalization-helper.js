@@ -44,6 +44,9 @@ function normalizeDateString(dateString) {
   // Clean the input: remove times and extra formatting
   let cleaned = dateString;
 
+  // Normalize newlines and tabs to spaces (handles "Wed\n\n29" from DOM extraction)
+  cleaned = cleaned.replace(/[\n\r\t]+/g, ' ');
+
   // Remove timezone abbreviations (EST, EDT, CST, CDT, PST, PDT, etc.)
   cleaned = cleaned.replace(/\s+(?:E[SD]T|C[SD]T|M[SD]T|P[SD]T|[A-Z]{2,4}T)\b/g, '');
 
@@ -56,8 +59,12 @@ function normalizeDateString(dateString) {
   // Remove "Featured" prefix (e.g., "Featured Apr 2 @10:00am")
   cleaned = cleaned.replace(/^Featured\s+/i, '');
 
-  // Remove "at" before times (e.g., "Apr 30, at 9:00 AM" → "Apr 30, 9:00 AM")
-  cleaned = cleaned.replace(/\s+at\s+(\d{1,2}[:\d]*\s*[ap])/gi, ' $1');
+  // Remove "at" or "from" before times (e.g., "Apr 30, at 9:00 AM", "May 09, from 8:30 AM–10:00 AM")
+  cleaned = cleaned.replace(/\s+(?:at|from)\s+(\d{1,2}[:\d]*\s*[ap])/gi, ' $1');
+
+  // Remove standalone "from TIME–TIME" or "from TIME-TIME" patterns without AM/PM
+  // (e.g., "from 10:00–14:00", "from 9:30-11:30")
+  cleaned = cleaned.replace(/\s+from\s+\d{1,2}:\d{2}\s*[-–—]\s*\d{1,2}:\d{2}/gi, '');
 
   // Remove localized day abbreviations (e.g., "Sá." for Saturday in Portuguese/Spanish)
   // Only remove if followed by comma+space or if the abbreviation contains non-ASCII chars
@@ -127,13 +134,18 @@ function normalizeDateString(dateString) {
     }
   }
 
-  // Handles numeric date ranges: "4/1–4/22", "4/1-4/22/2026"
-  const numericRangeMatch = cleaned.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?\s*[-–—]\s*\d{1,2}\/\d{1,2}/);
+  // Handles numeric date ranges: "4/1–4/22", "4/1-4/22/2026", "4/30/26 – 5/3/26"
+  const numericRangeMatch = cleaned.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\s*[-–—]\s*\d{1,2}\/\d{1,2}/);
   if (numericRangeMatch) {
     const [, month, day, year] = numericRangeMatch;
     const monthIndex = parseInt(month) - 1;
     if (monthIndex >= 0 && monthIndex < 12) {
-      const resolvedYear = year || inferYear(monthNamesArray[monthIndex], parseInt(day));
+      let resolvedYear;
+      if (year) {
+        resolvedYear = year.length === 2 ? 2000 + parseInt(year) : parseInt(year);
+      } else {
+        resolvedYear = inferYear(monthNamesArray[monthIndex], parseInt(day));
+      }
       return `${monthNamesArray[monthIndex]} ${parseInt(day)}, ${resolvedYear}`;
     }
   }
@@ -145,6 +157,19 @@ function normalizeDateString(dateString) {
     const monthIndex = parseInt(month) - 1;
     if (monthIndex >= 0 && monthIndex < 12) {
       return `${monthNamesArray[monthIndex]} ${parseInt(day)}, ${year}`;
+    }
+  }
+
+  // === Pattern 1b: Loose ISO with single-digit month/day, optionally with time + offset ===
+  // Discovery World (Children's Museums) emits "2026-4-1T10:00-4:00", "2026-3-16", "2026-4-18".
+  // Match YYYY-M-D where month/day may be 1-2 digits.
+  const looseIsoMatch = cleaned.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:T|\s|$)/);
+  if (looseIsoMatch) {
+    const [, year, month, day] = looseIsoMatch;
+    const monthIndex = parseInt(month) - 1;
+    const dayNum = parseInt(day);
+    if (monthIndex >= 0 && monthIndex < 12 && dayNum >= 1 && dayNum <= 31) {
+      return `${monthNamesArray[monthIndex]} ${dayNum}, ${year}`;
     }
   }
 
@@ -190,6 +215,30 @@ function normalizeDateString(dateString) {
     }
   }
 
+  // === Pattern 5b: Numeric date with 2-digit year: M/D/YY (e.g., "4/30/26") ===
+  // Range form already stripped to start above. Single-day form: "4/30/26".
+  const twoDigitYearMatch = cleaned.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2})$/);
+  if (twoDigitYearMatch) {
+    const [, month, day, yy] = twoDigitYearMatch;
+    const monthIndex = parseInt(month) - 1;
+    const fullYear = 2000 + parseInt(yy);
+    if (monthIndex >= 0 && monthIndex < 12) {
+      return `${monthNamesArray[monthIndex]} ${parseInt(day)}, ${fullYear}`;
+    }
+  }
+
+  // === Pattern 5c: Dot-separated US date M.D.YY or M.D.YYYY (e.g., "5.7.26", "5.16.2026") ===
+  // Used by some Children's Museum sites (Creative Discovery, etc.).
+  const dotDateMatch = cleaned.match(/^(\d{1,2})\.(\d{1,2})\.(\d{2}|\d{4})$/);
+  if (dotDateMatch) {
+    const [, month, day, year] = dotDateMatch;
+    const monthIndex = parseInt(month) - 1;
+    const fullYear = year.length === 2 ? 2000 + parseInt(year) : parseInt(year);
+    if (monthIndex >= 0 && monthIndex < 12) {
+      return `${monthNamesArray[monthIndex]} ${parseInt(day)}, ${fullYear}`;
+    }
+  }
+
   // === Pattern 6: "Day Month Year" format (e.g., "20 November 2025") ===
   const dayMonthYearMatch = cleaned.match(/(\d{1,2})\s+([A-Za-z]{3,9})\s+(\d{4})/i);
   if (dayMonthYearMatch) {
@@ -219,6 +268,18 @@ function normalizeDateString(dateString) {
     if (fullMonthName) {
       const year = inferYear(fullMonthName, parseInt(day));
       return `${fullMonthName} ${parseInt(day)}, ${year}`;
+    }
+  }
+
+  // === Pattern 9: Standalone month name (e.g., "May", "June", "Jun") ===
+  // Used when only a month is provided (e.g., Science Museum of VA "May", "Jun")
+  // Defaults to 1st of that month
+  const monthOnlyMatch = cleaned.match(/^([A-Za-z]{3,9})$/i);
+  if (monthOnlyMatch) {
+    const fullMonthName = lookupMonth(monthOnlyMatch[1]);
+    if (fullMonthName) {
+      const year = inferYear(fullMonthName, 1);
+      return `${fullMonthName} 1, ${year}`;
     }
   }
 

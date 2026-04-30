@@ -666,7 +666,15 @@ async function scrapeActiveNetParks(statesToScrape, dryRun) {
   }
   console.log('='.repeat(60) + '\n');
 
-  return stateResults;
+  return {
+    found: totalEvents,
+    new: totalSaved,
+    saved: totalSaved,
+    duplicates: totalSkipped,
+    skipped: totalSkipped,
+    errors: totalErrors,
+    stateResults,
+  };
 }
 
 // ──────────────────────────────────────────────────────────────────────
@@ -697,7 +705,7 @@ if (require.main === module) {
 async function scrapeActiveNetParksCloudFunction() {
   try {
     const result = await scrapeActiveNetParks();
-    return { success: true, scraper: SCRAPER_NAME, result };
+    return { success: true, scraper: SCRAPER_NAME, ...result, result };
   } catch (err) {
     console.error('Cloud Function Error:', err);
     return { success: false, scraper: SCRAPER_NAME, error: err.message };

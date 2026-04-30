@@ -235,8 +235,21 @@ async function scrapeGenericEvents() {
               ].find(el => el && el.textContent.trim().length > 0 && el.textContent.trim().length < 80);
 
               if (possibleTitles.length > 0) {
+                const rawTitle = possibleTitles[0].textContent.trim();
+                // Sanitize: clean up whitespace and reject titles that look like CSS/JS dumps,
+                // 404 pages, or generic nav fragments. Some WP themes embed <style>/<script>
+                // inside elements whose className matches [class*="event"].
+                const cleanTitle = rawTitle.replace(/\s+/g, ' ').trim();
+                const looksLikeCss = /\{[^}]*[:;][^}]*\}/.test(cleanTitle) || /@(media|supports|keyframes|font-face|import)/i.test(cleanTitle);
+                const tooLong = cleanTitle.length > 200;
+                const NAV_JUNK = /^(error\s*404\s*page|oops[,. ]*i think|page not found|404 not found|event calendar|home|menu|search|subscribe|login|sign in|sign up|contact us)$/i;
+
+                if (looksLikeCss || tooLong || NAV_JUNK.test(cleanTitle)) {
+                  return; // skip junk
+                }
+
                 const event = {
-                  title: possibleTitles[0].textContent.trim(),
+                  title: cleanTitle,
                   date: possibleDates.length > 0 ? possibleDates[0].textContent.trim() : '',
                   time: possibleDates.length > 1 ? possibleDates[1].textContent.trim() : '',
                   description: possibleDescs.length > 0 ? possibleDescs[0].textContent.trim() : '',

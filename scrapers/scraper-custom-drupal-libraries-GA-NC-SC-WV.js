@@ -186,16 +186,48 @@ const LIBRARY_SYSTEMS = [
   }
 ];
 
-// Parse age range from text
-function parseAgeRange(text) {
-  if (!text) return 'All Ages';
+// Parse age range from text.
+// IMPORTANT: This function is called with `name + description + audience` concatenated.
+// We prioritize the explicit audience signal because library descriptions often contain
+// the word "adult" in unrelated context (e.g., "an adult must accompany the child"),
+// which previously caused 43+ kid-friendly storytimes to be incorrectly flagged adult-only.
+function parseAgeRange(text, audienceField = '') {
+  if (!text && !audienceField) return 'All Ages';
 
-  const lowerText = text.toLowerCase();
+  // 1) Strong audience-field signals always win, regardless of what's in the description
+  const aud = (audienceField || '').toLowerCase();
+  if (aud) {
+    // Explicit kid age groups in audience field — return early, don't check the broader text
+    if (/\b(birth|infant|baby|babies|toddler|preschool|pre-school|early\s+childhood)\b/.test(aud)) {
+      if (/\bteens?\b/.test(aud)) return 'All Ages';
+      if (/\b(elementary|grade|kids?|children)\b/.test(aud)) return 'Children (6-12)';
+      if (/\btoddler|preschool|pre-school\b/.test(aud)) return 'Preschool (3-5)';
+      return 'Babies & Toddlers (0-2)';
+    }
+    if (/\b(family|families|all\s*ages|all-ages)\b/.test(aud) && !/\b(adults?\s*only)\b/.test(aud)) {
+      return 'All Ages';
+    }
+    if (/\b(elementary|grade|kids?|children|youth|tweens?)\b/.test(aud)) return 'Children (6-12)';
+    if (/\bteens?\b/.test(aud) && !/\badults?\b/.test(aud)) return 'Teens (13-17)';
+    // Audience explicitly says adults-only and no kid keyword → adults
+    if (/\badults?\b/.test(aud) && !/\b(family|families|all\s*ages|kids?|children|teens?|toddler|preschool|baby|babies|infant)\b/.test(aud)) {
+      return 'Adults';
+    }
+  }
 
-  // Check for adult-only indicators — explicit labels
+  const lowerText = (text || '').toLowerCase();
+
+  // 2) Check for adult-only indicators — explicit labels
   // Catches: "Adults", "Adults Only", "18+", "21+", "Adult", "Audience: Adults"
   // But NOT: "Young Adult" (= teens), "Adults and Children", "Families and Adults"
-  if (/\badults?\b/i.test(lowerText) && !/\byoung\s+adults?\b/i.test(lowerText) && !/\b(and\s+)?adults?\s+(and\s+)?(children|kids|families|family|teens?|all\s*ages)/i.test(lowerText) && !/\b(children|kids|families|family|teens?|all\s*ages)\s+(and\s+)?adults?\b/i.test(lowerText)) {
+  // Also exclude common library phrases ("an adult must accompany", "adult registration required")
+  // that appear in family-event descriptions.
+  if (/\badults?\b/i.test(lowerText)
+      && !/\byoung\s+adults?\b/i.test(lowerText)
+      && !/\b(and\s+)?adults?\s+(and\s+)?(children|kids|families|family|teens?|all\s*ages)/i.test(lowerText)
+      && !/\b(children|kids|families|family|teens?|all\s*ages)\s+(and\s+)?adults?\b/i.test(lowerText)
+      && !/\b(an?\s+)?adults?\s+(must|should|may|will|can|need|are\s+(required|asked|expected))\b/i.test(lowerText)
+      && !/\b(accompanied|accompany|with|by|registration|caregiver|guardian)\s+(?:by\s+)?(?:an?\s+)?adults?\b/i.test(lowerText)) {
     return 'Adults';
   }
   if (/\b18\+/.test(lowerText) || /\b21\+/.test(lowerText)) {
@@ -461,8 +493,10 @@ async function scrapeLibraryEvents(library, browser) {
     // Process each event
     for (const event of events) {
       try {
-        // Parse age range from description, title, and audience tag
-        const ageRange = parseAgeRange(event.name + ' ' + event.description + ' ' + (event.audience || ''));
+        // Parse age range from description, title, and audience tag.
+        // Pass audience separately so explicit audience signals (e.g. "Birth to Preschool")
+        // win over loose "adult" word matches in the description body.
+        const ageRange = parseAgeRange(event.name + ' ' + event.description, event.audience || '');
 
         if (ageRange === 'Adults') {
           console.log(`   ⛔ Skipping adult event: "${event.name.substring(0, 50)}" (audience: ${event.audience || 'keyword match'})`);

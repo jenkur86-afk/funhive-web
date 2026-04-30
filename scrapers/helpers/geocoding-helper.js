@@ -66,8 +66,17 @@ let rateLimitedUntil = 0;
 // Track consecutive 429s to progressively increase base delay
 let consecutive429s = 0;
 
+// Rate limiter for Photon (Komoot's OSM geocoder).
+// Photon doesn't enforce a strict 1 req/s like Nominatim but the public endpoint
+// asks for "reasonable" use, so we cap at ~2 req/s.
+let lastPhotonCall = 0;
+const PHOTON_MIN_DELAY_MS = 500;
+
 async function rateLimitedDelay() {
-  // Respect global 429 cooldown first
+  // Respect global 429 cooldown first.
+  // IMPORTANT: callers should check `isNominatimInCooldown()` BEFORE calling
+  // this function to fast-fail to Photon/centroid instead of sitting in a wait.
+  // This wait is only for cases where the caller decided to wait anyway.
   const now = Date.now();
   if (now < rateLimitedUntil) {
     const cooldownRemaining = rateLimitedUntil - now;
@@ -82,6 +91,57 @@ async function rateLimitedDelay() {
     await new Promise(resolve => setTimeout(resolve, minDelay - elapsed));
   }
   lastNominatimCall = Date.now();
+}
+
+function isNominatimInCooldown() {
+  return Date.now() < rateLimitedUntil;
+}
+
+async function photonRateLimitedDelay() {
+  const elapsed = Date.now() - lastPhotonCall;
+  if (elapsed < PHOTON_MIN_DELAY_MS) {
+    await new Promise(resolve => setTimeout(resolve, PHOTON_MIN_DELAY_MS - elapsed));
+  }
+  lastPhotonCall = Date.now();
+}
+
+/**
+ * Geocode an address via Photon (Komoot's free OSM-based geocoder).
+ * Used as a fallback when Nominatim is rate-limited.
+ *
+ * @returns {Promise<{latitude:number, longitude:number}|null>}
+ */
+async function geocodeViaPhoton(address) {
+  try {
+    await photonRateLimitedDelay();
+    const response = await axios.get('https://photon.komoot.io/api/', {
+      params: {
+        q: address,
+        limit: 1,
+        // Bias to US — Photon doesn't have a strict country filter but accepts
+        // a "lang" hint and sorts by relevance.
+        lang: 'en'
+      },
+      headers: {
+        'User-Agent': 'FunHive-EventAggregator/1.0 (family-events; contact@funhive.com)'
+      },
+      timeout: 8000
+    });
+    const features = response.data?.features || [];
+    if (features.length === 0) return null;
+    const feat = features[0];
+    const coords = feat.geometry?.coordinates;
+    if (!coords || coords.length < 2) return null;
+    // Photon returns [lon, lat]
+    const [lon, lat] = coords;
+    if (typeof lat !== 'number' || typeof lon !== 'number') return null;
+    // Sanity: drop hits clearly outside the US bounding box (rough)
+    if (lat < 18 || lat > 72 || lon < -180 || lon > -65) return null;
+    return { latitude: lat, longitude: lon };
+  } catch (e) {
+    // Don't escalate Photon failures — caller will fall through to centroids
+    return null;
+  }
 }
 
 // Hard fallback: US state centroids for last resort
@@ -209,11 +269,10 @@ async function geocodeWithFallback(address, options = {}) {
   }
 
   try {
-    // Strategy 1: Try the specific address first
-    const coords = await geocodeAddress(address);
+    // Strategy 1: Try the specific address via Nominatim first (skipped if in cooldown)
+    let coords = await geocodeAddress(address);
 
     if (coords) {
-      // Cache successful result (in-memory + persistent)
       if (useCache) {
         geocodeCache.set(address, coords);
         persistentCache[address] = coords;
@@ -222,7 +281,21 @@ async function geocodeWithFallback(address, options = {}) {
       return coords;
     }
 
-    // Strategy 2: Address geocoding failed, try fallback
+    // Strategy 1b: Nominatim missed (or is in cooldown) — try Photon for the
+    // same address. Photon often resolves things Nominatim can't (and is
+    // unaffected by Nominatim's rate limit).
+    coords = await geocodeViaPhoton(address);
+    if (coords) {
+      console.log(`✅ Photon resolved "${address.substring(0, 60)}"`);
+      if (useCache) {
+        geocodeCache.set(address, coords);
+        persistentCache[address] = coords;
+        savePersistentCache();
+      }
+      return coords;
+    }
+
+    // Strategy 2: Address geocoding failed entirely, try fallback chain
     console.log(`⚠️  Geocoding failed for "${address}", trying fallback...`);
     failedAddresses.add(address);
 
@@ -247,70 +320,56 @@ async function geocodeWithFallback(address, options = {}) {
  * @returns {Promise<{latitude: number, longitude: number}>}
  */
 async function tryFallbackGeocode(city, zipCode, state, county) {
+  // Helper: try a fallback address through Nominatim first (skipped if in cooldown),
+  // then Photon, with the same caching semantics each time.
+  async function lookupCascade(fallbackAddress, label) {
+    if (geocodeCache.has(fallbackAddress)) return geocodeCache.get(fallbackAddress);
+    if (persistentCache[fallbackAddress]) {
+      geocodeCache.set(fallbackAddress, persistentCache[fallbackAddress]);
+      return persistentCache[fallbackAddress];
+    }
+
+    let coords = await geocodeAddress(fallbackAddress);
+    if (!coords) {
+      coords = await geocodeViaPhoton(fallbackAddress);
+      if (coords) {
+        console.log(`✅ Photon fallback succeeded${label ? ` (${label})` : ''}: ${fallbackAddress}`);
+      }
+    } else {
+      console.log(`✅ Fallback geocoding succeeded${label ? ` (${label})` : ''}: ${fallbackAddress}`);
+    }
+
+    if (coords) {
+      geocodeCache.set(fallbackAddress, coords);
+      persistentCache[fallbackAddress] = coords;
+      savePersistentCache();
+    }
+    return coords;
+  }
+
   // Fallback 1: Try city + zip code + state
   if (city && zipCode && state) {
     const fallbackAddress1 = `${city}, ${state} ${zipCode}`;
-
-    // Check in-memory + persistent cache for fallback
-    if (geocodeCache.has(fallbackAddress1)) {
-      return geocodeCache.get(fallbackAddress1);
-    }
-    if (persistentCache[fallbackAddress1]) {
-      geocodeCache.set(fallbackAddress1, persistentCache[fallbackAddress1]);
-      return persistentCache[fallbackAddress1];
-    }
-
-    const coords1 = await geocodeAddress(fallbackAddress1);
-    if (coords1) {
-      console.log(`✅ Fallback geocoding succeeded: ${fallbackAddress1}`);
-      geocodeCache.set(fallbackAddress1, coords1);
-      persistentCache[fallbackAddress1] = coords1;
-      savePersistentCache();
-      return coords1;
-    }
+    const coords1 = await lookupCascade(fallbackAddress1, null);
+    if (coords1) return coords1;
   }
 
   // Fallback 2: Try just city + state
   if (city && state) {
     const fallbackAddress2 = `${city}, ${state}`;
-
-    if (geocodeCache.has(fallbackAddress2)) {
-      return geocodeCache.get(fallbackAddress2);
-    }
-    if (persistentCache[fallbackAddress2]) {
-      geocodeCache.set(fallbackAddress2, persistentCache[fallbackAddress2]);
-      return persistentCache[fallbackAddress2];
-    }
-
-    const coords2 = await geocodeAddress(fallbackAddress2);
-    if (coords2) {
-      console.log(`✅ Fallback geocoding succeeded: ${fallbackAddress2}`);
-      geocodeCache.set(fallbackAddress2, coords2);
-      persistentCache[fallbackAddress2] = coords2;
-      savePersistentCache();
-      return coords2;
-    }
+    const coords2 = await lookupCascade(fallbackAddress2, null);
+    if (coords2) return coords2;
   }
 
-  // Fallback 3: Try county + state via Nominatim
+  // Fallback 3: Try county + state
   if (county && state) {
-    const fallbackAddress3 = `${county} County, ${state}`;
-
-    if (geocodeCache.has(fallbackAddress3)) {
-      return geocodeCache.get(fallbackAddress3);
-    }
-    if (persistentCache[fallbackAddress3]) {
-      geocodeCache.set(fallbackAddress3, persistentCache[fallbackAddress3]);
-      return persistentCache[fallbackAddress3];
-    }
-
-    const coords3 = await geocodeAddress(fallbackAddress3);
-    if (coords3) {
-      console.log(`✅ Fallback geocoding succeeded (county): ${fallbackAddress3}`);
-      geocodeCache.set(fallbackAddress3, coords3);
-      persistentCache[fallbackAddress3] = coords3;
-      savePersistentCache();
-      return coords3;
+    // Strip an existing "County" suffix or "-County" hyphenated form so we don't
+    // build double-suffixed strings like "Multi-County County" or "Fairfax County County".
+    const cleanCounty = String(county).replace(/[-\s]?county$/i, '').trim();
+    if (cleanCounty) {
+      const fallbackAddress3 = `${cleanCounty} County, ${state}`;
+      const coords3 = await lookupCascade(fallbackAddress3, 'county');
+      if (coords3) return coords3;
     }
   }
 
@@ -342,7 +401,16 @@ async function tryFallbackGeocode(city, zipCode, state, county) {
  * @param {string} address - Address to geocode
  * @returns {Promise<{latitude: number, longitude: number}|null>}
  */
-async function geocodeAddress(address, retries = 3) {
+async function geocodeAddress(address, retries = 2) {
+  // Fast-fail when we're already known to be in cooldown.
+  // Previously, when the cooldown was active we sat in `rateLimitedDelay()` for
+  // 90-180s PER ADDRESS — this is what produced 6,825 "429" log lines and
+  // pushed LibraryMarket's runtime to 3.5h. Now we return null immediately so
+  // the caller can fall through to Photon or county/state centroid.
+  if (isNominatimInCooldown()) {
+    return null;
+  }
+
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
       await rateLimitedDelay(); // Respect Nominatim's 1 req/sec limit
@@ -373,26 +441,24 @@ async function geocodeAddress(address, retries = 3) {
 
       return null;
     } catch (error) {
-      // Handle 429 rate limiting with global cooldown + exponential backoff
+      // 429: enter global cooldown and IMMEDIATELY return null so the caller
+      // can switch to Photon or use a centroid. We no longer retry within this
+      // function — retries during a Nominatim block are pure waste.
       if (error.response && error.response.status === 429) {
         consecutive429s++;
-        // Set global cooldown so ALL concurrent geocode calls also pause
-        // Start at 90s (was 60s) and scale up: 90s, 180s, 180s cap
-        const cooldownMs = Math.min(90000 * Math.pow(2, attempt), 180000);
+        const cooldownMs = Math.min(90000 * Math.pow(2, Math.max(0, consecutive429s - 1)), 600000); // up to 10 min cap
         rateLimitedUntil = Date.now() + cooldownMs;
-        console.log(`  ⏳ Nominatim rate limited (429 #${consecutive429s}), global cooldown ${cooldownMs / 1000}s, base delay now ${Math.min(3500 + Math.floor(consecutive429s / 3) * 1000, 8000)}ms (attempt ${attempt + 1}/${retries})...`);
-        await new Promise(resolve => setTimeout(resolve, cooldownMs));
-        lastNominatimCall = Date.now();
-        continue;
+        console.log(`  ⏳ Nominatim rate limited (429 #${consecutive429s}), entering ${Math.round(cooldownMs / 1000)}s cooldown — falling through to Photon/centroid for this address.`);
+        return null;
       }
-      // Handle 502/503 server errors with retry
+      // Handle 502/503 server errors with one retry
       if (error.response && (error.response.status === 502 || error.response.status === 503)) {
         const backoffMs = 3000 * (attempt + 1);
         console.log(`  ⏳ Nominatim server error (${error.response.status}), retrying in ${backoffMs / 1000}s...`);
         await new Promise(resolve => setTimeout(resolve, backoffMs));
         continue;
       }
-      // Handle timeout with retry
+      // Handle timeout with one retry
       if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
         if (attempt < retries - 1) {
           console.log(`  ⏳ Nominatim timeout, retrying (attempt ${attempt + 1}/${retries})...`);

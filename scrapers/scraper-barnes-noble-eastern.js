@@ -381,10 +381,16 @@ async function scrapeStore(browser, store) {
         // Check for Cloudflare challenge or empty body
         const bodyText = await page.evaluate(() => document.body?.innerText?.substring(0, 200) || '');
         if (bodyText.includes('Checking your browser') || bodyText.includes('Just a moment') || bodyText.length < 50) {
-          console.log(`    ⏳ Anti-bot challenge detected, waiting...`);
-          await new Promise(resolve => setTimeout(resolve, 8000));
-          const retryBody = await page.evaluate(() => document.body?.innerText?.substring(0, 200) || '');
-          if (retryBody.includes('Checking your browser') || retryBody.length < 50) {
+          console.log(`    ⏳ Anti-bot challenge detected, waiting up to 20s...`);
+          // Two-stage wait: 10s, then check, then another 10s if still blocked.
+          // The previous 8s wait was too short for B&N's Cloudflare challenge — 77/136 stores failed.
+          await new Promise(resolve => setTimeout(resolve, 10000));
+          let retryBody = await page.evaluate(() => document.body?.innerText?.substring(0, 200) || '');
+          if (retryBody.includes('Checking your browser') || retryBody.includes('Just a moment') || retryBody.length < 50) {
+            await new Promise(resolve => setTimeout(resolve, 10000));
+            retryBody = await page.evaluate(() => document.body?.innerText?.substring(0, 200) || '');
+          }
+          if (retryBody.includes('Checking your browser') || retryBody.includes('Just a moment') || retryBody.length < 50) {
             console.log(`    ⚠️  Challenge not resolved for ${storePageUrl}`);
           } else {
             navigated = true;
@@ -715,6 +721,7 @@ async function scrapeBarnesNoble(options = {}) {
     }
 
     let totalSaved = 0;
+    let totalSkipped = 0;
     let totalErrors = 0;
 
     for (const [st, stateEvents] of Object.entries(eventsByState)) {
@@ -746,6 +753,7 @@ async function scrapeBarnesNoble(options = {}) {
 
         console.log(`  📊 ${st}: ${result.saved} saved, ${result.skipped} skipped, ${result.errors} errors`);
         totalSaved += result.saved || 0;
+        totalSkipped += result.skipped || 0;
         totalErrors += result.errors || 0;
       } catch (saveError) {
         console.error(`  ❌ Error saving ${st} events: ${saveError.message}`);
@@ -754,6 +762,21 @@ async function scrapeBarnesNoble(options = {}) {
     }
 
     console.log(`✅ Save complete: ${totalSaved} saved across ${Object.keys(eventsByState).length} states, ${totalErrors} errors`);
+
+    console.log(`\n${'='.repeat(70)}`);
+    console.log(`✅ BARNES & NOBLE EVENTS SCRAPER COMPLETE`);
+    console.log(`${'='.repeat(70)}\n`);
+
+    return {
+      found: allEvents.length,
+      new: totalSaved,
+      saved: totalSaved,
+      duplicates: totalSkipped,
+      skipped: totalSkipped,
+      errors: totalErrors,
+      total: allEvents.length,
+      events: allEvents
+    };
   } else if (dry) {
     console.log('🧪 Dry run — skipping database save');
     console.log(`   Would have saved ${allEvents.length} events`);
@@ -768,7 +791,7 @@ async function scrapeBarnesNoble(options = {}) {
   console.log(`✅ BARNES & NOBLE EVENTS SCRAPER COMPLETE`);
   console.log(`${'='.repeat(70)}\n`);
 
-  return { total: allEvents.length, events: allEvents };
+  return { found: allEvents.length, new: 0, saved: 0, duplicates: 0, errors: 0, total: allEvents.length, events: allEvents };
 }
 
 // ==========================================
@@ -785,10 +808,12 @@ async function scrapeBarnesNobleCloudFunction(req = null, res = null) {
     res.status(200).json({
       success: true,
       total: result.total,
+      saved: result.saved,
       scraperName: SCRAPER_NAME,
     });
   }
 
+  // Return the raw result so the local-scraper-runner can read found/new/duplicates
   return result;
 }
 

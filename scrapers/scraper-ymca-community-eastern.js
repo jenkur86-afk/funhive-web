@@ -275,12 +275,16 @@ async function tryHTMLScraping(center, page) {
 
       function addEvent(title, date, description, url, imageUrl, ageRange) {
         if (!title || title.length < 4) return;
+        // Reject when "date" is a pure time-only string ("9:00 AM", "12:00 PM").
+        // Times alone aren't dates and pollute the logs as "invalid date".
+        const dateStr = (date || '').trim();
+        if (/^\d{1,2}(:\d{2})?\s*[AP]\.?M\.?$/i.test(dateStr)) return;
         const key = title.toLowerCase().trim();
         if (seen.has(key)) return;
         seen.add(key);
         results.push({
           title: title.trim(),
-          date: date || '',
+          date: dateStr,
           description: (description || '').substring(0, 1000),
           url: url || '',
           imageUrl: imageUrl || '',
@@ -337,7 +341,13 @@ async function tryHTMLScraping(center, page) {
           '[class*="daxko"], .program-offering, .offering-card, .schedule-item'
         ).forEach(card => {
           const title = card.querySelector('h2, h3, h4, .title, .name')?.textContent?.trim();
-          const date = card.querySelector('.date, .time, .schedule')?.textContent?.trim() || '';
+          // Prefer .date / time elements over .time / .schedule (which often hold "9:00 AM" only).
+          const date = card.querySelector('.date, .event-date, .program-date')?.textContent?.trim() ||
+                       card.querySelector('time')?.getAttribute('datetime') ||
+                       card.querySelector('time')?.textContent?.trim() ||
+                       card.querySelector('.schedule')?.textContent?.trim() ||
+                       card.querySelector('.time')?.textContent?.trim() ||
+                       '';
           const desc = card.querySelector('p, .description')?.textContent?.trim();
           const url = card.querySelector('a')?.getAttribute('href') || '';
           addEvent(title, date, desc, url, '');
@@ -470,6 +480,9 @@ async function scrapeYMCACommunity(filterStates = null) {
   let allEvents = [];
   const stateResults = {};
   let totalFound = 0;
+  let totalSaved = 0;
+  let totalSkipped = 0;
+  let totalErrors = 0;
 
   try {
     for (let i = 0; i < centersToScrape.length; i++) {
@@ -488,11 +501,22 @@ async function scrapeYMCACommunity(filterStates = null) {
         if (allEvents.length > 0 && !DRY_RUN) {
           console.log(`\n💾 Saving batch of ${allEvents.length} events...`);
 
-          const venues = allEvents.map(e => ({
-            name: e.venueName || e.venue,
-            city: e.city,
-            state: e.state,
-          }));
+          // One venue entry per UNIQUE (venueName, city, state).
+          const venueMap = new Map();
+          for (const e of allEvents) {
+            const name = (e.venueName || e.venue || '').trim();
+            if (!name && !e.address) continue;
+            const key = `${name}|${e.city || ''}|${e.state || ''}`;
+            if (!venueMap.has(key)) {
+              venueMap.set(key, {
+                name: name || `${e.city}, ${e.state}`,
+                address: e.address || '',
+                city: e.city,
+                state: e.state,
+              });
+            }
+          }
+          const venues = Array.from(venueMap.values());
 
           try {
             const result = await saveEventsWithGeocoding(
@@ -506,9 +530,15 @@ async function scrapeYMCACommunity(filterStates = null) {
               }
             );
             const saved = result?.saved || result?.new || result?.imported || 0;
-            console.log(`   💾 Saved: ${saved}`);
+            const skipped = result?.skipped || 0;
+            const errors = result?.errors || 0;
+            totalSaved += saved;
+            totalSkipped += skipped;
+            totalErrors += errors;
+            console.log(`   💾 Saved: ${saved} | ⏭️ Skipped: ${skipped} | ❌ Errors: ${errors}`);
           } catch (err) {
             console.error(`   ❌ Save error: ${err.message}`);
+            totalErrors++;
           }
         }
         allEvents = [];
@@ -529,17 +559,26 @@ async function scrapeYMCACommunity(filterStates = null) {
   // Log summary
   console.log('\n\x1b[36m━━━━━━━━━━━━━ SUMMARY ━━━━━━━━━━━━━━\x1b[0m');
   console.log(`Total events found: ${totalFound}`);
+  console.log(`Total saved: ${totalSaved} | Skipped: ${totalSkipped} | Errors: ${totalErrors}`);
   for (const [state, count] of Object.entries(stateResults).sort((a, b) => b[1] - a[1])) {
     console.log(`  ${state}: ${count} events`);
   }
 
   logScraperResult(SCRAPER_NAME, {
     found: totalFound,
-    new: totalFound,
-    duplicates: 0,
+    new: totalSaved,
+    duplicates: totalSkipped,
   });
 
-  return stateResults;
+  return {
+    found: totalFound,
+    new: totalSaved,
+    saved: totalSaved,
+    duplicates: totalSkipped,
+    skipped: totalSkipped,
+    errors: totalErrors,
+    stateResults,
+  };
 }
 
 // ==========================================
@@ -574,7 +613,7 @@ if (require.main === module) {
 async function scrapeYMCACommunityCloudFunction() {
   try {
     const result = await scrapeYMCACommunity();
-    return { success: true, result };
+    return { success: true, ...result, result };
   } catch (err) {
     console.error('Cloud Function Error:', err);
     return { success: false, error: err.message };

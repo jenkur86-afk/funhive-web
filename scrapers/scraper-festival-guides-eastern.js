@@ -365,6 +365,9 @@ async function scrapeFestivalGuides(filterStates = null) {
   const browser = await launchBrowser();
   let allEvents = [];
   const stateResults = {};
+  let totalSaved = 0;
+  let totalSkipped = 0;
+  let totalErrors = 0;
 
   try {
     for (let i = 0; i < statesToScrape.length; i++) {
@@ -380,12 +383,29 @@ async function scrapeFestivalGuides(filterStates = null) {
         if (allEvents.length > 0 && !DRY_RUN) {
           console.log(`\n💾 Saving batch of ${allEvents.length} events...`);
 
-          // Build venues list for geocoding
-          const venues = allEvents.map(e => ({
-            name: e.venueName || e.title,
-            city: e.city,
-            state: e.state,
-          }));
+          // Build venues list for geocoding — one venue entry per UNIQUE
+          // (city + state) so each city's festivals land at the right city centroid
+          // (festival names are not geocodable, so we don't dedupe by venueName).
+          const venueMap = new Map();
+          for (const e of allEvents) {
+            const city = (e.city || e.details?.city || '').trim();
+            const state = (e.state || e.details?.state || '').trim();
+            // Need at least a city or state to geocode
+            if (!city && !state) continue;
+            const key = `${city}|${state}`;
+            if (!venueMap.has(key)) {
+              const addr = (e.details?.address || (city ? `${city}, ${state}` : state)).trim();
+              venueMap.set(key, {
+                // Use city as the venue "name" so the geocoder doesn't try to look up
+                // a festival name like "Hangout Music Festival" as if it were an address.
+                name: city || state,
+                address: addr,
+                city,
+                state,
+              });
+            }
+          }
+          const venues = Array.from(venueMap.values());
 
           try {
             const result = await saveEventsWithGeocoding(
@@ -399,9 +419,15 @@ async function scrapeFestivalGuides(filterStates = null) {
               }
             );
             const saved = result?.saved || result?.new || result?.imported || 0;
-            console.log(`   💾 Saved: ${saved}`);
+            const skipped = result?.skipped || 0;
+            const errors = result?.errors || 0;
+            totalSaved += saved;
+            totalSkipped += skipped;
+            totalErrors += errors;
+            console.log(`   💾 Saved: ${saved} | ⏭️ Skipped: ${skipped} | ❌ Errors: ${errors}`);
           } catch (err) {
             console.error(`   ❌ Save error: ${err.message}`);
+            totalErrors++;
           }
         }
         allEvents = [];
@@ -423,17 +449,26 @@ async function scrapeFestivalGuides(filterStates = null) {
   const totalEvents = Object.values(stateResults).reduce((sum, n) => sum + n, 0);
   console.log('\n\x1b[35m━━━━━━━━━━━━━ SUMMARY ━━━━━━━━━━━━━━\x1b[0m');
   console.log(`Total festivals found: ${totalEvents}`);
+  console.log(`Total saved: ${totalSaved} | Skipped: ${totalSkipped} | Errors: ${totalErrors}`);
   for (const [state, count] of Object.entries(stateResults).sort((a, b) => b[1] - a[1])) {
     console.log(`  ${state}: ${count} festivals`);
   }
 
   logScraperResult(SCRAPER_NAME, {
     found: totalEvents,
-    new: totalEvents,
-    duplicates: 0,
+    new: totalSaved,
+    duplicates: totalSkipped,
   });
 
-  return stateResults;
+  return {
+    found: totalEvents,
+    new: totalSaved,
+    saved: totalSaved,
+    duplicates: totalSkipped,
+    skipped: totalSkipped,
+    errors: totalErrors,
+    stateResults,
+  };
 }
 
 // ==========================================
@@ -468,7 +503,8 @@ if (require.main === module) {
 async function scrapeFestivalGuidesCloudFunction() {
   try {
     const result = await scrapeFestivalGuides();
-    return { success: true, result };
+    // Spread the stats so the local-scraper-runner can read found/new/duplicates directly
+    return { success: true, ...result, result };
   } catch (err) {
     console.error('Cloud Function Error:', err);
     return { success: false, error: err.message };
