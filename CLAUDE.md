@@ -61,7 +61,13 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - Run `node -c filename.js` to syntax-check any modified scraper file before committing.
 - Filter out reported items in queries with `.eq('reported', false)` and client-side `!e.reported` for RPC results.
 - Use selective `.select()` columns in all Supabase queries. Events list: `id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, min_age, max_age, description, address, location, activity_id, reported, is_free`. Activities list: `id, name, city, state, address, location, zip_code, category, description, age_range, min_age, max_age, hours, is_free, reported`.
-- Run data quality fix scripts (`fix-all.sh`) **weekly**, not after every scraper run — they're a safety net, not a required step. The scrapers' `saveEvent()` handles most validation at save time.
+- Run data quality fix scripts on a tiered cadence:
+  - **Daily**: `node scripts/data-quality-quick.js` (count-only audit, ~5 MB egress) and `bash scripts/fix-all.sh --recent-only` (last 72h only, ~50–150 MB).
+  - **Monthly**: `bash scripts/fix-all.sh` (full sweep, ~1.5–2 GB) and `node scripts/data-quality-check.js` (deep audit, ~500 MB).
+  - The scrapers' `saveEvent()` and `saveActivity()` now handle: junk-title rejection (`isJunkTitle()`), non-family rejection (sexy/cannabis/420/firearms/etc. all in `NON_FAMILY_PATTERNS`), cancelled rejection, past-event rejection, age-range normalization, adult-only rejection, time extraction, venue cleaning, geohash compute from lat/lng, and `event_date` text → `date` TIMESTAMPTZ parsing. Most rows no longer need backfill.
+  - Override the recent-only window via `FIX_WINDOW_HOURS=N bash scripts/fix-all.sh --recent-only` (default 72).
+  - Deletion-style steps inside `fix-event-quality.js` (past events, junk titles, dateless events) bypass `--recent-only` and always full-scan — those checks use selective columns and are cheap, and we always want stale junk gone regardless of when it was scraped.
+  - Description backfill is intentionally disabled — descriptions stay empty if the scraper didn't supply one.
 
 ### Bandwidth Management (Supabase Free Plan — 5.5 GB egress limit)
 - The venue cache in `venue-matcher.js` loads all activities with a **30-minute TTL** using selective columns (id, name, city, state, address, location, geohash, category). This is the single largest egress source during scraper runs.
@@ -116,21 +122,28 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - `database/schema-fix.sql` — Alternative `nearby_events` function
 - `database/migration-reports.sql` — Adds `event_reports` table, `reported` columns, updates RPCs
 
-### Data Quality Scripts (`scripts/` — run locally, weekly)
-- `scripts/fix-all.sh` — Runs all fix scripts in order (Steps 1-5). Usage: `bash scripts/fix-all.sh`
-- `scripts/fix-all-data-quality.js` — Step 1: Normalize age ranges, delete adult-only events, delete past events, backfill parsed dates
-- `scripts/cleanup-nonfamily-events.js` — Step 2: Auto-delete non-family events (3-tier: auto-delete, keep, borderline CSV)
-- `scripts/fix-event-quality.js` — Step 3: Fix missing geohash, location, city, state, descriptions, times, junk titles
-- `scripts/fix-duplicate-dates.js` — Step 4: Fix events with doubled date strings from scraper bug
-- `scripts/fix-missing-fields.js` — Step 5: Backfill addresses (reverse geocode) and descriptions
-- `scripts/data-quality-check.js` — Full audit: completeness, duplicates, scraper health
-- `scripts/fix-duplicate-venues.js` — Clean room suffixes from existing venue names
-- `scripts/fix-cancelled-events.js` — Remove cancelled/closed/postponed events
-- `scripts/archive/` — One-off fix scripts (already run, kept for reference)
+### Data Quality Scripts (`scripts/` — run locally)
+**Daily** (cheap, recent-only):
+- `scripts/data-quality-quick.js` — Count-only audit using Postgres aggregates (~5 MB egress). No row downloads.
+- `scripts/fix-all.sh --recent-only` — Runs Steps 1–4 against the last 72h only (configurable via `FIX_WINDOW_HOURS`). Deletion steps (past, junk, dateless) always full-scan.
+
+**Monthly** (full sweep):
+- `scripts/fix-all.sh` — Full sweep across all 4 steps.
+- `scripts/data-quality-check.js` — Deep audit: duplicates, distributions, scraper health, sample issues.
+
+**Individual fix scripts** (all support `--save`, `--recent-only`):
+- `scripts/fix-all-data-quality.js` — Step 1: normalize age ranges, delete adult-only events, delete past events, backfill parsed dates.
+- `scripts/cleanup-nonfamily-events.js` — Step 2: auto-delete non-family events (3-tier: auto-delete, keep, borderline CSV). saveEvent now rejects most of these at scrape time.
+- `scripts/fix-event-quality.js` — Step 3: fix missing geohash, location, city, state, times, junk titles, past events. Description backfill removed.
+- `scripts/fix-missing-fields.js` — Step 4: backfill activity addresses via reverse geocode. Description backfill disabled.
+- `scripts/fix-duplicate-venues.js` — Clean room suffixes from existing venue names (one-off).
+- `scripts/fix-cancelled-events.js` — Remove cancelled/closed/postponed events (saveEvent now does this at scrape time).
+- `scripts/archive/` — Retired scripts kept for reference (e.g., `fix-duplicate-dates.js` — Communico bug fixed Apr 2026).
 
 ### Prompts (top-level)
 - `SCRAPER-DIAGNOSIS-PROMPT.md` — Paste into Cowork after running scrapers
 - `DATA-QUALITY-DIAGNOSIS-PROMPT.md` — Paste into Cowork after running data-quality-check.js
+- `SCRIPT-WRITING-PROMPT.md` — Paste into Cowork when asking Claude to write a new script in `scripts/` (encodes selective `.select()`, `--save`/`--recent-only` conventions, save-time-vs-script trade-off, egress rules)
 
 ## Age Range Brackets
 The platform uses 5 age brackets with numeric range overlap:

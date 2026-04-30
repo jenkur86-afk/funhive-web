@@ -12,19 +12,30 @@ Do not ask me questions — just fix everything you can. For anything that requi
 
 ### Fix scripts overview
 
-All fix scripts live in the `scripts/` directory and are run together via `bash scripts/fix-all.sh`:
+The pipeline runs on a tiered cadence (Apr 2026):
 
-1. **`scripts/fix-all-data-quality.js --save`** — age range normalization, adult event deletion (by age_range), past event deletion, date backfill (parsed TIMESTAMPTZ from event_date text)
-2. **`scripts/cleanup-nonfamily-events.js --save`** — catches non-family events by name/description keywords (burlesque, cannabis, 21+, sexy, etc.) that the age-range check misses
-3. **`scripts/fix-event-quality.js --save`** — junk title deletion, dateless event deletion, past event deletion, missing state, missing geohash, missing city (reverse geocode), missing location (forward geocode), missing description generation, missing start_time/end_time (parsed from event_date text), PLUS all the same fixes for the **activities table** (missing geohash, city, location, description)
+**Daily** (~5 MB + 50–150 MB egress):
+- `node scripts/data-quality-quick.js` — Count-only audit using Postgres aggregates (no row downloads).
+- `bash scripts/fix-all.sh --recent-only` — Runs all four fix steps against the last 72h only (configurable via `FIX_WINDOW_HOURS=N`). Deletion-style steps (past events, junk titles, dateless events) always full-scan because those queries use selective columns and we always want stale junk gone.
 
-The combined runner script is `scripts/fix-all.sh` — it runs all five steps in order and stops on any failure.
+**Monthly** (~2.5 GB egress):
+- `bash scripts/fix-all.sh` — Full sweep across all four steps.
+- `node scripts/data-quality-check.js` — Deep audit (this prompt) with duplicates, distributions, scraper health, and sample issues.
+
+**Steps inside fix-all.sh:**
+
+1. **`scripts/fix-all-data-quality.js --save [--recent-only]`** — age range normalization, adult event deletion (by age_range), past event deletion, date backfill (parsed TIMESTAMPTZ from event_date text)
+2. **`scripts/cleanup-nonfamily-events.js --save [--recent-only]`** — catches non-family events by name/description keywords (burlesque, cannabis, 21+, sexy, etc.). saveEvent now rejects most of these at scrape time; this remains as a backstop.
+3. **`scripts/fix-event-quality.js --save [--recent-only]`** — junk title deletion, dateless event deletion, past event deletion, missing state, missing geohash, missing city (reverse geocode), missing location (forward geocode), missing start_time/end_time (parsed from event_date text), PLUS the same fixes for the **activities table** (missing geohash, city, location). **Description backfill removed** — descriptions stay empty if the scraper didn't supply one.
+4. **`scripts/fix-missing-fields.js --save --addresses [--recent-only]`** — backfill activity addresses via reverse geocode (Nominatim). Description backfill disabled.
+
+`scripts/fix-duplicate-dates.js` was retired Apr 2026 (Communico scraper bug fixed); old copy in `scripts/archive/`.
 
 ### Bandwidth management (Supabase free plan — 5.5 GB egress limit)
 
-- Run the data quality pipeline **weekly**, not after every scraper run. The scrapers' `saveEvent()` already handles date parsing, age detection, cancelled event filtering, and venue name cleaning at save time — the fix scripts are a safety net, not a required step.
+- Stick to the tiered cadence above. Daily `--recent-only` runs are cheap because saveEvent/saveActivity now do almost all validation at scrape time (junk titles, non-family, cancelled, past, age normalization, geohash compute from lat/lng, parsed date from event_date text). Most rows have nothing left to fix by the time the script gets to them.
 - When writing or modifying fix scripts, always use `.select('column1, column2, ...')` with only the columns the script actually reads — never `select('*')`. Each full-table scan of events (~500k rows) with all columns costs ~100-500 MB of egress.
-- The `fetchAll()` pattern in existing scripts already uses selective columns — preserve this when making changes.
+- The `fetchAll()` pattern in existing scripts already uses selective columns — preserve this when making changes. Each script's `fetchAll` also accepts a `skipRecentFilter: true` flag on filter objects so deletion-style steps can full-scan even in `--recent-only` mode.
 - Prefer batched updates over individual row updates to minimize round-trips.
 
 ### What to look for and fix
@@ -96,6 +107,32 @@ The combined runner script is `scripts/fix-all.sh` — it runs all five steps in
 - When missing location/geohash is high for a scraper, cross-reference its site list counties against `scrapers/utils/county-centroids.js` and add any missing counties
 - Run `node -c filename.js` syntax check on every modified file
 - At the end, do NOT tell me to run `bash fix-all.sh` or `node scripts/data-quality-check.js` — I already run those myself before and after using this prompt. Just list any scraper code fixes or new patterns you added.
+
+### Final summary — REQUIRED format
+
+End your response with a section titled **"Changes to push"** that I cannot miss. Be explicit and prescriptive:
+
+1. **List every file you modified**, in two groups:
+   - **Scraper / script changes** (`scrapers/**`, `database/**`, `scripts/**`) — pushing is for backup/version control only and does **not** trigger a Vercel deploy.
+   - **Website changes** (`src/**`, `public/**`, `next.config.*`, `package.json`, `package-lock.json`) — pushing **WILL** auto-deploy to Vercel from `main`. Call this out loudly so I can review the diff before pushing if I want.
+
+2. **Run `git status` for me first** before recommending any commit. If the working tree contains files I didn't ask you to touch (other uncommitted edits from prior sessions, etc.), list them under a separate heading "Other uncommitted changes — review before staging". Do not assume I want them committed.
+
+3. **Give me copy-paste-ready git commands**, one per line (no backslash continuations — they break in pasted blocks). Use a single `git add` per file or per small group. Avoid parentheses in commit messages (zsh chokes on them). Example shape:
+
+   ```
+   git add scripts/fix-foo.js scripts/fix-bar.js
+   git commit -m "Short imperative summary - no parens"
+   git push origin main
+   ```
+
+4. **State whether `npm install` is needed** and in which directory.
+
+5. If a fix only updates a `scripts/fix-*.js` file, remind me that running it locally is what actually cleans the DB — pushing alone changes nothing in Supabase.
+
+6. If any change does NOT need to be pushed, say so explicitly. Default assumption: I want changes committed and pushed for backup.
+
+Do not bury push instructions in prose. Make them a checklist I can follow without re-reading the rest of the response.
 
 ### Data quality check output
 

@@ -74,7 +74,11 @@ I just ran FunHive scrapers. Analyze the full output I'm pasting below and fix A
 - The venue cache in `venue-matcher.js` is the single largest egress source. It loads all activities into memory with a **30-minute TTL** and selective columns (id, name, city, state, address, location, geohash, category). Do NOT reduce the TTL or add more columns to the cache query.
 - When writing new scrapers or fix scripts that read from Supabase, always use `.select('column1, column2, ...')` with only the columns you need — never `select('*')`.
 - If a scraper needs to check for duplicates, use the existing `checkDuplicate()` in `supabase-adapter.js` which selects only `id, name`.
-- Data quality fix scripts should be run **weekly** (not after every scraper run) to minimize egress. The scrapers' `saveEvent()` function already handles date parsing, age detection, cancelled event filtering, and venue name cleaning at save time.
+- Data quality runs on a tiered cadence (Apr 2026):
+  - **Daily**: `node scripts/data-quality-quick.js` (count-only audit, ~5 MB) and `bash scripts/fix-all.sh --recent-only` (last 72h, ~50–150 MB).
+  - **Monthly**: `bash scripts/fix-all.sh` (full sweep, ~1.5–2 GB) and `node scripts/data-quality-check.js` (deep audit, ~500 MB).
+  - Override window with `FIX_WINDOW_HOURS=N` (e.g., 168 for a week-long catch-up).
+- The scrapers' `saveEvent()` and `saveActivity()` now do almost all validation at scrape time: junk-title rejection (`isJunkTitle()`), non-family rejection (including sexy/cannabis/420/firearms/gambling/nightclub patterns synced from `cleanup-nonfamily-events.js`), cancelled rejection, past-event rejection, age normalization, adult-only rejection, time extraction, venue cleaning, geohash compute from lat/lng, and `event_date` text → `date` TIMESTAMPTZ parsing. Most rows no longer need backfill — daily fix runs do very little work.
 
 ### How to fix
 
@@ -84,6 +88,33 @@ I just ran FunHive scrapers. Analyze the full output I'm pasting below and fix A
 - Run `node -c filename.js` syntax check on every modified file
 - For date normalization changes, verify against the test cases in the date helper
 - Summarize what you fixed and what I need to do (e.g., `npm install`, re-run a specific scraper)
+
+### Final summary — REQUIRED format
+
+End your response with a section titled **"Changes to push"** that I cannot miss. Be explicit and prescriptive:
+
+1. **List every file you modified**, in two groups:
+   - **Scraper changes** (`scrapers/**`, `database/**`, `scripts/**`) — these run locally; pushing is for backup/version control only and does **not** trigger a Vercel deploy.
+   - **Website changes** (`src/**`, `public/**`, `next.config.*`, `package.json`, `package-lock.json`) — pushing **WILL** auto-deploy to Vercel from `main`. Call this out loudly so I can review the diff before pushing if I want.
+
+2. **Run `git status` for me first** before recommending any commit. If the working tree contains files I didn't ask you to touch (other uncommitted edits from prior sessions, the `.geocode-cache.json` file, etc.), list them under a separate heading "Other uncommitted changes — review before staging". Do not assume I want them committed.
+
+3. **Give me copy-paste-ready git commands**, one per line (no backslash continuations — they break in pasted blocks). Use a single `git add` per file or per small group. Avoid parentheses in commit messages (zsh chokes on them). Example shape:
+
+   ```
+   git add scrapers/helpers/foo.js scrapers/helpers/bar.js
+   git add scrapers/scraper-baz.js
+   git commit -m "Short imperative summary - no parens"
+   git push origin main
+   ```
+
+4. **State whether `npm install` is needed.** If you added a dependency to `scrapers/package.json` or the root `package.json`, say so and tell me which directory to run it in. If no new deps, say "No `npm install` needed."
+
+5. **State which scrapers I should re-run** to confirm the fixes worked, and what specific log line to look for (e.g. "Master line should now show `Found: N, New: M, Duplicates: K` instead of `0/0/0`").
+
+6. If any change does NOT need to be pushed (e.g. the fix only affects scraper behavior locally and I run scrapers from this machine), say so explicitly. Default assumption: I want changes committed and pushed for backup.
+
+Do not bury push instructions in prose. Make them a checklist I can follow without re-reading the rest of the response.
 
 ### Scraper output
 
