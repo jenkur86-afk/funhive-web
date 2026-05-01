@@ -355,7 +355,7 @@ async function scrapeRegion(region, browser, daysToScrape) {
 // MAIN SCRAPER FUNCTION
 // ==========================================
 
-async function scrapeKidsOutAndAbout(filterStates = null, daysToScrape = 14) {
+async function scrapeKidsOutAndAbout(filterStates = null, daysToScrape = 60) {
   console.log('\n\x1b[33m👶━━━━━━━━━━━━━ KIDS OUT AND ABOUT SCRAPER (Eastern) ━━━━━━━━━━━━━━👶\x1b[0m');
 
   const regionsToScrape = filterStates
@@ -477,7 +477,7 @@ if (require.main === module) {
 
 async function scrapeKidsOutAndAboutCloudFunction() {
   try {
-    const result = await scrapeKidsOutAndAbout(null, 14);
+    const result = await scrapeKidsOutAndAbout(null, 60);
     return { success: true, result };
   } catch (err) {
     console.error('Cloud Function Error:', err);

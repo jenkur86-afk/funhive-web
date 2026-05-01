@@ -485,14 +485,19 @@ async function fetchEventDetail(config, event) {
 }
 
 /**
- * Fetch events covering the next 60 days in two monthly chunks.
+ * Fetch events covering at least the next 60 days.
+ *
+ * Uses 3 calendar-month chunks (current + next + month after) so that even
+ * when run on the last day of a month we still get ≥60 days of forward
+ * coverage. With only 2 chunks, end-of-month runs got as little as 31 days
+ * of forward coverage.
  */
 async function fetchAllEvents(config) {
   const allEvents = [];
   const now = new Date();
 
-  // Fetch current month and next month
-  for (let monthOffset = 0; monthOffset < 2; monthOffset++) {
+  // Fetch current month + next 2 months → always ≥60 days forward
+  for (let monthOffset = 0; monthOffset < 3; monthOffset++) {
     const start = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
     const end = new Date(now.getFullYear(), now.getMonth() + monthOffset + 1, 0); // last day of month
 
@@ -501,7 +506,7 @@ async function fetchAllEvents(config) {
     console.log(`  ✅ Got ${events.length} events`);
     allEvents.push(...events);
 
-    if (monthOffset < 1) {
+    if (monthOffset < 2) {
       await new Promise(resolve => setTimeout(resolve, 1500));
     }
   }
