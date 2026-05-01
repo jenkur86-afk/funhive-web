@@ -107,6 +107,52 @@ function cleanVenueName(venue) {
   return cleaned.trim();
 }
 
+/**
+ * Derive a venue when the scraper didn't supply one.
+ * Tries (in order): "X at <Venue>" / "@ <Venue>" pattern in name,
+ * first comma-separated component of address (if not a street number),
+ * then "<city>, <state>" as a last resort. Returns null if nothing works.
+ *
+ * Used as a fallback in saveEvent/flattenEvent so new rows never land with
+ * venue=NULL.
+ */
+function deriveVenueFallback(name, address, city, state) {
+  // 1. Name "at <Venue>" / "@ <Venue>"
+  if (name && typeof name === 'string') {
+    const cleaned = name.replace(/\s+/g, ' ').trim();
+    const atMatch = cleaned.match(/\s+(?:at|@)\s+([A-Z][^!?,–—\-|]{2,80})$/);
+    if (atMatch) {
+      const candidate = atMatch[1].trim();
+      if (!/^\d/.test(candidate) && !/^\d+\s*(am|pm)/i.test(candidate)) {
+        const v = candidate.replace(/[\s\-–—|:]+$/, '').trim();
+        if (v.length >= 3) return v;
+      }
+    }
+  }
+
+  // 2. First component of address (if not a street number / state / zip)
+  if (address && typeof address === 'string') {
+    const first = address.split(',')[0]?.trim() || '';
+    if (
+      first.length >= 3 &&
+      first.length <= 80 &&
+      /[a-zA-Z]/.test(first) &&
+      !/^\d+\s/.test(first) &&     // skip "123 Main St"
+      !/^[A-Z]{2}$/.test(first) && // skip "TX"
+      !/^\d{5}/.test(first)         // skip zip
+    ) {
+      return first;
+    }
+  }
+
+  // 3. City fallback so the event has SOMETHING
+  if (city) {
+    return state ? `${city}, ${state}` : String(city);
+  }
+
+  return null;
+}
+
 // ============================================================================
 // TIME EXTRACTION HELPER
 // ============================================================================
@@ -635,6 +681,16 @@ async function saveEvent(id, data) {
     state: normalizeState(data.state || data.location?.state) || null,
     zip_code: data.location?.zipCode || null,
     address: truncate(data.location?.address, 200) || null,
+  };
+
+  // Backfill venue if the scraper didn't supply one — tries name "at X",
+  // address first component, then city fallback. Better than venue=NULL.
+  if (!row.venue) {
+    const derived = deriveVenueFallback(row.name, row.address, row.city, row.state);
+    if (derived) row.venue = truncate(cleanVenueName(derived), 200);
+  }
+
+  Object.assign(row, {
     geohash: data.geohash || null,
     activity_id: data.activityId || null,
     source_url: truncate(data.metadata?.sourceUrl, 400) || null,
@@ -644,7 +700,7 @@ async function saveEvent(id, data) {
     start_time: data.startTime || null,
     end_time: data.endTime || null,
     age_range: null,  // set below after normalization
-  };
+  });
 
   // Normalize age_range: use scraper-provided value or auto-detect, then normalize to standard brackets
   const rawAgeRange = data.ageRange || detectAgeRange(data.name, data.description) || null;
@@ -1193,6 +1249,15 @@ function flattenEvent(data) {
       }
     }
   }
+
+  // Backfill venue if scraper didn't supply one — must run after location
+  // so address/city are populated. Tries name "at X", address first
+  // component, then city fallback. Better than venue=NULL.
+  if (!row.venue) {
+    const derived = deriveVenueFallback(row.name, row.address, row.city, row.state);
+    if (derived) row.venue = trunc(cleanVenueName(derived), 200);
+  }
+
   if (data.metadata) {
     row.source_url = row.source_url || trunc(data.metadata.sourceUrl, 500);
     row.scraper_name = row.scraper_name || data.metadata.scraperName || data.metadata.sourceName || data.metadata.source;
@@ -1361,4 +1426,6 @@ module.exports = {
   saveActivity,
   saveScraperLog,
   checkDuplicate,
+  cleanVenueName,
+  deriveVenueFallback,
 };
