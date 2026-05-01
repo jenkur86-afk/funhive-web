@@ -850,7 +850,7 @@ function createFirestoreCompatibleDB() {
               try {
                 flattened = flattenForTable(table, data);
               } catch (e) {
-                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event')) {
+                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event') || e.message?.includes('Skipping junk-title event') || e.message?.includes('Skipping dateless event')) {
                   return; // silently skip
                 }
                 throw e;
@@ -908,7 +908,7 @@ function createFirestoreCompatibleDB() {
           try {
             flattened = flattenForTable(collectionName, data);
           } catch (e) {
-            if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event')) {
+            if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event') || e.message?.includes('Skipping junk-title event') || e.message?.includes('Skipping dateless event')) {
               return { id }; // silently skip
             }
             throw e;
@@ -952,7 +952,7 @@ function createFirestoreCompatibleDB() {
                 upsertByTable[table].push({ id: op.id, ...flattenForTable(table, op.data) });
               } catch (e) {
                 // Skip past events and invalid events gracefully
-                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event')) {
+                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event') || e.message?.includes('Skipping junk-title event') || e.message?.includes('Skipping dateless event')) {
                   continue;
                 }
                 throw e;
@@ -1084,6 +1084,7 @@ function flattenEvent(data) {
 
   // Reject junk titles (nav links, footer items, all-caps acronyms, gibberish)
   if (isJunkTitle(data.name)) {
+    console.log(`  ⏭️ Skipping junk-title event: "${data.name}"`);
     throw new Error(`Skipping junk-title event: "${data.name}"`);
   }
 
@@ -1111,6 +1112,7 @@ function flattenEvent(data) {
   // displayed meaningfully and just get deleted by fix-event-quality.js.
   const eventDateStr = ((data.eventDate || data.event_date) || '').toString().trim();
   if (!eventDateStr || eventDateStr.length < 4) {
+    console.log(`  ⏭️ Skipping dateless event: "${data.name}"`);
     throw new Error(`Skipping dateless event: "${data.name}"`);
   }
 
