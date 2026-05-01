@@ -10,8 +10,8 @@
  * Estimated Events: 200+ per month
  *
  * Usage:
- *   node scraper-kidsoutandabout-dmv.js          # Test mode (3 days)
- *   node scraper-kidsoutandabout-dmv.js --full   # Full mode (30 days)
+ *   node scraper-kidsoutandabout-dmv.js          # Test mode (7 days)
+ *   node scraper-kidsoutandabout-dmv.js --full   # Full mode (60 days)
  *
  * Cloud Function: scheduledKidsOutAndAboutDMV
  * Schedule: Every 3 days
@@ -420,7 +420,8 @@ async function saveEvents(events) {
  * Main scraper function
  */
 async function scrapeKidsOutAndAboutDMV(options = {}) {
-  const { daysToScrape = 7, testMode = false } = options;
+  // Default to 60 days — matches MacaroniKid + park scrapers. Registry call passes no args.
+  const { daysToScrape = 60, testMode = false } = options;
 
   console.log(`\n🐝 KIDS OUT AND ABOUT DMV SCRAPER`);
   console.log(`📅 Scraping ${daysToScrape} days of events`);
@@ -637,14 +638,14 @@ async function scrapeKidsOutAndAboutDMV(options = {}) {
  */
 async function scrapeKidsOutAndAboutDMVCloudFunction() {
   console.log('☁️ Running as Cloud Function');
-  return await scrapeKidsOutAndAboutDMV({ daysToScrape: 14, testMode: false });
+  return await scrapeKidsOutAndAboutDMV({ daysToScrape: 60, testMode: false });
 }
 
 // Run if executed directly
 if (require.main === module) {
   const args = process.argv.slice(2);
   const fullMode = args.includes('--full');
-  const daysToScrape = fullMode ? 30 : 7;
+  const daysToScrape = fullMode ? 60 : 7;
 
   console.log(`\n🚀 Starting Kids Out and About DMV Scraper (${fullMode ? 'Full' : 'Test'} Mode)`);
 

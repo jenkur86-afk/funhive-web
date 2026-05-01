@@ -1077,10 +1077,10 @@ async function tryApiScrape(library) {
   const urlObj = new URL(library.url);
   const baseUrl = urlObj.origin;
 
-  // Build date range: today → 30 days out
+  // Build date range: today → 60 days out (matches MacaroniKid + park scrapers)
   const today = new Date();
   const endDate = new Date(today);
-  endDate.setDate(endDate.getDate() + 30);
+  endDate.setDate(endDate.getDate() + 60);
 
   const formatDate = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
