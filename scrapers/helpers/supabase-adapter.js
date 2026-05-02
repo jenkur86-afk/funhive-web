@@ -535,25 +535,47 @@ function isJunkTitle(name) {
   if (!name || typeof name !== 'string') return true;
   const trimmed = name.trim();
 
-  // Empty or extremely short
-  if (trimmed.length < 5) return true;
+  // Empty or extremely short — but allow 3-4 char real event names (GLOW, PAWS, WORM, 4H)
+  if (trimmed.length < 3) return true;
 
-  // All caps or alphanumeric-only AND short — looks like a menu acronym ("HOME", "FAQ", "ABOUT US")
-  if (trimmed.length < 12 && /^[A-Z0-9\s\-_/&]+$/.test(trimmed)) return true;
+  // (Removed prior "all caps short" rule — it was rejecting legitimate MacaroniKid
+  // titles like "GLOW", "KIDS FIT", "TOT ROCK", "STEAM CLUB". The explicit NAV_JUNK
+  // list below catches the real menu acronyms.)
 
   // Common navigation / boilerplate strings
   const NAV_JUNK = [
     /^(home|about|contact|menu|search|login|sign\s*in|sign\s*up|register|subscribe)$/i,
+    /^(about|contact)\s+us$/i,
+    /^(log|sign)\s+(in|out|up)$/i,
     /^(events?|calendar|schedule|programs?|services?|resources?|news|blog)$/i,
     /^(faq|faqs|terms|privacy|policy|sitemap|copyright|all\s*rights\s*reserved)$/i,
+    /^our\s+(team|story|mission|sponsors?|staff|values?)$/i,
     /^(read\s*more|learn\s*more|view\s*all|see\s*all|click\s*here|more\s*info)$/i,
     /^(next|previous|prev|back|forward|page\s*\d+|»|«|→|←)$/i,
-    /^(loading|please\s*wait|error|404|page\s*not\s*found)$/i,
+    /^(loading|please\s*wait|error)$/i,
+    /^404\b/i,
+    /page\s+not\s+found/i,
     /^(cookies?|gdpr|accept|decline|opt\s*out)$/i,
     /^(view|browse|filter|sort|reset|clear|apply|submit|cancel|close|save)$/i,
     /^(skip\s+to\s+(content|main|navigation))$/i,
     /^(toggle\s+(menu|navigation|search))$/i,
     /^(rss|feed|share|tweet|like|follow|email)$/i,
+    // Aggregate/listing-page junk that slips through individual scrapers
+    /^all\s+events?$/i,
+    /^upcoming\s+(events?|launches?|activities|programs?)/i,
+    /^recurring\s+events?$/i,
+    /^events?\s+(from|search|search\s+and\s+views|time|by\s+date)/i,
+    /^by\s+date(\(s\))?$/i,
+    /^sold\s+out$/i,
+    /^shopping\s+cart$/i,
+    /^more\s+to\s+explore$/i,
+    /^benefits?\s+of\s+season\s+tickets?$/i,
+    /^production\s+history$/i,
+    /^make\s+a\s+donation$/i,
+    /^season\s+tickets?$/i,
+    /^the\s+content\s+you\s+were\s+looking/i,
+    /^it\s+appears\s+we\s+have\s+a/i,
+    /^(events?|programs?|activities)\s+and\s+activities/i,
   ];
   for (const pattern of NAV_JUNK) {
     if (pattern.test(trimmed)) return true;

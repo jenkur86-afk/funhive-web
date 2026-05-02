@@ -662,8 +662,16 @@ async function scrapeMacaroniKidMaryland() {
         if (imported === 0) {
           console.log(`  🕐 Time debug: { name: "${event.name?.substring(0, 40)}", startTime: ${JSON.stringify(event.startTime)}, endTime: ${JSON.stringify(event.endTime)} }`);
         }
-        await db.collection('events').doc(eventId).set(event);
-        imported++;
+        try {
+          await db.collection('events').doc(eventId).set(event);
+          imported++;
+        } catch (saveErr) {
+          if (/^Skipping /.test(saveErr.message)) {
+            console.log(`  ⏭️  ${saveErr.message}`);
+          } else {
+            console.error(`  ⚠️  Save error: ${saveErr.message}`);
+          }
+        }
       }
       sitesSinceRestart++;
 

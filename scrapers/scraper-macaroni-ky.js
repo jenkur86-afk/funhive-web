@@ -550,8 +550,19 @@ async function scrapeMacaroniKidKentucky() {
 
       const events = await scrapeSite(browser, site, maxEventsPerSite);
       for (const event of events) {
-        await db.collection('events').add(event);
-        imported++;
+        try {
+          await db.collection('events').add(event);
+          imported++;
+        } catch (saveErr) {
+          // saveEvent throws for junk titles, non-family, past dates, etc.
+          // These are intentional skips — log and continue with the next event
+          // so one bad row doesn't kill the whole site's batch.
+          if (/^Skipping /.test(saveErr.message)) {
+            console.log(`  ⏭️  ${saveErr.message}`);
+          } else {
+            console.error(`  ⚠️  Save error: ${saveErr.message}`);
+          }
+        }
       }
       sitesSinceRestart++;
 
