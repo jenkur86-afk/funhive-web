@@ -253,6 +253,18 @@ async function scrapeState(stateInfo, browser) {
     await page.close();
   } catch (err) {
     console.error(`   ❌ Failed: ${err.message}`);
+    // Re-throw browser-died errors so the outer browser-restart logic can fire.
+    // Without this rethrow, the dead browser keeps being reused and every
+    // remaining state silently returns 0 events.
+    if (
+      err.message.includes('Protocol error') ||
+      err.message.includes('Connection closed') ||
+      err.message.includes('Target closed') ||
+      err.message.includes('detached') ||
+      err.message.includes('main frame too early')
+    ) {
+      throw err;
+    }
   }
 
   return events;
@@ -275,6 +287,8 @@ async function scrapeFairsFestivals(filterStates = null) {
   let browser = await launchBrowser();
   let allEvents = [];
   const stateResults = {};
+  let totalSaved = 0;
+  let totalDuplicates = 0;
 
   try {
     for (let i = 0; i < statesToScrape.length; i++) {
@@ -333,7 +347,10 @@ async function scrapeFairsFestivals(filterStates = null) {
               }
             );
             const saved = result?.saved || result?.new || result?.imported || 0;
+            const dup = result?.skipped || result?.duplicates || 0;
             console.log(`   💾 Saved: ${saved}`);
+            totalSaved += saved;
+            totalDuplicates += dup;
           } catch (err) {
             console.error(`   ❌ Save error: ${err.message}`);
           }
@@ -363,11 +380,17 @@ async function scrapeFairsFestivals(filterStates = null) {
 
   logScraperResult(SCRAPER_NAME, {
     found: totalEvents,
-    new: totalEvents,
-    duplicates: 0,
+    new: totalSaved,
+    duplicates: totalDuplicates,
   });
 
-  return stateResults;
+  return {
+    found: totalEvents,
+    new: totalSaved,
+    saved: totalSaved,
+    duplicates: totalDuplicates,
+    stateResults,
+  };
 }
 
 // ==========================================
@@ -402,7 +425,15 @@ if (require.main === module) {
 async function scrapeFairsFestivalsCloudFunction() {
   try {
     const result = await scrapeFairsFestivals();
-    return { success: true, result };
+    // Pass through the count fields so the runner can log them correctly
+    return {
+      success: true,
+      found: result?.found || 0,
+      new: result?.new || 0,
+      saved: result?.saved || 0,
+      duplicates: result?.duplicates || 0,
+      result,
+    };
   } catch (err) {
     console.error('Cloud Function Error:', err);
     return { success: false, error: err.message };

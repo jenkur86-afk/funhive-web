@@ -792,6 +792,7 @@ async function scrapeEventbriteFamily(options = {}) {
     }
 
     let totalSaved = 0;
+    let totalDuplicates = 0;
     for (const [st, stateEvents] of Object.entries(byState)) {
       // Build per-event venue entries for geocoding (not one generic per city)
       const venueMap = new Map();
@@ -818,13 +819,18 @@ async function scrapeEventbriteFamily(options = {}) {
           }
         );
         const saved = result?.saved || result?.new || result?.imported || 0;
+        const dup = result?.skipped || result?.duplicates || 0;
         console.log(`   💾 ${st}: ${saved} saved`);
         totalSaved += saved;
+        totalDuplicates += dup;
       } catch (saveError) {
         console.error(`   ❌ ${st} save error: ${saveError.message}`);
       }
     }
     console.log(`✅ Save complete: ${totalSaved} total`);
+    // Stash counts so the outer return can include them
+    scrapeEventbriteFamily.lastSaved = totalSaved;
+    scrapeEventbriteFamily.lastDuplicates = totalDuplicates;
   } else if (dry) {
     console.log('🧪 Dry run — skipping database save');
     console.log(`   Would have saved ${allEvents.length} events`);
@@ -840,7 +846,14 @@ async function scrapeEventbriteFamily(options = {}) {
   console.log(`✅ EVENTBRITE FAMILY EVENTS SCRAPER COMPLETE`);
   console.log(`${'='.repeat(70)}\n`);
 
-  return { total: allEvents.length, events: allEvents };
+  return {
+    total: allEvents.length,
+    found: allEvents.length,
+    new: scrapeEventbriteFamily.lastSaved || 0,
+    saved: scrapeEventbriteFamily.lastSaved || 0,
+    duplicates: scrapeEventbriteFamily.lastDuplicates || 0,
+    events: allEvents,
+  };
 }
 
 // ==========================================

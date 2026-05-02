@@ -440,6 +440,8 @@ async function scrapeChildrensTheater(filterStates = null) {
   let allEvents = [];
   const stateResults = {};
   let totalFound = 0;
+  let totalSaved = 0;
+  let totalDuplicates = 0;
 
   try {
     for (let i = 0; i < theatersToScrape.length; i++) {
@@ -476,7 +478,10 @@ async function scrapeChildrensTheater(filterStates = null) {
               }
             );
             const saved = result?.saved || result?.new || result?.imported || 0;
+            const dup = result?.skipped || result?.duplicates || 0;
             console.log(`   💾 Saved: ${saved}`);
+            totalSaved += saved;
+            totalDuplicates += dup;
           } catch (err) {
             console.error(`   ❌ Save error: ${err.message}`);
           }
@@ -505,11 +510,17 @@ async function scrapeChildrensTheater(filterStates = null) {
 
   logScraperResult(SCRAPER_NAME, {
     found: totalFound,
-    new: totalFound,
-    duplicates: 0,
+    new: totalSaved,
+    duplicates: totalDuplicates,
   });
 
-  return stateResults;
+  return {
+    found: totalFound,
+    new: totalSaved,
+    saved: totalSaved,
+    duplicates: totalDuplicates,
+    stateResults,
+  };
 }
 
 // ==========================================
@@ -544,7 +555,14 @@ if (require.main === module) {
 async function scrapeChildrensTheaterCloudFunction() {
   try {
     const result = await scrapeChildrensTheater();
-    return { success: true, result };
+    return {
+      success: true,
+      found: result?.found || 0,
+      new: result?.new || 0,
+      saved: result?.saved || 0,
+      duplicates: result?.duplicates || 0,
+      result,
+    };
   } catch (err) {
     console.error('Cloud Function Error:', err);
     return { success: false, error: err.message };

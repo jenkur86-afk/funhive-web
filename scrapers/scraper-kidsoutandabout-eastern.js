@@ -370,6 +370,8 @@ async function scrapeKidsOutAndAbout(filterStates = null, daysToScrape = 60) {
   const browser = await launchBrowser();
   let allEvents = [];
   const stateResults = {};
+  let totalSaved = 0;
+  let totalDuplicates = 0;
 
   try {
     for (let i = 0; i < regionsToScrape.length; i++) {
@@ -406,7 +408,10 @@ async function scrapeKidsOutAndAbout(filterStates = null, daysToScrape = 60) {
               }
             );
             const saved = result?.saved || result?.new || result?.imported || 0;
+            const dup = result?.skipped || result?.duplicates || 0;
             console.log(`   💾 Saved: ${saved}`);
+            totalSaved += saved;
+            totalDuplicates += dup;
           } catch (err) {
             console.error(`   ❌ Save error: ${err.message}`);
           }
@@ -436,11 +441,17 @@ async function scrapeKidsOutAndAbout(filterStates = null, daysToScrape = 60) {
 
   logScraperResult(SCRAPER_NAME, {
     found: totalEvents,
-    new: totalEvents,
-    duplicates: 0,
+    new: totalSaved,
+    duplicates: totalDuplicates,
   });
 
-  return stateResults;
+  return {
+    found: totalEvents,
+    new: totalSaved,
+    saved: totalSaved,
+    duplicates: totalDuplicates,
+    stateResults,
+  };
 }
 
 // ==========================================
@@ -478,7 +489,14 @@ if (require.main === module) {
 async function scrapeKidsOutAndAboutCloudFunction() {
   try {
     const result = await scrapeKidsOutAndAbout(null, 60);
-    return { success: true, result };
+    return {
+      success: true,
+      found: result?.found || 0,
+      new: result?.new || 0,
+      saved: result?.saved || 0,
+      duplicates: result?.duplicates || 0,
+      result,
+    };
   } catch (err) {
     console.error('Cloud Function Error:', err);
     return { success: false, error: err.message };

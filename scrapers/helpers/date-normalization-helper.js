@@ -59,6 +59,9 @@ function normalizeDateString(dateString) {
   // Remove "Featured" prefix (e.g., "Featured Apr 2 @10:00am")
   cleaned = cleaned.replace(/^Featured\s+/i, '');
 
+  // Strip NASA-style "NET" prefix meaning "no earlier than" (e.g., "NET October 2026")
+  cleaned = cleaned.replace(/^NET\s+/i, '');
+
   // Remove "at" or "from" before times (e.g., "Apr 30, at 9:00 AM", "May 09, from 8:30 AM–10:00 AM")
   cleaned = cleaned.replace(/\s+(?:at|from)\s+(\d{1,2}[:\d]*\s*[ap])/gi, ' $1');
 
@@ -120,6 +123,19 @@ function normalizeDateString(dateString) {
 
   // If after all cleaning only whitespace or empty, it was a time-only string
   if (!cleaned || cleaned.length < 3) return null;
+
+  // === Pattern 0a: Doubled-date pattern from MOSI/aggregator scrapers ===
+  // E.g. "Saturday June 6 June 8 to June 12" (after weekday strip: "June 6 June 8 to June 12")
+  // The first "Month Day" is the start date we want — drop everything after it.
+  const doubledDateMatch = cleaned.match(/^([A-Za-z]{3,9})\s+(\d{1,2})\s+(?:[A-Za-z]{3,9}\s+\d{1,2}\s+)?(?:to|through|thru|until|[-–—])\s+[A-Za-z]{3,9}\s+\d{1,2}/i);
+  if (doubledDateMatch) {
+    const [, month, day] = doubledDateMatch;
+    const fullMonthName = lookupMonth(month);
+    if (fullMonthName) {
+      const year = inferYear(fullMonthName, parseInt(day));
+      return `${fullMonthName} ${parseInt(day)}, ${year}`;
+    }
+  }
 
   // === Pattern 0: Date range formats — extract start date ===
   // Handles: "Apr 1 - 22, 2026", "Apr 20 - 25, 2026", "April 1 - May 3, 2026", "Apr 1 - 22 2026"
@@ -268,6 +284,17 @@ function normalizeDateString(dateString) {
     if (fullMonthName) {
       const year = inferYear(fullMonthName, parseInt(day));
       return `${fullMonthName} ${parseInt(day)}, ${year}`;
+    }
+  }
+
+  // === Pattern 8b: "Month Year" without day (e.g., "October 2026", "Nov 2026") ===
+  // Used by NASA launches and similar "month-only" announcements. Defaults to 1st.
+  const monthYearMatch = cleaned.match(/^([A-Za-z]{3,9})\s+(\d{4})$/i);
+  if (monthYearMatch) {
+    const [, month, year] = monthYearMatch;
+    const fullMonthName = lookupMonth(month);
+    if (fullMonthName) {
+      return `${fullMonthName} 1, ${year}`;
     }
   }
 

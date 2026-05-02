@@ -465,6 +465,8 @@ async function scrapeSportsEngineYouth(filterStates = null) {
 
   const browser = await launchBrowser();
   let allEvents = [];
+  let totalSaved = 0;
+  let totalDuplicates = 0;
 
   try {
     // Step 1: Scrape the discovery page (returns ~4-10 featured programs)
@@ -535,8 +537,9 @@ async function scrapeSportsEngineYouth(filterStates = null) {
             platform: 'sportsengine',
           }
         );
-        const saved = result?.saved || result?.new || result?.imported || 0;
-        console.log(`   💾 Saved: ${saved}`);
+        totalSaved = result?.saved || result?.new || result?.imported || 0;
+        totalDuplicates = result?.skipped || result?.duplicates || 0;
+        console.log(`   💾 Saved: ${totalSaved}`);
       } catch (err) {
         console.error(`   ❌ Save error: ${err.message}`);
       }
@@ -565,11 +568,17 @@ async function scrapeSportsEngineYouth(filterStates = null) {
 
   logScraperResult(SCRAPER_NAME, {
     found: allEvents.length,
-    new: allEvents.length,
-    duplicates: 0,
+    new: totalSaved,
+    duplicates: totalDuplicates,
   });
 
-  return { total: allEvents.length };
+  return {
+    total: allEvents.length,
+    found: allEvents.length,
+    new: totalSaved,
+    saved: totalSaved,
+    duplicates: totalDuplicates,
+  };
 }
 
 // ==========================================
@@ -604,7 +613,14 @@ if (require.main === module) {
 async function scrapeSportsEngineYouthCloudFunction() {
   try {
     const result = await scrapeSportsEngineYouth();
-    return { success: true, result };
+    return {
+      success: true,
+      found: result?.found || 0,
+      new: result?.new || 0,
+      saved: result?.saved || 0,
+      duplicates: result?.duplicates || 0,
+      result,
+    };
   } catch (err) {
     console.error('Cloud Function Error:', err);
     return { success: false, error: err.message };
