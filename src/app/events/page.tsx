@@ -339,7 +339,7 @@ function isEventOnOrAfterToday(event: any): boolean {
         // Excludes image_url, url, source_url, scraper_name, platform, scraped_at,
         // created_at, updated_at, review_count, is_sponsored, sponsor_expires_at,
         // geohash, end_date to reduce Supabase egress bandwidth.
-        const EVENT_LIST_COLS = 'id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, min_age, max_age, description, address, location, activity_id, reported, is_free'
+        const EVENT_LIST_COLS = 'id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, description, address, location, activity_id, reported'
         let suppQuery = supabase
           .from('events')
           .select(EVENT_LIST_COLS)
@@ -373,7 +373,7 @@ function isEventOnOrAfterToday(event: any): boolean {
         // No location — use standard query, ordered by date
         // Use the TIMESTAMPTZ `date` column for filtering & sorting
         // (the TEXT `event_date` column sorts alphabetically, not chronologically)
-        const EVENT_LIST_COLS_STD = 'id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, min_age, max_age, description, address, location, activity_id, reported, is_free'
+        const EVENT_LIST_COLS_STD = 'id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, description, address, location, activity_id, reported'
         let query = supabase
           .from('events')
           .select(EVENT_LIST_COLS_STD)
@@ -423,11 +423,14 @@ function isEventOnOrAfterToday(event: any): boolean {
     }
   }
 
-  // Helper function to check if an event is free
+  // Helper function to check if an event is free.
+  // NOTE: events table has no `is_free` column (only activities does), so we
+  // detect "free" purely from name/description text. Including `is_free` in a
+  // select on the events table 400s and bleeds egress.
   const isFreeEvent = (event: any): boolean => {
     const name = event.name?.toLowerCase() || ''
     const description = event.description?.toLowerCase() || ''
-    return name.includes('free') || description.includes('free') || event.is_free === true
+    return name.includes('free') || description.includes('free')
   }
 
   // Extract numeric age range from event text, returning {min, max} or null
