@@ -164,6 +164,9 @@ Check `database/schema.sql` before assuming a column name. The most common screw
 | Coordinates     | `location` (GEOMETRY)   | `location` (GEOMETRY)   | Store as `SRID=4326;POINT(lng lat)` WKT. |
 | Reported flag   | `reported` (BOOLEAN)    | `reported`              | Filter with `.eq('reported', false)` for visible-only. |
 | Created at      | `created_at`            | `created_at`            | DB-managed; use this for `--recent-only`. |
+| Free flag       | **(none)**              | `is_free` (BOOLEAN)     | **Events has no `is_free`. Detect free events from name/description text instead.** |
+| Numeric ages    | **(none)**              | `min_age`, `max_age` (INT) | **Events has no `min_age` / `max_age`. Use `age_range` (TEXT) on events; `min_age`/`max_age` only exist on activities.** Querying these on events returns 400 and bleeds egress. |
+| Age range text  | `age_range` (TEXT)      | `age_range` (TEXT)      | Both tables have it. |
 
 Other gotchas:
 - The reports table is `event_reports` (defined in `database/migration-reports.sql`).

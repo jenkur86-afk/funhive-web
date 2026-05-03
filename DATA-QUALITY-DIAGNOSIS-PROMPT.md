@@ -31,6 +31,10 @@ The pipeline runs on a tiered cadence (Apr 2026):
 
 `scripts/fix-duplicate-dates.js` was retired Apr 2026 (Communico scraper bug fixed); old copy in `scripts/archive/`.
 
+### Schema gotcha — events table does NOT have `min_age` / `max_age` / `is_free`
+
+These columns exist on `activities` only. Querying them on events returns 400 from PostgREST and bleeds egress on every retry. If you see `column events.min_age does not exist` in the Postgres logs (or repeated 400s on `GET /rest/v1/events` in the API Gateway logs), that's the root cause — a fix script or frontend query is naming a non-existent column. Use `age_range` (TEXT) on events; numeric ages and free flag only on activities.
+
 ### Bandwidth management (Supabase free plan — 5.5 GB egress limit)
 
 - Stick to the tiered cadence above. Daily `--recent-only` runs are cheap because saveEvent/saveActivity now do almost all validation at scrape time (junk titles, non-family, cancelled, past, age normalization, geohash compute from lat/lng, parsed date from event_date text). Most rows have nothing left to fix by the time the script gets to them.

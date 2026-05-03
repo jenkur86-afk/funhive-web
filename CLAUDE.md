@@ -15,7 +15,7 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 ## Key Architecture Decisions
 
 ### Database Schema
-- `events` table columns: `id`, `name`, `event_date` (TEXT, scraper-provided), `date` (TIMESTAMPTZ, parsed), `end_date`, `description`, `url`, `image_url`, `venue`, `category`, `city`, `state`, `zip_code`, `address`, `location` (GEOMETRY), `geohash`, `activity_id`, `source_url`, `scraper_name`, `platform`, `scraped_at`, `created_at`, `updated_at`, `review_count`, `is_sponsored`, `sponsor_expires_at`, `reported` (BOOLEAN), `start_time`, `end_time`, `age_range`, `min_age`, `max_age`. **Note:** The column is `source_url` not `source` — the `activities` table has `source` but `events` does not.
+- `events` table columns: `id`, `name`, `event_date` (TEXT, scraper-provided), `date` (TIMESTAMPTZ, parsed), `end_date`, `description`, `url`, `image_url`, `venue`, `category`, `city`, `state`, `zip_code`, `address`, `location` (GEOMETRY), `geohash`, `activity_id`, `source_url`, `scraper_name`, `platform`, `scraped_at`, `created_at`, `updated_at`, `review_count`, `average_rating`, `is_sponsored`, `sponsor_expires_at`, `reported` (BOOLEAN, added by `migration-reports.sql`), `age_range` (added by `add-age-range-column.sql`), `start_time`, `end_time`. **Critical: events does NOT have `min_age`, `max_age`, or `is_free`** — those columns only exist on the `activities` table. Putting them in any `.select(...)` on the events table returns 400 from PostgREST and bleeds egress on every retry. **Note:** The column is `source_url` not `source` — the `activities` table has `source` but `events` does not.
 - Always use `date` TIMESTAMPTZ for filtering/sorting, never `event_date` (TEXT sorts alphabetically, not chronologically).
 - `activities` table: venues/places with `location GEOMETRY(Point, 4326)` for PostGIS queries. Has `source TEXT` column. Also has `reported BOOLEAN DEFAULT FALSE`.
 - `event_reports` table: stores user reports (reason, comment, reporter_ip, status). Defined in `database/migration-reports.sql`.
@@ -49,9 +49,10 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - Never use `order('event_date', { ascending: true })` — it sorts alphabetically ("April 1" before "April 2" before "January 1").
 - Never parse ISO date strings with `new Date("2026-04-23")` — JavaScript treats date-only ISO strings as UTC midnight, which shifts to the previous day in US timezones. Always append `T00:00:00` for local time: `new Date("2026-04-23T00:00:00")`.
 - Never use `{ db }` or `{ admin, db }` from `supabase-adapter.js` in fix scripts — those are Firestore-compatibility wrappers. Use `{ supabase }` for the Supabase client.
-- Never assume column names — check `database/schema.sql` first. Common gotcha: `events` has `source_url` (not `source`), and `activities` has `source` (not `source_url`).
+- Never assume column names — check `database/schema.sql` first. Common gotchas: `events` has `source_url` (not `source`); `activities` has `source` (not `source_url`); `events` does **not** have `min_age` / `max_age` / `is_free` (only `activities` does — querying these on events 400s every request).
 - Never use `.select('*')` on the events or activities tables in list/search queries — always specify only the columns needed. Detail pages (single row) are fine.
 - Never reduce the venue cache TTL in `venue-matcher.js` below 30 minutes — it's the largest source of Supabase egress bandwidth.
+- Never restore the Firestore-compat read wrapper's old `select('*')` default in `supabase-adapter.js` — every per-event dedup check across 141+ scraper files goes through that wrapper. The wrapper now defaults to a lean projection (drops `description`, `image_url`, `location` GEOMETRY) and actually applies `.limit()` / `.orderBy()`. If a specific caller needs more columns, override per-call with `.select('*')` or a custom column list, not by changing the default.
 
 ### Always Do
 - Use `date` TIMESTAMPTZ column for all date filtering and sorting in queries.
@@ -60,7 +61,7 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - Wrap `useSearchParams()` in a `<Suspense>` boundary (Next.js requirement).
 - Run `node -c filename.js` to syntax-check any modified scraper file before committing.
 - Filter out reported items in queries with `.eq('reported', false)` and client-side `!e.reported` for RPC results.
-- Use selective `.select()` columns in all Supabase queries. Events list: `id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, min_age, max_age, description, address, location, activity_id, reported, is_free`. Activities list: `id, name, city, state, address, location, zip_code, category, description, age_range, min_age, max_age, hours, is_free, reported`.
+- Use selective `.select()` columns in all Supabase queries. Events list: `id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, description, address, location, activity_id, reported`. Activities list: `id, name, city, state, address, location, zip_code, category, description, age_range, min_age, max_age, hours, is_free, reported`. **Never** add `min_age`, `max_age`, or `is_free` to an events `.select(...)` — those columns don't exist on events and the request will 400.
 - Run data quality fix scripts on a tiered cadence:
   - **Daily**: `node scripts/data-quality-quick.js` (count-only audit, ~5 MB egress) and `bash scripts/fix-all.sh --recent-only` (last 72h only, ~50–150 MB).
   - **Monthly**: `bash scripts/fix-all.sh` (full sweep, ~1.5–2 GB) and `node scripts/data-quality-check.js` (deep audit, ~500 MB).
@@ -109,7 +110,7 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - `src/app/api/reports/[id]/[action]/route.ts` — GET endpoint: admin restore/remove via signed email links
 
 ### Scraper Infrastructure
-- `scrapers/helpers/supabase-adapter.js` — Central save/flatten functions, venue cleaning, age detection, cancelled event filtering
+- `scrapers/helpers/supabase-adapter.js` — Central save/flatten functions, venue cleaning, age detection, cancelled event filtering. Also hosts the Firestore-compat read wrapper (`db.collection(...).where(...).limit(N).get()`) with a lean default projection that drops `description`, `image_url`, and `location` GEOMETRY; `.limit()`, `.orderBy()`, `.select(cols)`, and the `'in'` operator are all honored. Override the projection per-call with `.select('*')` if a caller needs the heavy columns.
 - `scrapers/helpers/event-save-helper.js` — Event saving with geocoding
 - `scrapers/helpers/library-addresses.js` — Branch address lookups
 - `scrapers/scraper-registry.js` — All scrapers registered with group/state

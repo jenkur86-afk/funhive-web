@@ -856,18 +856,73 @@ async function checkDuplicate(name, eventDate, venue) {
 // ============================================================================
 
 function createFirestoreCompatibleDB() {
-  // Helper to create a chainable query object (supports .where().where().get())
-  function createQuery(collectionName, filters = []) {
+  // Default projection for read-only Firestore-compat queries on the events/activities tables.
+  // Excludes the 3 heavy columns (description, image_url, location-GEOMETRY) which scrapers
+  // never read off dedup-check results — keeping them in select('*') made every per-event
+  // existence check pull ~3 KB instead of ~600 bytes. Callers that need a different shape
+  // can chain .select('col1, col2') (or .select('*') for everything).
+  // Columns must exist in the live database. Only include columns confirmed in
+  // database/schema.sql + applied migrations (add-age-range-column.sql,
+  // migration-reports.sql). Adding a column that doesn't exist makes every
+  // dedup query 400 — and a previous version of this list referenced
+  // events.min_age / events.max_age which silently caused a flood of 400s and
+  // burned ~1 GB/day in error responses + retries.
+  //
+  // Events confirmed columns: id, name, event_date, date, end_date, description,
+  // url, image_url, venue, category, city, state, zip_code, address, location,
+  // geohash, activity_id, source_url, scraper_name, platform, scraped_at,
+  // created_at, updated_at, review_count, average_rating, is_sponsored,
+  // sponsor_expires_at, age_range (migration), reported (migration),
+  // start_time, end_time (added via saveEvent inserts so they must exist).
+  //
+  // Activities confirmed columns: per schema.sql includes min_age / max_age /
+  // is_free directly on the table.
+  //
+  // The lean projection still drops the heavy ones: description, image_url,
+  // location (GEOMETRY).
+  const DEFAULT_PROJECTIONS = {
+    events: 'id, name, event_date, date, end_date, venue, address, city, state, zip_code, geohash, scraper_name, url, source_url, category, age_range, start_time, end_time, activity_id, reported, is_sponsored, scraped_at, created_at, updated_at, platform, review_count',
+    activities: 'id, name, address, city, state, zip_code, geohash, scraper_name, source, url, category, subcategory, age_range, min_age, max_age, hours, phone, price_range, is_free, reported, scraped_at, created_at, updated_at',
+  };
+
+  function defaultProjectionFor(collectionName) {
+    const table = mapCollectionName(collectionName);
+    return DEFAULT_PROJECTIONS[table] || '*';
+  }
+
+  // Helper to create a chainable query object (supports .where().where().limit().get())
+  function createQuery(collectionName, filters = [], opts = {}) {
+    const state = {
+      filters,
+      _limit: opts._limit,
+      _orderBy: opts._orderBy,
+      _select: opts._select,
+    };
     return {
       where(field, op, value) {
-        return createQuery(collectionName, [...filters, { field, op, value }]);
+        return createQuery(collectionName, [...state.filters, { field, op, value }], state);
+      },
+      // Now actually tracked and applied in .get(). Previously a no-op which silently
+      // turned every .limit(1) dedup check into a full unbounded SELECT.
+      limit(n) {
+        return createQuery(collectionName, state.filters, { ...state, _limit: n });
+      },
+      orderBy(field, dir) {
+        return createQuery(collectionName, state.filters, { ...state, _orderBy: { field, dir } });
+      },
+      // Opt-in column projection. Pass '*' to force select('*'), pass 'id' for a minimal
+      // existence-check, or pass a comma-separated column list. If unset, defaults to
+      // DEFAULT_PROJECTIONS above (which already drops the heavy columns).
+      select(cols) {
+        return createQuery(collectionName, state.filters, { ...state, _select: cols });
       },
       async get() {
         const tableName = mapCollectionName(collectionName);
-        let query = supabase.from(tableName).select('*');
+        const projection = state._select || defaultProjectionFor(collectionName);
+        let query = supabase.from(tableName).select(projection);
 
         // Map Firestore dot-notation fields to Supabase column names
-        for (const filter of filters) {
+        for (const filter of state.filters) {
           const col = mapFieldName(collectionName, filter.field);
           if (filter.op === '==' || filter.op === '=') {
             query = query.eq(col, filter.value);
@@ -881,7 +936,19 @@ function createFirestoreCompatibleDB() {
             query = query.lt(col, filter.value);
           } else if (filter.op === '<=') {
             query = query.lte(col, filter.value);
+          } else if (filter.op === 'in') {
+            query = query.in(col, filter.value);
           }
+        }
+
+        if (state._orderBy) {
+          query = query.order(
+            mapFieldName(collectionName, state._orderBy.field),
+            { ascending: (state._orderBy.dir || 'asc') !== 'desc' }
+          );
+        }
+        if (typeof state._limit === 'number' && state._limit > 0) {
+          query = query.limit(state._limit);
         }
 
         const { data, error } = await query;
@@ -900,9 +967,6 @@ function createFirestoreCompatibleDB() {
           forEach(fn) { docs.forEach(fn); },
         };
       },
-      // Allow chaining .limit() and .orderBy() (common Firestore patterns)
-      limit(n) { return this; },
-      orderBy(field, dir) { return this; },
     };
   }
 
@@ -910,9 +974,21 @@ function createFirestoreCompatibleDB() {
     collection(collectionName) {
       const queryBase = createQuery(collectionName);
       return {
-        // Chainable query methods on the collection itself
+        // Chainable query methods on the collection itself — delegate to queryBase so
+        // `db.collection('events').limit(50).get()` and `.orderBy(...).limit(...).get()`
+        // patterns work the same as `.where(...).limit(...).get()`. Without these the
+        // bare-collection chain would TypeError on the second call.
         where(field, op, value) {
           return queryBase.where(field, op, value);
+        },
+        limit(n) {
+          return queryBase.limit(n);
+        },
+        orderBy(field, dir) {
+          return queryBase.orderBy(field, dir);
+        },
+        select(cols) {
+          return queryBase.select(cols);
         },
         async get() {
           return queryBase.get();
@@ -947,11 +1023,16 @@ function createFirestoreCompatibleDB() {
               }
             },
             async get() {
+              // Default to the same lean projection used by createQuery — every observed
+              // caller of .doc(id).get() reads only `.exists` (venue-matcher creating a
+              // venue, scraper-macaroni-md early dedup, scraper-port-discovery dedup),
+              // so we don't need description / image_url / GEOMETRY here either.
+              const projection = defaultProjectionFor(collectionName);
               const { data, error } = await supabase
                 .from(mapCollectionName(collectionName))
-                .select('*')
+                .select(projection)
                 .eq('id', docId)
-                .single();
+                .maybeSingle();
               return {
                 exists: !!data && !error,
                 data: () => data,
