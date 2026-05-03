@@ -381,16 +381,28 @@ async function scrapeSite(browser, site, logger, maxEvents = 50) {
 
       // Check 1: Does this exact event already exist in DB?
       const eventId = generateEventId(url);
-      const existingDoc = await db.collection('events').doc(eventId).get();
+      let existingDoc;
+      try {
+        existingDoc = await db.collection('events').doc(eventId).get();
+      } catch (dedupErr) {
+        console.log(`  ⚠️ Dedup check failed for ${url}: ${dedupErr.message} — continuing`);
+        continue;
+      }
       const isExistingEvent = existingDoc.exists;
 
       // Check 2: Cross-site duplicate (same event posted to multiple MK sites)
-      const duplicateCheck = await isDuplicateEvent(
-        details.name,
-        details.eventDate,
-        details.venue,
-        details.city
-      );
+      let duplicateCheck;
+      try {
+        duplicateCheck = await isDuplicateEvent(
+          details.name,
+          details.eventDate,
+          details.venue,
+          details.city
+        );
+      } catch (dupCheckErr) {
+        console.log(`  ⚠️ Cross-site dup check failed for ${url}: ${dupCheckErr.message} — treating as new`);
+        duplicateCheck = { isDuplicate: false };
+      }
       if (duplicateCheck.isDuplicate) {
         skippedDuplicate++;
         logger.trackDuplicate();
@@ -659,9 +671,6 @@ async function scrapeMacaroniKidMaryland() {
       const events = await scrapeSite(browser, site, logger, maxEventsPerSite);
       for (const event of events) {
         const eventId = generateEventId(event.url);
-        if (imported === 0) {
-          console.log(`  🕐 Time debug: { name: "${event.name?.substring(0, 40)}", startTime: ${JSON.stringify(event.startTime)}, endTime: ${JSON.stringify(event.endTime)} }`);
-        }
         try {
           await db.collection('events').doc(eventId).set(event);
           imported++;

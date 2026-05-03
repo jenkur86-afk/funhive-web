@@ -102,6 +102,15 @@ const COUNTY_DATA = {
     'Sarasota': { lat: 27.1820, lng: -82.3571 },
     'Collier': { lat: 26.0765, lng: -81.5686 },
     'Pasco': { lat: 28.3073, lng: -82.4318 },
+    // Added May 2026 — counties used by FL MacaroniKid sites but missing centroids
+    'Lake': { lat: 28.7611, lng: -81.7170 },          // South Lake-Celebration-Clermont
+    'Martin': { lat: 27.0786, lng: -80.2476 },        // Stuart
+    'Manatee': { lat: 27.4647, lng: -82.3018 },       // Bradenton
+    'Charlotte': { lat: 26.9988, lng: -81.9495 },     // Port Charlotte-Punta Gorda
+    'Okeechobee': { lat: 27.2439, lng: -80.8298 },    // Okeechobee-Loxahatchee
+    'St. Lucie': { lat: 27.3843, lng: -80.4423 },     // Port St Lucie
+    'Highlands': { lat: 27.3422, lng: -81.3409 },     // Sebring-Lake Placid-Avon Park
+    'Indian River': { lat: 27.6386, lng: -80.3973 },  // Vero Beach
   },
   'GA': {
     'Fulton': { lat: 33.8034, lng: -84.3963 },
@@ -319,6 +328,9 @@ const COUNTY_DATA = {
     'Dutchess': { lat: 41.7639, lng: -73.7410 },
     'Orange': { lat: 41.3912, lng: -74.3073 },
     'Rockland': { lat: 41.1539, lng: -74.0261 },
+    // Added May 2026 — counties used by NY MacaroniKid sites but missing centroids
+    'Broome': { lat: 42.1606, lng: -75.8197 },        // Binghamton
+    'Clinton': { lat: 44.7320, lng: -73.6779 },       // Plattsburgh
   },
   'OH': {
     'Franklin': { lat: 39.9716, lng: -82.9901 },

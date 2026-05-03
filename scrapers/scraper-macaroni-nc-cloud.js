@@ -487,7 +487,13 @@ async function scrapeSite(site, maxEvents = 50) {
       }
 
       // Check if event already exists
-      const existing = await db.collection('events').where('url', '==', url).limit(1).get();
+      let existing;
+      try {
+        existing = await db.collection('events').where('url', '==', url).limit(1).get();
+      } catch (dedupErr) {
+        console.log(`  ⚠️ Dedup check failed for ${url}: ${dedupErr.message} — continuing`);
+        continue;
+      }
       if (existing.empty) {
         events.push(eventDoc); imported++;
       } else {

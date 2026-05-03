@@ -1104,7 +1104,7 @@ const MACARONI_SCRAPERS = {
     type: 'puppeteer',
     group: 2,
     state: 'CT',
-    sites: 8
+    sites: 9
   },
   'MacaroniKid-MD': {
     file: './scraper-macaroni-md.js',
@@ -1112,7 +1112,7 @@ const MACARONI_SCRAPERS = {
     type: 'puppeteer',
     group: 2,
     state: 'MD',
-    sites: 8
+    sites: 20
   },
   'MacaroniKid-AZ': {
     file: './scraper-macaroni-az.js',
@@ -1120,7 +1120,7 @@ const MACARONI_SCRAPERS = {
     type: 'puppeteer',
     group: 2,
     state: 'AZ',
-    sites: 7
+    sites: 8
   },
   'MacaroniKid-OR': {
     file: './scraper-macaroni-or.js',
@@ -1128,7 +1128,7 @@ const MACARONI_SCRAPERS = {
     type: 'puppeteer',
     group: 2,
     state: 'OR',
-    sites: 6
+    sites: 2
   },
   'MacaroniKid-LA': {
     file: './scraper-macaroni-la.js',
@@ -1136,7 +1136,7 @@ const MACARONI_SCRAPERS = {
     type: 'puppeteer',
     group: 2,
     state: 'LA',
-    sites: 5
+    sites: 9
   },
   'MacaroniKid-KS': {
     file: './scraper-macaroni-ks.js',
@@ -1144,7 +1144,7 @@ const MACARONI_SCRAPERS = {
     type: 'puppeteer',
     group: 2,
     state: 'KS',
-    sites: 4
+    sites: 3
   },
   'MacaroniKid-AR': {
     file: './scraper-macaroni-ar.js',
@@ -1160,7 +1160,7 @@ const MACARONI_SCRAPERS = {
     type: 'puppeteer',
     group: 2,
     state: 'NH',
-    sites: 3
+    sites: 5
   },
   'MacaroniKid-NM': {
     file: './scraper-macaroni-nm.js',
@@ -1168,7 +1168,7 @@ const MACARONI_SCRAPERS = {
     type: 'puppeteer',
     group: 2,
     state: 'NM',
-    sites: 2
+    sites: 1
   },
   'MacaroniKid-ME': {
     file: './scraper-macaroni-me.js',
