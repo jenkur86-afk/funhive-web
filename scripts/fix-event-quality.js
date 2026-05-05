@@ -132,8 +132,32 @@ async function fetchAll(table, select, filters = {}) {
 
 // ── Reverse geocode ──
 let consecutiveFails = 0;
+let consecutive429s = 0;        // Tracks 429s separately so we can back off harder
+let dynamicDelay = 2500;        // Adapts upward when we see 429s, decays back down on success
+let nominatimDisabled = false;  // Tripped after sustained 429s — skip Nominatim for the rest of the run
 const NOMINATIM_UA = 'FunHive/1.0 (https://funhive.co; jenkur86@gmail.com)';
-const BASE_DELAY = 2500;  // 2.5s between requests (conservative — Nominatim allows 1/s but 429s at 1.5s)
+const BASE_DELAY = 2500;        // 2.5s between requests (Nominatim allows 1/s; we stay conservative)
+const MAX_DELAY = 15000;        // Cap dynamic delay so a hung session can't sleep forever
+const RATE_LIMIT_BAIL = 25;     // Stop calling Nominatim after this many consecutive 429s
+
+function noteNominatim429() {
+  consecutive429s++;
+  consecutiveFails++;
+  // Each 429 doubles the per-request delay (with a cap), so the loop quiets down naturally.
+  dynamicDelay = Math.min(MAX_DELAY, dynamicDelay * 2);
+  if (consecutive429s >= RATE_LIMIT_BAIL && !nominatimDisabled) {
+    nominatimDisabled = true;
+    console.log(`  🛑 ${RATE_LIMIT_BAIL} consecutive 429s — disabling Nominatim for the rest of this run.`);
+    console.log(`     Re-run later to pick up where we left off.`);
+  }
+}
+
+function noteNominatimSuccess() {
+  consecutive429s = 0;
+  consecutiveFails = 0;
+  // Decay the delay back toward the baseline so a brief rate-limit blip doesn't stick.
+  if (dynamicDelay > BASE_DELAY) dynamicDelay = Math.max(BASE_DELAY, Math.floor(dynamicDelay / 2));
+}
 
 // Pick the best "city-like" field from a Nominatim address object.
 // Rural locations frequently lack address.city/town, so we fall through to
@@ -156,6 +180,7 @@ function pickCityFromNominatim(addr) {
   return raw.replace(/^(Town|City|Village|Township|Borough)\s+of\s+/i, '').trim() || null;
 }
 async function reverseGeocode(lat, lng) {
+  if (nominatimDisabled) return null;
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1&zoom=12`;
@@ -163,10 +188,17 @@ async function reverseGeocode(lat, lng) {
         headers: { 'User-Agent': NOMINATIM_UA },
         signal: AbortSignal.timeout(15000)
       });
-      if (response.status === 429) { console.log(`  ⚠️ 429 rate limit — cooling down ${30 * (attempt + 1)}s`); await sleep(30000 * (attempt + 1)); continue; }
+      if (response.status === 429) {
+        noteNominatim429();
+        if (nominatimDisabled) return null;
+        const wait = 30000 * (attempt + 1);
+        console.log(`  ⚠️ 429 rate limit — cooling down ${wait / 1000}s (delay now ${dynamicDelay / 1000}s, ${consecutive429s} consecutive)`);
+        await sleep(wait);
+        continue;
+      }
       if (!response.ok) { await sleep(3000); continue; }
       const data = await response.json();
-      consecutiveFails = 0;
+      noteNominatimSuccess();
       if (data?.address) {
         return {
           city: pickCityFromNominatim(data.address),
@@ -186,6 +218,7 @@ async function reverseGeocode(lat, lng) {
 
 // ── Forward geocode (city-level) ──
 async function forwardGeocode(city, state) {
+  if (nominatimDisabled) return null;
   try {
     const q = `${city}, ${state}, USA`;
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1&countrycodes=us`;
@@ -193,9 +226,10 @@ async function forwardGeocode(city, state) {
       headers: { 'User-Agent': NOMINATIM_UA },
       signal: AbortSignal.timeout(15000)
     });
-    if (response.status === 429) { await sleep(30000); return null; }
+    if (response.status === 429) { noteNominatim429(); await sleep(30000); return null; }
     if (!response.ok) return null;
     const data = await response.json();
+    noteNominatimSuccess();
     if (data?.[0]) {
       return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
     }
@@ -205,6 +239,7 @@ async function forwardGeocode(city, state) {
 
 // ── Forward geocode (free-text query — address, venue name, etc.) ──
 async function forwardGeocodeQuery(query) {
+  if (nominatimDisabled) return null;
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=us&addressdetails=1`;
@@ -212,10 +247,10 @@ async function forwardGeocodeQuery(query) {
         headers: { 'User-Agent': NOMINATIM_UA },
         signal: AbortSignal.timeout(15000)
       });
-      if (response.status === 429) { await sleep(30000 * (attempt + 1)); continue; }
+      if (response.status === 429) { noteNominatim429(); if (nominatimDisabled) return null; await sleep(30000 * (attempt + 1)); continue; }
       if (!response.ok) return null;
       const data = await response.json();
-      consecutiveFails = 0;
+      noteNominatimSuccess();
       if (data?.[0]) {
         const addr = data[0].address || {};
         return {
@@ -295,10 +330,11 @@ function generateEventDescription(event) {
   }
 }
 
-// ── Parse time from event_date text ──
-function parseTimesFromEventDate(eventDate) {
-  if (!eventDate) return null;
-  const text = eventDate.trim();
+// ── Parse time from event_date text or any text-bearing field ──
+// (Renamed from parseTimesFromEventDate; kept that name as a back-compat alias.)
+function parseTimesFromText(rawText) {
+  if (!rawText) return null;
+  const text = rawText.trim();
 
   // Normalize unicode dashes and whitespace
   const normalized = text.replace(/[\u2013\u2014]/g, '-').replace(/\s+/g, ' ');
@@ -340,6 +376,23 @@ function parseTimesFromEventDate(eventDate) {
   }
 
   return null;
+}
+
+// Back-compat shim — original callers passed event_date.
+function parseTimesFromEventDate(eventDate) {
+  return parseTimesFromText(eventDate);
+}
+
+// Try event_date first, then name, then description as fallbacks.
+// Several scrapers stuff times into the title/description while leaving
+// event_date as a bare "May 6, 2026", which is why thousands of rows
+// have unparseable times even though the data is there.
+function parseTimesFromEvent(event) {
+  if (!event) return null;
+  const result = parseTimesFromText(event.event_date)
+    || parseTimesFromText(event.name)
+    || parseTimesFromText(event.description);
+  return result;
 }
 
 function normalizeTimeStr(raw) {
@@ -533,7 +586,7 @@ async function main() {
             const abbrev = STATE_ABBREVS[(result.state || '').toLowerCase()];
             if (abbrev) inferredState = abbrev;
           }
-          await sleep(BASE_DELAY);
+          await sleep(dynamicDelay);
         }
       } catch (e) { /* skip */ }
     }
@@ -620,6 +673,10 @@ async function main() {
 
   let cityFixed = 0;
   for (let i = 0; i < noCity.length; i++) {
+    if (nominatimDisabled) {
+      console.log(`  ⏭️  Nominatim disabled — skipping remaining ${noCity.length - i} city lookups`);
+      break;
+    }
     if (consecutiveFails >= 10) {
       console.log(`  ⚠️ 10 consecutive failures — pausing 90s for rate limit recovery...`);
       await sleep(90000);
@@ -643,7 +700,7 @@ async function main() {
       if (cityFixed <= 5) console.log(`  ✅ "${event.name}" → ${geo.city}`);
       else if (cityFixed % 100 === 0) console.log(`  ... ${cityFixed} cities fixed`);
     }
-    await sleep(BASE_DELAY);
+    await sleep(dynamicDelay);
   }
   console.log(`  5a fixed: ${cityFixed}/${noCity.length}`);
 
@@ -693,6 +750,10 @@ async function main() {
 
   // 6a. Geocode from city+state
   for (let i = 0; i < geocodable.length; i++) {
+    if (nominatimDisabled) {
+      console.log(`  ⏭️  Nominatim disabled — skipping remaining ${geocodable.length - i} city+state lookups`);
+      break;
+    }
     if (consecutiveFails >= 10) {
       console.log(`  ⚠️ 10 consecutive failures — pausing 90s for rate limit recovery...`);
       await sleep(90000);
@@ -705,7 +766,7 @@ async function main() {
     if (coords === undefined) {
       coords = await forwardGeocode(event.city, event.state);
       geoCache[cacheKey] = coords || null;
-      await sleep(BASE_DELAY);
+      await sleep(dynamicDelay);
     }
 
     if (coords) {
@@ -726,6 +787,10 @@ async function main() {
   // 6b. Fallback: geocode from address or venue name
   let fallbackFixed = 0;
   for (let i = 0; i < fallbackable.length; i++) {
+    if (nominatimDisabled) {
+      console.log(`  ⏭️  Nominatim disabled — skipping remaining ${fallbackable.length - i} fallback lookups`);
+      break;
+    }
     if (consecutiveFails >= 10) {
       console.log(`  ⚠️ 10 consecutive failures — pausing 90s for rate limit recovery...`);
       await sleep(90000);
@@ -749,7 +814,7 @@ async function main() {
       }
       result = await forwardGeocodeQuery(q);
       geoCache[cacheKey] = result || null;
-      await sleep(BASE_DELAY);
+      await sleep(dynamicDelay);
       if (result) break;
     }
 
@@ -810,28 +875,28 @@ async function main() {
   // ── 8. Fix missing start_time / end_time ──
   console.log(`\n⏰ STEP 8: Fix missing start_time / end_time`);
   console.log(`───────────────────────────────────────`);
-  const noStartTime = await fetchAll('events', 'id, name, event_date, start_time, end_time',
+  const noStartTime = await fetchAll('events', 'id, name, description, event_date, start_time, end_time',
     { is: ['start_time', null], not: ['event_date', 'is', null] });
   console.log(`  Found ${noStartTime.length} events with no start_time`);
 
-  // Sample unparseable event_date values for diagnostics
+  // Sample unparseable values for diagnostics
   const sampleUnparseable = [];
 
   let startFixed = 0, endFixed = 0;
-  const timeUpdates = []; // {id, updates}
+  const timeUpdates = new Map(); // id -> updates
 
   for (const event of noStartTime) {
-    const times = parseTimesFromEventDate(event.event_date);
+    const times = parseTimesFromEvent(event);
     if (times?.start) {
       const updates = { start_time: times.start };
       if (!event.end_time && times.end) {
         updates.end_time = times.end;
       }
-      timeUpdates.push({ id: event.id, updates });
+      timeUpdates.set(event.id, updates);
       startFixed++;
       if (times.end && !event.end_time) endFixed++;
       if (startFixed <= 5) {
-        console.log(`  ✅ "${event.event_date}" → start: ${times.start}${times.end ? `, end: ${times.end}` : ''}`);
+        console.log(`  ✅ "${(event.event_date || event.name || '').substring(0, 60)}" → start: ${times.start}${times.end ? `, end: ${times.end}` : ''}`);
       }
     } else if (sampleUnparseable.length < 15) {
       sampleUnparseable.push(`    "${event.event_date}" [${event.name?.substring(0, 40)}]`);
@@ -839,41 +904,40 @@ async function main() {
   }
 
   if (sampleUnparseable.length > 0) {
-    console.log(`  📋 Sample unparseable event_date values (no time info):`);
+    console.log(`  📋 Sample unparseable values (no time info in event_date, name, or description):`);
     for (const s of sampleUnparseable) console.log(s);
   }
 
   // Also check events that have start_time but no end_time
-  const noEndTime = await fetchAll('events', 'id, name, event_date, start_time, end_time',
+  const noEndTime = await fetchAll('events', 'id, name, description, event_date, start_time, end_time',
     { is: ['end_time', null], not: ['start_time', 'is', null] });
   console.log(`  Found ${noEndTime.length} events with start_time but no end_time`);
 
   let endOnlyFixed = 0;
   for (const event of noEndTime) {
     // Skip if already in timeUpdates
-    if (timeUpdates.find(u => u.id === event.id)) continue;
-    const times = parseTimesFromEventDate(event.event_date);
+    if (timeUpdates.has(event.id)) continue;
+    const times = parseTimesFromEvent(event);
     if (times?.end) {
-      timeUpdates.push({ id: event.id, updates: { end_time: times.end } });
+      timeUpdates.set(event.id, { end_time: times.end });
       endOnlyFixed++;
       if (endOnlyFixed <= 5) {
-        console.log(`  ✅ "${event.event_date}" → end: ${times.end}`);
+        console.log(`  ✅ "${(event.event_date || event.name || '').substring(0, 60)}" → end: ${times.end}`);
       }
     }
   }
 
-  if (SAVE && timeUpdates.length > 0) {
-    let saved = 0;
-    for (const u of timeUpdates) {
-      const { error } = await supabase.from('events').update(u.updates).eq('id', u.id);
+  console.log(`  Parseable: ${startFixed} start times, ${endFixed + endOnlyFixed} end times`);
+  if (SAVE && timeUpdates.size > 0) {
+    let saved = 0, errored = 0;
+    for (const [id, updates] of timeUpdates) {
+      const { error } = await supabase.from('events').update(updates).eq('id', id);
       if (!error) saved++;
-      else if (saved === 0) console.log(`    ⚠️ ${error.message}`);
+      else { errored++; if (errored <= 3) console.log(`    ⚠️ ${error.message}`); }
     }
-    console.log(`  ✅ Updated ${saved} events (${startFixed} start times, ${endFixed + endOnlyFixed} end times)`);
-  } else {
-    console.log(`  Parseable: ${startFixed} start times, ${endFixed + endOnlyFixed} end times`);
+    console.log(`  ✅ Updated ${saved} events`);
   }
-  totalFixed += timeUpdates.length;
+  totalFixed += timeUpdates.size;
 
   // ══════════════════════════════════════════════════════════
   // ACTIVITIES FIXES
@@ -948,6 +1012,10 @@ async function main() {
 
   let actCityFixed = 0;
   for (let i = 0; i < actNoCity.length; i++) {
+    if (nominatimDisabled) {
+      console.log(`  ⏭️  Nominatim disabled — skipping remaining ${actNoCity.length - i} activity city lookups`);
+      break;
+    }
     if (consecutiveFails >= 10) {
       console.log(`  ⚠️ 10 consecutive failures — pausing 90s for rate limit recovery...`);
       await sleep(90000);
@@ -970,7 +1038,7 @@ async function main() {
       actCityFixed++;
       if (actCityFixed <= 5) console.log(`  ✅ "${act.name}" → ${geo.city}`);
     }
-    await sleep(BASE_DELAY);
+    await sleep(dynamicDelay);
   }
   console.log(`  10a fixed: ${actCityFixed}/${actNoCity.length}`);
 
@@ -1013,6 +1081,10 @@ async function main() {
 
   let actLocFixed = 0;
   for (let i = 0; i < actGeocodable.length; i++) {
+    if (nominatimDisabled) {
+      console.log(`  ⏭️  Nominatim disabled — skipping remaining ${actGeocodable.length - i} activity city+state lookups`);
+      break;
+    }
     if (consecutiveFails >= 10) {
       console.log(`  ⚠️ 10 consecutive failures — pausing 90s for rate limit recovery...`);
       await sleep(90000);
@@ -1025,7 +1097,7 @@ async function main() {
     if (coords === undefined) {
       coords = await forwardGeocode(act.city, act.state);
       geoCache[cacheKey] = coords || null;
-      await sleep(BASE_DELAY);
+      await sleep(dynamicDelay);
     }
 
     if (coords) {
@@ -1045,6 +1117,10 @@ async function main() {
   // 11b. Fallback: geocode activities from address or name
   let actFallbackFixed = 0;
   for (let i = 0; i < actFallbackable.length; i++) {
+    if (nominatimDisabled) {
+      console.log(`  ⏭️  Nominatim disabled — skipping remaining ${actFallbackable.length - i} activity fallback lookups`);
+      break;
+    }
     if (consecutiveFails >= 10) {
       console.log(`  ⚠️ 10 consecutive failures — pausing 90s for rate limit recovery...`);
       await sleep(90000);
@@ -1067,7 +1143,7 @@ async function main() {
       }
       result = await forwardGeocodeQuery(q);
       geoCache[cacheKey] = result || null;
-      await sleep(BASE_DELAY);
+      await sleep(dynamicDelay);
       if (result) break;
     }
 
@@ -1151,26 +1227,36 @@ async function main() {
   }
   totalFixed += actDupeIds.length;
 
-  // ── 13. Fix activities with missing/unknown source — backfill from url ──
+  // ── 13. Fix activities with missing/unknown source — backfill from url, then scraper_name ──
   console.log(`\n🏷️  STEP 13: Fix activities with missing source`);
-  console.log(`──────��──────────────────────────────────���─────────────────`);
-  const actNoSource = await fetchAll('activities', 'id, name, url, source', {
+  console.log(`────────────────────────────────────────────────────────────`);
+  const actNoSource = await fetchAll('activities', 'id, name, url, source, scraper_name', {
     or: 'source.is.null,source.eq.,source.eq.unknown,source.eq.auto-created-by-scraper,source.eq.event-scraper'
   });
-  const actSourceFixable = actNoSource.filter(a => a.url && a.url.length > 5);
-  console.log(`  Found ${actNoSource.length} activities with missing/generic source (${actSourceFixable.length} have a url to backfill from)`);
-  if (SAVE && actSourceFixable.length > 0) {
-    for (let i = 0; i < actSourceFixable.length; i += 100) {
-      const batch = actSourceFixable.slice(i, i + 100);
-      for (const act of batch) {
-        await supabase.from('activities').update({ source: act.url }).eq('id', act.id);
-      }
+  const actFromUrl = actNoSource.filter(a => a.url && a.url.length > 5);
+  // Fallback: when there is no URL, the originating scraper name is still a
+  // useful provenance value (e.g. "scraper-macaroni-georgia"). Beats leaving
+  // 3000+ rows with literal "unknown".
+  const actFromScraper = actNoSource.filter(a =>
+    !(a.url && a.url.length > 5) && a.scraper_name && a.scraper_name.length > 1);
+  console.log(`  Found ${actNoSource.length} activities with missing/generic source`);
+  console.log(`    ${actFromUrl.length} can backfill from url`);
+  console.log(`    ${actFromScraper.length} can backfill from scraper_name (no url available)`);
+  if (SAVE) {
+    for (const act of actFromUrl) {
+      await supabase.from('activities').update({ source: act.url }).eq('id', act.id);
     }
-    console.log(`  ✅ Updated source for ${actSourceFixable.length} activities`);
+    for (const act of actFromScraper) {
+      await supabase.from('activities').update({ source: act.scraper_name }).eq('id', act.id);
+    }
+    if (actFromUrl.length + actFromScraper.length > 0) {
+      console.log(`  ✅ Updated source for ${actFromUrl.length + actFromScraper.length} activities (${actFromUrl.length} url, ${actFromScraper.length} scraper_name)`);
+    }
   } else {
-    actSourceFixable.slice(0, 5).forEach(a => console.log(`  - "${a.name}" → ${a.url}`));
+    actFromUrl.slice(0, 3).forEach(a => console.log(`  - [url] "${a.name}" → ${a.url}`));
+    actFromScraper.slice(0, 3).forEach(a => console.log(`  - [scraper] "${a.name}" → ${a.scraper_name}`));
   }
-  totalFixed += actSourceFixable.length;
+  totalFixed += actFromUrl.length + actFromScraper.length;
 
   // ── Summary ──
   console.log(`\n════════════════════════════════════════════════════════════`);
