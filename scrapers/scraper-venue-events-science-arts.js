@@ -132,10 +132,25 @@ const VENUES = [
  */
 async function extractEventsFromPage(page, venue) {
   try {
-    await page.goto(venue.eventsUrl, {
-      waitUntil: 'networkidle2',
-      timeout: 30000
-    });
+    // Try networkidle2 first; if it times out, fall back to domcontentloaded.
+    // NC Museum of Natural Sciences and a few SPA-heavy sites never reach
+    // networkidle2 within 30s but DO render their event list before then.
+    try {
+      await page.goto(venue.eventsUrl, {
+        waitUntil: 'networkidle2',
+        timeout: 60000
+      });
+    } catch (err) {
+      if (/Navigation timeout/i.test(err.message)) {
+        console.log(`  ⚠️ networkidle2 timed out for ${venue.name}; retrying with domcontentloaded`);
+        await page.goto(venue.eventsUrl, {
+          waitUntil: 'domcontentloaded',
+          timeout: 60000
+        });
+      } else {
+        throw err;
+      }
+    }
 
     // Wait for page content
     await page.waitForSelector('body', { timeout: 5000 });

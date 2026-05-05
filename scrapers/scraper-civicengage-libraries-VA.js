@@ -6,11 +6,9 @@
  * Scrapes events from libraries using CivicEngage calendar system
  * CivicEngage is a government website platform with built-in event calendars
  *
- * ACTIVE (2 library systems):
+ * ACTIVE (1 library system):
  * VA:
  * - Colonial Heights Public Library (Colonial Heights, VA) - 17,000 population
- * NC:
- * - Onslow County Public Library (Jacksonville, NC) - 216,000 population
  *
  * DISABLED:
  * - Newport News (moved to library.nnva.gov — now in WordPress-VA scraper)
@@ -19,6 +17,7 @@
  * - Hampton (Cloudflare block, no library CID — covered by libcal-VA)
  * - Falls Church / Mary Riley Styles (no family events)
  * - Radford (no library CID, returns general city calendar)
+ * - Onslow County NC (May 2026 — URL is now a static directory page)
  *
  * Usage:
  *   node functions/scrapers/scraper-civicengage-libraries-VA.js
@@ -110,15 +109,20 @@ const LIBRARY_SYSTEMS = [
   // },
 
   // NORTH CAROLINA
-  {
-    name: 'Onslow County Public Library',
-    url: 'https://www.onslowcountync.gov/1640/Family-Programs-Events',
-    county: 'Onslow',
-    state: 'NC',
-    website: 'https://www.onslowcountync.gov/library',
-    city: 'Jacksonville',
-    zipCode: '28540'
-  }
+  // Onslow County Public Library: DISABLED — May 2026 scraper run
+  // /1640/Family-Programs-Events is a static resource directory page, not a
+  // CivicEngage event calendar. Diagnostics: monthItem:0 listItem:0 calItem:0
+  // tableEvents:0 links:1 — i.e. nothing on the page matches CivicEngage event
+  // selectors. If a true Onslow library calendar URL surfaces later, restore.
+  // {
+  //   name: 'Onslow County Public Library',
+  //   url: 'https://www.onslowcountync.gov/1640/Family-Programs-Events',
+  //   county: 'Onslow',
+  //   state: 'NC',
+  //   website: 'https://www.onslowcountync.gov/library',
+  //   city: 'Jacksonville',
+  //   zipCode: '28540'
+  // }
 ];
 
 // Use shared geocoding helper with caching + rate limiting instead of raw Nominatim calls

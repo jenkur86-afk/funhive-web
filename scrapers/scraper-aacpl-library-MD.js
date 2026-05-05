@@ -310,23 +310,41 @@ async function scrapeAACPLEvents() {
     // Process each event
     for (const event of events) {
       try {
-        // Find matching library branch
+        // Find matching library branch by checking, in priority order:
+        //   1) the parsed venue text (when "Library Branch:" label is present)
+        //   2) the event title (e.g. "Storytime at Annapolis Library")
+        //   3) the event detail URL slug (e.g. /event/123/storytime-annapolis)
+        //   4) the description text
+        // The AACPL site dropped the "Library Branch:" label from the listing
+        // markup as of May 2026, so the venue field is now usually empty —
+        // without these fallbacks every event falls through as "no branch
+        // match" and the scraper imports zero events.
         let branch = null;
         let branchName = null;
 
+        const haystacks = [
+          event.venue || '',
+          event.name || '',
+          (event.url || '').toLowerCase().replace(/[-_]/g, ' '),
+          event.description || ''
+        ];
+
         for (const [name, data] of Object.entries(LIBRARY_BRANCHES)) {
-          if (event.venue.includes(name) || event.name.includes(name)) {
+          const needle = name.toLowerCase();
+          if (haystacks.some(h => h.toLowerCase().includes(needle))) {
             branch = data;
             branchName = name;
             break;
           }
         }
 
-        // Skip if we can't match to a branch
+        // If still no match, fall back to system-level (Annapolis HQ).
+        // These events are real and on the AACPL calendar — better to import
+        // them with a county-level location than to silently drop them.
         if (!branch) {
-          console.log(`  ⏭️  Skipping: ${event.name} (no branch match)`);
-          skipped++;
-          continue;
+          branch = LIBRARY_BRANCHES['Annapolis'];
+          branchName = 'Anne Arundel County';
+          console.log(`  📍 No branch match for "${event.name}" — using AACPL system fallback (Annapolis)`);
         }
 
         // Normalize date format
