@@ -338,6 +338,14 @@ const NON_FAMILY_PATTERNS = [
   /\bdate\s+night\b/i,
   /\bburlesque\b/i,
   /\bnight\s*club\b/i,
+  // Moms/dads/parents night out (without kids — these are explicitly
+  // adult-only socials, not family events). Caught one on 2026-05-05 via
+  // "adults only" — adding explicit patterns so we don't rely on that.
+  /\b(mom'?s?|moms|mama'?s?|mamas|mommy)\s+night\s+out\b/i,
+  /\b(dad'?s?|dads|daddy|papa)\s+night\s+out\b/i,
+  /\bparents?\s+night\s+out\s+\(no\s+kids?\)/i,
+  /\bgirls?\s+night\s+out\b/i,
+  /\bladies?\s+night\b/i,
 
   // Explicit adult content
   /\bsexy\b/i,
