@@ -91,6 +91,28 @@ async function fetchAllPaginated(table, select, filters) {
 // ============================================================
 
 let consecutiveFails = 0;
+let consecutive429s = 0;
+let dynamicDelay = 1100;          // Nominatim allows 1/s — start just over a second
+let nominatimDisabled = false;
+const MAX_DELAY = 15000;
+const RATE_LIMIT_BAIL = 25;       // Stop calling Nominatim after this many consecutive 429s
+
+function noteNominatim429() {
+  consecutive429s++;
+  consecutiveFails++;
+  dynamicDelay = Math.min(MAX_DELAY, Math.max(dynamicDelay * 2, 5000));
+  if (consecutive429s >= RATE_LIMIT_BAIL && !nominatimDisabled) {
+    nominatimDisabled = true;
+    console.log(`  🛑 ${RATE_LIMIT_BAIL} consecutive 429s — disabling Nominatim for the rest of this run.`);
+    console.log(`     Re-run later to pick up where we left off.`);
+  }
+}
+
+function noteNominatimSuccess() {
+  consecutive429s = 0;
+  consecutiveFails = 0;
+  if (dynamicDelay > 1100) dynamicDelay = Math.max(1100, Math.floor(dynamicDelay / 2));
+}
 
 // US state name → abbreviation lookup
 const STATE_ABBREVS = {
@@ -108,18 +130,22 @@ const STATE_ABBREVS = {
 };
 
 async function reverseGeocode(lat, lng) {
+  if (nominatimDisabled) return null;
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1&zoom=18`;
       const response = await fetch(url, {
-        headers: { 'User-Agent': 'FunHive/1.0 (data-quality-fix)' },
+        headers: { 'User-Agent': 'FunHive/1.0 (https://funhive.co; jenkur86@gmail.com)' },
         signal: AbortSignal.timeout(15000)
       });
 
-      // Handle rate limiting
+      // Handle rate limiting — back off harder than the original 5/10/15s cycle,
+      // which the run on 2026-05-05 showed was useless against persistent 429s.
       if (response.status === 429) {
-        const waitTime = 5000 * (attempt + 1);
-        console.log(`  ⏳ Rate limited — waiting ${waitTime / 1000}s...`);
+        noteNominatim429();
+        if (nominatimDisabled) return null;
+        const waitTime = 30000 * (attempt + 1);
+        console.log(`  ⏳ Rate limited — waiting ${waitTime / 1000}s (delay now ${dynamicDelay / 1000}s, ${consecutive429s} consecutive)...`);
         await sleep(waitTime);
         continue;
       }
@@ -130,7 +156,7 @@ async function reverseGeocode(lat, lng) {
       }
 
       const data = await response.json();
-      consecutiveFails = 0;
+      noteNominatimSuccess();
 
       if (data && data.address) {
         const addr = data.address;
@@ -176,17 +202,20 @@ async function reverseGeocode(lat, lng) {
 // ============================================================
 
 async function forwardGeocode(query) {
+  if (nominatimDisabled) return null;
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=us&addressdetails=1`;
       const response = await fetch(url, {
-        headers: { 'User-Agent': 'FunHive/1.0 (data-quality-fix)' },
+        headers: { 'User-Agent': 'FunHive/1.0 (https://funhive.co; jenkur86@gmail.com)' },
         signal: AbortSignal.timeout(15000)
       });
 
       if (response.status === 429) {
-        const waitTime = 5000 * (attempt + 1);
-        console.log(`  ⏳ Rate limited — waiting ${waitTime / 1000}s...`);
+        noteNominatim429();
+        if (nominatimDisabled) return null;
+        const waitTime = 30000 * (attempt + 1);
+        console.log(`  ⏳ Rate limited — waiting ${waitTime / 1000}s (delay now ${dynamicDelay / 1000}s, ${consecutive429s} consecutive)...`);
         await sleep(waitTime);
         continue;
       }
@@ -194,7 +223,7 @@ async function forwardGeocode(query) {
       if (!response.ok) { await sleep(2000); continue; }
 
       const data = await response.json();
-      consecutiveFails = 0;
+      noteNominatimSuccess();
 
       if (data && data[0]) {
         const addr = data[0].address || {};
@@ -428,6 +457,10 @@ async function main() {
     let geocodeCount = 0;
 
     for (const activity of allMissing) {
+      if (nominatimDisabled) {
+        console.log(`\n  ⏭️  Nominatim disabled — skipping remaining activities. Re-run later.`);
+        break;
+      }
       // If we've failed 20 in a row, Nominatim is probably blocking us
       if (consecutiveFails >= 20) {
         console.log(`\n  ⚠️ 20 consecutive failures — Nominatim may be blocking. Pausing 60s...`);
@@ -490,8 +523,8 @@ async function main() {
         console.log(`  ⏳ ${geocodeCount}/${allMissing.length} processed, ${addressFixed} fixed, ${addressFailed} failed`);
       }
 
-      // Rate limit: 2.5s between requests (conservative — Nominatim 429s at 1.5s)
-      await sleep(2500);
+      // Adaptive delay — increases on 429s, decays on success (see noteNominatim429)
+      await sleep(dynamicDelay);
     }
 
     console.log(`\n  📊 Reverse Geocode Results:`);
@@ -562,6 +595,10 @@ async function main() {
     for (let i = 0; i < forwardCandidates.length; i++) {
       const activity = forwardCandidates[i];
 
+      if (nominatimDisabled) {
+        console.log(`\n  ⏭️  Nominatim disabled — skipping remaining ${forwardCandidates.length - i} forward geocodes. Re-run later.`);
+        break;
+      }
       if (consecutiveFails >= 20) {
         console.log(`\n  ⚠️ 20 consecutive failures — pausing 60s...`);
         await sleep(60000);
@@ -608,7 +645,7 @@ async function main() {
         console.log(`  ⏳ ${i + 1}/${forwardCandidates.length} processed, ${fwdFixed} fixed, ${fwdFailed} failed`);
       }
 
-      await sleep(2500);
+      await sleep(dynamicDelay);
     }
     console.log(`\n  📊 Forward Geocode Results:`);
     console.log(`     Fixed:  ${fwdFixed}`);
