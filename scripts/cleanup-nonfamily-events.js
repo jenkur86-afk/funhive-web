@@ -39,6 +39,13 @@ const AUTO_DELETE_PATTERNS = [
   { pattern: /\bnight\s*club\b/i, label: 'nightclub' },
   { pattern: /\badults?\s*only\s*(night|event|party|swim|hours?|session)?\b/i, label: 'adults only' },
   { pattern: /\b21\s*\+\s*(only|event|night|party)\b/i, label: '21+ event' },
+  // Adult socials slipping through scraper-side filtering (caught one on
+  // 2026-05-05 only because it also said "adults only"). Keep these here
+  // as a backstop so historical rows still get cleaned up.
+  { pattern: /\b(mom'?s?|moms|mama'?s?|mamas|mommy)\s+night\s+out\b/i, label: "moms night out" },
+  { pattern: /\b(dad'?s?|dads|daddy|papa)\s+night\s+out\b/i, label: "dads night out" },
+  { pattern: /\bgirls?\s+night\s+out\b/i, label: 'girls night out' },
+  { pattern: /\bladies?\s+night\b/i, label: 'ladies night' },
   { pattern: /\bgambling\b/i, label: 'gambling' },
   { pattern: /\bdrug\s*take\s*back\b/i, label: 'drug take back' },
   { pattern: /\bgun\s*show\b/i, label: 'gun show' },
