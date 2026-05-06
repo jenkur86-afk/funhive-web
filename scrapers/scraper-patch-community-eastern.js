@@ -549,8 +549,16 @@ if (require.main === module) {
 
 async function scrapePatchCommunityCloudFunction() {
   try {
-    const result = await scrapePatchCommunity();
-    return { success: true, result };
+    const stateResults = await scrapePatchCommunity();
+    // stateResults is { AL: 12, DC: 19, ... } — collapse to runner-friendly shape
+    const total = Object.values(stateResults || {}).reduce((s, n) => s + (n || 0), 0);
+    return {
+      success: true,
+      result: stateResults,
+      found: total,
+      new: total,
+      duplicates: 0,
+    };
   } catch (err) {
     console.error('Cloud Function Error:', err);
     return { success: false, error: err.message };

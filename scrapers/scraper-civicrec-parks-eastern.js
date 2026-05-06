@@ -425,7 +425,12 @@ async function scrapeDepartment(browser, dept, dryRun) {
       const { category, subcategory } = detectCategory(raw.title, raw.description);
 
       const venue = raw.location || dept.name;
-      const url = raw.link || dept.urlBase;
+      // IMPORTANT: only assign a per-event url when raw.link is a real per-event link.
+      // Falling back to dept.urlBase makes every event in the department share the same URL,
+      // which then collides through generateEventId(url) and all 78 events collapse to 1 id.
+      // When per-event url is missing, leave it empty so the ID falls back to
+      // generateEventIdFromDetails(name, eventDate, venue) — which is unique per event.
+      const url = raw.link || '';
 
       events.push({
         name: raw.title.substring(0, 200),
@@ -602,8 +607,17 @@ if (require.main === module) {
 
 async function scrapeCivicRecParksCloudFunction() {
   try {
-    const result = await scrapeCivicRecParks();
-    return { success: true, scraper: SCRAPER_NAME, result };
+    const stateResults = await scrapeCivicRecParks();
+    // stateResults is { AL: 86, FL: 1100, ... } — collapse for runner
+    const total = Object.values(stateResults || {}).reduce((s, n) => s + (n || 0), 0);
+    return {
+      success: true,
+      scraper: SCRAPER_NAME,
+      result: stateResults,
+      found: total,
+      new: total,
+      duplicates: 0,
+    };
   } catch (err) {
     console.error('Cloud Function Error:', err);
     return { success: false, scraper: SCRAPER_NAME, error: err.message };

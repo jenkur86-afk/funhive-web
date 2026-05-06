@@ -654,10 +654,16 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
         console.log(`  ⚠️ "${eventDoc.name?.substring(0, 30)}": ${warnings.join(', ')}`);
       }
 
-      // Generate deterministic ID so re-scraping the same event upserts instead of duplicating
-      const eventId = eventDoc.url
-        ? generateEventId(eventDoc.url)
-        : generateEventIdFromDetails(eventDoc.name, eventDoc.eventDate, eventDoc.venue || '');
+      // Generate deterministic ID so re-scraping the same event upserts instead of duplicating.
+      // IMPORTANT: include name + eventDate + venue in the seed even when URL exists.
+      // Many scrapers fall back to a generic catalog/listing URL when per-event link is missing,
+      // and a URL-only ID would collide for every event in that listing — collapsing the whole
+      // batch to a single Supabase row at upsert time (the "60 → 1 rows" symptom).
+      const eventId = generateEventIdFromDetails(
+        eventDoc.name,
+        eventDoc.eventDate,
+        `${eventDoc.venue || ''}|${eventDoc.url || ''}`
+      );
       const docRef = db.collection('events').doc(eventId);
       batch.set(docRef, eventDoc);
 
@@ -814,9 +820,13 @@ async function saveEventsSimple(events, options = {}) {
       console.log(`  ⚠️ "${event.name?.substring(0, 30)}": ${warnings.join(', ')}`);
     }
 
-    const eventId = event.url
-      ? generateEventId(event.url)
-      : generateEventIdFromDetails(event.name, event.eventDate, event.venue || '');
+    // Always include name + eventDate + venue in the seed (URL alone collides when
+    // multiple events share a fallback listing URL).
+    const eventId = generateEventIdFromDetails(
+      event.name,
+      event.eventDate,
+      `${event.venue || ''}|${event.url || ''}`
+    );
     const docRef = db.collection('events').doc(eventId);
     batch.set(docRef, event);
 

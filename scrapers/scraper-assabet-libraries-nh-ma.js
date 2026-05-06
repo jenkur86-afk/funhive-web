@@ -188,6 +188,10 @@ async function scrapeAssabetEvents() {
 async function saveToDatabase(events) {
   return await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
+    // Each library carries its own `state` field (NH or MA) which takes priority
+    // inside saveEventsWithGeocoding via `library.state || state`. The option-level
+    // `state` is required as a fallback, so pass a multi-state sentinel.
+    state: 'NH',
     category: 'library',
     platform: 'assabet-interactive'
   });

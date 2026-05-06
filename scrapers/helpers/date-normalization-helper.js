@@ -62,6 +62,26 @@ function normalizeDateString(dateString) {
   // Strip NASA-style "NET" prefix meaning "no earlier than" (e.g., "NET October 2026")
   cleaned = cleaned.replace(/^NET\s+/i, '');
 
+  // Strip "Class N of M" / "Session N of M" prefix used by garden/nature programs
+  // (e.g., "Class 2 of 3 Wednesday, May 6 9:30-11:00am")
+  cleaned = cleaned.replace(/^(?:Class|Session|Part|Week)\s+\d+\s+of\s+\d+\s+/i, '');
+
+  // Strip "{Number} Sessions:" / "{Word} Sessions:" prefix
+  // (e.g., "Six Sessions: Tuesdays, March 31-May 5 • noon-3 p.m.")
+  cleaned = cleaned.replace(/^(?:Six|Five|Four|Three|Two|One|Eight|Ten|Twelve|\d+)\s+Sessions?\s*:\s*/i, '');
+
+  // Strip recurring-pattern prefix "Weekends", "Weekdays", "Daily", "Mondays", etc.
+  // (e.g., "Weekends May 16-31, 2026 • 10 a.m.-4 p.m.")
+  cleaned = cleaned.replace(/^(?:Weekends?|Weekdays?|Daily|Every\s+(?:Day|Week))\s+/i, '');
+  cleaned = cleaned.replace(/^(?:Mondays?|Tuesdays?|Wednesdays?|Thursdays?|Fridays?|Saturdays?|Sundays?)\s*,?\s*/i, '');
+
+  // Replace bullet/middot separators with spaces (event lines often use "Date • Time")
+  cleaned = cleaned.replace(/\s*[•·]\s*/g, ' ');
+
+  // Strip "noon" / "midnight" — they're time-only fragments masquerading as words
+  cleaned = cleaned.replace(/\b(noon|midnight)\b\s*[-–—]?\s*\d{0,2}\s*[ap]?\.?m?\.?/gi, '');
+  cleaned = cleaned.replace(/\b(noon|midnight)\b/gi, '');
+
   // Remove "at" or "from" before times (e.g., "Apr 30, at 9:00 AM", "May 09, from 8:30 AM–10:00 AM")
   cleaned = cleaned.replace(/\s+(?:at|from)\s+(\d{1,2}[:\d]*\s*[ap])/gi, ' $1');
 
@@ -80,6 +100,14 @@ function normalizeDateString(dateString) {
 
   // Remove time range patterns (e.g., "6:00pm - 7:00pm", "10:30am–12:00pm")
   cleaned = cleaned.replace(/\s*\d{1,2}:\d{2}\s*[ap]\.?m\.?\s*[-–—]\s*\d{1,2}:\d{2}\s*[ap]\.?m\.?/gi, '');
+
+  // Remove partial-AM/PM time ranges where only the END has AM/PM
+  // (e.g., "9:30-11:00am", "10:00-12:00pm", "9:30-11:30am")
+  cleaned = cleaned.replace(/\s*\d{1,2}:\d{2}\s*[-–—]\s*\d{1,2}:\d{2}\s*[ap]\.?m\.?/gi, '');
+
+  // Remove partial-AM/PM time ranges where only the START has AM/PM
+  // (e.g., "10am-2pm" already handled below; "10:00am-4" is rare but possible)
+  cleaned = cleaned.replace(/\s*\d{1,2}:\d{2}\s*[ap]\.?m\.?\s*[-–—]\s*\d{1,2}(?::\d{2})?(?!\s*[ap])/gi, '');
 
   // Remove compact time ranges without colons (e.g., "7am - 8pm", "7am–8pm")
   cleaned = cleaned.replace(/\s*\d{1,2}\s*[ap]\.?m\.?\s*[-–—]\s*\d{1,2}\s*[ap]\.?m\.?/gi, '');

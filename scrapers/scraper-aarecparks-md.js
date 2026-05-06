@@ -271,7 +271,11 @@ async function saveActivities(activities) {
 
   for (const activity of activities) {
     try {
-      const eventId = generateEventId(activity.url || `${BASE_URL}/${activity.name}`);
+      // Build a stable, per-event ID. When activity.url is missing, include name + date + venue
+      // so different activities don't collide on the same fallback URL.
+      const idSeed = activity.url
+        || `${BASE_URL}/${activity.name}|${activity.eventDate || ''}|${activity.venue || ''}`;
+      const eventId = generateEventId(idSeed);
       const docRef = db.collection('events').doc(eventId);
       batch.set(docRef, activity, { merge: true });
       saved++;
@@ -362,7 +366,11 @@ async function scrapeAARecParks(options = {}) {
         parentCategory: categorized.parentCategory || parentCategory,
         displayCategory: categorized.displayCategory || displayCategory,
         subcategory: categorized.subcategory || subcategory,
-        url: raw.link || SEARCH_URL,
+        // IMPORTANT: leave url empty when per-event link is missing.
+        // Falling back to SEARCH_URL makes every activity share the same URL,
+        // which causes generateEventId(url) collisions and the entire batch
+        // collapses to a single Supabase row at upsert time.
+        url: raw.link || '',
         imageUrl: '',
         metadata: {
           sourceName: 'Anne Arundel Recreation & Parks',

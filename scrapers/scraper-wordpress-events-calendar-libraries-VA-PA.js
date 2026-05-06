@@ -201,6 +201,33 @@ function parseAgeRange(audienceText) {
   return 'All Ages';
 }
 
+// Try The Events Calendar REST API (much more reliable than HTML scraping when available).
+// Endpoint: {site}/wp-json/tribe/events/v1/events?per_page=50&start_date=YYYY-MM-DD
+// Returns an array of {name, eventDate, venue, description, url, audience} entries
+// shaped to match the existing HTML extractor's output.
+async function tryTribeRestApi(library) {
+  try {
+    const baseUrl = library.website || library.url.replace(/\/events\/?.*$/, '');
+    const startDate = new Date().toISOString().slice(0, 10);
+    const apiUrl = `${baseUrl}/wp-json/tribe/events/v1/events?per_page=50&start_date=${startDate}`;
+    const resp = await axios.get(apiUrl, { timeout: 15000, validateStatus: () => true });
+    if (resp.status !== 200 || !resp.data || !Array.isArray(resp.data.events)) return null;
+    if (resp.data.events.length === 0) return [];
+
+    return resp.data.events.map(e => ({
+      name: (e.title || '').replace(/<[^>]+>/g, '').trim(),
+      url: e.url || '',
+      // start_date is "YYYY-MM-DD HH:MM:SS" — pass through, normalizeDateString handles it
+      eventDate: e.start_date || e.utc_start_date || '',
+      description: (e.description || '').replace(/<[^>]+>/g, '').trim().slice(0, 500),
+      venue: e.venue?.venue || '',
+      audience: ''
+    })).filter(ev => ev.name && ev.name.length >= 3);
+  } catch (err) {
+    return null;
+  }
+}
+
 // Scrape events from WordPress Events Calendar library
 async function scrapeLibraryEvents(library, browser) {
   console.log('\n\x1b[36m📍📍📍📍📍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━📍📍📍📍\x1b[0m');
@@ -212,6 +239,13 @@ async function scrapeLibraryEvents(library, browser) {
   let failed = 0;
 
   try {
+    // FAST PATH: try the Tribe REST API first — many sites that "return 0 events" via HTML
+    // are actually using a JS-rendered list view that's slow to settle. The REST API is direct.
+    const apiEvents = await tryTribeRestApi(library);
+    if (apiEvents && apiEvents.length > 0) {
+      console.log(`   ✓ Tribe REST API: ${apiEvents.length} events`);
+    }
+
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
 
@@ -223,11 +257,13 @@ async function scrapeLibraryEvents(library, browser) {
       urlsToTry.unshift(listViewUrl);
     }
 
-    let events = [];
-    for (const tryUrl of urlsToTry) {
+    // Seed events from the REST API result; only fall through to Puppeteer if API returned nothing.
+    let events = apiEvents && apiEvents.length > 0 ? apiEvents : [];
+    for (const tryUrl of (events.length > 0 ? [] : urlsToTry)) {
       await page.goto(tryUrl, {
         waitUntil: 'networkidle2',
-        timeout: 30000
+        // Bristol Public Library and a few others timed out at 30s — bump to 45s.
+        timeout: 45000
       });
 
       // Wait for events to load
