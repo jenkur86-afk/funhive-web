@@ -22,7 +22,9 @@ const { supabase } = require('../scrapers/helpers/supabase-adapter');
 const SAVE = process.argv.includes('--save');
 
 async function fetchAll() {
-  const cols = 'id, name, city, state, address, location, geohash, description, phone, website, created_at';
+  // NOTE: activities has `url` (not `website`) and `phone`. No `website` column —
+  // see database/schema.sql. Adding `website` to select returns 400 from PostgREST.
+  const cols = 'id, name, city, state, address, location, geohash, description, phone, url, created_at';
   let all = [];
   let from = 0;
   const PAGE = 1000;
@@ -45,7 +47,7 @@ function score(a) {
   if (a.geohash) s++;
   if (a.description) s++;
   if (a.phone) s++;
-  if (a.website) s++;
+  if (a.url) s++;
   return s;
 }
 
