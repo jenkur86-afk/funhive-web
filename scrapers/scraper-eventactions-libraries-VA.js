@@ -23,6 +23,7 @@ const { generateEventId, generateEventIdFromDetails } = require('./event-id-help
 const { logScraperResult } = require('./scraper-logger');
 const { getBranchAddress } = require('./library-addresses');
 const { linkEventToVenue } = require('./venue-matcher');
+const { geocodeWithFallback } = require('./helpers/geocoding-helper');
 
 // Library Systems using EventActions/Trumba
 const LIBRARY_SYSTEMS = [
@@ -191,20 +192,21 @@ async function scrapeLibraryEvents(library, browser) {
           ? getBranchAddress(library.name, branchName, library.state)
           : getBranchAddress(library.name, null, library.state);
 
-        // Try to geocode using the branch address
-        let coordinates = null;
-        if (branchLocation && branchLocation.address) {
-          const fullAddress = `${branchLocation.address}, ${branchLocation.city}, ${branchLocation.state} ${branchLocation.zipCode}`;
-          coordinates = await geocodeAddress(fullAddress);
-        }
-
-        // Fallback to generic geocoding if branch address didn't work
-        if (!coordinates) {
-          const venueAddress = branchName
-            ? `${branchName}, ${library.city}, ${library.county} County, ${library.state}`
-            : `${library.name}, ${library.city}, ${library.county} County, ${library.state}`;
-          coordinates = await geocodeAddress(venueAddress);
-        }
+        // Use the shared geocoder so we get the full fallback chain
+        // (library address → Nominatim → Photon → city center → county centroid).
+        // Without this, ~26 Jefferson-Madison events landed without coordinates
+        // and never showed on the map (caught 2026-05-10 via data-quality-check).
+        const primaryAddr = (branchLocation && branchLocation.address)
+          ? `${branchLocation.address}, ${branchLocation.city}, ${branchLocation.state} ${branchLocation.zipCode}`
+          : `${branchName || library.name}, ${library.city}, ${library.county} County, ${library.state}`;
+        let coordinates = await geocodeWithFallback(primaryAddr, {
+          city: branchLocation?.city || library.city,
+          zipCode: branchLocation?.zipCode || library.zipCode,
+          state: library.state,
+          county: library.county,
+          venueName: branchName || library.name,
+          sourceName: library.name,
+        });
 
         // Build event document
         const eventDoc = {

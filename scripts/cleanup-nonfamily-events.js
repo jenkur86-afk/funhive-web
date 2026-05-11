@@ -39,6 +39,14 @@ const AUTO_DELETE_PATTERNS = [
   { pattern: /\bnight\s*club\b/i, label: 'nightclub' },
   { pattern: /\badults?\s*only\s*(night|event|party|swim|hours?|session)?\b/i, label: 'adults only' },
   { pattern: /\b21\s*\+\s*(only|event|night|party)\b/i, label: '21+ event' },
+  // Explicit "Adult X" library programs — Sarasota, Fort Dodge, Wythe-Grayson all
+  // have "Adult Coloring", "Adult Book Club", "Adult Knitting" type events that
+  // pre-2026-05-10 were being rescued by the family-venue safeguard (library).
+  { pattern: /\badult\s+coloring\b/i, label: 'adult coloring' },
+  { pattern: /:\s*adult\s+coloring\b/i, label: 'adult coloring (subtitle)' },
+  { pattern: /\badult\s+book\s*club\b/i, label: 'adult book club' },
+  { pattern: /\badult\s+(knitting|crochet|quilting|writing|painting|literacy)\b/i, label: 'adult craft/class' },
+  { pattern: /\badult\s+(swim|fitness|yoga|line\s*danc)/i, label: 'adult fitness' },
   // Adult socials slipping through scraper-side filtering (caught one on
   // 2026-05-05 only because it also said "adults only"). Keep these here
   // as a backstop so historical rows still get cleaned up.
@@ -56,6 +64,14 @@ const AUTO_DELETE_PATTERNS = [
 function isFalsePositive(name, description, venue) {
   const text = `${name || ''} ${description || ''} ${venue || ''}`.toLowerCase();
   const nameLower = (name || '').toLowerCase();
+
+  // EXPLICIT ADULT in title — never rescue (libraries hold adult-only programs).
+  // Examples: "Adult Coloring Group", "Color Your World: Adult Coloring",
+  // "Adult Book Club", "Adults Only Swim", "Adult Knitting Circle".
+  // Without this, the family-venue rescue below (library/zoo/museum) was sparing
+  // legit adult-only programs. (Caught 2026-05-10 via data-quality-check.)
+  if (/\badults?\s+(only|coloring|book\s*club|craft|workshop|class|program|event|swim|knitting|writing|crochet|quilting|yoga|fitness|hour|night|social|painting|trivia|games?|literacy|line\s*danc)\b/i.test(nameLower)) return false;
+  if (/:\s*adult\s+coloring\b/i.test(nameLower)) return false;
 
   // If the event name explicitly says "family", "kids", "children", "toddler", "youth", "all ages" — it's family-friendly
   if (/\b(family|families|kid|kids|children|toddler|preschool|youth|all\s*ages|child|infant|baby|babies|mommy|daddy|parent)\b/i.test(nameLower)) return 'family keyword in title';

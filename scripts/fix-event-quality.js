@@ -130,6 +130,38 @@ async function fetchAll(table, select, filters = {}) {
   return all;
 }
 
+// Parse "April 25, 2026", "Apr 25 2026", "4/25/2026", "Sat, May 23, 2026 10:00am"
+// Returns ISO string or null. Mirrors parseEventDateToTimestamp in fix-all-data-quality.js.
+function parseEventDateToTimestampLocal(eventDate) {
+  if (!eventDate || typeof eventDate !== 'string') return null;
+  let d = new Date(eventDate);
+  if (!isNaN(d.getTime()) && d.getFullYear() >= 2024 && d.getFullYear() <= 2030) return d.toISOString();
+  const cleaned = eventDate
+    .replace(/\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|Mon|Tue|Tues|Wed|Thu|Thurs|Fri|Sat|Sun),?\s*/gi, '')
+    .replace(/\s+at\s+\d{1,2}[:.]\d{2}\s*(am|pm)?/gi, '')
+    .replace(/\s+\d{1,2}[:.]\d{2}\s*(am|pm)?(\s*[-–]\s*\d{1,2}[:.]\d{2}\s*(am|pm)?)?/gi, '')
+    .replace(/\s{2,}/g, ' ').trim();
+  d = new Date(cleaned);
+  if (!isNaN(d.getTime()) && d.getFullYear() >= 2024 && d.getFullYear() <= 2030) return d.toISOString();
+  const slash = cleaned.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (slash) {
+    d = new Date(parseInt(slash[3]), parseInt(slash[1]) - 1, parseInt(slash[2]));
+    if (!isNaN(d.getTime())) return d.toISOString();
+  }
+  const months = { jan:0,january:0,feb:1,february:1,mar:2,march:2,apr:3,april:3,may:4,jun:5,june:5,jul:6,july:6,aug:7,august:7,sep:8,sept:8,september:8,oct:9,october:9,nov:10,november:10,dec:11,december:11 };
+  const m = cleaned.match(/\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sept?(?:ember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+(\d{1,2})(?:st|nd|rd|th)?,?\s*(\d{4})?/i);
+  if (m) {
+    const month = months[m[1].toLowerCase()];
+    const day = parseInt(m[2]);
+    const year = m[3] ? parseInt(m[3]) : new Date().getFullYear();
+    if (month !== undefined && day >= 1 && day <= 31) {
+      d = new Date(year, month, day);
+      if (!isNaN(d.getTime()) && d.getFullYear() >= 2024 && d.getFullYear() <= 2030) return d.toISOString();
+    }
+  }
+  return null;
+}
+
 // ── Reverse geocode ──
 let consecutiveFails = 0;
 let consecutive429s = 0;        // Tracks 429s separately so we can back off harder
@@ -492,13 +524,42 @@ async function main() {
   }
   totalFixed += junkEvents.length;
 
+  // ── 1c. Sanitize event_date strings with leaked HTML / newlines ──
+  // Caught 2026-05-10 — 29 rows had "<br>" or "\n" inside event_date, which
+  // breaks date parsing and shows up garbled in the UI. saveEvent now strips
+  // these at scrape time; this step scrubs anything that pre-dates that fix.
+  console.log(`\n🧹 STEP 1c: Sanitize malformed event_date strings`);
+  console.log(`───────────────────────────────────────`);
+  const allDates = await fetchAll('events', 'id, event_date', { skipRecentFilter: true });
+  const malformed = allDates.filter(e => e.event_date && /<[^>]+>|[\r\n\t]|&[a-z]+;/i.test(e.event_date));
+  console.log(`  Found ${malformed.length} events with HTML/newlines in event_date`);
+  let sanitized = 0;
+  if (SAVE && malformed.length > 0) {
+    for (const e of malformed) {
+      const cleaned = e.event_date
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/&[a-z]+;/gi, ' ')
+        .replace(/[\r\n\t]+/g, ' ')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+      if (cleaned && cleaned !== e.event_date) {
+        await supabase.from('events').update({ event_date: cleaned }).eq('id', e.id);
+        sanitized++;
+      }
+    }
+    console.log(`  ✅ Sanitized ${sanitized} event_date strings`);
+  } else {
+    malformed.slice(0, 5).forEach(e => console.log(`  - "${e.event_date.substring(0, 60)}"`));
+  }
+  totalFixed += sanitized;
+
   // ── 2. Delete past events (2532) ──
   console.log(`\n🗑️  STEP 2: Remove past events`);
   console.log(`───────────────────────────────────────`);
   const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
   // Always full-scan: past events must be deleted regardless of scrape age.
   const pastEvents = await fetchAll('events', 'id, name, event_date, date', { lt: ['date', today], skipRecentFilter: true });
-  console.log(`  Found ${pastEvents.length} past events`);
+  console.log(`  Found ${pastEvents.length} past events (with parsed date < today)`);
   if (SAVE && pastEvents.length > 0) {
     const ids = pastEvents.map(e => e.id);
     for (let i = 0; i < ids.length; i += 100) {
@@ -510,6 +571,36 @@ async function main() {
     pastEvents.slice(0, 5).forEach(e => console.log(`  - "${e.name}" (${e.event_date})`));
   }
   totalFixed += pastEvents.length;
+
+  // ── 2a. Delete past events where parsed `date` is NULL but `event_date` text is past ──
+  // Without this, ~1300 past events linger in the DB (date column never got
+  // populated by the scraper, so the SQL `date < today` filter above misses them).
+  // Caught 2026-05-10 via data-quality-check.
+  console.log(`\n🗑️  STEP 2a: Remove past events with NULL parsed date`);
+  console.log(`───────────────────────────────────────`);
+  const datelessRows = await fetchAll('events', 'id, name, event_date', { is: ['date', null], skipRecentFilter: true });
+  const datePastFromText = [];
+  const todayDay = new Date(); todayDay.setHours(0, 0, 0, 0);
+  for (const e of datelessRows) {
+    if (!e.event_date) continue;
+    const parsed = parseEventDateToTimestampLocal(e.event_date);
+    if (!parsed) continue;
+    const d = new Date(parsed); d.setHours(0, 0, 0, 0);
+    if (d < todayDay) datePastFromText.push(e);
+  }
+  console.log(`  Scanned ${datelessRows.length} events with NULL parsed date`);
+  console.log(`  Found ${datePastFromText.length} past based on event_date text`);
+  if (SAVE && datePastFromText.length > 0) {
+    const ids = datePastFromText.map(e => e.id);
+    for (let i = 0; i < ids.length; i += 100) {
+      const batch = ids.slice(i, i + 100);
+      await supabase.from('events').delete().in('id', batch);
+    }
+    console.log(`  ✅ Deleted ${datePastFromText.length} past events`);
+  } else {
+    datePastFromText.slice(0, 5).forEach(e => console.log(`  - "${e.name}" (${e.event_date})`));
+  }
+  totalFixed += datePastFromText.length;
 
   // ── 2b. Remove duplicate events (same name + date + venue) ──
   console.log(`\n🔄 STEP 2b: Remove duplicate events`);

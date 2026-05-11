@@ -281,7 +281,9 @@ const NON_FAMILY_PATTERNS = [
   /\b(18|21)\s*\+/i,
   /\b(18|21)\s*and\s*(over|up|older)\b/i,
   /\bfor\s+(older\s+)?adults\b/i,
-  /\badult\s+(program|workshop|class|craft|event)\b/i,
+  /\badult\s+(program|workshop|class|craft|event|coloring|book\s*club|knitting|crochet|quilting|writing|painting|literacy|swim|hour|night|social|trivia|games?)\b/i,
+  // "Color Your World: Adult Coloring" pattern (subtitle position)
+  /:\s*adult\s+coloring\b/i,
 
   // Senior-specific programs
   /\bsenior\s+(program|workshop|class|event|group|circle|social|lunch|exercise|fitness|yoga|tai\s*chi|bingo|trip)\b/i,
@@ -398,6 +400,13 @@ const NON_FAMILY_PATTERNS = [
   /\blooking\s+for\s+library\s+story\s+times\b/i,
   /\bstart\s+here!?\s*$/i,
   /\bvisit\s+our\s+(full\s+)?guide\b/i,
+  // Trader Joe's "Get a Free Carnation" Mother's Day cross-syndicated promo
+  // (appeared in 40+ MacaroniKid feeds in May 2026 with no real venue)
+  /\bfree\s+carnation\b/i,
+  // "Local Library Activities & Events" — generic aggregator link, not an event
+  /^local\s+library\s+activit(y|ies)\b/i,
+  // "Plan Your Family Fun" — MK aggregator nav link
+  /^plan\s+your\s+family\s+fun\b/i,
 
   // Newsletter / mailing list sign-up promo events
   /\bjoin\s+our\s+e-?newsletter\b/i,
@@ -678,7 +687,18 @@ async function saveEvent(id, data) {
   // Reject events with no date string at all — they cannot be filtered or
   // displayed meaningfully and just get deleted by fix-event-quality.js Step 1.
   // Catch them here so they never hit the DB.
-  const evtDateStr = (data.eventDate || '').trim();
+  // Sanitize first: strip HTML tags and newlines that leaked from page DOM.
+  // Without this, ~29 events landed with `event_date` containing "<br>" or
+  // "\n" (caught 2026-05-10 as "Malformed dates" in data-quality-check).
+  let evtDateStr = (data.eventDate || '').trim()
+    .replace(/<[^>]+>/g, ' ')        // strip HTML tags (e.g. "<br>", "<span>")
+    .replace(/&[a-z]+;/gi, ' ')      // strip HTML entities (&nbsp;, &amp;, etc.)
+    .replace(/[\r\n\t]+/g, ' ')      // collapse newlines/tabs into spaces
+    .replace(/\s{2,}/g, ' ')         // squeeze repeated spaces
+    .trim();
+  if (data.eventDate !== evtDateStr) {
+    data.eventDate = evtDateStr;     // propagate cleaned value to row below
+  }
   if (!evtDateStr || evtDateStr.length < 4) {
     console.log(`  ⏭️ Skipping dateless event: "${data.name}"`);
     return null;
@@ -1277,7 +1297,16 @@ function flattenEvent(data) {
 
   // Reject events with no date string at all — they cannot be filtered or
   // displayed meaningfully and just get deleted by fix-event-quality.js.
-  const eventDateStr = ((data.eventDate || data.event_date) || '').toString().trim();
+  // Sanitize first: strip HTML tags / newlines / entities that leaked in from
+  // page DOM (caught 2026-05-10 — 29 events with "<br>" or "\n" in event_date).
+  let eventDateStr = ((data.eventDate || data.event_date) || '').toString().trim()
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&[a-z]+;/gi, ' ')
+    .replace(/[\r\n\t]+/g, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+  if (data.eventDate && data.eventDate !== eventDateStr) data.eventDate = eventDateStr;
+  if (data.event_date && data.event_date !== eventDateStr) data.event_date = eventDateStr;
   if (!eventDateStr || eventDateStr.length < 4) {
     console.log(`  ⏭️ Skipping dateless event: "${data.name}"`);
     throw new Error(`Skipping dateless event: "${data.name}"`);
