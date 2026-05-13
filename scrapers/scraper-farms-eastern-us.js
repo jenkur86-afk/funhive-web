@@ -1156,12 +1156,28 @@ async function main() {
       duration: parseFloat(duration),
     });
   } catch (_) {}
+
+  return {
+    venuesSaved: totalVenuesSaved,
+    venuesSkipped: totalVenuesSkipped,
+    eventsSaved: totalEventsSaved,
+    eventsSkipped: totalEventsSkipped,
+    eventsFailed: totalEventsFailed,
+  };
 }
 
-// Cloud function export
+// Cloud function export — returns Found / New / Duplicates so the master
+// scraper-runner logs accurate counts instead of "0 / 0 / 0".
 async function scrapeFarmsEasternUSCloudFunction() {
   process.argv.push('--full');
-  await main();
+  const stats = (await main()) || {};
+  const saved = (stats.venuesSaved || 0) + (stats.eventsSaved || 0);
+  const skipped = (stats.venuesSkipped || 0) + (stats.eventsSkipped || 0);
+  return {
+    found: saved + skipped,
+    new: saved,
+    duplicates: skipped,
+  };
 }
 
 module.exports = { scrapeFarmsEasternUSCloudFunction };

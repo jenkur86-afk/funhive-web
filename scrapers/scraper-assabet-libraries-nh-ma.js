@@ -98,11 +98,20 @@ async function scrapeAssabetEvents() {
           let dateText = '';
           if (dateEl) {
             dateText = dateEl.getAttribute('datetime') || dateEl.textContent.trim();
-          } else {
-            // Look for date-like text in the card
-            const cardText = card.textContent;
-            const dateMatch = cardText.match(/(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2}(?:,?\s*\d{4})?/i);
-            if (dateMatch) dateText = dateMatch[0];
+          }
+
+          // Assabet's calendar puts the date as a day-header outside the time
+          // element — the time field often holds just "All Day" or "10:00—11:00 AM"
+          // with no month name. If dateText is missing or has no month, scan the
+          // card's textContent for a "[Weekday,] Month DD" pattern and use that.
+          const hasMonth = /(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)/i.test(dateText);
+          if (!hasMonth) {
+            const cardText = card.textContent || '';
+            const dateMatch = cardText.match(/(?:Today)?\s*(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|Mon|Tue|Wed|Thu|Fri|Sat|Sun)?\s*,?\s*(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)\s+\d{1,2}(?:,?\s*\d{4})?/i);
+            if (dateMatch) {
+              // Prepend the day-header so normalizeDateString sees Month+Day first
+              dateText = dateText ? `${dateMatch[0]} ${dateText}` : dateMatch[0];
+            }
           }
 
           // Try to extract time

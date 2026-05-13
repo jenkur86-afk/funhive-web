@@ -47,6 +47,49 @@ function normalizeDateString(dateString) {
   // Normalize newlines and tabs to spaces (handles "Wed\n\n29" from DOM extraction)
   cleaned = cleaned.replace(/[\n\r\t]+/g, ' ');
 
+  // Strip Assabet-style "Today"/"Tomorrow" prefix that the calendar prepends to
+  // the current day cell (e.g., "TodayTuesday, May 12...").
+  cleaned = cleaned.replace(/^(?:Today|Tomorrow)\b\s*/i, '');
+
+  // De-concatenate day number from a time pattern when the scraper grabbed a
+  // textContent blob with no whitespace between them (Assabet calendar bug —
+  // produces strings like "Monday, May 410:00—10:45 AM" or "May 1210:30—11:00 AM").
+  // The digits before `:` may represent a 1- or 2-digit day followed by a 1- or
+  // 2-digit hour; split on whichever gives valid day (1-31) AND hour (0-23).
+  cleaned = cleaned.replace(
+    /([A-Za-z]{3,9})\s+(\d{2,4})(?=:\d{2})/g,
+    (full, month, digits) => {
+      if (digits.length <= 2) return full; // hour-only (e.g. "May 10:00") — leave alone
+      // 3-digit run: try [2-digit day | 1-digit hour] first (more common — most
+      // days >=10 are 2 digits and most hours <10 are 1 digit, e.g. "May 209"
+      // is much more likely "May 20" + "9:30" than "May 2" + "09:30").
+      if (digits.length === 3) {
+        const d2 = parseInt(digits.slice(0, 2)), h1 = parseInt(digits[2]);
+        if (d2 >= 1 && d2 <= 31 && h1 >= 0 && h1 <= 23) {
+          return `${month} ${digits.slice(0, 2)} ${digits[2]}`;
+        }
+        const d1 = parseInt(digits[0]), h2 = parseInt(digits.slice(1));
+        if (d1 >= 1 && d1 <= 31 && h2 >= 0 && h2 <= 23) {
+          return `${month} ${digits[0]} ${digits.slice(1)}`;
+        }
+        return full;
+      }
+      // 4-digit run: 2-digit day + 2-digit hour
+      const d = parseInt(digits.slice(0, 2)), h = parseInt(digits.slice(2));
+      if (d >= 1 && d <= 31 && h >= 0 && h <= 23) {
+        return `${month} ${digits.slice(0, 2)} ${digits.slice(2)}`;
+      }
+      return full;
+    }
+  );
+
+  // De-concatenate day number from adjacent letters when scraper textContent
+  // jammed them together (e.g., "May 1All Day" → "May 1 All Day",
+  // "Friday, May 12Trustees" → "Friday, May 12 Trustees"). Only inserts a space
+  // between a digit and a following letter — safe because ordinal suffixes
+  // (1st, 2nd, 3rd, etc.) are stripped further down.
+  cleaned = cleaned.replace(/(\d)(?=[A-Za-z])/g, '$1 ');
+
   // Remove timezone abbreviations (EST, EDT, CST, CDT, PST, PDT, etc.)
   cleaned = cleaned.replace(/\s+(?:E[SD]T|C[SD]T|M[SD]T|P[SD]T|[A-Z]{2,4}T)\b/g, '');
 
@@ -335,6 +378,25 @@ function normalizeDateString(dateString) {
     if (fullMonthName) {
       const year = inferYear(fullMonthName, 1);
       return `${fullMonthName} 1, ${year}`;
+    }
+  }
+
+  // === Final fallback: extract first "Month Day" from a longer string ===
+  // The Assabet calendar (and a few other scrapers) sometimes hand us a string
+  // that, even after cleaning, still has trailing junk like "May 4McConnell..."
+  // or "May 1 All Day Dover Public Library...". Pattern 4 above won't match
+  // because it's anchored to end-of-string. Pull the first valid "Month DD" we
+  // can find. The `(?!\d)` lookahead caps the day at 1-2 digits without needing
+  // a word boundary after — important because "4M" (digit-letter) IS a word
+  // boundary in regex terms but "4 " (digit-space) would work fine either way.
+  const fallbackMatch = cleaned.match(/\b([A-Za-z]{3,9})\s+(\d{1,2})(?!\d)/i);
+  if (fallbackMatch) {
+    const [, month, day] = fallbackMatch;
+    const fullMonthName = lookupMonth(month);
+    const dayNum = parseInt(day);
+    if (fullMonthName && dayNum >= 1 && dayNum <= 31) {
+      const year = inferYear(fullMonthName, dayNum);
+      return `${fullMonthName} ${dayNum}, ${year}`;
     }
   }
 
