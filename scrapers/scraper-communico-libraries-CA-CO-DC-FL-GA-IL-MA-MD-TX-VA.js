@@ -1116,11 +1116,27 @@ async function tryApiScrape(library) {
 
     // Map API response to the same format used by the Puppeteer extraction
     const events = data.map(item => {
-      // Build date string from API fields
+      // Build date string from API fields.
+      // Caught 2026-05-11: ~470 events landed with event_date="2:00pm–3:00pm"
+      // because item.datestring/item.date were both empty but item.time_string
+      // existed, so the old fallback set the date column to the time-only string.
+      // Derive a real date from item.raw_start_time (full timestamp) if the
+      // date-named fields are missing, and never fall back to time-only.
       let eventDate = item.datestring || item.date || '';
+      if (!eventDate) {
+        // raw_start_time/start_time can be "2026-05-11 10:00:00" or ISO.
+        const rawStart = item.raw_start_time || item.start_time || '';
+        if (rawStart) {
+          const m = String(rawStart).match(/(\d{4})-(\d{2})-(\d{2})/);
+          if (m) eventDate = `${m[1]}-${m[2]}-${m[3]}`;
+        }
+      }
       const timeStr = item.time_string || '';
-      if (timeStr && !eventDate.includes(timeStr)) {
-        eventDate = eventDate ? `${eventDate} ${timeStr}` : timeStr;
+      // Only append the time to a non-empty real date. NEVER let timeStr become
+      // the entire event_date — that produces "2:00pm–3:00pm" rows that can't
+      // be filtered, sorted, or geocoded.
+      if (eventDate && timeStr && !eventDate.includes(timeStr)) {
+        eventDate = `${eventDate} ${timeStr}`;
       }
 
       // Extract audience/age from agesArray

@@ -655,24 +655,35 @@ async function tryApiScrape(library) {
           }
         }
 
-        // Build date string from start/end
+        // Build date string from start/end.
+        // Caught 2026-05-11: 35 events landed with event_date literally
+        // "Invalid Date Invalid Date - Invalid Date" because def.start was
+        // present but malformed (non-ISO), so `new Date(...)` returned NaN
+        // and `toLocaleDateString` cheerfully serialized that as "Invalid Date".
+        // Guard every Date-parse with isNaN before formatting.
         let eventDate = '';
         let startTime = '';
         let endTime = '';
         if (def.start) {
-          // Format: "2026-06-26T10:00" (local time)
+          // Format expected: "2026-06-26T10:00" (local time)
           const startDate = new Date(def.start + ':00'); // Append seconds for parsing
-          eventDate = startDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-          startTime = startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+          if (!isNaN(startDate.getTime())) {
+            eventDate = startDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            startTime = startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+          }
         }
         if (def.end) {
           const endDate = new Date(def.end + ':00');
-          endTime = endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+          if (!isNaN(endDate.getTime())) {
+            endTime = endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+          }
         }
-        if (startTime) {
+        if (eventDate && startTime) {
           eventDate += ` ${startTime}`;
           if (endTime) eventDate += ` - ${endTime}`;
         }
+        // Leave eventDate empty if start was malformed — saveEvent's dateless
+        // guard will skip the row rather than persist a "Invalid Date" string.
 
         // Clean description (strip HTML tags)
         const description = (def.description || '').replace(/<[^>]+>/g, '').trim();

@@ -230,6 +230,27 @@ function _isDateObjInPast(dateObj) {
   return eventDay < today;
 }
 
+/**
+ * Returns true if the string contains time tokens but no date components.
+ * Examples that match (rejected by saveEvent):
+ *   "2:00pm–3:00pm", "10:00am - 11:00am", "6:30pm", "2 PM-3 PM"
+ * Examples that don't match (allowed through):
+ *   "May 11, 2026 2:00pm–3:00pm" (contains month name)
+ *   "2026-05-11" (contains date)
+ *   "Saturday, May 11"
+ */
+function _isTimeOnlyDateString(s) {
+  if (!s || typeof s !== 'string') return false;
+  // If it has a year, a month name/abbrev, or an ISO/slash date — it's not time-only.
+  if (/\b\d{4}\b/.test(s)) return false;                                   // year present
+  if (/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i.test(s)) return false;
+  if (/\b(mon|tue|wed|thu|fri|sat|sun)/i.test(s)) return false;            // weekday — usually paired with date
+  if (/\d{1,2}\/\d{1,2}/.test(s)) return false;                            // 4/8 style
+  if (/\d{4}-\d{2}-\d{2}/.test(s)) return false;                           // ISO
+  // No date markers — does it look like only times?
+  return /\d{1,2}(:\d{2})?\s*[ap]\.?\s*m\.?/i.test(s);
+}
+
 // ============================================================================
 // AGE DETECTION — auto-tag events with age ranges
 // ============================================================================
@@ -621,13 +642,21 @@ function parseEventDateText(eventDateStr) {
   const trimmed = eventDateStr.trim();
   if (!trimmed) return null;
 
-  // Strip common suffixes that confuse Date.parse
+  // Strip common suffixes that confuse Date.parse.
+  // Caught 2026-05-10: 507 events with "Mon, May 11, 2026 9:30am–10:00am"
+  // (no-space en-dash time range, then a leading time the old regex left in
+  // place — Date.parse can't read "9:30am" without a space before am/pm).
   let cleaned = trimmed
-    .replace(/\s*\(.*?\)\s*$/, '')                 // trailing "(EDT)"
+    .replace(/\s*\(.*?\)\s*$/, '')                              // trailing "(EDT)"
     .replace(/\s+(EST|EDT|PST|PDT|CST|CDT|MST|MDT|UTC|GMT)\b/i, '') // tz abbreviations
-    .replace(/\s+at\s+/i, ' ')                     // "April 8 at 10am" → "April 8 10am"
-    .replace(/\s+@\s+/i, ' ')                      // "April 8 @ 10am" → "April 8 10am"
-    .replace(/\s*[-–—]\s*\d{1,2}(:\d{2})?\s*(am|pm)?\s*$/i, '') // "10am - 12pm" → "10am"
+    .replace(/\s+at\s+/i, ' ')                                  // "April 8 at 10am" → "April 8 10am"
+    .replace(/\s+@\s+/i, ' ')                                   // "April 8 @ 10am" → "April 8 10am"
+    .replace(/[–—]/g, '-')                                      // normalize en/em dash to hyphen
+    .replace(/\s+all\s*day\s*$/i, '')                           // "May 25, 2026 All Day" → "May 25, 2026"
+    // Strip the END half of a time range first: "-10:00am", "- 10am", "-10pm"
+    .replace(/\s*-\s*\d{1,2}(?::\d{2})?\s*[ap]\.?\s*m\.?\s*$/i, '')
+    // Then strip any remaining single trailing time: "9:30am", " 9 AM", " 9:30 a.m."
+    .replace(/\s+\d{1,2}(?::\d{2})?\s*[ap]\.?\s*m\.?\s*$/i, '')
     .trim();
 
   // ISO date-only ("2026-04-23") — append local midnight to avoid UTC shift
@@ -701,6 +730,25 @@ async function saveEvent(id, data) {
   }
   if (!evtDateStr || evtDateStr.length < 4) {
     console.log(`  ⏭️ Skipping dateless event: "${data.name}"`);
+    return null;
+  }
+
+  // Reject time-only event_date strings ("2:00pm–3:00pm", "10:00am–11:00am").
+  // Caught 2026-05-11: 470 events from Communico libraries (Ames, Des Moines,
+  // Massapequa, etc.) landed with no date because the API path fell back to
+  // item.time_string when datestring/date were missing. Source bug is fixed,
+  // this is the belt-and-suspenders guard.
+  if (_isTimeOnlyDateString(evtDateStr)) {
+    console.log(`  ⏭️ Skipping time-only event_date: "${data.name}" (${evtDateStr})`);
+    return null;
+  }
+
+  // Reject literal "Invalid Date" strings from broken Date() formatting.
+  // Caught 2026-05-11: 35 BiblioCommons-VA events with event_date
+  // "Invalid Date Invalid Date - Invalid Date" because Date(malformed) → NaN
+  // and toLocaleDateString cheerfully serialized that as "Invalid Date".
+  if (/^invalid\s+date\b/i.test(evtDateStr)) {
+    console.log(`  ⏭️ Skipping "Invalid Date" event: "${data.name}" (${evtDateStr})`);
     return null;
   }
 
@@ -1032,7 +1080,7 @@ function createFirestoreCompatibleDB() {
               try {
                 flattened = flattenForTable(table, data);
               } catch (e) {
-                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event') || e.message?.includes('Skipping junk-title event') || e.message?.includes('Skipping dateless event')) {
+                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event') || e.message?.includes('Skipping junk-title event') || e.message?.includes('Skipping dateless event') || e.message?.includes('Skipping time-only event_date') || e.message?.includes('Skipping "Invalid Date" event')) {
                   return; // silently skip
                 }
                 throw e;
@@ -1095,7 +1143,7 @@ function createFirestoreCompatibleDB() {
           try {
             flattened = flattenForTable(collectionName, data);
           } catch (e) {
-            if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event') || e.message?.includes('Skipping junk-title event') || e.message?.includes('Skipping dateless event')) {
+            if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event') || e.message?.includes('Skipping junk-title event') || e.message?.includes('Skipping dateless event') || e.message?.includes('Skipping time-only event_date') || e.message?.includes('Skipping "Invalid Date" event')) {
               return { id }; // silently skip
             }
             throw e;
@@ -1139,7 +1187,7 @@ function createFirestoreCompatibleDB() {
                 upsertByTable[table].push({ id: op.id, ...flattenForTable(table, op.data) });
               } catch (e) {
                 // Skip past events and invalid events gracefully
-                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event') || e.message?.includes('Skipping junk-title event') || e.message?.includes('Skipping dateless event')) {
+                if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event') || e.message?.includes('Skipping junk-title event') || e.message?.includes('Skipping dateless event') || e.message?.includes('Skipping time-only event_date') || e.message?.includes('Skipping "Invalid Date" event')) {
                   continue;
                 }
                 throw e;
@@ -1310,6 +1358,17 @@ function flattenEvent(data) {
   if (!eventDateStr || eventDateStr.length < 4) {
     console.log(`  ⏭️ Skipping dateless event: "${data.name}"`);
     throw new Error(`Skipping dateless event: "${data.name}"`);
+  }
+
+  // Reject time-only event_date strings ("2:00pm–3:00pm"). Caught 2026-05-11 —
+  // see saveEvent for the full story. Same guard, applied to the flatten path.
+  if (_isTimeOnlyDateString(eventDateStr)) {
+    throw new Error(`Skipping time-only event_date: "${data.name}" (${eventDateStr})`);
+  }
+
+  // Reject literal "Invalid Date" strings (caught 2026-05-11 in 35 BiblioCommons-VA rows).
+  if (/^invalid\s+date\b/i.test(eventDateStr)) {
+    throw new Error(`Skipping "Invalid Date" event: "${data.name}" (${eventDateStr})`);
   }
 
   // Reject past events — parse date from eventDate string or date field
