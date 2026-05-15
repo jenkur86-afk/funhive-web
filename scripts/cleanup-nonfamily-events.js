@@ -164,7 +164,9 @@ async function fetchAll(select, filters) {
     let q = supabase.from('events').select(select);
     if (filters) q = filters(q);
     if (RECENT_THRESHOLD_ISO) q = q.gte('created_at', RECENT_THRESHOLD_ISO);
-    q = q.range(from, from + 999);
+    // .order('id') is required for stable pagination — without it Postgres can
+    // return the same row in multiple .range() pages. See 2026-05-15 incident.
+    q = q.order('id', { ascending: true }).range(from, from + 999);
     const { data, error } = await q;
     if (error) { console.error(`Error: ${error.message}`); break; }
     if (!data || data.length === 0) break;

@@ -49,7 +49,8 @@ async function fetchAllPaginated(table, select, filters) {
       // Recent-only: scope address backfill to recent activities (saveActivity now
       // computes geohash at save time; old gaps are caught by the monthly full run).
       if (RECENT_THRESHOLD_ISO) query = query.gte('created_at', RECENT_THRESHOLD_ISO);
-      query = query.range(from, from + pageSize - 1);
+      // .order('id') required for stable pagination — see 2026-05-15 incident.
+      query = query.order('id', { ascending: true }).range(from, from + pageSize - 1);
 
       const { data, error } = await query;
 

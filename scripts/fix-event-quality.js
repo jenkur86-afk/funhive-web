@@ -109,7 +109,13 @@ async function fetchAll(table, select, filters = {}) {
       if (RECENT_THRESHOLD_ISO && !filters.skipRecentFilter) {
         query = query.gte('created_at', RECENT_THRESHOLD_ISO);
       }
-      query = query.range(from, from + pageSize - 1);
+      // CRITICAL: must order by a stable column. Without ORDER BY, Postgres
+      // does not guarantee deterministic row order across paginated SELECT,
+      // and the same row can appear in multiple pages. That made Step 2b dedup
+      // wildly over-count "duplicates" on 2026-05-15 (one real row showing up
+      // 5 times in pagination, then 4 "extras" deleted — actually deleted the
+      // one real row when by-id delete fired). Order by id for stability.
+      query = query.order('id', { ascending: true }).range(from, from + pageSize - 1);
 
       const result = await query;
       data = result.data;

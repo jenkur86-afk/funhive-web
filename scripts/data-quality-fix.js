@@ -292,6 +292,7 @@ async function fetchAll(table, select = '*') {
     const { data, error } = await supabase
       .from(table)
       .select(select)
+      .order('id', { ascending: true }) // stable pagination — see 2026-05-15 incident
       .range(from, from + pageSize - 1);
     if (error) { console.error(`Error fetching ${table}:`, error.message); break; }
     if (!data || data.length === 0) break;

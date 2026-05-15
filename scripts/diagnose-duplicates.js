@@ -19,6 +19,7 @@
  *   node scripts/diagnose-duplicates.js              # full report (top 30 groups)
  *   node scripts/diagnose-duplicates.js --limit=100  # more groups
  *   node scripts/diagnose-duplicates.js --csv        # also emit dupes-sample.csv
+ *   node scripts/diagnose-duplicates.js --save       # ALSO delete extras (keep oldest)
  *
  * Selective columns to keep egress low.
  */
@@ -28,8 +29,14 @@ const fs = require('fs');
 
 const LIMIT = parseInt((process.argv.find(a => a.startsWith('--limit=')) || '').split('=')[1] || '30', 10);
 const WRITE_CSV = process.argv.includes('--csv');
+const SAVE = process.argv.includes('--save');
 
 async function fetchAll() {
+  // CRITICAL: must include .order(...) for stable pagination. Postgres does not
+  // guarantee a deterministic row order for paginated SELECT without ORDER BY,
+  // so the same row can appear in multiple .range() pages. That's how the
+  // 2026-05-15 run reported "5 copies of every event with the exact same UUID."
+  // Ordering by id makes pagination deterministic.
   let all = [];
   let from = 0;
   const PAGE = 1000;
@@ -37,6 +44,7 @@ async function fetchAll() {
     const { data, error } = await supabase
       .from('events')
       .select('id, name, event_date, venue, url, source_url, scraper_name, created_at, city, state')
+      .order('id', { ascending: true })
       .range(from, from + PAGE - 1);
     if (error) { console.error('Fetch error:', error.message); break; }
     if (!data || data.length === 0) break;
@@ -168,8 +176,30 @@ async function main() {
     console.log(`     event_date="${first.event_date}" venue="${first.venue}" city=${first.city}, ${first.state}`);
     for (const r of g) {
       const u = r.url || r.source_url || '';
-      console.log(`       id=${r.id.substring(0, 12)} scraper=${r.scraper_name || '?'} created=${(r.created_at || '').substring(0, 16)} url=${u.substring(0, 60)}`);
+      console.log(`       id=${r.id} scraper=${r.scraper_name || '?'} created=${(r.created_at || '').substring(0, 16)} url=${u.substring(0, 60)}`);
     }
+  }
+
+  // ── Optional cleanup (mirrors Step 2b: keep oldest, delete the rest) ──
+  if (SAVE) {
+    const toDelete = [];
+    for (const g of dupeGroups) {
+      // Already sorted oldest-first by Pattern 2 above; keep g[0], drop g[1..]
+      for (let i = 1; i < g.length; i++) toDelete.push(g[i].id);
+    }
+    console.log(`\n🗑️  Deleting ${toDelete.length} duplicate extras (keeping oldest in each group)...`);
+    let deleted = 0;
+    for (let i = 0; i < toDelete.length; i += 200) {
+      const batch = toDelete.slice(i, i + 200);
+      const { error } = await supabase.from('events').delete().in('id', batch);
+      if (error) {
+        console.error(`  ⚠️ Delete batch ${i}: ${error.message}`);
+      } else {
+        deleted += batch.length;
+      }
+      if ((i + 200) % 2000 === 0) console.log(`  ...${Math.min(i + 200, toDelete.length)}/${toDelete.length}`);
+    }
+    console.log(`✅ Deleted ${deleted}`);
   }
 
   // ── Optional CSV ──

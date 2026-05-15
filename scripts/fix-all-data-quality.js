@@ -49,7 +49,8 @@ async function fetchAll(table, select) {
   while (true) {
     let q = supabase.from(table).select(select);
     if (RECENT_THRESHOLD_ISO) q = q.gte('created_at', RECENT_THRESHOLD_ISO);
-    const { data, error } = await q.range(from, from + 999);
+    // .order('id') required for stable pagination — see 2026-05-15 incident.
+    const { data, error } = await q.order('id', { ascending: true }).range(from, from + 999);
     if (error) { console.error(`Error: ${error.message}`); break; }
     if (!data || data.length === 0) break;
     all = all.concat(data);

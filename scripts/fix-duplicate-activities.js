@@ -29,7 +29,10 @@ async function fetchAll() {
   let from = 0;
   const PAGE = 1000;
   while (true) {
-    const { data, error } = await supabase.from('activities').select(cols).range(from, from + PAGE - 1);
+    // .order('id') required for stable pagination — see 2026-05-15 incident.
+    const { data, error } = await supabase.from('activities').select(cols)
+      .order('id', { ascending: true })
+      .range(from, from + PAGE - 1);
     if (error) { console.error('Fetch error:', error.message); break; }
     if (!data || data.length === 0) break;
     all = all.concat(data);

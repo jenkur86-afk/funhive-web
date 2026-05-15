@@ -244,6 +244,30 @@ node scripts/data-quality-quick.js
 
 Append a dated entry every session that touches this file. Newest at the top.
 
+### 2026-05-15 — PAGINATION INSTABILITY INCIDENT (data loss)
+
+- Ran `node scripts/diagnose-duplicates.js --save` against the full table. **Deleted ~17,024 events** (69,370 → 52,346).
+- Subsequent read-only run reported 13,868 more dupe groups / 18,500 extras with the same pattern.
+- **Root cause was the diagnostic, not the data.** Increasing the displayed id length revealed every "duplicate" row in a group had the **identical UUID** (e.g. `cd77f78f-eb66-4c44-846d-bc20c5f9d336` × 5). That's impossible for a Postgres PRIMARY KEY — so the "5 copies" was actually **one real row, fetched 5 times** by an un-ordered paginated SELECT.
+- Supabase `.range(from, from + N)` does not guarantee deterministic row order without an `ORDER BY` clause. Without it, the same row can appear in multiple pages.
+- The dedup-by-id `.in('id', [...])` deletion deduplicated at the SQL layer, so 23,521 queued ids became ~17,031 unique ids → ~17,000 real rows were deleted (the "kept" oldest from each fake group). Most were probably legitimate events.
+- **Same bug exists** (or existed before this session) in `scripts/fix-event-quality.js` Step 2b. The 3576-row delete from the 2026-05-14 `fix-all.sh --recent-only` run was likely a mix of real `.add()`-random-UUID duplicates and pagination artifacts — hard to tell exactly what fraction.
+- **Patched in this session:** added `.order('id', { ascending: true })` to every `.range()` paginator in `scripts/`:
+  - `diagnose-duplicates.js`, `fix-event-quality.js` (the destructive two)
+  - `cleanup-nonfamily-events.js`, `fix-all-data-quality.js`, `fix-broken-event-dates.js`, `fix-duplicate-activities.js`, `fix-duplicate-venues.js`, `fix-event-state.js`, `fix-missing-fields.js`, `fix-null-dates.js`, `data-quality-check.js`, `data-quality-fix.js`. (`fix-missing-venue.js` already had `.order('created_at')`.)
+- **What the user has to do next:**
+  - Push the patches: `git add scripts/ && git commit -m "Fix paginator instability across scripts" && git push origin main`
+  - Re-run `node scripts/diagnose-duplicates.js` (READ ONLY) with the fix. If the dupe-group count is now near 0, the pre-fix diagnostic was entirely pagination noise. If it's still high but with truly different ids per group, those are real dupes from the `.add()` random-UUID bug.
+  - Recover the lost rows: re-scrape. The scrapers will repopulate. Verify by checking event total count climbs back from 52,346.
+- **Open question:** also need to audit the scrapers' own paginated `db.collection(...).where(...)` reads in `scrapers/helpers/supabase-adapter.js` — those run on every scrape, but they fetch single-row dedup checks which don't paginate, so probably fine. Confirm before re-running scrapers heavily.
+
+### 2026-05-14 (session 3 — after diagnose-duplicates ran)
+- Ran `diagnose-duplicates.js` against full table. **Found 19,329 dupe groups / 24,859 extra rows** — much larger than the 3576 the morning's `--recent-only` cleanup caught.
+- **All groups are within-scraper, same-run, same-URL.** Not URL drift, not cross-scraper overlap. The pattern is "single scrape session inserted the same row N times."
+- **Top contributors:** FestivalGuides-Eastern (6024), FairsFestivals-Eastern (2935), Eventbrite-Family-Eastern (845), RecDeskParks-ccrec (386), BarnesNoble-Eastern (364), then a long Macaroni Kid tail (Attleboro 331, Franklin-Milford 327, SW Boston 222, Cedar Rapids 218, Cranston 203, Wheaton 201, …).
+- Festival aggregators dominate, which matches the `.add()` random-UUID hypothesis. The Macaroni Kid contributions are unexpected — MK scrapers use `db.collection('events').doc(eventId).set(event)` with `generateEventId(url)`, so same URL should produce same id and `.set` should upsert. **Open question:** what's making MK produce dupes? Could be the per-URL pre-check race (`existingDoc.exists` fails on the first save in the batch, both calls then `.set` with the same id, second `.set` overwrites — that wouldn't dupe; but if `.set` is going through the `.add` path under some condition it would). Worth investigating in a follow-up session.
+- **Action:** added `--save` mode to `scripts/diagnose-duplicates.js` so the existing 24,859 can be deleted without running the full `fix-all.sh` sweep (cheaper egress). User to run `node scripts/diagnose-duplicates.js --save`, then re-run without `--save` after the next scheduled scrape to confirm new dupes stopped.
+
 ### 2026-05-14 (session 2)
 - Investigated the 3576-duplicate cluster from the morning's `fix-all.sh --recent-only` run.
 - **Root cause:** `supabase-adapter.js` line 1141 — the Firestore-compat `.add()` was minting `crypto.randomUUID()` for every call when the scraper didn't pre-set `data.id`. 89 scrapers call `.add()` without setting an id, so every re-scrape produced a fresh random row with identical content.

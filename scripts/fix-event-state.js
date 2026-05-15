@@ -239,7 +239,8 @@ async function fetchAll(filter) {
     );
     if (filter === 'missing') q = q.or('state.is.null,state.eq.');
     else if (filter === 'invalid') q = q.not('state', 'is', null);
-    q = q.range(from, from + PAGE - 1);
+    // .order('id') required for stable pagination — see 2026-05-15 incident.
+    q = q.order('id', { ascending: true }).range(from, from + PAGE - 1);
     const { data, error } = await q;
     if (error) { console.error('Fetch error:', error.message); break; }
     if (!data || data.length === 0) break;

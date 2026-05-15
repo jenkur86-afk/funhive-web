@@ -57,6 +57,7 @@ async function main() {
       .from('events')
       .select('id, venue')
       .like('venue', '% - %')
+      .order('id', { ascending: true }) // stable pagination — see 2026-05-15 incident
       .range(from, from + pageSize - 1);
 
     if (error) { console.error('Error:', error.message); break; }
@@ -129,6 +130,7 @@ async function main() {
       .from('events')
       .select('id, venue')
       .not('venue', 'is', null)
+      .order('id', { ascending: true }) // stable pagination — see 2026-05-15 incident
       .range(from, from + pageSize - 1);
 
     if (error) { console.error('Error:', error.message); break; }

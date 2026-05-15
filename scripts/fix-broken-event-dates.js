@@ -55,6 +55,7 @@ async function fetchTargets() {
       .select('id, name, event_date, scraper_name')
       .is('date', null)
       .not('event_date', 'is', null)
+      .order('id', { ascending: true }) // stable pagination — see 2026-05-15 incident
       .range(from, from + PAGE - 1);
     if (error) { console.error('Fetch error:', error.message); break; }
     if (!data || data.length === 0) break;
