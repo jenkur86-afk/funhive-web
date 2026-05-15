@@ -112,6 +112,8 @@ The Supabase project is on the free 5.5 GB/month egress plan. A careless `select
 
 ### Standard paginated fetch
 
+⚠️ **Every paginated SELECT MUST include `.order()` before `.range()`.** Postgres does not guarantee deterministic row order across paginated requests without ORDER BY. Without it, the same row can appear in multiple pages, which silently inflates dedup-style counts and — for scripts that delete by id — destroys legitimate data. The 2026-05-15 incident traced ~17,000 row deletions to a single missing `.order()`. Patched across all scripts in commit `35a724c`. Keep this in every new paginator.
+
 ```js
 async function fetchAll(table, select, filters = {}) {
   let all = [];
@@ -127,7 +129,10 @@ async function fetchAll(table, select, filters = {}) {
     if (RECENT_THRESHOLD_ISO && !filters.skipRecentFilter) {
       q = q.gte('created_at', RECENT_THRESHOLD_ISO);
     }
-    const { data, error } = await q.range(from, from + pageSize - 1);
+    // REQUIRED: stable pagination. Without .order(), same row can appear in multiple pages.
+    const { data, error } = await q
+      .order('id', { ascending: true })
+      .range(from, from + pageSize - 1);
     if (error) { console.error(`Error: ${error.message}`); break; }
     if (!data || data.length === 0) break;
     all = all.concat(data);

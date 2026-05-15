@@ -53,6 +53,7 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - Never use `.select('*')` on the events or activities tables in list/search queries — always specify only the columns needed. Detail pages (single row) are fine.
 - Never reduce the venue cache TTL in `venue-matcher.js` below 30 minutes — it's the largest source of Supabase egress bandwidth.
 - Never restore the Firestore-compat read wrapper's old `select('*')` default in `supabase-adapter.js` — every per-event dedup check across 141+ scraper files goes through that wrapper. The wrapper now defaults to a lean projection (drops `description`, `image_url`, `location` GEOMETRY) and actually applies `.limit()` / `.orderBy()`. If a specific caller needs more columns, override per-call with `.select('*')` or a custom column list, not by changing the default.
+- Never write a paginated `.range()` SELECT without a preceding `.order()` clause. Postgres doesn't guarantee deterministic row order without ORDER BY, so the same row can land in multiple pages. For dedup-style scripts this silently inflates "duplicate" counts and — with `--save` — destroys legitimate data. The 2026-05-15 incident lost ~17,000 events. Pattern: `await q.order('id', { ascending: true }).range(from, from + pageSize - 1)`. All paginators in `scripts/` were patched in commit `35a724c`.
 
 ### Always Do
 - Use `date` TIMESTAMPTZ column for all date filtering and sorting in queries.

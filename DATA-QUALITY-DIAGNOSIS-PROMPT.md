@@ -31,6 +31,20 @@ The pipeline runs on a tiered cadence (Apr 2026):
 
 `scripts/fix-duplicate-dates.js` was retired Apr 2026 (Communico scraper bug fixed); old copy in `scripts/archive/`.
 
+### Paginator gotcha — every `.range()` MUST be preceded by `.order()`
+
+Supabase paginated SELECT (`.range(from, to)`) does NOT guarantee a deterministic row order without an `ORDER BY` clause. Without it, the same row can appear in multiple pages, which silently inflates "duplicate" counts and — for dedup-style scripts that delete by id — actually destroys legitimate data.
+
+The 2026-05-15 incident: `scripts/diagnose-duplicates.js --save` deleted ~17,000 legitimate events because every page returned overlapping rows, the script grouped them as "duplicates," and the by-id delete fired on the one underlying row. All paginators in `scripts/` were patched in commit `35a724c` to include `.order('id', { ascending: true })`. Verify this is still present before writing or reviewing any cleanup script. Pattern:
+
+```js
+const { data, error } = await q
+  .order('id', { ascending: true })   // REQUIRED — without this, same row can appear in multiple pages
+  .range(from, from + pageSize - 1);
+```
+
+When a script reports duplicates, inspect a sample group's full ids before letting it delete. Identical ids across rows in the same group = paginator bug, not duplicates.
+
 ### Schema gotcha — events table does NOT have `min_age` / `max_age` / `is_free`
 
 These columns exist on `activities` only. Querying them on events returns 400 from PostgREST and bleeds egress on every retry. If you see `column events.min_age does not exist` in the Postgres logs (or repeated 400s on `GET /rest/v1/events` in the API Gateway logs), that's the root cause — a fix script or frontend query is naming a non-existent column. Use `age_range` (TEXT) on events; numeric ages and free flag only on activities.
@@ -58,9 +72,14 @@ These columns exist on `activities` only. Querying them on events returns 400 fr
 **3. Cancelled/postponed events**
 - Should be deleted. Check `scripts/fix-cancelled-events.js` and `supabase-adapter.js` `isCancelledEvent()` — add any new patterns if needed.
 
-**4. Duplicate events**
-- Check the duplicate groups listed in the output. Determine root cause: is it a scraper saving the same event with different IDs? Missing dedup logic? The `idx_events_unique_content` constraint should catch most, but scrapers may generate different IDs for the same event.
-- Fix the scraper's ID generation or add URL-based dedup. Write a cleanup script to remove extra copies.
+**4. Duplicate events** — ⚠️ VERIFY BEFORE DELETING
+
+- **First sanity check:** open one duplicate group in the sample output and look at the **full id** of each row. If every row in the group has the **exact same id**, it's NOT a real duplicate — it's a paginator bug fetching the same row multiple times. The events.id column is the primary key; truly different rows have truly different ids.
+- The 2026-05-15 incident: a diagnostic script's paginator lacked `.order()`, Postgres returned the same row in multiple `.range()` pages, "5 copies" reports were actually 1 row × 5 reads. The `--save` deleted ~17,000 legitimate rows. Recovery required re-scraping.
+- **Every paginated read of events/activities MUST include `.order('id', { ascending: true })`** before `.range()`. Without it, duplicate counts are unreliable. Audit the script you're about to run before letting it delete anything.
+- Real duplicates have **different ids** but identical `name + event_date + venue`. Common real cause (pre-2026-05-14): scrapers calling `db.collection('events').add(eventDoc)` without setting `data.id`, so the Firestore-compat wrapper minted a random UUID per call. The 2026-05-14 fix in `scrapers/helpers/supabase-adapter.js` (`_stableEventId` / `_stableActivityId`) now derives ids from URL or `name|date|venue` content, so re-scrapes upsert in place. The `idx_events_unique_content` index is still there as defense-in-depth.
+- If real dupes are still present after the .add() fix: investigate URL drift (trailing slash, query string, fragment — the helper normalizes these), or `data.id` being set inconsistently across scrape paths in the same scraper.
+- **Cleanup pattern:** group by `(lower(name), lower(event_date), lower(venue))`, sort each group oldest-first by `created_at`, delete the rest by id. Run any --save only after a dry-run inspection confirms the groups have distinct ids.
 
 **5. Missing critical fields (events)**
 - **Missing geohash / missing location**: These events won't show on the map. `scripts/fix-event-quality.js` computes geohash from existing coordinates and geocodes location from city+state. **Check the "By scraper" breakdown** — if one scraper dominates, the root cause is in that scraper's geocoding chain. Common causes: (a) missing county in `scrapers/utils/county-centroids.js` so the last-resort fallback fails, (b) the scraper doesn't pass city/address to the location object, (c) the scraper's geocoding helper is broken. Cross-reference each scraper's site list counties against the centroids file.
