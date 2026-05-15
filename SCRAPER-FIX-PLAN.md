@@ -244,7 +244,16 @@ node scripts/data-quality-quick.js
 
 Append a dated entry every session that touches this file. Newest at the top.
 
-### 2026-05-14
+### 2026-05-14 (session 2)
+- Investigated the 3576-duplicate cluster from the morning's `fix-all.sh --recent-only` run.
+- **Root cause:** `supabase-adapter.js` line 1141 — the Firestore-compat `.add()` was minting `crypto.randomUUID()` for every call when the scraper didn't pre-set `data.id`. 89 scrapers call `.add()` without setting an id, so every re-scrape produced a fresh random row with identical content.
+- **Confirmation:** `scraper-festivals-eastern-us.js` line 682 (`db.collection('events').add(eventDoc)`) imports `generateEventIdFromDetails` at line 33 but never uses it. The pre-check at line 601 only runs when `event.url` is non-empty, which is unreliable for festival-aggregator data.
+- **Fix:** added `_stableEventId(data)` / `_stableActivityId(data)` helpers in `supabase-adapter.js`. `.add()` now derives a deterministic id from URL (normalized — strips query string / trailing slash / fragment) or from `name|eventDate|venue` (case-insensitive), falling back to UUID only when nothing else is available. Same content → same id → upsert dedupes naturally. The DB's `idx_events_unique_content` constraint provides defense-in-depth.
+- **Verification:** unit-tested the helper against URL drift (trailing slash, `?utm_source=newsletter`), case variance, and the no-URL fallback — all five invariants hold.
+- **Diagnostic script added:** `scripts/diagnose-duplicates.js` — read-only, reports within-scraper vs cross-scraper, URL variance, temporal pattern, top-contributing scrapers, optional CSV. Run after the next scrape cycle to verify dupes stopped.
+- Not yet pushed — confirm one more time with the user, then commit.
+
+### 2026-05-14 (session 1)
 - Created this plan after pushing commit `8ab07a9`.
 - Catalogued zero-event vs never-ran scrapers; discovered the region-config gates explain most "never-ran" entries.
 - Identified Localist-Parks and KidsOutAndAbout-DMV as the only Group A (real bug, active region) items.

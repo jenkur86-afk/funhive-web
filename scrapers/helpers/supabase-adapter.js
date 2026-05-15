@@ -24,6 +24,58 @@ const crypto = require('crypto');
 const ngeohash = require('ngeohash');
 const { normalizeAgeRange } = require('./age-range-normalizer');
 
+// ============================================================================
+// STABLE-ID DERIVATION — for the .add() Firestore-compat path.
+// Caught 2026-05-14: 3576 duplicates because scrapers call `.add()` without
+// setting data.id, and the old fallback was `crypto.randomUUID()` (different
+// every call). Now we hash content to get a deterministic id, so re-scrapes
+// of the same event upsert to the same row.
+// ============================================================================
+function _hash30(s) {
+  return crypto.createHash('sha256').update(s).digest('base64url').substring(0, 30);
+}
+function _normalizeUrl(u) {
+  if (!u || typeof u !== 'string') return '';
+  try {
+    const url = new URL(u);
+    // Strip query string + fragment + trailing slash — those are the common
+    // sources of URL drift between scrape runs.
+    return `${url.origin}${url.pathname}`.replace(/\/$/, '').toLowerCase();
+  } catch (_) {
+    return u.trim().toLowerCase();
+  }
+}
+function _stableEventId(data) {
+  // 1) Prefer URL — most stable across re-scrapes.
+  const url = data.url || data.source_url || data.sourceUrl || (data.metadata && data.metadata.sourceUrl) || '';
+  const normUrl = _normalizeUrl(url);
+  if (normUrl) return _hash30(`url:${normUrl}`);
+  // 2) Fallback: name|eventDate|venue (matches Step 2b dedup key + DB unique constraint).
+  const name = (data.name || '').toLowerCase().trim();
+  const date = (data.eventDate || data.event_date || '').toLowerCase().trim();
+  const venue = (data.venue || '').toLowerCase().trim();
+  if (name && date && venue) return _hash30(`evt:${name}|${date}|${venue}`);
+  // 3) Last resort: random UUID. Means we couldn't tell anything about the
+  // event — better to insert and let the cleanup script find it later than
+  // to drop the row.
+  return crypto.randomUUID();
+}
+function _stableActivityId(data) {
+  const url = data.url || data.website || (data.contact && data.contact.website) || '';
+  const normUrl = _normalizeUrl(url);
+  if (normUrl) return _hash30(`url:${normUrl}`);
+  const name = (data.name || '').toLowerCase().trim();
+  const city = (data.city || (data.location && data.location.city) || '').toLowerCase().trim();
+  const state = (data.state || (data.location && data.location.state) || '').toLowerCase().trim();
+  if (name && city && state) return _hash30(`act:${name}|${city}|${state}`);
+  return crypto.randomUUID();
+}
+function _stableIdForCollection(collection, data) {
+  if (collection === 'events') return _stableEventId(data);
+  if (collection === 'activities') return _stableActivityId(data);
+  return crypto.randomUUID();
+}
+
 // Initialize Supabase client with service role key (bypasses RLS)
 const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -1138,7 +1190,13 @@ function createFirestoreCompatibleDB() {
           };
         },
         async add(data) {
-          const id = data.id || crypto.randomUUID();
+          // Derive a STABLE id from event/activity content rather than minting
+          // a random UUID. The old `crypto.randomUUID()` fallback was the root
+          // cause of the 3576 duplicate events deleted on 2026-05-14 — 89
+          // scrapers call `.add()` without setting data.id, so every re-scrape
+          // produced a new random row with identical content.
+          // Same event → same id → upsert dedupes naturally.
+          const id = data.id || _stableIdForCollection(collectionName, data);
           let flattened;
           try {
             flattened = flattenForTable(collectionName, data);
