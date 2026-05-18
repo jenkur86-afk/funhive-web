@@ -265,6 +265,12 @@ async function scrapeSite(browser, site, maxEvents = 50) {
           /^please double check/i,                   // "Please double check each event...",
           /^be sure to double/i,                     // "Be sure to double-check...",
           /^find more family fun/i,                  // "Find MORE Family Fun..."
+          // Trader Joe's free carnation Mother's Day promo (synd to MK feeds May 2026)
+          /\bfree\s+carnation\b/i,
+          // Generic library calendar aggregator link
+          /^local\s+library\s+activit(y|ies)\b/i,
+          // MK aggregator nav link
+          /^plan\s+your\s+family\s+fun\b/i,
         ]
       };
 

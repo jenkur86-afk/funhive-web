@@ -185,12 +185,29 @@ function cleanVenueForGeocoding(venue) {
 }
 
 // ── Venue-name geocoding (searches for named places, NOT street addresses) ──
+//
+// Two-tier blocklist on the venue name before we hit Nominatim:
+//   1. SKIP_PREFIX_PATTERNS — venue STARTS WITH one of these (catches things like
+//      "Online Event: ...", "Local Libraries", "Pop-Up Market on Main Street").
+//      Anchored with ^ but no $ — prefix match.
+//   2. SKIP_EXACT_PATTERNS — venue IS EXACTLY one of these common-noun names
+//      (catches "Haircut", "The Inn", "Park" alone). Anchored with both ^ and $
+//      so we don't false-positive on real places like "Central Park" or "The Inn
+//      at Saratoga".
+//
+// Why bother: Nominatim happily returns *something* for ambiguous queries
+// ("Haircut" → some random barbershop in Brooklyn), which gets logged as a
+// successful venue geocode and saves bogus coordinates. Skipping these lets
+// the caller fall through to city-level / county-centroid geocoding instead.
+const SKIP_PREFIX_PATTERNS = /^(see website|n\/a|various|tbd|tba|online|virtual|everywhere|your home|contact for|check website|play at a|earth day|discover pass|free state|kids eat free|a local|local (library|libraries|park|parks|school|schools|museum|museums|pool|pools|venue|venues|spot|spots|place|places|gym|gyms|business|businesses|shop|shops|store|stores|coffee|restaurants?|playground|playgrounds)|looking for|backyard\b|basement\b)/i;
+const SKIP_EXACT_PATTERNS = /^(haircut|breakfast|lunch|dinner|brunch|workshop|class|meeting|gathering|playdate|appointment|errand|errands|the inn|the park|the library|the school|the gym|the pool|the store|the shop|the market|the fair|park|library|school|gym|pool|market|fair|festival|event|class|home|outdoors|outside|nature|playground|tba|tbd|n\/a|various|pop[-\s]?up\s+(market|shop|store|sale|event)|pop[-\s]?up)$/i;
+
 async function geocodeVenue(venue, city, state, zipCode) {
   if (!venue) return null;
 
   // Skip venue names that are clearly not geocodable places
-  const skipPatterns = /^(see website|n\/a|various|tbd|tba|online|virtual|everywhere|your home|contact for|check website|play at a|earth day|discover pass|free state|kids eat free|a local|local park|looking for)/i;
-  if (skipPatterns.test(venue)) return null;
+  if (SKIP_PREFIX_PATTERNS.test(venue)) return null;
+  if (SKIP_EXACT_PATTERNS.test(venue.trim())) return null;
 
   // Clean the venue name (handle pipes, emoji prefixes, event-name contamination)
   const cleaned = cleanVenueForGeocoding(venue);
