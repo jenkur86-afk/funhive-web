@@ -113,15 +113,37 @@ function getDatesToScrape() {
   return dates;
 }
 
-// Scrape events from Drupal HTML feed for a specific date — uses axios (no Puppeteer needed)
+// Scrape events from Drupal HTML feed for a specific date — uses axios (no Puppeteer needed).
+// 2026-05-17 diagnostic: Lancaster Libraries was returning 400 on the
+// `_wrapper_format=lc_calendar_feed` URL form and zero events overall. Plain
+// `?current_date=YYYY-MM-DD` returns a 162KB HTML page with normal
+// `<article class="event-card">` blocks. Try the legacy URL form first, then
+// fall back to the bare query string if it 400s — keeps backwards compat for
+// libraries that still require the wrapper param.
 async function scrapeDateEvents(library, date) {
-  const url = `${library.baseUrl}${library.feedPath}?_wrapper_format=lc_calendar_feed&current_date=${date}`;
+  const wrapperUrl = `${library.baseUrl}${library.feedPath}?_wrapper_format=lc_calendar_feed&current_date=${date}`;
+  const bareUrl = `${library.baseUrl}${library.feedPath}?current_date=${date}`;
+
+  async function fetchUrl(url) {
+    return axios.get(url, {
+      timeout: 15000,
+      headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' },
+      validateStatus: (s) => s < 500  // keep 400s out of the catch so we can retry the bare URL
+    });
+  }
 
   try {
-    const response = await axios.get(url, {
-      timeout: 15000,
-      headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' }
-    });
+    let response = await fetchUrl(wrapperUrl);
+    if (response.status === 400) {
+      response = await fetchUrl(bareUrl);
+    }
+    if (response.status === 404) {
+      return [];  // feed not available for this date
+    }
+    if (response.status >= 400) {
+      console.error(`  ⚠️ ${library.name} ${date}: HTTP ${response.status}`);
+      return [];
+    }
 
     const html = response.data;
     if (!html || typeof html !== 'string') return [];

@@ -47,6 +47,15 @@ const AUTO_DELETE_PATTERNS = [
   { pattern: /\badult\s+book\s*club\b/i, label: 'adult book club' },
   { pattern: /\badult\s+(knitting|crochet|quilting|writing|painting|literacy)\b/i, label: 'adult craft/class' },
   { pattern: /\badult\s+(swim|fitness|yoga|line\s*danc)/i, label: 'adult fitness' },
+  // Wider "Adult <modifier> <activity>" patterns — caught 2026-05-17 by
+  // data-quality-check.js: "May Adult Workshop - Adult Abstract Painting
+  // Workshop" wasn't matching because "adult abstract painting" has a word
+  // between "adult" and "painting". Allow one or two intermediate words.
+  { pattern: /\badult\s+workshop\b/i, label: 'adult workshop' },
+  { pattern: /\badult\s+\w+\s+(workshop|class|program|painting|coloring|craft|book\s*club|knitting|crochet|quilting|literacy|swim|night|social|prom)\b/i, label: 'adult X program' },
+  { pattern: /\badult\s+\w+\s+\w+\s+(workshop|class|program|painting|coloring|prom)\b/i, label: 'adult X Y program' },
+  { pattern: /\badult\s+prom\b/i, label: 'adult prom' },
+  { pattern: /\badult\s+night\b/i, label: 'adult night' },
   // Adult socials slipping through scraper-side filtering (caught one on
   // 2026-05-05 only because it also said "adults only"). Keep these here
   // as a backstop so historical rows still get cleaned up.
@@ -65,16 +74,29 @@ function isFalsePositive(name, description, venue) {
   const text = `${name || ''} ${description || ''} ${venue || ''}`.toLowerCase();
   const nameLower = (name || '').toLowerCase();
 
-  // EXPLICIT ADULT in title — never rescue (libraries hold adult-only programs).
-  // Examples: "Adult Coloring Group", "Color Your World: Adult Coloring",
-  // "Adult Book Club", "Adults Only Swim", "Adult Knitting Circle".
-  // Without this, the family-venue rescue below (library/zoo/museum) was sparing
-  // legit adult-only programs. (Caught 2026-05-10 via data-quality-check.)
-  if (/\badults?\s+(only|coloring|book\s*club|craft|workshop|class|program|event|swim|knitting|writing|crochet|quilting|yoga|fitness|hour|night|social|painting|trivia|games?|literacy|line\s*danc)\b/i.test(nameLower)) return false;
+  // EXPLICIT ADULT in title or description — never rescue (libraries hold
+  // adult-only programs). Examples: "Adult Coloring Group", "Color Your World:
+  // Adult Coloring", "Adult Book Club", "Adults Only Swim", "Adult Knitting
+  // Circle". Without this, the family-venue rescue below (library/zoo/museum)
+  // was sparing legit adult-only programs. (Caught 2026-05-10 and 2026-05-17
+  // via data-quality-check.) Check both name AND description, since some feeds
+  // put "Adult Coloring Club" in the description while the title is just
+  // "Coloring Club".
+  const adultProgramPattern = /\badults?\s+(only|coloring|book\s*club|craft|workshop|class|program|event|swim|knitting|writing|crochet|quilting|yoga|fitness|hour|night|social|painting|trivia|games?|literacy|line\s*danc|prom)\b/i;
+  if (adultProgramPattern.test(nameLower)) return false;
+  if (adultProgramPattern.test(text)) return false;
+  // "Adult X workshop", "Adult X painting" (1-2 modifier words)
+  if (/\badult\s+\w+\s+(workshop|class|program|painting|coloring|craft|book\s*club|prom)\b/i.test(text)) return false;
   if (/:\s*adult\s+coloring\b/i.test(nameLower)) return false;
 
   // If the event name explicitly says "family", "kids", "children", "toddler", "youth", "all ages" — it's family-friendly
   if (/\b(family|families|kid|kids|children|toddler|preschool|youth|all\s*ages|child|infant|baby|babies|mommy|daddy|parent)\b/i.test(nameLower)) return 'family keyword in title';
+
+  // Library coloring/Zen programs that aren't explicitly adult — these are
+  // multi-age library activities. The explicit-adult check above runs first,
+  // so this only fires when neither name nor description says "adult".
+  if (/\bcoloring\s+club\b/i.test(nameLower)) return 'coloring club (library program)';
+  if (/\bzen\s+(art|coloring|tangle|doodle)\b/i.test(nameLower)) return 'zen library program';
 
   // Library trivia nights are family events
   if (/trivia/i.test(nameLower) && (/library|teen|family|kid|all ages|children/i.test(text))) return 'library/family trivia';

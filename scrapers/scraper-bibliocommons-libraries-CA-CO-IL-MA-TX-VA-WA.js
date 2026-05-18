@@ -854,14 +854,17 @@ async function scrapeLibraryEvents(library, browser) {
       timeout: 45000
     });
 
-    // Wait for BiblioCommons to load events - wait for JS to render
+    // Wait for BiblioCommons React app to render. Larger sites (Chicago, Hennepin,
+    // Burlington County) need longer than the previous 2s post-load + 10s selector
+    // window — 2026-05-18 diagnostic confirmed BiblioCommons returns 200 with the
+    // React bundle but no static event cards in initial HTML. Bumping selector
+    // timeout to 20s and adding a longer post-render settle so the JS hydration
+    // finishes before we evaluate.
     await page.waitForSelector('body', { timeout: 5000 });
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Reduced from 5000ms
-
-    // Try to wait for event content to appear
-    await page.waitForSelector('[class*="event"], [class*="Event"], .listItem', { timeout: 10000 }).catch(() => {
-      console.log('   Note: Event selector timeout - page may have no events');
+    await page.waitForSelector('[class*="event"], [class*="Event"], .listItem', { timeout: 20000 }).catch(() => {
+      console.log('   Note: Event selector timeout — page may have no events');
     });
+    await new Promise(resolve => setTimeout(resolve, 3500));
 
     // Extract events using BiblioCommons CSS selectors
     const events = await page.evaluate(() => {

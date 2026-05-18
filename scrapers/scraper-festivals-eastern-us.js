@@ -33,7 +33,7 @@ const { categorizeEvent } = require('./event-categorization-helper');
 const { generateEventIdFromDetails } = require('./event-id-helper');
 const { normalizeDateString, parseDateToObject } = require('./date-normalization-helper');
 const { logScraperResult } = require('./scraper-logger');
-const { geocodeAddress } = require('./helpers/geocoding-helper');
+const { geocodeAddress, geocodeWithFallback } = require('./helpers/geocoding-helper');
 
 const SCRAPER_NAME = 'Festivals-Eastern-US';
 
@@ -491,42 +491,37 @@ function deduplicateEvents(events) {
 }
 
 /**
- * Geocode a festival location — tries full address, then city+state, then state
+ * Geocode a festival location — tries full address, then city+state, then state.
+ * 2026-05-17: switched to geocodeWithFallback so we get the proper cascade
+ * (Nominatim → Photon → county centroid → state centroid). 107 events were
+ * landing with null geohash/location because plain geocodeAddress returned
+ * null without a centroid hard-fallback.
  */
 async function geocodeFestival(address, city, state, zipCode, venueName) {
-  // Try full address first
-  if (address && city) {
-    const fullAddr = `${address}, ${city}, ${state} ${zipCode || ''}`.trim();
-    try {
-      const coords = await geocodeAddress(fullAddr);
-      if (coords) return coords;
-    } catch (_) {}
-  }
+  // Try the most specific address available — geocodeWithFallback handles
+  // the full cascade internally and always returns coords if state is known.
+  const primary = address && city
+    ? `${address}, ${city}, ${state} ${zipCode || ''}`.trim()
+    : city
+      ? `${city}, ${state} ${zipCode || ''}`.trim()
+      : zipCode
+        ? `${zipCode}, ${state}`
+        : venueName && state
+          ? `${venueName}, ${state}`
+          : null;
 
-  // Try city + state + zip
-  if (city) {
-    const cityAddr = `${city}, ${state} ${zipCode || ''}`.trim();
-    try {
-      const coords = await geocodeAddress(cityAddr);
-      if (coords) return coords;
-    } catch (_) {}
-  }
+  if (!primary) return null;
 
-  // Try just zip + state
-  if (zipCode) {
-    try {
-      const coords = await geocodeAddress(`${zipCode}, ${state}`);
-      if (coords) return coords;
-    } catch (_) {}
-  }
-
-  // Fallback: try venue name + state (for events missing city/address/zip)
-  if (venueName && state) {
-    try {
-      const coords = await geocodeAddress(`${venueName}, ${state}`);
-      if (coords) return coords;
-    } catch (_) {}
-  }
+  try {
+    const coords = await geocodeWithFallback(primary, {
+      city,
+      zipCode,
+      state,
+      venueName,
+      sourceName: 'Festivals-Eastern-US'
+    });
+    if (coords) return coords;
+  } catch (_) {}
 
   return null;
 }

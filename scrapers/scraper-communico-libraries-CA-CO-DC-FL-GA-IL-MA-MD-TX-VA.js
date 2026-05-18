@@ -1327,18 +1327,22 @@ async function scrapeLibraryEvents(library, browser) {
       timeout: 30000
     });
 
-    // Wait for Communico event elements to appear
-    // Some libraries use standard Communico selectors, others (custom domains) use different ones
-    const waitSelectors = '.eelistevent, .em-event-list-item, .event-item, [data-event-id], .program-item, article.node--type-event';
+    // Wait for Communico event elements to appear.
+    // Some libraries use standard Communico selectors, others (custom domains) use
+    // different ones. 2026-05-18 diagnostic confirmed Multnomah / Waterloo / WPL
+    // all use the `amEvents` jQuery widget which hydrates AFTER initial paint —
+    // include `.eelisttitle` and `.events-grid-cell-event` which are the markup
+    // those installations actually emit. Bumped initial selector wait to 15s.
+    const waitSelectors = '.eelistevent, .eelisttitle, .events-grid-cell-event, .em-event-list-item, .event-item, [data-event-id], .program-item, article.node--type-event';
     try {
-      await page.waitForSelector(waitSelectors, { timeout: 10000 });
+      await page.waitForSelector(waitSelectors, { timeout: 15000 });
       console.log('   ✓ Event selectors found');
     } catch (error) {
       console.log('   ⚠ Event selectors timeout - waiting additional 5 seconds for AJAX render');
       // Fallback wait for slow AJAX rendering
       await new Promise(resolve => setTimeout(resolve, 5000));
     }
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 2500));
 
     // Scroll to load lazy-loaded content
     await page.evaluate(() => {

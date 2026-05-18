@@ -540,6 +540,13 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
         skipped++;
         continue;
       }
+      // Also skip when the scraper provided no date at all — these would
+      // otherwise be saved with null `date` TIMESTAMPTZ and disappear from
+      // date-filtered queries (caught 2026-05-17 via 212 assabet rows).
+      if (!rawDateStr || (typeof rawDateStr === 'string' && rawDateStr.trim().length === 0)) {
+        skipped++;
+        continue;
+      }
 
       if (dateStr) {
         try {

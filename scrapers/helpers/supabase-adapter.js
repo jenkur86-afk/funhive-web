@@ -23,6 +23,20 @@ require('dotenv').config();
 const crypto = require('crypto');
 const ngeohash = require('ngeohash');
 const { normalizeAgeRange } = require('./age-range-normalizer');
+// Lazy-loaded state centroids — used as a last-resort safety net so events and
+// activities never land with a null location when at least the state is known.
+let _STATE_CENTROIDS = null;
+function getStateCentroid(state) {
+  if (!state) return null;
+  if (!_STATE_CENTROIDS) {
+    try {
+      _STATE_CENTROIDS = require('./geocoding-helper').STATE_CENTROIDS || {};
+    } catch (e) {
+      _STATE_CENTROIDS = {};
+    }
+  }
+  return _STATE_CENTROIDS[state] || null;
+}
 
 // ============================================================================
 // STABLE-ID DERIVATION — for the .add() Firestore-compat path.
@@ -110,14 +124,23 @@ const STATE_ABBREVS = {
   'washington':'WA','west virginia':'WV','wisconsin':'WI','wyoming':'WY',
 };
 
+// Set of valid US 2-letter postal codes (built from STATE_ABBREVS values).
+const VALID_US_STATE_CODES = new Set(Object.values(STATE_ABBREVS));
+
 function normalizeState(rawState) {
   if (!rawState || typeof rawState !== 'string') return rawState || null;
   const trimmed = rawState.trim();
   if (!trimmed) return null;
-  // Already a 2-letter code → upper-case it and return
-  if (trimmed.length === 2) return trimmed.toUpperCase();
+  // Already a 2-letter code → upper-case it and validate. Anything that's
+  // exactly two letters but not a real US state code (caught on 2026-05-17:
+  // "BO", "GE", "RO", "US", "NI" — all city-name truncations or country codes)
+  // is rejected so we don't write garbage to the activities table.
+  if (trimmed.length === 2) {
+    const upper = trimmed.toUpperCase();
+    return VALID_US_STATE_CODES.has(upper) ? upper : null;
+  }
   const abbrev = STATE_ABBREVS[trimmed.toLowerCase()];
-  return abbrev || trimmed;
+  return abbrev || null;
 }
 
 // ============================================================================
@@ -354,9 +377,14 @@ const NON_FAMILY_PATTERNS = [
   /\b(18|21)\s*\+/i,
   /\b(18|21)\s*and\s*(over|up|older)\b/i,
   /\bfor\s+(older\s+)?adults\b/i,
-  /\badult\s+(program|workshop|class|craft|event|coloring|book\s*club|knitting|crochet|quilting|writing|painting|literacy|swim|hour|night|social|trivia|games?)\b/i,
+  /\badult\s+(program|workshop|class|craft|event|coloring|book\s*club|knitting|crochet|quilting|writing|painting|literacy|swim|hour|night|social|trivia|games?|prom)\b/i,
   // "Color Your World: Adult Coloring" pattern (subtitle position)
   /:\s*adult\s+coloring\b/i,
+  // Adult X program / Adult X Y program — for cases like "May Adult Workshop -
+  // Adult Abstract Painting Workshop" where "adult" and the activity word are
+  // separated by 1-2 modifier words (caught 2026-05-17 by data-quality-check).
+  /\badult\s+\w+\s+(workshop|class|program|painting|coloring|craft|book\s*club|knitting|crochet|quilting|literacy|swim|night|social|prom)\b/i,
+  /\badult\s+\w+\s+\w+\s+(workshop|class|program|painting|coloring|prom)\b/i,
 
   // Senior-specific programs
   /\bsenior\s+(program|workshop|class|event|group|circle|social|lunch|exercise|fitness|yoga|tai\s*chi|bingo|trip)\b/i,
@@ -523,6 +551,14 @@ const FAMILY_RESCUE_PATTERNS = [
   /\bfirst\s+thursday\b/i,
   /\bgarden\b/i,
   /\bbotanical\b/i,
+  // Specific titles seen on 2026-05-17 audit that were flagged as adult but
+  // are actually family/teen library programs. "Coloring Club" appeared 3x
+  // for Wythe-Grayson Regional Library — they run a multi-age coloring club.
+  // "Zen Art" / "Zen Coloring" is typically a teen library program.
+  // These match only when the title doesn't ALSO contain "adult" (the
+  // explicit-adult check in isFalsePositive runs first and bypasses rescue).
+  /\bcoloring\s+club\b/i,
+  /\bzen\s+(art|coloring|tangle|doodle)\b/i,
 ];
 
 // Venue-name patterns that indicate non-family venues (checked separately)
@@ -889,6 +925,24 @@ async function saveEvent(id, data) {
     }
   }
 
+  // Universal state-centroid safety net: if we still have no location but the
+  // state is a valid US code, drop in the state centroid. This means the row
+  // shows up on the map (at state granularity) instead of disappearing from
+  // every map query. Replaces the per-scraper logic that used to be needed in
+  // each individual scraper — caught by Festivals-Eastern-US 2026-05-17 where
+  // 107 events landed with null location.
+  if (!row.location && row.state) {
+    const centroid = getStateCentroid(row.state);
+    if (centroid) {
+      row.location = `SRID=4326;POINT(${centroid.lng} ${centroid.lat})`;
+      if (!row.geohash) {
+        try {
+          row.geohash = ngeohash.encode(centroid.lat, centroid.lng, 7);
+        } catch (e) { /* ignore */ }
+      }
+    }
+  }
+
   // Backfill parsed date TIMESTAMPTZ from event_date text when missing.
   // Without this, events are invisible to date-filtered queries until the
   // weekly fix scripts run. Doing it at save-time eliminates that dependency.
@@ -939,6 +993,21 @@ async function saveActivity(id, data) {
       try {
         row.geohash = ngeohash.encode(lat, lng, 7);
       } catch (e) { /* ignore — geohash is best-effort */ }
+    }
+  }
+
+  // Universal state-centroid safety net (same as saveEvent above). Without
+  // this, venues whose scraper geocoding chain failed entirely would land
+  // with null location / null geohash and disappear from the venue map.
+  if (!row.location && row.state) {
+    const centroid = getStateCentroid(row.state);
+    if (centroid) {
+      row.location = `SRID=4326;POINT(${centroid.lng} ${centroid.lat})`;
+      if (!row.geohash) {
+        try {
+          row.geohash = ngeohash.encode(centroid.lat, centroid.lng, 7);
+        } catch (e) { /* ignore */ }
+      }
     }
   }
 

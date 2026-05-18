@@ -835,6 +835,11 @@ async function checkEvents() {
     /\bfestival\b/i,
     /\bmarket\b/i,
     /\bderby\b/i,
+    // Library multi-age programs (added 2026-05-17 to rescue Coloring Club /
+    // Zen Art from being mis-flagged as adult when the name has neither
+    // "adult" nor a kid-keyword).
+    /\bcoloring\s+club\b/i,
+    /\bzen\s+(art|coloring|tangle|doodle)\b/i,
   ];
   function isAdultEvent(name, desc) {
     const text = `${name || ''} ${desc || ''}`;

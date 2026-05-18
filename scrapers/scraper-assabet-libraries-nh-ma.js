@@ -144,6 +144,14 @@ async function scrapeAssabetEvents() {
             card.querySelector('[class*="category"]')
           ].find(el => el && el.textContent.trim().length > 0 && el.textContent.trim().length < 80);
 
+          // Skip events with no parseable date — without a date, the row ends
+          // up in the DB with null `date` TIMESTAMPTZ and is invisible to
+          // date-filtered queries. 212 assabet events were in this state on
+          // 2026-05-17. Require at least a month name to consider it a date.
+          if (!dateText || !/(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)/i.test(dateText)) {
+            return;
+          }
+
           events.push({
             title: title,
             date: dateText,

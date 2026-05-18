@@ -63,10 +63,20 @@ async function fetchAllEvents(config) {
   let totalPages = 1;
   const perPage = 100;
 
+  // 2026-05-17 diagnostic: PA Parks Localist API returned 6 events at the bare
+  // /api/2/events endpoint, but the scraper saw 0. Root cause was that
+  // Localist's default response window includes past events — by the time the
+  // scraper's per-event "skip past" filter ran, every event in the default
+  // window had already happened. Constraining the API request to today + 90
+  // days returns the upcoming events we actually want.
+  const today = new Date().toISOString().slice(0, 10);  // YYYY-MM-DD
+
   while (page <= totalPages) {
     const params = {
       pp: perPage,
       page,
+      start_date: today,
+      days: 90,
       ...config.extraParams
     };
 

@@ -496,5 +496,6 @@ module.exports = {
   geocodeAddress,
   clearGeocodeCache,
   getCacheStats,
-  flushGeocodeCache
+  flushGeocodeCache,
+  STATE_CENTROIDS
 };

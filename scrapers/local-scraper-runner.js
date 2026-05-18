@@ -19,6 +19,32 @@
 const fs = require('fs');
 const path = require('path');
 
+// ─── Defensive firebase-admin shim resolution ───
+// The shim lives at scrapers/node_modules/firebase-admin/. Node only finds it
+// when the requiring file walks the node_modules tree from scrapers/ up. The
+// 2026-05-17 batch saw 8 scrapers fail with "Cannot find module
+// 'firebase-admin'" while siblings using the same code succeeded — most
+// plausibly a transient resolution race during browser-restart cycles. To
+// make resolution robust regardless of the require root, monkey-patch
+// Module._resolveFilename so any bare 'firebase-admin' request resolves to
+// the shim path. Subsequent require() runs hit the standard cache on that
+// path, so this is a one-shot redirect, not a per-call cost.
+try {
+  const Module = require('module');
+  const originalResolve = Module._resolveFilename;
+  const shimPath = path.join(__dirname, 'firebase-admin-shim.js');
+  if (fs.existsSync(shimPath)) {
+    Module._resolveFilename = function (request, parent, ...rest) {
+      if (request === 'firebase-admin') {
+        return shimPath;
+      }
+      return originalResolve.call(this, request, parent, ...rest);
+    };
+  }
+} catch (e) {
+  console.warn('⚠️  firebase-admin shim redirect failed (non-fatal):', e.message);
+}
+
 // Initialize Supabase (replaces Firebase Admin)
 const { db, supabase, saveScraperLog } = require('./helpers/supabase-adapter');
 
