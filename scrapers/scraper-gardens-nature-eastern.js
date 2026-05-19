@@ -314,6 +314,54 @@ async function tryHTMLScraping(venue, page) {
       const results = [];
       const seen = new Set();
 
+      // True if string looks like time-only or junk (no date component).
+      // Catches "10:00 am", "All Day", "41h", "11d", "9:00 a.m. - 12:00 p.m.",
+      // "in 5 days", etc. — used to reject useless date extractions so we can
+      // fall back to a different selector.
+      function isTimeOnly(s) {
+        if (!s || typeof s !== 'string') return true;
+        const t = s.trim();
+        if (!t) return true;
+        // Pure time: "10:00 am", "1:30 pm", "9:00 a.m.", "10:00"
+        if (/^\d{1,2}(?::\d{2})?\s*(?:[ap]\.?m\.?|am|pm)?(?:\s*[-–—]\s*\d{1,2}(?::\d{2})?\s*(?:[ap]\.?m\.?|am|pm)?)?$/i.test(t)) return true;
+        // All Day / All day
+        if (/^all\s*day$/i.test(t)) return true;
+        // Countdown widget output: "41h", "11d", "2w", "30m"
+        if (/^\d+\s*[dhwm]$/i.test(t)) return true;
+        // "in N days" / "in N hours"
+        if (/^in\s+\d+\s+(?:day|hour|minute|second|week|month)s?\b/i.test(t)) return true;
+        // "Just now" / "Now" / "Today" / "Tomorrow" with no further date info
+        if (/^(?:now|just\s+now|today|tomorrow)$/i.test(t)) return true;
+        return false;
+      }
+
+      // Extract the best date string from a card. Prefers <time datetime="..."> first
+      // (full ISO), then textContent of date-bearing selectors. Rejects time-only
+      // strings and walks through fallback selectors.
+      function extractDate(card, selectors) {
+        // 1. <time datetime="..."> attribute is most reliable (full ISO timestamp)
+        const timeEl = card.querySelector('time[datetime]');
+        if (timeEl) {
+          const dt = timeEl.getAttribute('datetime')?.trim();
+          if (dt && !isTimeOnly(dt)) return dt;
+        }
+        // 2. Walk through each selector and take the first non-time-only textContent
+        for (const sel of selectors) {
+          const els = card.querySelectorAll(sel);
+          for (const el of els) {
+            const txt = el.textContent?.trim();
+            if (txt && !isTimeOnly(txt)) return txt;
+          }
+        }
+        // 3. Last resort: any time element's textContent (might at least have a date)
+        const anyTime = card.querySelector('time');
+        if (anyTime) {
+          const txt = anyTime.textContent?.trim();
+          if (txt && !isTimeOnly(txt)) return txt;
+        }
+        return '';
+      }
+
       function addEvent(title, date, description, url, imageUrl, ageRange) {
         if (!title || title.length < 4) return;
         const key = title.toLowerCase().trim();
@@ -342,11 +390,13 @@ async function tryHTMLScraping(venue, page) {
           'h2 a, h3 a, .tribe-event-url a'
         );
         const title = titleEl?.textContent?.trim() || card.querySelector('h2, h3')?.textContent?.trim();
-        const dateEl = card.querySelector(
-          '.tribe-events-schedule, .tribe-event-schedule-details, ' +
-          '.tribe-events-calendar-list__event-datetime, time, .tribe-common-b2'
-        );
-        const date = dateEl?.textContent?.trim() || dateEl?.getAttribute('datetime') || '';
+        const date = extractDate(card, [
+          '.tribe-events-calendar-list__event-datetime',
+          '.tribe-event-date-start',
+          '.tribe-events-schedule',
+          '.tribe-event-schedule-details',
+          '.tribe-common-b2',
+        ]);
         const desc = card.querySelector('.tribe-events-list-event-description, .tribe-events-content, p')?.textContent?.trim();
         const url = titleEl?.getAttribute('href') || '';
         const img = card.querySelector('img')?.getAttribute('src') || '';
@@ -362,8 +412,9 @@ async function tryHTMLScraping(venue, page) {
           '.views-row, .node--type-event, article.event'
         ).forEach(card => {
           const title = card.querySelector('h2, h3, h4, .event-title, .title, [class*="title"] a')?.textContent?.trim();
-          const date = card.querySelector('time, .date, .event-date, [class*="date"], .meta')?.textContent?.trim() ||
-                       card.querySelector('time')?.getAttribute('datetime') || '';
+          const date = extractDate(card, [
+            '.event-date', '[class*="event-date"]', '.date', '[class*="date"]', '.meta',
+          ]);
           const desc = card.querySelector('p, .description, .excerpt, .event-description, [class*="desc"]')?.textContent?.trim();
           const url = card.querySelector('a')?.getAttribute('href') || '';
           const img = card.querySelector('img')?.getAttribute('src') || '';
@@ -376,8 +427,9 @@ async function tryHTMLScraping(venue, page) {
         document.querySelectorAll('article, .card, li.event, .list-item').forEach(card => {
           const linkEl = card.querySelector('a[href]');
           const title = card.querySelector('h2, h3, h4')?.textContent?.trim() || linkEl?.textContent?.trim();
-          const date = card.querySelector('time, .date, span[class*="date"]')?.textContent?.trim() ||
-                       card.querySelector('time')?.getAttribute('datetime') || '';
+          const date = extractDate(card, [
+            '.date', 'span[class*="date"]', '[class*="event-date"]',
+          ]);
           const desc = card.querySelector('p')?.textContent?.trim();
           const url = linkEl?.getAttribute('href') || '';
           const img = card.querySelector('img')?.getAttribute('src') || '';
