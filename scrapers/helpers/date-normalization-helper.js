@@ -57,9 +57,22 @@ function normalizeDateString(dateString) {
   // The digits before `:` may represent a 1- or 2-digit day followed by a 1- or
   // 2-digit hour; split on whichever gives valid day (1-31) AND hour (0-23).
   cleaned = cleaned.replace(
-    /([A-Za-z]{3,9})\s+(\d{2,4})(?=:\d{2})/g,
+    /([A-Za-z]{3,9})\s+(\d{1,4})(?=:\d{2})/g,
     (full, month, digits) => {
-      if (digits.length <= 2) return full; // hour-only (e.g. "May 10:00") — leave alone
+      // 1-digit run: must be hour-only (e.g. "May 1 9:30 AM" caught earlier; rare
+      // here, but "May 9:30" is fine to leave). No way to split a single digit.
+      if (digits.length === 1) return full;
+      // 2-digit run: if value > 23 it can't be an hour, so it must be day+hour
+      // (e.g., "May 89:30" = "May 8" + "9:30"). Otherwise treat as hour-only.
+      if (digits.length === 2) {
+        const asHour = parseInt(digits);
+        if (asHour >= 0 && asHour <= 23) return full; // legitimate hour like "May 10:00"
+        const d1 = parseInt(digits[0]), h1 = parseInt(digits[1]);
+        if (d1 >= 1 && d1 <= 9 && h1 >= 0 && h1 <= 23) {
+          return `${month} ${digits[0]} ${digits[1]}`;
+        }
+        return full;
+      }
       // 3-digit run: try [2-digit day | 1-digit hour] first (more common — most
       // days >=10 are 2 digits and most hours <10 are 1 digit, e.g. "May 209"
       // is much more likely "May 20" + "9:30" than "May 2" + "09:30").
