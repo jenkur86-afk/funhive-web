@@ -190,15 +190,22 @@ async function runScraper(name, config) {
     //   - MacaroniKid scrapers: { imported, failed }
     //   - Library/event scrapers: { found, new, duplicates, errors }
     //   - Some: { saved, skipped, errors }
+    //   - CloudFunction-wrapped: { success: true, result: { ... } }  ← unwrap first
     // The 2026-05-18 incident: MK runs reported `Found: 0, New: <high>` because
     // result.saved + result.updated + result.failed = NaN when only `imported`
     // is set (undefined + undefined + 0 → NaN, falls through to 0).
+    // The 2026-05-19 follow-up: Gardens-Nature / Zoos-Aquariums still reported
+    // 0/0/0 because their CloudFunction wrappers return { success, result } —
+    // stats are nested one level deep. Unwrap before normalizing.
+    const stats_src = (result && result.success === true && result.result && typeof result.result === 'object')
+      ? result.result
+      : result;
     const num = (v) => (typeof v === 'number' && !isNaN(v)) ? v : 0;
-    const newCount = num(result?.new) || (num(result?.saved) + num(result?.updated)) || num(result?.imported);
-    const dupCount = num(result?.duplicates) || num(result?.skipped);
-    const errCount = num(result?.errors) || num(result?.failed);
+    const newCount = num(stats_src?.new) || (num(stats_src?.saved) + num(stats_src?.updated)) || num(stats_src?.imported);
+    const dupCount = num(stats_src?.duplicates) || num(stats_src?.skipped);
+    const errCount = num(stats_src?.errors) || num(stats_src?.failed);
     const stats = {
-      found: num(result?.found) || num(result?.total) || (newCount + dupCount + errCount) || 0,
+      found: num(stats_src?.found) || num(stats_src?.total) || (newCount + dupCount + errCount) || 0,
       new: newCount,
       duplicates: dupCount,
       errors: errCount
