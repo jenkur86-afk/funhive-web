@@ -336,9 +336,26 @@ async function scrapeLibraryEvents(library, browser) {
             eventDate = dateEl.textContent.replace(/[\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
           }
 
-          // If dateEl content is just a time (no actual date), try to extract from full text
-          const isTimeOnly = eventDate && /^\d{1,2}:\d{2}\s*(?:am|pm)/i.test(eventDate) &&
-                            !/(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)/i.test(eventDate);
+          // Detect cases where the matched element gives only time/duration info but
+          // no real date — we need to look elsewhere on the card for the date.
+          //   - "10:00 am" / "10:00 am - 12:00 pm"           → pure time
+          //   - "All Day"                                     → all-day flag
+          //   - "All Day 5/23–5/25"                           → has a date, but our
+          //                                                      normalizer rejects it as a
+          //                                                      whole string; extract the date
+          //                                                      portion before falling back
+          const hasMonth = /(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)/i.test(eventDate);
+          const hasNumericDate = /\d{1,2}\/\d{1,2}/.test(eventDate);
+          const isTimeOnly = eventDate &&
+            (
+              (/^\d{1,2}:\d{2}\s*(?:am|pm)/i.test(eventDate) && !hasMonth) ||
+              (/^all\s*day\b/i.test(eventDate) && !hasMonth && !hasNumericDate)
+            );
+          // "All Day 5/23–5/25" — strip the "All Day" prefix so the normalizer can use
+          // the date range that follows.
+          if (eventDate && /^all\s*day\b/i.test(eventDate) && (hasMonth || hasNumericDate)) {
+            eventDate = eventDate.replace(/^all\s*day\s*/i, '').trim();
+          }
 
           if (!eventDate || isTimeOnly) {
             // Try to extract date from full text
@@ -347,7 +364,7 @@ async function scrapeLibraryEvents(library, browser) {
                              fullText.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+\d{1,2}(?:,?\s*\d{4})?/i);
             if (dateMatch) {
               // Combine date with original time if we have both
-              if (isTimeOnly) {
+              if (isTimeOnly && /^\d{1,2}:\d{2}\s*(?:am|pm)/i.test(eventDate)) {
                 eventDate = dateMatch[0] + ' ' + eventDate;
               } else {
                 eventDate = dateMatch[0];
