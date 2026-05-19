@@ -118,11 +118,18 @@ async function runScraper(name, config) {
     const durationMinutes = (duration / 60).toFixed(1);
 
     // Normalize result
+    // MacaroniKid scrapers return { imported, failed }; older shape used { saved, updated, failed }.
+    // The old chain `result?.saved + result?.updated + result?.failed` produced NaN when only
+    // `imported` was present, so the runner reported `Found: 0` while events actually saved.
+    const num = (v) => (typeof v === 'number' && !isNaN(v)) ? v : 0;
+    const newCount = num(result?.new) || (num(result?.saved) + num(result?.updated)) || num(result?.imported);
+    const dupCount = num(result?.duplicates) || num(result?.skipped);
+    const errCount = num(result?.errors) || num(result?.failed);
     const stats = {
-      found: result?.found || result?.total || result?.saved + result?.updated + result?.failed || 0,
-      new: result?.new || result?.imported || result?.saved || 0,
-      duplicates: result?.duplicates || result?.skipped || result?.updated || 0,
-      errors: result?.errors || result?.failed || 0
+      found: num(result?.found) || num(result?.total) || (newCount + dupCount + errCount) || 0,
+      new: newCount,
+      duplicates: dupCount,
+      errors: errCount
     };
 
     log(`✅ ${stateName} completed in ${durationMinutes}m - Found: ${stats.found}, New: ${stats.new}, Duplicates: ${stats.duplicates}`);

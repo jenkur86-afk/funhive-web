@@ -185,13 +185,23 @@ async function runScraper(name, config) {
     const duration = ((Date.now() - startTime) / 1000).toFixed(1);
 
     // Normalize result (handle various return shapes from different scrapers)
-    // Note: activity scrapers return { saved (new only), updated, failed }
-    // We count both saved + updated as "new" for logging, since updated means the record exists and was refreshed
+    // Scrapers return many different field combinations:
+    //   - Activity scrapers: { saved, updated, failed }
+    //   - MacaroniKid scrapers: { imported, failed }
+    //   - Library/event scrapers: { found, new, duplicates, errors }
+    //   - Some: { saved, skipped, errors }
+    // The 2026-05-18 incident: MK runs reported `Found: 0, New: <high>` because
+    // result.saved + result.updated + result.failed = NaN when only `imported`
+    // is set (undefined + undefined + 0 → NaN, falls through to 0).
+    const num = (v) => (typeof v === 'number' && !isNaN(v)) ? v : 0;
+    const newCount = num(result?.new) || (num(result?.saved) + num(result?.updated)) || num(result?.imported);
+    const dupCount = num(result?.duplicates) || num(result?.skipped);
+    const errCount = num(result?.errors) || num(result?.failed);
     const stats = {
-      found: result?.found || result?.total || (result?.saved || 0) + (result?.updated || 0) + (result?.failed || 0) || 0,
-      new: result?.new || result?.imported || (result?.saved || 0) + (result?.updated || 0) || 0,
-      duplicates: result?.duplicates || result?.skipped || 0,
-      errors: result?.errors || result?.failed || 0
+      found: num(result?.found) || num(result?.total) || (newCount + dupCount + errCount) || 0,
+      new: newCount,
+      duplicates: dupCount,
+      errors: errCount
     };
 
     log(`✅ ${name} completed in ${duration}s - Found: ${stats.found}, New: ${stats.new}, Duplicates: ${stats.duplicates}`);
