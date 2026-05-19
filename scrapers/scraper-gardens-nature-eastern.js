@@ -496,6 +496,9 @@ async function scrapeGardensNature(filterStates = null) {
   let allEvents = [];
   const stateResults = {};
   let totalFound = 0;
+  let totalSaved = 0;
+  let totalSkipped = 0;
+  let totalErrors = 0;
 
   try {
     for (let i = 0; i < venuesToScrape.length; i++) {
@@ -532,9 +535,15 @@ async function scrapeGardensNature(filterStates = null) {
               }
             );
             const saved = result?.saved || result?.new || result?.imported || 0;
-            console.log(`   💾 Saved: ${saved}`);
+            const skipped = result?.skipped || result?.duplicates || 0;
+            const errors = result?.errors || result?.failed || 0;
+            totalSaved += saved;
+            totalSkipped += skipped;
+            totalErrors += errors;
+            console.log(`   💾 Saved: ${saved} | ⏭️ Skipped: ${skipped} | ❌ Errors: ${errors}`);
           } catch (err) {
             console.error(`   ❌ Save error: ${err.message}`);
+            totalErrors++;
           }
         }
         allEvents = [];
@@ -555,17 +564,27 @@ async function scrapeGardensNature(filterStates = null) {
   // Log summary
   console.log('\n\x1b[32m━━━━━━━━━━━━━ SUMMARY ━━━━━━━━━━━━━━\x1b[0m');
   console.log(`Total events found: ${totalFound}`);
+  console.log(`Total saved: ${totalSaved} | Skipped: ${totalSkipped} | Errors: ${totalErrors}`);
   for (const [state, count] of Object.entries(stateResults).sort((a, b) => b[1] - a[1])) {
     console.log(`  ${state}: ${count} events`);
   }
 
   logScraperResult(SCRAPER_NAME, {
     found: totalFound,
-    new: totalFound,
-    duplicates: 0,
+    new: totalSaved,
+    duplicates: totalSkipped,
+    errors: totalErrors,
   });
 
-  return stateResults;
+  // Return a stats object the runner can read directly (do not return stateResults
+  // — the runner's normalizer can't extract found/new/duplicates from a state map).
+  return {
+    found: totalFound,
+    new: totalSaved,
+    duplicates: totalSkipped,
+    errors: totalErrors,
+    stateResults,
+  };
 }
 
 // ==========================================
