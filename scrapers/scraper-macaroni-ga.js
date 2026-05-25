@@ -293,6 +293,10 @@ async function scrapeSite(browser, site, maxEvents = 50) {
           /^local\s+library\s+activit(y|ies)\b/i,
           // MK aggregator nav link
           /^plan\s+your\s+family\s+fun\b/i,
+          // Generic 'Add Your Event' nav link surfaced as event (Fort Collins, Loveland CO)
+          /^add your event\b/i,
+          // Generic 'Play at a Local Park' aggregator (Peoria IL)
+          /^play at a local park\b/i,
         ]
       };
 
