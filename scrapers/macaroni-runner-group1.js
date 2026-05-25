@@ -17,6 +17,44 @@
 const fs = require('fs');
 const path = require('path');
 
+// ----------------------------------------------------------------------------
+// Swallow known-benign async errors from puppeteer-extra-plugin-stealth.
+//
+// When the browser is restarted (especially during transient network outages)
+// the stealth plugin's `_onTargetCreated` handlers race the browser shutdown
+// and throw "Requesting main frame too early!" / "Session closed" /
+// "TargetCloseError" as unhandled promise rejections. On Node 22+ that kills
+// the runner mid-state (PA crash, May 2026). These errors are not actionable —
+// the in-flight scrape will already throw a catchable error on the next await,
+// so we can safely log and continue.
+// ----------------------------------------------------------------------------
+const BENIGN_PUPPETEER_PATTERNS = [
+  /Requesting main frame too early/i,
+  /Session closed/i,
+  /TargetCloseError/i,
+  /Target closed/i,
+  /Protocol error \(Network\.setUserAgentOverride\)/i,
+];
+function isBenignPuppeteerError(err) {
+  const msg = (err && (err.message || String(err))) || '';
+  return BENIGN_PUPPETEER_PATTERNS.some((p) => p.test(msg));
+}
+process.on('unhandledRejection', (reason) => {
+  if (isBenignPuppeteerError(reason)) {
+    console.warn('  ⚠️  Swallowed benign Puppeteer rejection:', reason && reason.message ? reason.message : reason);
+    return;
+  }
+  console.error('Unhandled rejection:', reason);
+});
+process.on('uncaughtException', (err) => {
+  if (isBenignPuppeteerError(err)) {
+    console.warn('  ⚠️  Swallowed benign Puppeteer exception:', err && err.message ? err.message : err);
+    return;
+  }
+  console.error('Uncaught exception:', err);
+  throw err;
+});
+
 // Initialize Supabase
 const { saveScraperLog } = require('./helpers/supabase-adapter');
 
