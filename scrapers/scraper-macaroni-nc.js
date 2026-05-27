@@ -21,6 +21,7 @@ const { launchBrowser } = require('./puppeteer-config');
 const { getCountyCentroid } = require('./utils/county-centroids');
 const { getOrCreateVenue, findMatchingVenue } = require('./venue-matcher');
 const { normalizeDateString } = require('./date-normalization-helper');
+const { detectLibraryBranch } = require('./helpers/library-branch-detector');
 const { logScraperResult } = require('./scraper-logger');
 const { tryGeocode: _sharedTryGeocode, geocodeAddress: _sharedGeocodeAddress, getCityCenterCoords, geocodeVenue: _sharedGeocodeVenue, flushMacaroniGeocodeCache } = require('./helpers/macaroni-geocoding-helper');
 const { detectYodel, scrapeYodelEventUrls, extractYodelEventDetails } = require('./helpers/yodel-helper');
@@ -227,7 +228,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
       }
     }
 
-    let imported = 0, updated = 0, skippedPast = 0, skippedFuture = 0, failedGeocode = 0, noLocation = 0;
+    let imported = 0, updated = 0, skippedPast = 0, skippedFuture = 0, failedExtract = 0, failedGeocode = 0, noLocation = 0;
     let consecutiveYodelFailures = 0;
     const MAX_CONSECUTIVE_YODEL_FAILURES = 10; // Bail out if frame is clearly dead
 
@@ -244,7 +245,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
       if (isYodel) {
         if (!details) { consecutiveYodelFailures++; } else { consecutiveYodelFailures = 0; }
       }
-      if (!details || !details.eventDate) continue;
+      if (!details || !details.eventDate) { failedExtract++; continue; }
       const eventDate = new Date(details.eventDate);
       if (eventDate < today) { skippedPast++; continue; }
       if (eventDate > maxDate) { skippedFuture++; continue; }
@@ -294,6 +295,10 @@ async function scrapeSite(browser, site, maxEvents = 50) {
           /^add your event\b/i,
           // Generic 'Play at a Local Park' aggregator (Peoria IL)
           /^play at a local park\b/i,
+          // Yodel-syndicated nationwide aggregator entries (county-centroid junk)
+          /^emergency medicine day\b/i,
+          /^hike a national park\b/i,
+          /^freedom park playground\b/i,
         ]
       };
 
@@ -321,6 +326,24 @@ async function scrapeSite(browser, site, maxEvents = 50) {
 
 
 
+      // Library-system → branch detection (May 2026).
+      // MK aggregates library events as e.g. "Denver Public Library" without
+      // a branch. We scan title + description for a known branch name and,
+      // if found, rewrite venue/address before geocoding so the event pins
+      // to the actual building instead of the city centroid.
+      const _branchMatch = detectLibraryBranch({
+        venue: details.venue,
+        eventName: details.name,
+        description: details.description,
+        state: 'NC'
+      });
+      if (_branchMatch) {
+        details.venue = `${_branchMatch.systemName} — ${_branchMatch.branchName}`;
+        details.address = _branchMatch.address;
+        details.city = _branchMatch.city;
+        details.zipCode = _branchMatch.zipCode || details.zipCode;
+        console.log(`  📚 Library branch detected: ${_branchMatch.branchName} (${_branchMatch.city}) for: ${(details.name || '').substring(0, 35)}`);
+      }
       let coords = null;
       let locationObj = null;
 
@@ -530,7 +553,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
-    console.log(`  ✅ ${imported} new | 🔄 ${updated} updated | ⏭️ ${skippedPast} past | ⚠️ ${noLocation} no coords`);
+    console.log(`  ✅ ${imported} new | 🔄 ${updated} updated | ⏭️ ${skippedPast} past | ⏩ ${skippedFuture} future | ❓ ${failedExtract} no-date | ⚠️ ${noLocation} no coords`);
     await page.close();
   } catch (error) {
     console.error(`  ❌ Error: ${error.message}`);
