@@ -19,6 +19,9 @@ I just ran FunHive scrapers. Analyze the full output I'm pasting below and fix A
 - Check if the site now blocks scrapers (User-Agent, rate limiting, CAPTCHAs)
 
 **2. Skipped events due to invalid dates**
+- The MK summary line now exposes silent skips: `✅ N new | 🔄 M updated | ⏭️ P past | ⏩ F future | ❓ X no-date | ⚠️ W no coords` (added 2026-05-25).
+  - `⏩ F future` = events beyond the 60-day scrape window. Usually fine; large numbers just mean the source publishes far ahead.
+  - `❓ X no-date` = events where extraction returned no `eventDate`. This is the silent path where invalid date strings vanish — any site with consistently `❓ > 0` is a date-format issue worth investigating.
 - Check `date-normalization-helper.js` — does it handle the date format being skipped?
 - Common formats to watch for: "Month Day @ Time", timezone abbreviations (EST/PST), localized day abbreviations (Sá., Lu.), periods in month abbreviations (Apr.), date ranges with dashes
 - Add new normalization rules if needed, and verify all existing date tests still pass
@@ -41,6 +44,8 @@ I just ran FunHive scrapers. Analyze the full output I'm pasting below and fix A
 - Missing npm modules: Add to `scraperDependencies` in `package.json` and note what I need to `npm install`
 - Protocol/connection errors: Check browser restart logic in the scraper's main loop
 - Timeout errors: Consider increasing timeout or switching to `networkidle2`
+- **Network outage cascades** (the runner crashes mid-state with `Requesting main frame too early!` / `TargetCloseError` / `Session closed`): as of 2026-05-25 the three `macaroni-runner-group{1,2,3}.js` files have `process.on('unhandledRejection'/'uncaughtException')` handlers that swallow those specific Puppeteer-stealth races. If you see `⚠️ Swallowed benign Puppeteer rejection` in the output, that's the guard firing — not a bug. If a NEW unrelated unhandled rejection ever pops up, add the message pattern to `BENIGN_PUPPETEER_PATTERNS` in the runner files (all three).
+- States that show `❌ Error: net::ERR_INTERNET_DISCONNECTED` across every site are network-outage casualties, NOT scraper bugs. Re-run them with `node scrapers/macaroni-runner-groupN.js --state XX` once connectivity returns.
 
 **7. Data quality issues**
 - Events with no description, no venue, no age range
@@ -54,7 +59,7 @@ I just ran FunHive scrapers. Analyze the full output I'm pasting below and fix A
 - The correct pattern is: `date: admin.firestore.Timestamp.fromDate(dateObj)` where dateObj is a parsed Date object
 - If `date` is missing, events won't appear in date-filtered queries (supplementary location queries, non-location queries, custom date ranges)
 - The `nearby_events` RPC only checks `event_date IS NOT NULL`, so events may appear in location searches but vanish when a date range is applied
-- MacaroniKid scrapers were the most common offenders — as of April 2026, all 44 MK scrapers have been fixed with the `dateTimestamp` pattern
+- MacaroniKid scrapers were the most common offenders — as of April 2026, all 43 MK state scrapers have been fixed with the `dateTimestamp` pattern (the `nc-cloud.js` and `usa-local.js` variants are separate codepaths)
 
 **9. Missing county centroids for scraper sites**
 - Open `scrapers/utils/county-centroids.js` and cross-reference against every `county` value used in the scraper's site list
@@ -68,6 +73,16 @@ I just ran FunHive scrapers. Analyze the full output I'm pasting below and fix A
 - **Symptoms**: All events from a source share the same coordinates (usually a state centroid). The geocoding log shows the generic source name repeated for every batch. Events cluster at the geographic center of the state on the map instead of spreading across actual venues.
 - **The fix** is always in how the scraper builds its `venues` array (or `libraries` array) for `saveEventsWithGeocoding` — it should create one venue entry per unique `event.venueName` or `event.location`, not one per state/source
 - Check that extraction functions actually populate the `location` field from DOM elements (park names, branch names, venue fields) rather than leaving it empty and falling back to the config-level name
+
+**11. Library-system venue with no branch (MK scrapers)**
+- Look for repeated `📍 Using city-level geocode for: ...` lines where the *titles* mention library activities (storytimes, BabyTime, ToddlerTime, summer reading, etc.) and the venue would be a library system name like "Denver Public Library", "Jeffco Libraries", "Sno-Isle Libraries", etc.
+- Since 2026-05-25 the MK scrapers call `helpers/library-branch-detector.js` BEFORE geocoding. It scans event title + description for any branch name from `helpers/library-addresses.js` (278+ systems) and rewrites `details.venue/address/city/zipCode` to the specific branch so the next geocode hits a real address.
+- Watch for `📚 Library branch detected: ${branch} (${city})` log lines — that's the helper firing successfully.
+- If a library system appears repeatedly in the city-level logs but the branch detector never fires, check (in order):
+  1. Is the system in `helpers/library-addresses.js`? (`grep -i "your-system-name" scrapers/helpers/library-addresses.js`)
+  2. If the MK feed uses a community-known nickname (like "Jeffco Libraries" for "Jefferson County Public Library"), add it to the `ALIASES` map at the top of `helpers/library-branch-detector.js`.
+  3. Is the branch name actually present in the event title or description? Some MK feeds strip it — in that case there's nothing the detector can do without source-side branch metadata.
+  4. Run `node test-branch-detector.js`-style sanity case against the offending venue/title/description tuple before adding code.
 
 ### Bandwidth management (Supabase free plan — 5.5 GB egress limit)
 
@@ -92,9 +107,14 @@ I just ran FunHive scrapers. Analyze the full output I'm pasting below and fix A
 
 - Read the relevant scraper file(s) and helper files before making changes
 - Apply fixes directly — edit the code
-- When fixing MacaroniKid scrapers, remember all 44 files share the same structure. Use a script to apply changes to all of them if the fix applies broadly
+- When fixing MacaroniKid scrapers, remember all **43 state files** (`scrapers/scraper-macaroni-{ak..wv}.js` — excluding `nc-cloud.js` and `usa-local.js` which are variants) share the same structure. Use a script to apply changes to all of them if the fix applies broadly. **Anchor on stable string contents, not line numbers** — the promo-pattern block lives at different line numbers in different files (range observed: 258–307).
+- The standard MK pattern-injection anchors are:
+  - Promo regex list: insert after `/^plan\s+your\s+family\s+fun\b/i,` (or the most recently added pattern).
+  - New `require` lines: insert after `const { normalizeDateString } = require('./date-normalization-helper');`.
+  - State literal per file: read it from the `state: 'XX'` literal in the existing `findMatchingVenue({...})` call.
 - Run `node -c filename.js` syntax check on every modified file
 - For date normalization changes, verify against the test cases in the date helper
+- For library-branch-detector changes, run a sanity test like `outputs/test-branch-detector.js` covering at least one positive case, one negative case, and the wrong-state guard.
 - Summarize what you fixed and what I need to do (e.g., `npm install`, re-run a specific scraper)
 
 ### Final summary — REQUIRED format
