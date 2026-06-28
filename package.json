@@ -53,5 +53,9 @@
     "node-ical": "^0.20.0",
     "xlsx": "^0.18.0",
     "jsdom": "^24.0.0"
+  },
+  "allowScripts": {
+    "sharp@0.34.5": true,
+    "unrs-resolver@1.11.1": true
   }
 }

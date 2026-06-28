@@ -1,7 +1,7 @@
 {
   "name": "funhive-scrapers",
   "version": "1.0.0",
-  "description": "FunHive local scraper runner - runs on your Mac via launchd",
+  "description": "FunHive local scraper runner - runs locally on a 3-day group rotation",
   "private": true,
   "scripts": {
     "scrape": "node local-scraper-runner.js",
@@ -25,5 +25,8 @@
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "xlsx": "^0.18.0"
+  },
+  "allowScripts": {
+    "puppeteer@24.40.0": true
   }
 }

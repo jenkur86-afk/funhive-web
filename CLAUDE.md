@@ -7,7 +7,7 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS
 - **Database**: Supabase (PostgreSQL with PostGIS extension)
 - **Hosting**: Vercel (auto-deploys from `main` branch)
-- **Scrapers**: Node.js + Puppeteer, run locally on a 3-day group rotation
+- **Scrapers**: Node.js + Puppeteer, run locally on a 3-day group rotation (Windows: Task Scheduler; see `scrapers/task-scheduler/`)
 - **Maps**: Leaflet (client-side only via `dynamic()` import)
 - **Auth**: Supabase Auth (email + Google/Apple OAuth)
 - **Payments**: Stripe (not yet configured)
@@ -28,7 +28,7 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - 185+ scrapers in `scrapers/` directory, registered in `scrapers/scraper-registry.js`.
 - `SCRAPERS` is an object (not array), keyed by scraper name.
 - 3-day group rotation: Group 1 runs days 1,4,7,10...; Group 2 runs 2,5,8,11...; Group 3 runs 3,6,9,12...
-- MacaroniKid scrapers: 43 state-specific files (`scraper-macaroni-{state}.js`), each with identical structure.
+- MacaroniKid scrapers: 43 state-specific files (`scraper-macaroni-{2-letter-state}.js`, e.g. `scraper-macaroni-al.js`), each with identical structure.
 - All events flow through `supabase-adapter.js` → `saveEvent()` or `flattenEvent()`.
 - **Supabase client import**: Use `const { supabase } = require('./scrapers/helpers/supabase-adapter')` for direct Supabase client access in fix scripts. Do NOT use `db` (that's a Firestore-style reference used internally by scrapers). Pattern: `const { supabase } = require(...)` then `supabase.from('events').select(...)`.
 - Fix scripts follow a `--save` flag pattern: dry run by default, `--save` to write to DB. Always import `supabase` from `supabase-adapter.js`.
@@ -64,8 +64,8 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - Filter out reported items in queries with `.eq('reported', false)` and client-side `!e.reported` for RPC results.
 - Use selective `.select()` columns in all Supabase queries. Events list: `id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, description, address, location, activity_id, reported`. Activities list: `id, name, city, state, address, location, zip_code, category, description, age_range, min_age, max_age, hours, is_free, reported`. **Never** add `min_age`, `max_age`, or `is_free` to an events `.select(...)` — those columns don't exist on events and the request will 400.
 - Run data quality fix scripts on a tiered cadence:
-  - **Daily**: `node scripts/data-quality-quick.js` (count-only audit, ~5 MB egress) and `bash scripts/fix-all.sh --recent-only` (last 72h only, ~50–150 MB).
-  - **Monthly**: `bash scripts/fix-all.sh` (full sweep, ~1.5–2 GB) and `node scripts/data-quality-check.js` (deep audit, ~500 MB).
+  - **Daily**: `node scripts/data-quality-quick.js` (count-only audit, ~5 MB egress) and `bash scripts/fix-all.sh --recent-only` (last 72h only, ~50–150 MB). Windows PowerShell: `.\scripts\fix-all.ps1 --recent-only`
+  - **Monthly**: `bash scripts/fix-all.sh` (full sweep, ~1.5–2 GB) and `node scripts/data-quality-check.js` (deep audit, ~500 MB). Windows: `.\scripts\fix-all.ps1`
   - The scrapers' `saveEvent()` and `saveActivity()` now handle: junk-title rejection (`isJunkTitle()`), non-family rejection (sexy/cannabis/420/firearms/etc. all in `NON_FAMILY_PATTERNS`), cancelled rejection, past-event rejection, age-range normalization, adult-only rejection, time extraction, venue cleaning, geohash compute from lat/lng, and `event_date` text → `date` TIMESTAMPTZ parsing. Most rows no longer need backfill.
   - Override the recent-only window via `FIX_WINDOW_HOURS=N bash scripts/fix-all.sh --recent-only` (default 72).
   - Deletion-style steps inside `fix-event-quality.js` (past events, junk titles, dateless events) bypass `--recent-only` and always full-scan — those checks use selective columns and are cheap, and we always want stale junk gone regardless of when it was scraped.
@@ -86,8 +86,15 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 
 ### Testing Patterns
 - Syntax check: `node -c scrapers/filename.js`
-- Data quality: `node data-quality-check.js` (must run locally — sandbox can't reach Supabase)
+- Data quality: `node scripts/data-quality-check.js` (must run locally — sandbox can't reach Supabase)
 - Fix scripts use `--save` flag pattern: dry run by default, `--save` to write to DB.
+
+## Development Environment (Windows)
+- **Working directory**: `C:\dev\funhive-web` — do NOT develop from the Google Drive folder (`G:\My Drive\...`); Drive sync conflicts with npm writes
+- **Two npm installs required**: `npm install` in project root AND `cd scrapers && npm install` (separate `package.json` with puppeteer-extra etc.)
+- **Dev server**: `npm run dev` from project root — ready in ~2–3s after first compile
+- **Shell scripts**: `bash scripts/fix-all.sh` works in Git Bash (installed with Git for Windows); PowerShell users: `.\scripts\fix-all.ps1`
+- **Scheduled tasks**: `scrapers/task-scheduler/setup-tasks.ps1` (run once as admin) replaces the Mac launchd plists
 
 ## File Map
 
@@ -127,10 +134,10 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 ### Data Quality Scripts (`scripts/` — run locally)
 **Daily** (cheap, recent-only):
 - `scripts/data-quality-quick.js` — Count-only audit using Postgres aggregates (~5 MB egress). No row downloads.
-- `scripts/fix-all.sh --recent-only` — Runs Steps 1–4 against the last 72h only (configurable via `FIX_WINDOW_HOURS`). Deletion steps (past, junk, dateless) always full-scan.
+- `bash scripts/fix-all.sh --recent-only` (Git Bash) or `.\scripts\fix-all.ps1 --recent-only` (PowerShell) — Runs Steps 1–4 against the last 72h only (configurable via `FIX_WINDOW_HOURS`). Deletion steps (past, junk, dateless) always full-scan.
 
 **Monthly** (full sweep):
-- `scripts/fix-all.sh` — Full sweep across all 4 steps.
+- `bash scripts/fix-all.sh` (Git Bash) or `.\scripts\fix-all.ps1` (PowerShell) — Full sweep across all 4 steps.
 - `scripts/data-quality-check.js` — Deep audit: duplicates, distributions, scraper health, sample issues.
 
 **Individual fix scripts** (all support `--save`, `--recent-only`):
