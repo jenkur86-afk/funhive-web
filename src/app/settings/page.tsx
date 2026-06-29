@@ -54,7 +54,7 @@ export default function SettingsPage() {
     const savedReviewReminders = localStorage.getItem('funhive_review_reminders') === 'true'
     const savedEventRecommendations = localStorage.getItem('funhive_event_recommendations') === 'true'
     const savedShowFreeOnly = localStorage.getItem('funhive_show_free_only') === 'true'
-    const savedHiddenVenues = localStorage.getItem('funhive_hidden_venues')
+    const savedHiddenVenues = localStorage.getItem('hidden_venues')
 
     setPushNotifications(savedPushNotifications)
     setReviewReminders(savedReviewReminders && savedPushNotifications)
@@ -124,7 +124,7 @@ export default function SettingsPage() {
   const handleUnhideVenue = (id: string) => {
     const updatedVenues = hiddenVenues.filter((venue) => venue.id !== id)
     setHiddenVenues(updatedVenues)
-    localStorage.setItem('funhive_hidden_venues', JSON.stringify(updatedVenues))
+    localStorage.setItem('hidden_venues', JSON.stringify(updatedVenues))
   }
 
   // Delete account

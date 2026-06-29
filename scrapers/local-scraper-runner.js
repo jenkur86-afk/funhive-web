@@ -2,7 +2,7 @@
 
 /**
  * LOCAL SCRAPER RUNNER
- * Runs all cloud function scrapers locally on your Mac
+ * Runs all cloud function scrapers locally
  *
  * Usage:
  *   node local-scraper-runner.js                    # Run today's group automatically

@@ -3,6 +3,7 @@ import Header from '@/components/Header'
 import SuggestButton from '@/components/SuggestButton'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { FavoritesProvider } from '@/contexts/FavoritesContext'
+import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default function RootLayout({
             <Header />
             {children}
             <SuggestButton />
+            <Analytics />
           </FavoritesProvider>
         </AuthProvider>
       </body>

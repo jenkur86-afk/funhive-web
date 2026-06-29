@@ -61,45 +61,27 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
         return
       }
 
-      // Enrich favorites with item names
-      const enrichedFavorites = await Promise.all(
-        (data || []).map(async (fav) => {
-          let itemName: string | undefined = undefined
-          let itemType: 'event' | 'activity' | undefined = undefined
+      // Enrich favorites with item names — batch by type to avoid N+1 queries
+      const eventIds = (data || []).filter(f => f.event_id).map(f => f.event_id as string)
+      const activityIds = (data || []).filter(f => f.activity_id).map(f => f.activity_id as string)
 
-          if (fav.event_id) {
-            try {
-              const { data: event } = await supabase
-                .from('events')
-                .select('name')
-                .eq('id', fav.event_id)
-                .single() as { data: any, error: any }
-              itemName = event?.name
-              itemType = 'event'
-            } catch (err) {
-              console.error('Error fetching event name:', err)
-            }
-          } else if (fav.activity_id) {
-            try {
-              const { data: activity } = await supabase
-                .from('activities')
-                .select('name')
-                .eq('id', fav.activity_id)
-                .single() as { data: any, error: any }
-              itemName = activity?.name
-              itemType = 'activity'
-            } catch (err) {
-              console.error('Error fetching activity name:', err)
-            }
-          }
+      const [{ data: events }, { data: activities }] = await Promise.all([
+        eventIds.length
+          ? supabase.from('events').select('id, name').in('id', eventIds)
+          : Promise.resolve({ data: [] as { id: string; name: string }[] }),
+        activityIds.length
+          ? supabase.from('activities').select('id, name').in('id', activityIds)
+          : Promise.resolve({ data: [] as { id: string; name: string }[] }),
+      ])
 
-          return {
-            ...fav,
-            itemName,
-            itemType,
-          }
-        })
-      )
+      const eventNameMap = Object.fromEntries((events || []).map(e => [e.id, e.name]))
+      const activityNameMap = Object.fromEntries((activities || []).map(a => [a.id, a.name]))
+
+      const enrichedFavorites = (data || []).map(fav => ({
+        ...fav,
+        itemName: fav.event_id ? eventNameMap[fav.event_id] : activityNameMap[fav.activity_id ?? ''],
+        itemType: (fav.event_id ? 'event' : 'activity') as 'event' | 'activity',
+      }))
 
       setFavorites(enrichedFavorites)
     } catch (err) {
