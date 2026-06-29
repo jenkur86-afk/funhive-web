@@ -472,11 +472,13 @@ export default function VenuesPage() {
             placeholder="Zip code, city + state (e.g. Baltimore, Maryland)..."
             value={locationInput}
             onChange={(e) => setLocationInput(e.target.value)}
+            aria-label="Location: zip code or city and state"
             className="flex-1 min-w-48 px-4 py-2 rounded-lg border border-amber-200 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 bg-white"
           />
           <select
             value={selectedRadius}
             onChange={(e) => setSelectedRadius(Number(e.target.value))}
+            aria-label="Search radius in miles"
             className="px-4 py-2 rounded-lg border border-amber-200 bg-white text-amber-900 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
           >
             {RADIUS_OPTIONS.map((option) => (

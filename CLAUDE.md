@@ -44,8 +44,7 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - Events page reads URL params: `?category=`, `?q=`, `?date=`.
 - `ACTIVE_STATES` in `src/lib/region-filter.ts` controls which states appear on the website.
 - Age filtering uses numeric range intersection (not keyword matching).
-- **localStorage keys in use**: `funhive_location` ({lat,lng}), `hidden_venues` (array of {id,name} — used by events/page, activities/page, HideVenueButton), `funhive_kids` (array of {name, birthMonth, birthYear} — profile/page.tsx), `funhive_push_notifications` / `funhive_review_reminders` / `funhive_event_recommendations` / `funhive_show_free_only` (settings toggles).
-- **Known bug**: `settings/page.tsx` reads/writes `funhive_hidden_venues` but every other file uses `hidden_venues`. Venues hidden via `HideVenueButton` are invisible to Settings, and unhiding in Settings has no effect on the events list.
+- **localStorage keys in use**: `funhive_location` ({lat,lng}), `hidden_venues` (array of {id,name} — used by events/page, activities/page, HideVenueButton, settings/page), `funhive_kids` (array of {name, birthMonth, birthYear} — profile/page.tsx), `funhive_push_notifications` / `funhive_review_reminders` / `funhive_event_recommendations` / `funhive_show_free_only` (settings toggles).
 
 ## Critical Rules
 

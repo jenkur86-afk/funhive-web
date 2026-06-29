@@ -42,10 +42,18 @@ export default function Header() {
 
   return (
     <header className="bg-white border-b border-amber-100 sticky top-0 z-50">
+      {/* Skip to content for keyboard users */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-amber-500 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:font-semibold"
+      >
+        Skip to content
+      </a>
+
       <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <svg className="w-8 h-8" viewBox="0 0 100 100" fill="none">
+          <svg className="w-8 h-8" viewBox="0 0 100 100" fill="none" aria-hidden="true">
             <path d="M50 5L93.3 27.5V72.5L50 95L6.7 72.5V27.5L50 5Z" fill="#FDE68A" stroke="#F59E0B" strokeWidth="3"/>
             <ellipse cx="50" cy="55" rx="16" ry="20" fill="#F59E0B"/>
             <path d="M34 50h32" stroke="#92400E" strokeWidth="4" strokeLinecap="round"/>

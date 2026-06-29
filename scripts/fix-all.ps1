@@ -6,6 +6,11 @@
 #            Set $env:FIX_WINDOW_HOURS before running to override the 72h window.
 #   Monthly: .\scripts\fix-all.ps1
 #            Full table sweep (~1.5-2 GB egress). Catches accumulated drift.
+#
+# RETIRED SCRIPTS (not included here):
+#   fix-duplicate-dates.js  — Retired April 2026; Communico date-format bug was fixed upstream.
+#   fix-cancelled-events.js — Retired; saveEvent() now rejects cancelled events at scrape time.
+#   fix-duplicate-venues.js — One-off run to strip room suffixes; not needed regularly.
 
 $passArgs = $args
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path

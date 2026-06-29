@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createServerClient } from '@/lib/supabase-server'
 import { notFound } from 'next/navigation'
@@ -8,8 +9,49 @@ import ReportButton from '@/components/ReportButton'
 
 export const dynamic = 'force-dynamic'
 
+const BASE_URL = 'https://funhive-web.vercel.app'
+
 interface EventDetailProps {
   params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({ params }: EventDetailProps): Promise<Metadata> {
+  const { id } = await params
+  const supabase = createServerClient()
+
+  const { data: event } = await supabase
+    .from('events')
+    .select('name, description, city, state, image_url')
+    .eq('id', decodeURIComponent(id))
+    .eq('reported', false)
+    .single()
+
+  if (!event) {
+    return { title: 'Event Not Found | FunHive' }
+  }
+
+  const title = `${event.name} | FunHive`
+  const description = event.description
+    ? event.description.slice(0, 160)
+    : `Family event in ${[event.city, event.state].filter(Boolean).join(', ')} — discover more at FunHive.`
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `${BASE_URL}/events/${id}`,
+      images: event.image_url ? [{ url: event.image_url }] : [],
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: event.image_url ? [event.image_url] : [],
+    },
+  }
 }
 
 export default async function EventDetailPage({ params }: EventDetailProps) {
@@ -52,7 +94,41 @@ export default async function EventDetailPage({ params }: EventDetailProps) {
   const locationParts = [event.address, event.city, event.state, event.zip_code].filter(Boolean)
   const locationDisplay = locationParts.length > 0 ? locationParts.join(', ') : null
 
+  // JSON-LD structured data for Google rich results
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.name,
+    description: event.description || undefined,
+    startDate: event.date || event.event_date,
+    endDate: event.end_date || undefined,
+    url: `${BASE_URL}/events/${event.id}`,
+    image: event.image_url || undefined,
+    location: locationDisplay
+      ? {
+          '@type': 'Place',
+          name: event.venue || locationDisplay,
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: event.address || undefined,
+            addressLocality: event.city || undefined,
+            addressRegion: event.state || undefined,
+            postalCode: event.zip_code || undefined,
+            addressCountry: 'US',
+          },
+        }
+      : undefined,
+    organizer: event.venue
+      ? { '@type': 'Organization', name: event.venue }
+      : undefined,
+  }
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     <div className="max-w-3xl mx-auto px-4 py-8">
       {/* Header with favorite button */}
       <EventDetailHeader
@@ -202,6 +278,7 @@ export default async function EventDetailPage({ params }: EventDetailProps) {
         <ReviewsList eventId={event.id} />
       </div>
     </div>
+    </>
   )
 }
 

@@ -1,9 +1,14 @@
 'use client'
 
+import { useState } from 'react'
+
+// TODO: Uncomment when Stripe is configured
 // import { supabase } from '@/lib/supabase'
 
 export default function PricingPage() {
-  async function handleSubscribe(priceType: 'monthly' | 'annual') {
+  const [comingSoon, setComingSoon] = useState(false)
+
+  function handleSubscribe(_priceType: 'monthly' | 'annual') {
     // TODO: Uncomment when Stripe is configured
     // const { data: { user } } = await supabase.auth.getUser()
     // if (!user) {
@@ -19,7 +24,7 @@ export default function PricingPage() {
     // const { url } = await response.json()
     // window.location.href = url
 
-    alert('Stripe not yet configured. See .env.local.example for required keys.')
+    setComingSoon(true)
   }
 
   return (
@@ -107,6 +112,12 @@ export default function PricingPage() {
             >
               Start Annual — $24.99/yr
             </button>
+            {comingSoon && (
+              <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-center">
+                <p className="text-amber-800 text-sm font-medium">Premium subscriptions coming soon!</p>
+                <p className="text-amber-600 text-xs mt-1">We&apos;re putting the finishing touches on payments. Check back shortly.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

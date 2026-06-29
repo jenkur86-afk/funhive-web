@@ -960,6 +960,11 @@ async function saveEvent(id, data) {
  * Save an activity/venue to the activities table
  */
 async function saveActivity(id, data) {
+  if (!data.name || !data.name.trim()) {
+    console.log(`  ⏭️ Skipping activity with missing name (id: ${id})`);
+    return null;
+  }
+
   const row = {
     id,
     name: data.name,

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createServerClient } from '@/lib/supabase-server'
 import { notFound } from 'next/navigation'
@@ -7,8 +8,48 @@ import ReviewsList from '@/components/ReviewsList'
 
 export const dynamic = 'force-dynamic'
 
+const BASE_URL = 'https://funhive-web.vercel.app'
+
 interface ActivityDetailProps {
   params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({ params }: ActivityDetailProps): Promise<Metadata> {
+  const { id } = await params
+  const supabase = createServerClient()
+
+  const { data: activity } = await supabase
+    .from('activities')
+    .select('name, description, city, state, image_url')
+    .eq('id', decodeURIComponent(id))
+    .single()
+
+  if (!activity) {
+    return { title: 'Venue Not Found | FunHive' }
+  }
+
+  const title = `${activity.name} | FunHive`
+  const description = activity.description
+    ? activity.description.slice(0, 160)
+    : `Family venue in ${[activity.city, activity.state].filter(Boolean).join(', ')} — discover more at FunHive.`
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `${BASE_URL}/activities/${id}`,
+      images: activity.image_url ? [{ url: activity.image_url }] : [],
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: activity.image_url ? [activity.image_url] : [],
+    },
+  }
 }
 
 export default async function ActivityDetailPage({ params }: ActivityDetailProps) {
