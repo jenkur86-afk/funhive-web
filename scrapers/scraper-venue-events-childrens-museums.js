@@ -24,6 +24,7 @@
 const { launchBrowser } = require('./puppeteer-config');
 const { ScraperLogger, logScraperResult } = require('./scraper-logger');
 const { saveEventsWithGeocoding } = require('./event-save-helper');
+const axios = require('axios');
 
 const SCRAPER_NAME = 'ChildrensMuseums-Events-Eastern';
 
@@ -88,7 +89,7 @@ const VENUES = [
     extraction: 'events-manager' },
   { name: "Long Island Children's Museum", eventsUrl: "https://www.licm.org/events/", city: "Garden City", state: "NY", zip: "11530" },
   { name: "Strong National Museum of Play", eventsUrl: "https://www.museumofplay.org/visit/calendar/", city: "Rochester", state: "NY", zip: "14607",
-    extraction: 'tec' },
+    extraction: 'tec-api', tecApiUrl: 'https://www.museumofplay.org/wp-json/tribe/events/v1/events' },
   // North Carolina
   { name: "Marbles Kids Museum", eventsUrl: "https://www.marbleskidsmuseum.org/events", city: "Raleigh", state: "NC", zip: "27601" },
   { name: "Discovery Place Science", eventsUrl: "https://science.discoveryplace.org/events-calendar", city: "Charlotte", state: "NC", zip: "28202" },
@@ -99,7 +100,8 @@ const VENUES = [
   // public events calendar at a reachable URL.
   // { name: "Kidzu Children's Museum", eventsUrl: "https://kidzuchildrensmuseum.org/events/", city: "Chapel Hill", state: "NC", zip: "27516" },
   // Ohio
-  { name: "COSI Columbus", eventsUrl: "https://cosi.org/events/", city: "Columbus", state: "OH", zip: "43215" },
+  // COSI's /events/ 404s — calendar lives at /visit/hours-events-calendar
+  { name: "COSI Columbus", eventsUrl: "https://cosi.org/visit/hours-events-calendar", city: "Columbus", state: "OH", zip: "43215" },
   { name: "Children's Museum of Cleveland", eventsUrl: "https://cmcleveland.org/events/", city: "Cleveland", state: "OH", zip: "44106" },
   // Pennsylvania
   { name: "Please Touch Museum", eventsUrl: "https://www.pleasetouchmuseum.org/visit/events/", city: "Philadelphia", state: "PA", zip: "19131" },
@@ -112,8 +114,9 @@ const VENUES = [
     extraction: 'eventon' },
   { name: "Children's Museum of the Upstate", eventsUrl: "https://tcmupstate.org/events/", city: "Greenville", state: "SC", zip: "29601" },
   // Tennessee
-  { name: "Adventure Science Center", eventsUrl: "https://www.adventuresci.org/events/", city: "Nashville", state: "TN", zip: "37210",
-    extraction: 'tec' },
+  // adventuresci.org/events/ 404s — events live at /events-programs/events/; TEC REST API available
+  { name: "Adventure Science Center", eventsUrl: "https://www.adventuresci.org/events-programs/events/", city: "Nashville", state: "TN", zip: "37210",
+    extraction: 'tec-api', tecApiUrl: 'https://www.adventuresci.org/wp-json/tribe/events/v1/events' },
   { name: "Creative Discovery Museum", eventsUrl: "https://www.cdmfun.org/events", city: "Chattanooga", state: "TN", zip: "37402",
     extraction: 'webflow' },
   { name: "Muse Knoxville", eventsUrl: "https://themuseknoxville.org/events/", city: "Knoxville", state: "TN", zip: "37902",
@@ -122,7 +125,7 @@ const VENUES = [
   { name: "ECHO Leahy Center", eventsUrl: "https://www.echovermont.org/events/", city: "Burlington", state: "VT", zip: "05401",
     extraction: 'tec' },
   { name: "Montshire Museum of Science", eventsUrl: "https://montshire.org/events/", city: "Norwich", state: "VT", zip: "05055",
-    extraction: 'tec' },
+    extraction: 'tec-api', tecApiUrl: 'https://montshire.org/wp-json/tribe/events/v1/events' },
   // Virginia
   { name: "Virginia Discovery Museum", eventsUrl: "https://www.vadm.org/events/", city: "Charlottesville", state: "VA", zip: "22902",
     extraction: 'squarespace' },
@@ -191,11 +194,11 @@ const EVENT_SELECTORS = {
     '[class*="event-name"]',
     '[class*="event-title"]',
   ],
-  // Date selectors
+  // Date selectors — deliberately specific; avoid [class*="date"] (matches month pickers)
+  // and bare `time` (matches time-only elements like "14:00")
   date: [
     // TEC
     '.tribe-events-calendar-list__event-datetime',
-    'time[datetime]',
     // MEC
     '.mec-start-date-details',
     '.mec-event-date',
@@ -205,12 +208,14 @@ const EVENT_SELECTORS = {
     // Squarespace
     '.eventlist-datetag',
     '.eventlist-meta-date',
-    // Generic
+    // Generic — specific enough to avoid month pickers
     '.event-date',
-    '[class*="date"]',
-    'time',
+    '.event-start-date',
+    '.event-datetime',
     '[data-date]',
     '.when',
+    // time[datetime] last — only used if datetime attr contains a full date (see extraction logic)
+    'time[datetime]',
   ],
   // Description selectors
   description: [
@@ -236,6 +241,109 @@ const EVENT_SELECTORS = {
 // ==========================================
 // HELPER FUNCTIONS
 // ==========================================
+
+/**
+ * Validate that a string looks like an actual event date (not a time, day-number, or dropdown text)
+ */
+function isValidEventDate(s) {
+  if (!s || !s.trim()) return false;
+  s = s.trim().replace(/\s+/g, ' ');
+  if (s.length < 4) return false;
+  if (/^\d{1,2}:\d{2}(:\d{2})?(\s*(am|pm|AM|PM|Z))?$/.test(s)) return false; // time-only
+  if (/^\d{1,2}$/.test(s)) return false;                                        // day-only
+  if (/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s+\d{1,2}$/.test(s)) return false;      // weekday + day only
+  if (/select\s+month/i.test(s)) return false;                                  // dropdown text
+  // Must contain a year OR a month name/abbrev OR ISO date
+  return /\b(202[4-9]|203\d)\b/.test(s)
+    || /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i.test(s)
+    || /\d{4}-\d{2}-\d{2}/.test(s);
+}
+
+/**
+ * Extract events from JSON-LD structured data (most reliable when available)
+ */
+function extractJsonLd(document, baseUrl) {
+  const results = [];
+  const now = new Date();
+  document.querySelectorAll('script[type="application/ld+json"]').forEach(script => {
+    try {
+      let data = JSON.parse(script.textContent);
+      if (!Array.isArray(data)) data = [data];
+      data.forEach(item => {
+        const items = item['@graph'] ? item['@graph'] : [item];
+        items.filter(i => i['@type'] === 'Event' && i.name).forEach(e => {
+          const dateText = e.startDate || '';
+          if (dateText) {
+            const d = new Date(dateText);
+            if (!isNaN(d.getTime()) && d < now) return; // skip past
+          }
+          results.push({
+            name: String(e.name).replace(/\s+/g, ' ').trim().substring(0, 200),
+            eventDate: dateText,
+            description: (e.description || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim().substring(0, 500),
+            url: e.url || baseUrl,
+          });
+        });
+      });
+    } catch (e) {}
+  });
+  return results;
+}
+
+/**
+ * Fetch events from TEC (The Events Calendar) REST API.
+ * Returns events in FunHive format with clean ISO dates.
+ */
+async function fetchTecApiEvents(venue) {
+  const results = [];
+  const today = new Date().toISOString().split('T')[0];
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() + 90);
+  const cutoffStr = cutoff.toISOString().split('T')[0];
+
+  let page = 1;
+  while (page <= 6) {
+    const url = `${venue.tecApiUrl}?per_page=50&page=${page}&start_date=${today}&end_date=${cutoffStr}`;
+    let response;
+    try {
+      response = await axios.get(url, {
+        headers: { 'User-Agent': 'FunHive-EventAggregator/1.0 (family-events)' },
+        timeout: 15000
+      });
+    } catch (e) {
+      console.log(`      [tec-api] page ${page} error: ${e.message}`);
+      break;
+    }
+
+    const events = response.data.events || [];
+    if (events.length === 0) break;
+
+    events.forEach(e => {
+      if (!e.title || !e.start_date) return;
+      const d = new Date(e.start_date.replace(' ', 'T'));
+      if (isNaN(d.getTime()) || d < new Date()) return;
+
+      const dateOnly = e.start_date.split(' ')[0];  // "2026-07-15"
+      const startTime = e.start_date.split(' ')[1]?.substring(0, 5) || '';
+      const endTime = e.end_date?.split(' ')[1]?.substring(0, 5) || '';
+
+      results.push({
+        name: String(e.title).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim().substring(0, 200),
+        eventDate: dateOnly,
+        startTime,
+        endTime,
+        description: (e.description || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim().substring(0, 500),
+        url: e.url || venue.eventsUrl,
+      });
+    });
+
+    if (!response.data.next_rest_url) break;
+    page++;
+  }
+
+  console.log(`      [tec-api] fetched ${results.length} events`);
+  return results;
+}
 
 /**
  * Extract text safely from element
@@ -396,7 +504,14 @@ function extractEventsFromPage(html, baseUrl, venue = {}) {
 
   const platform = venue.extraction || null;
 
-  // Try platform-specific extraction first
+  // 1. Try JSON-LD structured data first (most reliable when present)
+  const jsonLdEvents = extractJsonLd(document, baseUrl);
+  if (jsonLdEvents.length > 0) {
+    console.log(`      [json-ld] extracted ${jsonLdEvents.length} events`);
+    return filterJunkEvents(jsonLdEvents);
+  }
+
+  // 2. Try platform-specific extraction
   if (platform) {
     let platformEvents = [];
     switch (platform) {
@@ -411,7 +526,6 @@ function extractEventsFromPage(html, baseUrl, venue = {}) {
       console.log(`      [${platform}] extracted ${platformEvents.length} events`);
       return filterJunkEvents(platformEvents);
     }
-    // Fall through to generic if platform-specific found nothing
   }
 
   const events = [];
@@ -438,13 +552,22 @@ function extractEventsFromPage(html, baseUrl, venue = {}) {
         if (seenTitles.has(title)) return;
         seenTitles.add(title);
 
-        // Extract date
+        // Extract date — for time[datetime] elements only accept the attribute if it
+        // contains a full date (has a year); time-only values like "14:00" are skipped.
         let eventDate = '';
         for (const dateSel of EVENT_SELECTORS.date) {
           const dateElem = container.querySelector(dateSel);
-          if (dateElem) {
-            eventDate = dateElem.getAttribute('datetime') || dateElem.textContent.trim() || '';
-            if (eventDate) break;
+          if (!dateElem) continue;
+          const datetimeAttr = dateElem.getAttribute('datetime') || '';
+          const textContent = dateElem.textContent.trim();
+          // For time[datetime]: only use attribute if it has a year
+          if (dateSel === 'time[datetime]' && datetimeAttr && !/\d{4}/.test(datetimeAttr)) {
+            continue; // time-only attribute like "14:00" or "T09:30" — skip
+          }
+          const candidate = (/\d{4}/.test(datetimeAttr) ? datetimeAttr : '') || textContent;
+          if (candidate && isValidEventDate(candidate)) {
+            eventDate = candidate;
+            break;
           }
         }
 
@@ -504,38 +627,39 @@ function filterJunkEvents(events) {
 }
 
 /**
- * Scrape a single venue's events page
+ * Scrape a single venue's events page (or REST API if venue.tecApiUrl is set)
  */
 async function scrapeVenue(browser, venue, logger) {
   logger.startSite(venue.name, venue.eventsUrl, { state: venue.state });
 
   try {
-    const page = await browser.newPage();
+    let pageEvents = [];
 
-    // Set viewport
-    await page.setViewport({ width: 1920, height: 1080 });
+    // REST API path — no Puppeteer needed
+    if (venue.extraction === 'tec-api' && venue.tecApiUrl) {
+      pageEvents = await fetchTecApiEvents(venue);
+    } else {
+      // Puppeteer path
+      const page = await browser.newPage();
+      await page.setViewport({ width: 1920, height: 1080 });
+      await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
-    // Set user agent
-    await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+      await page.goto(venue.eventsUrl, { waitUntil: 'domcontentloaded', timeout: 35000 });
+      await new Promise(resolve => setTimeout(resolve, 3500));
 
-    // Navigate to events page
-    await page.goto(venue.eventsUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
+      const html = await page.content();
+      await page.close();
 
-    // Wait for content to load
-    await new Promise(resolve => setTimeout(resolve, 2000));
+      pageEvents = extractEventsFromPage(html, venue.eventsUrl, venue);
+    }
 
-    // Extract HTML
-    const html = await page.content();
-    await page.close();
-
-    // Parse events from HTML
-    const pageEvents = extractEventsFromPage(html, venue.eventsUrl, venue);
     logger.trackFound(pageEvents.length);
 
-    // Convert events to FunHive format
     const convertedEvents = pageEvents.map(event => ({
       name: event.name || 'Untitled Event',
       eventDate: event.eventDate || '',
+      startTime: event.startTime || '',
+      endTime: event.endTime || '',
       description: event.description || '',
       venue: venue.name,
       address: `${venue.city}, ${venue.state} ${venue.zip}`,
