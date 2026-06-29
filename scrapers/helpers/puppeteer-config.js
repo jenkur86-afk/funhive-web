@@ -68,11 +68,11 @@ function getRandomUserAgent() {
 
 function getLocalChromePath() {
   const platform = process.platform;
+  // On Windows, puppeteer-extra + stealth plugin is incompatible with system
+  // Chrome — use Puppeteer's bundled Chromium instead (omit executablePath).
+  if (platform === 'win32') return null;
   const candidates =
-    platform === 'win32' ? [
-      'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
-    ] : platform === 'darwin' ? [
+    platform === 'darwin' ? [
       '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
     ] : [
       '/usr/bin/google-chrome',
