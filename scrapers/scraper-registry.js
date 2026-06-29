@@ -448,6 +448,13 @@ const SCRAPERS = {
     group: 2,
     state: 'MD'
   },
+  'SanDiegoLibrary': {
+    file: './scraper-sandiego-library-CA.js',
+    exportName: 'scrapeSanDiegoLibrary',
+    type: 'http',
+    group: 2,
+    state: 'CA'
+  },
   'LibraryMarket': {
     file: './scraper-librarymarket-libraries-CA-CO-FL-MD-TX-VA.js',
     exportName: 'scrapeLibraryMarketEvents',

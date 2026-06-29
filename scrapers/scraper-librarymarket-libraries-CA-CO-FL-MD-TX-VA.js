@@ -46,17 +46,6 @@ const { geocodeWithFallback } = require('./helpers/geocoding-helper');
 
 // LibraryMarket Library Systems
 const LIBRARY_SYSTEMS = [
-  // CALIFORNIA
-  {
-    name: 'San Diego Public Library',
-    url: 'https://sandiego.librarymarket.com/events/upcoming',
-    county: 'San Diego',
-    state: 'CA',
-    website: 'https://www.sandiego.gov/public-library',
-    city: 'San Diego',
-    zipCode: '92101'
-  },
-
   // COLORADO
   {
     name: 'Pikes Peak Library District',
