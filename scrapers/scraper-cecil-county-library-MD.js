@@ -10,10 +10,10 @@
 
 const { admin, db } = require('./helpers/supabase-adapter');
 const { launchBrowser } = require('./puppeteer-config');
-const axios = require('axios');
 const ngeohash = require('ngeohash');
+const { geocodeWithFallback } = require('./helpers/geocoding-helper');
+const { detectLibraryBranch } = require('./helpers/library-branch-detector');
 const { categorizeEvent } = require('./event-categorization-helper');
-const { generateEventId, generateEventIdFromDetails } = require('./event-id-helper');
 const { normalizeDateString } = require('./date-normalization-helper');
 const { linkEventToVenue } = require('./venue-matcher');
 const { logScraperResult } = require('./scraper-logger');
@@ -29,31 +29,23 @@ const LIBRARY = {
   zipCode: '21921'
 };
 
-// Geocode address
-async function geocodeAddress(address) {
-  try {
-    const response = await axios.get('https://nominatim.openstreetmap.org/search', {
-      params: {
-        q: address,
-        format: 'json',
-        limit: 1,
-        countrycodes: 'us'
-      },
-      headers: {
-        'User-Agent': 'FunHive/1.0'
-      }
-    });
-
-    if (response.data && response.data.length > 0) {
-      return {
-        latitude: parseFloat(response.data[0].lat),
-        longitude: parseFloat(response.data[0].lon)
-      };
-    }
-  } catch (error) {
-    console.error('Geocoding error:', error.message);
+// Parse "1:00pm–2:00pm" → { startTime, endTime }
+function parseTimeRange(timeStr) {
+  if (!timeStr) return { startTime: null, endTime: null };
+  const fmt = (h, m, ap) => {
+    h = parseInt(h);
+    if (h > 12) h -= 12;
+    if (h === 0) h = 12;
+    return `${h}:${String(m).padStart(2, '0')} ${ap.toUpperCase()}`;
+  };
+  const rm = timeStr.match(/(\d{1,2}):(\d{2})\s*(am|pm)?\s*[-–]\s*(\d{1,2}):(\d{2})\s*(am|pm)/i);
+  if (rm) {
+    const sap = rm[3] || (parseInt(rm[1]) >= 7 && parseInt(rm[1]) < 12 ? 'AM' : 'PM');
+    return { startTime: fmt(rm[1], rm[2], sap), endTime: fmt(rm[4], rm[5], rm[6]) };
   }
-  return null;
+  const sm = timeStr.match(/(\d{1,2}):(\d{2})\s*(am|pm)/i);
+  if (sm) return { startTime: fmt(sm[1], sm[2], sm[3]), endTime: null };
+  return { startTime: null, endTime: null };
 }
 
 // Parse age range from age group text
@@ -125,9 +117,7 @@ async function scrapeCecilEvents() {
           let attempts = 0;
           while (eventContainer && attempts < 5) {
             const text = eventContainer.textContent;
-            if (text.includes('Nov') || text.includes('Dec') || text.includes('Jan') || text.includes('2025')) {
-              break;
-            }
+            if (text.match(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/)) break;
             eventContainer = eventContainer.parentElement;
             attempts++;
           }
@@ -193,16 +183,15 @@ async function scrapeCecilEvents() {
           }
 
           if (title && eventDate) {
-            const rawDate = time ? `${eventDate} ${time}` : eventDate;
-
             results.push({
               name: title,
-              eventDate: rawDate,
+              eventDate: time ? `${eventDate} ${time}` : eventDate,
+              time,
               venue: location,
               description: description || fullText.substring(0, 200),
-              url: url,
-              ageGroup: ageGroup,
-              programType: programType
+              url,
+              ageGroup,
+              programType
             });
           }
         } catch (err) {
@@ -234,11 +223,41 @@ async function scrapeCecilEvents() {
           continue;
         }
 
-        // Try to geocode location
-        let coordinates = null;
-        if (event.venue) {
-          coordinates = await geocodeAddress(`${event.venue}, ${LIBRARY.city}, ${LIBRARY.county} County, ${LIBRARY.state}`);
+        // Resolve branch address via library-branch-detector
+        const branchInfo = detectLibraryBranch({
+          venue: event.venue || LIBRARY.name,
+          eventName: event.name,
+          description: event.description,
+          state: LIBRARY.state
+        });
+
+        let venueName = event.venue || LIBRARY.name;
+        let venueAddress = '';
+        let venueCity = LIBRARY.city;
+        let venueZip = LIBRARY.zipCode;
+
+        if (branchInfo) {
+          venueName = branchInfo.branchName;
+          venueAddress = branchInfo.address;
+          venueCity = branchInfo.city;
+          venueZip = branchInfo.zipCode;
         }
+
+        // Geocode via rate-limited helper (3.5s min delay, Photon fallback, cache)
+        const geocodeAddr = venueAddress
+          ? `${venueAddress}, ${venueCity}, ${LIBRARY.state}`
+          : `${LIBRARY.name}, ${LIBRARY.city}, ${LIBRARY.state}`;
+
+        const coordinates = await geocodeWithFallback(geocodeAddr, {
+          city: venueCity,
+          zipCode: venueZip,
+          state: LIBRARY.state,
+          county: LIBRARY.county,
+          venueName,
+          sourceName: LIBRARY.name
+        });
+
+        const { startTime, endTime } = parseTimeRange(event.time);
 
         // Use categorization helper
         const { parentCategory, displayCategory, subcategory } = categorizeEvent({
@@ -249,24 +268,26 @@ async function scrapeCecilEvents() {
         // Build event document
         const eventDoc = {
           name: event.name,
-          venue: event.venue || LIBRARY.name,
+          venue: venueName,
           eventDate: normalizedDate,
+          startTime,
+          endTime,
           scheduleDescription: event.eventDate,
           parentCategory,
           displayCategory,
           subcategory,
-          ageRange: ageRange,
+          ageRange,
           cost: 'Free',
           description: (event.description || '').substring(0, 1000),
           moreInfo: event.programType || '',
           state: LIBRARY.state,
           location: {
-            name: event.venue || LIBRARY.name,
-            address: '',
-            city: LIBRARY.city,
+            name: venueName,
+            address: venueAddress,
+            city: venueCity,
             state: LIBRARY.state,
-            zipCode: LIBRARY.zipCode,
-            coordinates: coordinates
+            zipCode: venueZip,
+            coordinates: coordinates || null
           },
           contact: {
             website: event.url || LIBRARY.website,
@@ -282,11 +303,10 @@ async function scrapeCecilEvents() {
           },
           filters: {
             isFree: true,
-            ageRange: ageRange
+            ageRange
           }
         };
 
-        // Add geohash if we have coordinates
         if (coordinates) {
           eventDoc.geohash = ngeohash.encode(coordinates.latitude, coordinates.longitude, 7);
         }
@@ -313,9 +333,6 @@ async function scrapeCecilEvents() {
         } else {
           skipped++;
         }
-
-        // Rate limiting
-        await new Promise(resolve => setTimeout(resolve, 300));
 
       } catch (error) {
         console.error(`  ❌ Error processing event:`, error.message);
