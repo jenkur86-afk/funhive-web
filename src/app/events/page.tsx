@@ -230,8 +230,10 @@ function EventsPageInner() {
 // Parse event_date strings like "April 1, 2026 10:00am" or "2026-04-09" into Date objects
 function parseEventDate(dateStr: string): Date | null {
   if (!dateStr) return null
-  // Already ISO format
-  if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) return new Date(dateStr + 'T00:00:00')
+  // Pure ISO date (YYYY-MM-DD exactly) — append local midnight to avoid UTC-shift to previous day
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return new Date(dateStr + 'T00:00:00')
+  // Datetime with space separator ("2026-06-28 10:00:00") — replace space with T for valid ISO
+  if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}/.test(dateStr)) return new Date(dateStr.replace(' ', 'T'))
   // Try native parsing ("April 1, 2026 10:00am" works in most browsers)
   const d = new Date(dateStr)
   if (!isNaN(d.getTime())) return d
@@ -476,25 +478,37 @@ function isEventOnOrAfterToday(event: any): boolean {
   // Helper function to check date range
   const matchesDateFilter = (event: any): boolean => {
     if (selectedDateFilter === 'All') return true
-    if (!event.event_date) return false
 
-    const eventDate = parseEventDate(event.event_date)
+    // Prefer the TIMESTAMPTZ `date` column (already parsed); fall back to event_date text
+    let eventDate: Date | null = null
+    if (event.date) {
+      const d = new Date(event.date)
+      if (!isNaN(d.getTime())) eventDate = d
+    }
+    if (!eventDate && event.event_date) {
+      eventDate = parseEventDate(event.event_date)
+    }
     if (!eventDate) return false
+
     const today = new Date()
     today.setHours(0, 0, 0, 0)
+
+    // Local-date-only copy of the event timestamp for day-level comparisons
+    const eventDay = new Date(eventDate)
+    eventDay.setHours(0, 0, 0, 0)
 
     const dayOfWeek = today.getDay()
     const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek
 
     switch (selectedDateFilter) {
       case 'Today':
-        return eventDate.toDateString() === today.toDateString()
+        return eventDay.getTime() === today.getTime()
 
       case 'This Week': {
         const endOfWeek = new Date(today)
         endOfWeek.setDate(endOfWeek.getDate() + daysUntilSunday)
         endOfWeek.setHours(23, 59, 59, 999)
-        return eventDate >= today && eventDate <= endOfWeek
+        return eventDay >= today && eventDate <= endOfWeek
       }
 
       case 'This Weekend': {
@@ -504,16 +518,16 @@ function isEventOnOrAfterToday(event: any): boolean {
         const sunday = new Date(saturday)
         sunday.setDate(sunday.getDate() + 1)
         sunday.setHours(23, 59, 59, 999)
-        return eventDate >= saturday && eventDate <= sunday
+        return eventDay >= saturday && eventDate <= sunday
       }
 
       case 'Next Week': {
         const nextWeekStart = new Date(today)
-        nextWeekStart.setDate(nextWeekStart.getDate() + 7 + (daysUntilSunday ? daysUntilSunday + 1 : 1))
+        nextWeekStart.setDate(nextWeekStart.getDate() + daysUntilSunday + 1)
         const nextWeekEnd = new Date(nextWeekStart)
         nextWeekEnd.setDate(nextWeekEnd.getDate() + 6)
         nextWeekEnd.setHours(23, 59, 59, 999)
-        return eventDate >= nextWeekStart && eventDate <= nextWeekEnd
+        return eventDay >= nextWeekStart && eventDate <= nextWeekEnd
       }
 
       case 'Custom': {
@@ -521,7 +535,7 @@ function isEventOnOrAfterToday(event: any): boolean {
         const startDate = new Date(customDateRange.start + 'T00:00:00')
         const endDate = new Date(customDateRange.end + 'T00:00:00')
         endDate.setHours(23, 59, 59, 999)
-        return eventDate >= startDate && eventDate <= endDate
+        return eventDay >= startDate && eventDate <= endDate
       }
 
       default:

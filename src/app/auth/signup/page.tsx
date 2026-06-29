@@ -274,11 +274,11 @@ export default function SignupPage() {
                 />
                 <label htmlFor="terms" className="text-sm text-gray-600">
                   I agree to the{' '}
-                  <a href="#" className="text-amber-600 hover:text-amber-700">
+                  <a href="https://funhive.app/terms" target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:text-amber-700">
                     Terms of Service
                   </a>{' '}
                   and{' '}
-                  <a href="#" className="text-amber-600 hover:text-amber-700">
+                  <a href="https://funhive.app/privacy" target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:text-amber-700">
                     Privacy Policy
                   </a>
                 </label>

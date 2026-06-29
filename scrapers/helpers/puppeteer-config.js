@@ -8,6 +8,7 @@
 const puppeteerExtra = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const puppeteerCore = require('puppeteer-core');
+const fs = require('fs');
 
 // Add stealth plugin to avoid bot detection
 puppeteerExtra.use(StealthPlugin());
@@ -27,6 +28,22 @@ const USER_AGENTS = [
  */
 function getRandomUserAgent() {
   return USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)];
+}
+
+function getLocalChromePath() {
+  const platform = process.platform;
+  const candidates =
+    platform === 'win32' ? [
+      'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
+    ] : platform === 'darwin' ? [
+      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+    ] : [
+      '/usr/bin/google-chrome',
+      '/usr/bin/chromium-browser',
+      '/usr/bin/chromium'
+    ];
+  return candidates.find(p => fs.existsSync(p)) || null;
 }
 
 /**
@@ -75,17 +92,20 @@ async function launchBrowser(options = {}) {
       });
     }
   } else {
-    // Local environment - use system Chrome with stealth
+    // Local environment - auto-detect Chrome, fall back to Puppeteer's bundled Chromium
+    const chromePath = getLocalChromePath();
+    const launchOpts = chromePath ? { executablePath: chromePath } : {};
+
     if (stealth) {
       return await puppeteerExtra.launch({
-        executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+        ...launchOpts,
         headless: true,
         args: stealthArgs,
         ignoreHTTPSErrors: true
       });
     } else {
       return await puppeteerCore.launch({
-        executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+        ...launchOpts,
         headless: true,
         args: [
           '--no-sandbox',
