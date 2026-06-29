@@ -13,6 +13,42 @@ const fs = require('fs');
 // Add stealth plugin to avoid bot detection
 puppeteerExtra.use(StealthPlugin());
 
+// Swallow benign Puppeteer/stealth async errors so scrapers run directly
+// (not through a group runner) don't crash on Windows libuv cleanup or
+// stealth-plugin races during browser restart between sites.
+const BENIGN_PUPPETEER_PATTERNS = [
+  /Requesting main frame too early/i,
+  /Session closed/i,
+  /TargetCloseError/i,
+  /Target closed/i,
+  /Protocol error \(Network\.setUserAgentOverride\)/i,
+  /UV_HANDLE_CLOSING/i,
+  /Assertion failed/i,
+];
+function isBenignPuppeteerError(err) {
+  const msg = (err && (err.message || String(err))) || '';
+  return BENIGN_PUPPETEER_PATTERNS.some((p) => p.test(msg));
+}
+if (!process.listenerCount('unhandledRejection')) {
+  process.on('unhandledRejection', (reason) => {
+    if (isBenignPuppeteerError(reason)) {
+      console.warn('  ⚠️  Swallowed benign Puppeteer rejection:', reason && reason.message ? reason.message : reason);
+      return;
+    }
+    console.error('Unhandled rejection:', reason);
+  });
+}
+if (!process.listenerCount('uncaughtException')) {
+  process.on('uncaughtException', (err) => {
+    if (isBenignPuppeteerError(err)) {
+      console.warn('  ⚠️  Swallowed benign Puppeteer exception:', err && err.message ? err.message : err);
+      return;
+    }
+    console.error('Uncaught exception:', err);
+    throw err;
+  });
+}
+
 // Random user agents for rotation
 const USER_AGENTS = [
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -64,6 +100,7 @@ async function launchBrowser(options = {}) {
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage',
     '--disable-gpu',
+    '--no-zygote',
     '--disable-blink-features=AutomationControlled',
     '--disable-infobars',
     '--window-size=1920,1080',
