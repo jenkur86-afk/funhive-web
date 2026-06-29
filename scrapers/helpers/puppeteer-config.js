@@ -103,7 +103,8 @@ async function launchBrowser(options = {}) {
     '--disable-blink-features=AutomationControlled',
     '--disable-infobars',
     '--window-size=1920,1080',
-    '--start-maximized'
+    '--start-maximized',
+    '--ignore-certificate-errors',
   ];
 
   if (isCloudFunction) {
