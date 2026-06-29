@@ -1,12 +1,14 @@
-# FunHive Scraper Diagnosis Prompt
+# FunHive Scraper Diagnosis — Work Doc
 
-Copy everything below the line and paste it into a new conversation after running scrapers. Paste the full scraper output after the prompt.
+HOW TO USE:
+1. Run scrapers: `npm run scraper -- --group N` (from `C:\dev\funhive-web`)
+2. Open a new Claude session
+3. Copy everything between PASTE START and PASTE END below
+4. Paste it in, then paste your full scraper output at the bottom
 
----
+<!-- ==================== PASTE START ==================== -->
 
-## Instructions
-
-I just ran FunHive scrapers. Analyze the full output I'm pasting below and fix ALL issues. Do not ask me questions — just fix everything you can.
+I just ran FunHive scrapers on Windows (`C:\dev\funhive-web`). Analyze the full output I'm pasting below and fix ALL issues. Do not ask me questions — just fix everything you can.
 
 ### What to look for and fix
 
@@ -92,8 +94,8 @@ I just ran FunHive scrapers. Analyze the full output I'm pasting below and fix A
 - **Firestore-compat read wrapper (`db.collection(...).where(...).limit(N).get()` and `db.collection(...).doc(id).get()`) defaults to a LEAN projection** — it drops `description`, `image_url`, and `location` (GEOMETRY) from the returned rows because the 141 dedup-check call sites only need to know whether a row exists. If you actually need those fat columns, opt in: `.select('*')` for everything, or `.select('id, description, location')` for a custom set. The wrapper also now honors `.limit(n)` and `.orderBy(field, dir)` (both were silent no-ops before; `.limit(1)` did nothing). The `'in'` operator is supported in `.where()`. Do not "fix" a scraper by adding `.select('*')` back unless the scraper is actually reading a column not in the default projection — defaulting to `*` is what blew through Supabase egress in the first place.
 - **The events table does NOT have `min_age`, `max_age`, or `is_free` columns** — only `activities` does. If you see PostgREST 400 errors `column events.min_age does not exist` (or similar) in the API Gateway logs, that's the root cause. Never include `min_age`, `max_age`, or `is_free` in the events default projection or in an explicit `.select(...)` on the events table. A May 2026 incident traced ~1 GB/day of egress to broken-query churn from this exact mistake (every dedup query 400'd, every event still inserted, scrapers retried on duplicate-key, repeat). For events, use `age_range` (TEXT) and detect free events from name/description text.
 - Data quality runs on a tiered cadence (Apr 2026):
-  - **Daily**: `node scripts/data-quality-quick.js` (count-only audit, ~5 MB) and `bash scripts/fix-all.sh --recent-only` (last 72h, ~50–150 MB).
-  - **Monthly**: `bash scripts/fix-all.sh` (full sweep, ~1.5–2 GB) and `node scripts/data-quality-check.js` (deep audit, ~500 MB).
+  - **Daily**: `node scripts/data-quality-quick.js` (count-only audit, ~5 MB) and `.\scripts\fix-all.ps1 --recent-only` (last 72h, ~50–150 MB). Git Bash: `bash scripts/fix-all.sh --recent-only`.
+  - **Monthly**: `.\scripts\fix-all.ps1` (full sweep, ~1.5–2 GB) and `node scripts/data-quality-check.js` (deep audit, ~500 MB). Git Bash: `bash scripts/fix-all.sh`.
   - Override window with `FIX_WINDOW_HOURS=N` (e.g., 168 for a week-long catch-up).
 - The scrapers' `saveEvent()` and `saveActivity()` now do almost all validation at scrape time: junk-title rejection (`isJunkTitle()`), non-family rejection (including sexy/cannabis/420/firearms/gambling/nightclub patterns synced from `cleanup-nonfamily-events.js`), cancelled rejection, past-event rejection, age normalization, adult-only rejection, time extraction, venue cleaning, geohash compute from lat/lng, and `event_date` text → `date` TIMESTAMPTZ parsing. Most rows no longer need backfill — daily fix runs do very little work.
 - **As of 2026-05-14, saveEvent/flattenEvent also reject time-only `event_date` strings** (e.g. `"2:00pm–3:00pm"` — Communico fallback bug) and **literal `"Invalid Date"` strings** (BiblioCommons malformed `def.start`). The scraper-side root causes are fixed in `scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js` (now derives date from `item.raw_start_time` when `datestring`/`date` are missing) and `scraper-bibliocommons-libraries-CA-CO-IL-MA-TX-VA-WA.js` (now guards `new Date(def.start)` with `isNaN`).
@@ -143,6 +145,8 @@ End your response with a section titled **"Changes to push"** that I cannot miss
 6. If any change does NOT need to be pushed (e.g. the fix only affects scraper behavior locally and I run scrapers from this machine), say so explicitly. Default assumption: I want changes committed and pushed for backup.
 
 Do not bury push instructions in prose. Make them a checklist I can follow without re-reading the rest of the response.
+
+<!-- ==================== PASTE END ==================== -->
 
 ### Scraper output
 

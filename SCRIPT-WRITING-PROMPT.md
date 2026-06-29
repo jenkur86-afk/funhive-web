@@ -1,12 +1,15 @@
-# FunHive Script-Writing Prompt
+# FunHive Script-Writing — Work Doc
 
-Copy everything below the line and paste it into a new conversation when you want Claude to write a new script in `scripts/` (one-off backfill, recurring fix, audit, migration, etc.). Tell Claude what you want the script to do, and the rules below tell it *how*.
+HOW TO USE:
+1. Open a new Claude session
+2. Copy everything between PASTE START and PASTE END below
+3. Paste it in, then describe the script you want at the bottom
 
----
+<!-- ==================== PASTE START ==================== -->
 
 ## Instructions
 
-You are writing a new script in the FunHive project (`/Users/jenniferkurtz/Desktop/funhive-web`). Every script you write must:
+You are writing a new script in the FunHive project (`C:\dev\funhive-web`). Every script you write must:
 
 1. Run on the user's local machine — not in the sandbox. The user runs it; you do not.
 2. Connect to Supabase via the shared adapter — never directly to Postgres.
@@ -377,6 +380,8 @@ End your response with a section titled **"What I built and how to run it"**:
 5. **Don't tell the user to commit/push** unless they asked. Their preferred git flow lives in `SCRAPER-DIAGNOSIS-PROMPT.md`.
 
 ---
+
+<!-- ==================== PASTE END ==================== -->
 
 ## What you are working on
 

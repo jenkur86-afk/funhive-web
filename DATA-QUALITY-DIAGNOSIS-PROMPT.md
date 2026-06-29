@@ -1,12 +1,14 @@
-# FunHive Data Quality Diagnosis Prompt
+# FunHive Data Quality Diagnosis — Work Doc
 
-Copy everything below the line and paste it into a new conversation after running `node scripts/data-quality-check.js`. Paste the full output after the prompt.
+HOW TO USE:
+1. Run the deep audit: `node scripts/data-quality-check.js` (from `C:\dev\funhive-web`)
+2. Open a new Claude session
+3. Copy everything between PASTE START and PASTE END below
+4. Paste it in, then paste the full script output at the bottom
 
----
+<!-- ==================== PASTE START ==================== -->
 
-## Instructions
-
-I just ran `node scripts/data-quality-check.js` on my FunHive database. Analyze the full output I'm pasting below and fix ALL issues — both data fixes (run scripts against the DB) and scraper code fixes (so issues don't recur).
+I just ran `node scripts/data-quality-check.js` on my FunHive database (Windows, `C:\dev\funhive-web`). Analyze the full output I'm pasting below and fix ALL issues — both data fixes (run scripts against the DB) and scraper code fixes (so issues don't recur).
 
 Do not ask me questions — just fix everything you can. For anything that requires running against the live DB (which you can't reach from the sandbox), write or update a fix script and tell me what to run.
 
@@ -16,10 +18,10 @@ The pipeline runs on a tiered cadence (Apr 2026):
 
 **Daily** (~5 MB + 50–150 MB egress):
 - `node scripts/data-quality-quick.js` — Count-only audit using Postgres aggregates (no row downloads).
-- `bash scripts/fix-all.sh --recent-only` — Runs all four fix steps against the last 72h only (configurable via `FIX_WINDOW_HOURS=N`). Deletion-style steps (past events, junk titles, dateless events) always full-scan because those queries use selective columns and we always want stale junk gone.
+- `.\scripts\fix-all.ps1 --recent-only` — Runs all four fix steps against the last 72h only (configurable via `$env:FIX_WINDOW_HOURS=N`). Git Bash: `bash scripts/fix-all.sh --recent-only`. Deletion-style steps (past events, junk titles, dateless events) always full-scan.
 
 **Monthly** (~2.5 GB egress):
-- `bash scripts/fix-all.sh` — Full sweep across all four steps.
+- `.\scripts\fix-all.ps1` — Full sweep across all four steps. Git Bash: `bash scripts/fix-all.sh`.
 - `node scripts/data-quality-check.js` — Deep audit (this prompt) with duplicates, distributions, scraper health, and sample issues.
 
 **Steps inside fix-all.sh:**
@@ -126,7 +128,7 @@ These columns exist on `activities` only. Querying them on events returns 400 fr
 - Read the relevant scraper files, helper files, and fix scripts before making changes
 - For **scraper code fixes** (prevent future issues): edit the scraper files directly
 - For **database fixes** (clean up existing data): update the appropriate `scripts/fix-*.js` script and tell me exactly what to run
-- When fixing MacaroniKid scrapers, remember all 45 files share the same structure — use a script to apply changes to all of them
+- When fixing MacaroniKid scrapers, remember all 43 files (`scraper-macaroni-{2-letter-code}.js`) share the same structure — use a script to apply changes to all of them
 - When missing location/geohash is high for a scraper, cross-reference its site list counties against `scrapers/utils/county-centroids.js` and add any missing counties
 - Run `node -c filename.js` syntax check on every modified file
 - At the end, do NOT tell me to run `bash fix-all.sh` or `node scripts/data-quality-check.js` — I already run those myself before and after using this prompt. Just list any scraper code fixes or new patterns you added.
@@ -156,6 +158,8 @@ End your response with a section titled **"Changes to push"** that I cannot miss
 6. If any change does NOT need to be pushed, say so explicitly. Default assumption: I want changes committed and pushed for backup.
 
 Do not bury push instructions in prose. Make them a checklist I can follow without re-reading the rest of the response.
+
+<!-- ==================== PASTE END ==================== -->
 
 ### Data quality check output
 
