@@ -133,7 +133,7 @@ async function scrapeEventbriteFestivals(page, stateObj) {
 
     // Fallback: DOM scraping if JSON-LD didn't yield events
     if (events.length === 0) {
-      const domEvents = await page.evaluate(() => {
+      const domEvents = await page.evaluate((stateCode) => {
         const results = [];
 
         // Eventbrite event card selectors
@@ -164,15 +164,35 @@ async function scrapeEventbriteFestivals(page, stateObj) {
             const title = titleEl?.textContent?.trim() || '';
             if (!title) return;
 
+            // Extract city from Eventbrite location text
+            // Formats: "Venue • City, ST", "City, ST", "City", "Online Event"
+            const locationText = locationEl?.textContent?.trim() || '';
+            let city = '';
+            if (locationText) {
+              // Strip leading "Venue • " prefix if present
+              const afterBullet = locationText.includes('•')
+                ? locationText.split('•').pop().trim()
+                : locationText;
+              // Match "City, ST" pattern at end
+              const cityMatch = afterBullet.match(/^([A-Za-z][A-Za-z\s'.\-]{1,35}?)\s*(?:,\s*[A-Z]{2})?$/);
+              if (cityMatch) {
+                const candidate = cityMatch[1].trim();
+                // Reject non-geographic strings
+                if (!/^(online|virtual|tbd|tbh|various|multiple|nationwide|anywhere)/i.test(candidate)) {
+                  city = candidate;
+                }
+              }
+            }
+
             results.push({
               name: title,
               eventDate: dateEl?.textContent?.trim() || '',
               url: linkEl?.href || card.querySelector('a')?.href || '',
               description: '',
-              venue: locationEl?.textContent?.trim() || '',
+              venue: locationText,
               image: imgEl?.src || '',
-              city: '',
-              stateCode: '',
+              city,
+              stateCode: city ? stateCode : '',
               zipCode: '',
               address: ''
             });
@@ -180,7 +200,7 @@ async function scrapeEventbriteFestivals(page, stateObj) {
         });
 
         return results;
-      });
+      }, stateObj.code);
 
       if (domEvents.length > 0) {
         console.log(`    ✓ Found ${domEvents.length} events via DOM`);

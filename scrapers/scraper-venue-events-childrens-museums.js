@@ -36,33 +36,48 @@ const VENUES = [
   // Alabama
   { name: "McWane Science Center", eventsUrl: "https://mcwane.org/events/", city: "Birmingham", state: "AL", zip: "35203",
     extraction: 'mec' },
-  { name: "EarlyWorks Children's Museum", eventsUrl: "https://earlyworks.com/events/", city: "Huntsville", state: "AL", zip: "35801",
-    extraction: 'mec' },
+  // Uses STEC (Simple/Smart Events Calendar), not MEC.
+  { name: "EarlyWorks Children's Museum", eventsUrl: "https://earlyworks.com/explore/events/", city: "Huntsville", state: "AL", zip: "35801",
+    extraction: 'stec' },
   // Connecticut
-  { name: "Stepping Stones Museum for Children", eventsUrl: "https://steppingstonesmuseum.org/calendar/", city: "Norwalk", state: "CT", zip: "06854" },
+  // /calendar 404s; /events is the correct path (Puppeteer follows the JS redirect).
+  { name: "Stepping Stones Museum for Children", eventsUrl: "https://www.steppingstonesmuseum.org/events", city: "Norwalk", state: "CT", zip: "06854" },
   // Imagine Nation: the bare-domain `imaginenation.org` refuses connections;
   // the `www.` host responds and the calendar lives at /calendar (not /events).
   { name: "Imagine Nation Museum", eventsUrl: "https://www.imaginenation.org/calendar", city: "Bristol", state: "CT", zip: "06010" },
   // DC
-  { name: "National Children's Museum", eventsUrl: "https://nationalchildrensmuseum.org/events/", city: "Washington", state: "DC", zip: "20004" },
+  { name: "National Children's Museum", eventsUrl: "https://nationalchildrensmuseum.org/events", city: "Washington", state: "DC", zip: "20004" },
   // Delaware
   { name: "Delaware Children's Museum", eventsUrl: "https://delawarechildrensmuseum.org/events/", city: "Wilmington", state: "DE", zip: "19801" },
   // Florida
   { name: "Miami Children's Museum", eventsUrl: "https://www.miamichildrensmuseum.org/events/", city: "Miami", state: "FL", zip: "33132",
     extraction: 'webflow' },
-  { name: "Glazer Children's Museum", eventsUrl: "https://www.glazermuseum.org/visit/calendar", city: "Tampa", state: "FL", zip: "33602" },
+  // www. host 404s; bare domain works. TEC REST API confirmed 2026-06-29.
+  { name: "Glazer Children's Museum", eventsUrl: "https://glazermuseum.org/visit/calendar", city: "Tampa", state: "FL", zip: "33602",
+    extraction: 'tec-api', tecApiUrl: 'https://glazermuseum.org/wp-json/tribe/events/v1/events' },
   // The cmonaples.org domain was decommissioned (DNS no longer resolves).
   // The museum (CMON) now lives at cmon.org. Verified 2026-04-30: HTTP 200.
-  { name: "Golisano Children's Museum of Naples", eventsUrl: "https://www.cmon.org/events/", city: "Naples", state: "FL", zip: "34110" },
-  { name: "Great Explorations", eventsUrl: "https://www.greatexplorations.org/events/", city: "St. Petersburg", state: "FL", zip: "33701" },
+  // TEC REST API confirmed available 2026-06-28.
+  { name: "Golisano Children's Museum of Naples", eventsUrl: "https://www.cmon.org/events/", city: "Naples", state: "FL", zip: "34110",
+    extraction: 'tec-api', tecApiUrl: 'https://www.cmon.org/wp-json/tribe/events/v1/events' },
+  // Domain moved from greatexplorations.org to greatex.org. TEC REST API confirmed 2026-06-29.
+  { name: "Great Explorations", eventsUrl: "https://greatex.org/events/", city: "St. Petersburg", state: "FL", zip: "33701",
+    extraction: 'tec-api', tecApiUrl: 'https://greatex.org/wp-json/tribe/events/v1/events' },
   // Georgia
-  { name: "Children's Museum of Atlanta", eventsUrl: "https://childrensmuseumatlanta.org/events/", city: "Atlanta", state: "GA", zip: "30313" },
+  // /events/ returns 404; /programs/ is the WordPress CPT archive for their programs.
+  { name: "Children's Museum of Atlanta", eventsUrl: "https://childrensmuseumatlanta.org/programs/", city: "Atlanta", state: "GA", zip: "30313",
+    extraction: 'wp-cpt' },
   // Illinois
+  // Uses TEC Photo view (class: event-thumbnail-size-32-standard), not Squarespace.
   { name: "Chicago Children's Museum", eventsUrl: "https://www.chicagochildrensmuseum.org/program-calendar", city: "Chicago", state: "IL", zip: "60611",
-    extraction: 'squarespace' },
-  { name: "Kohl Children's Museum", eventsUrl: "https://www.kohlchildrensmuseum.org/visit/events-and-programs/", city: "Glenview", state: "IL", zip: "60025" },
+    extraction: 'tec-photo' },
+  // /visit/events-and-programs/ returns 404; /events/ returns 200.
+  { name: "Kohl Children's Museum", eventsUrl: "https://www.kohlchildrensmuseum.org/events/", city: "Glenview", state: "IL", zip: "60025" },
   // Indiana
-  { name: "The Children's Museum of Indianapolis", eventsUrl: "https://www.childrensmuseum.org/visit/calendar", city: "Indianapolis", state: "IN", zip: "46208" },
+  // /visit/calendar redirects to /visit/experiences/activities (exhibits, not a calendar).
+  // /visit/calendar redirects to activities; special-events has a custom card layout.
+  { name: "The Children's Museum of Indianapolis", eventsUrl: "https://www.childrensmuseum.org/visit/experiences/special-events", city: "Indianapolis", state: "IN", zip: "46208",
+    extraction: 'custom-indy' },
   // Kentucky
   { name: "Kentucky Science Center", eventsUrl: "https://kysciencecenter.org/events/", city: "Louisville", state: "KY", zip: "40202",
     extraction: 'tec' },
@@ -72,27 +87,33 @@ const VENUES = [
   { name: "Maine Discovery Museum", eventsUrl: "https://www.mainediscoverymuseum.org/special-events", city: "Bangor", state: "ME", zip: "04401",
     extraction: 'squarespace' },
   // Massachusetts
-  { name: "Boston Children's Museum", eventsUrl: "https://www.bostonchildrensmuseum.org/programs-events", city: "Boston", state: "MA", zip: "02210" },
-  { name: "Discovery Museum", eventsUrl: "https://www.discoveryacton.org/visit/programs", city: "Acton", state: "MA", zip: "01720" },
+  // www. host returns 404; bare domain works.
+  { name: "Boston Children's Museum", eventsUrl: "https://bostonchildrensmuseum.org/programs-events", city: "Boston", state: "MA", zip: "02210" },
+  // /visit/programs returns 404; /visit/events-programs is the correct Drupal path.
+  { name: "Discovery Museum", eventsUrl: "https://www.discoveryacton.org/visit/events-programs", city: "Acton", state: "MA", zip: "01720",
+    extraction: 'drupal' },
   // Michigan
-  { name: "Grand Rapids Children's Museum", eventsUrl: "https://www.grcm.org/events/", city: "Grand Rapids", state: "MI", zip: "49503" },
+  { name: "Grand Rapids Children's Museum", eventsUrl: "https://www.grcm.org/events", city: "Grand Rapids", state: "MI", zip: "49503" },
   // Mississippi
   { name: "Mississippi Children's Museum", eventsUrl: "https://mschildrensmuseum.org/events/", city: "Jackson", state: "MS", zip: "39202",
     extraction: 'tec' },
   // New Hampshire
   { name: "Children's Museum of New Hampshire", eventsUrl: "https://childrens-museum.org/calendar/", city: "Dover", state: "NH", zip: "03820" },
   // New Jersey
-  { name: "Garden State Discovery Museum", eventsUrl: "https://discoverymuseum.com/events/", city: "Cherry Hill", state: "NJ", zip: "08003" },
+  { name: "Garden State Discovery Museum", eventsUrl: "https://www.discoverymuseum.com/events/", city: "Cherry Hill", state: "NJ", zip: "08003" },
   // New York
   { name: "Children's Museum of Manhattan", eventsUrl: "https://cmom.org/visit/calendar/", city: "New York", state: "NY", zip: "10024" },
   { name: "Brooklyn Children's Museum", eventsUrl: "https://www.brooklynkids.org/calendar/", city: "Brooklyn", state: "NY", zip: "11213",
     extraction: 'events-manager' },
-  { name: "Long Island Children's Museum", eventsUrl: "https://www.licm.org/events/", city: "Garden City", state: "NY", zip: "11530" },
+  // /events/ returns 404; /calendar/ returns 200. Uses custom .event-result layout.
+  { name: "Long Island Children's Museum", eventsUrl: "https://www.licm.org/calendar/", city: "Garden City", state: "NY", zip: "11530",
+    extraction: 'licm' },
   { name: "Strong National Museum of Play", eventsUrl: "https://www.museumofplay.org/visit/calendar/", city: "Rochester", state: "NY", zip: "14607",
     extraction: 'tec-api', tecApiUrl: 'https://www.museumofplay.org/wp-json/tribe/events/v1/events' },
   // North Carolina
-  { name: "Marbles Kids Museum", eventsUrl: "https://www.marbleskidsmuseum.org/events", city: "Raleigh", state: "NC", zip: "27601" },
-  { name: "Discovery Place Science", eventsUrl: "https://science.discoveryplace.org/events-calendar", city: "Charlotte", state: "NC", zip: "28202" },
+  // www. host redirects to bare domain; use canonical form.
+  { name: "Marbles Kids Museum", eventsUrl: "https://marbleskidsmuseum.org/events/", city: "Raleigh", state: "NC", zip: "27601" },
+  { name: "Discovery Place Science", eventsUrl: "https://discoveryplace.org/events-calendar", city: "Charlotte", state: "NC", zip: "28202" },
   // DISABLED 2026-04-30: Kidzu's main location closed in August 2024 after a
   // water main break. Both kidzuchildrensmuseum.org and kidzuchildrensmuseum.com
   // are currently unreachable. They operate from a temporary location at 1712
@@ -104,7 +125,9 @@ const VENUES = [
   { name: "COSI Columbus", eventsUrl: "https://cosi.org/visit/hours-events-calendar", city: "Columbus", state: "OH", zip: "43215" },
   { name: "Children's Museum of Cleveland", eventsUrl: "https://cmcleveland.org/events/", city: "Cleveland", state: "OH", zip: "44106" },
   // Pennsylvania
-  { name: "Please Touch Museum", eventsUrl: "https://www.pleasetouchmuseum.org/visit/events/", city: "Philadelphia", state: "PA", zip: "19131" },
+  // /visit/events/ returns 404. TEC REST API confirmed available 2026-06-28.
+  { name: "Please Touch Museum", eventsUrl: "https://www.pleasetouchmuseum.org/events/", city: "Philadelphia", state: "PA", zip: "19131",
+    extraction: 'tec-api', tecApiUrl: 'https://www.pleasetouchmuseum.org/wp-json/tribe/events/v1/events' },
   { name: "Children's Museum of Pittsburgh", eventsUrl: "https://pittsburghkids.org/events", city: "Pittsburgh", state: "PA", zip: "15212" },
   // Rhode Island
   { name: "Providence Children's Museum", eventsUrl: "https://providencechildrensmuseum.org/events/", city: "Providence", state: "RI", zip: "02903",
@@ -122,8 +145,9 @@ const VENUES = [
   { name: "Muse Knoxville", eventsUrl: "https://themuseknoxville.org/events/", city: "Knoxville", state: "TN", zip: "37902",
     extraction: 'eventon' },
   // Vermont
+  // TEC REST API confirmed 2026-06-29 (87 events); API more reliable than Puppeteer.
   { name: "ECHO Leahy Center", eventsUrl: "https://www.echovermont.org/events/", city: "Burlington", state: "VT", zip: "05401",
-    extraction: 'tec' },
+    extraction: 'tec-api', tecApiUrl: 'https://www.echovermont.org/wp-json/tribe/events/v1/events' },
   { name: "Montshire Museum of Science", eventsUrl: "https://montshire.org/events/", city: "Norwich", state: "VT", zip: "05055",
     extraction: 'tec-api', tecApiUrl: 'https://montshire.org/wp-json/tribe/events/v1/events' },
   // Virginia
@@ -139,7 +163,9 @@ const VENUES = [
     extraction: 'events-manager' },
   { name: "Madison Children's Museum", eventsUrl: "https://madisonchildrensmuseum.org/events/", city: "Madison", state: "WI", zip: "53703",
     extraction: 'tec' },
-  { name: "Discovery World", eventsUrl: "https://www.discoveryworld.org/events/", city: "Milwaukee", state: "WI", zip: "53202" },
+  // www. redirects to bare domain. TEC REST API confirmed 2026-06-29 (62 events).
+  { name: "Discovery World", eventsUrl: "https://discoveryworld.org/events/", city: "Milwaukee", state: "WI", zip: "53202",
+    extraction: 'tec-api', tecApiUrl: 'https://discoveryworld.org/wp-json/tribe/events/v1/events' },
 ];
 
 // ==========================================
@@ -424,14 +450,18 @@ function extractMEC(document, baseUrl) {
  */
 function extractEventON(document, baseUrl) {
   const results = [];
-  document.querySelectorAll('.eventon_list_event, .evcal_list_event').forEach(el => {
-    const titleEl = el.querySelector('.eventon_event_title, .evcal_desc_title, .evcal_event_title');
-    const dateEl = el.querySelector('.evcal_desc2 .date, .evcal_date, [class*="date"]');
+  document.querySelectorAll('.eventon_list_event, .evcal_list_event, .evo_event').forEach(el => {
+    // Title: broad fallback + data-attr (EventON v4 stores title in data-event_title)
+    const titleEl = el.querySelector('.eventon_event_title a, .evcal_desc_title a, .evcal_event_title a, .evcal_event_title, .eventon_event_title, h3 a, h2 a, a');
+    const name = (titleEl ? titleEl.textContent.trim() : '') || el.getAttribute('data-event_title') || '';
+    if (!name) return;
     const linkEl = el.querySelector('a[href]');
-    const title = titleEl ? titleEl.textContent.trim() : '';
-    const url = linkEl ? makeAbsoluteUrl(linkEl.getAttribute('href'), baseUrl) : '';
-    const dateText = dateEl ? dateEl.textContent.trim() : '';
-    if (title) results.push({ name: title.substring(0, 200), eventDate: dateText.substring(0, 100), url: url || baseUrl, description: '' });
+    const url = linkEl ? makeAbsoluteUrl(linkEl.getAttribute('href'), baseUrl) : baseUrl;
+    // Date: data attribute first (EventON v4 stores ISO date in data-event_startdate)
+    const startDate = el.getAttribute('data-event_startdate') || el.getAttribute('data-start-date') || '';
+    const dateEl = el.querySelector('.evcal_desc2 .date, .evcal_date, .evo_date, .evcal_dateformat_span');
+    const dateText = startDate || (dateEl ? dateEl.textContent.trim() : '');
+    results.push({ name: name.substring(0, 200), eventDate: dateText.substring(0, 100), url, description: '' });
   });
   return results;
 }
@@ -492,6 +522,132 @@ function extractEventsManager(document, baseUrl) {
 }
 
 /**
+ * Platform-specific extraction: STEC (Simple/Smart Events Calendar plugin)
+ * Classes: .stec-grid-event, .stec-grid-event-title, .stec-grid-event-nfo
+ */
+function extractSTEC(document, baseUrl) {
+  const results = [];
+  document.querySelectorAll('.stec-grid-event, .stec-list-event').forEach(el => {
+    const titleEl = el.querySelector('.stec-grid-event-title, .stec-list-event-title, [class*="stec-"][class*="title"]');
+    const name = titleEl ? titleEl.textContent.trim() : '';
+    if (!name) return;
+    // STEC stores start date in data-start (Unix ms) or data-start-date (ISO)
+    const rawDate = el.getAttribute('data-start-date') || el.getAttribute('data-start') || '';
+    let dateText = rawDate;
+    if (rawDate && /^\d{10,13}$/.test(rawDate)) {
+      const ms = rawDate.length === 10 ? parseInt(rawDate) * 1000 : parseInt(rawDate);
+      dateText = new Date(ms).toISOString().split('T')[0];
+    }
+    if (!dateText) {
+      const nfo = el.querySelector('.stec-grid-event-nfo, .stec-list-event-nfo, [class*="stec-"][class*="nfo"]');
+      dateText = nfo ? nfo.textContent.trim().substring(0, 100) : '';
+    }
+    const linkEl = el.querySelector('a[href]');
+    const url = linkEl ? makeAbsoluteUrl(linkEl.getAttribute('href'), baseUrl) : baseUrl;
+    const descEl = el.querySelector('.stec-grid-event-description, .stec-list-event-description');
+    results.push({ name: name.substring(0, 200), eventDate: dateText.substring(0, 100), url, description: (descEl ? descEl.textContent.trim() : '').substring(0, 500) });
+  });
+  return results;
+}
+
+/**
+ * Platform-specific extraction: TEC Photo/List view
+ * Classes: event-thumbnail-size-*, event-date-label, a.url
+ * Used by Chicago Children's Museum (TEC with Photo view template)
+ */
+function extractTECPhotoView(document, baseUrl) {
+  const results = [];
+  document.querySelectorAll('article[class*="event-thumbnail"], [class*="event-thumbnail-size"]').forEach(el => {
+    const titleEl = el.querySelector('a.url, .tribe-events-list-event-title a, h2 a, h3 a');
+    const name = titleEl ? titleEl.textContent.trim() : '';
+    if (!name) return;
+    const url = titleEl ? makeAbsoluteUrl(titleEl.getAttribute('href'), baseUrl) : baseUrl;
+    const dateEl = el.querySelector('.event-date-label, .tribe-events-abbr, abbr[title], .tribe-events-start-datetime');
+    const dateText = dateEl ? (dateEl.getAttribute('title') || dateEl.getAttribute('datetime') || dateEl.textContent.trim()) : '';
+    const descEl = el.querySelector('.event-excerpt p, .tribe-events-list-event-description p, p');
+    results.push({ name: name.substring(0, 200), eventDate: dateText.substring(0, 100), url, description: (descEl ? descEl.textContent.trim() : '').substring(0, 500) });
+  });
+  return results;
+}
+
+/**
+ * Platform-specific extraction: Indianapolis Children's Museum custom calendar
+ * Classes: .calendar-event-card, .calendar-event-info, .calendar-event-info-items
+ */
+function extractCustomIndy(document, baseUrl) {
+  const results = [];
+  document.querySelectorAll('.calendar-event-card').forEach(el => {
+    const titleEl = el.querySelector('h3, h2, h4, [class*="title"], a');
+    const name = titleEl ? titleEl.textContent.trim() : '';
+    if (!name) return;
+    const linkEl = el.querySelector('a[href]');
+    const url = linkEl ? makeAbsoluteUrl(linkEl.getAttribute('href'), baseUrl) : baseUrl;
+    const dateEl = el.querySelector('.calendar-event-info-items time, time[datetime], [class*="date"]');
+    const dateText = dateEl ? (dateEl.getAttribute('datetime') || dateEl.textContent.trim()) : '';
+    results.push({ name: name.substring(0, 200), eventDate: dateText.substring(0, 100), url, description: '' });
+  });
+  return results;
+}
+
+/**
+ * Platform-specific extraction: Drupal calendar views
+ * Classes: .node--type-event, .event-title, .field--name-field-event-date
+ * Used by Discovery Museum Acton (Drupal 8/9 with Views calendar)
+ */
+function extractDrupal(document, baseUrl) {
+  const results = [];
+  document.querySelectorAll('.node--type-event, article[class*="node--type-event"]').forEach(el => {
+    const titleEl = el.querySelector('.event-title a, .node-title a, h3 a, h2 a');
+    const name = titleEl ? titleEl.textContent.trim() : '';
+    if (!name) return;
+    const url = titleEl ? makeAbsoluteUrl(titleEl.getAttribute('href'), baseUrl) : baseUrl;
+    const dateEl = el.querySelector('.field--name-field-event-date time, time[datetime], .event-date');
+    const dateText = dateEl ? (dateEl.getAttribute('datetime') || dateEl.textContent.trim()) : '';
+    const descEl = el.querySelector('.field--name-body p, .node__content p');
+    results.push({ name: name.substring(0, 200), eventDate: dateText.substring(0, 100), url, description: (descEl ? descEl.textContent.trim() : '').substring(0, 500) });
+  });
+  return results;
+}
+
+/**
+ * Platform-specific extraction: Long Island Children's Museum custom layout
+ * Classes: .event-result, .event-info, .event-image
+ */
+function extractLICM(document, baseUrl) {
+  const results = [];
+  document.querySelectorAll('.event-result').forEach(el => {
+    const titleEl = el.querySelector('.event-info h3, .event-info h2, .event-info a, h3, h2');
+    const name = titleEl ? titleEl.textContent.trim() : '';
+    if (!name) return;
+    const linkEl = el.querySelector('a[href]');
+    const url = linkEl ? makeAbsoluteUrl(linkEl.getAttribute('href'), baseUrl) : baseUrl;
+    const dateEl = el.querySelector('.event-info time, time[datetime], .event-info [class*="date"], [class*="event-date"]');
+    const dateText = dateEl ? (dateEl.getAttribute('datetime') || dateEl.textContent.trim()) : '';
+    results.push({ name: name.substring(0, 200), eventDate: dateText.substring(0, 100), url, description: '' });
+  });
+  return results;
+}
+
+/**
+ * Platform-specific extraction: WordPress custom post type archive
+ * Classes: post-type-archive-cma-program (body), article[class*="type-cma"]
+ * Used by Children's Museum of Atlanta (/programs/ archive)
+ */
+function extractWordPressCPT(document, baseUrl) {
+  const results = [];
+  document.querySelectorAll('article[class*="cma-program"], article[class*="type-cma"], .program-item, article.post').forEach(el => {
+    const titleEl = el.querySelector('.entry-title a, h2 a, h3 a, a[rel="bookmark"]');
+    const name = titleEl ? titleEl.textContent.trim() : '';
+    if (!name) return;
+    const url = titleEl ? makeAbsoluteUrl(titleEl.getAttribute('href'), baseUrl) : baseUrl;
+    const dateEl = el.querySelector('time[datetime], .entry-date, .event-date, [class*="date"]');
+    const dateText = dateEl ? (dateEl.getAttribute('datetime') || dateEl.textContent.trim()) : '';
+    results.push({ name: name.substring(0, 200), eventDate: dateText.substring(0, 100), url, description: '' });
+  });
+  return results;
+}
+
+/**
  * Extract events from page using platform-specific or generic CSS selectors.
  * @param {string} html - The page HTML
  * @param {string} baseUrl - The base URL for resolving relative links
@@ -521,6 +677,12 @@ function extractEventsFromPage(html, baseUrl, venue = {}) {
       case 'squarespace': platformEvents = extractSquarespace(document, baseUrl); break;
       case 'webflow': platformEvents = extractWebflow(document, baseUrl); break;
       case 'events-manager': platformEvents = extractEventsManager(document, baseUrl); break;
+      case 'stec': platformEvents = extractSTEC(document, baseUrl); break;
+      case 'tec-photo': platformEvents = extractTECPhotoView(document, baseUrl); break;
+      case 'custom-indy': platformEvents = extractCustomIndy(document, baseUrl); break;
+      case 'drupal': platformEvents = extractDrupal(document, baseUrl); break;
+      case 'licm': platformEvents = extractLICM(document, baseUrl); break;
+      case 'wp-cpt': platformEvents = extractWordPressCPT(document, baseUrl); break;
     }
     if (platformEvents.length > 0) {
       console.log(`      [${platform}] extracted ${platformEvents.length} events`);

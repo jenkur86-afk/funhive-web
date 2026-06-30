@@ -237,8 +237,9 @@ async function geocodeWithFallback(address, options = {}) {
   }
 
   // Strategy 0: Try library-addresses.js lookup first
-  // This avoids API calls for known library addresses
-  if (venueName || sourceName) {
+  // Only for library-related sources — prevents event names from matching library branches
+  const isLibrarySource = sourceName && /library|libraries|lib\b|biblioth/i.test(sourceName);
+  if (isLibrarySource && (venueName || sourceName)) {
     const libraryAddress = getLibraryAddress(venueName, sourceName, state);
     if (libraryAddress) {
       // Cache the library address lookup key

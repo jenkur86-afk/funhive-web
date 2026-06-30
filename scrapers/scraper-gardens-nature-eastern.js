@@ -44,7 +44,7 @@ const VENUES = [
   { name: 'Birmingham Botanical Gardens', url: 'https://www.bbgardens.org', eventsUrl: 'https://www.bbgardens.org/events', city: 'Birmingham', state: 'AL', platform: 'custom' },
   { name: 'Huntsville Botanical Garden', url: 'https://hsvbg.org', eventsUrl: 'https://hsvbg.org/events/', city: 'Huntsville', state: 'AL', platform: 'wordpress' },
   { name: 'Mobile Botanical Gardens', url: 'https://www.mobilebotanicalgardens.org', eventsUrl: 'https://www.mobilebotanicalgardens.org/events/', city: 'Mobile', state: 'AL', platform: 'wordpress' },
-  { name: 'Aldridge Botanical Gardens', url: 'https://www.aldridgegardens.com', eventsUrl: 'https://www.aldridgegardens.com/events/', city: 'Hoover', state: 'AL', platform: 'wordpress' },
+  { name: 'Aldridge Botanical Gardens', url: 'https://www.aldridgegardens.com', eventsUrl: 'https://www.aldridgegardens.com/education/events/spring_event_calendar.html', city: 'Hoover', state: 'AL', platform: 'custom' },
 
   // Connecticut
   { name: 'Connecticut College Arboretum', url: 'https://www.conncoll.edu/the-arboretum/', eventsUrl: 'https://www.conncoll.edu/the-arboretum/events/', city: 'New London', state: 'CT', platform: 'custom' },
@@ -88,16 +88,16 @@ const VENUES = [
   // Indiana
   { name: 'Indianapolis Museum of Art at Newfields', url: 'https://discovernewfields.org', eventsUrl: 'https://discovernewfields.org/calendar', city: 'Indianapolis', state: 'IN', platform: 'custom' },
   { name: 'Garfield Park Conservatory', url: 'https://www.garfieldgardensconservatory.org', eventsUrl: 'https://www.garfieldgardensconservatory.org/events/', city: 'Indianapolis', state: 'IN', platform: 'wordpress' },
-  { name: 'Foellinger-Freimann Botanical Conservatory', url: 'https://www.botanicalconservatory.org', eventsUrl: 'https://www.botanicalconservatory.org/events/', city: 'Fort Wayne', state: 'IN', platform: 'wordpress' },
+  { name: 'Foellinger-Freimann Botanical Conservatory', url: 'https://www.cityoffortwayne.org', eventsUrl: 'https://www.cityoffortwayne.in.gov/calendar.aspx?CID=9', city: 'Fort Wayne', state: 'IN', platform: 'custom' },
 
   // Kentucky
   { name: 'Bernheim Arboretum and Research Forest', url: 'https://bernheim.org', eventsUrl: 'https://bernheim.org/events/', city: 'Clermont', state: 'KY', platform: 'wordpress' },
   { name: 'Louisville Nature Center', url: 'https://www.louisvillenaturecenter.org', eventsUrl: 'https://www.louisvillenaturecenter.org/events/', city: 'Louisville', state: 'KY', platform: 'wordpress' },
-  { name: 'Yew Dell Botanical Gardens', url: 'https://www.yewdellgardens.org', eventsUrl: 'https://www.yewdellgardens.org/events/', city: 'Crestwood', state: 'KY', platform: 'wordpress' },
+  { name: 'Yew Dell Botanical Gardens', url: 'https://www.yewdellgardens.org', eventsUrl: 'https://www.yewdellgardens.org/classes-events', city: 'Crestwood', state: 'KY', platform: 'wordpress' },
 
   // Massachusetts
-  { name: 'Arnold Arboretum of Harvard University', url: 'https://arboretum.harvard.edu', eventsUrl: 'https://arboretum.harvard.edu/visit/events/', city: 'Boston', state: 'MA', platform: 'custom' },
-  { name: 'Tower Hill Botanic Garden', url: 'https://www.towerhillbg.org', eventsUrl: 'https://www.towerhillbg.org/events/', city: 'Boylston', state: 'MA', platform: 'wordpress' },
+  { name: 'Arnold Arboretum of Harvard University', url: 'https://arboretum.harvard.edu', eventsUrl: 'https://arboretum.harvard.edu/events/', city: 'Boston', state: 'MA', platform: 'wordpress' },
+  { name: 'Tower Hill Botanic Garden', url: 'https://nebg.org', eventsUrl: 'https://nebg.org/events/', city: 'Boylston', state: 'MA', platform: 'wordpress' },
   { name: 'Garden in the Woods', url: 'https://www.nativeplanttrust.org', eventsUrl: 'https://www.nativeplanttrust.org/events/', city: 'Framingham', state: 'MA', platform: 'wordpress' },
   { name: 'Mass Audubon Drumlin Farm', url: 'https://www.massaudubon.org/get-outdoors/wildlife-sanctuaries/drumlin-farm', eventsUrl: 'https://www.massaudubon.org/programs', city: 'Lincoln', state: 'MA', platform: 'custom' },
 
@@ -109,12 +109,12 @@ const VENUES = [
 
   // Maine
   { name: 'Coastal Maine Botanical Gardens', url: 'https://www.mainegardens.org', eventsUrl: 'https://www.mainegardens.org/events/', city: 'Boothbay', state: 'ME', platform: 'custom' },
-  { name: 'Viles Arboretum', url: 'https://www.vilesarboretum.org', eventsUrl: 'https://www.vilesarboretum.org/events/', city: 'Augusta', state: 'ME', platform: 'wordpress' },
+  { name: 'Viles Arboretum', url: 'https://www.vilesarboretum.org', eventsUrl: 'https://www.vilesarboretum.org/experiences/events-programs', city: 'Augusta', state: 'ME', platform: 'custom' },
 
   // Minnesota
   { name: 'Minnesota Landscape Arboretum', url: 'https://arb.umn.edu', eventsUrl: 'https://arb.umn.edu/events', city: 'Chaska', state: 'MN', platform: 'custom' },
   { name: 'Como Park Zoo & Conservatory', url: 'https://comozooconservatory.org', eventsUrl: 'https://comozooconservatory.org/events/', city: 'Saint Paul', state: 'MN', platform: 'wordpress' },
-  { name: 'Eastman Nature Center', url: 'https://www.threeriversparks.org/location/eastman-nature-center', eventsUrl: 'https://www.threeriversparks.org/events', city: 'Dayton', state: 'MN', platform: 'custom' },
+  { name: 'Eastman Nature Center', url: 'https://www.threeriversparks.org/location/eastman-nature-center', eventsUrl: 'https://www.threeriversparks.org/page/three-rivers-programs', city: 'Dayton', state: 'MN', platform: 'custom' },
 
   // Mississippi
   { name: 'Crosby Arboretum', url: 'https://www.crosbyarboretum.msstate.edu', eventsUrl: 'https://www.crosbyarboretum.msstate.edu/events/', city: 'Picayune', state: 'MS', platform: 'custom' },
@@ -123,12 +123,12 @@ const VENUES = [
   // North Carolina
   { name: 'North Carolina Arboretum', url: 'https://www.ncarboretum.org', eventsUrl: 'https://www.ncarboretum.org/events/', city: 'Asheville', state: 'NC', platform: 'wordpress' },
   { name: 'Daniel Stowe Botanical Garden', url: 'https://www.dsbg.org', eventsUrl: 'https://www.dsbg.org/events/', city: 'Belmont', state: 'NC', platform: 'wordpress' },
-  { name: 'JC Raulston Arboretum', url: 'https://jcra.ncsu.edu', eventsUrl: 'https://jcra.ncsu.edu/events/', city: 'Raleigh', state: 'NC', platform: 'custom' },
+  { name: 'JC Raulston Arboretum', url: 'https://jcra.ncsu.edu', eventsUrl: 'https://jcra.ncsu.edu/events/calendar/index.php', city: 'Raleigh', state: 'NC', platform: 'custom' },
   { name: 'Cape Fear Botanical Garden', url: 'https://www.capefearbg.org', eventsUrl: 'https://www.capefearbg.org/events/', city: 'Fayetteville', state: 'NC', platform: 'wordpress' },
 
   // New Hampshire
   { name: 'Squam Lakes Natural Science Center', url: 'https://www.nhnature.org', eventsUrl: 'https://www.nhnature.org/programs/', city: 'Holderness', state: 'NH', platform: 'custom' },
-  { name: 'Bedrock Gardens', url: 'https://www.bedrockgardens.org', eventsUrl: 'https://www.bedrockgardens.org/events/', city: 'Lee', state: 'NH', platform: 'wordpress' },
+  { name: 'Bedrock Gardens', url: 'https://www.bedrockgardens.org', eventsUrl: 'https://www.bedrockgardens.org/program-calendar.html', city: 'Lee', state: 'NH', platform: 'custom' },
 
   // New Jersey
   { name: 'New Jersey Botanical Garden', url: 'https://www.njbg.org', eventsUrl: 'https://www.njbg.org/events/', city: 'Ringwood', state: 'NJ', platform: 'wordpress' },
@@ -137,7 +137,7 @@ const VENUES = [
   { name: 'Duke Farms', url: 'https://www.dukefarms.org', eventsUrl: 'https://www.dukefarms.org/events/', city: 'Hillsborough', state: 'NJ', platform: 'wordpress' },
 
   // New York
-  { name: 'Brooklyn Botanic Garden', url: 'https://www.bbg.org', eventsUrl: 'https://www.bbg.org/visit/event_calendar', city: 'Brooklyn', state: 'NY', platform: 'custom' },
+  { name: 'Brooklyn Botanic Garden', url: 'https://www.bbg.org', eventsUrl: 'https://www.bbg.org/calendar/', city: 'Brooklyn', state: 'NY', platform: 'custom' },
   { name: 'New York Botanical Garden', url: 'https://www.nybg.org', eventsUrl: 'https://www.nybg.org/event/', city: 'Bronx', state: 'NY', platform: 'custom' },
   { name: 'Wave Hill', url: 'https://www.wavehill.org', eventsUrl: 'https://www.wavehill.org/events', city: 'Bronx', state: 'NY', platform: 'custom' },
   { name: 'Buffalo Botanical Gardens', url: 'https://www.buffalogardens.com', eventsUrl: 'https://www.buffalogardens.com/pages/events', city: 'Buffalo', state: 'NY', platform: 'custom' },
@@ -145,15 +145,15 @@ const VENUES = [
   // Ohio
   { name: 'Cleveland Botanical Garden', url: 'https://holdenfg.org', eventsUrl: 'https://holdenfg.org/events/', city: 'Cleveland', state: 'OH', platform: 'wordpress' },
   { name: 'Franklin Park Conservatory', url: 'https://www.fpconservatory.org', eventsUrl: 'https://www.fpconservatory.org/events/', city: 'Columbus', state: 'OH', platform: 'custom' },
-  { name: 'Cincinnati Nature Center', url: 'https://www.cincynature.org', eventsUrl: 'https://www.cincynature.org/visit-explore/events/', city: 'Milford', state: 'OH', platform: 'custom' },
+  { name: 'Cincinnati Nature Center', url: 'https://www.cincynature.org', eventsUrl: 'https://www.cincynature.org/things-to-do', city: 'Milford', state: 'OH', platform: 'custom' },
   { name: 'Dawes Arboretum', url: 'https://dawesarb.org', eventsUrl: 'https://dawesarb.org/events/', city: 'Newark', state: 'OH', platform: 'wordpress' },
 
   // Pennsylvania
   { name: 'Longwood Gardens', url: 'https://longwoodgardens.org', eventsUrl: 'https://longwoodgardens.org/events', city: 'Kennett Square', state: 'PA', platform: 'custom' },
-  { name: 'Phipps Conservatory', url: 'https://www.phipps.conservatory.org', eventsUrl: 'https://www.phipps.conservatory.org/calendar-of-events', city: 'Pittsburgh', state: 'PA', platform: 'custom' },
+  { name: 'Phipps Conservatory', url: 'https://www.phipps.conservatory.org', eventsUrl: 'https://www.phipps.conservatory.org/events', city: 'Pittsburgh', state: 'PA', platform: 'custom' },
   { name: 'Morris Arboretum', url: 'https://www.morrisarboretum.org', eventsUrl: 'https://www.morrisarboretum.org/events/', city: 'Philadelphia', state: 'PA', platform: 'wordpress' },
   { name: 'Bowmans Hill Wildflower Preserve', url: 'https://www.bhwp.org', eventsUrl: 'https://www.bhwp.org/events/', city: 'New Hope', state: 'PA', platform: 'wordpress' },
-  { name: 'Tyler Arboretum', url: 'https://www.tylerarboretum.org', eventsUrl: 'https://www.tylerarboretum.org/events/', city: 'Media', state: 'PA', platform: 'wordpress' },
+  { name: 'Tyler Arboretum', url: 'https://www.tylerarboretum.org', eventsUrl: 'https://www.tylerarboretum.org/calendar/', city: 'Media', state: 'PA', platform: 'wordpress' },
 
   // Rhode Island
   { name: 'Blithewold Mansion & Gardens', url: 'https://www.blithewold.org', eventsUrl: 'https://www.blithewold.org/events/', city: 'Bristol', state: 'RI', platform: 'wordpress' },
@@ -161,7 +161,7 @@ const VENUES = [
 
   // South Carolina
   { name: 'Brookgreen Gardens', url: 'https://www.brookgreen.org', eventsUrl: 'https://www.brookgreen.org/events', city: 'Murrells Inlet', state: 'SC', platform: 'custom' },
-  { name: 'Magnolia Plantation and Gardens', url: 'https://www.magnoliaplantation.com', eventsUrl: 'https://www.magnoliaplantation.com/events.html', city: 'Charleston', state: 'SC', platform: 'custom' },
+  { name: 'Magnolia Plantation and Gardens', url: 'https://www.magnoliaplantation.com', eventsUrl: 'https://www.magnoliaplantation.com/events/', city: 'Charleston', state: 'SC', platform: 'squarespace' },
   { name: 'South Carolina Botanical Garden', url: 'https://www.clemson.edu/public/scbg/', eventsUrl: 'https://www.clemson.edu/public/scbg/events/', city: 'Clemson', state: 'SC', platform: 'custom' },
 
   // Tennessee
@@ -184,7 +184,7 @@ const VENUES = [
   { name: 'Olbrich Botanical Gardens', url: 'https://www.olbrich.org', eventsUrl: 'https://www.olbrich.org/events/', city: 'Madison', state: 'WI', platform: 'wordpress' },
   { name: 'Boerner Botanical Gardens', url: 'https://www.boernerbotanicalgardens.org', eventsUrl: 'https://www.boernerbotanicalgardens.org/events/', city: 'Hales Corners', state: 'WI', platform: 'wordpress' },
   { name: 'Green Bay Botanical Garden', url: 'https://www.gbbg.org', eventsUrl: 'https://www.gbbg.org/events/', city: 'Green Bay', state: 'WI', platform: 'wordpress' },
-  { name: 'Schlitz Audubon Nature Center', url: 'https://www.schlitzaudubon.org', eventsUrl: 'https://www.schlitzaudubon.org/events/', city: 'Milwaukee', state: 'WI', platform: 'wordpress' },
+  { name: 'Schlitz Audubon Nature Center', url: 'https://www.schlitzaudubon.org', eventsUrl: 'https://www.schlitzaudubon.org/calendar/', city: 'Milwaukee', state: 'WI', platform: 'wordpress' },
 
   // West Virginia
   { name: 'West Virginia Botanic Garden', url: 'https://wvbg.org', eventsUrl: 'https://wvbg.org/events/', city: 'Morgantown', state: 'WV', platform: 'wordpress' },
@@ -382,12 +382,13 @@ async function tryHTMLScraping(venue, page) {
       document.querySelectorAll(
         '.tribe-events-single, .type-tribe_events, ' +
         '.tribe-common-g-row, .tribe-events-calendar-list__event, ' +
-        '.tribe-events-pro-summary__event'
+        '.tribe-events-pro-summary__event, ' +
+        '.tribe-events-list article, .tribe-events-list-event, .tribe_events article'
       ).forEach(card => {
         const titleEl = card.querySelector(
           '.tribe-events-list-event-title a, .tribe-events-calendar-list__event-title a, ' +
-          '.tribe-events-pro-summary__event-title a, ' +
-          'h2 a, h3 a, .tribe-event-url a'
+          '.tribe-events-pro-summary__event-title a, .tribe-event-url, ' +
+          'h2 a, h3 a'
         );
         const title = titleEl?.textContent?.trim() || card.querySelector('h2, h3')?.textContent?.trim();
         const date = extractDate(card, [
@@ -403,17 +404,19 @@ async function tryHTMLScraping(venue, page) {
         addEvent(title, date, desc, url, img);
       });
 
-      // Strategy B: Generic event card patterns
+      // Strategy B: Generic event card patterns (including Squarespace and Webflow)
       if (results.length === 0) {
         document.querySelectorAll(
           '.event-card, .event-item, .events-listing, .event-listing, ' +
           '.event-entry, .upcoming-event, .calendar-event, ' +
           '[class*="event-card"], [class*="event-item"], ' +
-          '.views-row, .node--type-event, article.event'
+          '.views-row, .node--type-event, article.event, ' +
+          '.eventlist-event, .w-dyn-item'
         ).forEach(card => {
-          const title = card.querySelector('h2, h3, h4, .event-title, .title, [class*="title"] a')?.textContent?.trim();
+          const title = card.querySelector('h2, h3, h4, .event-title, .eventlist-title, .title, [class*="title"] a')?.textContent?.trim();
           const date = extractDate(card, [
             '.event-date', '[class*="event-date"]', '.date', '[class*="date"]', '.meta',
+            '.eventlist-datetag', '.eventlist-meta-date',
           ]);
           const desc = card.querySelector('p, .description, .excerpt, .event-description, [class*="desc"]')?.textContent?.trim();
           const url = card.querySelector('a')?.getAttribute('href') || '';
