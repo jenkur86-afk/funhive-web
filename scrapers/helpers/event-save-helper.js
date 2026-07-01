@@ -494,8 +494,9 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
           sourceName: event.metadata?.sourceName || library.name
         });
 
-        // Rate limiting for geocoding API (Nominatim needs ≥2.5s between requests)
-        await new Promise(resolve => setTimeout(resolve, 2500));
+        // geocoding-helper.js enforces its own per-API rate limiting internally;
+        // sleeping here also fires on cache hits and caused State-Parks-Events VA
+        // (455 events) to take ~20 extra minutes and hit the Task Scheduler timeout.
       }
 
       if (!coordinates) {

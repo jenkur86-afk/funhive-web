@@ -159,7 +159,10 @@ async function scrapePrattLibrary() {
         const title = event.summary || '';
         const description = event.description || '';
         const location = event.location || '';
-        const url = event.url || 'https://calendar.prattlibrary.org';
+        // node-ical sometimes returns URL as { val: '...', params: {} } for parameterized iCal fields
+        let url = event.url;
+        if (url && typeof url === 'object') url = url.val || url.href || url.value || '';
+        url = url || 'https://calendar.prattlibrary.org';
 
         // Format date
         const formattedDate = eventDate.toLocaleDateString('en-US', {
