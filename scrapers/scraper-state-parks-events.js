@@ -13,7 +13,7 @@
  *
  * Browser investigation notes (April 2026):
  *   FL: Drupal cards, .card--green .card__title, .date-display-range
- *   GA: explore.gastateparks.org, TABLE-based layout
+ *   GA: gastateparks.org/EventList, TABLE-based layout (explore.* URL broken July 2026)
  *   NC: events.dncr.nc.gov, Events Manager plugin (.em-item)
  *   TN: tnstateparks.com/happenings, Drupal views
  *   KY: parks.ky.gov/events, JS card layout with date overlays
@@ -48,7 +48,7 @@ const PARKS_CONFIG = [
   {
     name: 'Georgia State Parks',
     state: 'GA',
-    eventsUrl: 'https://explore.gastateparks.org/events',
+    eventsUrl: 'https://gastateparks.org/EventList',
     altUrl: 'https://gastateparks.org/Events',
     county: 'Multi-County',
     extract: extractGeorgia
@@ -541,15 +541,15 @@ async function extractTennessee(page) {
  * date overlay badges, park name + city/state. Cards may load dynamically.
  */
 async function extractKentucky(page) {
-  // Wait extra for JS content to load (use setTimeout — waitForTimeout removed in newer Puppeteer)
-  await new Promise(resolve => setTimeout(resolve, 3000));
+  // parks.ky.gov/events loads event cards via JS — wait longer than default 2s
+  await new Promise(resolve => setTimeout(resolve, 6000));
 
   return await page.evaluate(() => {
     const events = [];
     const seen = new Set();
 
     // Strategy 1: Card-based layout (image cards with event info)
-    document.querySelectorAll('[class*="card"], [class*="event"], article, .views-row').forEach(card => {
+    document.querySelectorAll('[class*="card"], [class*="event"], article, .views-row, li').forEach(card => {
       if (card.closest('nav, header, footer, [class*="filter"], [class*="search"]')) return;
 
       const titleEl = card.querySelector('h2, h3, h4, [class*="title"], [class*="heading"]');
@@ -573,13 +573,19 @@ async function extractKentucky(page) {
       });
     });
 
-    // Strategy 2: Scan all links to event pages
+    // Strategy 2: Scan all body-area links — broaden beyond /event and /parks/
+    // KY uses /things-to-do/, /find-parks/, and park-specific paths
     if (events.length < 3) {
-      document.querySelectorAll('a[href*="/event"], a[href*="/parks/"]').forEach(link => {
-        if (link.closest('nav, header, footer')) return;
+      const main = document.querySelector('main, [id="main"], [role="main"], body');
+      (main || document).querySelectorAll('a[href]').forEach(link => {
+        if (link.closest('nav, header, footer, [class*="social"]')) return;
+        const href = link.getAttribute('href') || '';
+        // Must be an internal parks.ky.gov path that isn't a generic nav destination
+        if (!href.startsWith('/') && !href.includes('parks.ky.gov')) return;
+        if (/^\/(contact|faq|media|employment|gift|drone|sponsor|volunteer|info\/|things-to-know|lodging|reserv|subscribe)/i.test(href)) return;
         const title = link.textContent.trim();
         if (title.length < 4 || title.length > 200) return;
-        if (/^(home|events?|parks?|about|contact|calendar|map|search|filter|more|view|all)/i.test(title)) return;
+        if (/^(home|about|contact|calendar|map|search|filter|more|view|all|skip|facebook|twitter|instagram|youtube)/i.test(title)) return;
         const key = title.toLowerCase();
         if (seen.has(key)) return;
         seen.add(key);
