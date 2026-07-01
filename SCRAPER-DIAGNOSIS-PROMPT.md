@@ -10,6 +10,14 @@ HOW TO USE:
 
 I just ran FunHive scrapers on Windows (`C:\dev\funhive-web`). Analyze the full output I'm pasting below and fix ALL issues. Do not ask me questions — just fix everything you can.
 
+### Active region context (critical — read before diagnosing)
+
+Active scraper regions are set in `scrapers/region-config.json`. **Currently active: `dmv` + `eastern`** — 22 states total: DC, MD, VA, ME, NH, VT, MA, RI, CT, NY, NJ, PA, DE, WV, NC, SC, GA, FL, AL, MS, TN, KY.
+
+A scraper is active if `scraper.state === 'Multi'` OR `scraper.state` is in the active list. `isScraperActive()` in `scraper-registry.js` is the source of truth. **Do not "fix" a scraper from an inactive state (OH, CA, TX, WA, etc.) — it is intentionally disabled.** Inactive scrapers produce no log output at all; they won't appear in the log you're reading.
+
+Active scraper counts (July 2026): Group 1 = 51, Group 2 = 49, Group 3 = 45.
+
 ### What to look for and fix
 
 **1. Zero-event scrapers (Found 0 URLs / 0 new / 0 updated)**

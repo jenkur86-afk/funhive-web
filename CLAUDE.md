@@ -1,7 +1,7 @@
 # FunHive – Claude Instructions
 
 ## Project Overview
-FunHive is a family event and activity discovery platform. It aggregates events from 185+ sources (libraries, parks, museums, MacaroniKid, community centers) across 25+ US states and displays them on a Next.js website with Supabase (PostgreSQL + PostGIS) as the backend.
+FunHive is a family event and activity discovery platform. It aggregates events from 185+ sources (libraries, parks, museums, MacaroniKid, community centers) across the eastern US (22 states: DC, MD, VA + ME, NH, VT, MA, RI, CT, NY, NJ, PA, DE, WV, NC, SC, GA, FL, AL, MS, TN, KY) and displays them on a Next.js website with Supabase (PostgreSQL + PostGIS) as the backend.
 
 ## Tech Stack
 - **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS
@@ -33,6 +33,8 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - 185+ scrapers in `scrapers/` directory, registered in `scrapers/scraper-registry.js`.
 - `SCRAPERS` is an object (not array), keyed by scraper name.
 - 3-day group rotation: Group 1 runs days 1,4,7,10...; Group 2 runs 2,5,8,11...; Group 3 runs 3,6,9,12...
+- **Active region**: `scrapers/region-config.json` controls which states run. Currently `dmv` + `eastern` are active (22 states). `isScraperActive(scraper, activeStates)` returns true if `scraper.state === 'Multi'` OR if the scraper's state is in the active list. Scrapers for inactive regions are registered but never run — do not "fix" them.
+- **Active state counts (July 2026)**: Group 1 = 51, Group 2 = 49, Group 3 = 45.
 - MacaroniKid scrapers: 43 state-specific files (`scraper-macaroni-{2-letter-state}.js`, e.g. `scraper-macaroni-al.js`), each with identical structure.
 - All events flow through `supabase-adapter.js` → `saveEvent()` or `flattenEvent()`.
 - **Supabase client import**: Use `const { supabase } = require('./scrapers/helpers/supabase-adapter')` for direct Supabase client access in fix scripts. Do NOT use `db` (that's a Firestore-style reference used internally by scrapers). Pattern: `const { supabase } = require(...)` then `supabase.from('events').select(...)`.
@@ -42,7 +44,7 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 ### Client-Side Patterns
 - Location persisted in `localStorage` key `funhive_location` as `{lat, lng}` JSON.
 - Events page reads URL params: `?category=`, `?q=`, `?date=`.
-- `ACTIVE_STATES` in `src/lib/region-filter.ts` controls which states appear on the website.
+- `ACTIVE_STATES` in `src/lib/region-filter.ts` controls which states appear on the website. Currently includes all 22 eastern states + OH/IN/MI/IL/WI (Midwest bordering the eastern region). Already correct as of July 2026.
 - Age filtering uses numeric range intersection (not keyword matching).
 - **localStorage keys in use**: `funhive_location` ({lat,lng}), `hidden_venues` (array of {id,name} — used by events/page, activities/page, HideVenueButton, settings/page), `funhive_kids` (array of {name, birthMonth, birthYear} — profile/page.tsx), `funhive_push_notifications` / `funhive_review_reminders` / `funhive_event_recommendations` / `funhive_show_free_only` (settings toggles).
 

@@ -4,7 +4,9 @@
  * KIDS OUT AND ABOUT DMV SCRAPER
  *
  * Scrapes family events from dmv.kidsoutandabout.com
- * Coverage: Washington DC, Maryland, Virginia (DMV region)
+ * Coverage: Washington DC, Maryland, Virginia — intentionally DMV-specific.
+ * KidsOutAndAbout uses per-metro subdomains; eastern expansion would require
+ * additional scrapers for boston.kidsoutandabout.com, nyc.kidsoutandabout.com, etc.
  *
  * Data Source: JSON-LD structured data on event pages
  * Estimated Events: 200+ per month

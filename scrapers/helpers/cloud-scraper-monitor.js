@@ -62,7 +62,7 @@ exports.scheduledCloudScraperMonitor = async (req, res) => {
     console.log('✅ Running comprehensive data quality validation...');
     let dataQualityReport = null;
     try {
-      dataQualityReport = await runDataQualityValidation({ dmvOnly: true, limit: 10000 });
+      dataQualityReport = await runDataQualityValidation({ activeOnly: true, limit: 10000 });
       console.log(`   Events: ${dataQualityReport.events?.validPercent || 'N/A'}% valid`);
       console.log(`   Venues: ${dataQualityReport.venues?.validPercent || 'N/A'}% valid`);
     } catch (err) {

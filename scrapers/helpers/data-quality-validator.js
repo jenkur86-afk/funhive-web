@@ -27,6 +27,7 @@
  */
 
 const admin = require('firebase-admin');
+const { getActiveStates } = require('../scraper-registry');
 
 // Initialize if not already initialized
 if (!admin.apps.length) {
@@ -89,8 +90,8 @@ const VALID_STATES = [
   'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
 ];
 
-// DMV States for focused reporting
-const DMV_STATES = ['MD', 'VA', 'DC'];
+// Active states from region config (falls back to DMV if config unavailable)
+const ACTIVE_STATES = getActiveStates() || ['DC', 'MD', 'VA'];
 
 /**
  * Get nested value from object using dot notation
@@ -333,23 +334,25 @@ function validateVenue(data, docId) {
 
 /**
  * Run full data quality validation
- * @param {Object} options - { dmvOnly: boolean, limit: number, collection: 'events'|'activities'|'both' }
+ * @param {Object} options - { activeOnly: boolean, limit: number, collection: 'events'|'activities'|'both' }
  * @returns {Object} Validation report
  */
 async function runDataQualityValidation(options = {}) {
   const {
-    dmvOnly = true,
+    activeOnly = true,
+    dmvOnly,          // legacy alias — treat as activeOnly if passed
     limit = 10000,
     collection = 'both'
   } = options;
+  const scopeActive = activeOnly || dmvOnly;
 
   console.log('🔍 Starting Data Quality Validation...');
-  console.log(`   Scope: ${dmvOnly ? 'DMV only (MD, VA, DC)' : 'All states'}`);
+  console.log(`   Scope: ${scopeActive ? `Active states (${ACTIVE_STATES.join(', ')})` : 'All states'}`);
   console.log(`   Collections: ${collection}`);
 
   const report = {
     timestamp: new Date().toISOString(),
-    scope: dmvOnly ? 'DMV' : 'All',
+    scope: scopeActive ? 'Active' : 'All',
     events: null,
     venues: null,
     summary: {}
@@ -358,13 +361,13 @@ async function runDataQualityValidation(options = {}) {
   // Validate Events
   if (collection === 'both' || collection === 'events') {
     console.log('\n📅 Validating Events...');
-    report.events = await validateCollection('events', validateEvent, EVENT_VALIDATION_RULES, { dmvOnly, limit });
+    report.events = await validateCollection('events', validateEvent, EVENT_VALIDATION_RULES, { activeOnly: scopeActive, limit });
   }
 
   // Validate Venues/Activities
   if (collection === 'both' || collection === 'activities') {
     console.log('\n🏢 Validating Venues/Activities...');
-    report.venues = await validateCollection('activities', validateVenue, VENUE_VALIDATION_RULES, { dmvOnly, limit });
+    report.venues = await validateCollection('activities', validateVenue, VENUE_VALIDATION_RULES, { activeOnly: scopeActive, limit });
   }
 
   // Generate summary
@@ -377,11 +380,11 @@ async function runDataQualityValidation(options = {}) {
  * Validate a collection
  */
 async function validateCollection(collectionName, validateFn, rules, options) {
-  const { dmvOnly, limit } = options;
+  const { activeOnly, limit } = options;
 
   let query = db.collection(collectionName);
-  if (dmvOnly) {
-    query = query.where('state', 'in', DMV_STATES);
+  if (activeOnly) {
+    query = query.where('state', 'in', ACTIVE_STATES);
   }
   query = query.limit(limit);
 
@@ -572,11 +575,11 @@ module.exports = {
 // Run standalone if executed directly
 if (require.main === module) {
   const args = process.argv.slice(2);
-  const dmvOnly = !args.includes('--all');
+  const activeOnly = !args.includes('--all');
   const collection = args.includes('--events') ? 'events' :
                      args.includes('--venues') ? 'activities' : 'both';
 
-  runDataQualityValidation({ dmvOnly, collection })
+  runDataQualityValidation({ activeOnly, collection })
     .then(report => {
       printReport(report);
       process.exit(0);
