@@ -19,6 +19,8 @@ I just ran FunHive scrapers on Windows (`C:\dev\funhive-web`). Analyze the full 
 - Check page rendering issues (domcontentloaded vs networkidle2 for SPAs)
 - Check if CSS selectors still match the live site structure
 - Check if the site now blocks scrapers (User-Agent, rate limiting, CAPTCHAs)
+- **For multi-venue scrapers** (ones that loop over a VENUES array): collect all zero-event venue entries from the log, then spawn a subagent with WebFetch to check every URL simultaneously. Do not ask which to investigate — check all of them, fix all fixable issues (URL rot, wrong selectors), and list the unfixable ones (WAF-blocked, down, genuinely empty) at the end. This is the expected autonomous workflow for any scraper covering 20+ venues. See Section 13 for the full diagnosis workflow.
+- **Eventbrite DOM fallback**: Eventbrite stopped serving JSON-LD on search result pages (observed 2026). If a scraper uses Eventbrite search pages and the log shows "Found N events via DOM" for every state but geocoding later fails, verify that the DOM extraction code parses `city` from the location element text (e.g., text after the `•` separator in the card's location string). An empty `city: ''` from the DOM path will cascade to state centroid geocoding for every event. See Section 12.
 
 **2. Skipped events due to invalid dates**
 - The MK summary line now exposes silent skips: `✅ N new | 🔄 M updated | ⏭️ P past | ⏩ F future | ❓ X no-date | ⚠️ W no coords` (added 2026-05-25).
@@ -41,6 +43,7 @@ I just ran FunHive scrapers on Windows (`C:\dev\funhive-web`). Analyze the full 
 - 429 rate limiting: Check delay between requests (should be ≥2.5s for Nominatim)
 - Excessive "no coords" counts: Check geocoding fallback chain (address → venue → city → county centroid)
 - Check User-Agent string is descriptive (not generic)
+- **State centroid end-of-chain**: If `no coords` is low but events cluster at the center of a state on the map, geocoding may have silently succeeded using the state centroid fallback (it assigns coordinates without logging "no coords"). This happens when `city: ''` in the scraped data exhausts all fallbacks. See Section 12 for detection query and cleanup steps.
 
 **6. Fatal errors / crashes**
 - Missing npm modules: Add to `scraperDependencies` in `package.json` and note what I need to `npm install`
@@ -75,6 +78,7 @@ I just ran FunHive scrapers on Windows (`C:\dev\funhive-web`). Analyze the full 
 - **Symptoms**: All events from a source share the same coordinates (usually a state centroid). The geocoding log shows the generic source name repeated for every batch. Events cluster at the geographic center of the state on the map instead of spreading across actual venues.
 - **The fix** is always in how the scraper builds its `venues` array (or `libraries` array) for `saveEventsWithGeocoding` — it should create one venue entry per unique `event.venueName` or `event.location`, not one per state/source
 - Check that extraction functions actually populate the `location` field from DOM elements (park names, branch names, venue fields) rather than leaving it empty and falling back to the config-level name
+- **Library address false positives (non-library scrapers only)**: `geocoding-helper.js` Strategy 0 calls `getLibraryAddress()` using substring matching — it can fire when any word in the venue or source name matches a library branch name (e.g., "Charlotte" matched a China Grove NC branch; "White Plains" matched a Syracuse NY branch). Fixed 2026-06-30 with `isLibrarySource` guard (`/library|libraries|lib\b|biblioth/i` test on `sourceName`) so non-library scrapers skip Strategy 0 entirely. If you see events from a non-library scraper geocoded to suspiciously specific but wrong small cities, check whether `isLibrarySource` is accidentally matching the scraper's source name.
 
 **11. Library-system venue with no branch (MK scrapers)**
 - Look for repeated `📍 Using city-level geocode for: ...` lines where the *titles* mention library activities (storytimes, BabyTime, ToddlerTime, summer reading, etc.) and the venue would be a library system name like "Denver Public Library", "Jeffco Libraries", "Sno-Isle Libraries", etc.
@@ -85,6 +89,68 @@ I just ran FunHive scrapers on Windows (`C:\dev\funhive-web`). Analyze the full 
   2. If the MK feed uses a community-known nickname (like "Jeffco Libraries" for "Jefferson County Public Library"), add it to the `ALIASES` map at the top of `helpers/library-branch-detector.js`.
   3. Is the branch name actually present in the event title or description? Some MK feeds strip it — in that case there's nothing the detector can do without source-side branch metadata.
   4. Run `node test-branch-detector.js`-style sanity case against the offending venue/title/description tuple before adding code.
+
+**12. State/city centroid geocoding clusters**
+
+**What it looks like**: Many events from one scraper share identical coordinates matching a state centroid. Events cluster at the geographic center of a state on the map. `city` field is empty or wrong (e.g., all Charlotte-area events at China Grove NC, all White Plains events at Syracuse NY).
+
+**How to detect**: Look for `📍 Using state centroid for: ...` lines in the log. Or run this in the Supabase SQL editor after a scraper run:
+```sql
+SELECT scraper_name, state,
+  ROUND(ST_Y(location::geometry)::numeric, 4) as lat,
+  ROUND(ST_X(location::geometry)::numeric, 4) as lng,
+  COUNT(*) as cnt
+FROM events
+WHERE date >= now()
+  AND scraped_at > now() - interval '2 hours'
+GROUP BY scraper_name, state, lat, lng
+HAVING COUNT(*) > 5
+ORDER BY cnt DESC;
+```
+If `lat/lng` matches a known state centroid in `STATE_CENTROIDS` in `scrapers/helpers/geocoding-helper.js`, the geocoding chain hit the last-resort fallback.
+
+**Root causes (in order of likelihood)**:
+
+a. **Empty `city` from DOM extraction** — scraper set `city: ''`; geocoding fell through Nominatim → Photon → county centroid → state centroid. Check how city is passed to `saveEvent()` or `saveEventsWithGeocoding()`. Most common: Eventbrite DOM fallback (see Section 1). Fix: parse city from the location element text.
+
+b. **Library address false positives** — `getLibraryAddress()` fires on non-library scrapers via substring matching. Fixed 2026-06-30 with `isLibrarySource` guard. If new occurrences appear, check the scraper's source name against `/library|libraries|lib\b|biblioth/i`.
+
+c. **Geocoding rate limiting** — 429 errors exhausted all providers; fallback reached state centroid. Fix: increase delay between geocode calls.
+
+**Cleanup after fixing the root cause**: write a script following `scripts/fix-festivals-geocoding.js`:
+- Query `events` for `scraper_name = 'X'`, `date >= now()`, `city = ''`
+- Delete in batches of 100 (dry run by default; `--save` to execute)
+- Re-run the scraper to recreate events with correct coordinates
+
+Do not leave bad-coordinate events in the DB — they surface in the wrong location queries.
+
+**13. Per-venue zero-event sites within multi-venue scrapers**
+
+Scrapers like `scraper-gardens-nature-eastern.js` and `scraper-venue-events-childrens-museums.js` cover dozens of venues. When individual venues log `⚠️ No events found`, diagnose autonomously — do not ask which to investigate.
+
+**Step 1**: Build the zero-venue list from the log (all entries that logged "No events found" or "0 events").
+
+**Step 2**: Spawn a subagent with WebFetch to hit all zero-venue `eventsUrl` values simultaneously. For each report: HTTP status, whether event titles/dates are visible in the raw HTML, and what CSS classes are on event containers.
+
+**Root causes and fixes**:
+
+| Root cause | WebFetch signal | Fix |
+|---|---|---|
+| URL rot (404) | 404 response | Update `eventsUrl` in VENUES array; find correct path from site's nav |
+| Domain rebrand | 404 or redirect to new domain | Update both `url` and `eventsUrl` |
+| Wrong CSS selectors (site updated TEC version, or uses Squarespace/Webflow) | 200 + events in HTML | Add observed CSS classes to Strategy A/B in `tryHTMLScraping()` |
+| WAF-blocked (403) | 403 from all paths | Note as known issue; Puppeteer stealth can't reliably bypass |
+| Site down (ECONNREFUSED / SSL error) | Error | Note; recheck on next run |
+| Genuinely empty | 200 + "No upcoming events" text | Correct behavior; leave as-is |
+
+**TEC selector coverage** — Strategy A should cover both modern TEC (`.tribe-events-calendar-list__event`) and older variants (`.tribe-events-list article`, `.tribe-events-list-event`, `.tribe_events article`). For WordPress+TEC sites returning 0, also try the REST API: `GET {siteUrl}/wp-json/tribe/events/v1/events/?per_page=50&start_date=now`.
+
+**Non-WordPress platforms to add to Strategy B if missing**:
+- Squarespace: `.eventlist-event`, `.eventlist-title`, `.eventlist-datetag`
+- Webflow CMS: `.w-dyn-item`
+- CivicPlus (govt CMS): `.cal_container`, `.cat_container`
+
+Fix URL rot and selector issues without asking. List WAF-blocked, down, and genuinely empty sites at the end.
 
 ### Bandwidth management (Supabase free plan — 5.5 GB egress limit)
 
