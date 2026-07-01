@@ -6,7 +6,7 @@
  * Scrapes events from libraries using Communico platform (HTML method)
  * API requires authentication, so we scrape the HTML pages directly
  *
- * COVERAGE (87 libraries across 26 states):
+ * COVERAGE (90 libraries across 28 states):
  *
  * CA (4 libraries - 4.39M people):
  * - Berkeley Public Library (120K)
@@ -150,7 +150,14 @@
  * NH (1 library):
  * - Peterborough Town Library
  *
- * Total: 87 libraries serving ~50+ million people
+ * WV (2 libraries):
+ * - Bridgeport Public Library (Harrison County)
+ * - Huntington Public Library (Cabell County)
+ *
+ * AL (1 library):
+ * - Hoover Public Library (Jefferson County suburb)
+ *
+ * Total: 90 libraries serving ~50+ million people
  *
  * Usage:
  *   node functions/scrapers/scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js
@@ -1042,6 +1049,37 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.peterboroughtownlibrary.org',
     city: 'Peterborough',
     zipCode: '03458'
+  },
+
+  // WEST VIRGINIA (2 libraries)
+  {
+    name: 'Bridgeport Public Library',
+    url: 'https://bplwv.libnet.info/events',
+    county: 'Harrison',
+    state: 'WV',
+    website: 'https://www.bplwv.org',
+    city: 'Bridgeport',
+    zipCode: '26330'
+  },
+  {
+    name: 'Huntington Public Library',
+    url: 'https://myhpl.libnet.info/events',
+    county: 'Cabell',
+    state: 'WV',
+    website: 'https://www.cabell.lib.wv.us',
+    city: 'Huntington',
+    zipCode: '25701'
+  },
+
+  // ALABAMA (1 library)
+  {
+    name: 'Hoover Public Library',
+    url: 'https://hoover.libnet.info/events',
+    county: 'Jefferson',
+    state: 'AL',
+    website: 'https://www.hooverlibrary.org',
+    city: 'Hoover',
+    zipCode: '35216'
   }
 ];
 

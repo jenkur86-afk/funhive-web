@@ -1580,5 +1580,152 @@
     "state": "VT",
     "category": "Trampoline & Ninja Parks",
     "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Montshire Museum of Science",
+    "city": "Norwich",
+    "state": "VT",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Cairns Arena",
+    "city": "South Burlington",
+    "state": "VT",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Arena"
+  },
+  {
+    "name": "Spare Time Entertainment",
+    "city": "Colchester",
+    "state": "VT",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
+  },
+  {
+    "name": "MetroRock Vermont",
+    "city": "Winooski",
+    "state": "VT",
+    "category": "Climbing Gyms",
+    "subcategory": "Indoor Climbing"
+  },
+  {
+    "name": "Maine Discovery Museum",
+    "city": "Bangor",
+    "state": "ME",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Children's Discovery Museum"
+  },
+  {
+    "name": "Family Ice Center",
+    "city": "Falmouth",
+    "state": "ME",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Arena"
+  },
+  {
+    "name": "EVO Rock & Fitness",
+    "city": "Portland",
+    "state": "ME",
+    "category": "Climbing Gyms",
+    "subcategory": "Indoor Climbing"
+  },
+  {
+    "name": "Spare Time Entertainment",
+    "city": "Portland",
+    "state": "ME",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
+  },
+  {
+    "name": "Happy Wheels Skate Center",
+    "city": "Westbrook",
+    "state": "ME",
+    "category": "Roller Skating Rinks",
+    "subcategory": "Roller Skating"
+  },
+  {
+    "name": "Conway Arena",
+    "city": "Nashua",
+    "state": "NH",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Arena"
+  },
+  {
+    "name": "Lakeside Lanes",
+    "city": "Manchester",
+    "state": "NH",
+    "category": "Bowling Alleys",
+    "subcategory": "Candlepin Bowling"
+  },
+  {
+    "name": "Leda Lanes",
+    "city": "Nashua",
+    "state": "NH",
+    "category": "Bowling Alleys",
+    "subcategory": "Candlepin Bowling"
+  },
+  {
+    "name": "Funspot Family Fun Center",
+    "city": "Laconia",
+    "state": "NH",
+    "category": "Family Entertainment Centers",
+    "subcategory": "Arcade & Bowling"
+  },
+  {
+    "name": "South Charleston Memorial Ice Arena",
+    "city": "South Charleston",
+    "state": "WV",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Arena"
+  },
+  {
+    "name": "Mylan Park Ice Pavilion",
+    "city": "Morgantown",
+    "state": "WV",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Arena"
+  },
+  {
+    "name": "Roll-A-Rama Roller Rink",
+    "city": "Huntington",
+    "state": "WV",
+    "category": "Roller Skating Rinks",
+    "subcategory": "Roller Skating"
+  },
+  {
+    "name": "Suburban Lanes",
+    "city": "Morgantown",
+    "state": "WV",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
+  },
+  {
+    "name": "Lynn Meadows Discovery Center",
+    "city": "Gulfport",
+    "state": "MS",
+    "category": "Children's Museums",
+    "subcategory": "Interactive Museum"
+  },
+  {
+    "name": "Mississippi Coast Coliseum",
+    "city": "Biloxi",
+    "state": "MS",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Seasonal Ice Skating"
+  },
+  {
+    "name": "Funtime Skateland",
+    "city": "Pearl",
+    "state": "MS",
+    "category": "Roller Skating Rinks",
+    "subcategory": "Roller Skating"
+  },
+  {
+    "name": "Fannin Lanes",
+    "city": "Brandon",
+    "state": "MS",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
   }
 ]

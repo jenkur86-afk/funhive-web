@@ -13,7 +13,7 @@
  *   Event links under /content/ paths
  *   JSON-LD structured data on individual event pages
  *
- * COVERAGE: 25+ eastern US regions (~200-500 events per region per month)
+ * COVERAGE: 26+ eastern US regions (~200-500 events per region per month)
  *
  * Usage:
  *   node scrapers/scraper-kidsoutandabout-eastern.js                    # All regions
@@ -104,6 +104,9 @@ const REGIONS = [
 
   // South Carolina
   { slug: 'charleston', name: 'Charleston', state: 'SC', city: 'Charleston' },
+
+  // Rhode Island
+  { slug: 'providence', name: 'Providence', state: 'RI', city: 'Providence' },
 ];
 
 // ==========================================

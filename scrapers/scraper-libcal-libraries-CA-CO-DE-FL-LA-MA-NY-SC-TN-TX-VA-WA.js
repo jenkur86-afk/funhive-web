@@ -154,6 +154,9 @@
  * - Nashua Public Library
  * - Keene Public Library
  *
+ * VT (NEW):
+ * - Fletcher Free Library (Burlington)
+ *
  * Usage:
  *   node scripts/scraper-libcal-libraries.js
  */
@@ -1362,6 +1365,17 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.bangorpubliclibrary.org',
     city: 'Bangor',
     zipCode: '04401'
+  },
+
+  // VERMONT
+  {
+    name: 'Fletcher Free Library',
+    url: 'https://fletcherfree.libcal.com/calendar?cid=-1&t=d&d=0000-00-00',
+    county: 'Chittenden',
+    state: 'VT',
+    website: 'https://www.fletcherfree.org',
+    city: 'Burlington',
+    zipCode: '05401'
   },
 
   // WASHINGTON
