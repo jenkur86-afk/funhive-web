@@ -20,7 +20,7 @@
         "WV", "NC", "SC", "GA", "FL",
         "AL", "MS", "TN", "KY"
       ],
-      "active": false,
+      "active": true,
       "phase": 2,
       "notes": "Phase 2 expansion - New England, Mid-Atlantic, Southeast"
     },
