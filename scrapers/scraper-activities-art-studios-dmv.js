@@ -26,7 +26,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'ArtStudios-DMV';
+const SCRAPER_NAME = 'ArtStudios-Eastern';
 
 // ==========================================
 // VENUE DATA - DMV Art Studios & Pottery
@@ -396,6 +396,71 @@ const ART_STUDIOS = [
     venueType: 'pottery-studio',
     features: ['pottery-wheel', 'hand-building', 'classes', 'camps', 'kids-focused'],
   },
+
+  // ==========================================
+  // EASTERN US EXPANSION — ART STUDIOS
+  // ==========================================
+
+  // NEW YORK
+  { name: 'Color Me Mine New York', address: '1000 Third Ave', city: 'New York', state: 'NY', zipCode: '10022', latitude: 40.7612, longitude: -73.9669, phone: '(212) 317-0060', website: 'https://www.colormemine.com', hours: 'Mon-Thu 11am-8pm, Fri-Sat 11am-10pm, Sun 11am-7pm', county: 'New York County', description: 'Paint-your-own pottery studio in Manhattan with hundreds of pottery pieces. Walk-in sessions and birthday parties.', cost: '$10 studio fee + pottery price', ageRange: 'All Ages', isFree: false, venueType: 'paint-pottery', features: ['paint-your-own', 'pottery', 'birthday-parties', 'walk-in', 'family-friendly'] },
+  { name: 'Pinot s Palette Long Beach', address: '5 W Park Ave', city: 'Long Beach', state: 'NY', zipCode: '11561', latitude: 40.5887, longitude: -73.6588, phone: '(516) 889-0600', website: 'https://www.pinotspalette.com', hours: 'Various class times Tue-Sun', county: 'Nassau County', description: 'Paint and sip art studio on Long Island with guided painting classes, family days, and kids birthday parties.', cost: '$35-55/person', ageRange: 'Ages 5+', isFree: false, venueType: 'paint-sip', features: ['guided-painting', 'family-days', 'birthday-parties', 'canvas-art'] },
+
+  // NEW JERSEY
+  { name: 'Color Me Mine Cherry Hill', address: '2000 Route 38', city: 'Cherry Hill', state: 'NJ', zipCode: '08002', latitude: 39.9280, longitude: -75.0118, phone: '(856) 488-0080', website: 'https://www.colormemine.com', hours: 'Mon-Thu 11am-8pm, Fri-Sat 11am-10pm, Sun 11am-7pm', county: 'Camden County', description: 'Paint-your-own pottery studio in Cherry Hill NJ with walk-in sessions and birthday parties.', cost: '$10 studio fee + pottery price', ageRange: 'All Ages', isFree: false, venueType: 'paint-pottery', features: ['paint-your-own', 'pottery', 'birthday-parties', 'walk-in', 'family-friendly'] },
+
+  // PENNSYLVANIA
+  { name: 'Color Me Mine King of Prussia', address: '160 N Gulph Rd', city: 'King of Prussia', state: 'PA', zipCode: '19406', latitude: 40.0867, longitude: -75.3807, phone: '(610) 265-5000', website: 'https://www.colormemine.com', hours: 'Mon-Thu 11am-8pm, Fri-Sat 11am-10pm, Sun 11am-7pm', county: 'Montgomery County', description: 'Paint-your-own pottery studio at KOP Mall near Philadelphia. Walk-in sessions and birthday parties.', cost: '$10 studio fee + pottery price', ageRange: 'All Ages', isFree: false, venueType: 'paint-pottery', features: ['paint-your-own', 'pottery', 'birthday-parties', 'walk-in', 'family-friendly'] },
+  { name: 'Fired Up Pottery Pittsburgh', address: '1540 Babcock Blvd', city: 'Pittsburgh', state: 'PA', zipCode: '15209', latitude: 40.5074, longitude: -79.9724, phone: '(412) 821-9580', website: 'https://www.fireduppottery.com', hours: 'Mon-Sat 11am-8pm, Sun 12pm-6pm', county: 'Allegheny County', description: 'Paint-your-own pottery studio in Pittsburgh with a huge selection of pottery pieces. Walk-in welcome, birthday parties available.', cost: '$8 studio fee + pottery price', ageRange: 'All Ages', isFree: false, venueType: 'paint-pottery', features: ['paint-your-own', 'pottery', 'birthday-parties', 'walk-in', 'family-friendly'] },
+
+  // CONNECTICUT
+  { name: 'My Art Studio Westport', address: '1470 Post Rd E', city: 'Westport', state: 'CT', zipCode: '06880', latitude: 41.1390, longitude: -73.3340, phone: '(203) 557-8707', website: 'https://www.myartstudioct.com', hours: 'Mon-Sat 10am-7pm, Sun 11am-5pm', county: 'Fairfield County', description: 'Art studio in Westport CT with painting, pottery, and mixed media classes. Birthday parties and family classes available.', cost: '$20-40/session', ageRange: 'Ages 3+', isFree: false, venueType: 'art-studio', features: ['painting', 'pottery', 'mixed-media', 'birthday-parties', 'family-classes'] },
+
+  // MASSACHUSETTS
+  { name: 'Color Me Mine Brookline', address: '321 Washington St', city: 'Brookline', state: 'MA', zipCode: '02446', latitude: 42.3388, longitude: -71.1230, phone: '(617) 566-4700', website: 'https://www.colormemine.com', hours: 'Mon-Thu 11am-8pm, Fri-Sat 11am-10pm, Sun 11am-7pm', county: 'Norfolk County', description: 'Paint-your-own pottery studio in Brookline MA near Boston. Walk-in sessions and birthday parties for all ages.', cost: '$10 studio fee + pottery price', ageRange: 'All Ages', isFree: false, venueType: 'paint-pottery', features: ['paint-your-own', 'pottery', 'birthday-parties', 'walk-in', 'family-friendly'] },
+
+  // RHODE ISLAND
+  { name: 'Pinot s Palette Providence', address: '169 Westminster St', city: 'Providence', state: 'RI', zipCode: '02903', latitude: 41.8244, longitude: -71.4154, phone: '(401) 837-8160', website: 'https://www.pinotspalette.com', hours: 'Various class times Wed-Sun', county: 'Providence County', description: 'Paint and sip art studio in downtown Providence with guided painting classes, family nights, and birthday parties.', cost: '$35-50/person', ageRange: 'Ages 5+', isFree: false, venueType: 'paint-sip', features: ['guided-painting', 'family-nights', 'birthday-parties', 'canvas-art'] },
+
+  // NEW HAMPSHIRE
+  { name: 'Painting with a Twist Nashua', address: '320 Daniel Webster Hwy', city: 'Nashua', state: 'NH', zipCode: '03060', latitude: 42.7687, longitude: -71.5026, phone: '(603) 718-5665', website: 'https://www.paintingwithatwist.com', hours: 'Various class times Wed-Sun', county: 'Hillsborough County', description: 'Paint and sip studio in Nashua NH with guided painting classes and family-friendly sessions.', cost: '$35-50/person', ageRange: 'Ages 5+', isFree: false, venueType: 'paint-sip', features: ['guided-painting', 'family-sessions', 'birthday-parties', 'canvas-art'] },
+
+  // MAINE
+  { name: 'Portland Museum of Art Family Studio', address: '7 Congress Sq', city: 'Portland', state: 'ME', zipCode: '04101', latitude: 43.6553, longitude: -70.2573, phone: '(207) 775-6148', website: 'https://www.portlandmuseum.org', hours: 'Sat-Sun 10am-5pm family programs', county: 'Cumberland County', description: 'Portland Museum of Art with family studio programs, hands-on art classes, and workshops for children and families.', cost: '$12-18/person', ageRange: 'Ages 3+', isFree: false, venueType: 'art-studio', features: ['painting', 'sculpture', 'mixed-media', 'family-classes', 'museum-affiliated'] },
+
+  // VERMONT
+  { name: 'Vermont Folklife Center Middlebury', address: '88 Main St', city: 'Middlebury', state: 'VT', zipCode: '05753', latitude: 44.0154, longitude: -73.1684, phone: '(802) 388-4964', website: 'https://www.vermontfolklifecenter.org', hours: 'Mon-Sat 10am-5pm', county: 'Addison County', description: 'Vermont Folklife Center with folk art workshops, community art programs, and family creative sessions.', cost: 'Varies by program', ageRange: 'All Ages', isFree: false, venueType: 'art-studio', features: ['folk-art', 'workshops', 'community-art', 'family-programs'] },
+
+  // DELAWARE
+  { name: 'Color Me Mine Wilmington', address: '3710 Kennett Pike', city: 'Greenville', state: 'DE', zipCode: '19807', latitude: 39.7887, longitude: -75.5665, phone: '(302) 655-0100', website: 'https://www.colormemine.com', hours: 'Mon-Thu 11am-8pm, Fri-Sat 11am-10pm, Sun 11am-7pm', county: 'New Castle County', description: 'Paint-your-own pottery studio near Wilmington DE. Walk-in sessions and birthday parties for all ages.', cost: '$10 studio fee + pottery price', ageRange: 'All Ages', isFree: false, venueType: 'paint-pottery', features: ['paint-your-own', 'pottery', 'birthday-parties', 'walk-in', 'family-friendly'] },
+
+  // WEST VIRGINIA
+  { name: 'Tamarack Art Gallery Beckley', address: '1 Tamarack Park Rd', city: 'Beckley', state: 'WV', zipCode: '25801', latitude: 37.7782, longitude: -81.1873, phone: '(304) 256-6843', website: 'https://www.tamarackwv.com', hours: 'Daily 8am-6pm', county: 'Raleigh County', description: 'Tamarack arts center in Beckley WV with handmade crafts, art classes, workshops, and family art programs.', cost: 'Varies by program', ageRange: 'All Ages', isFree: false, venueType: 'art-studio', features: ['crafts', 'art-classes', 'workshops', 'family-programs', 'local-art'] },
+
+  // NORTH CAROLINA
+  { name: 'Color Me Mine Charlotte', address: '4723 Sharon Rd', city: 'Charlotte', state: 'NC', zipCode: '28210', latitude: 35.1588, longitude: -80.8336, phone: '(704) 552-9999', website: 'https://www.colormemine.com', hours: 'Mon-Thu 11am-8pm, Fri-Sat 11am-10pm, Sun 11am-7pm', county: 'Mecklenburg County', description: 'Paint-your-own pottery studio in Charlotte NC at SouthPark. Walk-in sessions and birthday parties.', cost: '$10 studio fee + pottery price', ageRange: 'All Ages', isFree: false, venueType: 'paint-pottery', features: ['paint-your-own', 'pottery', 'birthday-parties', 'walk-in', 'family-friendly'] },
+  { name: 'Painting with a Twist Raleigh', address: '4351 The Circle at North Hills St', city: 'Raleigh', state: 'NC', zipCode: '27609', latitude: 35.8529, longitude: -78.6354, phone: '(919) 855-0202', website: 'https://www.paintingwithatwist.com', hours: 'Various class times Tue-Sun', county: 'Wake County', description: 'Paint and sip studio in North Hills Raleigh with guided painting classes and family-friendly sessions.', cost: '$35-50/person', ageRange: 'Ages 5+', isFree: false, venueType: 'paint-sip', features: ['guided-painting', 'family-sessions', 'birthday-parties', 'canvas-art'] },
+
+  // SOUTH CAROLINA
+  { name: 'Color Me Mine Columbia', address: '4520 Forest Dr', city: 'Columbia', state: 'SC', zipCode: '29206', latitude: 34.0225, longitude: -80.9921, phone: '(803) 748-9999', website: 'https://www.colormemine.com', hours: 'Mon-Thu 11am-8pm, Fri-Sat 11am-10pm, Sun 11am-7pm', county: 'Richland County', description: 'Paint-your-own pottery studio in Columbia SC. Walk-in sessions and birthday parties for all ages.', cost: '$10 studio fee + pottery price', ageRange: 'All Ages', isFree: false, venueType: 'paint-pottery', features: ['paint-your-own', 'pottery', 'birthday-parties', 'walk-in', 'family-friendly'] },
+
+  // GEORGIA
+  { name: 'Color Me Mine Dunwoody', address: '4400 Ashford Dunwoody Rd', city: 'Dunwoody', state: 'GA', zipCode: '30346', latitude: 33.9248, longitude: -84.3333, phone: '(770) 394-9999', website: 'https://www.colormemine.com', hours: 'Mon-Thu 11am-8pm, Fri-Sat 11am-10pm, Sun 11am-7pm', county: 'DeKalb County', description: 'Paint-your-own pottery studio in Dunwoody near Atlanta. Walk-in sessions and birthday parties for all ages.', cost: '$10 studio fee + pottery price', ageRange: 'All Ages', isFree: false, venueType: 'paint-pottery', features: ['paint-your-own', 'pottery', 'birthday-parties', 'walk-in', 'family-friendly'] },
+
+  // FLORIDA
+  { name: 'Color Me Mine Tampa', address: '12802 N Dale Mabry Hwy', city: 'Tampa', state: 'FL', zipCode: '33618', latitude: 28.0609, longitude: -82.5070, phone: '(813) 961-0500', website: 'https://www.colormemine.com', hours: 'Mon-Thu 11am-8pm, Fri-Sat 11am-10pm, Sun 11am-7pm', county: 'Hillsborough County', description: 'Paint-your-own pottery studio in Tampa FL. Walk-in sessions and birthday parties for all ages.', cost: '$10 studio fee + pottery price', ageRange: 'All Ages', isFree: false, venueType: 'paint-pottery', features: ['paint-your-own', 'pottery', 'birthday-parties', 'walk-in', 'family-friendly'] },
+  { name: 'Color Me Mine Orlando', address: '7600 Dr Phillips Blvd', city: 'Orlando', state: 'FL', zipCode: '32819', latitude: 28.4563, longitude: -81.4891, phone: '(407) 226-0700', website: 'https://www.colormemine.com', hours: 'Mon-Thu 11am-8pm, Fri-Sat 11am-10pm, Sun 11am-7pm', county: 'Orange County', description: 'Paint-your-own pottery studio in Orlando FL. Walk-in sessions and birthday parties for all ages.', cost: '$10 studio fee + pottery price', ageRange: 'All Ages', isFree: false, venueType: 'paint-pottery', features: ['paint-your-own', 'pottery', 'birthday-parties', 'walk-in', 'family-friendly'] },
+
+  // ALABAMA
+  { name: 'Color Me Mine Vestavia Hills', address: '3000 Cahaba Village Plaza', city: 'Vestavia Hills', state: 'AL', zipCode: '35243', latitude: 33.4456, longitude: -86.7546, phone: '(205) 967-9999', website: 'https://www.colormemine.com', hours: 'Mon-Thu 11am-8pm, Fri-Sat 11am-10pm, Sun 11am-7pm', county: 'Jefferson County', description: 'Paint-your-own pottery studio in Vestavia Hills near Birmingham AL. Walk-in sessions and birthday parties.', cost: '$10 studio fee + pottery price', ageRange: 'All Ages', isFree: false, venueType: 'paint-pottery', features: ['paint-your-own', 'pottery', 'birthday-parties', 'walk-in', 'family-friendly'] },
+
+  // MISSISSIPPI
+  { name: 'Painting with a Twist Flowood', address: '100 Township Ave', city: 'Flowood', state: 'MS', zipCode: '39232', latitude: 32.3504, longitude: -90.0836, phone: '(601) 933-4000', website: 'https://www.paintingwithatwist.com', hours: 'Various class times Wed-Sun', county: 'Rankin County', description: 'Paint and sip studio near Jackson MS with guided painting classes and family-friendly sessions.', cost: '$35-50/person', ageRange: 'Ages 5+', isFree: false, venueType: 'paint-sip', features: ['guided-painting', 'family-sessions', 'birthday-parties', 'canvas-art'] },
+
+  // TENNESSEE
+  { name: 'Color Me Mine Nashville', address: '2615 Erwin Rd', city: 'Nashville', state: 'TN', zipCode: '37215', latitude: 36.0960, longitude: -86.8316, phone: '(615) 292-6644', website: 'https://www.colormemine.com', hours: 'Mon-Thu 11am-8pm, Fri-Sat 11am-10pm, Sun 11am-7pm', county: 'Davidson County', description: 'Paint-your-own pottery studio in Nashville TN. Walk-in sessions and birthday parties for all ages.', cost: '$10 studio fee + pottery price', ageRange: 'All Ages', isFree: false, venueType: 'paint-pottery', features: ['paint-your-own', 'pottery', 'birthday-parties', 'walk-in', 'family-friendly'] },
+
+  // KENTUCKY
+  { name: 'Color Me Mine Louisville', address: '190 N Hurstbourne Pkwy', city: 'Louisville', state: 'KY', zipCode: '40222', latitude: 38.2592, longitude: -85.5988, phone: '(502) 429-9999', website: 'https://www.colormemine.com', hours: 'Mon-Thu 11am-8pm, Fri-Sat 11am-10pm, Sun 11am-7pm', county: 'Jefferson County', description: 'Paint-your-own pottery studio in Louisville KY. Walk-in sessions and birthday parties for all ages.', cost: '$10 studio fee + pottery price', ageRange: 'All Ages', isFree: false, venueType: 'paint-pottery', features: ['paint-your-own', 'pottery', 'birthday-parties', 'walk-in', 'family-friendly'] },
 ];
 
 // ==========================================
@@ -504,29 +569,20 @@ async function scrapeArtStudiosDMV() {
   console.log('\n🎨 Processing Art Studios & Pottery...');
 
   // Group by state
-  const mdVenues = ART_STUDIOS.filter(v => v.state === 'MD');
-  const vaVenues = ART_STUDIOS.filter(v => v.state === 'VA');
-  const dcVenues = ART_STUDIOS.filter(v => v.state === 'DC');
-
-  console.log(`\n  Maryland (${mdVenues.length} venues):`);
-  for (const location of mdVenues) {
-    const activity = createActivityDocument(location);
-    allActivities.push(activity);
-    console.log(`    ✓ ${location.name} (${location.city})`);
+  // Group by state — handles all eastern states
+  const stateGroups = {};
+  for (const venue of ART_STUDIOS) {
+    if (!stateGroups[venue.state]) stateGroups[venue.state] = [];
+    stateGroups[venue.state].push(venue);
   }
-
-  console.log(`\n  Virginia (${vaVenues.length} venues):`);
-  for (const location of vaVenues) {
-    const activity = createActivityDocument(location);
-    allActivities.push(activity);
-    console.log(`    ✓ ${location.name} (${location.city})`);
-  }
-
-  console.log(`\n  DC (${dcVenues.length} venues):`);
-  for (const location of dcVenues) {
-    const activity = createActivityDocument(location);
-    allActivities.push(activity);
-    console.log(`    ✓ ${location.name} (${location.city})`);
+  for (const [state, venues] of Object.entries(stateGroups).sort()) {
+    console.log(`
+  ${state} (${venues.length} venues):`);
+    for (const location of venues) {
+      const activity = createActivityDocument(location);
+      allActivities.push(activity);
+      console.log(`    ✓ ${location.name} (${location.city})`);
+    }
   }
 
   console.log(`\n📊 Total activities to save: ${allActivities.length}`);

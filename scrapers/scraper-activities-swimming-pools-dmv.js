@@ -24,7 +24,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'SwimmingPools-DMV';
+const SCRAPER_NAME = 'SwimmingPools-Eastern';
 
 // ==========================================
 // VENUE DATA - DMV Swimming Pools & Aquatic Centers
@@ -350,6 +350,73 @@ const SWIMMING_POOLS = [
     isFree: true,
     features: ['lap-pool', 'diving', 'lessons', 'free-dc-residents'],
   },
+
+  // ==========================================
+  // EASTERN US EXPANSION — SWIMMING POOLS
+  // ==========================================
+
+  // NEW YORK
+  { name: 'Flushing Meadows Aquatic Center', address: ' Avery Ave and 111th St', city: 'Flushing', state: 'NY', zipCode: '11368', latitude: 40.7506, longitude: -73.8397, phone: '(718) 760-6380', website: 'https://www.nycparks.com', hours: 'Summer: Daily 11am-7pm', county: 'Queens County', description: 'NYC Parks aquatic center in Flushing Meadows with outdoor pools, family swim sessions, and swim lessons. Free for NYC residents.', cost: 'Free for NYC residents', ageRange: 'All Ages', isFree: true, features: ['outdoor-pool', 'family-swim', 'lessons', 'free', 'summer-only', 'nyc-parks'] },
+  { name: 'Asphalt Green NYC', address: '555 E 90th St', city: 'New York', state: 'NY', zipCode: '10128', latitude: 40.7816, longitude: -73.9485, phone: '(212) 369-8890', website: 'https://www.asphaltgreen.org', hours: 'Mon-Fri 5:30am-10pm, Sat-Sun 7am-9pm', county: 'New York County', description: 'Olympic-size indoor aquatic center on the Upper East Side with lap swim, family swim, and youth swim lessons year-round.', cost: '$25-35/session', ageRange: 'All Ages', isFree: false, features: ['olympic-pool', 'indoor', 'year-round', 'lessons', 'family-swim', 'lap-swim'] },
+
+  // NEW JERSEY
+  { name: 'Monmouth County Aquatic Center', address: '3000 Kozloski Rd', city: 'Freehold', state: 'NJ', zipCode: '07728', latitude: 40.2612, longitude: -74.3118, phone: '(732) 431-7990', website: 'https://www.monmouthcountyparks.com', hours: 'Mon-Fri 5:30am-9pm, Sat-Sun 6am-8pm', county: 'Monmouth County', description: 'Monmouth County aquatic center with Olympic lap pool, leisure pool, waterslides, and swim lessons for all ages.', cost: '$5-10/session', ageRange: 'All Ages', isFree: false, features: ['olympic-pool', 'leisure-pool', 'waterslides', 'lessons', 'year-round', 'county-park'] },
+
+  // PENNSYLVANIA
+  { name: 'Philadelphia Citywide Pool Program', address: '1500 Pattison Ave', city: 'Philadelphia', state: 'PA', zipCode: '19145', latitude: 39.9074, longitude: -75.1726, phone: '(215) 685-0152', website: 'https://www.phila.gov/pools', hours: 'Summer: Daily 12pm-5pm and 6pm-8pm', county: 'Philadelphia County', description: 'Philadelphia Parks and Rec outdoor pools with free public swim, lessons, and youth programs. Multiple locations throughout the city.', cost: 'Free', ageRange: 'All Ages', isFree: true, features: ['outdoor-pool', 'family-swim', 'lessons', 'free', 'summer-only', 'multiple-locations'] },
+  { name: 'Pittsburgh Citiparks Pools', address: '6000 Broad St', city: 'Pittsburgh', state: 'PA', zipCode: '15213', latitude: 40.4374, longitude: -79.9578, phone: '(412) 682-7275', website: 'https://www.pittsburghpa.gov/citiparks', hours: 'Summer: Daily 1pm-5pm and 6pm-8pm', county: 'Allegheny County', description: 'Pittsburgh Citiparks outdoor community pools with free public swim and swim lessons for youth. Multiple locations.', cost: 'Free', ageRange: 'All Ages', isFree: true, features: ['outdoor-pool', 'family-swim', 'lessons', 'free', 'summer-only', 'multiple-locations'] },
+
+  // CONNECTICUT
+  { name: 'Mitchell Aquatic Center Hartford', address: '150 New Britain Ave', city: 'Hartford', state: 'CT', zipCode: '06106', latitude: 41.7543, longitude: -72.6987, phone: '(860) 722-6350', website: 'https://www.hartford.gov/parks', hours: 'Year-round: Mon-Fri 6am-9pm, Sat-Sun 7am-6pm', county: 'Hartford County', description: 'Hartford city aquatic center with indoor 25-yard pool, family swim, and youth swim lessons year-round.', cost: '$4-8/session', ageRange: 'All Ages', isFree: false, features: ['indoor-pool', 'family-swim', 'lessons', 'year-round', 'community-center'] },
+
+  // MASSACHUSETTS
+  { name: 'Clarksburg State Park Pool Clarksburg', address: '1199 Middle Rd', city: 'Clarksburg', state: 'MA', zipCode: '01247', latitude: 42.7188, longitude: -73.0599, phone: '(413) 664-8345', website: 'https://www.mass.gov/dcr', hours: 'Summer: Daily 10am-6pm', county: 'Berkshire County', description: 'State park swimming area in the Berkshires with supervised beach and pond swimming. Lifeguards on duty during summer.', cost: '$5/person', ageRange: 'All Ages', isFree: false, features: ['pond-swimming', 'lifeguards', 'summer-only', 'nature', 'picnicking'] },
+  { name: 'YMCA Aquatics Boston', address: '316 Huntington Ave', city: 'Boston', state: 'MA', zipCode: '02115', latitude: 42.3427, longitude: -71.0898, phone: '(617) 927-8040', website: 'https://www.ymcaboston.org', hours: 'Mon-Fri 5:30am-10pm, Sat-Sun 7am-9pm', county: 'Suffolk County', description: 'Boston YMCA with indoor pool, lap swim, family swim, and swim lessons for all ages year-round.', cost: '$5-15/session (membership)', ageRange: 'All Ages', isFree: false, features: ['indoor-pool', 'family-swim', 'lessons', 'year-round', 'ymca', 'lap-swim'] },
+
+  // RHODE ISLAND
+  { name: 'Providence Recreation Centers Pools', address: '401 Elmwood Ave', city: 'Providence', state: 'RI', zipCode: '02907', latitude: 41.8066, longitude: -71.4299, phone: '(401) 680-7260', website: 'https://www.providenceri.gov/parks', hours: 'Summer: Daily 1pm-8pm', county: 'Providence County', description: 'Providence city outdoor pools with free public swim and youth programs during summer. Multiple neighborhood locations.', cost: 'Free', ageRange: 'All Ages', isFree: true, features: ['outdoor-pool', 'family-swim', 'lessons', 'free', 'summer-only', 'neighborhood-pools'] },
+
+  // NEW HAMPSHIRE
+  { name: 'Gill Stadium Pool Manchester', address: '280 Mast Rd', city: 'Manchester', state: 'NH', zipCode: '03102', latitude: 42.9907, longitude: -71.4867, phone: '(603) 624-6444', website: 'https://www.manchesternh.gov/parks', hours: 'Summer: Daily 1pm-5pm and 6pm-8pm', county: 'Hillsborough County', description: 'Manchester city outdoor pool with free public swim and youth swim lessons during summer months.', cost: '$2-4/person', ageRange: 'All Ages', isFree: false, features: ['outdoor-pool', 'family-swim', 'lessons', 'summer-only', 'affordable'] },
+
+  // MAINE
+  { name: 'Portland Recreation Pools', address: '66 Payson Park Rd', city: 'Portland', state: 'ME', zipCode: '04103', latitude: 43.6850, longitude: -70.3153, phone: '(207) 756-8275', website: 'https://www.portlandmaine.gov/parks', hours: 'Summer: Daily 1pm-5pm', county: 'Cumberland County', description: 'Portland ME city outdoor pools with supervised family swim and youth programs during summer season.', cost: '$3-5/session', ageRange: 'All Ages', isFree: false, features: ['outdoor-pool', 'family-swim', 'lessons', 'summer-only', 'affordable'] },
+
+  // VERMONT
+  { name: 'Burlington City Pool', address: '802 North Ave', city: 'Burlington', state: 'VT', zipCode: '05408', latitude: 44.4967, longitude: -73.2411, phone: '(802) 864-0123', website: 'https://www.enjoyburlington.com', hours: 'Summer: Daily 12pm-6pm', county: 'Chittenden County', description: 'Burlington VT outdoor pool with family swim and youth lessons during summer. Lifeguards on duty.', cost: '$4-6/session', ageRange: 'All Ages', isFree: false, features: ['outdoor-pool', 'family-swim', 'lessons', 'summer-only', 'community'] },
+
+  // DELAWARE
+  { name: 'Kirkwood Pool Wilmington', address: '523 Kirkwood Hwy', city: 'Wilmington', state: 'DE', zipCode: '19808', latitude: 39.7287, longitude: -75.6155, phone: '(302) 995-7620', website: 'https://www.destateparks.com', hours: 'Summer: Daily 1pm-5pm and 6pm-8pm', county: 'New Castle County', description: 'Community pool in Wilmington DE with outdoor family swim, youth lessons, and recreational swim sessions.', cost: '$3-5/session', ageRange: 'All Ages', isFree: false, features: ['outdoor-pool', 'family-swim', 'lessons', 'summer-only', 'affordable'] },
+
+  // WEST VIRGINIA
+  { name: 'Cabell Midland Aquatic Center Huntington', address: '2300 US-60', city: 'Huntington', state: 'WV', zipCode: '25701', latitude: 38.4221, longitude: -82.3953, phone: '(304) 525-9393', website: 'https://www.cabellmidlandaquatics.com', hours: 'Year-round: Mon-Fri 5:30am-9pm, Sat-Sun 7am-6pm', county: 'Cabell County', description: 'Year-round indoor aquatic center in Huntington WV with lap pool, family swim, waterslides, and swim lessons.', cost: '$5-8/session', ageRange: 'All Ages', isFree: false, features: ['indoor-pool', 'waterslides', 'family-swim', 'lessons', 'year-round', 'lap-swim'] },
+
+  // NORTH CAROLINA
+  { name: 'Charlotte Mecklenburg Aquatic Center', address: '21 W Lakeview Ave', city: 'Charlotte', state: 'NC', zipCode: '28202', latitude: 35.2271, longitude: -80.8375, phone: '(704) 336-2884', website: 'https://www.cmsparks.com', hours: 'Year-round: Mon-Fri 5:30am-9pm, Sat-Sun 7am-6pm', county: 'Mecklenburg County', description: 'Charlotte city aquatic center with indoor Olympic pool, leisure pool, family swim, and lessons for all ages.', cost: '$4-8/session', ageRange: 'All Ages', isFree: false, features: ['olympic-pool', 'leisure-pool', 'indoor', 'year-round', 'lessons', 'family-swim'] },
+  { name: 'Raleigh Aquatic Center', address: '1680 Lake Wheeler Rd', city: 'Raleigh', state: 'NC', zipCode: '27603', latitude: 35.7615, longitude: -78.6757, phone: '(919) 831-6935', website: 'https://www.raleighnc.gov', hours: 'Year-round: Mon-Fri 5:30am-9pm, Sat-Sun 7am-6pm', county: 'Wake County', description: 'Raleigh city aquatic center with 50-meter indoor pool, family swim, diving well, and youth lessons.', cost: '$4-8/session', ageRange: 'All Ages', isFree: false, features: ['olympic-pool', 'indoor', 'diving', 'year-round', 'lessons', 'family-swim'] },
+
+  // SOUTH CAROLINA
+  { name: 'Myrtle Beach Aquatics Center', address: '2000 Oak St', city: 'Myrtle Beach', state: 'SC', zipCode: '29577', latitude: 33.7001, longitude: -78.9023, phone: '(843) 918-1260', website: 'https://www.cityofmyrtlebeach.com', hours: 'Year-round: Mon-Fri 6am-9pm, Sat-Sun 7am-6pm', county: 'Horry County', description: 'Myrtle Beach city aquatic center with indoor pool, leisure pool, waterslides, and swim lessons for families.', cost: '$4-7/session', ageRange: 'All Ages', isFree: false, features: ['indoor-pool', 'waterslides', 'leisure-pool', 'year-round', 'lessons', 'family-swim'] },
+
+  // GEORGIA
+  { name: 'Georgia Tech Aquatic Center Atlanta', address: '177 North Ave NW', city: 'Atlanta', state: 'GA', zipCode: '30332', latitude: 33.7742, longitude: -84.3944, phone: '(404) 894-5100', website: 'https://www.gatech.edu/aquatics', hours: 'Mon-Fri 6am-9pm, Sat-Sun 8am-6pm (community hours)', county: 'Fulton County', description: 'Olympic-venue aquatic center at Georgia Tech open for community swim, lessons, and family programs.', cost: '$5-10/session', ageRange: 'All Ages', isFree: false, features: ['olympic-pool', 'indoor', 'year-round', 'lessons', 'family-swim', 'university'] },
+  { name: 'City of Savannah Pools', address: '1700 Drayton St', city: 'Savannah', state: 'GA', zipCode: '30315', latitude: 31.9790, longitude: -81.0990, phone: '(912) 351-3852', website: 'https://www.savannahga.gov', hours: 'Summer: Daily 12pm-5pm and 6pm-8pm', county: 'Chatham County', description: 'Savannah city outdoor pools with free family swim, youth lessons, and recreational programs during summer.', cost: 'Free', ageRange: 'All Ages', isFree: true, features: ['outdoor-pool', 'family-swim', 'lessons', 'free', 'summer-only', 'community'] },
+
+  // FLORIDA
+  { name: 'Sailfish Splash Waterpark Stuart', address: '931 SE Monterey Rd', city: 'Stuart', state: 'FL', zipCode: '34994', latitude: 27.1736, longitude: -80.2445, phone: '(772) 320-3150', website: 'https://www.sailfishsplash.com', hours: 'Seasonal: Daily 10am-6pm', county: 'Martin County', description: 'Family water park in Stuart FL with indoor Olympic pool, waterslides, lazy river, and kids water playground.', cost: '$12-18/person', ageRange: 'All Ages', isFree: false, features: ['olympic-pool', 'waterslides', 'lazy-river', 'kids-area', 'lessons', 'year-round'] },
+  { name: 'Fort Lauderdale Aquatic Complex', address: '501 Seabreeze Blvd', city: 'Fort Lauderdale', state: 'FL', zipCode: '33316', latitude: 26.1145, longitude: -80.1076, phone: '(954) 468-1580', website: 'https://www.fortlauderdale.gov', hours: 'Year-round: Mon-Fri 5:30am-9pm, Sat-Sun 7am-7pm', county: 'Broward County', description: 'Olympic aquatic center in Fort Lauderdale with 50-meter outdoor pool, family swim, and youth lessons. Former Olympic and World Championship venue.', cost: '$5-10/session', ageRange: 'All Ages', isFree: false, features: ['olympic-pool', 'outdoor', 'year-round', 'lessons', 'family-swim', 'championship-venue'] },
+
+  // ALABAMA
+  { name: 'Huntsville Aquatics Center', address: '1025 Nolen Ave SW', city: 'Huntsville', state: 'AL', zipCode: '35801', latitude: 34.7175, longitude: -86.5921, phone: '(256) 427-5900', website: 'https://www.huntsvilleal.gov', hours: 'Year-round: Mon-Fri 5:30am-9pm, Sat-Sun 7am-6pm', county: 'Madison County', description: 'Huntsville city aquatic center with indoor 50-meter pool, family swim, waterslides, and lessons for all ages.', cost: '$4-7/session', ageRange: 'All Ages', isFree: false, features: ['olympic-pool', 'indoor', 'waterslides', 'year-round', 'lessons', 'family-swim'] },
+
+  // MISSISSIPPI
+  { name: 'Ridgeland Natatorium', address: '1060 Old Agency Rd', city: 'Ridgeland', state: 'MS', zipCode: '39157', latitude: 32.4074, longitude: -90.1312, phone: '(601) 853-2011', website: 'https://www.ridgelandms.org', hours: 'Year-round: Mon-Fri 6am-9pm, Sat-Sun 8am-6pm', county: 'Madison County', description: 'Ridgeland city natatorium with indoor pool, family swim, and youth swim lessons near Jackson MS.', cost: '$4-6/session', ageRange: 'All Ages', isFree: false, features: ['indoor-pool', 'family-swim', 'lessons', 'year-round', 'lap-swim', 'affordable'] },
+
+  // TENNESSEE
+  { name: 'Nashville Centennial Sportsplex Aquatic', address: '222 25th Ave N', city: 'Nashville', state: 'TN', zipCode: '37203', latitude: 36.1534, longitude: -86.8254, phone: '(615) 862-8480', website: 'https://www.nashville.gov/sportsplex', hours: 'Year-round: Mon-Fri 5:30am-9pm, Sat-Sun 7am-6pm', county: 'Davidson County', description: 'Nashville Centennial Sportsplex aquatic center with indoor 50-meter pool, family swim, and lessons for all ages.', cost: '$4-7/session', ageRange: 'All Ages', isFree: false, features: ['olympic-pool', 'indoor', 'year-round', 'lessons', 'family-swim', 'lap-swim'] },
+
+  // KENTUCKY
+  { name: 'Louisville Crescent Hill Pool', address: '3109 Frankfort Ave', city: 'Louisville', state: 'KY', zipCode: '40206', latitude: 38.2580, longitude: -85.7119, phone: '(502) 456-8000', website: 'https://www.louisvilleky.gov/parks', hours: 'Summer: Daily 1pm-8pm', county: 'Jefferson County', description: 'Louisville outdoor pool with family swim, lap swim, and youth lessons during summer season. Affordable community aquatics.', cost: '$2-4/session', ageRange: 'All Ages', isFree: false, features: ['outdoor-pool', 'family-swim', 'lessons', 'summer-only', 'affordable', 'lap-swim'] },
 ];
 
 // ==========================================
@@ -449,29 +516,20 @@ async function scrapeSwimmingPoolsDMV() {
 
   console.log('\n🏊 Processing Swimming Pools...');
 
-  const mdPools = SWIMMING_POOLS.filter(p => p.state === 'MD');
-  const vaPools = SWIMMING_POOLS.filter(p => p.state === 'VA');
-  const dcPools = SWIMMING_POOLS.filter(p => p.state === 'DC');
-
-  console.log(`\n  Maryland (${mdPools.length} pools):`);
-  for (const location of mdPools) {
-    const activity = createActivityDocument(location);
-    allActivities.push(activity);
-    console.log(`    ✓ ${location.name} (${location.city})`);
+  // Group by state — handles all eastern states
+  const stateGroups = {};
+  for (const venue of SWIMMING_POOLS) {
+    if (!stateGroups[venue.state]) stateGroups[venue.state] = [];
+    stateGroups[venue.state].push(venue);
   }
-
-  console.log(`\n  Virginia (${vaPools.length} pools):`);
-  for (const location of vaPools) {
-    const activity = createActivityDocument(location);
-    allActivities.push(activity);
-    console.log(`    ✓ ${location.name} (${location.city})`);
-  }
-
-  console.log(`\n  DC (${dcPools.length} pools):`);
-  for (const location of dcPools) {
-    const activity = createActivityDocument(location);
-    allActivities.push(activity);
-    console.log(`    ✓ ${location.name} (${location.city})`);
+  for (const [state, venues] of Object.entries(stateGroups).sort()) {
+    console.log(`
+  ${state} (${venues.length} venues):`);
+    for (const location of venues) {
+      const activity = createActivityDocument(location);
+      allActivities.push(activity);
+      console.log(`    ✓ ${location.name} (${location.city})`);
+    }
   }
 
   console.log(`\n📊 Total activities to save: ${allActivities.length}`);

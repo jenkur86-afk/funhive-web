@@ -23,7 +23,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'MinigolfBatting-DMV';
+const SCRAPER_NAME = 'MinigolfBatting-Eastern';
 
 // ==========================================
 // VENUE DATA - DMV Mini Golf & Batting Cages
@@ -379,6 +379,74 @@ const MINIGOLF_BATTING_VENUES = [
     venueType: 'driving-range',
     features: ['driving-range', 'junior-golf', 'lessons', 'outdoor'],
   },
+
+  // ==========================================
+  // EASTERN US EXPANSION — MINI GOLF & BATTING
+  // ==========================================
+
+  // NEW YORK
+  { name: 'Adventureland Mini Golf Farmingdale', address: '2245 Broad Hollow Rd', city: 'Farmingdale', state: 'NY', zipCode: '11735', latitude: 40.7337, longitude: -73.4143, phone: '(631) 694-6868', website: 'https://www.adventurelandusa.com', hours: 'Seasonal: Daily 11am-10pm summer', county: 'Nassau County', description: 'Mini golf at Adventureland amusement park on Long Island with 18-hole course. Plus arcade and go-karts.', cost: '$8/game', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'outdoor', 'amusement-park', 'family-fun', 'seasonal'] },
+  { name: 'Randall s Island Mini Golf', address: '20 Randall s Island Park', city: 'New York', state: 'NY', zipCode: '10035', latitude: 40.7920, longitude: -73.9272, phone: '(212) 860-1819', website: 'https://www.randallsisland.org', hours: 'Seasonal: Daily 10am-8pm', county: 'New York County', description: 'Mini golf on Randall s Island in Manhattan with 18 holes and scenic views. Batting cages also available.', cost: '$8-10/game', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'batting-cages', 'outdoor', 'parks', 'nyc-parks', 'seasonal'] },
+
+  // NEW JERSEY
+  { name: 'Putting Edge Turnersville', address: '3000 NJ-168', city: 'Turnersville', state: 'NJ', zipCode: '08012', latitude: 39.7609, longitude: -75.0612, phone: '(856) 374-9100', website: 'https://www.puttingedge.com', hours: 'Mon-Thu 12pm-9pm, Fri-Sat 12pm-11pm, Sun 12pm-9pm', county: 'Gloucester County', description: 'Glow-in-the-dark indoor mini golf near Philadelphia in NJ with 18-hole cosmic course. Great year-round family activity.', cost: '$12/round', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'indoor', 'glow-in-dark', 'year-round', 'birthday-parties'] },
+
+  // PENNSYLVANIA
+  { name: 'Palace Entertainment Mini Golf Ligonier', address: '2574 US Route 30', city: 'Ligonier', state: 'PA', zipCode: '15658', latitude: 40.2326, longitude: -79.2368, phone: '(724) 238-3666', website: 'https://www.idlewild.com', hours: 'Seasonal May-Oct: Tue-Sun', county: 'Westmoreland County', description: 'Mini golf at Idlewild and Soakzone in western Pennsylvania. Whimsical 18-hole course in a beautiful park setting.', cost: '$6/round', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'outdoor', 'amusement-park', 'seasonal', 'family-friendly'] },
+  { name: 'Golf Galaxy Batting Cages Philadelphia', address: '2250 E Lincoln Hwy', city: 'Langhorne', state: 'PA', zipCode: '19047', latitude: 40.1789, longitude: -74.9122, phone: '(215) 750-8883', website: 'https://www.golfgalaxy.com', hours: 'Mon-Sat 9am-9pm, Sun 10am-7pm', county: 'Bucks County', description: 'Golf Galaxy with simulator bays, mini golf practice area, and batting cage rentals near Philadelphia.', cost: '$15-30/session', ageRange: 'Ages 6+', isFree: false, venueType: 'driving-range', features: ['batting-cages', 'golf-simulator', 'mini-golf', 'lessons', 'junior-golf'] },
+
+  // CONNECTICUT
+  { name: 'Back Nine Fun Center Middlefield', address: '1005 Linden St', city: 'Middlefield', state: 'CT', zipCode: '06455', latitude: 41.5212, longitude: -72.7254, phone: '(860) 349-0066', website: 'https://www.backninefuncenter.com', hours: 'Seasonal: Daily 10am-9pm summer', county: 'Middlesex County', description: 'Back Nine Fun Center with 18-hole mini golf, batting cages, and driving range in central Connecticut.', cost: '$7-12 per activity', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'batting-cages', 'driving-range', 'outdoor', 'seasonal'] },
+
+  // MASSACHUSETTS
+  { name: 'Kimball Farm Westford', address: '400 Littleton Rd', city: 'Westford', state: 'MA', zipCode: '01886', latitude: 42.5774, longitude: -71.4606, phone: '(978) 486-3891', website: 'https://www.kimballfarm.com', hours: 'Seasonal: Daily 10am-9pm', county: 'Middlesex County', description: 'Kimball Farm in Westford MA with 2 mini golf courses, bumper boats, batting cages, go-karts, and famous ice cream.', cost: '$7-10 per activity', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'batting-cages', 'go-karts', 'bumper-boats', 'ice-cream', 'seasonal'] },
+  { name: 'Batter s Box Easton', address: '53 Hayward St', city: 'Easton', state: 'MA', zipCode: '02375', latitude: 41.9859, longitude: -71.0892, phone: '(508) 230-4900', website: 'https://www.battersboxeaston.com', hours: 'Mon-Fri 12pm-9pm, Sat-Sun 9am-9pm', county: 'Bristol County', description: 'Batting cages complex in Easton MA with baseball and softball cages, pitching machines, and lessons for youth players.', cost: '$5-8/token', ageRange: 'Ages 5+', isFree: false, venueType: 'batting-cages', features: ['batting-cages', 'pitching-machines', 'lessons', 'youth-programs', 'indoor-cages'] },
+
+  // RHODE ISLAND
+  { name: 'Miniature Village Mini Golf Charlestown', address: '1 Miniature Village Rd', city: 'Charlestown', state: 'RI', zipCode: '02813', latitude: 41.4024, longitude: -71.6520, phone: '(401) 364-9050', website: 'https://www.miniatrevillage.com', hours: 'Seasonal Jun-Sep: Daily 10am-9pm', county: 'Washington County', description: 'Charming 19-hole mini golf in Charlestown RI featuring miniature New England buildings and coastal scenery.', cost: '$6/round', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'outdoor', 'scenic', 'seasonal', 'new-england-theme'] },
+
+  // NEW HAMPSHIRE
+  { name: 'Family Fun Pitch and Putt Laconia', address: '1 Scenic Dr', city: 'Laconia', state: 'NH', zipCode: '03246', latitude: 43.5279, longitude: -71.4695, phone: '(603) 528-2228', website: 'https://www.familyfunnh.com', hours: 'Seasonal: Daily 10am-9pm summer', county: 'Belknap County', description: 'Mini golf, batting cages, and go-karts at Lakes Region family fun center near Lake Winnipesaukee.', cost: '$7-10 per activity', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'batting-cages', 'go-karts', 'outdoor', 'seasonal', 'lake-region'] },
+
+  // MAINE
+  { name: 'Pirate s Cove Mini Golf Yarmouth', address: '192 Gilman Rd', city: 'Yarmouth', state: 'ME', zipCode: '04096', latitude: 43.7950, longitude: -70.1965, phone: '(207) 846-5227', website: 'https://www.piratescove.net', hours: 'Seasonal May-Sep: Daily 10am-9pm', county: 'Cumberland County', description: 'Pirate-themed mini golf adventure park in Yarmouth ME with 18 holes. Family classic near Portland Maine.', cost: '$8/round', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'pirate-theme', 'outdoor', 'seasonal', 'family-classic'] },
+
+  // VERMONT
+  { name: 'Spare Time Mini Golf Williston', address: '222 Granger Rd', city: 'Williston', state: 'VT', zipCode: '05495', latitude: 44.4311, longitude: -73.0652, phone: '(802) 862-0500', website: 'https://www.sparetimevt.com', hours: 'Daily 10am-10pm', county: 'Chittenden County', description: 'Indoor mini golf at Spare Time Entertainment near Burlington VT. Laser tag, bowling, and arcade also available.', cost: '$8/round', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'indoor', 'year-round', 'family-fun', 'entertainment-center'] },
+
+  // DELAWARE
+  { name: 'Swings N Things Frankford', address: '37310 Cedar Neck Rd', city: 'Frankford', state: 'DE', zipCode: '19945', latitude: 38.5012, longitude: -75.2393, phone: '(302) 732-3445', website: 'https://www.swingsnthings.com', hours: 'Seasonal: Daily 10am-9pm summer', county: 'Sussex County', description: 'Mini golf and batting cages at the Delaware beach area in Frankford. Go-karts and bumper boats also available.', cost: '$7-10 per activity', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'batting-cages', 'go-karts', 'bumper-boats', 'outdoor', 'seasonal'] },
+
+  // WEST VIRGINIA
+  { name: 'Fun Zone Family Entertainment Parkersburg', address: '2001 Seventh St', city: 'Parkersburg', state: 'WV', zipCode: '26101', latitude: 39.2650, longitude: -81.5537, phone: '(304) 485-0000', website: 'https://www.funzonewv.com', hours: 'Daily 11am-9pm', county: 'Wood County', description: 'Family entertainment center in Parkersburg WV with mini golf, batting cages, go-karts, and arcade.', cost: '$5-12 per activity', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'batting-cages', 'go-karts', 'arcade', 'birthday-parties'] },
+
+  // NORTH CAROLINA
+  { name: 'Frankie s Fun Park Mini Golf Raleigh', address: '1215 Pine Plaza Dr', city: 'Raleigh', state: 'NC', zipCode: '27615', latitude: 35.9013, longitude: -78.6578, phone: '(919) 846-4150', website: 'https://www.frankiesfunpark.com', hours: 'Mon-Thu 12pm-9pm, Fri-Sat 10am-11pm, Sun 12pm-9pm', county: 'Wake County', description: 'Frankie s Fun Park in Raleigh with 36-hole mini golf, batting cages, go-karts, laser tag, and arcade.', cost: '$5-20 per activity', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'batting-cages', 'go-karts', 'laser-tag', 'arcade', 'birthday-parties'] },
+  { name: 'Speed Street Mini Golf Charlotte', address: '8907 J M Keynes Dr', city: 'Charlotte', state: 'NC', zipCode: '28262', latitude: 35.3192, longitude: -80.7614, phone: '(704) 548-3555', website: 'https://www.speedstreetfun.com', hours: 'Mon-Thu 11am-9pm, Fri-Sat 11am-11pm, Sun 12pm-9pm', county: 'Mecklenburg County', description: 'Mini golf, go-karts, batting cages, and laser tag in Charlotte NC. Family entertainment complex.', cost: '$5-15 per activity', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'batting-cages', 'go-karts', 'laser-tag', 'birthday-parties'] },
+
+  // SOUTH CAROLINA
+  { name: 'Myrtle Beach Mini Golf Championship Course', address: '1800 21st Ave N', city: 'Myrtle Beach', state: 'SC', zipCode: '29577', latitude: 33.7054, longitude: -78.8791, phone: '(843) 626-1777', website: 'https://www.myrtlebeachminigolf.com', hours: 'Daily 9am-10pm (seasonal hours)', county: 'Horry County', description: 'Championship mini golf in Myrtle Beach with elaborately themed 18-hole courses. Multiple locations available.', cost: '$12-15/round', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'outdoor', 'themed', 'beach-location', 'family-fun'] },
+
+  // GEORGIA
+  { name: 'Stars and Strikes Mini Golf Kennesaw', address: '2700 Town Center Dr', city: 'Kennesaw', state: 'GA', zipCode: '30144', latitude: 34.0343, longitude: -84.6139, phone: '(770) 422-7005', website: 'https://www.starsandstrikes.com', hours: 'Mon-Thu 11am-10pm, Fri-Sat 11am-12am, Sun 12pm-9pm', county: 'Cobb County', description: 'Stars and Strikes Kennesaw with indoor mini golf, bowling, batting cages, laser tag, and arcade.', cost: '$5-15 per activity', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'batting-cages', 'bowling', 'laser-tag', 'birthday-parties'] },
+  { name: 'Mountasia Fun Center Marietta', address: '2200 Delk Rd SE', city: 'Marietta', state: 'GA', zipCode: '30067', latitude: 33.9162, longitude: -84.5187, phone: '(770) 955-3776', website: 'https://www.mountasiamarietta.com', hours: 'Mon-Thu 12pm-9pm, Fri-Sat 11am-11pm, Sun 12pm-9pm', county: 'Cobb County', description: 'Mountasia Fun Center in Marietta GA with 54 holes of mini golf, go-karts, batting cages, laser tag, and arcade.', cost: '$6-15 per activity', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'batting-cages', 'go-karts', 'laser-tag', 'birthday-parties'] },
+
+  // FLORIDA
+  { name: 'Congo River Mini Golf Orlando', address: '6812 International Dr', city: 'Orlando', state: 'FL', zipCode: '32819', latitude: 28.4618, longitude: -81.4639, phone: '(407) 352-0042', website: 'https://www.congoriver.com', hours: 'Daily 10am-11pm', county: 'Orange County', description: 'Congo River mini golf on International Drive Orlando with two 18-hole jungle courses, real alligators, and gem mining.', cost: '$11-14/round', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'alligators', 'gem-mining', 'themed', 'outdoor', 'family-fun'] },
+  { name: 'Batter Up Batting Cages Fort Lauderdale', address: '7250 N University Dr', city: 'Tamarac', state: 'FL', zipCode: '33321', latitude: 26.2122, longitude: -80.2554, phone: '(954) 726-0600', website: 'https://www.batterupfl.com', hours: 'Mon-Fri 12pm-9pm, Sat-Sun 9am-9pm', county: 'Broward County', description: 'Batting cages in South Florida with baseball and softball pitching machines, lessons, and youth clinics.', cost: '$3-5/token', ageRange: 'Ages 5+', isFree: false, venueType: 'batting-cages', features: ['batting-cages', 'pitching-machines', 'lessons', 'youth-programs', 'indoor-cages'] },
+
+  // ALABAMA
+  { name: 'Back Forty Fun Park Huntsville', address: '8180 US-72 W', city: 'Madison', state: 'AL', zipCode: '35758', latitude: 34.7085, longitude: -86.7495, phone: '(256) 837-8080', website: 'https://www.back40funpark.com', hours: 'Mon-Thu 12pm-9pm, Fri-Sat 10am-11pm, Sun 12pm-9pm', county: 'Madison County', description: 'Family fun park in Huntsville area with mini golf, go-karts, batting cages, laser tag, and arcade games.', cost: '$5-15 per activity', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'batting-cages', 'go-karts', 'laser-tag', 'birthday-parties'] },
+
+  // MISSISSIPPI
+  { name: 'Springridge Mini Golf Clinton', address: '100 Springridge Rd', city: 'Clinton', state: 'MS', zipCode: '39056', latitude: 32.3441, longitude: -90.3274, phone: '(601) 924-0000', website: 'https://www.springridgegolf.com', hours: 'Mon-Sat 10am-9pm, Sun 12pm-7pm', county: 'Hinds County', description: 'Mini golf and driving range in Clinton MS near Jackson. Batting cages and junior golf lessons available.', cost: '$7-10 per activity', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'batting-cages', 'driving-range', 'junior-golf', 'lessons'] },
+
+  // TENNESSEE
+  { name: 'Nashville Shores Mini Golf', address: '4001 Bell Rd', city: 'Hermitage', state: 'TN', zipCode: '37076', latitude: 36.1710, longitude: -86.6072, phone: '(615) 889-7050', website: 'https://www.nashvilleshores.com', hours: 'Seasonal: Daily 10am-8pm', county: 'Davidson County', description: 'Mini golf at Nashville Shores Lakeside Resort with 18-hole course plus waterpark and lakeside activities.', cost: '$8/round', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'outdoor', 'waterpark', 'lakeside', 'seasonal', 'birthday-parties'] },
+  { name: 'Putt Putt Golf Memphis', address: '5484 Summer Ave', city: 'Memphis', state: 'TN', zipCode: '38134', latitude: 35.1677, longitude: -89.8717, phone: '(901) 386-2992', website: 'https://www.puttputt.com', hours: 'Daily 10am-10pm', county: 'Shelby County', description: 'Putt-Putt Golf and Games in Memphis with 18-hole mini golf, go-karts, batting cages, and arcade.', cost: '$5-12 per activity', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'batting-cages', 'go-karts', 'arcade', 'birthday-parties'] },
+
+  // KENTUCKY
+  { name: 'Glowgolf Louisville', address: '2350 Cane Run Rd', city: 'Louisville', state: 'KY', zipCode: '40211', latitude: 38.2290, longitude: -85.8056, phone: '(502) 588-0000', website: 'https://www.glowgolf.com', hours: 'Mon-Thu 11am-8pm, Fri-Sat 11am-10pm, Sun 11am-7pm', county: 'Jefferson County', description: 'Glow-in-the-dark indoor mini golf in Louisville KY. 18-hole cosmic course with neon lights and fun for all ages.', cost: '$10/round', ageRange: 'All Ages', isFree: false, venueType: 'mini-golf', features: ['mini-golf', 'indoor', 'glow-in-dark', 'year-round', 'birthday-parties'] },
 ];
 
 // ==========================================
@@ -489,29 +557,20 @@ async function scrapeMinigolfBattingDMV() {
   console.log('\n⛳ Processing Mini Golf & Batting Cage Venues...');
 
   // Group by state
-  const mdVenues = MINIGOLF_BATTING_VENUES.filter(v => v.state === 'MD');
-  const vaVenues = MINIGOLF_BATTING_VENUES.filter(v => v.state === 'VA');
-  const dcVenues = MINIGOLF_BATTING_VENUES.filter(v => v.state === 'DC');
-
-  console.log(`\n  Maryland (${mdVenues.length} venues):`);
-  for (const location of mdVenues) {
-    const activity = createActivityDocument(location);
-    allActivities.push(activity);
-    console.log(`    ✓ ${location.name} (${location.city})`);
+  // Group by state — handles all eastern states
+  const stateGroups = {};
+  for (const venue of MINIGOLF_BATTING_VENUES) {
+    if (!stateGroups[venue.state]) stateGroups[venue.state] = [];
+    stateGroups[venue.state].push(venue);
   }
-
-  console.log(`\n  Virginia (${vaVenues.length} venues):`);
-  for (const location of vaVenues) {
-    const activity = createActivityDocument(location);
-    allActivities.push(activity);
-    console.log(`    ✓ ${location.name} (${location.city})`);
-  }
-
-  console.log(`\n  DC (${dcVenues.length} venues):`);
-  for (const location of dcVenues) {
-    const activity = createActivityDocument(location);
-    allActivities.push(activity);
-    console.log(`    ✓ ${location.name} (${location.city})`);
+  for (const [state, venues] of Object.entries(stateGroups).sort()) {
+    console.log(`
+  ${state} (${venues.length} venues):`);
+    for (const location of venues) {
+      const activity = createActivityDocument(location);
+      allActivities.push(activity);
+      console.log(`    ✓ ${location.name} (${location.city})`);
+    }
   }
 
   console.log(`\n📊 Total activities to save: ${allActivities.length}`);

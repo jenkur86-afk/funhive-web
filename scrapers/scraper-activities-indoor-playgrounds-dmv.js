@@ -22,7 +22,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'IndoorPlaygrounds-DMV';
+const SCRAPER_NAME = 'IndoorPlaygrounds-Eastern';
 
 // ==========================================
 // VENUE DATA - DMV Indoor Playgrounds
@@ -243,6 +243,19 @@ const URBAN_AIR_LOCATIONS = [
     hours: 'Mon-Thu 12pm-8pm, Fri 12pm-9pm, Sat 10am-9pm, Sun 11am-7pm',
     county: 'Prince George\'s County',
   },
+
+  // Eastern US expansion
+  { name: 'Urban Air New York Staten Island', address: '2560 Richmond Ave', city: 'Staten Island', state: 'NY', zipCode: '10314', latitude: 40.5844, longitude: -74.1696, phone: '', website: 'https://www.urbanair.com', hours: 'Mon-Thu 10am-8pm, Fri 10am-9pm, Sat 9am-9pm, Sun 11am-7pm', county: 'Richmond County' },
+  { name: 'Urban Air New Jersey Voorhees', address: '501 Route 73 S', city: 'Voorhees', state: 'NJ', zipCode: '08043', latitude: 39.8518, longitude: -75.0024, phone: '', website: 'https://www.urbanair.com', hours: 'Mon-Thu 10am-8pm, Fri 10am-9pm, Sat 9am-9pm, Sun 11am-7pm', county: 'Camden County' },
+  { name: 'Urban Air Pennsylvania Easton', address: '25 S 25th St', city: 'Easton', state: 'PA', zipCode: '18042', latitude: 40.6878, longitude: -75.2290, phone: '', website: 'https://www.urbanair.com', hours: 'Mon-Thu 10am-8pm, Fri 10am-9pm, Sat 9am-9pm, Sun 11am-7pm', county: 'Northampton County' },
+  { name: 'Urban Air North Carolina Charlotte', address: '7621 Pineville-Matthews Rd', city: 'Charlotte', state: 'NC', zipCode: '28226', latitude: 35.0882, longitude: -80.8687, phone: '', website: 'https://www.urbanair.com', hours: 'Mon-Thu 10am-8pm, Fri 10am-9pm, Sat 9am-9pm, Sun 11am-7pm', county: 'Mecklenburg County' },
+  { name: 'Urban Air Georgia Duluth', address: '3250 Satellite Blvd', city: 'Duluth', state: 'GA', zipCode: '30096', latitude: 33.9658, longitude: -84.1444, phone: '', website: 'https://www.urbanair.com', hours: 'Mon-Thu 10am-8pm, Fri 10am-9pm, Sat 9am-9pm, Sun 11am-7pm', county: 'Gwinnett County' },
+  { name: 'Urban Air Florida Brandon', address: '563 Brandon Town Center Dr', city: 'Brandon', state: 'FL', zipCode: '33511', latitude: 27.9374, longitude: -82.2962, phone: '', website: 'https://www.urbanair.com', hours: 'Mon-Thu 10am-8pm, Fri 10am-9pm, Sat 9am-9pm, Sun 11am-7pm', county: 'Hillsborough County' },
+  { name: 'Urban Air Tennessee Clarksville', address: '2801 Wilma Rudolph Blvd', city: 'Clarksville', state: 'TN', zipCode: '37040', latitude: 36.5393, longitude: -87.3592, phone: '', website: 'https://www.urbanair.com', hours: 'Mon-Thu 10am-8pm, Fri 10am-9pm, Sat 9am-9pm, Sun 11am-7pm', county: 'Montgomery County' },
+  { name: 'Urban Air Kentucky Louisville', address: '4801 Outer Loop', city: 'Louisville', state: 'KY', zipCode: '40219', latitude: 38.1238, longitude: -85.6876, phone: '', website: 'https://www.urbanair.com', hours: 'Mon-Thu 10am-8pm, Fri 10am-9pm, Sat 9am-9pm, Sun 11am-7pm', county: 'Jefferson County' },
+  { name: 'Urban Air Alabama Huntsville', address: '8205 Highway 72 W', city: 'Madison', state: 'AL', zipCode: '35758', latitude: 34.7077, longitude: -86.7465, phone: '', website: 'https://www.urbanair.com', hours: 'Mon-Thu 10am-8pm, Fri 10am-9pm, Sat 9am-9pm, Sun 11am-7pm', county: 'Madison County' },
+  { name: 'Urban Air Mississippi Madison', address: '1076 Highland Colony Pkwy', city: 'Madison', state: 'MS', zipCode: '39110', latitude: 32.4572, longitude: -90.1099, phone: '', website: 'https://www.urbanair.com', hours: 'Mon-Thu 10am-8pm, Fri 10am-9pm, Sat 9am-9pm, Sun 11am-7pm', county: 'Madison County' },
+  { name: 'Urban Air South Carolina Columbia', address: '520 Bush River Rd', city: 'Columbia', state: 'SC', zipCode: '29210', latitude: 34.0364, longitude: -81.1204, phone: '', website: 'https://www.urbanair.com', hours: 'Mon-Thu 10am-8pm, Fri 10am-9pm, Sat 9am-9pm, Sun 11am-7pm', county: 'Richland County' },
 ];
 
 const ZAVAZONE_LOCATIONS = [

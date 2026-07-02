@@ -27,7 +27,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'IceRinks-DMV';
+const SCRAPER_NAME = 'IceRinks-Eastern';
 
 // ==========================================
 // VENUE DATA - DMV Ice Rinks
@@ -286,6 +286,74 @@ const ICE_RINKS = [
     seasonal: true,
     features: ['public-skating', 'rentals', 'outdoor', 'shopping-nearby'],
   },
+
+  // ==========================================
+  // EASTERN US EXPANSION — ICE RINKS
+  // ==========================================
+
+  // NEW YORK
+  { name: 'The Rink at Rockefeller Center', address: '600 5th Ave', city: 'New York', state: 'NY', zipCode: '10020', latitude: 40.7587, longitude: -73.9787, phone: '(212) 332-7654', website: 'https://www.therinkatrockcenter.com', hours: 'Oct-Apr daily 9am-10pm', county: 'New York County', description: 'Iconic outdoor ice skating rink at Rockefeller Center in Manhattan. Family sessions and public skating available Oct-April.', cost: '$13-33/session', ageRange: 'All Ages', isFree: false, seasonal: true, features: ['public-skating', 'rentals', 'lessons', 'seasonal', 'outdoor', 'iconic'] },
+  { name: 'Sky Rink at Chelsea Piers', address: '23rd St at Hudson River Pier 61', city: 'New York', state: 'NY', zipCode: '10011', latitude: 40.7484, longitude: -74.0053, phone: '(212) 336-6100', website: 'https://www.chelseapiers.com/sky-rink', hours: 'Daily 8am-11pm year-round', county: 'New York County', description: 'Year-round indoor ice skating at Chelsea Piers with public sessions, lessons, and hockey programs.', cost: '$15-20/session', ageRange: 'All Ages', isFree: false, seasonal: false, features: ['public-skating', 'rentals', 'lessons', 'year-round', 'indoor'] },
+  { name: 'NYCB LIVE Ice Rink', address: '1255 Hempstead Tpke', city: 'Uniondale', state: 'NY', zipCode: '11553', latitude: 40.7224, longitude: -73.5927, phone: '(516) 794-9300', website: 'https://www.nassaucoliseum.com', hours: 'Oct-Mar: Mon-Fri 10am-5pm, Sat-Sun 12pm-5pm', county: 'Nassau County', description: 'Public ice skating at Nassau Coliseum on Long Island with family sessions and holiday skating.', cost: '$10-15/session', ageRange: 'All Ages', isFree: false, seasonal: true, features: ['public-skating', 'rentals', 'hockey', 'lessons', 'seasonal'] },
+
+  // NEW JERSEY
+  { name: 'Mennen Sports Arena', address: '161 E Hanover Ave', city: 'Morris Township', state: 'NJ', zipCode: '07960', latitude: 40.8002, longitude: -74.4844, phone: '(973) 326-7651', website: 'https://www.morriscountynj.gov/mennen', hours: 'Oct-Mar: Daily public sessions', county: 'Morris County', description: 'Morris County public ice skating arena with public sessions, figure skating lessons, and youth hockey programs.', cost: '$8-12/session', ageRange: 'All Ages', isFree: false, seasonal: true, features: ['public-skating', 'rentals', 'figure-skating', 'hockey', 'lessons'] },
+  { name: 'Codey Arena', address: '560 Northfield Ave', city: 'West Orange', state: 'NJ', zipCode: '07052', latitude: 40.7924, longitude: -74.2752, phone: '(973) 731-3828', website: 'https://www.essexcountynj.org/codey-arena', hours: 'Sep-Apr: Tue-Sun with public sessions', county: 'Essex County', description: 'Essex County public ice skating facility with family skating, lessons, and youth hockey leagues.', cost: '$8-12/session', ageRange: 'All Ages', isFree: false, seasonal: true, features: ['public-skating', 'rentals', 'hockey', 'lessons', 'county-park'] },
+
+  // PENNSYLVANIA
+  { name: 'University of Delaware Ice Arenas', address: '831 S College Ave', city: 'Newark', state: 'PA', zipCode: '19716', latitude: 39.6779, longitude: -75.7524, phone: '(302) 831-2978', website: 'https://www.udel.edu/icearenas', hours: 'Sep-Apr: Tue-Sun public sessions', county: 'New Castle County', description: 'Two ice rinks with public skating, lessons, and youth hockey. Open Sept-April with family sessions.', cost: '$8-12/session', ageRange: 'All Ages', isFree: false, seasonal: true, features: ['public-skating', 'rentals', 'figure-skating', 'hockey', 'two-rinks'] },
+  { name: 'Igloo Ice Rink Pittsburgh', address: '300 Auditorium Pl', city: 'Pittsburgh', state: 'PA', zipCode: '15212', latitude: 40.4490, longitude: -80.0167, phone: '(412) 323-5500', website: 'https://www.ppgpaints.com/arena', hours: 'Oct-Apr public sessions', county: 'Allegheny County', description: 'Public skating at PPG Paints Arena in Pittsburgh during hockey season, plus nearby outdoor rinks.', cost: '$10-15/session', ageRange: 'All Ages', isFree: false, seasonal: true, features: ['public-skating', 'rentals', 'professional-venue', 'seasonal'] },
+
+  // CONNECTICUT
+  { name: 'Ingalls Rink Yale', address: '73 Sachem St', city: 'New Haven', state: 'CT', zipCode: '06520', latitude: 41.3161, longitude: -72.9221, phone: '(203) 432-0895', website: 'https://www.yalebulldogs.com/facilities/ingalls-rink', hours: 'Oct-Mar: Tue-Sun public sessions', county: 'New Haven County', description: 'Historic Yale University skating rink (the "Whale") with public skating sessions and learn-to-skate programs.', cost: '$8-12/session', ageRange: 'All Ages', isFree: false, seasonal: true, features: ['public-skating', 'rentals', 'lessons', 'historic', 'university'] },
+
+  // MASSACHUSETTS
+  { name: 'Frog Pond Boston', address: '38 Beacon St', city: 'Boston', state: 'MA', zipCode: '02108', latitude: 42.3576, longitude: -71.0682, phone: '(617) 635-2120', website: 'https://www.bostonfrogpond.com', hours: 'Nov-Mar: Daily 10am-9pm', county: 'Suffolk County', description: 'Iconic outdoor ice skating rink in Boston Common, one of New England oldest skating spots. Free admission for children under 14.', cost: 'Adults $6, Kids free', ageRange: 'All Ages', isFree: false, seasonal: true, features: ['public-skating', 'rentals', 'outdoor', 'seasonal', 'historic', 'affordable'] },
+  { name: 'New England Sports Center', address: '212 Rte 85', city: 'Marlborough', state: 'MA', zipCode: '01752', latitude: 42.3293, longitude: -71.5553, phone: '(508) 481-3111', website: 'https://www.nesc.com', hours: 'Year-round public sessions', county: 'Middlesex County', description: 'Multi-rink ice sports facility near Boston with public skating, figure skating, and youth hockey programs.', cost: '$8-14/session', ageRange: 'All Ages', isFree: false, seasonal: false, features: ['public-skating', 'rentals', 'figure-skating', 'hockey', 'year-round', 'multiple-rinks'] },
+
+  // RHODE ISLAND
+  { name: 'Thayer Arena Providence', address: '1 Lasalle Sq', city: 'Providence', state: 'RI', zipCode: '02903', latitude: 41.8236, longitude: -71.4128, phone: '(401) 331-0700', website: 'https://www.thayerarena.com', hours: 'Sep-Apr public sessions weekends', county: 'Providence County', description: 'Public ice skating in downtown Providence with open skating sessions, lessons, and youth hockey.', cost: '$8-12/session', ageRange: 'All Ages', isFree: false, seasonal: true, features: ['public-skating', 'rentals', 'hockey', 'lessons', 'downtown'] },
+
+  // NEW HAMPSHIRE
+  { name: 'Everett Arena Concord', address: '15 Loudon Rd', city: 'Concord', state: 'NH', zipCode: '03301', latitude: 43.2098, longitude: -71.5374, phone: '(603) 226-3419', website: 'https://www.concordnh.gov/everett-arena', hours: 'Sep-Apr: Multiple public sessions weekly', county: 'Merrimack County', description: 'City of Concord ice arena with public skating, learn-to-skate programs, and youth hockey leagues.', cost: '$6-10/session', ageRange: 'All Ages', isFree: false, seasonal: true, features: ['public-skating', 'rentals', 'lessons', 'hockey', 'affordable'] },
+
+  // MAINE
+  { name: 'Alfond Youth Center Waterville', address: '126 North St', city: 'Waterville', state: 'ME', zipCode: '04901', latitude: 44.5526, longitude: -69.6317, phone: '(207) 873-0684', website: 'https://www.alfondyouthcenter.org', hours: 'Sep-Apr: Tue-Sun public sessions', county: 'Kennebec County', description: 'Alfond Youth Center ice arena with public skating, youth programs, and figure skating lessons.', cost: '$5-9/session', ageRange: 'All Ages', isFree: false, seasonal: true, features: ['public-skating', 'rentals', 'lessons', 'youth-programs', 'hockey'] },
+
+  // VERMONT
+  { name: 'Cairns Arena Burlington', address: '36 Roosevelt Hwy', city: 'South Burlington', state: 'VT', zipCode: '05403', latitude: 44.4587, longitude: -73.1887, phone: '(802) 864-0023', website: 'https://www.cairnsarena.com', hours: 'Sep-Apr: Tue-Sun public sessions', county: 'Chittenden County', description: 'South Burlington ice arena with public skating, youth hockey, and figure skating programs.', cost: '$6-10/session', ageRange: 'All Ages', isFree: false, seasonal: true, features: ['public-skating', 'rentals', 'hockey', 'figure-skating', 'lessons'] },
+
+  // DELAWARE
+  { name: 'University of Delaware Ice Arena Newark', address: '831 S College Ave', city: 'Newark', state: 'DE', zipCode: '19716', latitude: 39.6779, longitude: -75.7524, phone: '(302) 831-2978', website: 'https://www.udel.edu/icearenas', hours: 'Sep-Apr: Tue-Sun public sessions', county: 'New Castle County', description: 'Public ice skating at University of Delaware with figure skating programs and learn-to-skate classes.', cost: '$8-12/session', ageRange: 'All Ages', isFree: false, seasonal: true, features: ['public-skating', 'rentals', 'figure-skating', 'lessons', 'university'] },
+
+  // WEST VIRGINIA
+  { name: 'Big Sandy Arena Huntington', address: '1 Civic Center Dr', city: 'Huntington', state: 'WV', zipCode: '25701', latitude: 38.4192, longitude: -82.4268, phone: '(304) 696-5990', website: 'https://www.bigsandyarena.com', hours: 'Nov-Mar seasonal public sessions', county: 'Cabell County', description: 'Public ice skating at Big Sandy Arena in Huntington WV during winter season with family sessions.', cost: '$8-12/session', ageRange: 'All Ages', isFree: false, seasonal: true, features: ['public-skating', 'rentals', 'seasonal', 'family-sessions'] },
+
+  // NORTH CAROLINA
+  { name: 'Polar Ice House Charlotte', address: '8118 Outlet Village Way', city: 'Charlotte', state: 'NC', zipCode: '28273', latitude: 35.1060, longitude: -80.9613, phone: '(704) 527-9260', website: 'https://www.polaricecharlotte.com', hours: 'Year-round: Mon-Sat 10am-9pm, Sun 12pm-6pm', county: 'Mecklenburg County', description: 'Year-round indoor ice skating in Charlotte NC with public sessions, birthday parties, and hockey programs.', cost: '$8-12/session', ageRange: 'All Ages', isFree: false, seasonal: false, features: ['public-skating', 'rentals', 'hockey', 'lessons', 'year-round', 'birthday-parties'] },
+  { name: 'Triangle Sports Center Raleigh', address: '1250 Baker Rd', city: 'Wake Forest', state: 'NC', zipCode: '27587', latitude: 35.9618, longitude: -78.4874, phone: '(919) 453-0111', website: 'https://www.trianglesportscenter.com', hours: 'Year-round public sessions', county: 'Wake County', description: 'Indoor ice skating near Raleigh with public sessions, figure skating, and youth hockey leagues.', cost: '$8-12/session', ageRange: 'All Ages', isFree: false, seasonal: false, features: ['public-skating', 'rentals', 'hockey', 'figure-skating', 'year-round'] },
+
+  // SOUTH CAROLINA
+  { name: 'Carolina Ice Palace Greenville', address: '1209 Boiling Springs Rd', city: 'Boiling Springs', state: 'SC', zipCode: '29316', latitude: 35.0476, longitude: -81.9809, phone: '(864) 579-5600', website: 'https://www.carolinaicepalace.com', hours: 'Year-round: Mon-Sat 10am-9pm, Sun 12pm-6pm', county: 'Spartanburg County', description: 'Year-round indoor ice skating near Greenville SC with public sessions, lessons, and youth hockey.', cost: '$8-12/session', ageRange: 'All Ages', isFree: false, seasonal: false, features: ['public-skating', 'rentals', 'hockey', 'figure-skating', 'year-round', 'birthday-parties'] },
+
+  // GEORGIA
+  { name: 'Cascade Ice Rink Atlanta', address: '2649 Cascade Rd SW', city: 'Atlanta', state: 'GA', zipCode: '30311', latitude: 33.7146, longitude: -84.4696, phone: '(404) 755-0960', website: 'https://www.cascadeatl.com', hours: 'Tue-Sun public sessions', county: 'Fulton County', description: 'Indoor ice and roller skating in Southwest Atlanta. Public sessions and birthday parties available year-round.', cost: '$8-12/session', ageRange: 'All Ages', isFree: false, seasonal: false, features: ['public-skating', 'rentals', 'roller-rink', 'birthday-parties', 'year-round'] },
+
+  // FLORIDA
+  { name: 'Iceplex Fort Lauderdale', address: '3299 NW 5th Ave', city: 'Pompano Beach', state: 'FL', zipCode: '33064', latitude: 26.2399, longitude: -80.1199, phone: '(954) 946-5000', website: 'https://www.iceplexfl.com', hours: 'Year-round: Mon-Sun multiple sessions', county: 'Broward County', description: 'Year-round ice skating in South Florida with public sessions, youth hockey, and figure skating programs.', cost: '$8-14/session', ageRange: 'All Ages', isFree: false, seasonal: false, features: ['public-skating', 'rentals', 'hockey', 'figure-skating', 'year-round'] },
+  { name: 'RDV Sportsplex Ice Den', address: '8701 Maitland Summit Blvd', city: 'Orlando', state: 'FL', zipCode: '32810', latitude: 28.6247, longitude: -81.3958, phone: '(407) 916-2400', website: 'https://www.rdvsportsplex.com', hours: 'Year-round public sessions', county: 'Orange County', description: 'Practice facility for NHL Orlando with public skating, youth hockey, and figure skating programs year-round.', cost: '$9-14/session', ageRange: 'All Ages', isFree: false, seasonal: false, features: ['public-skating', 'rentals', 'nhl-facility', 'hockey', 'figure-skating', 'year-round'] },
+
+  // ALABAMA
+  { name: 'BJCC Ice Sports Birmingham', address: '2100 Richard Arrington Jr Blvd N', city: 'Birmingham', state: 'AL', zipCode: '35203', latitude: 33.5250, longitude: -86.8025, phone: '(205) 458-8400', website: 'https://www.bjcc.org/ice-sports', hours: 'Year-round public sessions', county: 'Jefferson County', description: 'Year-round indoor ice skating at Birmingham-Jefferson Convention Complex with public sessions and youth programs.', cost: '$8-12/session', ageRange: 'All Ages', isFree: false, seasonal: false, features: ['public-skating', 'rentals', 'hockey', 'year-round', 'birthday-parties'] },
+
+  // TENNESSEE
+  { name: 'Ford Ice Center Nashville', address: '100 Forrest Park Dr', city: 'Antioch', state: 'TN', zipCode: '37013', latitude: 36.0656, longitude: -86.6793, phone: '(615) 880-8869', website: 'https://fordice.com', hours: 'Year-round public sessions', county: 'Davidson County', description: 'Nashville Predators practice facility open to the public with skating sessions, lessons, and hockey programs.', cost: '$9-14/session', ageRange: 'All Ages', isFree: false, seasonal: false, features: ['public-skating', 'rentals', 'nhl-facility', 'hockey', 'lessons', 'year-round'] },
+
+  // KENTUCKY
+  { name: 'Lexington Ice Center', address: '560 Eureka Springs Dr', city: 'Lexington', state: 'KY', zipCode: '40517', latitude: 38.0117, longitude: -84.5022, phone: '(859) 269-5578', website: 'https://www.lexingtonicecenter.com', hours: 'Year-round public sessions', county: 'Fayette County', description: 'Year-round indoor ice skating in Lexington KY with public sessions, youth hockey leagues, and figure skating.', cost: '$7-11/session', ageRange: 'All Ages', isFree: false, seasonal: false, features: ['public-skating', 'rentals', 'hockey', 'figure-skating', 'year-round'] },
+
+  // MISSISSIPPI
+  { name: 'Ridgeland Ice Sports Center', address: '1060 Old Agency Rd', city: 'Ridgeland', state: 'MS', zipCode: '39157', latitude: 32.4074, longitude: -90.1312, phone: '(601) 853-7680', website: 'https://www.ridgelandms.org/ice-sports', hours: 'Sep-Apr public sessions', county: 'Madison County', description: 'Public ice skating near Jackson MS with seasonal sessions, youth hockey, and learn-to-skate programs.', cost: '$7-11/session', ageRange: 'All Ages', isFree: false, seasonal: true, features: ['public-skating', 'rentals', 'hockey', 'lessons', 'seasonal'] },
 ];
 
 // ==========================================
@@ -388,29 +456,20 @@ async function scrapeIceRinksDMV() {
   console.log('\n⛸️ Processing Ice Rinks...');
 
   // Group by state and type
-  const mdRinks = ICE_RINKS.filter(r => r.state === 'MD');
-  const vaRinks = ICE_RINKS.filter(r => r.state === 'VA');
-  const dcRinks = ICE_RINKS.filter(r => r.state === 'DC');
-
-  console.log(`\n  Maryland (${mdRinks.length} rinks):`);
-  for (const location of mdRinks) {
-    const activity = createActivityDocument(location);
-    allActivities.push(activity);
-    console.log(`    ✓ ${location.name} (${location.city})${location.seasonal ? ' [seasonal]' : ''}`);
+  // Group by state — handles all eastern states
+  const stateGroups = {};
+  for (const venue of ICE_RINKS) {
+    if (!stateGroups[venue.state]) stateGroups[venue.state] = [];
+    stateGroups[venue.state].push(venue);
   }
-
-  console.log(`\n  Virginia (${vaRinks.length} rinks):`);
-  for (const location of vaRinks) {
-    const activity = createActivityDocument(location);
-    allActivities.push(activity);
-    console.log(`    ✓ ${location.name} (${location.city})${location.seasonal ? ' [seasonal]' : ''}`);
-  }
-
-  console.log(`\n  DC (${dcRinks.length} rinks):`);
-  for (const location of dcRinks) {
-    const activity = createActivityDocument(location);
-    allActivities.push(activity);
-    console.log(`    ✓ ${location.name} (${location.city})${location.seasonal ? ' [seasonal]' : ''}`);
+  for (const [state, venues] of Object.entries(stateGroups).sort()) {
+    console.log(`
+  ${state} (${venues.length} venues):`);
+    for (const location of venues) {
+      const activity = createActivityDocument(location);
+      allActivities.push(activity);
+      console.log(`    ✓ ${location.name} (${location.city})`);
+    }
   }
 
   console.log(`\n📊 Total activities to save: ${allActivities.length}`);

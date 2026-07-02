@@ -27,7 +27,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'FamilyEntertainment-DMV';
+const SCRAPER_NAME = 'FamilyEntertainment-Eastern';
 
 // ==========================================
 // VENUE DATA - DMV Family Entertainment Centers
@@ -503,6 +503,67 @@ const FAMILY_ENTERTAINMENT_CENTERS = [
     venueType: 'escape-room',
     features: ['escape-rooms', 'puzzles', 'team-building', 'birthday-parties'],
   },
+
+  // ==========================================
+  // EASTERN US EXPANSION — FAMILY ENTERTAINMENT
+  // ==========================================
+
+  // NEW YORK
+  { name: 'Dave and Busters Times Square', address: '234 W 42nd St', city: 'New York', state: 'NY', zipCode: '10036', latitude: 40.7568, longitude: -73.9879, phone: '(646) 495-2015', website: 'https://www.daveandbusters.com', hours: 'Mon-Thu 10am-12am, Fri-Sat 10am-2am, Sun 10am-12am', county: 'New York County', description: 'Dave and Busters in Times Square with hundreds of arcade games, billiards, and American food. Family gaming for all ages.', cost: '$20-40 game play', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'billiards', 'dining', 'birthday-parties'] },
+  { name: 'Adventureland Farmingdale', address: '2245 Broad Hollow Rd', city: 'Farmingdale', state: 'NY', zipCode: '11735', latitude: 40.7337, longitude: -73.4143, phone: '(631) 694-6868', website: 'https://www.adventurelandusa.com', hours: 'Summer: Daily 11am-10pm; Spring/Fall: weekends only', county: 'Nassau County', description: 'Outdoor family amusement park on Long Island with rides, go-karts, mini golf, and arcade. All ages welcome.', cost: '$10-35/person', ageRange: 'All Ages', isFree: false, venueType: 'amusement-park', features: ['rides', 'go-karts', 'mini-golf', 'arcade', 'birthday-parties', 'outdoor'] },
+  { name: 'Chuck E Cheese New York Yonkers', address: '2548 Central Park Ave', city: 'Yonkers', state: 'NY', zipCode: '10710', latitude: 40.9515, longitude: -73.8477, phone: '(914) 793-1177', website: 'https://www.chuckecheese.com', hours: 'Sun-Thu 10am-9pm, Fri-Sat 10am-10pm', county: 'Westchester County', description: 'Chuck E. Cheese in Yonkers with play structures, arcade games, and birthday party packages.', cost: '$15-25/person', ageRange: 'Ages 2-12', isFree: false, venueType: 'kids-entertainment', features: ['arcade', 'play-structures', 'birthday-parties', 'pizza'] },
+
+  // NEW JERSEY
+  { name: 'Dave and Busters Westfield', address: '450 State Route 35', city: 'Aberdeen', state: 'NJ', zipCode: '07747', latitude: 40.4200, longitude: -74.2237, phone: '(732) 988-1001', website: 'https://www.daveandbusters.com', hours: 'Mon-Thu 10am-12am, Fri-Sat 10am-2am, Sun 10am-12am', county: 'Monmouth County', description: 'Dave and Busters in Monmouth County NJ with arcade games, billiards, and dining. Family friendly.', cost: '$20-40 game play', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'billiards', 'dining', 'birthday-parties'] },
+  { name: 'Diggerland USA West Berlin', address: '100 Pinedge Dr', city: 'West Berlin', state: 'NJ', zipCode: '08091', latitude: 39.8037, longitude: -74.9274, phone: '(856) 768-1110', website: 'https://www.diggerlandusa.com', hours: 'Seasonal Apr-Oct weekends, summer daily', county: 'Camden County', description: 'Unique construction-themed family park in NJ where kids operate real excavators, diggers, and construction equipment.', cost: '$32-42/person', ageRange: 'Ages 3+', isFree: false, venueType: 'theme-park', features: ['construction-rides', 'water-park', 'birthday-parties', 'unique-experience'] },
+
+  // PENNSYLVANIA
+  { name: 'Dave and Busters Philadelphia', address: '325 N Columbus Blvd', city: 'Philadelphia', state: 'PA', zipCode: '19106', latitude: 39.9529, longitude: -75.1390, phone: '(215) 413-1951', website: 'https://www.daveandbusters.com', hours: 'Mon-Thu 10am-12am, Fri-Sat 10am-2am, Sun 10am-12am', county: 'Philadelphia County', description: 'Dave and Busters on the Philadelphia waterfront with arcade games, billiards, and dining.', cost: '$20-40 game play', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'billiards', 'dining', 'birthday-parties'] },
+  { name: 'Palace Entertainment Idlewild', address: '2574 US Route 30', city: 'Ligonier', state: 'PA', zipCode: '15658', latitude: 40.2326, longitude: -79.2368, phone: '(724) 238-3666', website: 'https://www.idlewild.com', hours: 'Seasonal May-Oct: Tue-Sun 10am-6pm', county: 'Westmoreland County', description: 'Classic family amusement park in Pennsylvania with Mister Rogers Neighborhood attraction, rides, and Story Book Forest.', cost: '$25-35/person', ageRange: 'All Ages', isFree: false, venueType: 'amusement-park', features: ['rides', 'story-book-forest', 'mr-rogers', 'water-park', 'birthday-parties'] },
+
+  // CONNECTICUT
+  { name: 'Dave and Busters Manchester CT', address: '194 Buckland Hills Dr', city: 'Manchester', state: 'CT', zipCode: '06042', latitude: 41.7876, longitude: -72.5282, phone: '(860) 644-1300', website: 'https://www.daveandbusters.com', hours: 'Mon-Thu 10am-12am, Fri-Sat 10am-2am, Sun 10am-12am', county: 'Hartford County', description: 'Dave and Busters in Manchester CT with arcade games, billiards, and American dining.', cost: '$20-40 game play', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'billiards', 'dining', 'birthday-parties'] },
+
+  // MASSACHUSETTS
+  { name: 'Dave and Busters Boston', address: '210 Old Orchard Shopping Ctr', city: 'Skokie', state: 'MA', zipCode: '02169', latitude: 42.2557, longitude: -71.0003, phone: '(781) 848-9600', website: 'https://www.daveandbusters.com', hours: 'Mon-Thu 10am-12am, Fri-Sat 10am-2am, Sun 10am-12am', county: 'Norfolk County', description: 'Dave and Busters south of Boston in Quincy/Braintree area with arcade, billiards, and dining.', cost: '$20-40 game play', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'billiards', 'dining', 'birthday-parties'] },
+  { name: 'Canobie Lake Park Salem', address: '85 N Policy St', city: 'Salem', state: 'MA', zipCode: '03079', latitude: 42.8023, longitude: -71.2237, phone: '(603) 893-3506', website: 'https://www.canobie.com', hours: 'Seasonal May-Oct: daily 10am-9pm', county: 'Rockingham County', description: 'Classic New England amusement park in Salem NH (near MA border) with 85+ rides, water park, and live entertainment.', cost: '$25-40/person', ageRange: 'All Ages', isFree: false, venueType: 'amusement-park', features: ['rides', 'water-park', 'live-shows', 'birthday-parties', 'seasonal'] },
+
+  // RHODE ISLAND
+  { name: 'Dave and Busters Providence', address: '1 Providence Place', city: 'Providence', state: 'RI', zipCode: '02903', latitude: 41.8265, longitude: -71.4195, phone: '(401) 270-4555', website: 'https://www.daveandbusters.com', hours: 'Mon-Thu 10am-12am, Fri-Sat 10am-2am, Sun 10am-12am', county: 'Providence County', description: 'Dave and Busters in Providence Place Mall with arcade games, billiards, and dining.', cost: '$20-40 game play', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'billiards', 'dining', 'birthday-parties'] },
+
+  // NORTH CAROLINA
+  { name: 'Dave and Busters Charlotte', address: '4310 Sharon Rd', city: 'Charlotte', state: 'NC', zipCode: '28211', latitude: 35.1597, longitude: -80.8331, phone: '(704) 544-5555', website: 'https://www.daveandbusters.com', hours: 'Mon-Thu 10am-12am, Fri-Sat 10am-2am, Sun 10am-12am', county: 'Mecklenburg County', description: 'Dave and Busters in Charlotte NC with arcade, billiards, and dining. Family friendly with games for all ages.', cost: '$20-40 game play', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'billiards', 'dining', 'birthday-parties'] },
+  { name: 'Frankie s Fun Park Charlotte', address: '4012 Yancey Rd', city: 'Charlotte', state: 'NC', zipCode: '28217', latitude: 35.2034, longitude: -80.9076, phone: '(704) 522-7888', website: 'https://www.frankiesfunpark.com', hours: 'Mon-Thu 12pm-9pm, Fri-Sat 10am-11pm, Sun 12pm-9pm', county: 'Mecklenburg County', description: 'Frankie s Fun Park with go-karts, mini golf, laser tag, batting cages, and arcade. Great for family outings.', cost: '$5-35 per activity', ageRange: 'All Ages', isFree: false, venueType: 'family-fun', features: ['go-karts', 'mini-golf', 'laser-tag', 'batting-cages', 'arcade', 'birthday-parties'] },
+
+  // SOUTH CAROLINA
+  { name: 'Medieval Times Myrtle Beach', address: '2904 Fantasy Way', city: 'Myrtle Beach', state: 'SC', zipCode: '29579', latitude: 33.7469, longitude: -78.9136, phone: '(866) 543-9637', website: 'https://www.medievaltimes.com/myrtle-beach', hours: 'Various shows Tue-Sun', county: 'Horry County', description: 'Medieval Times dinner and tournament with jousting knights, horses, and a 4-course feast. Spectacular family entertainment.', cost: '$50-65/person', ageRange: 'All Ages', isFree: false, venueType: 'dinner-show', features: ['dinner-show', 'jousting', 'live-performance', 'birthday-parties', 'unique-experience'] },
+
+  // GEORGIA
+  { name: 'Dave and Busters Atlanta', address: '2215 D W Briarcliff Rd NE', city: 'Atlanta', state: 'GA', zipCode: '30329', latitude: 33.8109, longitude: -84.3319, phone: '(404) 320-6100', website: 'https://www.daveandbusters.com', hours: 'Mon-Thu 10am-12am, Fri-Sat 10am-2am, Sun 10am-12am', county: 'DeKalb County', description: 'Dave and Busters in Atlanta with arcade games, billiards, and dining. Family friendly with games for all ages.', cost: '$20-40 game play', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'billiards', 'dining', 'birthday-parties'] },
+  { name: 'Stars and Strikes Kennesaw', address: '2700 Town Center Dr', city: 'Kennesaw', state: 'GA', zipCode: '30144', latitude: 34.0343, longitude: -84.6139, phone: '(770) 422-7005', website: 'https://www.starsandstrikes.com', hours: 'Mon-Thu 11am-10pm, Fri-Sat 11am-12am, Sun 12pm-9pm', county: 'Cobb County', description: 'Stars and Strikes family entertainment in Kennesaw GA with bowling, laser tag, arcade, and go-karts.', cost: '$5-35 per activity', ageRange: 'All Ages', isFree: false, venueType: 'family-fun', features: ['bowling', 'laser-tag', 'arcade', 'go-karts', 'birthday-parties'] },
+
+  // FLORIDA
+  { name: 'Dave and Busters Jacksonville', address: '7631 Gate Pkwy', city: 'Jacksonville', state: 'FL', zipCode: '32256', latitude: 30.2384, longitude: -81.5526, phone: '(904) 997-4011', website: 'https://www.daveandbusters.com', hours: 'Mon-Thu 10am-12am, Fri-Sat 10am-2am, Sun 10am-12am', county: 'Duval County', description: 'Dave and Busters in Jacksonville FL with arcade games, billiards, and dining.', cost: '$20-40 game play', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'billiards', 'dining', 'birthday-parties'] },
+  { name: 'Andretti Indoor Karting Orlando', address: '9299 Universal Blvd', city: 'Orlando', state: 'FL', zipCode: '32819', latitude: 28.4659, longitude: -81.4628, phone: '(407) 988-0040', website: 'https://www.andrettikarting.com', hours: 'Mon-Thu 11am-10pm, Fri-Sat 11am-12am, Sun 11am-9pm', county: 'Orange County', description: 'Andretti Indoor Karting in Orlando with go-karts, laser tag, bowling, arcade, and VR. Massive family entertainment complex.', cost: '$15-45 per activity', ageRange: 'All Ages', isFree: false, venueType: 'family-fun', features: ['go-karts', 'laser-tag', 'bowling', 'arcade', 'vr', 'birthday-parties'] },
+
+  // ALABAMA
+  { name: 'Dave and Busters Hoover', address: '2000 Riverchase Galleria', city: 'Hoover', state: 'AL', zipCode: '35244', latitude: 33.3794, longitude: -86.7990, phone: '(205) 990-2450', website: 'https://www.daveandbusters.com', hours: 'Mon-Thu 10am-12am, Fri-Sat 10am-2am, Sun 10am-12am', county: 'Jefferson County', description: 'Dave and Busters in the Riverchase Galleria in Hoover AL with arcade, billiards, and dining.', cost: '$20-40 game play', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'billiards', 'dining', 'birthday-parties'] },
+
+  // MISSISSIPPI
+  { name: 'Fun Zone Jackson', address: '1 Lakeland Dr', city: 'Jackson', state: 'MS', zipCode: '39216', latitude: 32.3456, longitude: -90.1234, phone: '(601) 981-9800', website: 'https://www.funzonejackson.com', hours: 'Mon-Thu 11am-9pm, Fri-Sat 11am-11pm, Sun 12pm-8pm', county: 'Hinds County', description: 'Family entertainment center in Jackson MS with go-karts, mini golf, laser tag, and arcade games.', cost: '$5-25 per activity', ageRange: 'All Ages', isFree: false, venueType: 'family-fun', features: ['go-karts', 'mini-golf', 'laser-tag', 'arcade', 'birthday-parties'] },
+
+  // TENNESSEE
+  { name: 'Dave and Busters Nashville', address: '1975 Galleria Blvd', city: 'Franklin', state: 'TN', zipCode: '37067', latitude: 35.9671, longitude: -86.8364, phone: '(615) 771-7700', website: 'https://www.daveandbusters.com', hours: 'Mon-Thu 10am-12am, Fri-Sat 10am-2am, Sun 10am-12am', county: 'Williamson County', description: 'Dave and Busters in Cool Springs Galleria near Nashville with arcade games, billiards, and dining.', cost: '$20-40 game play', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'billiards', 'dining', 'birthday-parties'] },
+  { name: 'Gatlinburg SkyPark', address: '805 Parkway', city: 'Gatlinburg', state: 'TN', zipCode: '37738', latitude: 35.7143, longitude: -83.5129, phone: '(865) 436-4307', website: 'https://www.gatlinburgskypark.com', hours: 'Daily 9am-9pm (seasonal hours)', county: 'Sevier County', description: 'Mountain adventure park in Gatlinburg TN with Sky Bridge, zip lines, and mountain-top views. Family adventure for all ages.', cost: '$25-40/person', ageRange: 'All Ages', isFree: false, venueType: 'adventure-park', features: ['sky-bridge', 'zip-lines', 'mountain-views', 'adventure', 'birthday-parties'] },
+
+  // KENTUCKY
+  { name: 'Dave and Busters Louisville', address: '4600 Shelbyville Rd', city: 'Louisville', state: 'KY', zipCode: '40207', latitude: 38.2486, longitude: -85.6254, phone: '(502) 893-4600', website: 'https://www.daveandbusters.com', hours: 'Mon-Thu 10am-12am, Fri-Sat 10am-2am, Sun 10am-12am', county: 'Jefferson County', description: 'Dave and Busters in Louisville KY at St. Matthews with arcade games, billiards, and dining.', cost: '$20-40 game play', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'billiards', 'dining', 'birthday-parties'] },
+
+  // WEST VIRGINIA
+  { name: 'GameWorks Charleston', address: '3000 Town Center Dr', city: 'Charleston', state: 'WV', zipCode: '25389', latitude: 38.3984, longitude: -81.6998, phone: '(304) 925-8000', website: 'https://www.gameworkscharleston.com', hours: 'Mon-Thu 12pm-9pm, Fri-Sat 11am-11pm, Sun 12pm-8pm', county: 'Kanawha County', description: 'Family entertainment center in Charleston WV with arcade games, laser tag, and birthday party packages.', cost: '$10-30 per activity', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'laser-tag', 'birthday-parties', 'family-fun'] },
+
+  // DELAWARE
+  { name: 'Dave and Busters Wilmington', address: '1600 Wilmington Pike', city: 'Glen Mills', state: 'DE', zipCode: '19342', latitude: 39.8920, longitude: -75.5157, phone: '(610) 358-8900', website: 'https://www.daveandbusters.com', hours: 'Mon-Thu 10am-12am, Fri-Sat 10am-2am, Sun 10am-12am', county: 'New Castle County', description: 'Dave and Busters near Wilmington DE at Brandywine Town Center with arcade, billiards, and dining.', cost: '$20-40 game play', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'billiards', 'dining', 'birthday-parties'] },
 ];
 
 // ==========================================
@@ -613,29 +674,20 @@ async function scrapeFamilyEntertainmentDMV() {
   console.log('\n🎮 Processing Family Entertainment Centers...');
 
   // Group by state
-  const mdVenues = FAMILY_ENTERTAINMENT_CENTERS.filter(v => v.state === 'MD');
-  const vaVenues = FAMILY_ENTERTAINMENT_CENTERS.filter(v => v.state === 'VA');
-  const dcVenues = FAMILY_ENTERTAINMENT_CENTERS.filter(v => v.state === 'DC');
-
-  console.log(`\n  Maryland (${mdVenues.length} venues):`);
-  for (const location of mdVenues) {
-    const activity = createActivityDocument(location);
-    allActivities.push(activity);
-    console.log(`    ✓ ${location.name} (${location.city})`);
+  // Group by state — handles all eastern states
+  const stateGroups = {};
+  for (const venue of FAMILY_ENTERTAINMENT_CENTERS) {
+    if (!stateGroups[venue.state]) stateGroups[venue.state] = [];
+    stateGroups[venue.state].push(venue);
   }
-
-  console.log(`\n  Virginia (${vaVenues.length} venues):`);
-  for (const location of vaVenues) {
-    const activity = createActivityDocument(location);
-    allActivities.push(activity);
-    console.log(`    ✓ ${location.name} (${location.city})`);
-  }
-
-  console.log(`\n  DC (${dcVenues.length} venues):`);
-  for (const location of dcVenues) {
-    const activity = createActivityDocument(location);
-    allActivities.push(activity);
-    console.log(`    ✓ ${location.name} (${location.city})`);
+  for (const [state, venues] of Object.entries(stateGroups).sort()) {
+    console.log(`
+  ${state} (${venues.length} venues):`);
+    for (const location of venues) {
+      const activity = createActivityDocument(location);
+      allActivities.push(activity);
+      console.log(`    ✓ ${location.name} (${location.city})`);
+    }
   }
 
   console.log(`\n📊 Total activities to save: ${allActivities.length}`);
