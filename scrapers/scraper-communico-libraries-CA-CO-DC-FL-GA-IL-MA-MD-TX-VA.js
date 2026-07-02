@@ -1071,7 +1071,7 @@ const LIBRARY_SYSTEMS = [
     zipCode: '25701'
   },
 
-  // ALABAMA (1 library)
+  // ALABAMA (2 libraries)
   {
     name: 'Hoover Public Library',
     url: 'https://hoover.libnet.info/events',
@@ -1080,6 +1080,55 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.hooverlibrary.org',
     city: 'Hoover',
     zipCode: '35216'
+  },
+  {
+    name: 'Trussville Public Library',
+    url: 'https://jclctrussville.libnet.info/events',
+    county: 'Jefferson',
+    state: 'AL',
+    website: 'https://www.trussvillelibrary.com',
+    city: 'Trussville',
+    zipCode: '35173'
+  },
+
+  // KENTUCKY (new — 3 additional libraries)
+  {
+    name: 'Muhlenberg County Public Libraries',
+    url: 'https://mcplib.libnet.info/events',
+    county: 'Muhlenberg',
+    state: 'KY',
+    website: 'https://www.mcplib.net',
+    city: 'Greenville',
+    zipCode: '42345'
+  },
+  {
+    name: 'Anderson Public Library',
+    url: 'https://aplkentucky.libnet.info/events',
+    county: 'Anderson',
+    state: 'KY',
+    website: 'https://www.andersonpubliclibrary.org',
+    city: 'Lawrenceburg',
+    zipCode: '40342'
+  },
+  {
+    name: 'Pike County Public Library',
+    url: 'https://informationplace.libnet.info/events',
+    county: 'Pike',
+    state: 'KY',
+    website: 'https://www.theinformationplace.org',
+    city: 'Pikeville',
+    zipCode: '41501'
+  },
+
+  // TENNESSEE (new — 1 additional library)
+  {
+    name: 'Collierville Burch Library',
+    url: 'https://collierville.libnet.info/events',
+    county: 'Shelby',
+    state: 'TN',
+    website: 'https://colliervillelibrary.org',
+    city: 'Collierville',
+    zipCode: '38017'
   }
 ];
 
