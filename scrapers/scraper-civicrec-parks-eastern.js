@@ -62,11 +62,16 @@ const DEPARTMENTS = [
 
   // New Hampshire
   { slug: 'nottingham-nh', urlBase: 'https://secure.rec1.com/NH/nottingham-nh/catalog', city: 'Nottingham', state: 'NH', name: 'Nottingham Parks & Recreation', county: 'Rockingham' },
+  { slug: 'hanover-nh', urlBase: 'https://secure.rec1.com/NH/hanover-nh/catalog', city: 'Hanover', state: 'NH', name: 'Hanover Parks & Recreation', county: 'Grafton' },
 
   // Vermont
   { slug: 'town-of-milton-vt', urlBase: 'https://secure.rec1.com/VT/town-of-milton-vt/catalog', city: 'Milton', state: 'VT', name: 'Milton Recreation & Parks', county: 'Chittenden' },
   { slug: 'manchester-vt', urlBase: 'https://secure.rec1.com/VT/manchester-vt/catalog', city: 'Manchester', state: 'VT', name: 'Manchester Parks & Recreation', county: 'Bennington' },
   { slug: 'colchester-vt', urlBase: 'https://secure.rec1.com/VT/colchester-vt/catalog', city: 'Colchester', state: 'VT', name: 'Colchester Parks & Recreation', county: 'Chittenden' },
+  { slug: 'south-burlington-vt-recreation-parks', urlBase: 'https://secure.rec1.com/VT/south-burlington-vt-recreation-parks/catalog', city: 'South Burlington', state: 'VT', name: 'South Burlington Recreation & Parks', county: 'Chittenden' },
+
+  // Rhode Island
+  { slug: 'barrington-ri', urlBase: 'https://secure.rec1.com/RI/barrington-ri/catalog', city: 'Barrington', state: 'RI', name: 'Barrington Recreation', county: 'Bristol' },
 
   // Florida
   { slug: 'city-tallahassee-fl', urlBase: 'https://secure.rec1.com/FL/city-tallahassee-fl/catalog', city: 'Tallahassee', state: 'FL', name: 'City of Tallahassee Parks & Recreation', county: 'Leon' },
@@ -151,6 +156,9 @@ const DEPARTMENTS = [
   { slug: 'newport-news-va', urlBase: 'https://secure.rec1.com/VA/newport-news-va/catalog', city: 'Newport News', state: 'VA', name: 'Newport News Parks & Recreation', county: 'Newport News City' },
   { slug: 'frederick-county-va', urlBase: 'https://secure.rec1.com/VA/frederick-county-va/catalog', city: 'Winchester', state: 'VA', name: 'Frederick County Parks & Recreation', county: 'Frederick' },
   { slug: 'caroline-county-va', urlBase: 'https://secure.rec1.com/VA/caroline-county-va/catalog', city: 'Bowling Green', state: 'VA', name: 'Caroline County Parks & Recreation', county: 'Caroline' },
+  { slug: 'shenandoah-county-va', urlBase: 'https://secure.rec1.com/VA/shenandoah-county-va/catalog', city: 'Woodstock', state: 'VA', name: 'Shenandoah County Parks & Recreation', county: 'Shenandoah' },
+  { slug: 'orange-county-va', urlBase: 'https://secure.rec1.com/VA/orange-county-va/catalog', city: 'Orange', state: 'VA', name: 'Orange County Parks & Recreation', county: 'Orange' },
+  { slug: 'hampton-va', urlBase: 'https://secure.rec1.com/VA/hampton-va/catalog', city: 'Hampton', state: 'VA', name: 'Hampton Parks, Recreation & Leisure Services', county: 'Hampton City' },
 
   // Wisconsin
   { slug: 'monona-wi', urlBase: 'https://secure.rec1.com/WI/monona-wi/catalog', city: 'Monona', state: 'WI', name: 'Monona Parks & Recreation', county: 'Dane' },

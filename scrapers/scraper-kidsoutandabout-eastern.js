@@ -107,6 +107,9 @@ const REGIONS = [
 
   // Rhode Island
   { slug: 'providence', name: 'Providence', state: 'RI', city: 'Providence' },
+
+  // Maine
+  { slug: 'portland', name: 'Portland', state: 'ME', city: 'Portland' },
 ];
 
 // ==========================================
