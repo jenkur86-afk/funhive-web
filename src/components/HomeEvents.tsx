@@ -95,7 +95,7 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
           lat: coords!.lat,
           radius_miles: 50,
           max_results: 500,
-        } as any) as { data: any[] | null; error: any }
+        })
 
         if (nearbyData) {
           const futureEvents = nearbyData

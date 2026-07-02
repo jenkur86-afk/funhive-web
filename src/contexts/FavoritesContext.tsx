@@ -152,9 +152,9 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
             user_id: user.id,
             event_id: eventId || null,
             activity_id: activityId || null,
-          } as any)
+          })
           .select()
-          .single() as { data: any, error: any }
+          .single()
 
         if (error) throw error
 

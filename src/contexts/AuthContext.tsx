@@ -59,9 +59,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           search_radius_miles: 25,
           email_digest: true,
           is_premium: false,
-        } as any)
+        })
         .select()
-        .single() as { data: any, error: any }
+        .single()
 
       if (error) {
         console.error('Error creating user profile:', error)
@@ -148,8 +148,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (data.user) {
       await createDefaultProfile(data.user.id, email)
       // Update display name
-      const { error: updateError } = await (supabase
-        .from('user_settings') as any)
+      const { error: updateError } = await supabase
+        .from('user_settings')
         .update({ display_name: displayName })
         .eq('user_id', data.user.id)
 
@@ -197,8 +197,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw new Error('User not authenticated')
     }
 
-    const { error } = await (supabase
-      .from('user_settings') as any)
+    const { error } = await supabase
+      .from('user_settings')
       .update(data)
       .eq('user_id', user.id)
 

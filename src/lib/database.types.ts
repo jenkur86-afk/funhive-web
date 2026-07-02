@@ -43,6 +43,7 @@ export interface Database {
           average_rating: number
           is_sponsored: boolean
           sponsor_expires_at: string | null
+          reported: boolean
         }
         Insert: {
           id: string
@@ -74,6 +75,7 @@ export interface Database {
           average_rating?: number
           is_sponsored?: boolean
           sponsor_expires_at?: string | null
+          reported?: boolean
         }
         Update: {
           id?: string
@@ -105,7 +107,12 @@ export interface Database {
           average_rating?: number
           is_sponsored?: boolean
           sponsor_expires_at?: string | null
+          reported?: boolean
+          county?: string | null
+          latitude?: number | null
+          longitude?: number | null
         }
+        Relationships: []
       }
       events: {
         Row: {
@@ -136,6 +143,10 @@ export interface Database {
           average_rating: number
           is_sponsored: boolean
           sponsor_expires_at: string | null
+          reported: boolean
+          start_time: string | null
+          end_time: string | null
+          age_range: string | null
         }
         Insert: {
           id: string
@@ -165,6 +176,10 @@ export interface Database {
           average_rating?: number
           is_sponsored?: boolean
           sponsor_expires_at?: string | null
+          reported?: boolean
+          start_time?: string | null
+          end_time?: string | null
+          age_range?: string | null
         }
         Update: {
           id?: string
@@ -194,7 +209,12 @@ export interface Database {
           average_rating?: number
           is_sponsored?: boolean
           sponsor_expires_at?: string | null
+          reported?: boolean
+          start_time?: string | null
+          end_time?: string | null
+          age_range?: string | null
         }
+        Relationships: []
       }
       event_series: {
         Row: {
@@ -227,6 +247,7 @@ export interface Database {
           review_count?: number
           average_rating?: number
         }
+        Relationships: []
       }
       reviews: {
         Row: {
@@ -265,6 +286,7 @@ export interface Database {
           updated_at?: string
           helpful_count?: number
         }
+        Relationships: []
       }
       helpful_votes: {
         Row: {
@@ -285,6 +307,7 @@ export interface Database {
           review_id?: string
           created_at?: string
         }
+        Relationships: []
       }
       user_favorites: {
         Row: {
@@ -308,6 +331,7 @@ export interface Database {
           activity_id?: string | null
           created_at?: string
         }
+        Relationships: []
       }
       user_settings: {
         Row: {
@@ -364,6 +388,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
       scraper_logs: {
         Row: {
@@ -399,6 +424,7 @@ export interface Database {
           duration_ms?: number | null
           run_at?: string
         }
+        Relationships: []
       }
     }
     Functions: {
@@ -421,7 +447,13 @@ export interface Database {
         Returns: Database['public']['Tables']['activities']['Row'][]
       }
     }
+    Views: {
+      [_ in never]: never
+    }
     Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
       [_ in never]: never
     }
   }
