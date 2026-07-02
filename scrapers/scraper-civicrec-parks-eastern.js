@@ -54,6 +54,7 @@ const DEPARTMENTS = [
   { slug: 'coventry-ct', urlBase: 'https://secure.rec1.com/CT/coventry-ct/catalog', city: 'Coventry', state: 'CT', name: 'Coventry Parks & Recreation', county: 'Tolland' },
   { slug: 'wilton-parks-and-recreation-ct', urlBase: 'https://secure.rec1.com/CT/wilton-parks-and-recreation-ct/catalog', city: 'Wilton', state: 'CT', name: 'Wilton Parks & Recreation', county: 'Fairfield' },
   { slug: 'middlebury-ct-parks-recreation', urlBase: 'https://secure.rec1.com/CT/middlebury-ct-parks-recreation/catalog', city: 'Middlebury', state: 'CT', name: 'Middlebury Parks & Recreation', county: 'New Haven' },
+  { slug: 'hartford-sports-recreation-ct', urlBase: 'https://secure.rec1.com/CT/hartford-sports-recreation-ct/catalog', city: 'Hartford', state: 'CT', name: 'Hartford Parks & Recreation', county: 'Hartford' },
 
   // Maine
   { slug: 'orono-me', urlBase: 'https://secure.rec1.com/ME/orono-me/catalog', city: 'Orono', state: 'ME', name: 'Orono Parks & Recreation', county: 'Penobscot' },
@@ -70,9 +71,6 @@ const DEPARTMENTS = [
   { slug: 'colchester-vt', urlBase: 'https://secure.rec1.com/VT/colchester-vt/catalog', city: 'Colchester', state: 'VT', name: 'Colchester Parks & Recreation', county: 'Chittenden' },
   { slug: 'south-burlington-vt-recreation-parks', urlBase: 'https://secure.rec1.com/VT/south-burlington-vt-recreation-parks/catalog', city: 'South Burlington', state: 'VT', name: 'South Burlington Recreation & Parks', county: 'Chittenden' },
 
-  // Rhode Island
-  { slug: 'barrington-ri', urlBase: 'https://secure.rec1.com/RI/barrington-ri/catalog', city: 'Barrington', state: 'RI', name: 'Barrington Recreation', county: 'Bristol' },
-
   // Florida
   { slug: 'city-tallahassee-fl', urlBase: 'https://secure.rec1.com/FL/city-tallahassee-fl/catalog', city: 'Tallahassee', state: 'FL', name: 'City of Tallahassee Parks & Recreation', county: 'Leon' },
   { slug: 'sanford-fl', urlBase: 'https://secure.rec1.com/FL/sanford-fl/catalog', city: 'Sanford', state: 'FL', name: 'Sanford Parks & Recreation', county: 'Seminole' },
@@ -81,6 +79,11 @@ const DEPARTMENTS = [
   { slug: 'brooksville-fl', urlBase: 'https://secure.rec1.com/FL/brooksville-fl/catalog', city: 'Brooksville', state: 'FL', name: 'Brooksville Parks & Recreation', county: 'Hernando' },
   { slug: 'lauderhill-fl', urlBase: 'https://secure.rec1.com/FL/lauderhill-fl/catalog', city: 'Lauderhill', state: 'FL', name: 'Lauderhill Parks & Recreation', county: 'Broward' },
   { slug: 'martin-county-fl', urlBase: 'https://secure.rec1.com/FL/martin-county-fl/catalog', city: 'Stuart', state: 'FL', name: 'Martin County Parks & Recreation', county: 'Martin' },
+  { slug: 'pinellas-park-fl', urlBase: 'https://secure.rec1.com/FL/pinellas-park-fl/catalog', city: 'Pinellas Park', state: 'FL', name: 'Pinellas Park Parks & Recreation', county: 'Pinellas' },
+  { slug: 'flagler-county', urlBase: 'https://secure.rec1.com/FL/flagler-county/catalog', city: 'Palm Coast', state: 'FL', name: 'Flagler County Parks & Recreation', county: 'Flagler' },
+  { slug: 'pasco-county-fl', urlBase: 'https://secure.rec1.com/FL/pasco-county-fl/catalog', city: 'New Port Richey', state: 'FL', name: 'Pasco County Parks & Recreation', county: 'Pasco' },
+  { slug: 'daytona-beach-leisure-services', urlBase: 'https://secure.rec1.com/FL/daytona-beach-leisure-services/catalog', city: 'Daytona Beach', state: 'FL', name: 'City of Daytona Beach Parks & Recreation', county: 'Volusia' },
+  { slug: 'wildwood-fl', urlBase: 'https://secure.rec1.com/FL/wildwood-fl/catalog', city: 'Wildwood', state: 'FL', name: 'Wildwood Parks & Recreation', county: 'Sumter' },
 
   // Georgia
   { slug: 'gwinnett-county-parks-recreation', urlBase: 'https://secure.rec1.com/GA/gwinnett-county-parks-recreation/catalog', city: 'Lawrenceville', state: 'GA', name: 'Gwinnett County Parks & Recreation', county: 'Gwinnett' },
@@ -108,6 +111,7 @@ const DEPARTMENTS = [
   // Massachusetts
   { slug: 'melrose-ma', urlBase: 'https://secure.rec1.com/MA/melrose-ma/catalog', city: 'Melrose', state: 'MA', name: 'Melrose Recreation', county: 'Middlesex' },
   { slug: 'north-andover-ma', urlBase: 'https://secure.rec1.com/MA/north-andover-ma/catalog', city: 'North Andover', state: 'MA', name: 'North Andover Youth & Recreation', county: 'Essex' },
+  { slug: 'milton-ma-parks-recreation', urlBase: 'https://secure.rec1.com/MA/milton-ma-parks-recreation/catalog', city: 'Milton', state: 'MA', name: 'Milton Parks & Recreation', county: 'Norfolk' },
 
   // North Carolina
   { slug: 'harrisburg-nc', urlBase: 'https://secure.rec1.com/NC/harrisburg-nc/catalog', city: 'Harrisburg', state: 'NC', name: 'Harrisburg Parks & Recreation', county: 'Cabarrus' },
@@ -123,6 +127,13 @@ const DEPARTMENTS = [
   // Ohio
   { slug: 'cleveland-oh', urlBase: 'https://secure.rec1.com/OH/cleveland-oh/catalog', city: 'Cleveland', state: 'OH', name: 'Cleveland Metroparks', county: 'Cuyahoga' },
   { slug: 'mentor-oh', urlBase: 'https://secure.rec1.com/OH/mentor-oh/catalog', city: 'Mentor', state: 'OH', name: 'Mentor Parks & Recreation', county: 'Lake' },
+
+  // New York
+  { slug: 'middletown-ny', urlBase: 'https://secure.rec1.com/NY/middletown-ny/catalog', city: 'Middletown', state: 'NY', name: 'Middletown Recreation', county: 'Orange' },
+  { slug: 'new-castle-ny', urlBase: 'https://secure.rec1.com/NY/new-castle-ny/catalog', city: 'Chappaqua', state: 'NY', name: 'New Castle Recreation & Parks', county: 'Westchester' },
+  { slug: 'Town-Brighton-Parks-Recreation', urlBase: 'https://secure.rec1.com/NY/Town-Brighton-Parks-Recreation/catalog', city: 'Rochester', state: 'NY', name: 'Brighton Parks & Recreation', county: 'Monroe' },
+  { slug: 'watertown-ny', urlBase: 'https://secure.rec1.com/NY/watertown-ny/catalog', city: 'Watertown', state: 'NY', name: 'Watertown Parks & Recreation', county: 'Jefferson' },
+  { slug: 'briarcliff-manor-ny', urlBase: 'https://secure.rec1.com/NY/briarcliff-manor-ny/catalog', city: 'Briarcliff Manor', state: 'NY', name: 'Briarcliff Manor Recreation', county: 'Westchester' },
 
   // Pennsylvania
   { slug: 'bucks-county-pa-parks-recreation', urlBase: 'https://secure.rec1.com/PA/bucks-county-pa-parks-recreation/catalog', city: 'Doylestown', state: 'PA', name: 'Bucks County Parks & Recreation', county: 'Bucks' },
