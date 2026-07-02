@@ -868,6 +868,13 @@
     "subcategory": "Entertainment Center"
   },
   {
+    "name": "Southwick's Zoo",
+    "city": "Mendon",
+    "state": "MA",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
     "name": "Providence Children's Museum",
     "city": "Providence",
     "state": "RI",
@@ -901,6 +908,48 @@
     "state": "RI",
     "category": "Indoor Playgrounds",
     "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Providence Rock Gym",
+    "city": "Providence",
+    "state": "RI",
+    "category": "Climbing Gyms",
+    "subcategory": "Rock Climbing"
+  },
+  {
+    "name": "Bowl New England Providence",
+    "city": "Providence",
+    "state": "RI",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling Alley"
+  },
+  {
+    "name": "Skating Club of Rhode Island",
+    "city": "Pawtucket",
+    "state": "RI",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Rink"
+  },
+  {
+    "name": "Skating Club of Providence",
+    "city": "Providence",
+    "state": "RI",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Rink"
+  },
+  {
+    "name": "Newport Polo",
+    "city": "Portsmouth",
+    "state": "RI",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Farm"
+  },
+  {
+    "name": "Bowlero Providence",
+    "city": "Providence",
+    "state": "RI",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling Alley"
   },
   {
     "name": "Connecticut Science Center",
@@ -943,6 +992,41 @@
     "state": "CT",
     "category": "Indoor Playgrounds",
     "subcategory": "Indoor Play"
+  },
+  {
+    "name": "The Maritime Aquarium at Norwalk",
+    "city": "Norwalk",
+    "state": "CT",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Aquarium"
+  },
+  {
+    "name": "Stepping Stones Museum for Children",
+    "city": "Norwalk",
+    "state": "CT",
+    "category": "Children's Museums",
+    "subcategory": "Children's Museum"
+  },
+  {
+    "name": "Sports Center of Connecticut",
+    "city": "Shelton",
+    "state": "CT",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Rink"
+  },
+  {
+    "name": "Bowlero Milford",
+    "city": "Milford",
+    "state": "CT",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling Alley"
+  },
+  {
+    "name": "Sky Zone Wallingford",
+    "city": "Wallingford",
+    "state": "CT",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
   },
   {
     "name": "Children's Museum of NH",
@@ -1092,6 +1176,34 @@
     "subcategory": "Movie Theater"
   },
   {
+    "name": "Raleigh School of Gymnastics",
+    "city": "Raleigh",
+    "state": "NC",
+    "category": "Gymnastics Centers",
+    "subcategory": "Gymnastics"
+  },
+  {
+    "name": "Ray's Splash Planet",
+    "city": "Charlotte",
+    "state": "NC",
+    "category": "Swimming & Splash Pads",
+    "subcategory": "Splash Pad"
+  },
+  {
+    "name": "Swingin' Things",
+    "city": "Jacksonville",
+    "state": "NC",
+    "category": "Mini Golf & Batting Cages",
+    "subcategory": "Mini Golf"
+  },
+  {
+    "name": "Painting with a Twist Charlotte",
+    "city": "Charlotte",
+    "state": "NC",
+    "category": "Art Studios & Pottery",
+    "subcategory": "Art Studio"
+  },
+  {
     "name": "EdVenture Children's Museum",
     "city": "Columbia",
     "state": "SC",
@@ -1141,6 +1253,69 @@
     "subcategory": "Bowling"
   },
   {
+    "name": "FlipCity South",
+    "city": "Columbia",
+    "state": "SC",
+    "category": "Gymnastics Centers",
+    "subcategory": "Gymnastics"
+  },
+  {
+    "name": "Splash Island Waterpark",
+    "city": "Mount Pleasant",
+    "state": "SC",
+    "category": "Swimming & Splash Pads",
+    "subcategory": "Water Park"
+  },
+  {
+    "name": "Frankie's Fun Park",
+    "city": "Greenville",
+    "state": "SC",
+    "category": "Mini Golf & Batting Cages",
+    "subcategory": "Mini Golf"
+  },
+  {
+    "name": "WonderWorks Myrtle Beach",
+    "city": "Myrtle Beach",
+    "state": "SC",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Broadway Grand Prix Myrtle Beach",
+    "city": "Myrtle Beach",
+    "state": "SC",
+    "category": "Mini Golf & Batting Cages",
+    "subcategory": "Mini Golf"
+  },
+  {
+    "name": "Bowlero Columbia",
+    "city": "Columbia",
+    "state": "SC",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling Alley"
+  },
+  {
+    "name": "Sky Zone Charleston",
+    "city": "Charleston",
+    "state": "SC",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Riverbanks Zoo Botanical Garden",
+    "city": "Columbia",
+    "state": "SC",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Botanical Garden"
+  },
+  {
+    "name": "Charleston Museum",
+    "city": "Charleston",
+    "state": "SC",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Museum"
+  },
+  {
     "name": "Children's Museum of Atlanta",
     "city": "Atlanta",
     "state": "GA",
@@ -1188,6 +1363,69 @@
     "state": "GA",
     "category": "Indoor Playgrounds",
     "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Georgia Gymnastics Academy",
+    "city": "Alpharetta",
+    "state": "GA",
+    "category": "Gymnastics Centers",
+    "subcategory": "Gymnastics"
+  },
+  {
+    "name": "Putt Putt Fun Center Augusta",
+    "city": "Augusta",
+    "state": "GA",
+    "category": "Mini Golf & Batting Cages",
+    "subcategory": "Mini Golf"
+  },
+  {
+    "name": "Color Me Mine Atlanta",
+    "city": "Atlanta",
+    "state": "GA",
+    "category": "Art Studios & Pottery",
+    "subcategory": "Art Studio"
+  },
+  {
+    "name": "Coca-Cola Space Science Center",
+    "city": "Columbus",
+    "state": "GA",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Museum of Arts and Sciences Macon",
+    "city": "Macon",
+    "state": "GA",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Stone Summit Climbing Atlanta",
+    "city": "Atlanta",
+    "state": "GA",
+    "category": "Climbing Gyms",
+    "subcategory": "Rock Climbing"
+  },
+  {
+    "name": "Bowlero Atlanta",
+    "city": "Atlanta",
+    "state": "GA",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling Alley"
+  },
+  {
+    "name": "Ice Forum at Peachtree City",
+    "city": "Peachtree City",
+    "state": "GA",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Rink"
+  },
+  {
+    "name": "National Infantry Museum",
+    "city": "Columbus",
+    "state": "GA",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Museum"
   },
   {
     "name": "Miami Children's Museum",
@@ -1246,6 +1484,76 @@
     "subcategory": "Indoor Play"
   },
   {
+    "name": "Glazer Children's Museum",
+    "city": "Tampa",
+    "state": "FL",
+    "category": "Children's Museums",
+    "subcategory": "Children's Museum"
+  },
+  {
+    "name": "Crayola Experience Orlando",
+    "city": "Orlando",
+    "state": "FL",
+    "category": "Children's Museums",
+    "subcategory": "Children's Museum"
+  },
+  {
+    "name": "Discovery Science Center Broward",
+    "city": "Fort Lauderdale",
+    "state": "FL",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Sky Zone Jacksonville",
+    "city": "Jacksonville",
+    "state": "FL",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Urban Air Jacksonville",
+    "city": "Jacksonville",
+    "state": "FL",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Sky Zone Fort Lauderdale",
+    "city": "Fort Lauderdale",
+    "state": "FL",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Iceland of Pinellas",
+    "city": "Clearwater",
+    "state": "FL",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Rink"
+  },
+  {
+    "name": "Bowlero Fort Lauderdale",
+    "city": "Fort Lauderdale",
+    "state": "FL",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling Alley"
+  },
+  {
+    "name": "AMC Town Center 20 Jacksonville",
+    "city": "Jacksonville",
+    "state": "FL",
+    "category": "Movie Theaters",
+    "subcategory": "Movie Theater"
+  },
+  {
+    "name": "Morikami Museum and Japanese Gardens",
+    "city": "Delray Beach",
+    "state": "FL",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Museum"
+  },
+  {
     "name": "McWane Science Center",
     "city": "Birmingham",
     "state": "AL",
@@ -1286,6 +1594,48 @@
     "state": "AL",
     "category": "Climbing Gyms",
     "subcategory": "Climbing Gym"
+  },
+  {
+    "name": "Alabama Splash Adventure",
+    "city": "Bessemer",
+    "state": "AL",
+    "category": "Swimming & Splash Pads",
+    "subcategory": "Water Park"
+  },
+  {
+    "name": "U.S. Space & Rocket Center",
+    "city": "Huntsville",
+    "state": "AL",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Gulf Coast Exploreum",
+    "city": "Mobile",
+    "state": "AL",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Sky Zone Huntsville",
+    "city": "Huntsville",
+    "state": "AL",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Mobile Zoo",
+    "city": "Theodore",
+    "state": "AL",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Bowlero Huntsville",
+    "city": "Huntsville",
+    "state": "AL",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling Alley"
   },
   {
     "name": "Adventure Science Center",
@@ -1349,6 +1699,41 @@
     "state": "TN",
     "category": "Bowling Alleys",
     "subcategory": "Bowling"
+  },
+  {
+    "name": "Nashville Gymnastics Training Center",
+    "city": "Nashville",
+    "state": "TN",
+    "category": "Gymnastics Centers",
+    "subcategory": "Gymnastics"
+  },
+  {
+    "name": "Nashville Shores Waterpark",
+    "city": "Nashville",
+    "state": "TN",
+    "category": "Swimming & Splash Pads",
+    "subcategory": "Water Park"
+  },
+  {
+    "name": "Dollywood's Splash Country",
+    "city": "Pigeon Forge",
+    "state": "TN",
+    "category": "Swimming & Splash Pads",
+    "subcategory": "Water Park"
+  },
+  {
+    "name": "Farragut Golf and Games",
+    "city": "Knoxville",
+    "state": "TN",
+    "category": "Mini Golf & Batting Cages",
+    "subcategory": "Mini Golf"
+  },
+  {
+    "name": "Painting with a Twist Nashville",
+    "city": "Nashville",
+    "state": "TN",
+    "category": "Art Studios & Pottery",
+    "subcategory": "Art Studio"
   },
   {
     "name": "Mississippi Children's Museum",
@@ -1426,6 +1811,34 @@
     "state": "KY",
     "category": "Ice Skating Rinks",
     "subcategory": "Ice Skating"
+  },
+  {
+    "name": "Louisville Gymnastics Academy",
+    "city": "Louisville",
+    "state": "KY",
+    "category": "Gymnastics Centers",
+    "subcategory": "Gymnastics"
+  },
+  {
+    "name": "Kentucky Kingdom",
+    "city": "Louisville",
+    "state": "KY",
+    "category": "Swimming & Splash Pads",
+    "subcategory": "Water Park"
+  },
+  {
+    "name": "Adventure Falls Mini Golf",
+    "city": "Richmond",
+    "state": "KY",
+    "category": "Mini Golf & Batting Cages",
+    "subcategory": "Mini Golf"
+  },
+  {
+    "name": "Painting with a Twist Louisville",
+    "city": "Louisville",
+    "state": "KY",
+    "category": "Art Studios & Pottery",
+    "subcategory": "Art Studio"
   },
   {
     "name": "COSI",
@@ -1722,6 +2135,41 @@
     "subcategory": "Indoor Climbing"
   },
   {
+    "name": "ECHO, Leahy Center for Lake Champlain",
+    "city": "Burlington",
+    "state": "VT",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Fairbanks Museum & Planetarium",
+    "city": "Saint Johnsbury",
+    "state": "VT",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Leddy Park Arena",
+    "city": "Burlington",
+    "state": "VT",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Rink"
+  },
+  {
+    "name": "Shelburne Museum",
+    "city": "Shelburne",
+    "state": "VT",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Museum"
+  },
+  {
+    "name": "Billings Farm and Museum",
+    "city": "Woodstock",
+    "state": "VT",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Farm"
+  },
+  {
     "name": "Maine Discovery Museum",
     "city": "Bangor",
     "state": "ME",
@@ -1757,6 +2205,41 @@
     "subcategory": "Roller Skating"
   },
   {
+    "name": "Children's Museum & Theatre of Maine",
+    "city": "Portland",
+    "state": "ME",
+    "category": "Children's Museums",
+    "subcategory": "Children's Museum"
+  },
+  {
+    "name": "Maine Wildlife Park",
+    "city": "Gray",
+    "state": "ME",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Wildlife Park"
+  },
+  {
+    "name": "Portland Observatory",
+    "city": "Portland",
+    "state": "ME",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Funtown Splashtown USA",
+    "city": "Saco",
+    "state": "ME",
+    "category": "Swimming & Splash Pads",
+    "subcategory": "Water Park"
+  },
+  {
+    "name": "Big Air Trampoline Park",
+    "city": "Portland",
+    "state": "ME",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
     "name": "Conway Arena",
     "city": "Nashua",
     "state": "NH",
@@ -1783,6 +2266,48 @@
     "state": "NH",
     "category": "Family Entertainment Centers",
     "subcategory": "Arcade & Bowling"
+  },
+  {
+    "name": "SEE Science Center",
+    "city": "Manchester",
+    "state": "NH",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Children's Museum of New Hampshire",
+    "city": "Dover",
+    "state": "NH",
+    "category": "Children's Museums",
+    "subcategory": "Children's Museum"
+  },
+  {
+    "name": "McAuliffe-Shepard Discovery Center",
+    "city": "Concord",
+    "state": "NH",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Urban Air Manchester",
+    "city": "Manchester",
+    "state": "NH",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Canobie Lake Park",
+    "city": "Salem",
+    "state": "NH",
+    "category": "Family Entertainment Centers",
+    "subcategory": "Amusement Park"
+  },
+  {
+    "name": "Story Land",
+    "city": "Glen",
+    "state": "NH",
+    "category": "Family Entertainment Centers",
+    "subcategory": "Theme Park"
   },
   {
     "name": "South Charleston Memorial Ice Arena",
@@ -1813,6 +2338,34 @@
     "subcategory": "Bowling"
   },
   {
+    "name": "Clay Center for the Arts & Sciences",
+    "city": "Charleston",
+    "state": "WV",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Good Zoo at Oglebay Resort",
+    "city": "Wheeling",
+    "state": "WV",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Oglebay Resort Ice Arena",
+    "city": "Wheeling",
+    "state": "WV",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Rink"
+  },
+  {
+    "name": "Sky Zone Charleston",
+    "city": "Charleston",
+    "state": "WV",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
     "name": "Lynn Meadows Discovery Center",
     "city": "Gulfport",
     "state": "MS",
@@ -1839,5 +2392,40 @@
     "state": "MS",
     "category": "Bowling Alleys",
     "subcategory": "Bowling"
+  },
+  {
+    "name": "Mississippi Museum of Natural Science",
+    "city": "Jackson",
+    "state": "MS",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Children's Museum of Mississippi",
+    "city": "Jackson",
+    "state": "MS",
+    "category": "Children's Museums",
+    "subcategory": "Children's Museum"
+  },
+  {
+    "name": "Mississippi Aquarium",
+    "city": "Gulfport",
+    "state": "MS",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Aquarium"
+  },
+  {
+    "name": "Sky Zone Jackson",
+    "city": "Jackson",
+    "state": "MS",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Hattiesburg Zoo",
+    "city": "Hattiesburg",
+    "state": "MS",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
   }
 ]
