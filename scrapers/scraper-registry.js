@@ -176,7 +176,12 @@ const SCRAPERS = {
     group: 2,
     state: 'WA'
   },
-  // LibCal-WV removed — WV Library Commission has no events ("No events are scheduled")
+  // LibCal-WV: WV Library Commission had no events; Morgantown Public Library added to file
+  'LibCal-WV': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalWV', type: 'puppeteer', group: 2, state: 'WV' },
+  'LibCal-AL': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalAL', type: 'puppeteer', group: 1, state: 'AL' },
+  'LibCal-ME': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalME', type: 'puppeteer', group: 3, state: 'ME' },
+  'LibCal-VT': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalVT', type: 'puppeteer', group: 2, state: 'VT' },
+  'LibCal-KY': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalKY', type: 'puppeteer', group: 1, state: 'KY' },
 
   // ============================================================================
   // COMMUNICO PLATFORM SCRAPERS (19)
@@ -894,6 +899,8 @@ const SCRAPERS = {
   'Communico-SC': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoSC', type: 'puppeteer', group: 2, state: 'SC' },
   'Communico-TN': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoTN', type: 'puppeteer', group: 3, state: 'TN' },
   'Communico-WA': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoWA', type: 'puppeteer', group: 1, state: 'WA' },
+  'Communico-AL': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoAL', type: 'puppeteer', group: 2, state: 'AL' },
+  'Communico-WV': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoWV', type: 'puppeteer', group: 3, state: 'WV' },
 
   // --- BiblioCommons new state wrapper ---
   'BiblioCommons-WI': { file: './scraper-bibliocommons-libraries-CA-CO-IL-MA-TX-VA-WA.js', exportName: 'scrapeBiblioCommonsWI', type: 'puppeteer', group: 2, state: 'WI' },
