@@ -49,10 +49,22 @@ const JURISDICTIONS = [
   // Maryland
   { slug: 'aarecparks', city: 'Annapolis', state: 'MD', name: 'Anne Arundel Recreation & Parks', county: 'Anne Arundel' },
 
+  // North Carolina (verified July 2026)
+  { slug: 'mecklenburgparks', city: 'Charlotte', state: 'NC', name: 'Mecklenburg County Parks & Recreation', county: 'Mecklenburg' },
+  { slug: 'wakeparks', city: 'Raleigh', state: 'NC', name: 'Wake County Parks & Recreation', county: 'Wake' },
+  { slug: 'kannapolisnc', city: 'Kannapolis', state: 'NC', name: 'Kannapolis Parks & Recreation', county: 'Cabarrus' },
+  { slug: 'apexparksrecculres', city: 'Apex', state: 'NC', name: 'Apex Parks, Recreation & Cultural Resources', county: 'Wake' },
+
   // Ohio (slug changed from columbusrecparks → columbusrecparks1 as of April 2026)
   { slug: 'columbusrecparks1', city: 'Columbus', state: 'OH', name: 'Columbus Recreation & Parks', county: 'Franklin' },
 
-  // ── Inactive jurisdictions (redirect to activecommunities.com as of April 2026) ──
+  // Tennessee (verified July 2026)
+  { slug: 'wcpr', city: 'Franklin', state: 'TN', name: 'Williamson County Parks & Recreation', county: 'Williamson' },
+
+  // Virginia (verified July 2026)
+  { slug: 'novaparks', city: 'Fairfax', state: 'VA', name: 'NOVA Parks (Northern Virginia Regional Park Authority)', county: 'Fairfax' },
+
+  // ── Inactive jurisdictions (migrated off ActiveNet as of April 2026) ──
   // These departments have migrated off the ActiveNet platform.
   // Kept commented out for reference — re-enable if their slugs come back online.
   //
