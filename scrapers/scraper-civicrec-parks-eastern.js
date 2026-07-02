@@ -138,6 +138,18 @@ const DEPARTMENTS = [
   // Pennsylvania
   { slug: 'bucks-county-pa-parks-recreation', urlBase: 'https://secure.rec1.com/PA/bucks-county-pa-parks-recreation/catalog', city: 'Doylestown', state: 'PA', name: 'Bucks County Parks & Recreation', county: 'Bucks' },
   { slug: 'ross-township', urlBase: 'https://secure.rec1.com/PA/ross-township/catalog', city: 'Pittsburgh', state: 'PA', name: 'Ross Township Recreation', county: 'Allegheny' },
+  { slug: 'springettsbury-township-pa', urlBase: 'https://secure.rec1.com/PA/springettsbury-township-pa/catalog', city: 'York', state: 'PA', name: 'Springettsbury Township Recreation', county: 'York' },
+  { slug: 'york-county-pa-', urlBase: 'https://secure.rec1.com/PA/york-county-pa-/catalog', city: 'York', state: 'PA', name: 'York County Parks', county: 'York' },
+  { slug: 'abington-township-pa', urlBase: 'https://secure.rec1.com/PA/abington-township-pa/catalog', city: 'Abington', state: 'PA', name: 'Abington Township Parks & Recreation', county: 'Montgomery' },
+
+  // New Jersey
+  { slug: 'camden-county-nj', urlBase: 'https://secure.rec1.com/NJ/camden-county-nj/catalog', city: 'Camden', state: 'NJ', name: 'Camden County Parks Department', county: 'Camden' },
+  { slug: 'passaic-nj', urlBase: 'https://secure.rec1.com/NJ/passaic-nj/catalog', city: 'Passaic', state: 'NJ', name: 'Passaic Recreation', county: 'Passaic' },
+  { slug: 'union-county-nj', urlBase: 'https://secure.rec1.com/NJ/union-county-nj/catalog', city: 'Elizabeth', state: 'NJ', name: 'Union County Recreation', county: 'Union' },
+  { slug: 'wayne-township-nj', urlBase: 'https://secure.rec1.com/NJ/wayne-township-nj/catalog', city: 'Wayne', state: 'NJ', name: 'Wayne Township Recreation', county: 'Passaic' },
+  { slug: 'hunterdon-county-nj', urlBase: 'https://secure.rec1.com/NJ/hunterdon-county-nj/catalog', city: 'Flemington', state: 'NJ', name: 'Hunterdon County Parks & Recreation', county: 'Hunterdon' },
+  { slug: 'moorestown-nj', urlBase: 'https://secure.rec1.com/NJ/moorestown-nj/catalog', city: 'Moorestown', state: 'NJ', name: 'Moorestown Parks & Recreation', county: 'Burlington' },
+  { slug: 'jackson-township-nj', urlBase: 'https://secure.rec1.com/NJ/jackson-township-nj/catalog', city: 'Jackson', state: 'NJ', name: 'Jackson Township Parks & Recreation', county: 'Ocean' },
 
   // Kentucky
   { slug: 'danvilleboyle-county-parks-recreation-department', urlBase: 'https://secure.rec1.com/KY/danvilleboyle-county-parks-recreation-department/catalog', city: 'Danville', state: 'KY', name: 'Danville-Boyle County Parks & Recreation', county: 'Boyle' },
