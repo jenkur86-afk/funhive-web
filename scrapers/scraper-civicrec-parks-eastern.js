@@ -134,6 +134,10 @@ const DEPARTMENTS = [
   { slug: 'knox-county-parks-and-recreation', urlBase: 'https://secure.rec1.com/TN/knox-county-parks-and-recreation/catalog', city: 'Knoxville', state: 'TN', name: 'Knox County Parks & Recreation', county: 'Knox' },
   { slug: 'montgomery-county-parks-recreation', urlBase: 'https://secure.rec1.com/TN/montgomery-county-parks-recreation/catalog', city: 'Clarksville', state: 'TN', name: 'Montgomery County Parks & Recreation', county: 'Montgomery' },
   { slug: 'columbia-tn', urlBase: 'https://secure.rec1.com/TN/columbia-tn/catalog', city: 'Columbia', state: 'TN', name: 'City of Columbia Parks & Recreation', county: 'Maury' },
+  { slug: 'maury-county-tn', urlBase: 'https://secure.rec1.com/TN/maury-county-tn/catalog', city: 'Columbia', state: 'TN', name: 'Maury County Parks & Recreation', county: 'Maury' },
+  { slug: 'springfield-tn', urlBase: 'https://secure.rec1.com/TN/springfield-tn/catalog', city: 'Springfield', state: 'TN', name: 'Springfield Parks & Recreation', county: 'Robertson' },
+  { slug: 'tullahoma-parks-and-recreation', urlBase: 'https://secure.rec1.com/TN/tullahoma-parks-and-recreation/catalog', city: 'Tullahoma', state: 'TN', name: 'Tullahoma Parks & Recreation', county: 'Coffee' },
+  { slug: 'lakeland-tn', urlBase: 'https://secure.rec1.com/TN/lakeland-tn/catalog', city: 'Lakeland', state: 'TN', name: 'Lakeland Parks & Recreation', county: 'Shelby' },
 
   // West Virginia
   { slug: 'beckley-wv', urlBase: 'https://secure.rec1.com/WV/beckley-wv/catalog', city: 'Beckley', state: 'WV', name: 'Beckley Parks & Recreation', county: 'Raleigh' },
