@@ -93,6 +93,9 @@ const DEPARTMENTS = [
   { slug: 'troup-county-parks-and-recreation', urlBase: 'https://secure.rec1.com/GA/troup-county-parks-and-recreation/catalog', city: 'LaGrange', state: 'GA', name: 'Troup County Parks & Recreation', county: 'Troup' },
   { slug: 'spalding-county-parks-and-recreation', urlBase: 'https://secure.rec1.com/GA/spalding-county-parks-and-recreation/catalog', city: 'Griffin', state: 'GA', name: 'Spalding County Parks & Recreation', county: 'Spalding' },
   { slug: 'fayette-county-ga', urlBase: 'https://secure.rec1.com/GA/fayette-county-ga/catalog', city: 'Fayetteville', state: 'GA', name: 'Fayette County Parks & Recreation', county: 'Fayette' },
+  { slug: 'commerce-ga', urlBase: 'https://secure.rec1.com/GA/commerce-ga/catalog', city: 'Commerce', state: 'GA', name: 'Commerce Parks & Recreation', county: 'Jackson' },
+  { slug: 'sumter-county-parks-recreation', urlBase: 'https://secure.rec1.com/GA/sumter-county-parks-recreation/catalog', city: 'Americus', state: 'GA', name: 'Sumter County Parks & Recreation', county: 'Sumter' },
+  { slug: 'miller-county-parks-and-recreation-ga', urlBase: 'https://secure.rec1.com/GA/miller-county-parks-and-recreation-ga/catalog', city: 'Colquitt', state: 'GA', name: 'Miller County Parks & Recreation', county: 'Miller' },
 
   // Indiana
   { slug: 'fishers-in', urlBase: 'https://secure.rec1.com/IN/fishers-in/catalog', city: 'Fishers', state: 'IN', name: 'Fishers Parks & Recreation', county: 'Hamilton' },
@@ -147,6 +150,7 @@ const DEPARTMENTS = [
   { slug: 'springfield-tn', urlBase: 'https://secure.rec1.com/TN/springfield-tn/catalog', city: 'Springfield', state: 'TN', name: 'Springfield Parks & Recreation', county: 'Robertson' },
   { slug: 'tullahoma-parks-and-recreation', urlBase: 'https://secure.rec1.com/TN/tullahoma-parks-and-recreation/catalog', city: 'Tullahoma', state: 'TN', name: 'Tullahoma Parks & Recreation', county: 'Coffee' },
   { slug: 'lakeland-tn', urlBase: 'https://secure.rec1.com/TN/lakeland-tn/catalog', city: 'Lakeland', state: 'TN', name: 'Lakeland Parks & Recreation', county: 'Shelby' },
+  { slug: 'kingsport-tn', urlBase: 'https://secure.rec1.com/TN/kingsport-tn/catalog', city: 'Kingsport', state: 'TN', name: 'City of Kingsport Parks & Recreation', county: 'Sullivan' },
 
   // West Virginia
   { slug: 'beckley-wv', urlBase: 'https://secure.rec1.com/WV/beckley-wv/catalog', city: 'Beckley', state: 'WV', name: 'Beckley Parks & Recreation', county: 'Raleigh' },
