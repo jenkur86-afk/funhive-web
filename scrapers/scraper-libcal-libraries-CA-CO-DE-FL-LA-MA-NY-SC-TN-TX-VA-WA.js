@@ -1304,6 +1304,15 @@ const LIBRARY_SYSTEMS = [
     city: 'Burlington',
     zipCode: '41005'
   },
+  {
+    name: 'Warren County Public Library',
+    url: 'https://warrenpl.libcal.com/calendar?cid=-1&t=d',
+    county: 'Warren',
+    state: 'KY',
+    website: 'https://www.warrenpl.org',
+    city: 'Bowling Green',
+    zipCode: '42101'
+  },
 
   // MICHIGAN
   {
