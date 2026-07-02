@@ -74,6 +74,7 @@ const DEPARTMENTS = [
   { slug: 'manchester-vt', urlBase: 'https://secure.rec1.com/VT/manchester-vt/catalog', city: 'Manchester', state: 'VT', name: 'Manchester Parks & Recreation', county: 'Bennington' },
   { slug: 'colchester-vt', urlBase: 'https://secure.rec1.com/VT/colchester-vt/catalog', city: 'Colchester', state: 'VT', name: 'Colchester Parks & Recreation', county: 'Chittenden' },
   { slug: 'south-burlington-vt-recreation-parks', urlBase: 'https://secure.rec1.com/VT/south-burlington-vt-recreation-parks/catalog', city: 'South Burlington', state: 'VT', name: 'South Burlington Recreation & Parks', county: 'Chittenden' },
+  { slug: 'stowe-vt', urlBase: 'https://secure.rec1.com/VT/stowe-vt/catalog', city: 'Stowe', state: 'VT', name: 'Stowe Parks & Recreation', county: 'Lamoille' },
 
   // Florida
   { slug: 'city-tallahassee-fl', urlBase: 'https://secure.rec1.com/FL/city-tallahassee-fl/catalog', city: 'Tallahassee', state: 'FL', name: 'City of Tallahassee Parks & Recreation', county: 'Leon' },

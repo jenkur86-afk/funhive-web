@@ -2023,6 +2023,20 @@
     "subcategory": "Museum"
   },
   {
+    "name": "Louisville Mega Cavern",
+    "city": "Louisville",
+    "state": "KY",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Bowlero Lexington",
+    "city": "Lexington",
+    "state": "KY",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling Alley"
+  },
+  {
     "name": "COSI",
     "city": "Columbus",
     "state": "OH",
@@ -2434,6 +2448,27 @@
     "state": "ME",
     "category": "Farms, Zoos & Nature Centers",
     "subcategory": "Nature Center"
+  },
+  {
+    "name": "Wonder Mountain Fun Park",
+    "city": "Wells",
+    "state": "ME",
+    "category": "Mini Golf & Batting Cages",
+    "subcategory": "Mini Golf"
+  },
+  {
+    "name": "It Adventure Indoor Ropes Course",
+    "city": "South Portland",
+    "state": "ME",
+    "category": "Family Entertainment Centers",
+    "subcategory": "Ropes Course"
+  },
+  {
+    "name": "Bowling at Family Fun Lanes",
+    "city": "Brewer",
+    "state": "ME",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling Alley"
   },
   {
     "name": "Conway Arena",
