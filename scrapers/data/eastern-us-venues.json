@@ -504,6 +504,48 @@
     "subcategory": "Zoo"
   },
   {
+    "name": "Delaware Rock Gym",
+    "city": "Bear",
+    "state": "DE",
+    "category": "Climbing Gyms",
+    "subcategory": "Rock Climbing"
+  },
+  {
+    "name": "Patriot Ice Center",
+    "city": "Newark",
+    "state": "DE",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Rink"
+  },
+  {
+    "name": "Bowlero New Castle",
+    "city": "New Castle",
+    "state": "DE",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling Alley"
+  },
+  {
+    "name": "Shell We Bounce Trampoline Park",
+    "city": "Lewes",
+    "state": "DE",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Vince's Sports Center",
+    "city": "Newark",
+    "state": "DE",
+    "category": "Mini Golf & Batting Cages",
+    "subcategory": "Mini Golf"
+  },
+  {
+    "name": "Cape Henlopen State Park",
+    "city": "Lewes",
+    "state": "DE",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "State Park"
+  },
+  {
     "name": "Bronx Zoo",
     "city": "Bronx",
     "state": "NY",
@@ -952,6 +994,34 @@
     "subcategory": "Bowling Alley"
   },
   {
+    "name": "Quonset Davisville Ice Rink",
+    "city": "North Kingstown",
+    "state": "RI",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Rink"
+  },
+  {
+    "name": "WaterFire Arts Center",
+    "city": "Providence",
+    "state": "RI",
+    "category": "Art Studios & Pottery",
+    "subcategory": "Art Studio"
+  },
+  {
+    "name": "Climbing Lab Providence",
+    "city": "Providence",
+    "state": "RI",
+    "category": "Climbing Gyms",
+    "subcategory": "Rock Climbing"
+  },
+  {
+    "name": "Dave and Buster's Providence",
+    "city": "Providence",
+    "state": "RI",
+    "category": "Family Entertainment Centers",
+    "subcategory": "FEC"
+  },
+  {
     "name": "Connecticut Science Center",
     "city": "Hartford",
     "state": "CT",
@@ -1027,6 +1097,34 @@
     "state": "CT",
     "category": "Trampoline & Ninja Parks",
     "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "New Milford Trampoline Park",
+    "city": "New Milford",
+    "state": "CT",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Chelsea Piers Connecticut",
+    "city": "Stamford",
+    "state": "CT",
+    "category": "Gymnastics Centers",
+    "subcategory": "Gymnastics"
+  },
+  {
+    "name": "Wonderland of Ice",
+    "city": "Bridgeport",
+    "state": "CT",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Rink"
+  },
+  {
+    "name": "Mystic Seaport Museum",
+    "city": "Mystic",
+    "state": "CT",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Museum"
   },
   {
     "name": "Children's Museum of NH",
@@ -1841,6 +1939,34 @@
     "subcategory": "Art Studio"
   },
   {
+    "name": "Lexington Ice Center",
+    "city": "Lexington",
+    "state": "KY",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Rink"
+  },
+  {
+    "name": "Bowlero Louisville",
+    "city": "Louisville",
+    "state": "KY",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling Alley"
+  },
+  {
+    "name": "Mega Cavern Louisville",
+    "city": "Louisville",
+    "state": "KY",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Science Museum"
+  },
+  {
+    "name": "Louisville Slugger Museum",
+    "city": "Louisville",
+    "state": "KY",
+    "category": "Science & Discovery Centers",
+    "subcategory": "Museum"
+  },
+  {
     "name": "COSI",
     "city": "Columbus",
     "state": "OH",
@@ -2364,6 +2490,48 @@
     "state": "WV",
     "category": "Trampoline & Ninja Parks",
     "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Launch Pad Trampoline Park",
+    "city": "Morgantown",
+    "state": "WV",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Morgantown Municipal Ice Arena",
+    "city": "Morgantown",
+    "state": "WV",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Rink"
+  },
+  {
+    "name": "Suburban Lanes",
+    "city": "Morgantown",
+    "state": "WV",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling Alley"
+  },
+  {
+    "name": "Billy Bob's Wonderland",
+    "city": "Huntington",
+    "state": "WV",
+    "category": "Family Entertainment Centers",
+    "subcategory": "FEC"
+  },
+  {
+    "name": "Outside-In Climbing Gym",
+    "city": "Beckley",
+    "state": "WV",
+    "category": "Climbing Gyms",
+    "subcategory": "Rock Climbing"
+  },
+  {
+    "name": "Coonskin Park",
+    "city": "Charleston",
+    "state": "WV",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Park"
   },
   {
     "name": "Lynn Meadows Discovery Center",
