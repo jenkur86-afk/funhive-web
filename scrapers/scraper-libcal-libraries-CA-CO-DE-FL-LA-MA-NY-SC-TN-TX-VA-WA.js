@@ -1273,6 +1273,15 @@ const LIBRARY_SYSTEMS = [
     city: 'Morgantown',
     zipCode: '26505'
   },
+  {
+    name: 'Martinsburg-Berkeley County Public Libraries',
+    url: 'https://bcpls.libcal.com/calendar?cid=-1&t=d&d=0000-00-00',
+    county: 'Berkeley',
+    state: 'WV',
+    website: 'https://www.bcpls.com',
+    city: 'Martinsburg',
+    zipCode: '25401'
+  },
 
   // ALABAMA
   {
@@ -1394,6 +1403,15 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.fletcherfree.org',
     city: 'Burlington',
     zipCode: '05401'
+  },
+  {
+    name: 'Kellogg-Hubbard Library',
+    url: 'https://kellogghubbard.libcal.com/calendar?cid=-1&t=d&d=0000-00-00',
+    county: 'Washington',
+    state: 'VT',
+    website: 'https://www.kellogghubbard.org',
+    city: 'Montpelier',
+    zipCode: '05602'
   },
 
   // WASHINGTON

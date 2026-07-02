@@ -1149,6 +1149,17 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.homewoodpubliclibrary.org',
     city: 'Homewood',
     zipCode: '35209'
+  },
+
+  // MISSISSIPPI (1 library)
+  {
+    name: 'Jackson-Hinds Library System',
+    url: 'https://jhlibrary.libnet.info/events',
+    county: 'Hinds',
+    state: 'MS',
+    website: 'https://www.jhlibrary.com',
+    city: 'Jackson',
+    zipCode: '39201'
   }
 ];
 
@@ -1997,6 +2008,7 @@ async function scrapeCommunicoTN() { return scrapeCommunicoLibraries('TN'); }
 async function scrapeCommunicoWA() { return scrapeCommunicoLibraries('WA'); }
 async function scrapeCommunicoAL() { return scrapeCommunicoLibraries('AL'); }
 async function scrapeCommunicoWV() { return scrapeCommunicoLibraries('WV'); }
+async function scrapeCommunicoMS() { return scrapeCommunicoLibraries('MS'); }
 
 // Cloud Function wrapper
 async function scrapeCommunicoLibrariesCloudFunction() {
@@ -2059,5 +2071,6 @@ module.exports = {
   scrapeCommunicoTN,
   scrapeCommunicoWA,
   scrapeCommunicoAL,
-  scrapeCommunicoWV
+  scrapeCommunicoWV,
+  scrapeCommunicoMS
 };

@@ -901,6 +901,7 @@ const SCRAPERS = {
   'Communico-WA': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoWA', type: 'puppeteer', group: 1, state: 'WA' },
   'Communico-AL': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoAL', type: 'puppeteer', group: 2, state: 'AL' },
   'Communico-WV': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoWV', type: 'puppeteer', group: 3, state: 'WV' },
+  'Communico-MS': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoMS', type: 'puppeteer', group: 1, state: 'MS' },
 
   // --- BiblioCommons new state wrapper ---
   'BiblioCommons-WI': { file: './scraper-bibliocommons-libraries-CA-CO-IL-MA-TX-VA-WA.js', exportName: 'scrapeBiblioCommonsWI', type: 'puppeteer', group: 2, state: 'WI' },
