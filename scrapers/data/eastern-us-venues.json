@@ -1869,6 +1869,34 @@
     "subcategory": "Art Studio"
   },
   {
+    "name": "Creative Discovery Museum",
+    "city": "Chattanooga",
+    "state": "TN",
+    "category": "Children's Museums",
+    "subcategory": "Children Museum"
+  },
+  {
+    "name": "High Point Climbing & Fitness Chattanooga",
+    "city": "Chattanooga",
+    "state": "TN",
+    "category": "Climbing Gyms",
+    "subcategory": "Rock Climbing"
+  },
+  {
+    "name": "Onsight Rock Gym",
+    "city": "Knoxville",
+    "state": "TN",
+    "category": "Climbing Gyms",
+    "subcategory": "Rock Climbing"
+  },
+  {
+    "name": "SOAR Adventure Tower",
+    "city": "Franklin",
+    "state": "TN",
+    "category": "Family Entertainment Centers",
+    "subcategory": "FEC"
+  },
+  {
     "name": "Mississippi Children's Museum",
     "city": "Jackson",
     "state": "MS",
@@ -1972,13 +2000,6 @@
     "state": "KY",
     "category": "Art Studios & Pottery",
     "subcategory": "Art Studio"
-  },
-  {
-    "name": "Lexington Ice Center",
-    "city": "Lexington",
-    "state": "KY",
-    "category": "Ice Skating Rinks",
-    "subcategory": "Ice Rink"
   },
   {
     "name": "Bowlero Louisville",
@@ -2387,20 +2408,6 @@
     "subcategory": "Roller Skating"
   },
   {
-    "name": "Children's Museum & Theatre of Maine",
-    "city": "Portland",
-    "state": "ME",
-    "category": "Children's Museums",
-    "subcategory": "Children's Museum"
-  },
-  {
-    "name": "Maine Wildlife Park",
-    "city": "Gray",
-    "state": "ME",
-    "category": "Farms, Zoos & Nature Centers",
-    "subcategory": "Wildlife Park"
-  },
-  {
     "name": "Portland Observatory",
     "city": "Portland",
     "state": "ME",
@@ -2420,6 +2427,13 @@
     "state": "ME",
     "category": "Trampoline & Ninja Parks",
     "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Orono Bog Boardwalk",
+    "city": "Orono",
+    "state": "ME",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Nature Center"
   },
   {
     "name": "Conway Arena",
@@ -2492,6 +2506,27 @@
     "subcategory": "Theme Park"
   },
   {
+    "name": "Altitude Trampoline Park Merrimack",
+    "city": "Merrimack",
+    "state": "NH",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Vertical Dreams Rock Climbing",
+    "city": "Manchester",
+    "state": "NH",
+    "category": "Climbing Gyms",
+    "subcategory": "Rock Climbing"
+  },
+  {
+    "name": "Everett Arena",
+    "city": "Concord",
+    "state": "NH",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Rink"
+  },
+  {
     "name": "South Charleston Memorial Ice Arena",
     "city": "South Charleston",
     "state": "WV",
@@ -2541,13 +2576,6 @@
     "subcategory": "Ice Rink"
   },
   {
-    "name": "Sky Zone Charleston",
-    "city": "Charleston",
-    "state": "WV",
-    "category": "Trampoline & Ninja Parks",
-    "subcategory": "Trampoline Park"
-  },
-  {
     "name": "Launch Pad Trampoline Park",
     "city": "Morgantown",
     "state": "WV",
@@ -2560,13 +2588,6 @@
     "state": "WV",
     "category": "Ice Skating Rinks",
     "subcategory": "Ice Rink"
-  },
-  {
-    "name": "Suburban Lanes",
-    "city": "Morgantown",
-    "state": "WV",
-    "category": "Bowling Alleys",
-    "subcategory": "Bowling Alley"
   },
   {
     "name": "Billy Bob's Wonderland",
@@ -2637,13 +2658,6 @@
     "state": "MS",
     "category": "Science & Discovery Centers",
     "subcategory": "Aquarium"
-  },
-  {
-    "name": "Sky Zone Jackson",
-    "city": "Jackson",
-    "state": "MS",
-    "category": "Trampoline & Ninja Parks",
-    "subcategory": "Trampoline Park"
   },
   {
     "name": "Hattiesburg Zoo",
