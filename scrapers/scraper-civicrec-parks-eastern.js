@@ -107,6 +107,7 @@ const DEPARTMENTS = [
   // Maryland
   { slug: 'baltimore-md', urlBase: 'https://secure.rec1.com/MD/baltimore-md/catalog', city: 'Baltimore', state: 'MD', name: 'Baltimore Recreation & Parks', county: 'Baltimore City' },
   { slug: 'annapolis-md', urlBase: 'https://secure.rec1.com/MD/annapolis-md/catalog', city: 'Annapolis', state: 'MD', name: 'Annapolis Recreation & Parks', county: 'Anne Arundel' },
+  { slug: 'st-marys-county-md', urlBase: 'https://secure.rec1.com/MD/st-marys-county-md/catalog', city: 'Leonardtown', state: 'MD', name: 'St. Mary\'s County Recreation', county: 'St. Mary\'s' },
 
   // Massachusetts
   { slug: 'melrose-ma', urlBase: 'https://secure.rec1.com/MA/melrose-ma/catalog', city: 'Melrose', state: 'MA', name: 'Melrose Recreation', county: 'Middlesex' },
@@ -163,6 +164,7 @@ const DEPARTMENTS = [
   { slug: 'greenville-sc', urlBase: 'https://secure.rec1.com/SC/greenville-sc/catalog', city: 'Greenville', state: 'SC', name: 'Greenville County Recreation', county: 'Greenville' },
   { slug: 'fort-mill-sc', urlBase: 'https://secure.rec1.com/SC/fort-mill-sc/catalog', city: 'Fort Mill', state: 'SC', name: 'Fort Mill Parks & Recreation', county: 'York' },
   { slug: 'horry-county-sc', urlBase: 'https://secure.rec1.com/SC/horry-county-sc/catalog', city: 'Conway', state: 'SC', name: 'Horry County Parks & Recreation', county: 'Horry' },
+  { slug: 'clover-sc', urlBase: 'https://secure.rec1.com/SC/clover-sc/catalog', city: 'Clover', state: 'SC', name: 'Clover Parks & Recreation', county: 'York' },
 
   // Tennessee
   { slug: 'clarksville-tn', urlBase: 'https://secure.rec1.com/TN/clarksville-tn/catalog', city: 'Clarksville', state: 'TN', name: 'Clarksville Parks & Recreation', county: 'Montgomery' },

@@ -1313,6 +1313,15 @@ const LIBRARY_SYSTEMS = [
     city: 'Bowling Green',
     zipCode: '42101'
   },
+  {
+    name: 'Clay County Public Library',
+    url: 'https://claycountygov.libcal.com/calendar/LibraryCalendar?cid=-1&t=d',
+    county: 'Clay',
+    state: 'KY',
+    website: 'https://www.claycountygov.com/library',
+    city: 'Manchester',
+    zipCode: '40962'
+  },
 
   // MICHIGAN
   {
