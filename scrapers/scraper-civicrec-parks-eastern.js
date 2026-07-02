@@ -39,6 +39,17 @@ const DEPARTMENTS = [
   { slug: 'huntsville-al', urlBase: 'https://secure.rec1.com/AL/huntsville-al/catalog', city: 'Huntsville', state: 'AL', name: 'Huntsville Parks & Recreation', county: 'Madison' },
   { slug: 'athens-al', urlBase: 'https://secure.rec1.com/AL/athens-al/catalog', city: 'Athens', state: 'AL', name: 'Athens Parks & Recreation', county: 'Limestone' },
 
+  // Mississippi
+  { slug: 'starkville-parks-recreation', urlBase: 'https://secure.rec1.com/MS/starkville-parks-recreation/catalog', city: 'Starkville', state: 'MS', name: 'Starkville Parks & Recreation', county: 'Oktibbeha' },
+  { slug: 'jackson-county-ms', urlBase: 'https://secure.rec1.com/MS/jackson-county-ms/catalog', city: 'Pascagoula', state: 'MS', name: 'Jackson County Parks & Recreation', county: 'Jackson' },
+
+  // Rhode Island
+  { slug: 'westerly-ri', urlBase: 'https://secure.rec1.com/RI/westerly-ri/catalog', city: 'Westerly', state: 'RI', name: 'Westerly Parks & Recreation', county: 'Washington' },
+  { slug: 'portsmouth-ri', urlBase: 'https://secure.rec1.com/RI/portsmouth-ri/catalog', city: 'Portsmouth', state: 'RI', name: 'Portsmouth Parks & Recreation', county: 'Newport' },
+  { slug: 'town-of-south-kingstown-ri', urlBase: 'https://secure.rec1.com/RI/town-of-south-kingstown-ri/catalog', city: 'South Kingstown', state: 'RI', name: 'South Kingstown Parks & Recreation', county: 'Washington' },
+  { slug: 'barrington-ri', urlBase: 'https://secure.rec1.com/RI/barrington-ri/catalog', city: 'Barrington', state: 'RI', name: 'Barrington Recreation', county: 'Bristol' },
+  { slug: 'smithfield-ri', urlBase: 'https://secure.rec1.com/RI/smithfield-ri/catalog', city: 'Smithfield', state: 'RI', name: 'Smithfield Recreation', county: 'Providence' },
+
   // Connecticut
   { slug: 'coventry-ct', urlBase: 'https://secure.rec1.com/CT/coventry-ct/catalog', city: 'Coventry', state: 'CT', name: 'Coventry Parks & Recreation', county: 'Tolland' },
   { slug: 'wilton-parks-and-recreation-ct', urlBase: 'https://secure.rec1.com/CT/wilton-parks-and-recreation-ct/catalog', city: 'Wilton', state: 'CT', name: 'Wilton Parks & Recreation', county: 'Fairfield' },
