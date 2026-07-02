@@ -41,6 +41,21 @@ const DEPARTMENTS = [
 
   // Connecticut
   { slug: 'coventry-ct', urlBase: 'https://secure.rec1.com/CT/coventry-ct/catalog', city: 'Coventry', state: 'CT', name: 'Coventry Parks & Recreation', county: 'Tolland' },
+  { slug: 'wilton-parks-and-recreation-ct', urlBase: 'https://secure.rec1.com/CT/wilton-parks-and-recreation-ct/catalog', city: 'Wilton', state: 'CT', name: 'Wilton Parks & Recreation', county: 'Fairfield' },
+  { slug: 'middlebury-ct-parks-recreation', urlBase: 'https://secure.rec1.com/CT/middlebury-ct-parks-recreation/catalog', city: 'Middlebury', state: 'CT', name: 'Middlebury Parks & Recreation', county: 'New Haven' },
+
+  // Maine
+  { slug: 'orono-me', urlBase: 'https://secure.rec1.com/ME/orono-me/catalog', city: 'Orono', state: 'ME', name: 'Orono Parks & Recreation', county: 'Penobscot' },
+  { slug: 'brunswick-me', urlBase: 'https://secure.rec1.com/ME/brunswick-me/catalog', city: 'Brunswick', state: 'ME', name: 'Brunswick Parks & Recreation', county: 'Cumberland' },
+  { slug: 'town-of-wells-me', urlBase: 'https://secure.rec1.com/ME/town-of-wells-me/catalog', city: 'Wells', state: 'ME', name: 'Wells Parks & Recreation', county: 'York' },
+
+  // New Hampshire
+  { slug: 'nottingham-nh', urlBase: 'https://secure.rec1.com/NH/nottingham-nh/catalog', city: 'Nottingham', state: 'NH', name: 'Nottingham Parks & Recreation', county: 'Rockingham' },
+
+  // Vermont
+  { slug: 'town-of-milton-vt', urlBase: 'https://secure.rec1.com/VT/town-of-milton-vt/catalog', city: 'Milton', state: 'VT', name: 'Milton Recreation & Parks', county: 'Chittenden' },
+  { slug: 'manchester-vt', urlBase: 'https://secure.rec1.com/VT/manchester-vt/catalog', city: 'Manchester', state: 'VT', name: 'Manchester Parks & Recreation', county: 'Bennington' },
+  { slug: 'colchester-vt', urlBase: 'https://secure.rec1.com/VT/colchester-vt/catalog', city: 'Colchester', state: 'VT', name: 'Colchester Parks & Recreation', county: 'Chittenden' },
 
   // Florida
   { slug: 'city-tallahassee-fl', urlBase: 'https://secure.rec1.com/FL/city-tallahassee-fl/catalog', city: 'Tallahassee', state: 'FL', name: 'City of Tallahassee Parks & Recreation', county: 'Leon' },
