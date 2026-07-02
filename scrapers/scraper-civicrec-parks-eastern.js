@@ -46,11 +46,21 @@ const DEPARTMENTS = [
   { slug: 'city-tallahassee-fl', urlBase: 'https://secure.rec1.com/FL/city-tallahassee-fl/catalog', city: 'Tallahassee', state: 'FL', name: 'City of Tallahassee Parks & Recreation', county: 'Leon' },
   { slug: 'sanford-fl', urlBase: 'https://secure.rec1.com/FL/sanford-fl/catalog', city: 'Sanford', state: 'FL', name: 'Sanford Parks & Recreation', county: 'Seminole' },
   { slug: 'pembroke-pines-fl', urlBase: 'https://secure.rec1.com/FL/pembroke-pines-fl/catalog', city: 'Pembroke Pines', state: 'FL', name: 'Pembroke Pines Parks & Recreation', county: 'Broward' },
+  { slug: 'nassau-county-fl-parks-recreation', urlBase: 'https://secure.rec1.com/FL/nassau-county-fl-parks-recreation/catalog', city: 'Yulee', state: 'FL', name: 'Nassau County Parks & Recreation', county: 'Nassau' },
+  { slug: 'brooksville-fl', urlBase: 'https://secure.rec1.com/FL/brooksville-fl/catalog', city: 'Brooksville', state: 'FL', name: 'Brooksville Parks & Recreation', county: 'Hernando' },
+  { slug: 'lauderhill-fl', urlBase: 'https://secure.rec1.com/FL/lauderhill-fl/catalog', city: 'Lauderhill', state: 'FL', name: 'Lauderhill Parks & Recreation', county: 'Broward' },
+  { slug: 'martin-county-fl', urlBase: 'https://secure.rec1.com/FL/martin-county-fl/catalog', city: 'Stuart', state: 'FL', name: 'Martin County Parks & Recreation', county: 'Martin' },
 
   // Georgia
   { slug: 'gwinnett-county-parks-recreation', urlBase: 'https://secure.rec1.com/GA/gwinnett-county-parks-recreation/catalog', city: 'Lawrenceville', state: 'GA', name: 'Gwinnett County Parks & Recreation', county: 'Gwinnett' },
   { slug: 'savannah-ga', urlBase: 'https://secure.rec1.com/GA/savannah-ga/catalog', city: 'Savannah', state: 'GA', name: 'City of Savannah Recreation', county: 'Chatham' },
   { slug: 'forsyth-county-ga', urlBase: 'https://secure.rec1.com/GA/forsyth-county-ga/catalog', city: 'Cumming', state: 'GA', name: 'Forsyth County Parks & Recreation', county: 'Forsyth' },
+  { slug: 'jackson-county-ga', urlBase: 'https://secure.rec1.com/GA/jackson-county-ga/catalog', city: 'Jefferson', state: 'GA', name: 'Jackson County Parks & Recreation', county: 'Jackson' },
+  { slug: 'valdosta-lowndes', urlBase: 'https://secure.rec1.com/GA/valdosta-lowndes/catalog', city: 'Valdosta', state: 'GA', name: 'Valdosta-Lowndes County Parks & Recreation', county: 'Lowndes' },
+  { slug: 'newton-recreation-commission', urlBase: 'https://secure.rec1.com/GA/newton-recreation-commission/catalog', city: 'Covington', state: 'GA', name: 'Newton County Parks & Recreation', county: 'Newton' },
+  { slug: 'dawson-county-recreation', urlBase: 'https://secure.rec1.com/GA/dawson-county-recreation/catalog', city: 'Dawsonville', state: 'GA', name: 'Dawson County Parks & Recreation', county: 'Dawson' },
+  { slug: 'troup-county-parks-and-recreation', urlBase: 'https://secure.rec1.com/GA/troup-county-parks-and-recreation/catalog', city: 'LaGrange', state: 'GA', name: 'Troup County Parks & Recreation', county: 'Troup' },
+  { slug: 'spalding-county-parks-and-recreation', urlBase: 'https://secure.rec1.com/GA/spalding-county-parks-and-recreation/catalog', city: 'Griffin', state: 'GA', name: 'Spalding County Parks & Recreation', county: 'Spalding' },
 
   // Indiana
   { slug: 'fishers-in', urlBase: 'https://secure.rec1.com/IN/fishers-in/catalog', city: 'Fishers', state: 'IN', name: 'Fishers Parks & Recreation', county: 'Hamilton' },
@@ -68,6 +78,9 @@ const DEPARTMENTS = [
   { slug: 'harrisburg-nc', urlBase: 'https://secure.rec1.com/NC/harrisburg-nc/catalog', city: 'Harrisburg', state: 'NC', name: 'Harrisburg Parks & Recreation', county: 'Cabarrus' },
   { slug: 'burlington-nc', urlBase: 'https://secure.rec1.com/NC/burlington-nc/catalog', city: 'Burlington', state: 'NC', name: 'Burlington Recreation & Parks', county: 'Alamance' },
   { slug: 'cabarrus-county', urlBase: 'https://secure.rec1.com/NC/cabarrus-county/catalog', city: 'Concord', state: 'NC', name: 'Cabarrus County Active Living & Parks', county: 'Cabarrus' },
+  { slug: 'concord-nc', urlBase: 'https://secure.rec1.com/NC/concord-nc/catalog', city: 'Concord', state: 'NC', name: 'City of Concord Parks & Recreation', county: 'Cabarrus' },
+  { slug: 'mooresville-recreation-parks-department', urlBase: 'https://secure.rec1.com/NC/mooresville-recreation-parks-department/catalog', city: 'Mooresville', state: 'NC', name: 'Mooresville Parks & Recreation', county: 'Iredell' },
+  { slug: 'huntersville-nc-', urlBase: 'https://secure.rec1.com/NC/huntersville-nc-/catalog', city: 'Huntersville', state: 'NC', name: 'Huntersville Parks & Recreation', county: 'Mecklenburg' },
 
   // Ohio
   { slug: 'cleveland-oh', urlBase: 'https://secure.rec1.com/OH/cleveland-oh/catalog', city: 'Cleveland', state: 'OH', name: 'Cleveland Metroparks', county: 'Cuyahoga' },
@@ -84,10 +97,13 @@ const DEPARTMENTS = [
   // Tennessee
   { slug: 'clarksville-tn', urlBase: 'https://secure.rec1.com/TN/clarksville-tn/catalog', city: 'Clarksville', state: 'TN', name: 'Clarksville Parks & Recreation', county: 'Montgomery' },
   { slug: 'knox-county-parks-and-recreation', urlBase: 'https://secure.rec1.com/TN/knox-county-parks-and-recreation/catalog', city: 'Knoxville', state: 'TN', name: 'Knox County Parks & Recreation', county: 'Knox' },
+  { slug: 'montgomery-county-parks-recreation', urlBase: 'https://secure.rec1.com/TN/montgomery-county-parks-recreation/catalog', city: 'Clarksville', state: 'TN', name: 'Montgomery County Parks & Recreation', county: 'Montgomery' },
+  { slug: 'columbia-tn', urlBase: 'https://secure.rec1.com/TN/columbia-tn/catalog', city: 'Columbia', state: 'TN', name: 'City of Columbia Parks & Recreation', county: 'Maury' },
 
   // Virginia
   { slug: 'fredericksburg-va', urlBase: 'https://secure.rec1.com/VA/fredericksburg-va/catalog', city: 'Fredericksburg', state: 'VA', name: 'Fredericksburg Parks & Recreation', county: 'Fredericksburg City' },
   { slug: 'newport-news-va', urlBase: 'https://secure.rec1.com/VA/newport-news-va/catalog', city: 'Newport News', state: 'VA', name: 'Newport News Parks & Recreation', county: 'Newport News City' },
+  { slug: 'frederick-county-va', urlBase: 'https://secure.rec1.com/VA/frederick-county-va/catalog', city: 'Winchester', state: 'VA', name: 'Frederick County Parks & Recreation', county: 'Frederick' },
 
   // Wisconsin
   { slug: 'monona-wi', urlBase: 'https://secure.rec1.com/WI/monona-wi/catalog', city: 'Monona', state: 'WI', name: 'Monona Parks & Recreation', county: 'Dane' },
