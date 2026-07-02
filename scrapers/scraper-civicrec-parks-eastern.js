@@ -55,6 +55,10 @@ const DEPARTMENTS = [
   { slug: 'wilton-parks-and-recreation-ct', urlBase: 'https://secure.rec1.com/CT/wilton-parks-and-recreation-ct/catalog', city: 'Wilton', state: 'CT', name: 'Wilton Parks & Recreation', county: 'Fairfield' },
   { slug: 'middlebury-ct-parks-recreation', urlBase: 'https://secure.rec1.com/CT/middlebury-ct-parks-recreation/catalog', city: 'Middlebury', state: 'CT', name: 'Middlebury Parks & Recreation', county: 'New Haven' },
   { slug: 'hartford-sports-recreation-ct', urlBase: 'https://secure.rec1.com/CT/hartford-sports-recreation-ct/catalog', city: 'Hartford', state: 'CT', name: 'Hartford Parks & Recreation', county: 'Hartford' },
+  { slug: 'city-of-danbury-ct', urlBase: 'https://secure.rec1.com/CT/city-of-danbury-ct/catalog', city: 'Danbury', state: 'CT', name: 'Danbury Parks & Recreation', county: 'Fairfield' },
+  { slug: 'town-windsor', urlBase: 'https://secure.rec1.com/CT/town-windsor/catalog', city: 'Windsor', state: 'CT', name: 'Windsor Parks & Recreation', county: 'Hartford' },
+  { slug: 'preston-ct-', urlBase: 'https://secure.rec1.com/CT/preston-ct-/catalog', city: 'Preston', state: 'CT', name: 'Preston Parks & Recreation', county: 'New London' },
+  { slug: 'pomfret-ct', urlBase: 'https://secure.rec1.com/CT/pomfret-ct/catalog', city: 'Pomfret', state: 'CT', name: 'Pomfret Recreation Department', county: 'Windham' },
 
   // Maine
   { slug: 'orono-me', urlBase: 'https://secure.rec1.com/ME/orono-me/catalog', city: 'Orono', state: 'ME', name: 'Orono Parks & Recreation', county: 'Penobscot' },
@@ -113,6 +117,7 @@ const DEPARTMENTS = [
   { slug: 'melrose-ma', urlBase: 'https://secure.rec1.com/MA/melrose-ma/catalog', city: 'Melrose', state: 'MA', name: 'Melrose Recreation', county: 'Middlesex' },
   { slug: 'north-andover-ma', urlBase: 'https://secure.rec1.com/MA/north-andover-ma/catalog', city: 'North Andover', state: 'MA', name: 'North Andover Youth & Recreation', county: 'Essex' },
   { slug: 'milton-ma-parks-recreation', urlBase: 'https://secure.rec1.com/MA/milton-ma-parks-recreation/catalog', city: 'Milton', state: 'MA', name: 'Milton Parks & Recreation', county: 'Norfolk' },
+  { slug: 'rockland-ma', urlBase: 'https://secure.rec1.com/MA/rockland-ma/catalog', city: 'Rockland', state: 'MA', name: 'Rockland Parks & Recreation', county: 'Plymouth' },
 
   // North Carolina
   { slug: 'harrisburg-nc', urlBase: 'https://secure.rec1.com/NC/harrisburg-nc/catalog', city: 'Harrisburg', state: 'NC', name: 'Harrisburg Parks & Recreation', county: 'Cabarrus' },
