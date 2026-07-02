@@ -38,6 +38,7 @@ const DEPARTMENTS = [
   // Alabama
   { slug: 'huntsville-al', urlBase: 'https://secure.rec1.com/AL/huntsville-al/catalog', city: 'Huntsville', state: 'AL', name: 'Huntsville Parks & Recreation', county: 'Madison' },
   { slug: 'athens-al', urlBase: 'https://secure.rec1.com/AL/athens-al/catalog', city: 'Athens', state: 'AL', name: 'Athens Parks & Recreation', county: 'Limestone' },
+  { slug: 'dothan-al', urlBase: 'https://secure.rec1.com/AL/dothan-al/catalog', city: 'Dothan', state: 'AL', name: 'Dothan Leisure Services', county: 'Houston' },
 
   // Mississippi
   { slug: 'starkville-parks-recreation', urlBase: 'https://secure.rec1.com/MS/starkville-parks-recreation/catalog', city: 'Starkville', state: 'MS', name: 'Starkville Parks & Recreation', county: 'Oktibbeha' },
@@ -105,6 +106,7 @@ const DEPARTMENTS = [
   { slug: 'commerce-ga', urlBase: 'https://secure.rec1.com/GA/commerce-ga/catalog', city: 'Commerce', state: 'GA', name: 'Commerce Parks & Recreation', county: 'Jackson' },
   { slug: 'sumter-county-parks-recreation', urlBase: 'https://secure.rec1.com/GA/sumter-county-parks-recreation/catalog', city: 'Americus', state: 'GA', name: 'Sumter County Parks & Recreation', county: 'Sumter' },
   { slug: 'miller-county-parks-and-recreation-ga', urlBase: 'https://secure.rec1.com/GA/miller-county-parks-and-recreation-ga/catalog', city: 'Colquitt', state: 'GA', name: 'Miller County Parks & Recreation', county: 'Miller' },
+  { slug: 'macon-bibb-ga', urlBase: 'https://secure.rec1.com/GA/macon-bibb-ga/catalog', city: 'Macon', state: 'GA', name: 'Macon-Bibb County Parks & Recreation', county: 'Bibb' },
 
   // Indiana
   { slug: 'fishers-in', urlBase: 'https://secure.rec1.com/IN/fishers-in/catalog', city: 'Fishers', state: 'IN', name: 'Fishers Parks & Recreation', county: 'Hamilton' },
@@ -114,6 +116,8 @@ const DEPARTMENTS = [
   { slug: 'baltimore-md', urlBase: 'https://secure.rec1.com/MD/baltimore-md/catalog', city: 'Baltimore', state: 'MD', name: 'Baltimore Recreation & Parks', county: 'Baltimore City' },
   { slug: 'annapolis-md', urlBase: 'https://secure.rec1.com/MD/annapolis-md/catalog', city: 'Annapolis', state: 'MD', name: 'Annapolis Recreation & Parks', county: 'Anne Arundel' },
   { slug: 'st-marys-county-md', urlBase: 'https://secure.rec1.com/MD/st-marys-county-md/catalog', city: 'Leonardtown', state: 'MD', name: 'St. Mary\'s County Recreation', county: 'St. Mary\'s' },
+  { slug: 'harford-county-md', urlBase: 'https://secure.rec1.com/MD/harford-county-md/catalog', city: 'Bel Air', state: 'MD', name: 'Harford County Parks & Recreation', county: 'Harford' },
+  { slug: 'city-of-rockville-md', urlBase: 'https://secure.rec1.com/MD/city-of-rockville-md/catalog', city: 'Rockville', state: 'MD', name: 'City of Rockville Recreation', county: 'Montgomery' },
 
   // Massachusetts
   { slug: 'melrose-ma', urlBase: 'https://secure.rec1.com/MA/melrose-ma/catalog', city: 'Melrose', state: 'MA', name: 'Melrose Recreation', county: 'Middlesex' },
@@ -171,12 +175,14 @@ const DEPARTMENTS = [
   { slug: 'georgetown-ky', urlBase: 'https://secure.rec1.com/KY/georgetown-ky/catalog', city: 'Georgetown', state: 'KY', name: 'Georgetown-Scott County Parks & Recreation', county: 'Scott' },
   { slug: 'kenton-county-ky', urlBase: 'https://secure.rec1.com/KY/kenton-county-ky/catalog', city: 'Covington', state: 'KY', name: 'Kenton County Parks & Recreation', county: 'Kenton' },
   { slug: 'boyd-county-ky', urlBase: 'https://secure.rec1.com/KY/boyd-county-ky/catalog', city: 'Ashland', state: 'KY', name: 'Boyd County Parks & Recreation', county: 'Boyd' },
+  { slug: 'shepherdsville-ky', urlBase: 'https://secure.rec1.com/KY/shepherdsville-ky/catalog', city: 'Shepherdsville', state: 'KY', name: 'Shepherdsville Parks & Recreation', county: 'Bullitt' },
 
   // South Carolina
   { slug: 'greenville-sc', urlBase: 'https://secure.rec1.com/SC/greenville-sc/catalog', city: 'Greenville', state: 'SC', name: 'Greenville County Recreation', county: 'Greenville' },
   { slug: 'fort-mill-sc', urlBase: 'https://secure.rec1.com/SC/fort-mill-sc/catalog', city: 'Fort Mill', state: 'SC', name: 'Fort Mill Parks & Recreation', county: 'York' },
   { slug: 'horry-county-sc', urlBase: 'https://secure.rec1.com/SC/horry-county-sc/catalog', city: 'Conway', state: 'SC', name: 'Horry County Parks & Recreation', county: 'Horry' },
   { slug: 'clover-sc', urlBase: 'https://secure.rec1.com/SC/clover-sc/catalog', city: 'Clover', state: 'SC', name: 'Clover Parks & Recreation', county: 'York' },
+  { slug: 'spartanburg-county-parks-dept', urlBase: 'https://secure.rec1.com/SC/spartanburg-county-parks-dept/catalog', city: 'Spartanburg', state: 'SC', name: 'Spartanburg County Parks', county: 'Spartanburg' },
 
   // Tennessee
   { slug: 'clarksville-tn', urlBase: 'https://secure.rec1.com/TN/clarksville-tn/catalog', city: 'Clarksville', state: 'TN', name: 'Clarksville Parks & Recreation', county: 'Montgomery' },
