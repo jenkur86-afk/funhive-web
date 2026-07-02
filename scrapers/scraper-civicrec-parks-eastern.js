@@ -89,6 +89,7 @@ const DEPARTMENTS = [
   { slug: 'pasco-county-fl', urlBase: 'https://secure.rec1.com/FL/pasco-county-fl/catalog', city: 'New Port Richey', state: 'FL', name: 'Pasco County Parks & Recreation', county: 'Pasco' },
   { slug: 'daytona-beach-leisure-services', urlBase: 'https://secure.rec1.com/FL/daytona-beach-leisure-services/catalog', city: 'Daytona Beach', state: 'FL', name: 'City of Daytona Beach Parks & Recreation', county: 'Volusia' },
   { slug: 'wildwood-fl', urlBase: 'https://secure.rec1.com/FL/wildwood-fl/catalog', city: 'Wildwood', state: 'FL', name: 'Wildwood Parks & Recreation', county: 'Sumter' },
+  { slug: 'walton-county-fl', urlBase: 'https://secure.rec1.com/FL/walton-county-fl/catalog', city: 'DeFuniak Springs', state: 'FL', name: 'Walton County Parks & Recreation', county: 'Walton' },
 
   // Georgia
   { slug: 'gwinnett-county-parks-recreation', urlBase: 'https://secure.rec1.com/GA/gwinnett-county-parks-recreation/catalog', city: 'Lawrenceville', state: 'GA', name: 'Gwinnett County Parks & Recreation', county: 'Gwinnett' },
@@ -132,6 +133,7 @@ const DEPARTMENTS = [
   { slug: 'morganton-parks-recreation-nc', urlBase: 'https://secure.rec1.com/NC/morganton-parks-recreation-nc/catalog', city: 'Morganton', state: 'NC', name: 'Morganton Parks & Recreation', county: 'Burke' },
   { slug: 'southern-pines-nc', urlBase: 'https://secure.rec1.com/NC/southern-pines-nc/catalog', city: 'Southern Pines', state: 'NC', name: 'Southern Pines Parks & Recreation', county: 'Moore' },
   { slug: 'city-of-gastonia', urlBase: 'https://secure.rec1.com/NC/city-of-gastonia/catalog', city: 'Gastonia', state: 'NC', name: 'City of Gastonia Parks & Recreation', county: 'Gaston' },
+  { slug: 'warren-county-nc', urlBase: 'https://secure.rec1.com/NC/warren-county-nc/catalog', city: 'Warrenton', state: 'NC', name: 'Warren County Parks & Recreation', county: 'Warren' },
 
   // Ohio
   { slug: 'cleveland-oh', urlBase: 'https://secure.rec1.com/OH/cleveland-oh/catalog', city: 'Cleveland', state: 'OH', name: 'Cleveland Metroparks', county: 'Cuyahoga' },
@@ -189,6 +191,7 @@ const DEPARTMENTS = [
 
   // West Virginia
   { slug: 'beckley-wv', urlBase: 'https://secure.rec1.com/WV/beckley-wv/catalog', city: 'Beckley', state: 'WV', name: 'Beckley Parks & Recreation', county: 'Raleigh' },
+  { slug: 'bluefield-wv', urlBase: 'https://secure.rec1.com/WV/bluefield-wv/catalog', city: 'Bluefield', state: 'WV', name: 'Bluefield Parks & Recreation', county: 'Mercer' },
 
   // Virginia
   { slug: 'fredericksburg-va', urlBase: 'https://secure.rec1.com/VA/fredericksburg-va/catalog', city: 'Fredericksburg', state: 'VA', name: 'Fredericksburg Parks & Recreation', county: 'Fredericksburg City' },
@@ -198,6 +201,9 @@ const DEPARTMENTS = [
   { slug: 'shenandoah-county-va', urlBase: 'https://secure.rec1.com/VA/shenandoah-county-va/catalog', city: 'Woodstock', state: 'VA', name: 'Shenandoah County Parks & Recreation', county: 'Shenandoah' },
   { slug: 'orange-county-va', urlBase: 'https://secure.rec1.com/VA/orange-county-va/catalog', city: 'Orange', state: 'VA', name: 'Orange County Parks & Recreation', county: 'Orange' },
   { slug: 'hampton-va', urlBase: 'https://secure.rec1.com/VA/hampton-va/catalog', city: 'Hampton', state: 'VA', name: 'Hampton Parks, Recreation & Leisure Services', county: 'Hampton City' },
+  { slug: 'warren-county-va', urlBase: 'https://secure.rec1.com/VA/warren-county-va/catalog', city: 'Front Royal', state: 'VA', name: 'Warren County Parks & Recreation', county: 'Warren' },
+  { slug: 'city-of-danville-va', urlBase: 'https://secure.rec1.com/VA/city-of-danville-va/catalog', city: 'Danville', state: 'VA', name: 'City of Danville Parks & Recreation', county: 'Danville City' },
+  { slug: 'hanover-county-va', urlBase: 'https://secure.rec1.com/VA/hanover-county-va/catalog', city: 'Mechanicsville', state: 'VA', name: 'Hanover County Parks & Recreation', county: 'Hanover' },
 
   // Wisconsin
   { slug: 'monona-wi', urlBase: 'https://secure.rec1.com/WI/monona-wi/catalog', city: 'Monona', state: 'WI', name: 'Monona Parks & Recreation', county: 'Dane' },
