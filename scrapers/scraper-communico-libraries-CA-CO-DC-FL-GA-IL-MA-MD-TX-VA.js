@@ -1129,6 +1129,17 @@ const LIBRARY_SYSTEMS = [
     website: 'https://colliervillelibrary.org',
     city: 'Collierville',
     zipCode: '38017'
+  },
+
+  // ALABAMA (new — 1 additional library)
+  {
+    name: 'Homewood Public Library',
+    url: 'https://homewood.libnet.info/events',
+    county: 'Jefferson',
+    state: 'AL',
+    website: 'https://www.homewoodpubliclibrary.org',
+    city: 'Homewood',
+    zipCode: '35209'
   }
 ];
 

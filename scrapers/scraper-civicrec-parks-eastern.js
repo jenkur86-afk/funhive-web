@@ -87,6 +87,7 @@ const DEPARTMENTS = [
   { slug: 'dawson-county-recreation', urlBase: 'https://secure.rec1.com/GA/dawson-county-recreation/catalog', city: 'Dawsonville', state: 'GA', name: 'Dawson County Parks & Recreation', county: 'Dawson' },
   { slug: 'troup-county-parks-and-recreation', urlBase: 'https://secure.rec1.com/GA/troup-county-parks-and-recreation/catalog', city: 'LaGrange', state: 'GA', name: 'Troup County Parks & Recreation', county: 'Troup' },
   { slug: 'spalding-county-parks-and-recreation', urlBase: 'https://secure.rec1.com/GA/spalding-county-parks-and-recreation/catalog', city: 'Griffin', state: 'GA', name: 'Spalding County Parks & Recreation', county: 'Spalding' },
+  { slug: 'fayette-county-ga', urlBase: 'https://secure.rec1.com/GA/fayette-county-ga/catalog', city: 'Fayetteville', state: 'GA', name: 'Fayette County Parks & Recreation', county: 'Fayette' },
 
   // Indiana
   { slug: 'fishers-in', urlBase: 'https://secure.rec1.com/IN/fishers-in/catalog', city: 'Fishers', state: 'IN', name: 'Fishers Parks & Recreation', county: 'Hamilton' },
@@ -107,6 +108,9 @@ const DEPARTMENTS = [
   { slug: 'concord-nc', urlBase: 'https://secure.rec1.com/NC/concord-nc/catalog', city: 'Concord', state: 'NC', name: 'City of Concord Parks & Recreation', county: 'Cabarrus' },
   { slug: 'mooresville-recreation-parks-department', urlBase: 'https://secure.rec1.com/NC/mooresville-recreation-parks-department/catalog', city: 'Mooresville', state: 'NC', name: 'Mooresville Parks & Recreation', county: 'Iredell' },
   { slug: 'huntersville-nc-', urlBase: 'https://secure.rec1.com/NC/huntersville-nc-/catalog', city: 'Huntersville', state: 'NC', name: 'Huntersville Parks & Recreation', county: 'Mecklenburg' },
+  { slug: 'cornelius-parks-and-recreation', urlBase: 'https://secure.rec1.com/NC/cornelius-parks-and-recreation/catalog', city: 'Cornelius', state: 'NC', name: 'Cornelius Parks & Recreation', county: 'Mecklenburg' },
+  { slug: 'lincoln-county-nc', urlBase: 'https://secure.rec1.com/NC/lincoln-county-nc/catalog', city: 'Lincolnton', state: 'NC', name: 'Lincoln County Parks & Recreation', county: 'Lincoln' },
+  { slug: 'morganton-parks-recreation-nc', urlBase: 'https://secure.rec1.com/NC/morganton-parks-recreation-nc/catalog', city: 'Morganton', state: 'NC', name: 'Morganton Parks & Recreation', county: 'Burke' },
 
   // Ohio
   { slug: 'cleveland-oh', urlBase: 'https://secure.rec1.com/OH/cleveland-oh/catalog', city: 'Cleveland', state: 'OH', name: 'Cleveland Metroparks', county: 'Cuyahoga' },
@@ -146,6 +150,7 @@ const DEPARTMENTS = [
   { slug: 'fredericksburg-va', urlBase: 'https://secure.rec1.com/VA/fredericksburg-va/catalog', city: 'Fredericksburg', state: 'VA', name: 'Fredericksburg Parks & Recreation', county: 'Fredericksburg City' },
   { slug: 'newport-news-va', urlBase: 'https://secure.rec1.com/VA/newport-news-va/catalog', city: 'Newport News', state: 'VA', name: 'Newport News Parks & Recreation', county: 'Newport News City' },
   { slug: 'frederick-county-va', urlBase: 'https://secure.rec1.com/VA/frederick-county-va/catalog', city: 'Winchester', state: 'VA', name: 'Frederick County Parks & Recreation', county: 'Frederick' },
+  { slug: 'caroline-county-va', urlBase: 'https://secure.rec1.com/VA/caroline-county-va/catalog', city: 'Bowling Green', state: 'VA', name: 'Caroline County Parks & Recreation', county: 'Caroline' },
 
   // Wisconsin
   { slug: 'monona-wi', urlBase: 'https://secure.rec1.com/WI/monona-wi/catalog', city: 'Monona', state: 'WI', name: 'Monona Parks & Recreation', county: 'Dane' },
