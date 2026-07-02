@@ -1043,6 +1043,55 @@
     "subcategory": "Indoor Play"
   },
   {
+    "name": "Polar Ice Raleigh",
+    "city": "Raleigh",
+    "state": "NC",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Skating"
+  },
+  {
+    "name": "Triangle Rock Club",
+    "city": "Raleigh",
+    "state": "NC",
+    "category": "Climbing Gyms",
+    "subcategory": "Climbing Gym"
+  },
+  {
+    "name": "Inner Peaks Climbing",
+    "city": "Charlotte",
+    "state": "NC",
+    "category": "Climbing Gyms",
+    "subcategory": "Climbing Gym"
+  },
+  {
+    "name": "Bowlero Raleigh",
+    "city": "Raleigh",
+    "state": "NC",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
+  },
+  {
+    "name": "Bowlero Charlotte",
+    "city": "Charlotte",
+    "state": "NC",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
+  },
+  {
+    "name": "Alamo Drafthouse Raleigh",
+    "city": "Raleigh",
+    "state": "NC",
+    "category": "Movie Theaters",
+    "subcategory": "Movie Theater"
+  },
+  {
+    "name": "AMC Carolina Pavilion 22",
+    "city": "Charlotte",
+    "state": "NC",
+    "category": "Movie Theaters",
+    "subcategory": "Movie Theater"
+  },
+  {
     "name": "EdVenture Children's Museum",
     "city": "Columbia",
     "state": "SC",
@@ -1076,6 +1125,20 @@
     "state": "SC",
     "category": "Indoor Playgrounds",
     "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Carolina Ice Palace",
+    "city": "North Charleston",
+    "state": "SC",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Skating"
+  },
+  {
+    "name": "Bowlero Greenville",
+    "city": "Greenville",
+    "state": "SC",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
   },
   {
     "name": "Children's Museum of Atlanta",
@@ -1218,6 +1281,13 @@
     "subcategory": "Indoor Play"
   },
   {
+    "name": "High Point Climbing",
+    "city": "Birmingham",
+    "state": "AL",
+    "category": "Climbing Gyms",
+    "subcategory": "Climbing Gym"
+  },
+  {
     "name": "Adventure Science Center",
     "city": "Nashville",
     "state": "TN",
@@ -1251,6 +1321,34 @@
     "state": "TN",
     "category": "Indoor Playgrounds",
     "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Centennial Sportsplex",
+    "city": "Nashville",
+    "state": "TN",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Skating"
+  },
+  {
+    "name": "Ford Ice Center",
+    "city": "Antioch",
+    "state": "TN",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Skating"
+  },
+  {
+    "name": "Climb Nashville",
+    "city": "Nashville",
+    "state": "TN",
+    "category": "Climbing Gyms",
+    "subcategory": "Climbing Gym"
+  },
+  {
+    "name": "Bowlero Bartlett",
+    "city": "Bartlett",
+    "state": "TN",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling"
   },
   {
     "name": "Mississippi Children's Museum",
@@ -1314,6 +1412,20 @@
     "state": "KY",
     "category": "Indoor Playgrounds",
     "subcategory": "Indoor Play"
+  },
+  {
+    "name": "Iceland Sports Complex",
+    "city": "Louisville",
+    "state": "KY",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Skating"
+  },
+  {
+    "name": "Lexington Ice Center",
+    "city": "Lexington",
+    "state": "KY",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Skating"
   },
   {
     "name": "COSI",
