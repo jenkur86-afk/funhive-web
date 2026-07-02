@@ -135,6 +135,8 @@ const DEPARTMENTS = [
   { slug: 'Town-Brighton-Parks-Recreation', urlBase: 'https://secure.rec1.com/NY/Town-Brighton-Parks-Recreation/catalog', city: 'Rochester', state: 'NY', name: 'Brighton Parks & Recreation', county: 'Monroe' },
   { slug: 'watertown-ny', urlBase: 'https://secure.rec1.com/NY/watertown-ny/catalog', city: 'Watertown', state: 'NY', name: 'Watertown Parks & Recreation', county: 'Jefferson' },
   { slug: 'briarcliff-manor-ny', urlBase: 'https://secure.rec1.com/NY/briarcliff-manor-ny/catalog', city: 'Briarcliff Manor', state: 'NY', name: 'Briarcliff Manor Recreation', county: 'Westchester' },
+  { slug: 'victor-parks-recreation', urlBase: 'https://secure.rec1.com/NY/victor-parks-recreation/catalog', city: 'Victor', state: 'NY', name: 'Victor Parks & Recreation', county: 'Ontario' },
+  { slug: 'broome-county-ny', urlBase: 'https://secure.rec1.com/NY/broome-county-ny/catalog', city: 'Binghamton', state: 'NY', name: 'Broome County Parks & Recreation', county: 'Broome' },
 
   // Pennsylvania
   { slug: 'bucks-county-pa-parks-recreation', urlBase: 'https://secure.rec1.com/PA/bucks-county-pa-parks-recreation/catalog', city: 'Doylestown', state: 'PA', name: 'Bucks County Parks & Recreation', county: 'Bucks' },
