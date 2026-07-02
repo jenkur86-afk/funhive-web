@@ -328,7 +328,16 @@ const LIBRARY_SYSTEMS = [
     zipCode: '34601'
   },
 
-  // GEORGIA (5 libraries)
+  // GEORGIA (6 libraries)
+  {
+    name: 'Clayton County Library System',
+    url: 'https://claytonpl.libnet.info/events',
+    county: 'Clayton',
+    state: 'GA',
+    website: 'https://www.claytonpl.org',
+    city: 'Jonesboro',
+    zipCode: '30236'
+  },
   {
     name: 'Gwinnett County Public Library',
     url: 'https://gwinnettpl.libnet.info/events',

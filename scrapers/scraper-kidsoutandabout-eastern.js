@@ -91,6 +91,7 @@ const REGIONS = [
 
   // Tennessee
   { slug: 'nashville', name: 'Nashville', state: 'TN', city: 'Nashville' },
+  { slug: 'memphis', name: 'Memphis', state: 'TN', city: 'Memphis' },
 
   // Wisconsin
   { slug: 'milwaukee', name: 'Milwaukee', state: 'WI', city: 'Milwaukee' },

@@ -45,6 +45,13 @@ const LIBRARIES = [
     city: 'Springfield',
     state: 'MA',
     zipCode: '01103'
+  },
+  {
+    name: 'West Hartford Library',
+    eventsUrl: 'https://westhartford.librarymarket.com/events/upcoming',
+    city: 'West Hartford',
+    state: 'CT',
+    zipCode: '06107'
   }
 ];
 
