@@ -130,6 +130,8 @@ const DEPARTMENTS = [
   { slug: 'cornelius-parks-and-recreation', urlBase: 'https://secure.rec1.com/NC/cornelius-parks-and-recreation/catalog', city: 'Cornelius', state: 'NC', name: 'Cornelius Parks & Recreation', county: 'Mecklenburg' },
   { slug: 'lincoln-county-nc', urlBase: 'https://secure.rec1.com/NC/lincoln-county-nc/catalog', city: 'Lincolnton', state: 'NC', name: 'Lincoln County Parks & Recreation', county: 'Lincoln' },
   { slug: 'morganton-parks-recreation-nc', urlBase: 'https://secure.rec1.com/NC/morganton-parks-recreation-nc/catalog', city: 'Morganton', state: 'NC', name: 'Morganton Parks & Recreation', county: 'Burke' },
+  { slug: 'southern-pines-nc', urlBase: 'https://secure.rec1.com/NC/southern-pines-nc/catalog', city: 'Southern Pines', state: 'NC', name: 'Southern Pines Parks & Recreation', county: 'Moore' },
+  { slug: 'city-of-gastonia', urlBase: 'https://secure.rec1.com/NC/city-of-gastonia/catalog', city: 'Gastonia', state: 'NC', name: 'City of Gastonia Parks & Recreation', county: 'Gaston' },
 
   // Ohio
   { slug: 'cleveland-oh', urlBase: 'https://secure.rec1.com/OH/cleveland-oh/catalog', city: 'Cleveland', state: 'OH', name: 'Cleveland Metroparks', county: 'Cuyahoga' },
