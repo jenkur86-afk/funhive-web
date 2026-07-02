@@ -1887,7 +1887,11 @@ async function scrapeLibCalTN() { return scrapeLibCalLibraries('TN'); }
 async function scrapeLibCalTX() { return scrapeLibCalLibraries('TX'); }
 async function scrapeLibCalVA() { return scrapeLibCalLibraries('VA'); }
 async function scrapeLibCalWA() { return scrapeLibCalLibraries('WA'); }
-// scrapeLibCalWV removed — WV Library Commission has no events
+async function scrapeLibCalAL() { return scrapeLibCalLibraries('AL'); }
+async function scrapeLibCalKY() { return scrapeLibCalLibraries('KY'); }
+async function scrapeLibCalME() { return scrapeLibCalLibraries('ME'); }
+async function scrapeLibCalVT() { return scrapeLibCalLibraries('VT'); }
+async function scrapeLibCalWV() { return scrapeLibCalLibraries('WV'); }
 
 // Run if executed directly
 if (require.main === module) {
@@ -1922,6 +1926,10 @@ module.exports = {
   scrapeLibCalTN,
   scrapeLibCalTX,
   scrapeLibCalVA,
-  scrapeLibCalWA
-  // scrapeLibCalWV removed — WV Library Commission has no events
+  scrapeLibCalWA,
+  scrapeLibCalAL,
+  scrapeLibCalKY,
+  scrapeLibCalME,
+  scrapeLibCalVT,
+  scrapeLibCalWV
 };

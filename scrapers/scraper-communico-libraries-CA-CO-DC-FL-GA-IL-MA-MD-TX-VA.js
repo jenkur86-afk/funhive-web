@@ -1975,6 +1975,8 @@ async function scrapeCommunicoNC() { return scrapeCommunicoLibraries('NC'); }
 async function scrapeCommunicoKY() { return scrapeCommunicoLibraries('KY'); }
 async function scrapeCommunicoTN() { return scrapeCommunicoLibraries('TN'); }
 async function scrapeCommunicoWA() { return scrapeCommunicoLibraries('WA'); }
+async function scrapeCommunicoAL() { return scrapeCommunicoLibraries('AL'); }
+async function scrapeCommunicoWV() { return scrapeCommunicoLibraries('WV'); }
 
 // Cloud Function wrapper
 async function scrapeCommunicoLibrariesCloudFunction() {
@@ -2035,5 +2037,7 @@ module.exports = {
   scrapeCommunicoNC,
   scrapeCommunicoKY,
   scrapeCommunicoTN,
-  scrapeCommunicoWA
+  scrapeCommunicoWA,
+  scrapeCommunicoAL,
+  scrapeCommunicoWV
 };
