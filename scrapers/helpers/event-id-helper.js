@@ -13,8 +13,7 @@ const crypto = require('crypto');
  * @returns {string} - A URL-safe event ID (max 30 chars)
  */
 function generateEventId(url) {
-  if (!url) {
-    // Fallback to random ID if no URL provided
+  if (!url || typeof url !== 'string') {
     return crypto.randomBytes(15).toString('base64url').substring(0, 30);
   }
 

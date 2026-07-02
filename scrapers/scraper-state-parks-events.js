@@ -230,6 +230,7 @@ async function extractFlorida(page) {
 
       const titleEl = card.querySelector('.card__title, h3, h2, [class*="title"]');
       const dateEl = card.querySelector('.date-display-range, .date-display-single, [class*="date"], time, [datetime]');
+      const parkEl = card.querySelector('.field--name-field-park, [class*="field-park"], [class*="park-name"], .card__subtitle, .card__location');
       const descEl = card.querySelector('.card__summary, .card__body, [class*="summary"], [class*="body"], p');
       const linkEl = card.querySelector('a[href]');
 
@@ -253,10 +254,12 @@ async function extractFlorida(page) {
         if (dateMatch) date = dateMatch[1];
       }
 
+      let location = parkEl?.textContent?.trim()?.replace(/^park:\s*/i, '').substring(0, 150) || '';
+
       events.push({
         title: title.substring(0, 200),
         date: date,
-        location: '',
+        location: location,
         description: descEl?.textContent?.trim()?.substring(0, 500) || '',
         url: linkEl?.href || ''
       });
@@ -268,6 +271,7 @@ async function extractFlorida(page) {
         if (el.closest('nav, header, footer')) return;
         const titleEl = el.querySelector('h2 a, h3 a, h2, h3, [class*="title"]');
         const dateEl = el.querySelector('.date-display-range, .date-display-single, time, [class*="date"], [datetime]');
+        const parkEl = el.querySelector('.field--name-field-park, [class*="field-park"], [class*="park-name"]');
         const title = titleEl?.textContent?.trim();
         if (!title || title.length < 4) return;
         const key = title.toLowerCase();
@@ -282,10 +286,12 @@ async function extractFlorida(page) {
           if (dateMatch) date = dateMatch[1];
         }
 
+        const location = parkEl?.textContent?.trim()?.replace(/^park:\s*/i, '').substring(0, 150) || '';
+
         events.push({
           title: title.substring(0, 200),
           date: date,
-          location: '',
+          location: location,
           description: '',
           url: titleEl?.href || titleEl?.closest('a')?.href || el.querySelector('a')?.href || ''
         });

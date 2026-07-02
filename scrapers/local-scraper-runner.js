@@ -75,10 +75,10 @@ const CONFIG = {
   DELAY_BETWEEN_SCRAPERS: 2000,
 
   // Checkpoint file for crash recovery
-  CHECKPOINT_FILE: path.join(__dirname, '..', 'logs', 'scraper-checkpoint.json'),
+  CHECKPOINT_FILE: path.join(__dirname, 'logs', 'scraper-checkpoint.json'),
 
   // Log file
-  LOG_FILE: path.join(__dirname, '..', 'logs', `scraper-run-${new Date().toISOString().split('T')[0]}.log`)
+  LOG_FILE: path.join(__dirname, 'logs', `scraper-run-${new Date().toISOString().split('T')[0]}.log`)
 };
 
 // ============================================================================

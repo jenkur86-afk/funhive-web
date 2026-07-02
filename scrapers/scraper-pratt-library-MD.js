@@ -162,6 +162,7 @@ async function scrapePrattLibrary() {
         // node-ical sometimes returns URL as { val: '...', params: {} } for parameterized iCal fields
         let url = event.url;
         if (url && typeof url === 'object') url = url.val || url.href || url.value || '';
+        if (typeof url !== 'string') url = '';
         url = url || 'https://calendar.prattlibrary.org';
 
         // Format date
