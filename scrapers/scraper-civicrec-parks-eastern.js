@@ -90,15 +90,27 @@ const DEPARTMENTS = [
   { slug: 'bucks-county-pa-parks-recreation', urlBase: 'https://secure.rec1.com/PA/bucks-county-pa-parks-recreation/catalog', city: 'Doylestown', state: 'PA', name: 'Bucks County Parks & Recreation', county: 'Bucks' },
   { slug: 'ross-township', urlBase: 'https://secure.rec1.com/PA/ross-township/catalog', city: 'Pittsburgh', state: 'PA', name: 'Ross Township Recreation', county: 'Allegheny' },
 
+  // Kentucky
+  { slug: 'danvilleboyle-county-parks-recreation-department', urlBase: 'https://secure.rec1.com/KY/danvilleboyle-county-parks-recreation-department/catalog', city: 'Danville', state: 'KY', name: 'Danville-Boyle County Parks & Recreation', county: 'Boyle' },
+  { slug: 'daviess-county-ky', urlBase: 'https://secure.rec1.com/KY/daviess-county-ky/catalog', city: 'Owensboro', state: 'KY', name: 'Daviess County Parks & Recreation', county: 'Daviess' },
+  { slug: 'frankfort-ky', urlBase: 'https://secure.rec1.com/KY/frankfort-ky/catalog', city: 'Frankfort', state: 'KY', name: 'Frankfort Parks, Recreation & Historic Sites', county: 'Franklin' },
+  { slug: 'georgetown-ky', urlBase: 'https://secure.rec1.com/KY/georgetown-ky/catalog', city: 'Georgetown', state: 'KY', name: 'Georgetown-Scott County Parks & Recreation', county: 'Scott' },
+  { slug: 'kenton-county-ky', urlBase: 'https://secure.rec1.com/KY/kenton-county-ky/catalog', city: 'Covington', state: 'KY', name: 'Kenton County Parks & Recreation', county: 'Kenton' },
+  { slug: 'boyd-county-ky', urlBase: 'https://secure.rec1.com/KY/boyd-county-ky/catalog', city: 'Ashland', state: 'KY', name: 'Boyd County Parks & Recreation', county: 'Boyd' },
+
   // South Carolina
   { slug: 'greenville-sc', urlBase: 'https://secure.rec1.com/SC/greenville-sc/catalog', city: 'Greenville', state: 'SC', name: 'Greenville County Recreation', county: 'Greenville' },
   { slug: 'fort-mill-sc', urlBase: 'https://secure.rec1.com/SC/fort-mill-sc/catalog', city: 'Fort Mill', state: 'SC', name: 'Fort Mill Parks & Recreation', county: 'York' },
+  { slug: 'horry-county-sc', urlBase: 'https://secure.rec1.com/SC/horry-county-sc/catalog', city: 'Conway', state: 'SC', name: 'Horry County Parks & Recreation', county: 'Horry' },
 
   // Tennessee
   { slug: 'clarksville-tn', urlBase: 'https://secure.rec1.com/TN/clarksville-tn/catalog', city: 'Clarksville', state: 'TN', name: 'Clarksville Parks & Recreation', county: 'Montgomery' },
   { slug: 'knox-county-parks-and-recreation', urlBase: 'https://secure.rec1.com/TN/knox-county-parks-and-recreation/catalog', city: 'Knoxville', state: 'TN', name: 'Knox County Parks & Recreation', county: 'Knox' },
   { slug: 'montgomery-county-parks-recreation', urlBase: 'https://secure.rec1.com/TN/montgomery-county-parks-recreation/catalog', city: 'Clarksville', state: 'TN', name: 'Montgomery County Parks & Recreation', county: 'Montgomery' },
   { slug: 'columbia-tn', urlBase: 'https://secure.rec1.com/TN/columbia-tn/catalog', city: 'Columbia', state: 'TN', name: 'City of Columbia Parks & Recreation', county: 'Maury' },
+
+  // West Virginia
+  { slug: 'beckley-wv', urlBase: 'https://secure.rec1.com/WV/beckley-wv/catalog', city: 'Beckley', state: 'WV', name: 'Beckley Parks & Recreation', county: 'Raleigh' },
 
   // Virginia
   { slug: 'fredericksburg-va', urlBase: 'https://secure.rec1.com/VA/fredericksburg-va/catalog', city: 'Fredericksburg', state: 'VA', name: 'Fredericksburg Parks & Recreation', county: 'Fredericksburg City' },
