@@ -1736,6 +1736,41 @@
     "subcategory": "Bowling Alley"
   },
   {
+    "name": "Pelham Civic Complex Ice Arena",
+    "city": "Pelham",
+    "state": "AL",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Rink"
+  },
+  {
+    "name": "Urban Air Huntsville",
+    "city": "Huntsville",
+    "state": "AL",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Upsurge Trampoline Park",
+    "city": "Decatur",
+    "state": "AL",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Bowlero Birmingham",
+    "city": "Birmingham",
+    "state": "AL",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling Alley"
+  },
+  {
+    "name": "Birmingham Botanical Gardens",
+    "city": "Birmingham",
+    "state": "AL",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Botanical Garden"
+  },
+  {
     "name": "Adventure Science Center",
     "city": "Nashville",
     "state": "TN",
@@ -2296,6 +2331,27 @@
     "subcategory": "Farm"
   },
   {
+    "name": "Bowl-O-Rama Burlington",
+    "city": "Burlington",
+    "state": "VT",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling Alley"
+  },
+  {
+    "name": "Leddy Arena",
+    "city": "Burlington",
+    "state": "VT",
+    "category": "Ice Skating Rinks",
+    "subcategory": "Ice Rink"
+  },
+  {
+    "name": "Cabot Gymnastics",
+    "city": "Stowe",
+    "state": "VT",
+    "category": "Gymnastics Centers",
+    "subcategory": "Gymnastics"
+  },
+  {
     "name": "Maine Discovery Museum",
     "city": "Bangor",
     "state": "ME",
@@ -2595,5 +2651,26 @@
     "state": "MS",
     "category": "Farms, Zoos & Nature Centers",
     "subcategory": "Zoo"
+  },
+  {
+    "name": "Jackson Zoo",
+    "city": "Jackson",
+    "state": "MS",
+    "category": "Farms, Zoos & Nature Centers",
+    "subcategory": "Zoo"
+  },
+  {
+    "name": "Urban Air Hattiesburg",
+    "city": "Hattiesburg",
+    "state": "MS",
+    "category": "Trampoline & Ninja Parks",
+    "subcategory": "Trampoline Park"
+  },
+  {
+    "name": "Bowlero Ridgeland",
+    "city": "Ridgeland",
+    "state": "MS",
+    "category": "Bowling Alleys",
+    "subcategory": "Bowling Alley"
   }
 ]
