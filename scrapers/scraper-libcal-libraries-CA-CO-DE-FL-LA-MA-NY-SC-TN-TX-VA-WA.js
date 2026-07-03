@@ -540,6 +540,11 @@ const LIBRARY_SYSTEMS = [
     zipCode: '02445'
   },
 
+  // Worcester Public Library: catalog is SirsiDynix LibNet (mywpl.libnet.info).
+  // Not on LibCal (worcpublib.libcal.com → ERR_NAME_NOT_RESOLVED).
+  // Platform unknown — may use Evanced or their own WordPress calendar.
+  // TODO: check worcpublib.org/events to identify the platform.
+
   // NEW YORK
   {
     name: 'Buffalo & Erie County Public Library',

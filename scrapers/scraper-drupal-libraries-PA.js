@@ -511,6 +511,10 @@ async function scrapeLibraryEvents(library, browser) {
     failed++;
   }
 
+  if (imported === 0 && failed === 0) {
+    console.warn(`  ⚠️  ${library.name}: 0 events from both feed and Puppeteer fallback — feed URL may have changed or no upcoming events`);
+  }
+
   return { imported, failed, skipped };
 }
 

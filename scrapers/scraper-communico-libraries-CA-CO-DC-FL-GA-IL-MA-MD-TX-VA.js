@@ -702,16 +702,8 @@ const LIBRARY_SYSTEMS = [
     zipCode: '40507'
   },
 
-  // MASSACHUSETTS (1 library)
-  {
-    name: 'Worcester Public Library',
-    url: 'https://mywpl.libnet.info/events',
-    county: 'Worcester',
-    state: 'MA',
-    website: 'https://www.worcpublib.org',
-    city: 'Worcester',
-    zipCode: '01608'
-  },
+  // MASSACHUSETTS — Worcester Public Library uses LibNet (SirsiDynix), not Communico.
+  // Moved to scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js under MA.
 
   // MARYLAND (9 libraries)
   {
