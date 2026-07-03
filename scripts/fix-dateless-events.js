@@ -49,11 +49,17 @@ async function main() {
   const rows = await fetchAll();
   console.log(`\nFound ${rows.length} events with NULL date TIMESTAMPTZ`);
 
-  // Filter to only those where event_date also can't be parsed
+  // Filter to those where event_date cannot be converted to a real Date.
+  // normalizeDateString may return strings like "June 51, 2026" (invalid day)
+  // for Assabet events saved before the de-concatenation fix — check that the
+  // resulting string produces a valid Date object too.
   const toDelete = rows.filter(r => {
     if (!r.event_date || r.event_date.trim().length === 0) return true;
-    const parsed = normalizeDateString(r.event_date);
-    return !parsed;
+    const normalized = normalizeDateString(r.event_date);
+    if (!normalized) return true;
+    const d = new Date(normalized + 'T00:00:00');
+    if (isNaN(d.getTime())) return true;  // "June 51" is not a real date
+    return false;
   });
 
   // Report by scraper

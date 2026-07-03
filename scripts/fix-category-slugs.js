@@ -59,16 +59,21 @@ async function fixTable(table) {
   let totalFixed = 0;
 
   for (const [slug, displayName] of Object.entries(SLUG_MAP)) {
-    let from = 0;
+    // Always fetch from offset 0: updated rows are removed from the result set,
+    // so incrementing the offset would skip rows. Stop when no rows remain.
     let batchTotal = 0;
+    let from = 0;
 
     while (true) {
-      const { data, error } = await fetchBatch(table, slug, from);
+      // In save mode, always fetch from 0 (rows disappear after update).
+      // In dry-run mode, advance offset normally to avoid infinite loop.
+      const fetchFrom = SAVE ? 0 : from;
+      const { data, error } = await fetchBatch(table, slug, fetchFrom);
       if (error) { console.error(`  Error fetching ${table} where category='${slug}':`, error.message); break; }
       if (!data || data.length === 0) break;
 
       batchTotal += data.length;
-      console.log(`  ${table}: "${slug}" → "${displayName}" (${data.length} rows at offset ${from})`);
+      console.log(`  ${table}: "${slug}" → "${displayName}" (${data.length} rows)`);
 
       if (SAVE) {
         const ids = data.map(r => r.id);
@@ -82,8 +87,10 @@ async function fixTable(table) {
         }
       }
 
-      if (data.length < PAGE_SIZE) break;
-      from += PAGE_SIZE;
+      if (!SAVE && data.length < PAGE_SIZE) break;
+      if (!SAVE) from += PAGE_SIZE;
+      // In save mode: if data.length < PAGE_SIZE, there are no more rows
+      if (SAVE && data.length < PAGE_SIZE) break;
     }
 
     if (batchTotal > 0) totalFixed += batchTotal;
