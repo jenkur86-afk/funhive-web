@@ -6,6 +6,7 @@ import ShareButton from '@/components/ShareButton'
 import AddToCalendarButton from '@/components/AddToCalendarButton'
 import DirectionsButton from '@/components/DirectionsButton'
 import Link from 'next/link'
+import { logInteraction } from '@/lib/track-click'
 
 interface EventActionsProps {
   eventId: string
@@ -56,7 +57,7 @@ export default function EventActions({
       />
 
       {fullAddress && (
-        <DirectionsButton address={fullAddress} lat={lat} lng={lng} venueName={venue} />
+        <DirectionsButton address={fullAddress} lat={lat} lng={lng} venueName={venue} eventId={eventId} />
       )}
 
       {url && (
@@ -64,6 +65,7 @@ export default function EventActions({
           href={url}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => logInteraction('click_source_url', { event_id: eventId })}
           className="inline-flex items-center gap-2 bg-amber-500 text-white px-5 py-3 rounded-lg font-semibold hover:bg-amber-600 transition text-sm"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -33,6 +33,8 @@ export async function generateMetadata({ params }: ActivityDetailProps): Promise
     ? activity.description.slice(0, 160)
     : `Family venue in ${[activity.city, activity.state].filter(Boolean).join(', ')} — discover more at FunHive.`
 
+  const ogImage = activity.image_url || `${BASE_URL}/activities/${id}/opengraph-image`
+
   return {
     title,
     description,
@@ -40,14 +42,14 @@ export async function generateMetadata({ params }: ActivityDetailProps): Promise
       title,
       description,
       url: `${BASE_URL}/activities/${id}`,
-      images: activity.image_url ? [{ url: activity.image_url }] : [],
+      images: [{ url: ogImage }],
       type: 'article',
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: activity.image_url ? [activity.image_url] : [],
+      images: [ogImage],
     },
   }
 }
@@ -89,7 +91,34 @@ export default async function ActivityDetailPage({ params }: ActivityDetailProps
   const locationParts = [activity.address, activity.city, activity.state, activity.zip_code].filter(Boolean)
   const locationDisplay = locationParts.length > 0 ? locationParts.join(', ') : null
 
+  // JSON-LD structured data for Google rich results
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: activity.name,
+    description: activity.description || undefined,
+    url: `${BASE_URL}/activities/${activity.id}`,
+    image: activity.image_url || undefined,
+    telephone: activity.phone || undefined,
+    priceRange: activity.price_range || undefined,
+    address: locationDisplay
+      ? {
+          '@type': 'PostalAddress',
+          streetAddress: activity.address || undefined,
+          addressLocality: activity.city || undefined,
+          addressRegion: activity.state || undefined,
+          postalCode: activity.zip_code || undefined,
+          addressCountry: 'US',
+        }
+      : undefined,
+  }
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     <div className="max-w-3xl mx-auto px-4 py-8">
       {/* Header with favorite button */}
       <ActivityDetailHeader
@@ -276,5 +305,6 @@ export default async function ActivityDetailPage({ params }: ActivityDetailProps
         </div>
       )}
     </div>
+    </>
   )
 }

@@ -1,19 +1,22 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { logInteraction } from '@/lib/track-click'
 
 interface DirectionsButtonProps {
   address: string
   lat?: number
   lng?: number
   venueName?: string
+  eventId?: string
+  activityId?: string
 }
 
 interface MapsPreference {
   service: 'google' | 'apple' | 'waze'
 }
 
-export default function DirectionsButton({ address, lat, lng, venueName }: DirectionsButtonProps) {
+export default function DirectionsButton({ address, lat, lng, venueName, eventId, activityId }: DirectionsButtonProps) {
   const [showDropdown, setShowDropdown] = useState(false)
   const [savedPreference, setSavedPreference] = useState<MapsPreference | null>(null)
 
@@ -48,11 +51,13 @@ export default function DirectionsButton({ address, lat, lng, venueName }: Direc
     localStorage.setItem('maps_preference', JSON.stringify({ service }))
     setSavedPreference({ service })
     setShowDropdown(false)
+    logInteraction('click_directions', { event_id: eventId, activity_id: activityId })
     window.open(getDirectionsUrl(service), '_blank')
   }
 
   const handleClick = () => {
     if (savedPreference) {
+      logInteraction('click_directions', { event_id: eventId, activity_id: activityId })
       window.open(getDirectionsUrl(savedPreference.service), '_blank')
     } else {
       setShowDropdown(!showDropdown)

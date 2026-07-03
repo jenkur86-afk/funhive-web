@@ -5,6 +5,7 @@ import ReportButton from '@/components/ReportButton'
 import ShareButton from '@/components/ShareButton'
 import DirectionsButton from '@/components/DirectionsButton'
 import HideVenueButton from '@/components/HideVenueButton'
+import { logInteraction } from '@/lib/track-click'
 
 interface ActivityActionsProps {
   activityId: string
@@ -41,7 +42,7 @@ export default function ActivityActions({
       <ShareButton title={name} text={`Check out ${name}`} url={shareUrl} />
 
       {fullAddress && (
-        <DirectionsButton address={fullAddress} lat={lat} lng={lng} venueName={name} />
+        <DirectionsButton address={fullAddress} lat={lat} lng={lng} venueName={name} activityId={activityId} />
       )}
 
       <HideVenueButton venueId={activityId} venueName={name} onHide={onVenueHidden} />
@@ -51,6 +52,7 @@ export default function ActivityActions({
           href={url}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => logInteraction('click_source_url', { activity_id: activityId })}
           className="inline-flex items-center gap-2 bg-amber-500 text-white px-5 py-3 rounded-lg font-semibold hover:bg-amber-600 transition text-sm"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

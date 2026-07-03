@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { parseTime } from '@/lib/hours-utils'
 import { ACTIVE_STATES } from '@/lib/region-filter'
+import { getUserLocation } from '@/lib/geo-utils'
+import LocationPrompt, { LOCATION_PROMPT_DISMISSED_KEY } from '@/components/LocationPrompt'
 
 const CATEGORIES = [
   { name: 'Community', emoji: '🤝', color: '#f59e0b' },
@@ -71,6 +73,10 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null)
   const [locationName, setLocationName] = useState('')
   const [locating, setLocating] = useState(false)
+  // Only show the fallback "Use My Location" button once the LocationPrompt
+  // banner has been dismissed (or already handled) — avoids showing two
+  // "set your location" controls stacked on top of each other.
+  const [promptDismissed, setPromptDismissed] = useState(false)
   const [upcoming, setUpcoming] = useState<any[]>(() => serverUpcoming.filter(isEventOnOrAfterToday))
   const [weekend, setWeekend] = useState<any[]>(() => serverWeekend.filter(isEventOnOrAfterToday))
   const [loading, setLoading] = useState(false)
@@ -147,31 +153,29 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
           setLocationName(`${parsed.lat.toFixed(2)}, ${parsed.lng.toFixed(2)}`)
         }
       }
+      if (localStorage.getItem(LOCATION_PROMPT_DISMISSED_KEY)) {
+        setPromptDismissed(true)
+      }
     } catch {}
   }, [])
 
-  const handleUseLocation = () => {
-    if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser.')
+  const handleUseLocation = async () => {
+    setLocating(true)
+    const loc = await getUserLocation()
+    setLocating(false)
+    if (!loc) {
+      alert('Unable to get your location. Please allow location access.')
       return
     }
-    setLocating(true)
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords
-        const loc = { lat: latitude, lng: longitude }
-        setCoords(loc)
-        setLocationName(`${latitude.toFixed(2)}, ${longitude.toFixed(2)}`)
-        setLocating(false)
-        // Persist so category links and events page can use it
-        try { localStorage.setItem('funhive_location', JSON.stringify(loc)) } catch {}
-      },
-      () => {
-        alert('Unable to get your location. Please allow location access.')
-        setLocating(false)
-      },
-      { timeout: 10000 }
-    )
+    setCoords(loc)
+    setLocationName(`${loc.lat.toFixed(2)}, ${loc.lng.toFixed(2)}`)
+    // Persist so category links and events page can use it
+    try { localStorage.setItem('funhive_location', JSON.stringify(loc)) } catch {}
+  }
+
+  const handleLocationPromptSet = (loc: { lat: number; lng: number }) => {
+    setCoords(loc)
+    setLocationName(`${loc.lat.toFixed(2)}, ${loc.lng.toFixed(2)}`)
   }
 
   const handleClearLocation = () => {
@@ -182,6 +186,13 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
 
   return (
     <>
+      {!coords && (
+        <LocationPrompt
+          onLocationSet={handleLocationPromptSet}
+          onDismiss={() => setPromptDismissed(true)}
+        />
+      )}
+
       {/* Location bar */}
       <div className="max-w-6xl mx-auto px-4 pt-6 flex items-center gap-3 flex-wrap">
         {coords ? (
@@ -195,7 +206,7 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
           </div>
-        ) : (
+        ) : promptDismissed ? (
           <button
             onClick={handleUseLocation}
             disabled={locating}
@@ -207,7 +218,7 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
             </svg>
             {locating ? 'Getting location...' : 'Use My Location'}
           </button>
-        )}
+        ) : null}
         {loading && <span className="text-sm text-amber-600 animate-pulse">Loading nearby events...</span>}
       </div>
 

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/contexts/AuthContext'
 import StarRating from '@/components/StarRating'
+import { logInteraction } from '@/lib/track-click'
 import type { Database } from '@/lib/database.types'
 
 type Review = Database['public']['Tables']['reviews']['Row']
@@ -114,6 +115,8 @@ function WriteReviewContent() {
           })
 
         if (error) throw error
+
+        logInteraction('review_submit', { event_id: eventId || undefined, activity_id: activityId || undefined })
       }
 
       // Redirect based on what we came from

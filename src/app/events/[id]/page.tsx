@@ -6,6 +6,7 @@ import EventDetailHeader from '@/components/EventDetailHeader'
 import EventActions from '@/components/EventActions'
 import ReviewsList from '@/components/ReviewsList'
 import ReportButton from '@/components/ReportButton'
+import VenueLinkTracker from '@/components/VenueLinkTracker'
 
 export const dynamic = 'force-dynamic'
 
@@ -35,6 +36,8 @@ export async function generateMetadata({ params }: EventDetailProps): Promise<Me
     ? event.description.slice(0, 160)
     : `Family event in ${[event.city, event.state].filter(Boolean).join(', ')} — discover more at FunHive.`
 
+  const ogImage = event.image_url || `${BASE_URL}/events/${id}/opengraph-image`
+
   return {
     title,
     description,
@@ -42,14 +45,14 @@ export async function generateMetadata({ params }: EventDetailProps): Promise<Me
       title,
       description,
       url: `${BASE_URL}/events/${id}`,
-      images: event.image_url ? [{ url: event.image_url }] : [],
+      images: [{ url: ogImage }],
       type: 'article',
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: event.image_url ? [event.image_url] : [],
+      images: [ogImage],
     },
   }
 }
@@ -179,13 +182,14 @@ export default async function EventDetailPage({ params }: EventDetailProps) {
               {/* Venue name - link to venue page if available */}
               {event.venue && (
                 venue ? (
-                  <Link
-                    href={`/activities/${encodeURIComponent(venue.id)}`}
+                  <VenueLinkTracker
+                    activityId={venue.id}
+                    eventId={event.id}
                     className="text-blue-600 hover:text-blue-800 font-medium block"
                   >
                     {event.venue}
                     <span className="text-xs text-gray-400 ml-2">View venue &rarr;</span>
-                  </Link>
+                  </VenueLinkTracker>
                 ) : (
                   <p className="text-gray-800 font-medium">{event.venue}</p>
                 )

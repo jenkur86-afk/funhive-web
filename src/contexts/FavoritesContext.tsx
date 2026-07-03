@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from './AuthContext'
+import { logInteraction } from '@/lib/track-click'
 import type { Database } from '@/lib/database.types'
 
 type UserFavorite = Database['public']['Tables']['user_favorites']['Row']
@@ -157,6 +158,8 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
           .single()
 
         if (error) throw error
+
+        logInteraction('favorite_add', { event_id: eventId, activity_id: activityId })
 
         // Update local state
         setFavorites((prev) => [

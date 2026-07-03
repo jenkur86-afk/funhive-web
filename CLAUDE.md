@@ -176,6 +176,7 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - `scripts/fix-event-quality.js` — Step 3: fix missing geohash, location, city, state, times, junk titles, past events. Description backfill removed.
 - `scripts/fix-missing-fields.js` — Step 4: backfill activity addresses via reverse geocode. Description backfill disabled.
 - `scripts/fix-duplicate-venues.js` — Clean room suffixes from existing venue names (one-off).
+- `scripts/fix-venue-title-quality.js` — Strip promo/ticket bracket cruft (e.g. "(TICKET LINK)") and extra whitespace from event titles, normalize SHOUTED all-caps titles to Title Case (guards against mangling short acronyms and dot-separated initialisms like "L.Y.E"), and null-out + re-derive venue when it exactly duplicates the event title. saveEvent()/flattenEvent() now do all three at scrape time; this is the backfill for pre-existing rows.
 - `scripts/fix-cancelled-events.js` — Remove cancelled/closed/postponed events (saveEvent now does this at scrape time).
 - `scripts/data-quality-fix.js` — Broader fix: past events, geohash, state codes, city, activity addresses (reverse geocode), forward-geocode for missing locations, uncategorized events, stale scraper logs. Supports `--past-only` and `--geo-only` flags.
 - `scripts/fix-broken-event-dates.js` — Delete events whose `event_date` has no recoverable date (time-only strings like "2:00pm–3:00pm", literal "Invalid Date" — historical rows from Communico/BiblioCommons bugs now fixed at scrape time).

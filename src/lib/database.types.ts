@@ -426,6 +426,57 @@ export interface Database {
         }
         Relationships: []
       }
+      click_events: {
+        Row: {
+          id: string
+          interaction_type: string
+          event_id: string | null
+          activity_id: string | null
+          search_query: string | null
+          search_location: string | null
+          category: string | null
+          age_range: string | null
+          date_filter: string | null
+          radius_miles: number | null
+          user_lat: number | null
+          user_lng: number | null
+          session_id: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          interaction_type: string
+          event_id?: string | null
+          activity_id?: string | null
+          search_query?: string | null
+          search_location?: string | null
+          category?: string | null
+          age_range?: string | null
+          date_filter?: string | null
+          radius_miles?: number | null
+          user_lat?: number | null
+          user_lng?: number | null
+          session_id?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          interaction_type?: string
+          event_id?: string | null
+          activity_id?: string | null
+          search_query?: string | null
+          search_location?: string | null
+          category?: string | null
+          age_range?: string | null
+          date_filter?: string | null
+          radius_miles?: number | null
+          user_lat?: number | null
+          user_lng?: number | null
+          session_id?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Functions: {
       nearby_events: {

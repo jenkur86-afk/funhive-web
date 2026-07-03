@@ -210,6 +210,63 @@ function cleanVenueName(venue) {
   return cleaned.trim();
 }
 
+// ============================================================================
+// TITLE CLEANING
+// ============================================================================
+
+// Strips bracketed/parenthetical promo-ticket cruft scrapers sometimes pick up
+// from source markup, e.g. "Toddler Time (TICKET LINK)", "Fall Fest [SOLD OUT]".
+// Also collapses leftover double-spaces (from HTML whitespace or the strip
+// above) — harmless and desirable regardless of whether a bracket matched.
+const PROMO_BRACKET_RE = /\s*[([]\s*(tickets?|ticket\s*link|buy\s*tickets?|sold\s*out|register(?:\s*(now|here))?|rsvp|click\s*here|more\s*info|link\s*in\s*bio)\s*[)\]]\s*/gi;
+
+function stripPromoBracketCruft(title) {
+  if (!title || typeof title !== 'string') return title;
+  return title.replace(PROMO_BRACKET_RE, ' ').replace(/\s{2,}/g, ' ').trim();
+}
+
+// Small words kept lowercase in title-case output (except when first word).
+const SMALL_WORDS = new Set(['a', 'an', 'and', 'at', 'but', 'by', 'for', 'in', 'of', 'on', 'or', 'the', 'to', 'with']);
+
+// Dot-separated initialisms like "L.Y.E", "U.S.A." — preserve as-is (uppercase)
+// rather than title-casing, which would otherwise mangle them into "L.y.e".
+const DOT_INITIALISM_RE = /^([A-Za-z]\.){2,}[A-Za-z]?\.?$/;
+
+function capitalizeShoutedWord(word) {
+  if (DOT_INITIALISM_RE.test(word)) return word.toUpperCase();
+  const lower = word.toLowerCase();
+  // Capitalize the first letter and the letter after any internal "/" or "-"
+  // delimiter, e.g. "w/miss" -> "W/Miss", "drop-in" -> "Drop-In".
+  return lower.replace(/(^|[/-])([a-z])/g, (_m, sep, ch) => sep + ch.toUpperCase());
+}
+
+/**
+ * Normalize a SHOUTED all-caps title to Title Case, without mangling short
+ * acronyms (STEM, PTA, 4H, GLOW), dot-separated initialisms (L.Y.E, U.S.A.),
+ * or already mixed-case titles.
+ * Only fires when the title is long enough to be a real "shouted" sentence
+ * (not a short acronym) AND the majority of its letters are uppercase.
+ * A mixed-case title like "STEM Night at the Library" is left alone since
+ * most of its letters are lowercase.
+ */
+function normalizeShoutedTitle(title) {
+  if (!title || typeof title !== 'string') return title;
+  const trimmed = title.trim();
+  const letters = trimmed.replace(/[^a-zA-Z]/g, '');
+  if (letters.length < 16) return title;
+  if (!/\s/.test(trimmed)) return title;
+  const upperCount = (trimmed.match(/[A-Z]/g) || []).length;
+  if (upperCount / letters.length < 0.85) return title;
+
+  return trimmed.split(' ').map((word, i) => {
+    if (!word) return word;
+    if (i > 0 && SMALL_WORDS.has(word.toLowerCase()) && !DOT_INITIALISM_RE.test(word)) {
+      return word.toLowerCase();
+    }
+    return capitalizeShoutedWord(word);
+  }).join(' ');
+}
+
 /**
  * Derive a venue when the scraper didn't supply one.
  * Tries (in order): "X at <Venue>" / "@ <Venue>" pattern in name,
@@ -901,7 +958,7 @@ async function saveEvent(id, data) {
 
   const row = {
     id,
-    name: truncate(data.name, 300),
+    name: truncate(normalizeShoutedTitle(stripPromoBracketCruft(data.name)), 300),
     event_date: truncate(evtDateStr, 100),
     date: data.date instanceof Date ? data.date.toISOString()
       : (typeof data.date?.toDate === 'function') ? data.date.toDate().toISOString()
@@ -916,6 +973,15 @@ async function saveEvent(id, data) {
     zip_code: data.location?.zipCode || null,
     address: truncate(data.location?.address, 200) || null,
   };
+
+  // Treat venue as missing if it's literally the same as the event title —
+  // usually means the scraper mistakenly copied the title into the venue
+  // field, not a real venue name. Exact match only; a venue that's merely a
+  // substring of a longer descriptive title (e.g. "Aberdeen Library" inside
+  // "Aberdeen Library Summer Concert Series") is legitimate and left alone.
+  if (row.venue && row.name && row.venue.trim().toLowerCase() === row.name.trim().toLowerCase()) {
+    row.venue = null;
+  }
 
   // Backfill venue if the scraper didn't supply one — tries name "at X",
   // address first component, then city fallback. Better than venue=NULL.
@@ -1571,7 +1637,7 @@ function flattenEvent(data) {
   const trunc = (str, maxLen) => str && str.length > maxLen ? str.substring(0, maxLen) : str;
 
   const row = {};
-  row.name = trunc(data.name.trim(), 300);
+  row.name = trunc(normalizeShoutedTitle(stripPromoBracketCruft(data.name.trim())), 300);
   if (data.eventDate) row.event_date = trunc(data.eventDate, 100);
   if (data.date) {
     if (data.date instanceof Date) row.date = data.date.toISOString();
@@ -1582,6 +1648,10 @@ function flattenEvent(data) {
   if (data.url) row.url = trunc(data.url, 400);
   if (data.imageUrl) row.image_url = trunc(data.imageUrl, 500);
   if (data.venue) row.venue = trunc(cleanVenueName(data.venue), 200);
+  // Treat venue as missing if it's literally the same as the event title (see saveEvent for rationale).
+  if (row.venue && row.name && row.venue.trim().toLowerCase() === row.name.trim().toLowerCase()) {
+    row.venue = null;
+  }
   if (data.state) row.state = normalizeState(data.state);
   if (data.geohash) row.geohash = data.geohash;
   if (data.activityId) row.activity_id = data.activityId;
@@ -1809,4 +1879,6 @@ module.exports = {
   checkDuplicate,
   cleanVenueName,
   deriveVenueFallback,
+  stripPromoBracketCruft,
+  normalizeShoutedTitle,
 };

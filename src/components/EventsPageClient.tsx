@@ -1,0 +1,1009 @@
+'use client'
+
+import { useState, useEffect, useRef, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
+import dynamic from 'next/dynamic'
+import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
+import FavoriteButton from '@/components/FavoriteButton'
+import ReportButton from '@/components/ReportButton'
+import { logInteraction } from '@/lib/track-click'
+import { haversineDistance, getUserLocation } from '@/lib/geo-utils'
+import { parseLocationInput, preloadZipData, lookupZipSync, lookupCitySync } from '@/lib/zip-lookup'
+import { extractTimeFromEventDate, parseTime } from '@/lib/hours-utils'
+import { getCategoryIcon } from '@/lib/category-icons'
+import { ACTIVE_STATES } from '@/lib/region-filter'
+
+// Leaflet must be loaded client-side only (no SSR)
+const EventMap = dynamic(() => import('@/components/EventMap'), { ssr: false })
+
+interface HiddenVenue {
+  id: string
+  name: string
+}
+
+function getHiddenVenues(): HiddenVenue[] {
+  if (typeof window === 'undefined') return []
+  try {
+    const stored = localStorage.getItem('hidden_venues')
+    return stored ? JSON.parse(stored) : []
+  } catch {
+    return []
+  }
+}
+
+const CATEGORIES = [
+  'Community',
+  'Storytimes & Library',
+  'Festivals',
+  'Arts & Culture',
+  'Indoor',
+  'Outdoor & Nature',
+  'Classes & Workshops',
+  'Animals & Wildlife',
+]
+
+const AGE_RANGES = [
+  { label: 'Babies & Toddlers (0-2)', value: 'babies', min: 0, max: 2 },
+  { label: 'Preschool (3-5)', value: 'preschool', min: 3, max: 5 },
+  { label: 'Kids (6-8)', value: 'kids', min: 6, max: 8 },
+  { label: 'Tweens (9-12)', value: 'tweens', min: 9, max: 12 },
+  { label: 'Teens (13-18)', value: 'teens', min: 13, max: 18 },
+]
+
+const DATE_FILTERS = ['All', 'Today', 'This Week', 'This Weekend', 'Next Week', 'Custom']
+
+const RADIUS_OPTIONS = [
+  { label: '10 mi', value: 10 },
+  { label: '25 mi', value: 25 },
+  { label: '50 mi', value: 50 },
+  { label: '100 mi', value: 100 },
+  { label: '150 mi', value: 150 },
+  { label: '200 mi', value: 200 },
+]
+
+// Inline always-visible pill toggle filter
+function InlinePillFilter({
+  options,
+  selected,
+  onToggle,
+  showIcons = false,
+}: {
+  options: { label: string; value: string }[]
+  selected: string[]
+  onToggle: (value: string) => void
+  showIcons?: boolean
+}) {
+  return (
+    <div className="flex gap-2 flex-wrap">
+      {options.map((option) => {
+        const isSelected = selected.includes(option.value)
+        const icon = showIcons ? getCategoryIcon(option.value) : null
+        return (
+          <button
+            key={option.value}
+            onClick={() => onToggle(option.value)}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition ${
+              isSelected
+                ? 'text-white'
+                : showIcons && icon
+                ? ''
+                : 'bg-amber-50 text-amber-700 hover:bg-amber-100'
+            }`}
+            style={
+              isSelected && icon
+                ? { backgroundColor: icon.color }
+                : !isSelected && icon
+                ? { color: icon.color, backgroundColor: icon.color + '15' }
+                : isSelected
+                ? { backgroundColor: '#f59e0b' }
+                : undefined
+            }
+          >
+            {icon && (
+              <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                <path d={icon.path} />
+              </svg>
+            )}
+            {option.label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+const ITEMS_PER_PAGE = 24
+
+function EventsPageFallback() {
+  return <div className="max-w-6xl mx-auto px-4 py-12 text-center text-gray-500">Loading events...</div>
+}
+
+interface EventsPageClientProps {
+  initialEvents: any[]
+}
+
+export default function EventsPageClient({ initialEvents }: EventsPageClientProps) {
+  return (
+    <Suspense fallback={<EventsPageFallback />}>
+      <EventsPageInner initialEvents={initialEvents} />
+    </Suspense>
+  )
+}
+
+function EventsPageInner({ initialEvents }: EventsPageClientProps) {
+  const [events, setEvents] = useState<any[]>(initialEvents)
+  const [loading, setLoading] = useState(initialEvents.length === 0)
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [showMap, setShowMap] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
+  const [freeOnly, setFreeOnly] = useState(false)
+  const [selectedDateFilter, setSelectedDateFilter] = useState('All')
+  const [customDateRange, setCustomDateRange] = useState<{ start: string; end: string } | null>(null)
+  const [selectedAgeRanges, setSelectedAgeRanges] = useState<string[]>([])
+  const [locationInput, setLocationInput] = useState('')
+  const [selectedRadius, setSelectedRadius] = useState(25)
+  const [locationCoords, setLocationCoords] = useState<{ lat: number; lng: number } | null>(null)
+  const [showCustomDate, setShowCustomDate] = useState(false)
+  const [locationError, setLocationError] = useState('')
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE)
+
+  const searchParams = useSearchParams()
+
+  // Initialize filters from URL query parameters and saved location on first load
+  useEffect(() => {
+    const categoryParam = searchParams.get('category')
+    const queryParam = searchParams.get('q')
+    const dateParam = searchParams.get('date')
+    if (categoryParam) {
+      setSelectedCategories(categoryParam.split(',').map(c => c.trim()).filter(Boolean))
+    }
+    if (queryParam) {
+      setSearchQuery(queryParam)
+    }
+    if (dateParam && DATE_FILTERS.includes(dateParam)) {
+      setSelectedDateFilter(dateParam)
+    }
+    // Restore saved location from homepage "Use My Location"
+    try {
+      const saved = localStorage.getItem('funhive_location')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (parsed.lat && parsed.lng) {
+          setLocationCoords(parsed)
+          setLocationInput(`${parsed.lat.toFixed(4)}, ${parsed.lng.toFixed(4)}`)
+        }
+      }
+    } catch {}
+  }, [])
+
+  // Debounce search query so DB queries don't fire on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 300)
+    return () => clearTimeout(timer)
+  }, [searchQuery])
+
+  useEffect(() => {
+    preloadZipData().then(() => loadEvents())
+  }, [selectedCategories, locationCoords, selectedRadius, debouncedSearch, selectedDateFilter, customDateRange])
+
+  // Track search interactions (skip empty queries)
+  useEffect(() => {
+    if (debouncedSearch) {
+      logInteraction('search', { search_query: debouncedSearch })
+    }
+  }, [debouncedSearch])
+
+  // Track filter changes, skipping the initial mount (which just restores URL/localStorage state)
+  const didMountFilterTracking = useRef(false)
+  useEffect(() => {
+    if (!didMountFilterTracking.current) {
+      didMountFilterTracking.current = true
+      return
+    }
+    logInteraction('filter_change', {
+      category: selectedCategories.join(',') || undefined,
+      age_range: selectedAgeRanges.join(',') || undefined,
+      date_filter: selectedDateFilter !== 'All' ? selectedDateFilter : undefined,
+      radius_miles: selectedRadius,
+      search_location: locationInput || undefined,
+    })
+  }, [selectedCategories, selectedAgeRanges, selectedDateFilter, selectedRadius, locationCoords])
+
+  // Parse location input whenever it changes
+  useEffect(() => {
+    const trimmed = locationInput.trim()
+    if (!trimmed) {
+      setLocationCoords(null)
+      setLocationError('')
+      return
+    }
+
+    let cancelled = false
+    parseLocationInput(trimmed).then((parsed) => {
+      if (cancelled) return
+      if (parsed) {
+        setLocationCoords(parsed)
+        setLocationError('')
+      } else if (/^\d{5}$/.test(trimmed)) {
+        setLocationCoords(null)
+        setLocationError('Zip code not found. Try a city name (e.g. Baltimore, MD)')
+      } else if (trimmed.includes(',')) {
+        setLocationCoords(null)
+        setLocationError('Location not recognized. Try: zip code, city + state, or lat,lng')
+      } else {
+        setLocationCoords(null)
+        setLocationError('')
+      }
+    })
+
+    return () => { cancelled = true }
+  }, [locationInput])
+
+  const handleUseMyLocation = async () => {
+    const location = await getUserLocation()
+    if (location) {
+      setLocationCoords(location)
+      setLocationInput(`${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}`)
+      setLocationError('')
+      try { localStorage.setItem('funhive_location', JSON.stringify(location)) } catch {}
+    } else {
+      setLocationError('Could not get your location. Please allow location access or enter a zip code.')
+    }
+  }
+
+
+// Parse event_date strings like "April 1, 2026 10:00am" or "2026-04-09" into Date objects
+function parseEventDate(dateStr: string): Date | null {
+  if (!dateStr) return null
+  // Pure ISO date (YYYY-MM-DD exactly) — append local midnight to avoid UTC-shift to previous day
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return new Date(dateStr + 'T00:00:00')
+  // Datetime with space separator ("2026-06-28 10:00:00") — replace space with T for valid ISO
+  if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}/.test(dateStr)) return new Date(dateStr.replace(' ', 'T'))
+  // Try native parsing ("April 1, 2026 10:00am" works in most browsers)
+  const d = new Date(dateStr)
+  if (!isNaN(d.getTime())) return d
+  return null
+}
+
+function isEventOnOrAfterToday(event: any): boolean {
+  if (!event.event_date) return false
+  const d = parseEventDate(event.event_date)
+  if (!d) return false
+  const now = new Date()
+  const today = new Date(now)
+  today.setHours(0, 0, 0, 0)
+  const eventDay = new Date(d)
+  eventDay.setHours(0, 0, 0, 0)
+
+  // Future days are always visible
+  if (eventDay > today) return true
+  // Past days are always hidden
+  if (eventDay < today) return false
+
+  // Event is today — check if end time (or start time) has passed
+  const endMinutes = event.end_time ? parseTime(event.end_time) : null
+  const startMinutes = event.start_time ? parseTime(event.start_time) : null
+  const nowMinutes = now.getHours() * 60 + now.getMinutes()
+
+  // If we have an end time, hide once it's past
+  if (endMinutes !== null) return nowMinutes <= endMinutes
+  // No end time — show all day
+  return true
+}
+
+  // Compute the DB-level date range from the selected date filter.
+  // Returns { start, end } ISO date strings, or just { start } for open-ended.
+  function getDateRange(): { start: string; end?: string } {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const todayStr = today.toISOString().split('T')[0]
+    const dayOfWeek = today.getDay()
+
+    switch (selectedDateFilter) {
+      case 'Today':
+        return { start: todayStr, end: todayStr }
+
+      case 'This Week': {
+        const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek
+        const endOfWeek = new Date(today)
+        endOfWeek.setDate(endOfWeek.getDate() + daysUntilSunday)
+        return { start: todayStr, end: endOfWeek.toISOString().split('T')[0] }
+      }
+
+      case 'This Weekend': {
+        const daysUntilSaturday = dayOfWeek === 0 ? 6 : (6 - dayOfWeek + 7) % 7
+        const saturday = new Date(today)
+        saturday.setDate(saturday.getDate() + daysUntilSaturday)
+        const sunday = new Date(saturday)
+        sunday.setDate(sunday.getDate() + 1)
+        return { start: saturday.toISOString().split('T')[0], end: sunday.toISOString().split('T')[0] }
+      }
+
+      case 'Next Week': {
+        const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek
+        const nextWeekStart = new Date(today)
+        nextWeekStart.setDate(nextWeekStart.getDate() + daysUntilSunday + 1)
+        const nextWeekEnd = new Date(nextWeekStart)
+        nextWeekEnd.setDate(nextWeekEnd.getDate() + 6)
+        return { start: nextWeekStart.toISOString().split('T')[0], end: nextWeekEnd.toISOString().split('T')[0] }
+      }
+
+      case 'Custom': {
+        if (customDateRange?.start && customDateRange?.end) {
+          // Use the later of today or the custom start, so we don't fetch past events
+          const effectiveStart = customDateRange.start > todayStr ? customDateRange.start : todayStr
+          return { start: effectiveStart, end: customDateRange.end }
+        }
+        return { start: todayStr }
+      }
+
+      default:
+        return { start: todayStr }
+    }
+  }
+
+  async function loadEvents() {
+    setLoading(true)
+    try {
+      const { start: dateStart, end: dateEnd } = getDateRange()
+      let allData: any[] = []
+
+      if (locationCoords) {
+        // Use PostGIS spatial query for location-based search (events with geometry)
+        const result = await supabase.rpc('nearby_events', {
+          lng: locationCoords.lng,
+          lat: locationCoords.lat,
+          radius_miles: selectedRadius,
+          max_results: 500,
+        } as any) as { data: any[] | null; error: any }
+        if (!result.error && result.data) {
+          allData = result.data.filter((e: any) => isEventOnOrAfterToday(e) && !e.reported && (!ACTIVE_STATES || ACTIVE_STATES.includes(e.state)))
+        }
+
+        // Also fetch events WITHOUT geometry that have city/state/zip
+        // so client-side fallback can compute distance
+        // Select only the columns needed for card display and client-side filtering.
+        // Excludes image_url, url, source_url, scraper_name, platform, scraped_at,
+        // created_at, updated_at, review_count, is_sponsored, sponsor_expires_at,
+        // geohash, end_date to reduce Supabase egress bandwidth.
+        const EVENT_LIST_COLS = 'id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, description, address, location, activity_id, reported'
+        let suppQuery = supabase
+          .from('events')
+          .select(EVENT_LIST_COLS)
+          .is('location', null)
+          .not('event_date', 'is', null)
+          .eq('reported', false)
+          .gte('date', dateStart)
+          .in('state', ACTIVE_STATES || [])
+          .limit(300)
+
+        if (dateEnd) {
+          suppQuery = suppQuery.lte('date', dateEnd + 'T23:59:59')
+        }
+
+        if (debouncedSearch) {
+          const term = `%${debouncedSearch}%`
+          suppQuery = suppQuery.or(
+            `name.ilike.${term},venue.ilike.${term},city.ilike.${term},description.ilike.${term},category.ilike.${term},address.ilike.${term}`
+          )
+        }
+
+        const supplementary = await suppQuery
+
+        if (!supplementary.error && supplementary.data) {
+          // Deduplicate by id
+          const existingIds = new Set(allData.map((e: any) => e.id))
+          const additional = supplementary.data.filter((e: any) => !existingIds.has(e.id) && isEventOnOrAfterToday(e))
+          allData = [...allData, ...additional]
+        }
+      } else {
+        // No location — use standard query, ordered by date
+        // Use the TIMESTAMPTZ `date` column for filtering & sorting
+        // (the TEXT `event_date` column sorts alphabetically, not chronologically)
+        const EVENT_LIST_COLS_STD = 'id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, description, address, location, activity_id, reported'
+        let query = supabase
+          .from('events')
+          .select(EVENT_LIST_COLS_STD)
+          .not('event_date', 'is', null)
+          .eq('reported', false)
+          .in('state', ACTIVE_STATES || [])
+
+        if (debouncedSearch) {
+          // When searching, skip .gte('date') because some events have event_date
+          // (TEXT) but no parsed date (TIMESTAMPTZ) — filter dates client-side instead
+          const term = `%${debouncedSearch}%`
+          query = query
+            .or(
+              `name.ilike.${term},venue.ilike.${term},city.ilike.${term},description.ilike.${term},category.ilike.${term},address.ilike.${term}`
+            )
+            .order('date', { ascending: true, nullsFirst: false })
+            .limit(500)
+        } else {
+          // Filter at DB level using the computed date range
+          query = query.gte('date', dateStart)
+          if (dateEnd) {
+            query = query.lte('date', dateEnd + 'T23:59:59')
+          }
+          query = query
+            .order('date', { ascending: true })
+            .limit(500)
+        }
+
+        const result = await query
+        if (!result.error && result.data) {
+          allData = debouncedSearch
+            ? result.data.filter((e: any) => isEventOnOrAfterToday(e))
+            : result.data
+        }
+      }
+
+      // Apply category filter client-side (works for both RPC and standard queries)
+      if (selectedCategories.length > 0) {
+        allData = allData.filter((e: any) => selectedCategories.includes(e.category))
+      }
+
+      setEvents(allData)
+    } catch (err) {
+      console.error('Failed to load events:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Helper function to check if an event is free.
+  // NOTE: events table has no `is_free` column (only activities does), so we
+  // detect "free" purely from name/description text. Including `is_free` in a
+  // select on the events table 400s and bleeds egress.
+  const isFreeEvent = (event: any): boolean => {
+    const name = event.name?.toLowerCase() || ''
+    const description = event.description?.toLowerCase() || ''
+    return name.includes('free') || description.includes('free')
+  }
+
+  // Extract numeric age range from event text, returning {min, max} or null
+  const extractAgeRange = (event: any): { min: number; max: number } | null => {
+    const ageStr = event.age_range?.toLowerCase() || ''
+    const content = `${event.name || ''} ${event.description || ''} ${ageStr}`.toLowerCase()
+
+    // Try numeric range: "3-5", "ages 0-12", "(6-8 yrs)"
+    const numMatch = ageStr.match(/(\d{1,2})\s*[-–to]+\s*(\d{1,2})/) ||
+                     content.match(/ages?\s+(\d{1,2})\s*[-–to]+\s*(\d{1,2})/) ||
+                     content.match(/\((\d{1,2})\s*[-–]\s*(\d{1,2})/)
+    if (numMatch) {
+      const a = parseInt(numMatch[1]), b = parseInt(numMatch[2])
+      if (a <= 18 && b <= 18) return { min: Math.min(a, b), max: Math.max(a, b) }
+    }
+
+    // Keyword-based inference
+    if (/\b(baby|babies|infant|lap\s*sit)\b/.test(content)) return { min: 0, max: 2 }
+    if (/\btoddler/.test(content)) return { min: 0, max: 3 }
+    if (/\b(preschool|pre-k|prek)\b/.test(content)) return { min: 3, max: 5 }
+    if (/\belementary/.test(content)) return { min: 5, max: 11 }
+    if (/\btween/.test(content)) return { min: 9, max: 12 }
+    if (/\bteen\b/.test(content) && !/\bfamil/.test(content)) return { min: 13, max: 18 }
+    if (/\b(kids?|children)\b/.test(content) && !/\bfamil/.test(content)) return { min: 4, max: 12 }
+    if (/\ball\s*ages\b/.test(content) || /\bfamil/.test(content)) return { min: 0, max: 18 }
+    return null
+  }
+
+  // Check if event's age range overlaps with any selected filter bracket
+  const matchesAgeRange = (event: any): boolean => {
+    if (selectedAgeRanges.length === 0) return true
+    const eventRange = extractAgeRange(event)
+    // If no age info, include it (don't hide events with unknown age range)
+    if (!eventRange) return true
+    // Check overlap: event range intersects with at least one selected bracket
+    return selectedAgeRanges.some((rangeValue) => {
+      const bracket = AGE_RANGES.find(r => r.value === rangeValue)
+      if (!bracket) return false
+      return eventRange.min <= bracket.max && eventRange.max >= bracket.min
+    })
+  }
+
+  // Helper function to check date range
+  const matchesDateFilter = (event: any): boolean => {
+    if (selectedDateFilter === 'All') return true
+
+    // Prefer the TIMESTAMPTZ `date` column (already parsed); fall back to event_date text
+    let eventDate: Date | null = null
+    if (event.date) {
+      const d = new Date(event.date)
+      if (!isNaN(d.getTime())) eventDate = d
+    }
+    if (!eventDate && event.event_date) {
+      eventDate = parseEventDate(event.event_date)
+    }
+    if (!eventDate) return false
+
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    // Local-date-only copy of the event timestamp for day-level comparisons
+    const eventDay = new Date(eventDate)
+    eventDay.setHours(0, 0, 0, 0)
+
+    const dayOfWeek = today.getDay()
+    const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek
+
+    switch (selectedDateFilter) {
+      case 'Today':
+        return eventDay.getTime() === today.getTime()
+
+      case 'This Week': {
+        const endOfWeek = new Date(today)
+        endOfWeek.setDate(endOfWeek.getDate() + daysUntilSunday)
+        endOfWeek.setHours(23, 59, 59, 999)
+        return eventDay >= today && eventDate <= endOfWeek
+      }
+
+      case 'This Weekend': {
+        const daysUntilSaturday = dayOfWeek === 0 ? 6 : (6 - dayOfWeek + 7) % 7
+        const saturday = new Date(today)
+        saturday.setDate(saturday.getDate() + daysUntilSaturday)
+        const sunday = new Date(saturday)
+        sunday.setDate(sunday.getDate() + 1)
+        sunday.setHours(23, 59, 59, 999)
+        return eventDay >= saturday && eventDate <= sunday
+      }
+
+      case 'Next Week': {
+        const nextWeekStart = new Date(today)
+        nextWeekStart.setDate(nextWeekStart.getDate() + daysUntilSunday + 1)
+        const nextWeekEnd = new Date(nextWeekStart)
+        nextWeekEnd.setDate(nextWeekEnd.getDate() + 6)
+        nextWeekEnd.setHours(23, 59, 59, 999)
+        return eventDay >= nextWeekStart && eventDate <= nextWeekEnd
+      }
+
+      case 'Custom': {
+        if (!customDateRange) return false
+        const startDate = new Date(customDateRange.start + 'T00:00:00')
+        const endDate = new Date(customDateRange.end + 'T00:00:00')
+        endDate.setHours(23, 59, 59, 999)
+        return eventDay >= startDate && eventDate <= endDate
+      }
+
+      default:
+        return true
+    }
+  }
+
+  const hiddenVenues = getHiddenVenues()
+
+  // Extract lat/lng from event, handling multiple location data formats
+  const getCoords = (item: any): { lat: number; lng: number } | null => {
+    // 1. GeoJSON format: { type: "Point", coordinates: [lng, lat] }
+    const coords = item.location?.coordinates
+    if (Array.isArray(coords) && coords.length >= 2) {
+      return { lat: coords[1], lng: coords[0] }
+    }
+
+    // 2. Direct latitude/longitude fields (some scrapers set these)
+    if (item.latitude && item.longitude) {
+      return { lat: Number(item.latitude), lng: Number(item.longitude) }
+    }
+
+    // 3. Fallback: look up the event's zip code in our 43K+ zip database
+    if (item.zip_code) {
+      const clean = String(item.zip_code).trim().slice(0, 5)
+      if (/^\d{5}$/.test(clean)) return lookupZipSync(clean)
+    }
+
+    // 4. Last resort: look up the event's city + state
+    if (item.city && item.state) {
+      return lookupCitySync(item.city, item.state)
+    }
+
+    return null
+  }
+
+  const filteredEvents = events
+    .filter((event) => {
+      // Filter out events from hidden venues
+      const isVenueHidden = hiddenVenues.some(
+        (v) => v.id === event.activity_id || v.name === event.venue
+      )
+      if (isVenueHidden) return false
+
+      // Search across all event data, not just name/venue/city
+      const matchesSearch =
+        !searchQuery ||
+        event.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.venue?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.city?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.state?.toLowerCase().includes(searchQuery.toLowerCase())
+
+      const matchesFree = !freeOnly || isFreeEvent(event)
+      const matchesAge = matchesAgeRange(event)
+      const matchesDate = matchesDateFilter(event)
+
+      // Filter by radius if location is active
+      if (locationCoords) {
+        const coords = getCoords(event)
+        if (!coords) return false
+        const dist = haversineDistance(locationCoords.lat, locationCoords.lng, coords.lat, coords.lng)
+        if (dist > selectedRadius) return false
+      }
+
+      return matchesSearch && matchesFree && matchesAge && matchesDate
+    })
+    .sort((a, b) => {
+      // Sort by date first (day only, ignoring time in the timestamp)
+      const dA = a.date ? new Date(a.date) : a.event_date ? parseEventDate(a.event_date) : null
+      const dB = b.date ? new Date(b.date) : b.event_date ? parseEventDate(b.event_date) : null
+      const dayA = dA ? new Date(dA).setHours(0,0,0,0) : Infinity
+      const dayB = dB ? new Date(dB).setHours(0,0,0,0) : Infinity
+      if (dayA !== dayB) return dayA - dayB
+
+      // Same day — sort by start_time (events with time before those without)
+      const timeA = a.start_time ? parseTime(a.start_time) : null
+      const timeB = b.start_time ? parseTime(b.start_time) : null
+      if (timeA !== null && timeB !== null) return timeA - timeB
+      if (timeA !== null) return -1
+      if (timeB !== null) return 1
+
+      // Tertiary sort: distance if location search active
+      if (locationCoords) {
+        const cA = getCoords(a)
+        const cB = getCoords(b)
+        const distA = cA ? haversineDistance(locationCoords.lat, locationCoords.lng, cA.lat, cA.lng) : 9999
+        const distB = cB ? haversineDistance(locationCoords.lat, locationCoords.lng, cB.lat, cB.lng) : 9999
+        return distA - distB
+      }
+      return 0
+    })
+
+  // Calculate distance for each event if location search is active
+  const getEventDistance = (event: any): number | null => {
+    if (!locationCoords) return null
+    const coords = getCoords(event)
+    if (!coords) return null
+    return haversineDistance(locationCoords.lat, locationCoords.lng, coords.lat, coords.lng)
+  }
+
+  const toggleCategory = (cat: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
+    )
+  }
+
+  const toggleAgeRange = (age: string) => {
+    setSelectedAgeRanges((prev) =>
+      prev.includes(age) ? prev.filter((a) => a !== age) : [...prev, age]
+    )
+  }
+
+  const hasActiveFilters =
+    selectedCategories.length > 0 ||
+    searchQuery ||
+    freeOnly ||
+    selectedDateFilter !== 'All' ||
+    selectedAgeRanges.length > 0 ||
+    locationCoords
+
+  // Reset pagination when filters change
+  useEffect(() => {
+    setVisibleCount(ITEMS_PER_PAGE)
+  }, [searchQuery, freeOnly, selectedDateFilter, selectedAgeRanges, selectedCategories, locationCoords])
+
+  const handleClearAllFilters = () => {
+    setSelectedCategories([])
+    setSearchQuery('')
+    setFreeOnly(false)
+    setSelectedDateFilter('All')
+    setCustomDateRange(null)
+    setShowCustomDate(false)
+    setSelectedAgeRanges([])
+    setLocationCoords(null)
+    setLocationInput('')
+    setLocationError('')
+    setVisibleCount(ITEMS_PER_PAGE)
+  }
+
+  // Show the full-page loading state only when there's nothing to display yet
+  // (first load with no server-seeded data). Once we have results — whether
+  // from SSR seeding or a prior fetch — keep showing them while a background
+  // refresh runs, instead of flashing to a blank "Loading..." state.
+  const showFullPageLoading = loading && filteredEvents.length === 0
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold text-amber-900">Events</h1>
+        <div className="flex items-center gap-3">
+          {hasActiveFilters && (
+            <button
+              onClick={handleClearAllFilters}
+              className="px-4 py-2 rounded-lg border border-red-300 text-red-600 text-sm font-medium hover:bg-red-50 transition"
+            >
+              Clear All Filters
+            </button>
+          )}
+          <button
+            onClick={() => setShowMap(!showMap)}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-amber-300 text-amber-700 hover:bg-amber-50"
+          >
+            {showMap ? 'List View' : 'Map View'}
+          </button>
+        </div>
+      </div>
+
+      {/* Search Bar */}
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search events, descriptions, venues, categories..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-4 py-3 rounded-lg border border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-400"
+        />
+      </div>
+
+      {/* Location Search */}
+      <div className="mb-4 p-4 bg-amber-50 rounded-lg border border-amber-200">
+        <p className="text-xs font-medium text-amber-900 mb-2">Location</p>
+        <div className="flex gap-2 flex-wrap items-center">
+          <input
+            type="text"
+            placeholder="Zip code, city + state (e.g. Baltimore, Maryland)..."
+            value={locationInput}
+            onChange={(e) => setLocationInput(e.target.value)}
+            aria-label="Location: zip code or city and state"
+            className="flex-1 min-w-48 px-4 py-2 rounded-lg border border-amber-200 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 bg-white"
+          />
+          <select
+            value={selectedRadius}
+            onChange={(e) => setSelectedRadius(Number(e.target.value))}
+            aria-label="Search radius in miles"
+            className="px-4 py-2 rounded-lg border border-amber-200 bg-white text-amber-900 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+          >
+            {RADIUS_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <button
+            onClick={handleUseMyLocation}
+            className="px-4 py-2 rounded-lg bg-amber-500 text-white text-sm hover:bg-amber-600 transition"
+          >
+            Use My Location
+          </button>
+          {locationCoords && (
+            <button
+              onClick={() => { setLocationCoords(null); setLocationInput(''); setLocationError(''); try { localStorage.removeItem('funhive_location') } catch {} }}
+              className="px-4 py-2 rounded-lg border border-amber-300 text-amber-700 text-sm hover:bg-amber-50 transition"
+            >
+              Clear Location
+            </button>
+          )}
+        </div>
+        {locationError && (
+          <p className="text-xs text-red-500 mt-2">{locationError}</p>
+        )}
+        {locationCoords && (
+          <p className="text-xs text-green-600 mt-2">
+            Showing events within {selectedRadius} miles
+          </p>
+        )}
+      </div>
+
+      {/* Date Filter Pills */}
+      <div className="mb-4">
+        <p className="text-xs font-medium text-amber-900 mb-2">When</p>
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          {DATE_FILTERS.map((filter) => (
+            <button
+              key={filter}
+              onClick={() => {
+                setSelectedDateFilter(filter)
+                setShowCustomDate(filter === 'Custom')
+              }}
+              className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition ${
+                selectedDateFilter === filter
+                  ? 'bg-amber-500 text-white'
+                  : 'bg-amber-50 text-amber-700 hover:bg-amber-100'
+              }`}
+            >
+              {filter}
+            </button>
+          ))}
+        </div>
+        {showCustomDate && (
+          <div className="flex gap-2 mt-3">
+            <input
+              type="date"
+              value={customDateRange?.start || ''}
+              onChange={(e) =>
+                setCustomDateRange({
+                  start: e.target.value,
+                  end: customDateRange?.end || e.target.value,
+                })
+              }
+              className="px-4 py-2 rounded-lg border border-amber-200 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+            />
+            <input
+              type="date"
+              value={customDateRange?.end || ''}
+              onChange={(e) =>
+                setCustomDateRange({
+                  start: customDateRange?.start || '',
+                  end: e.target.value,
+                })
+              }
+              className="px-4 py-2 rounded-lg border border-amber-200 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Category Filter — always visible pills */}
+      <div className="mb-4">
+        <p className="text-xs font-medium text-amber-900 mb-2">Category</p>
+        <InlinePillFilter
+          options={CATEGORIES.map((c) => ({ label: c, value: c }))}
+          selected={selectedCategories}
+          onToggle={toggleCategory}
+          showIcons
+        />
+      </div>
+
+      {/* Age Filter — always visible pills */}
+      <div className="mb-4">
+        <p className="text-xs font-medium text-amber-900 mb-2">Age</p>
+        <div className="flex gap-2 flex-wrap items-center">
+          <InlinePillFilter
+            options={AGE_RANGES}
+            selected={selectedAgeRanges}
+            onToggle={toggleAgeRange}
+          />
+          <label className="flex items-center gap-2 px-4 py-2 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-sm cursor-pointer hover:bg-amber-100 transition">
+            <input
+              type="checkbox"
+              checked={freeOnly}
+              onChange={(e) => setFreeOnly(e.target.checked)}
+              className="w-4 h-4 rounded cursor-pointer"
+            />
+            <span>Free Only</span>
+          </label>
+        </div>
+      </div>
+
+      {/* Results Count */}
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-sm text-gray-600">
+          {showFullPageLoading ? 'Loading...' : `${filteredEvents.length} event${filteredEvents.length !== 1 ? 's' : ''}`}
+        </p>
+      </div>
+
+      {/* Map or List View */}
+      {showMap && (locationCoords || userLocation) ? (
+        <div className="h-[480px] rounded-xl overflow-hidden mb-8 border border-amber-200 shadow">
+          <EventMap events={filteredEvents} center={(locationCoords || userLocation)!} />
+        </div>
+      ) : showMap ? (
+        <div className="h-48 flex items-center justify-center rounded-xl border border-amber-200 bg-amber-50 mb-8">
+          <p className="text-amber-700 text-sm">Enter a location above to view events on the map</p>
+        </div>
+      ) : null}
+
+      {/* Event Cards */}
+      {showFullPageLoading ? (
+        <div className="text-center py-12 text-amber-600">Loading events...</div>
+      ) : filteredEvents.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-gray-500">No events found matching your filters.</p>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredEvents.slice(0, visibleCount).map((event) => {
+              const distance = getEventDistance(event)
+              const catIcon = getCategoryIcon(event.category)
+              return (
+                <div
+                  key={event.id}
+                  className="group relative bg-white rounded-lg shadow hover:shadow-md transition p-6 border border-amber-100"
+                >
+                  <Link
+                    href={`/events/${encodeURIComponent(event.id)}`}
+                    className="block"
+                    onClick={() => logInteraction('view_event', { event_id: event.id })}
+                  >
+                    <h3 className="font-semibold text-amber-900 mb-2">{event.name}</h3>
+                    <p className="text-sm text-gray-600 mb-1">
+                      {event.event_date}
+                      {(() => {
+                        const st = event.start_time
+                        const et = event.end_time
+                        if (st) {
+                          return (
+                            <span className="ml-2 text-amber-600">
+                              {st}{et ? ` – ${et}` : ''}
+                            </span>
+                          )
+                        }
+                        const extracted = extractTimeFromEventDate(event.event_date)
+                        if (extracted) {
+                          return (
+                            <span className="ml-2 text-amber-600">
+                              {extracted.startTime}{extracted.endTime ? ` – ${extracted.endTime}` : ''}
+                            </span>
+                          )
+                        }
+                        return null
+                      })()}
+                    </p>
+                    {event.venue && <p className="text-sm text-gray-500">{event.venue}</p>}
+                    {(event.city || event.state) && (
+                      <p className="text-sm text-gray-400">
+                        {[event.city, event.state].filter(Boolean).join(', ')}
+                      </p>
+                    )}
+                    {distance !== null && (
+                      <span className="inline-flex items-center gap-1 mt-2 px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        {distance.toFixed(1)} mi away
+                      </span>
+                    )}
+                    <div className="flex flex-wrap items-center gap-2 mt-2">
+                      {event.category && catIcon && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded" style={{ color: catIcon.color, backgroundColor: catIcon.color + '15' }}>
+                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                            <path d={catIcon.path} />
+                          </svg>
+                          {event.category}
+                        </span>
+                      )}
+                      {event.age_range && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-50 text-purple-700 text-xs rounded border border-purple-100">
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                          {event.age_range}
+                        </span>
+                      )}
+                      {isFreeEvent(event) && (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full border border-green-200">
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                          </svg>
+                          Free
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                  <div className="absolute top-4 right-4 flex flex-col gap-1.5" onClick={(e) => e.stopPropagation()}>
+                    <FavoriteButton eventId={event.id} itemName={event.name} size="sm" />
+                    <ReportButton eventId={event.id} itemName={event.name} itemType="event" size="sm" />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Load More */}
+          {visibleCount < filteredEvents.length && (
+            <div className="text-center mt-8">
+              <button
+                onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_PAGE)}
+                className="px-8 py-3 rounded-lg bg-amber-500 text-white font-semibold hover:bg-amber-600 transition"
+              >
+                Load More ({filteredEvents.length - visibleCount} remaining)
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  )
+}
