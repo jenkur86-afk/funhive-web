@@ -78,7 +78,11 @@ const CONFIG = {
   CHECKPOINT_FILE: path.join(__dirname, 'logs', 'scraper-checkpoint.json'),
 
   // Log file
-  LOG_FILE: path.join(__dirname, 'logs', `scraper-run-${new Date().toISOString().split('T')[0]}.log`)
+  LOG_FILE: path.join(__dirname, 'logs', `scraper-run-${new Date().toISOString().split('T')[0]}.log`),
+
+  // Summary-only log — captures only run headers, per-scraper completion/failure lines,
+  // and the final table. Never contains per-event output. Safe to tail -30 for a quick diagnosis.
+  SUMMARY_FILE: path.join(__dirname, 'logs', 'scraper-summary.log')
 };
 
 // ============================================================================
@@ -96,6 +100,17 @@ function log(message, level = 'info') {
     fs.appendFileSync(CONFIG.LOG_FILE, logLine + '\n');
   } catch (err) {
     // Ignore file write errors
+  }
+}
+
+// Write only to the summary log — never called for per-event scraper output,
+// only for run headers, per-scraper completion/failure lines, and the final table.
+function logSummary(message) {
+  try {
+    const ts = new Date().toISOString();
+    fs.appendFileSync(CONFIG.SUMMARY_FILE, `[${ts}] ${message}\n`);
+  } catch (err) {
+    // Ignore
   }
 }
 
@@ -214,7 +229,9 @@ async function runScraper(name, config) {
       errors: errCount
     };
 
+    const zeroFlag = stats.found === 0 ? ' ⚠️ ZERO EVENTS' : '';
     log(`✅ ${name} completed in ${duration}s - Found: ${stats.found}, New: ${stats.new}, Duplicates: ${stats.duplicates}`);
+    logSummary(`✅ ${name} | Found: ${stats.found}  New: ${stats.new}  Dupes: ${stats.duplicates}  Time: ${duration}s${zeroFlag}`);
 
     // Log to database
     await logToFirestore(name, 'success', stats, null, parseFloat(duration));
@@ -224,6 +241,7 @@ async function runScraper(name, config) {
   } catch (error) {
     const duration = ((Date.now() - startTime) / 1000).toFixed(1);
     log(`❌ ${name} failed after ${duration}s: ${error.message}`, 'error');
+    logSummary(`❌ ${name} | FAILED after ${duration}s — ${error.message}`);
 
     // Log to database
     await logToFirestore(name, 'failed', {}, error.message, parseFloat(duration));
@@ -497,6 +515,8 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
   log(`🐝 FunHive Local Scraper Runner`);
   log(`📅 ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })} EST`);
   log(`${'='.repeat(60)}\n`);
+  logSummary(`${'='.repeat(60)}`);
+  logSummary(`🐝 FunHive Scraper Run — ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })} EST`);
 
   let results;
 
@@ -599,6 +619,47 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
     }
 
     log(`\n${'='.repeat(60)}\n`);
+
+    // ── Per-scraper table written to both stdout log and summary log ──────────
+    // Sorted: zero-event first, then failures, then successes by found desc.
+    const allResults = [
+      ...results.failed.map(r => ({ ...r, sortKey: 0 })),
+      ...results.success.filter(r => (r.stats?.found ?? 0) === 0).map(r => ({ ...r, sortKey: 1 })),
+      ...results.success.filter(r => (r.stats?.found ?? 0) > 0).sort((a, b) => (b.stats?.found ?? 0) - (a.stats?.found ?? 0)).map(r => ({ ...r, sortKey: 2 })),
+    ];
+
+    const colW = 34;
+    const tableHeader = `${'SCRAPER'.padEnd(colW)} ${'FOUND'.padStart(6)} ${'NEW'.padStart(6)} ${'DUPES'.padStart(6)} ${'TIME(s)'.padStart(8)}`;
+    const divider = '-'.repeat(tableHeader.length);
+
+    log(`\n📋 PER-SCRAPER RESULTS`);
+    log(divider);
+    log(tableHeader);
+    log(divider);
+    logSummary(`\n📋 PER-SCRAPER RESULTS — ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })} EST (${totalDuration} min)`);
+    logSummary(divider);
+    logSummary(tableHeader);
+    logSummary(divider);
+
+    for (const r of allResults) {
+      if (!r.success) {
+        const row = `${'❌ ' + r.name}`;
+        log(`${row.padEnd(colW + 1)} FAILED — ${r.error?.slice(0, 40) ?? 'unknown error'}`);
+        logSummary(`${row.padEnd(colW + 1)} FAILED — ${r.error?.slice(0, 40) ?? 'unknown error'}`);
+      } else {
+        const found = r.stats?.found ?? 0;
+        const isZero = found === 0;
+        const prefix = isZero ? '⚠️  ' : '   ';
+        const name = (prefix + r.name).padEnd(colW);
+        const row = `${name} ${String(found).padStart(6)} ${String(r.stats?.new ?? 0).padStart(6)} ${String(r.stats?.duplicates ?? 0).padStart(6)} ${String(r.duration?.toFixed(1) ?? '?').padStart(8)}`;
+        log(row);
+        logSummary(row);
+      }
+    }
+
+    log(divider);
+    logSummary(divider);
+    logSummary(`✅ ${results.success.length} succeeded  ❌ ${results.failed.length} failed  ⏭️ ${results.skipped.length} skipped  ⏱️ ${totalDuration} min total\n`);
 
   } catch (error) {
     log(`💥 Fatal error: ${error.message}`, 'error');
