@@ -630,6 +630,10 @@ function isCancelledEvent(name, description) {
     return true;
   }
 
+  // Facility/library closure notices — Communico libraries publish these as calendar entries.
+  // "Library Closed", "All CCPL Locations Closed", "Branch Closed for Juneteenth", etc.
+  if (/\b(library|branch[es]?|location[s]?|center)\s+closed\b/i.test(nameStr)) return true;
+
   // Strong signals in the DESCRIPTION — only cancelled/postponed/suspended (NOT "closed")
   // "closed" in descriptions causes too many false positives (gates close, road closed, registration closed, etc.)
   if (/\b(cancelled|canceled|postponed|suspended)\b/i.test(descStr)) {

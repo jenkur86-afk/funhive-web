@@ -18,8 +18,7 @@
  * Schedule: Every 3 days
  */
 
-const puppeteer = require('puppeteer-core');
-// chromium loaded lazily in launchBrowser() — not available locally
+const { launchBrowser } = require('./helpers/puppeteer-config');
 const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { categorizeEvent } = require('./event-categorization-helper');
@@ -51,34 +50,6 @@ const CATEGORY_MAP = {
   'Teens': { parent: 'Teen Events', sub: 'Teen Programs' },
   'Trips': { parent: 'Field Trips', sub: 'Day Trips' },
 };
-
-/**
- * Launch Puppeteer browser
- */
-async function launchBrowser() {
-  const isCloud = process.env.FUNCTION_TARGET || process.env.K_SERVICE;
-
-  if (isCloud) {
-    try {
-      const chromium = require('@sparticuz/chromium');
-      return await puppeteer.launch({
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath(),
-        headless: chromium.headless,
-      });
-    } catch (e) {
-      console.warn('Cloud chromium not available, falling back to local');
-    }
-  }
-
-  // Local development fallback
-  return await puppeteer.launch({
-    headless: 'new',
-    executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  });
-}
 
 /**
  * Parse age range from activity

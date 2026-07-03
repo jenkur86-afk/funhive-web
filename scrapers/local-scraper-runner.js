@@ -197,8 +197,11 @@ async function runScraper(name, config) {
     // The 2026-05-19 follow-up: Gardens-Nature / Zoos-Aquariums still reported
     // 0/0/0 because their CloudFunction wrappers return { success, result } —
     // stats are nested one level deep. Unwrap before normalizing.
+    // When a CloudFunction wrapper returns { success, result: stateDict, found, new, duplicates },
+    // the inner stateDict (e.g. { AL: 12, FL: 100 }) has no count fields — use outer object instead.
+    const hasCountFields = (obj) => obj && ('found' in obj || 'new' in obj || 'saved' in obj || 'imported' in obj);
     const stats_src = (result && result.success === true && result.result && typeof result.result === 'object')
-      ? result.result
+      ? (hasCountFields(result.result) ? result.result : result)
       : result;
     const num = (v) => (typeof v === 'number' && !isNaN(v)) ? v : 0;
     const newCount = num(stats_src?.new) || (num(stats_src?.saved) + num(stats_src?.updated)) || num(stats_src?.imported);
