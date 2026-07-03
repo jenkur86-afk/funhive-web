@@ -155,6 +155,34 @@ function normalizeState(rawState) {
  */
 const ROOM_KEYWORDS = /\b(room|meeting|conference|study|program|children|teen|makerspace|lab|studio|space|area|floor|auditorium|gallery|caf[eé]|parking|outdoor|outside|public|department|zoom|virtual|online|computer|board|storytime|story\s*time|large|small|grounds|lounge|lobby|patio|terrace|garden|courtyard|annex|wing|level|basement|lower)\b/i;
 
+// Maps internal category slugs to the display names used by the frontend.
+// The frontend's CATEGORIES array in events/page.tsx, activities/page.tsx, and
+// HomeEvents.tsx uses these exact strings for both filtering and display.
+const CATEGORY_SLUG_MAP = {
+  'library': 'Storytimes & Library',
+  'parks': 'Outdoor & Nature',
+  'parks-rec': 'Outdoor & Nature',
+  'parks_rec': 'Outdoor & Nature',
+  'community': 'Community',
+  'learning-culture': 'Arts & Culture',
+  'learning_culture': 'Arts & Culture',
+  'arts': 'Arts & Culture',
+  'arts-culture': 'Arts & Culture',
+  'festivals': 'Festivals',
+  'animals': 'Animals & Wildlife',
+  'wildlife': 'Animals & Wildlife',
+  'indoor': 'Indoor',
+  'classes': 'Classes & Workshops',
+  'workshops': 'Classes & Workshops',
+  'nature': 'Outdoor & Nature',
+  'outdoor': 'Outdoor & Nature',
+};
+
+function normalizeCategory(cat) {
+  if (!cat) return cat;
+  return CATEGORY_SLUG_MAP[cat.toLowerCase().trim()] || cat;
+}
+
 function cleanVenueName(venue) {
   if (!venue || typeof venue !== 'string') return venue;
   let cleaned = venue.trim();
@@ -456,10 +484,9 @@ const NON_FAMILY_PATTERNS = [
   /\berotic\b/i,
   /\bkink\b/i,
 
-  // Cannabis / drugs
+  // Cannabis / drugs (420 is handled in NAME_ONLY_NON_FAMILY_PATTERNS above)
   /\bcannabis\b/i,
   /\bmarijuana\b/i,
-  /\b420\b/i,
   /\bstoner\b/i,
   /\bdrug\s*take\s*back\b/i,
 
@@ -526,7 +553,7 @@ const FAMILY_RESCUE_PATTERNS = [
   /\bbab(y|ies)\b/i,
   /\binfant/i,
   /\ball\s*ages\b/i,
-  /\bstorytime/i,
+  /\bstory\s*time\b/i,
   /\bpuppet/i,
   /\bteen/i,
   /\byouth\b/i,
@@ -581,8 +608,25 @@ const NON_FAMILY_VENUE_PATTERNS = [
   /\bspeakeasy\b/i,
 ];
 
+// Patterns that should only be checked against the event name, not description.
+// "420" as a room number, date, or address number appears in many library
+// descriptions (e.g., "We meet in Room 420"). Cannabis events reliably put
+// "420" in their title, not just a description.
+const NAME_ONLY_NON_FAMILY_PATTERNS = [
+  /\b420\b/i,
+];
+
 function isNonFamilyEvent(name, description, venue) {
   const text = `${name || ''} ${description || ''}`;
+  const nameOnly = name || '';
+
+  // Check name-only patterns first (these must not fire on description alone)
+  for (const pattern of NAME_ONLY_NON_FAMILY_PATTERNS) {
+    if (pattern.test(nameOnly)) {
+      const rescued = FAMILY_RESCUE_PATTERNS.some(fp => fp.test(text));
+      if (!rescued) return pattern.source;
+    }
+  }
 
   for (const pattern of NON_FAMILY_PATTERNS) {
     if (pattern.test(text)) {
@@ -1565,6 +1609,8 @@ function flattenEvent(data) {
 
   // Category: check top-level, displayCategory, parentCategory, then metadata
   row.category = data.category || data.displayCategory || data.parentCategory || null;
+  // Normalize internal category slugs to frontend display names
+  if (row.category) row.category = normalizeCategory(row.category);
 
   // Scraper name: check top-level, then metadata, then source field
   if (data.scraperName) row.scraper_name = data.scraperName;
@@ -1599,7 +1645,7 @@ function flattenEvent(data) {
     row.platform = row.platform || data.metadata.platform;
     row.scraped_at = row.scraped_at || data.metadata.scrapedAt;
     // Category: metadata.category as fallback if not already set
-    row.category = row.category || data.metadata.category;
+    row.category = row.category || (data.metadata.category ? normalizeCategory(data.metadata.category) : null);
     // State: metadata.state as additional fallback
     row.state = row.state || normalizeState(data.metadata.state);
   }
@@ -1656,7 +1702,7 @@ function flattenActivity(data) {
   const row = {};
   if (data.name) row.name = data.name;
   if (data.description) row.description = data.description;
-  if (data.category) row.category = data.category;
+  if (data.category) row.category = normalizeCategory(data.category);
   if (data.subcategory) row.subcategory = data.subcategory;
   if (data.url || data.website) row.url = data.url || data.website;
   if (data.imageUrl) row.image_url = data.imageUrl;
@@ -1676,7 +1722,7 @@ function flattenActivity(data) {
     row.scraper_name = row.scraper_name || data.metadata.scraperName || data.metadata.source;
     row.scraped_at = data.metadata.scrapedAt;
     // Pull additional fields from metadata if not at top level
-    row.category = row.category || data.metadata.category;
+    row.category = row.category || (data.metadata.category ? normalizeCategory(data.metadata.category) : null);
     row.state = row.state || normalizeState(data.metadata.state);
     // Derive source from metadata sourceUrl if not set (track by site URL)
     if (!row.source) row.source = data.metadata.sourceUrl || null;

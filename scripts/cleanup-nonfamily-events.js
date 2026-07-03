@@ -31,7 +31,7 @@ const AUTO_DELETE_PATTERNS = [
   { pattern: /\bbooze\b/i, label: 'booze' },
   { pattern: /\bcannabis\b/i, label: 'cannabis' },
   { pattern: /\bmarijuana\b/i, label: 'marijuana' },
-  { pattern: /\b420\b/i, label: '420' },
+  { pattern: /\b420\b/i, label: '420', nameOnly: true },
   { pattern: /\bstoner\b/i, label: 'stoner' },
   { pattern: /\bbar\s*crawl/i, label: 'bar crawl' },
   { pattern: /\bsingles?\s*(night|mixer|mingle|event)\b/i, label: 'singles event' },
@@ -73,6 +73,12 @@ const AUTO_DELETE_PATTERNS = [
 function isFalsePositive(name, description, venue) {
   const text = `${name || ''} ${description || ''} ${venue || ''}`.toLowerCase();
   const nameLower = (name || '').toLowerCase();
+
+  // Story time events are almost universally family programs. Rescue these
+  // before checking description-level adult patterns — "Morning Story Time"
+  // should never be deleted even if the description mentions adult coloring
+  // happening at the same time. (False positive caught 2026-07-03.)
+  if (/\b(storytime|story\s*time|morning\s*story|bedtime\s*story|lap\s*sit|read\s+aloud)\b/i.test(nameLower)) return 'story time event';
 
   // EXPLICIT ADULT in title or description — never rescue (libraries hold
   // adult-only programs). Examples: "Adult Coloring Group", "Color Your World:
@@ -224,10 +230,11 @@ async function main() {
       continue;
     }
 
-    // Check auto-delete patterns
+    // Check auto-delete patterns (nameOnly patterns only test the event name, not description)
     let deleteMatch = null;
-    for (const { pattern, label } of AUTO_DELETE_PATTERNS) {
-      if (pattern.test(text)) {
+    for (const { pattern, label, nameOnly } of AUTO_DELETE_PATTERNS) {
+      const searchText = nameOnly ? (e.name || '') : text;
+      if (pattern.test(searchText)) {
         deleteMatch = label;
         break;
       }

@@ -54,7 +54,8 @@ const LIBRARY_SYSTEMS = [
     state: 'CO',
     website: 'https://ppld.org',
     city: 'Colorado Springs',
-    zipCode: '80901'
+    zipCode: '80901',
+    latitude: 38.8339, longitude: -104.8214
   },
 
   // FLORIDA
@@ -65,7 +66,8 @@ const LIBRARY_SYSTEMS = [
     state: 'FL',
     website: 'https://www.leelibrary.net',
     city: 'Fort Myers',
-    zipCode: '33901'
+    zipCode: '33901',
+    latitude: 26.6406, longitude: -81.8723
   },
 
   {
@@ -75,7 +77,8 @@ const LIBRARY_SYSTEMS = [
     state: 'FL',
     website: 'https://www.scgov.net/government/libraries',
     city: 'Sarasota',
-    zipCode: '34237'
+    zipCode: '34237',
+    latitude: 27.3364, longitude: -82.5307
   },
 
   // MARYLAND
@@ -86,7 +89,8 @@ const LIBRARY_SYSTEMS = [
     state: 'MD',
     website: 'https://www.alleganycountylibrary.info',
     city: 'Cumberland',
-    zipCode: '21502'
+    zipCode: '21502',
+    latitude: 39.6529, longitude: -78.7628
   },
   {
     name: 'Carroll County Public Library',
@@ -335,6 +339,12 @@ async function scrapeLibraryEvents(library, browser) {
           venueName: event.venue || library.name,
           sourceName: library.name
         });
+
+        // Hard-coded fallback: if geocoding fails, use library's known centroid so
+        // events always have a location for map display and nearby queries.
+        if (!coordinates && library.latitude && library.longitude) {
+          coordinates = { latitude: library.latitude, longitude: library.longitude };
+        }
 
         // Use categorization helper
         const { parentCategory, displayCategory, subcategory } = categorizeEvent({
