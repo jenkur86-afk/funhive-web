@@ -24,6 +24,7 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - `user_favorites` table: links `auth.users` to events or activities. Free-plan cap is 10 favorites (enforced in `FavoritesContext.tsx`). RLS: users see only their own rows.
 - `user_settings` table: keyed by `auth.users.id`. Stores `display_name`, `home_location GEOMETRY`, `home_city/state/zip`, `search_radius_miles` (default 25), `preferred_categories TEXT[]`, `preferred_age_range`, `email_digest`, `is_premium` (bool), `stripe_customer_id`, `stripe_subscription_id`, `premium_expires_at`. RLS: users see only their own row.
 - `scraper_logs` table: per-run telemetry (`scraper_name`, `status`, `events_found/saved/skipped`, `error_message`, `duration_ms`, `run_at`).
+- `click_events` table: user interaction analytics (`interaction_type`, `event_id`/`activity_id`, `search_query`, `search_location`, `category`, `age_range`, `date_filter`, `radius_miles`, `user_lat/lng`, `session_id`, `created_at`). Defined in `database/migration-click-events.sql`. Populated client-side via `logInteraction()` in `src/lib/track-click.ts` (fire-and-forget, errors swallowed). RLS allows anonymous INSERT only — no SELECT policy, so it can't be queried from the app; view it via the Supabase SQL Editor (or a service-role script) only. See "Viewing click analytics" below.
 - `nearby_events` RPC: `nearby_events(lng, lat, radius_miles, max_results)` uses `ST_DWithin()`. Excludes `reported` items.
 - `nearby_activities` RPC: `nearby_activities(lng, lat, radius_miles, max_results)` — same pattern as `nearby_events` for venues. Excludes `reported` items.
 - Location stored as `SRID=4326;POINT(lng lat)` WKT format.
@@ -97,6 +98,38 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - Syntax check: `node -c scrapers/filename.js`
 - Data quality: `node scripts/data-quality-check.js` (must run locally — sandbox can't reach Supabase)
 - Fix scripts use `--save` flag pattern: dry run by default, `--save` to write to DB.
+
+### Viewing Click Analytics
+The `click_events` table (see Database Schema above) has no SELECT policy — the app can only write to it, never read it back — so there are two ways to view the data, both outside the Next.js app:
+1. **Supabase Dashboard → SQL Editor** (easiest, no setup). Paste a query and run. Useful starting queries:
+   ```sql
+   -- Counts by interaction type, most recent 7 days
+   select interaction_type, count(*) from click_events
+   where created_at > now() - interval '7 days'
+   group by interaction_type order by count(*) desc;
+
+   -- Most-viewed events
+   select e.name, count(*) as views from click_events c
+   join events e on e.id = c.event_id
+   where c.interaction_type = 'view_event'
+   group by e.name order by views desc limit 20;
+
+   -- Most-viewed venues
+   select a.name, count(*) as views from click_events c
+   join activities a on a.id = c.activity_id
+   where c.interaction_type = 'view_activity'
+   group by a.name order by views desc limit 20;
+
+   -- Top search terms
+   select search_query, count(*) from click_events
+   where interaction_type = 'search' and search_query is not null
+   group by search_query order by count(*) desc limit 20;
+
+   -- Distinct sessions (rough visitor count) per day
+   select date(created_at), count(distinct session_id) from click_events
+   group by date(created_at) order by date(created_at) desc;
+   ```
+2. **A local script using the service-role key** (for repeatable/scripted reports) — connect with `createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)` from `.env.local` (same pattern used to verify the migration when it was first added) and `.select()`/`.order()`/`.limit()` as needed. The anon key won't work here since RLS blocks anon reads by design.
 
 ## Development Environment (Windows)
 - **Working directory**: `C:\dev\funhive-web` — do NOT develop from the Google Drive folder (`G:\My Drive\...`); Drive sync conflicts with npm writes
