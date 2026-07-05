@@ -5,18 +5,15 @@
  *
  * Scrapes events from Hampton Public Library
  *
- * KNOWN LIMITATION: Hampton uses BeWith/WithApps platform at calendar.hampton.gov
- * which loads events dynamically via React/JavaScript. The events are not available
- * in the initial HTML and API interception is complex. This scraper attempts multiple
- * approaches but may return 0 events due to the dynamic loading.
+ * Hampton uses the BeWith/WithApps platform. The hampton.gov calendar page only
+ * embeds the actual widget in an iframe (main.withapps.io/event-grid?...) — events
+ * never render into the wrapper page's own DOM, so scraping calendar.hampton.gov
+ * directly always found 0 events. Fixed 2026-07-05 by navigating Puppeteer straight
+ * to the widget URL instead of the hampton.gov wrapper (confirmed via
+ * page.frames() debug instrumentation).
  *
  * COVERAGE (1 library system in VA):
  * - Hampton Public Library (Hampton, VA) - 135,000 population
- *
- * FUTURE IMPROVEMENTS:
- * - Request iCal/RSS feed access from Hampton library
- * - Use Puppeteer with longer wait times and scroll triggers
- * - Intercept API calls to api.withapps.io
  *
  * Usage:
  *   node functions/scrapers/scraper-withapps-libraries-VA.js
@@ -36,6 +33,11 @@ const { linkEventToVenue } = require('./venue-matcher');
 const LIBRARY = {
   name: 'Hampton Public Library',
   calendarUrl: 'https://calendar.hampton.gov/hamptonva/calendar',
+  // The hampton.gov page above only embeds this URL in an iframe — events never
+  // render into the parent page's DOM, so document.body.innerText on the
+  // wrapper page is always empty. Scrape the embedded widget URL directly instead
+  // (found via page.frames() debug instrumentation, 2026-07-05).
+  widgetUrl: 'https://main.withapps.io/event-grid?organizationId=30&communityId=114&isPrivate=0&isApprovedOnly=0&view=calendar',
   libraryPage: 'https://www.hampton.gov/100/Libraries',
   county: 'Hampton',
   state: 'VA',
@@ -77,9 +79,11 @@ async function scrapeLibraryEvents(browser) {
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
-    // Navigate to the calendar page
-    console.log('   Loading BeWith calendar (dynamic React app)...');
-    await page.goto(LIBRARY.calendarUrl, {
+    // Navigate directly to the embedded widget URL — the hampton.gov wrapper
+    // page only loads this in an iframe, and events never render into the
+    // parent page's DOM (confirmed via page.frames() debug output).
+    console.log('   Loading BeWith calendar widget directly...');
+    await page.goto(LIBRARY.widgetUrl, {
       waitUntil: 'networkidle2',
       timeout: 60000
     });
@@ -280,8 +284,7 @@ async function scrapeLibraryEvents(browser) {
 async function scrapeWithAppsLibraries() {
   console.log('\n📚 HAMPTON PUBLIC LIBRARY SCRAPER');
   console.log('='.repeat(60));
-  console.log('Coverage: Hampton Public Library, VA (135K population)');
-  console.log('Note: BeWith calendar uses dynamic loading - events may be limited\n');
+  console.log('Coverage: Hampton Public Library, VA (135K population)\n');
 
   const browser = await launchBrowser();
 

@@ -73,6 +73,17 @@ async function scrapeOrangeCountyLibraryFL() {
 
     // Extract event data via JavaScript
     const eventData = await page.evaluate(() => {
+      // OCLS embeds the full event feed as window.OCLS_Events in an inline
+      // <script> tag that runs before any calendar DOM renders — reading it
+      // directly is far more reliable than scraping individual event cards,
+      // and it's where the real date lives (each event: title, start, end,
+      // url, branch, allDay). The per-card DOM scraping below was extracting
+      // a rendered clock-time string like "10:00 AM" where the date belonged,
+      // because the actual date was never present as per-card DOM text at all.
+      if (window.OCLS_Events && Array.isArray(window.OCLS_Events.events)) {
+        return { events: window.OCLS_Events.events, source: 'global', debugSamples: [] };
+      }
+
       const events = [];
 
       // Try multiple selectors for event containers
@@ -169,28 +180,34 @@ async function scrapeOrangeCountyLibraryFL() {
         }
       });
 
-      return { events, debugSamples };
+      return { events, source: 'dom', debugSamples };
     });
 
-    console.log(`  ✅ Found ${eventData.events.length} events in calendar\n`);
-
-    // DEBUG: print raw HTML of sample event elements to find the real date/title
-    // selectors — remove this block once the date extraction bug is fixed.
-    if (eventData.debugSamples && eventData.debugSamples.length > 0) {
-      console.log('\n🔍 DEBUG: raw HTML of first event elements (remove once date bug is fixed):');
-      eventData.debugSamples.forEach((html, i) => {
-        console.log(`--- sample ${i + 1} ---\n${html}\n`);
-      });
-    }
+    console.log(`  ✅ Found ${eventData.events.length} events in calendar (source: ${eventData.source})\n`);
 
     // Transform and enrich event data
     for (const event of eventData.events) {
       if (!event.title || event.title.length < 3) continue;
 
-      // Parse date and time
-      let eventDate = event.date || '';
-      if (event.time && !eventDate.includes(event.time)) {
-        eventDate = `${eventDate} ${event.time}`.trim();
+      let eventDate;
+      let description;
+      let venueName;
+
+      if (eventData.source === 'global') {
+        // window.OCLS_Events format: { title, start, end, url, branch, allDay }.
+        // "start" is "YYYY-MM-DD HH:MM:SS" — swap the space for "T" so it
+        // parses as local time consistently across environments.
+        eventDate = (event.start || '').replace(' ', 'T');
+        description = '';
+        venueName = event.branch || OCLS_HQ.name;
+      } else {
+        // Legacy DOM-scraped fallback format: { title, date, time, location, description, url }
+        eventDate = event.date || '';
+        if (event.time && !eventDate.includes(event.time)) {
+          eventDate = `${eventDate} ${event.time}`.trim();
+        }
+        description = event.description || '';
+        venueName = event.location || OCLS_HQ.name;
       }
 
       // Build event object for saving
@@ -199,11 +216,11 @@ async function scrapeOrangeCountyLibraryFL() {
         name: event.title,
         eventDate: eventDate,
         date: eventDate,
-        description: event.description || '',
+        description: description,
         url: event.url || CALENDAR_URL,
-        venue: event.location || OCLS_HQ.name,
-        venueName: event.location || OCLS_HQ.name,
-        location: event.location || CITY,
+        venue: venueName,
+        venueName: venueName,
+        location: CITY,
         metadata: {
           sourceName: OCLS_HQ.name,
           sourceUrl: CALENDAR_URL,
@@ -212,7 +229,7 @@ async function scrapeOrangeCountyLibraryFL() {
       };
 
       // Try to extract age group from description or title
-      const fullText = `${event.title} ${event.description || ''}`.toLowerCase();
+      const fullText = `${event.title} ${description}`.toLowerCase();
       if (fullText.includes('toddler') || fullText.includes('baby') || fullText.includes('0-3')) {
         eventObj.ageRange = 'Babies & Toddlers (0-2)';
       } else if (fullText.includes('preschool') || fullText.includes('3-5')) {

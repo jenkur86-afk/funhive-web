@@ -119,7 +119,7 @@ const VENUES = [
   { name: "Roger Williams Park Zoo", eventsUrl: "https://www.rwpzoo.org/events/", city: "Providence", state: "RI", zip: "02905" },
   // South Carolina
   { name: "Riverbanks Zoo & Garden", eventsUrl: "https://www.riverbanks.org/events/", city: "Columbia", state: "SC", zip: "29210" },
-  { name: "SC Aquarium", eventsUrl: "https://scaquarium.org/events/", city: "Charleston", state: "SC", zip: "29401" },
+  { name: "SC Aquarium", eventsUrl: "https://scaquarium.org/calendar-of-events", city: "Charleston", state: "SC", zip: "29401", waitStrategy: "domcontentloaded" },
   // Tennessee
   { name: "Nashville Zoo", eventsUrl: "https://www.nashvillezoo.org/events", city: "Nashville", state: "TN", zip: "37211" },
   { name: "Memphis Zoo", eventsUrl: "https://www.memphiszoo.org/events", city: "Memphis", state: "TN", zip: "38112" },
@@ -214,12 +214,18 @@ async function scrapeVenueEvents(venue, browser) {
     const page = await browser.newPage();
     await page.setViewport({ width: 1920, height: 1080 });
 
-    // Navigate to venue events page with retry
+    // Navigate to venue events page with retry.
+    // Most venues use networkidle2 (the default) so we know AJAX content has
+    // settled before extracting. A few venues run a JS calendar widget with
+    // persistent background network activity (analytics polling, live
+    // calendar refresh) that keeps networkidle2 from ever resolving — those
+    // venues set `waitStrategy: 'domcontentloaded'` in the VENUES entry to
+    // opt out, same fix as the OCLS scraper's SPA timeout (2026-07-05).
     let retries = 2;
     while (retries > 0) {
       try {
         await page.goto(venue.eventsUrl, {
-          waitUntil: 'networkidle2',
+          waitUntil: venue.waitStrategy || 'networkidle2',
           timeout: 30000
         });
         break;

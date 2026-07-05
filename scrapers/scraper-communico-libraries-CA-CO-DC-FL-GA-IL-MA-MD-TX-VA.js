@@ -125,9 +125,10 @@
  * - Greenville County Library System (520K)
  * - Pickens County Library (Easley)
  *
- * TN (2 libraries - 1.25M people) (NEW):
- * - Nashville Public Library (715K)
- * - Chattanooga Public Library (540K)
+ * TN (1 library):
+ * - Collierville Burch Library
+ *   (Nashville and Chattanooga removed 2026-07-05 — both migrated off
+ *   Communico to other platforms; see the TN block below for details)
  *
  * TX (3 libraries - 511K people):
  * - McAllen Public Library (143K)
@@ -968,25 +969,20 @@ const LIBRARY_SYSTEMS = [
     zipCode: '29640'
   },
 
-  // TENNESSEE (2 libraries)
-  {
-    name: 'Chattanooga Public Library',
-    url: 'https://chattanooga.libnet.info/events',
-    county: 'Hamilton',
-    state: 'TN',
-    website: 'https://chattlibrary.org',
-    city: 'Chattanooga',
-    zipCode: '37402'
-  },
-  {
-    name: 'Nashville Public Library',
-    url: 'https://nashville.libnet.info/events',
-    county: 'Davidson',
-    state: 'TN',
-    website: 'https://www.library.nashville.org',
-    city: 'Nashville',
-    zipCode: '37219'
-  },
+  // TENNESSEE — Chattanooga and Nashville removed 2026-07-05. Both
+  // chattanooga.libnet.info and nashville.libnet.info now 302-redirect every
+  // request (even a bare GET on `/`) to http://www.google.co.uk with
+  // `Server: Communico` in the response — Communico's own backend serving a
+  // decommissioned-tenant redirect, not a WAF block. Both libraries migrated
+  // off Communico entirely:
+  //   - Chattanooga Public Library moved to WordPress + The Events Calendar
+  //     plugin at https://chattlibrary.org/events — already correctly
+  //     registered and scraped by scraper-wordpress-libraries-tn.js, so
+  //     removing this dead entry loses no coverage.
+  //   - Nashville Public Library moved to a Bedework calendar at
+  //     https://events.library.nashville.org/ — a different platform not
+  //     yet supported by any scraper (JS-rendered widget; Bedework exposes
+  //     RSS/JSON/iCal export feeds that would need dedicated support).
 
   // VIRGINIA (2 libraries)
   {
