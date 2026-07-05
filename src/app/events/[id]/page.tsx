@@ -7,10 +7,11 @@ import EventActions from '@/components/EventActions'
 import ReviewsList from '@/components/ReviewsList'
 import ReportButton from '@/components/ReportButton'
 import VenueLinkTracker from '@/components/VenueLinkTracker'
+import ViewTracker from '@/components/ViewTracker'
 
 export const dynamic = 'force-dynamic'
 
-const BASE_URL = 'https://funhive-web.vercel.app'
+const BASE_URL = 'https://myfunhive.com'
 
 interface EventDetailProps {
   params: Promise<{ id: string }>
@@ -132,6 +133,7 @@ export default async function EventDetailPage({ params }: EventDetailProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <ViewTracker type="view_event" id={event.id} />
     <div className="max-w-3xl mx-auto px-4 py-8">
       {/* Header with favorite button */}
       <EventDetailHeader

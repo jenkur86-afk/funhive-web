@@ -3,10 +3,20 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/contexts/AuthContext'
 import { parseTime } from '@/lib/hours-utils'
 import { ACTIVE_STATES } from '@/lib/region-filter'
 import { getUserLocation } from '@/lib/geo-utils'
 import LocationPrompt, { LOCATION_PROMPT_DISMISSED_KEY } from '@/components/LocationPrompt'
+
+const HOME_SECTION_SIZE = 6
+
+// Premium perk: early access. Free users don't see events scraped in the last 24h.
+function isEarlyAccessAllowed(event: any, isPremium: boolean): boolean {
+  if (isPremium) return true
+  if (!event.scraped_at) return true
+  return Date.now() - new Date(event.scraped_at).getTime() > 24 * 60 * 60 * 1000
+}
 
 const CATEGORIES = [
   { name: 'Community', emoji: '🤝', color: '#f59e0b' },
@@ -70,6 +80,8 @@ interface Props {
 }
 
 export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
+  const { user, userProfile, updateProfile } = useAuth()
+  const isPremium = !!userProfile?.is_premium
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null)
   const [locationName, setLocationName] = useState('')
   const [locating, setLocating] = useState(false)
@@ -77,15 +89,19 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
   // banner has been dismissed (or already handled) — avoids showing two
   // "set your location" controls stacked on top of each other.
   const [promptDismissed, setPromptDismissed] = useState(false)
-  const [upcoming, setUpcoming] = useState<any[]>(() => serverUpcoming.filter(isEventOnOrAfterToday))
-  const [weekend, setWeekend] = useState<any[]>(() => serverWeekend.filter(isEventOnOrAfterToday))
+  const [upcoming, setUpcoming] = useState<any[]>(() =>
+    serverUpcoming.filter(isEventOnOrAfterToday).filter((e) => isEarlyAccessAllowed(e, isPremium)).slice(0, HOME_SECTION_SIZE)
+  )
+  const [weekend, setWeekend] = useState<any[]>(() =>
+    serverWeekend.filter(isEventOnOrAfterToday).filter((e) => isEarlyAccessAllowed(e, isPremium)).slice(0, HOME_SECTION_SIZE)
+  )
   const [loading, setLoading] = useState(false)
 
-  // When coords change, fetch nearby events
+  // When coords or premium status change, recompute
   useEffect(() => {
     if (!coords) {
-      setUpcoming(serverUpcoming.filter(isEventOnOrAfterToday))
-      setWeekend(serverWeekend.filter(isEventOnOrAfterToday))
+      setUpcoming(serverUpcoming.filter(isEventOnOrAfterToday).filter((e) => isEarlyAccessAllowed(e, isPremium)).slice(0, HOME_SECTION_SIZE))
+      setWeekend(serverWeekend.filter(isEventOnOrAfterToday).filter((e) => isEarlyAccessAllowed(e, isPremium)).slice(0, HOME_SECTION_SIZE))
       return
     }
 
@@ -105,7 +121,7 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
 
         if (nearbyData) {
           const futureEvents = nearbyData
-            .filter((e: any) => isEventOnOrAfterToday(e) && !e.reported && ACTIVE_STATES?.includes(e.state))
+            .filter((e: any) => isEventOnOrAfterToday(e) && !e.reported && ACTIVE_STATES?.includes(e.state) && isEarlyAccessAllowed(e, isPremium))
             .sort((a: any, b: any) => {
               const dA = a.date ? new Date(a.date) : null
               const dB = b.date ? new Date(b.date) : null
@@ -120,7 +136,7 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
               return 0
             })
 
-          setUpcoming(futureEvents.slice(0, 6))
+          setUpcoming(futureEvents.slice(0, HOME_SECTION_SIZE))
 
           // Filter for weekend — try TIMESTAMPTZ date first, fall back to parsing event_date text
           const weekendStart = new Date(weekendRange.start)
@@ -130,7 +146,7 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
             if (!d || isNaN(d.getTime())) return false
             return d >= weekendStart && d <= weekendEnd
           })
-          setWeekend(weekendFiltered.slice(0, 6))
+          setWeekend(weekendFiltered.slice(0, HOME_SECTION_SIZE))
         }
       } catch (err) {
         console.error('Failed to fetch nearby events:', err)
@@ -140,7 +156,7 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
     }
 
     fetchNearby()
-  }, [coords])
+  }, [coords, isPremium])
 
   // On mount, check if user previously granted location
   useEffect(() => {
@@ -159,6 +175,12 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
     } catch {}
   }, [])
 
+  // Feeds the weekly premium email digest, which personalizes by user_settings.home_location
+  const persistHomeLocation = (loc: { lat: number; lng: number }) => {
+    if (!user) return
+    updateProfile({ home_location: `SRID=4326;POINT(${loc.lng} ${loc.lat})` }).catch(() => {})
+  }
+
   const handleUseLocation = async () => {
     setLocating(true)
     const loc = await getUserLocation()
@@ -171,11 +193,13 @@ export default function HomeEvents({ serverUpcoming, serverWeekend }: Props) {
     setLocationName(`${loc.lat.toFixed(2)}, ${loc.lng.toFixed(2)}`)
     // Persist so category links and events page can use it
     try { localStorage.setItem('funhive_location', JSON.stringify(loc)) } catch {}
+    persistHomeLocation(loc)
   }
 
   const handleLocationPromptSet = (loc: { lat: number; lng: number }) => {
     setCoords(loc)
     setLocationName(`${loc.lat.toFixed(2)}, ${loc.lng.toFixed(2)}`)
+    persistHomeLocation(loc)
   }
 
   const handleClearLocation = () => {

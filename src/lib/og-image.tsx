@@ -54,3 +54,52 @@ export function renderBrandOgImage(tagline: string = 'Discover Family Fun Near Y
     { ...OG_IMAGE_SIZE }
   )
 }
+
+// Per-event/activity OG image — only used when there's no photo to show (see
+// callers), so it renders the name/date/venue as text on the brand gradient
+// instead of the generic "FunHive" card, so shared links look distinct.
+export function renderDetailOgImage(title: string, subtitle?: string) {
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          padding: 64,
+          background: 'linear-gradient(135deg, #f97316 0%, #f59e0b 50%, #fbbf24 100%)',
+        }}
+      >
+        <svg width="72" height="72" viewBox="0 0 100 100" fill="none">
+          <path d="M50 5L93.3 27.5V72.5L50 95L6.7 72.5V27.5L50 5Z" fill="#FDE68A" stroke="#F59E0B" strokeWidth="3" />
+          <ellipse cx="50" cy="55" rx="16" ry="20" fill="#F59E0B" />
+          <path d="M34 50h32" stroke="#92400E" strokeWidth="4" strokeLinecap="round" />
+          <path d="M36 58h28" stroke="#92400E" strokeWidth="4" strokeLinecap="round" />
+          <circle cx="50" cy="33" r="10" fill="#F59E0B" />
+          <circle cx="46" cy="31" r="2.5" fill="#1C1917" />
+          <circle cx="54" cy="31" r="2.5" fill="#1C1917" />
+        </svg>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div
+            style={{
+              fontSize: 56,
+              fontWeight: 700,
+              color: '#ffffff',
+              textShadow: '0 2px 8px rgba(146, 64, 14, 0.35)',
+              lineHeight: 1.15,
+            }}
+          >
+            {title.length > 70 ? title.slice(0, 67) + '…' : title}
+          </div>
+          {subtitle && (
+            <div style={{ marginTop: 16, fontSize: 28, color: '#fde68a' }}>{subtitle}</div>
+          )}
+          <div style={{ marginTop: 24, fontSize: 24, color: 'rgba(255,255,255,0.85)' }}>FunHive</div>
+        </div>
+      </div>
+    ),
+    { ...OG_IMAGE_SIZE }
+  )
+}

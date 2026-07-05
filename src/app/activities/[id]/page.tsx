@@ -5,10 +5,11 @@ import { notFound } from 'next/navigation'
 import ActivityDetailHeader from '@/components/ActivityDetailHeader'
 import ActivityActions from '@/components/ActivityActions'
 import ReviewsList from '@/components/ReviewsList'
+import ViewTracker from '@/components/ViewTracker'
 
 export const dynamic = 'force-dynamic'
 
-const BASE_URL = 'https://funhive-web.vercel.app'
+const BASE_URL = 'https://myfunhive.com'
 
 interface ActivityDetailProps {
   params: Promise<{ id: string }>
@@ -119,6 +120,7 @@ export default async function ActivityDetailPage({ params }: ActivityDetailProps
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <ViewTracker type="view_activity" id={activity.id} />
     <div className="max-w-3xl mx-auto px-4 py-8">
       {/* Header with favorite button */}
       <ActivityDetailHeader
@@ -215,30 +217,6 @@ export default async function ActivityDetailPage({ params }: ActivityDetailProps
               <p className={`ml-7 font-medium ${activity.is_free ? 'text-green-600' : 'text-gray-700'}`}>
                 {activity.is_free ? 'FREE' : activity.price_range || 'Contact for pricing'}
               </p>
-            </div>
-          )}
-
-          {/* Contact Section - kept for reference display */}
-          {(activity.url || activity.phone) && (
-            <div className="mb-6">
-              <div className="flex items-center gap-2 mb-2">
-                <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-                <h2 className="text-lg font-semibold text-gray-900">Contact</h2>
-              </div>
-              <div className="ml-7 space-y-2">
-                {activity.url && (
-                  <p className="text-sm text-gray-600">
-                    Website: <span className="text-gray-700">{activity.url}</span>
-                  </p>
-                )}
-                {activity.phone && (
-                  <p className="text-sm text-gray-600">
-                    Phone: <span className="text-gray-700">{activity.phone}</span>
-                  </p>
-                )}
-              </div>
             </div>
           )}
 

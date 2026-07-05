@@ -14,7 +14,7 @@ type Review = Database['public']['Tables']['reviews']['Row']
 function WriteReviewContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { user, loading: authLoading } = useAuth()
+  const { user, userProfile, loading: authLoading } = useAuth()
 
   const reviewId = searchParams.get('reviewId')
   const eventId = searchParams.get('eventId')
@@ -103,6 +103,23 @@ function WriteReviewContent() {
 
         if (error) throw error
       } else {
+        // Free tier: 3 reviews/month cap
+        if (!userProfile?.is_premium) {
+          const monthAgo = new Date()
+          monthAgo.setDate(monthAgo.getDate() - 30)
+          const { count } = await supabase
+            .from('reviews')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .gte('created_at', monthAgo.toISOString())
+
+          if ((count || 0) >= 3) {
+            setError('Free accounts can write up to 3 reviews per month. Upgrade to Premium for unlimited reviews.')
+            setSubmitting(false)
+            return
+          }
+        }
+
         // Create new review
         const { error } = await (supabase
           .from('reviews') as any)
@@ -112,6 +129,7 @@ function WriteReviewContent() {
             activity_id: activityId || null,
             rating,
             text: text.trim(),
+            reviewer_is_premium: userProfile?.is_premium || false,
           })
 
         if (error) throw error
@@ -223,7 +241,17 @@ function WriteReviewContent() {
           {/* Error Message */}
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-              <p className="text-sm text-red-700">{error}</p>
+              <p className="text-sm text-red-700">
+                {error}
+                {error.includes('Upgrade to Premium') && (
+                  <>
+                    {' '}
+                    <Link href="/pricing" className="underline font-semibold">
+                      See plans
+                    </Link>
+                  </>
+                )}
+              </p>
             </div>
           )}
 

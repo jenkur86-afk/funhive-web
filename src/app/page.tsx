@@ -46,28 +46,30 @@ export default async function HomePage() {
   const today = new Date().toISOString().split('T')[0]
   const weekend = getWeekendRange()
 
-  // Fetch upcoming events using TIMESTAMPTZ date column (not TEXT event_date)
+  // Fetch upcoming events using TIMESTAMPTZ date column (not TEXT event_date).
+  // Fetches a buffer beyond the 6 displayed so HomeEvents can filter out events
+  // still in their Premium-only 24hr early-access window and still show 6.
   const { data: upcomingEvents } = await supabase
     .from('events')
-    .select('id, name, event_date, date, start_time, end_time, venue, city, state, category')
+    .select('id, name, event_date, date, start_time, end_time, venue, city, state, category, scraped_at')
     .not('event_date', 'is', null)
     .eq('reported', false)
     .gte('date', today)
     .in('state', ACTIVE_STATES || [])
     .order('date', { ascending: true })
-    .limit(6)
+    .limit(20)
 
   // This Weekend events using TIMESTAMPTZ date column
   const { data: weekendEvents } = await supabase
     .from('events')
-    .select('id, name, event_date, date, start_time, end_time, venue, city, state, category')
+    .select('id, name, event_date, date, start_time, end_time, venue, city, state, category, scraped_at')
     .not('event_date', 'is', null)
     .eq('reported', false)
     .gte('date', weekend.start)
     .lte('date', weekend.end)
     .in('state', ACTIVE_STATES || [])
     .order('date', { ascending: true })
-    .limit(6)
+    .limit(20)
 
   // Get total counts for stats
   const { count: eventCount } = await supabase

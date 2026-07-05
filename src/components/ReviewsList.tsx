@@ -217,7 +217,20 @@ export default function ReviewsList({ eventId, activityId }: ReviewsListProps) {
                 {review.id.charAt(0).toUpperCase()}
               </div>
               <div>
-                <StarRating rating={review.rating} size="sm" />
+                <div className="flex items-center gap-2">
+                  <StarRating rating={review.rating} size="sm" />
+                  {review.reviewer_is_premium && (
+                    <span
+                      title="Premium member"
+                      className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-full"
+                    >
+                      <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.19l-4.77 2.52.91-5.32-3.87-3.77 5.34-.78L10 1z" clipRule="evenodd" />
+                      </svg>
+                      Verified
+                    </span>
+                  )}
+                </div>
                 <p className="text-xs text-gray-500 mt-1">{formatRelativeDate(review.created_at)}</p>
               </div>
             </div>

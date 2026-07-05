@@ -22,6 +22,9 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  // Apple requires explicit opt-in; Google is always shown (matches login page)
+  const appleEnabled = !!process.env.NEXT_PUBLIC_APPLE_OAUTH_ENABLED
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
@@ -51,8 +54,11 @@ export default function SignupPage() {
 
     try {
       await signUp(email, password, fullName)
-      // TODO: Handle plan selection (integration with Stripe)
-      router.push('/')
+      if (selectedPlan === 'monthly' || selectedPlan === 'annual') {
+        router.push(`/pricing?plan=${selectedPlan}`)
+      } else {
+        router.push('/')
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to create account')
     } finally {
@@ -99,7 +105,7 @@ export default function SignupPage() {
       price: '$2.99',
       period: '/month',
       description: 'Upgrade anytime',
-      features: ['Unlimited reviews', 'Verified badge', 'Photo uploads', 'Advanced filters'],
+      features: ['Unlimited favorites', 'Unlimited reviews', 'Verified badge', 'Early access to new events', 'Weekly email digest'],
     },
     {
       id: 'annual',
@@ -108,7 +114,7 @@ export default function SignupPage() {
       period: '/year',
       badge: 'Save 17%',
       description: '2 months free',
-      features: ['Unlimited reviews', 'Verified badge', 'Photo uploads', 'Advanced filters', '2 months free'],
+      features: ['Unlimited favorites', 'Unlimited reviews', 'Verified badge', 'Early access to new events', 'Weekly email digest', '2 months free'],
     },
   ]
 
@@ -144,16 +150,18 @@ export default function SignupPage() {
                 Sign up with Google
               </button>
 
-              <button
-                onClick={handleAppleSignup}
-                disabled={loading}
-                className="w-full flex items-center justify-center gap-3 bg-black text-white rounded-lg py-3 px-4 hover:bg-gray-900 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
-                </svg>
-                Sign up with Apple
-              </button>
+              {appleEnabled && (
+                <button
+                  onClick={handleAppleSignup}
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-3 bg-black text-white rounded-lg py-3 px-4 hover:bg-gray-900 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
+                  </svg>
+                  Sign up with Apple
+                </button>
+              )}
             </div>
 
             {/* Divider */}

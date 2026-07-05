@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
       payment_method_types: ['card'],
       customer_email: email,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${req.nextUrl.origin}/account?success=true`,
+      success_url: `${req.nextUrl.origin}/profile?success=true`,
       cancel_url: `${req.nextUrl.origin}/pricing`,
       metadata: { user_id: userId },
     })

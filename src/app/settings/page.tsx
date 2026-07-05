@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
+import { supabase } from '@/lib/supabase'
 
 interface HiddenVenue {
   id: string
@@ -47,6 +48,11 @@ export default function SettingsPage() {
   // Loading state
   const [isSaving, setIsSaving] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
+
+  // Account deletion
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
 
   // Load all settings from localStorage on mount
   useEffect(() => {
@@ -129,12 +135,30 @@ export default function SettingsPage() {
 
   // Delete account
   const handleDeleteAccount = () => {
-    if (
-      window.confirm(
-        'Are you sure you want to delete your account? This action cannot be undone. All your data will be permanently deleted.'
-      )
-    ) {
-      alert('Account deletion is not yet implemented. Please contact support@funhive.app')
+    setDeleteError('')
+    setShowDeleteModal(true)
+  }
+
+  const confirmDeleteAccount = async () => {
+    setDeleting(true)
+    setDeleteError('')
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) throw new Error('Not signed in')
+
+      const response = await fetch('/api/account/delete', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'Failed to delete account')
+
+      await signOut()
+      router.push('/')
+    } catch (error: any) {
+      setDeleteError(error.message || 'Failed to delete account')
+      setDeleting(false)
     }
   }
 
@@ -442,6 +466,39 @@ export default function SettingsPage() {
           <p>© 2025 FunHive. All rights reserved.</p>
         </div>
       </div>
+
+      {/* Delete Account Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-sm w-full p-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Delete your account?</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              This permanently deletes your account, favorites, and reviews. This action cannot be undone.
+            </p>
+            {deleteError && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-700">{deleteError}</p>
+              </div>
+            )}
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                disabled={deleting}
+                className="flex-1 border border-gray-300 text-gray-700 py-2 rounded-lg font-semibold hover:bg-gray-50 transition disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDeleteAccount}
+                disabled={deleting}
+                className="flex-1 bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700 transition disabled:opacity-50"
+              >
+                {deleting ? 'Deleting...' : 'Delete Account'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

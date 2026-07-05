@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 
@@ -12,8 +12,10 @@ interface Kid {
   birthYear: number
 }
 
-export default function ProfilePage() {
+function ProfileContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const showSuccessBanner = searchParams.get('success') === 'true'
   const { user, userProfile, loading, signOut } = useAuth()
   const [reviewCount, setReviewCount] = useState(0)
   const [helpfulVotes, setHelpfulVotes] = useState(0)
@@ -162,6 +164,13 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-white pb-12">
       <div className="max-w-2xl mx-auto px-4 py-8">
+        {showSuccessBanner && (
+          <div className="mb-6 p-4 bg-amber-100 border border-amber-300 rounded-lg text-center">
+            <p className="text-amber-900 font-semibold">Welcome to Premium!</p>
+            <p className="text-amber-700 text-sm mt-1">Your subscription is active — enjoy unlimited favorites, reviews, and more.</p>
+          </div>
+        )}
+
         {/* Profile Header */}
         <div className="bg-white rounded-lg shadow-sm p-8 mb-6">
           <div className="flex items-start gap-6 mb-6">
@@ -388,5 +397,13 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={null}>
+      <ProfileContent />
+    </Suspense>
   )
 }

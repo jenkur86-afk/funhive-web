@@ -1,30 +1,36 @@
 'use client'
 
 import { useState } from 'react'
-
-// TODO: Uncomment when Stripe is configured
-// import { supabase } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 
 export default function PricingPage() {
-  const [comingSoon, setComingSoon] = useState(false)
+  const [loadingPlan, setLoadingPlan] = useState<'monthly' | 'annual' | null>(null)
+  const [error, setError] = useState('')
 
-  function handleSubscribe(_priceType: 'monthly' | 'annual') {
-    // TODO: Uncomment when Stripe is configured
-    // const { data: { user } } = await supabase.auth.getUser()
-    // if (!user) {
-    //   window.location.href = '/auth/login?redirect=/pricing'
-    //   return
-    // }
-    //
-    // const response = await fetch('/api/checkout', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ priceType, userId: user.id, email: user.email }),
-    // })
-    // const { url } = await response.json()
-    // window.location.href = url
+  async function handleSubscribe(priceType: 'monthly' | 'annual') {
+    setError('')
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      window.location.href = '/auth/login?redirect=/pricing'
+      return
+    }
 
-    setComingSoon(true)
+    setLoadingPlan(priceType)
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceType, userId: user.id, email: user.email }),
+      })
+      const { url, error: checkoutError } = await response.json()
+      if (checkoutError || !url) {
+        throw new Error(checkoutError || 'Failed to start checkout')
+      }
+      window.location.href = url
+    } catch (err: any) {
+      setError(err.message || 'Failed to start checkout')
+      setLoadingPlan(null)
+    }
   }
 
   return (
@@ -32,9 +38,15 @@ export default function PricingPage() {
       <div className="text-center mb-12">
         <h1 className="text-3xl font-bold text-amber-900 mb-4">FunHive Premium</h1>
         <p className="text-lg text-gray-600">
-          Get more out of FunHive with an ad-free experience and exclusive features.
+          Get more out of FunHive with unlimited reviews, early access, and a weekly digest.
         </p>
       </div>
+
+      {error && (
+        <div className="max-w-2xl mx-auto mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-700 text-sm">{error}</p>
+        </div>
+      )}
 
       <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
         {/* Free Tier */}
@@ -59,6 +71,10 @@ export default function PricingPage() {
               <span className="text-green-500 mt-0.5">&#10003;</span>
               Save up to 10 favorites
             </li>
+            <li className="flex items-start gap-2">
+              <span className="text-green-500 mt-0.5">&#10003;</span>
+              Write up to 3 reviews/month
+            </li>
           </ul>
           <div className="text-center text-gray-400 font-medium">Current plan</div>
         </div>
@@ -80,15 +96,15 @@ export default function PricingPage() {
             </li>
             <li className="flex items-start gap-2">
               <span className="text-amber-500 mt-0.5">&#10003;</span>
-              Ad-free experience
+              Unlimited favorites
             </li>
             <li className="flex items-start gap-2">
               <span className="text-amber-500 mt-0.5">&#10003;</span>
-              Unlimited favorites and lists
+              Unlimited reviews
             </li>
             <li className="flex items-start gap-2">
               <span className="text-amber-500 mt-0.5">&#10003;</span>
-              Weekly personalized email digest
+              Verified badge on your reviews
             </li>
             <li className="flex items-start gap-2">
               <span className="text-amber-500 mt-0.5">&#10003;</span>
@@ -96,28 +112,24 @@ export default function PricingPage() {
             </li>
             <li className="flex items-start gap-2">
               <span className="text-amber-500 mt-0.5">&#10003;</span>
-              Write reviews and ratings
+              Weekly personalized email digest
             </li>
           </ul>
           <div className="space-y-2">
             <button
               onClick={() => handleSubscribe('monthly')}
-              className="w-full bg-amber-500 text-white py-3 rounded-lg font-semibold hover:bg-amber-600 transition"
+              disabled={loadingPlan !== null}
+              className="w-full bg-amber-500 text-white py-3 rounded-lg font-semibold hover:bg-amber-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Start Monthly — $2.99/mo
+              {loadingPlan === 'monthly' ? 'Redirecting…' : 'Start Monthly — $2.99/mo'}
             </button>
             <button
               onClick={() => handleSubscribe('annual')}
-              className="w-full border-2 border-amber-400 text-amber-700 py-3 rounded-lg font-semibold hover:bg-amber-50 transition"
+              disabled={loadingPlan !== null}
+              className="w-full border-2 border-amber-400 text-amber-700 py-3 rounded-lg font-semibold hover:bg-amber-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Start Annual — $24.99/yr
+              {loadingPlan === 'annual' ? 'Redirecting…' : 'Start Annual — $24.99/yr'}
             </button>
-            {comingSoon && (
-              <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-center">
-                <p className="text-amber-800 text-sm font-medium">Premium subscriptions coming soon!</p>
-                <p className="text-amber-600 text-xs mt-1">We&apos;re putting the finishing touches on payments. Check back shortly.</p>
-              </div>
-            )}
           </div>
         </div>
       </div>

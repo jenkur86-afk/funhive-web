@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/contexts/AuthContext'
 import FavoriteButton from '@/components/FavoriteButton'
 import ReportButton from '@/components/ReportButton'
 import { logInteraction } from '@/lib/track-click'
@@ -132,6 +133,7 @@ export default function EventsPageClient({ initialEvents }: EventsPageClientProp
 }
 
 function EventsPageInner({ initialEvents }: EventsPageClientProps) {
+  const { userProfile } = useAuth()
   const [events, setEvents] = useState<any[]>(initialEvents)
   const [loading, setLoading] = useState(initialEvents.length === 0)
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
@@ -187,7 +189,7 @@ function EventsPageInner({ initialEvents }: EventsPageClientProps) {
 
   useEffect(() => {
     preloadZipData().then(() => loadEvents())
-  }, [selectedCategories, locationCoords, selectedRadius, debouncedSearch, selectedDateFilter, customDateRange])
+  }, [selectedCategories, locationCoords, selectedRadius, debouncedSearch, selectedDateFilter, customDateRange, userProfile?.is_premium])
 
   // Track search interactions (skip empty queries)
   useEffect(() => {
@@ -369,7 +371,7 @@ function isEventOnOrAfterToday(event: any): boolean {
         // Excludes image_url, url, source_url, scraper_name, platform, scraped_at,
         // created_at, updated_at, review_count, is_sponsored, sponsor_expires_at,
         // geohash, end_date to reduce Supabase egress bandwidth.
-        const EVENT_LIST_COLS = 'id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, description, address, location, activity_id, reported'
+        const EVENT_LIST_COLS = 'id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, description, address, location, activity_id, reported, scraped_at'
         let suppQuery = supabase
           .from('events')
           .select(EVENT_LIST_COLS)
@@ -403,7 +405,7 @@ function isEventOnOrAfterToday(event: any): boolean {
         // No location — use standard query, ordered by date
         // Use the TIMESTAMPTZ `date` column for filtering & sorting
         // (the TEXT `event_date` column sorts alphabetically, not chronologically)
-        const EVENT_LIST_COLS_STD = 'id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, description, address, location, activity_id, reported'
+        const EVENT_LIST_COLS_STD = 'id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, description, address, location, activity_id, reported, scraped_at'
         let query = supabase
           .from('events')
           .select(EVENT_LIST_COLS_STD)
@@ -443,6 +445,12 @@ function isEventOnOrAfterToday(event: any): boolean {
       // Apply category filter client-side (works for both RPC and standard queries)
       if (selectedCategories.length > 0) {
         allData = allData.filter((e: any) => selectedCategories.includes(e.category))
+      }
+
+      // Premium perk: early access. Free users don't see events scraped in the last 24h.
+      if (!userProfile?.is_premium) {
+        const cutoff = Date.now() - 24 * 60 * 60 * 1000
+        allData = allData.filter((e: any) => !e.scraped_at || new Date(e.scraped_at).getTime() <= cutoff)
       }
 
       setEvents(allData)

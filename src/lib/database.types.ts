@@ -261,6 +261,7 @@ export interface Database {
           created_at: string
           updated_at: string
           helpful_count: number
+          reviewer_is_premium: boolean
         }
         Insert: {
           id?: string
@@ -273,6 +274,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
           helpful_count?: number
+          reviewer_is_premium?: boolean
         }
         Update: {
           id?: string
@@ -285,6 +287,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
           helpful_count?: number
+          reviewer_is_premium?: boolean
         }
         Relationships: []
       }
