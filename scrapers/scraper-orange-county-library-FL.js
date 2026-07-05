@@ -107,6 +107,15 @@ async function scrapeOrangeCountyLibraryFL() {
         }
       }
 
+      // DEBUG: capture the raw HTML of the first 2 event elements so the actual
+      // date/title DOM structure can be inspected from the log — two prior
+      // guesses (innerText, then <time datetime> attribute) both failed to
+      // find the real date, and this calendar is a client-rendered React app
+      // so the structure can't be inspected via a plain HTML fetch either.
+      // Remove this block (and the `.events`/`.debugSamples` unwrap below)
+      // once the real selectors are confirmed and wired up.
+      const debugSamples = Array.from(eventElements).slice(0, 2).map(el => el.outerHTML.substring(0, 2000));
+
       // Parse events from DOM
       eventElements.forEach((el) => {
         // Try to extract title
@@ -160,13 +169,22 @@ async function scrapeOrangeCountyLibraryFL() {
         }
       });
 
-      return events;
+      return { events, debugSamples };
     });
 
-    console.log(`  ✅ Found ${eventData.length} events in calendar\n`);
+    console.log(`  ✅ Found ${eventData.events.length} events in calendar\n`);
+
+    // DEBUG: print raw HTML of sample event elements to find the real date/title
+    // selectors — remove this block once the date extraction bug is fixed.
+    if (eventData.debugSamples && eventData.debugSamples.length > 0) {
+      console.log('\n🔍 DEBUG: raw HTML of first event elements (remove once date bug is fixed):');
+      eventData.debugSamples.forEach((html, i) => {
+        console.log(`--- sample ${i + 1} ---\n${html}\n`);
+      });
+    }
 
     // Transform and enrich event data
-    for (const event of eventData) {
+    for (const event of eventData.events) {
       if (!event.title || event.title.length < 3) continue;
 
       // Parse date and time

@@ -441,6 +441,16 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
   let skipped = 0;
   let errors = 0;
   let batchCount = 0;
+  // Broken out by reason so scrapers/runners can report them separately —
+  // lumping these into one `skipped` counter caused invalid-date rejections
+  // to be displayed as "Duplicates" in the summary table (they share the
+  // counter, and the runner falls back to `skipped` when `duplicates` is absent).
+  let skippedNoVenue = 0;
+  let skippedNoGeocode = 0;
+  let skippedInvalidDate = 0;
+  let skippedNoDate = 0;
+  let skippedPastEvent = 0;
+  let skippedDuplicate = 0;
 
   console.log(`\n💾 Saving ${events.length} events with geocoding...`);
 
@@ -451,6 +461,7 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
       if (!library) {
         console.log(`  ⚠️ No library found for event: ${event.title || event.name}`);
         skipped++;
+        skippedNoVenue++;
         continue;
       }
 
@@ -502,6 +513,7 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
       if (!coordinates) {
         console.log(`  ⚠️ Could not geocode: ${event.title || event.name}`);
         skipped++;
+        skippedNoGeocode++;
         continue;
       }
 
@@ -539,6 +551,7 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
       if (!dateStr && rawDateStr) {
         console.log(`  ⚠️ Skipping event with invalid date: "${rawDateStr}" - ${(event.title || event.name || '').substring(0, 40)}`);
         skipped++;
+        skippedInvalidDate++;
         continue;
       }
       // Also skip when the scraper provided no date at all — these would
@@ -546,6 +559,7 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
       // date-filtered queries (caught 2026-05-17 via 212 assabet rows).
       if (!rawDateStr || (typeof rawDateStr === 'string' && rawDateStr.trim().length === 0)) {
         skipped++;
+        skippedNoDate++;
         continue;
       }
 
@@ -556,6 +570,7 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
             // Skip past events
             if (dateObj < new Date()) {
               skipped++;
+              skippedPastEvent++;
               continue;
             }
             dateTimestamp = admin.firestore.Timestamp.fromDate(dateObj);
@@ -582,6 +597,7 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
           if (duplicateCheck.isDuplicate) {
             console.log(`  Skipping duplicate: "${(event.title || event.name || '').substring(0, 40)}..." (matches ${duplicateCheck.existingSource || duplicateCheck.existingId})`);
             skipped++;
+            skippedDuplicate++;
             continue;
           }
 
@@ -589,6 +605,7 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
           if (duplicateCheck.hasInvalidDate) {
             console.log(`  Skipping invalid date: "${(event.title || event.name || '').substring(0, 40)}..." (date: "${duplicateCheck.dateValue}")`);
             skipped++;
+            skippedInvalidDate++;
             continue;
           }
         } catch (e) {
@@ -698,6 +715,7 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
   }
 
   console.log(`\n✅ Save complete: ${saved} saved, ${skipped} skipped, ${errors} errors`);
+  console.log(`   Skip breakdown: ${skippedInvalidDate} invalid date, ${skippedDuplicate} duplicate, ${skippedNoVenue} no venue match, ${skippedNoGeocode} geocode failed, ${skippedNoDate} no date, ${skippedPastEvent} past event`);
 
   // Verify and cleanup events that are no longer on source
   let deleted = 0;
@@ -708,7 +726,20 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
     console.error(`  ⚠️ Verification failed: ${verifyError.message}`);
   }
 
-  return { saved, skipped, errors, deleted };
+  return {
+    saved,
+    skipped,
+    errors,
+    deleted,
+    // Reason breakdown — do not silently merge these back into `skipped`
+    // callers/reporting rely on `duplicates` and `invalidDate` being distinct.
+    duplicates: skippedDuplicate,
+    invalidDate: skippedInvalidDate,
+    noVenue: skippedNoVenue,
+    noGeocode: skippedNoGeocode,
+    noDate: skippedNoDate,
+    pastEvent: skippedPastEvent
+  };
 }
 
 /**
@@ -746,6 +777,8 @@ async function saveEventsSimple(events, options = {}) {
   let batch = db.batch();
   let saved = 0;
   let skipped = 0;
+  let skippedDuplicate = 0;
+  let skippedInvalidDate = 0;
   let batchCount = 0;
 
   for (const event of events) {
@@ -772,6 +805,7 @@ async function saveEventsSimple(events, options = {}) {
         if (duplicateCheck.isDuplicate) {
           console.log(`  Skipping duplicate: "${(event.name || '').substring(0, 40)}..." (matches ${duplicateCheck.existingSource || duplicateCheck.existingId})`);
           skipped++;
+          skippedDuplicate++;
           continue;
         }
 
@@ -779,6 +813,7 @@ async function saveEventsSimple(events, options = {}) {
         if (duplicateCheck.hasInvalidDate) {
           console.log(`  Skipping invalid date: "${(event.name || '').substring(0, 40)}..." (date: "${duplicateCheck.dateValue}")`);
           skipped++;
+          skippedInvalidDate++;
           continue;
         }
       } catch (e) {
@@ -863,7 +898,7 @@ async function saveEventsSimple(events, options = {}) {
     }
   }
 
-  return { saved, skipped, deleted };
+  return { saved, skipped, deleted, duplicates: skippedDuplicate, invalidDate: skippedInvalidDate };
 }
 
 module.exports = {

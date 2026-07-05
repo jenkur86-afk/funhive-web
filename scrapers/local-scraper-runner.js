@@ -220,18 +220,28 @@ async function runScraper(name, config) {
       : result;
     const num = (v) => (typeof v === 'number' && !isNaN(v)) ? v : 0;
     const newCount = num(stats_src?.new) || (num(stats_src?.saved) + num(stats_src?.updated)) || num(stats_src?.imported);
-    const dupCount = num(stats_src?.duplicates) || num(stats_src?.skipped);
+    // event-save-helper.js now returns a `duplicates`/`invalidDate` breakdown
+    // instead of one combined `skipped` bucket. Scrapers that call it (or pass
+    // its result straight through) expose both fields, so prefer them over the
+    // old combined `skipped` fallback — otherwise invalid-date rejections get
+    // mislabeled as "Duplicates" in this table (2026-07-05 incident: OCLS
+    // reported "Duplicates: 4805" when all 4805 were actually invalid-date skips).
+    const hasBreakdown = stats_src && ('duplicates' in stats_src || 'invalidDate' in stats_src);
+    const invalidDateCount = num(stats_src?.invalidDate);
+    const dupCount = hasBreakdown ? num(stats_src?.duplicates) : num(stats_src?.skipped);
     const errCount = num(stats_src?.errors) || num(stats_src?.failed);
     const stats = {
-      found: num(stats_src?.found) || num(stats_src?.total) || (newCount + dupCount + errCount) || 0,
+      found: num(stats_src?.found) || num(stats_src?.total) || (newCount + dupCount + invalidDateCount + errCount) || 0,
       new: newCount,
       duplicates: dupCount,
+      invalidDate: invalidDateCount,
       errors: errCount
     };
 
     const zeroFlag = stats.found === 0 ? ' ⚠️ ZERO EVENTS' : '';
-    log(`✅ ${name} completed in ${duration}s - Found: ${stats.found}, New: ${stats.new}, Duplicates: ${stats.duplicates}`);
-    logSummary(`✅ ${name} | Found: ${stats.found}  New: ${stats.new}  Dupes: ${stats.duplicates}  Time: ${duration}s${zeroFlag}`);
+    const invalidDateFlag = stats.invalidDate > 0 ? `, InvalidDate: ${stats.invalidDate}` : '';
+    log(`✅ ${name} completed in ${duration}s - Found: ${stats.found}, New: ${stats.new}, Duplicates: ${stats.duplicates}${invalidDateFlag}`);
+    logSummary(`✅ ${name} | Found: ${stats.found}  New: ${stats.new}  Dupes: ${stats.duplicates}${stats.invalidDate > 0 ? `  InvalidDate: ${stats.invalidDate}` : ''}  Time: ${duration}s${zeroFlag}`);
 
     // Log to database
     await logToFirestore(name, 'success', stats, null, parseFloat(duration));
@@ -629,7 +639,7 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
     ];
 
     const colW = 34;
-    const tableHeader = `${'SCRAPER'.padEnd(colW)} ${'FOUND'.padStart(6)} ${'NEW'.padStart(6)} ${'DUPES'.padStart(6)} ${'TIME(s)'.padStart(8)}`;
+    const tableHeader = `${'SCRAPER'.padEnd(colW)} ${'FOUND'.padStart(6)} ${'NEW'.padStart(6)} ${'DUPES'.padStart(6)} ${'INVALID'.padStart(7)} ${'TIME(s)'.padStart(8)}`;
     const divider = '-'.repeat(tableHeader.length);
 
     log(`\n📋 PER-SCRAPER RESULTS`);
@@ -651,7 +661,7 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
         const isZero = found === 0;
         const prefix = isZero ? '⚠️  ' : '   ';
         const name = (prefix + r.name).padEnd(colW);
-        const row = `${name} ${String(found).padStart(6)} ${String(r.stats?.new ?? 0).padStart(6)} ${String(r.stats?.duplicates ?? 0).padStart(6)} ${String(r.duration?.toFixed(1) ?? '?').padStart(8)}`;
+        const row = `${name} ${String(found).padStart(6)} ${String(r.stats?.new ?? 0).padStart(6)} ${String(r.stats?.duplicates ?? 0).padStart(6)} ${String(r.stats?.invalidDate ?? 0).padStart(7)} ${String(r.duration?.toFixed(1) ?? '?').padStart(8)}`;
         log(row);
         logSummary(row);
       }
