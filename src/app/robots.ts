@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/auth/', '/api/', '/profile/', '/settings/', '/favorites/', '/reviews/'],
     },
-    sitemap: 'https://funhive-web.vercel.app/sitemap.xml',
+    sitemap: 'https://myfunhive.com/sitemap.xml',
   }
 }

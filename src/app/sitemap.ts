@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { createServerClient } from '@/lib/supabase-server'
 
-const BASE_URL = 'https://funhive-web.vercel.app'
+const BASE_URL = 'https://myfunhive.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createServerClient()

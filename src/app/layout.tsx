@@ -6,7 +6,7 @@ import { FavoritesProvider } from '@/contexts/FavoritesContext'
 import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
 
-const SITE_URL = 'https://funhive-web.vercel.app'
+const SITE_URL = 'https://myfunhive.com'
 
 export const metadata: Metadata = {
   title: 'FunHive - Family Events & Activities Near You',
