@@ -1,5 +1,4 @@
-const puppeteer = require('puppeteer-core');
-const chromium = require('@sparticuz/chromium');
+const { launchBrowser } = require('./helpers/puppeteer-config');
 const { admin, db } = require('./helpers/supabase-adapter');
 
 const { logScraperResult } = require('./scraper-logger');
@@ -285,12 +284,7 @@ const LIBRARIES = [
 const SCRAPER_NAME = 'wordpress-GA';
 
 async function scrapeGenericEvents() {
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath(),
-    headless: chromium.headless
-  });
+  const browser = await launchBrowser();
   const events = [];
   for (const library of LIBRARIES) {
     try {

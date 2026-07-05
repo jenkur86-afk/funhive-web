@@ -42,8 +42,10 @@ let lastGeocodeTime = 0;
 
 // Geocode address with rate limiting (1 req/sec max for Nominatim)
 async function geocodeAddress(address) {
-  // Check cache first
-  if (geocodeCache[address]) {
+  // Check cache first — includes cached failures, so a rate-limited/no-result
+  // address (all events share the same library address) isn't retried
+  // hundreds of times in a single run.
+  if (address in geocodeCache) {
     return geocodeCache[address];
   }
 
@@ -78,9 +80,11 @@ async function geocodeAddress(address) {
       return coordinates;
     } else {
       console.log(`   ⚠️  Geocoding: No results for "${address}"`);
+      geocodeCache[address] = null;
     }
   } catch (error) {
     console.error(`   ❌ Geocoding error for "${address}":`, error.message);
+    geocodeCache[address] = null;
   }
   return null;
 }

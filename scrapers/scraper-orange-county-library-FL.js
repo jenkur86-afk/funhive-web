@@ -56,13 +56,15 @@ async function scrapeOrangeCountyLibraryFL() {
     });
 
     const page = await browser.newPage();
-    page.setDefaultTimeout(15000);
+    page.setDefaultTimeout(30000);
 
     // Set viewport
     await page.setViewport({ width: 1920, height: 1080 });
 
     console.log('📅 Loading calendar page...');
-    await page.goto(CALENDAR_URL, { waitUntil: 'networkidle2' });
+    // domcontentloaded, not networkidle2 — the React calendar plugin keeps
+    // background network activity going, so networkidle2 never resolves.
+    await page.goto(CALENDAR_URL, { waitUntil: 'domcontentloaded' });
 
     // Wait for calendar to load (WordPress/React may take a moment)
     await page.waitForSelector('[class*="calendar"], [class*="event"], .event-item', { timeout: 10000 }).catch(() => {
@@ -113,8 +115,15 @@ async function scrapeOrangeCountyLibraryFL() {
           || el.getAttribute('data-name')
           || el.innerText?.split('\n')[0];
 
-        // Try to extract date
-        let dateStr = el.querySelector('[class*="date"], time')?.innerText?.trim()
+        // Try to extract date. Prefer the <time datetime="..."> attribute
+        // (standard HTML5 machine-readable date) over its visible text —
+        // on this calendar widget the visible text of the <time> element is
+        // just the clock time (e.g. "10:00 AM"), not the date, which was
+        // causing every event to be extracted with a time-only "date".
+        const dateEl = el.querySelector('[class*="date"], time');
+        let dateStr = dateEl?.getAttribute('datetime')
+          || dateEl?.getAttribute('data-date')
+          || dateEl?.innerText?.trim()
           || el.getAttribute('data-date')
           || el.getAttribute('data-event-date');
 
