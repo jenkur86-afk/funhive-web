@@ -26,7 +26,9 @@ const CALENDAR_URL = 'https://ocls.org/calendar/';
 const STATE = 'FL';
 const CITY = 'Orlando';
 
-// Orange County Library System main branch
+// Orange County Library System main branch (used as the default/fallback
+// venue for the "Online" branch and any branch name that doesn't match one
+// of the real branches below).
 const OCLS_HQ = {
   name: 'Orange County Library System',
   city: CITY,
@@ -36,6 +38,33 @@ const OCLS_HQ = {
   url: CALENDAR_URL,
   county: 'Orange',
 };
+
+// Real per-branch addresses (from https://ocls.org/locations/, 2026-07-05) so
+// each event geocodes to its actual branch instead of one shared HQ address.
+// event.branch values from window.OCLS_Events are matched against these
+// `name` fields by findLibraryForEvent() in event-save-helper.js (substring
+// match either direction). OCLS_HQ must stay first in the array passed to
+// saveEventsWithGeocoding — findLibraryForEvent() falls back to libraries[0]
+// when a branch name doesn't match anything below (e.g. the "Online" branch).
+const OCLS_BRANCHES = [
+  OCLS_HQ,
+  { name: 'Orlando Public Library', city: 'Orlando', state: STATE, address: '101 E. Central Blvd.', zipCode: '32801', county: 'Orange' },
+  { name: 'Melrose Center', city: 'Orlando', state: STATE, address: '101 E. Central Blvd.', zipCode: '32801', county: 'Orange' },
+  { name: 'Alafaya Branch', city: 'Orlando', state: STATE, address: '12000 E. Colonial Drive', zipCode: '32826', county: 'Orange' },
+  { name: 'Chickasaw Branch', city: 'Orlando', state: STATE, address: '870 N. Chickasaw Trail', zipCode: '32825', county: 'Orange' },
+  { name: 'Eatonville Branch', city: 'Eatonville', state: STATE, address: '200 E. Kennedy Blvd.', zipCode: '32751', county: 'Orange' },
+  { name: 'Fairview Shores Branch', city: 'Orlando', state: STATE, address: '902 Lee Road, Suite 26', zipCode: '32810', county: 'Orange' },
+  { name: 'Hiawassee Branch', city: 'Orlando', state: STATE, address: '7391 W. Colonial Drive', zipCode: '32818', county: 'Orange' },
+  { name: 'North Orange Branch', city: 'Apopka', state: STATE, address: '1211 E. Semoran Blvd.', zipCode: '32703', county: 'Orange' },
+  { name: 'South Creek Branch', city: 'Orlando', state: STATE, address: '1702 Deerfield Blvd.', zipCode: '32837', county: 'Orange' },
+  { name: 'South Trail Branch', city: 'Orlando', state: STATE, address: '4600 S. Orange Blossom Trail', zipCode: '32839', county: 'Orange' },
+  { name: 'Southeast Branch', city: 'Orlando', state: STATE, address: '5575 S. Semoran Blvd.', zipCode: '32822', county: 'Orange' },
+  { name: 'Southwest Branch', city: 'Orlando', state: STATE, address: '7255 Della Drive', zipCode: '32819', county: 'Orange' },
+  { name: 'Washington Park Branch', city: 'Orlando', state: STATE, address: '5151 Raleigh St., Suite A', zipCode: '32811', county: 'Orange' },
+  { name: 'West Oaks Branch and Genealogy Center', city: 'Ocoee', state: STATE, address: '1821 E. Silver Star Road', zipCode: '34761', county: 'Orange' },
+  { name: 'Windermere Branch', city: 'Windermere', state: STATE, address: '530 Main St.', zipCode: '34786', county: 'Orange' },
+  { name: 'Winter Garden Branch', city: 'Winter Garden', state: STATE, address: '805 E. Plant St.', zipCode: '34787', county: 'Orange' },
+];
 
 /**
  * Scrape events from OCLS calendar
@@ -255,7 +284,7 @@ async function scrapeOrangeCountyLibraryFL() {
     // Save events using the standard helper
     if (events.length > 0) {
       console.log('💾 Saving events...\n');
-      const result = await saveEventsWithGeocoding(events, [OCLS_HQ], {
+      const result = await saveEventsWithGeocoding(events, OCLS_BRANCHES, {
         scraperName: SCRAPER_NAME,
         state: STATE,
         category: 'library',

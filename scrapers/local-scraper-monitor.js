@@ -12,28 +12,18 @@
  *   node local-scraper-monitor.js --days 7  # Report for last 7 days
  *
  * Created: January 2026 - Cloud-to-Local Migration
+ * Rewritten 2026-07-06: originally read Firestore (admin.firestore(),
+ * db.collection('scraperLogs'/'events'/'activities')), which was
+ * decommissioned when the project migrated to Supabase — this crashed with
+ * "Cannot find module 'firebase-admin'" since that package was removed and
+ * never reinstalled, and even with the package present there is no
+ * firebase-service-account.json anymore. Scrapers now write run telemetry to
+ * Supabase's `scraper_logs` table via saveScraperLog() in
+ * helpers/supabase-adapter.js (see database/schema.sql) — this script reads
+ * from there instead. Output format and CLI flags are unchanged.
  */
 
-const admin = require('firebase-admin');
-const fs = require('fs');
-const path = require('path');
-
-// Initialize Firebase Admin
-const serviceAccountPath = path.join(__dirname, '..', 'firebase-service-account.json');
-if (!fs.existsSync(serviceAccountPath)) {
-  console.error('❌ Firebase service account not found at:', serviceAccountPath);
-  process.exit(1);
-}
-
-const serviceAccount = require(serviceAccountPath);
-
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  });
-}
-
-const db = admin.firestore();
+const { supabase, saveScraperLog } = require('./helpers/supabase-adapter');
 
 // ============================================================================
 // REPORT GENERATION
@@ -50,16 +40,19 @@ async function generateScraperReport(options = {}) {
   console.log(`🕐 Generated: ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })} EST`);
   console.log('='.repeat(70) + '\n');
 
-  // Get scraper logs
-  const logsSnapshot = await db.collection('scraperLogs')
-    .where('timestamp', '>=', admin.firestore.Timestamp.fromDate(startDate))
-    .orderBy('timestamp', 'desc')
-    .get();
+  // Get scraper logs — selective columns only (bandwidth convention)
+  const { data: logs, error: logsError } = await supabase
+    .from('scraper_logs')
+    .select('scraper_name, status, events_found, events_saved, events_skipped, error_message, run_at')
+    .gte('run_at', startDate.toISOString())
+    .order('run_at', { ascending: false });
 
-  const logs = [];
-  logsSnapshot.forEach(doc => logs.push({ id: doc.id, ...doc.data() }));
+  if (logsError) {
+    console.error('❌ Failed to fetch scraper_logs:', logsError.message);
+    return { success: 0, failed: 0, scrapers: {} };
+  }
 
-  if (logs.length === 0) {
+  if (!logs || logs.length === 0) {
     console.log('⚠️  No scraper logs found for this period\n');
     return { success: 0, failed: 0, scrapers: {} };
   }
@@ -68,7 +61,7 @@ async function generateScraperReport(options = {}) {
   const scraperStats = {};
 
   for (const log of logs) {
-    const name = log.scraperName || 'Unknown';
+    const name = log.scraper_name || 'Unknown';
     if (!scraperStats[name]) {
       scraperStats[name] = {
         runs: 0,
@@ -85,18 +78,18 @@ async function generateScraperReport(options = {}) {
     const stats = scraperStats[name];
     stats.runs++;
 
-    if (log.status === 'success' || log.success === true) {
+    if (log.status === 'success') {
       stats.successes++;
-      stats.lastSuccess = log.timestamp;
-      stats.totalNew += log.new || log.imported || 0;
-      stats.totalDuplicates += log.duplicates || log.skipped || 0;
-    } else if (log.status === 'failed' || log.success === false) {
+      stats.lastSuccess = log.run_at;
+      stats.totalNew += log.events_saved || 0;
+      stats.totalDuplicates += log.events_skipped || 0;
+    } else if (log.status === 'error' || log.status === 'partial') {
       stats.failures++;
-      stats.lastError = log.error;
+      stats.lastError = log.error_message;
     }
 
-    if (!stats.lastRun || (log.timestamp && log.timestamp > stats.lastRun)) {
-      stats.lastRun = log.timestamp;
+    if (!stats.lastRun || (log.run_at && log.run_at > stats.lastRun)) {
+      stats.lastRun = log.run_at;
     }
   }
 
@@ -171,39 +164,41 @@ async function generateScraperReport(options = {}) {
     }
   }
 
-  // Get database stats
+  // Get database stats — count-only queries (no row downloads)
   if (!options.alertOnly) {
     console.log('📈 DATABASE STATUS');
     console.log('-'.repeat(40));
 
-    const now = new Date();
-    const futureEvents = await db.collection('events')
-      .where('eventDate', '>=', admin.firestore.Timestamp.fromDate(now))
-      .count()
-      .get();
+    const now = new Date().toISOString();
 
-    const totalEvents = await db.collection('events').count().get();
-    const totalVenues = await db.collection('activities').count().get();
+    const { count: futureEventsCount } = await supabase
+      .from('events')
+      .select('*', { count: 'exact', head: true })
+      .gte('date', now);
 
-    console.log(`Total Events:  ${totalEvents.data().count.toLocaleString()}`);
-    console.log(`Future Events: ${futureEvents.data().count.toLocaleString()}`);
-    console.log(`Total Venues:  ${totalVenues.data().count.toLocaleString()}`);
+    const { count: totalEventsCount } = await supabase
+      .from('events')
+      .select('*', { count: 'exact', head: true });
+
+    const { count: totalVenuesCount } = await supabase
+      .from('activities')
+      .select('*', { count: 'exact', head: true });
+
+    console.log(`Total Events:  ${(totalEventsCount || 0).toLocaleString()}`);
+    console.log(`Future Events: ${(futureEventsCount || 0).toLocaleString()}`);
+    console.log(`Total Venues:  ${(totalVenuesCount || 0).toLocaleString()}`);
     console.log('');
   }
 
   console.log('='.repeat(70) + '\n');
 
   // Log monitoring result
-  await db.collection('scraperLogs').add({
+  await saveScraperLog({
     scraperName: 'Local-ScraperMonitor',
     status: 'success',
-    totalRuns: logs.length,
-    totalSuccesses,
-    totalFailures,
-    failedScrapers: failedScrapers.map(f => f.name),
-    timestamp: admin.firestore.FieldValue.serverTimestamp(),
-    runDate: new Date().toISOString(),
-    source: 'local-monitor'
+    eventsFound: logs.length,
+    eventsSaved: totalSuccesses,
+    eventsSkipped: totalFailures,
   });
 
   return {

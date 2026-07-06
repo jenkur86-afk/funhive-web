@@ -898,6 +898,7 @@ const SCRAPERS = {
   'Communico-NC': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoNC', type: 'puppeteer', group: 1, state: 'NC' },
   'Communico-SC': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoSC', type: 'puppeteer', group: 2, state: 'SC' },
   'Communico-TN': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoTN', type: 'puppeteer', group: 3, state: 'TN' },
+  'Nashville-Library-TN': { file: './scraper-nashville-library-TN.js', exportName: 'scrapeNashvilleLibraryTN', type: 'axios', group: 3, state: 'TN' },
   'Communico-WA': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoWA', type: 'puppeteer', group: 1, state: 'WA' },
   'Communico-AL': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoAL', type: 'puppeteer', group: 2, state: 'AL' },
   'Communico-WV': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoWV', type: 'puppeteer', group: 3, state: 'WV' },

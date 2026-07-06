@@ -1,13 +1,23 @@
-const puppeteer = require('puppeteer-core');
-const chromium = require('@sparticuz/chromium');
+const { launchBrowser } = require('./helpers/puppeteer-config');
 
 const { saveEventsWithGeocoding } = require('./event-save-helper');
 const { logScraperResult } = require('./scraper-logger');
-const ngeohash = require('ngeohash');const admin = require('firebase-admin');
+const ngeohash = require('ngeohash');
 
 /**
  * AUTO-GENERATED LIBCAL SCRAPER
  * State: NH
+ *
+ * Fixed 2026-07-06: stale .s-lc-ea-e/.s-lc-whw-row selectors (LibCal renamed
+ * its markup to .s-lc-eventcard at some point), a broken registry export
+ * (scrapeLibCalNH pointed at scrape-only code that never saved), some
+ * libraries defaulting to Monthly/grid view instead of Card view, and
+ * Merrimack's config pointing at the homepage widget instead of the real
+ * calendar page. Kelley Library was removed from this list entirely — its
+ * config (cityofsalemlibrary.libcal.com) was actually Salem, OREGON's
+ * library system, not Salem, NH; Kelley Library is on Assabet Interactive
+ * and now lives in scraper-assabet-libraries-nh-ma.js instead.
+ *
  * Libraries: [
   {
     "name": "Manchester City Library",
@@ -43,13 +53,6 @@ const ngeohash = require('ngeohash');const admin = require('firebase-admin');
     "state": "NH",
     "zipCode": "03766",
     "eventsUrl": "https://leblibrary.libcal.com/calendars"
-  },
-  {
-    "name": "Kelley Library",
-    "city": "Salem",
-    "state": "NH",
-    "zipCode": "03079",
-    "eventsUrl": "https://cityofsalemlibrary.libcal.com/calendar/events"
   },
   {
     "name": "Merrimack Public Library",
@@ -88,8 +91,7 @@ const LIBRARIES = [
   { name: "Concord Public Library", url: "https://concordnh-pl.libcal.com", platform: "libcal", eventsUrl: "https://concordnh-pl.libcal.com/calendar", city: "Concord", state: "NH", zipCode: "03301", county: "Merrimack" },
   { name: "Keene Public Library", url: "https://keenenh.libcal.com", platform: "libcal", eventsUrl: "https://keenenh.libcal.com/calendar", city: "Keene", state: "NH", zipCode: "03431", county: "Cheshire" },
   { name: "Lebanon Public Libraries", url: "https://leblibrary.libcal.com", platform: "libcal", eventsUrl: "https://leblibrary.libcal.com/calendars", city: "Lebanon", state: "NH", zipCode: "03766", county: "Grafton" },
-  { name: "Kelley Library", url: "https://cityofsalemlibrary.libcal.com", platform: "libcal", eventsUrl: "https://cityofsalemlibrary.libcal.com/calendar/events", city: "Salem", state: "NH", zipCode: "03079", county: "Rockingham" },
-  { name: "Merrimack Public Library", url: "https://merrimack.libcal.com", platform: "libcal", eventsUrl: "https://merrimack.libcal.com/", city: "Merrimack", state: "NH", zipCode: "03054", county: "Hillsborough" },
+  { name: "Merrimack Public Library", url: "https://merrimack.libcal.com", platform: "libcal", eventsUrl: "https://merrimack.libcal.com/calendar", city: "Merrimack", state: "NH", zipCode: "03054", county: "Hillsborough" },
   { name: "Hooksett Public Library", url: "https://hooksettlibrary.libcal.com", platform: "libcal", eventsUrl: "https://hooksettlibrary.libcal.com/calendar", city: "Hooksett", state: "NH", zipCode: "03106", county: "Merrimack" },
   { name: "Hollis Social Library", url: "https://hollislibrary.libcal.com", platform: "libcal", eventsUrl: "https://hollislibrary.libcal.com/calendar", city: "Hollis", state: "NH", zipCode: "03049", county: "Hillsborough" },
   { name: "Pelham Public Library", url: "https://pelhampubliclibrary.libcal.com", platform: "libcal", eventsUrl: "https://pelhampubliclibrary.libcal.com/calendar/events", city: "Pelham", state: "NH", zipCode: "03076", county: "Hillsborough" }
@@ -98,12 +100,7 @@ const LIBRARIES = [
 const SCRAPER_NAME = 'libcal-NH';
 
 async function scrapeLibCalEvents() {
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath(),
-    headless: chromium.headless
-  });
+  const browser = await launchBrowser();
   const events = [];
 
   for (const library of LIBRARIES) {
@@ -116,39 +113,84 @@ async function scrapeLibCalEvents() {
         timeout: 30000
       });
 
-      // Wait for LibCal events container
-      await page.waitForSelector('.s-lc-ea-e, .s-lc-whw-row', { timeout: 10000 }).catch(() => null);
+      // Some libraries' calendars default to LibCal's Monthly/grid view
+      // instead of Card view (caught 2026-07-06: Lebanon and Pelham both
+      // rendered 0 .s-lc-eventcard elements until this button was clicked —
+      // the grid view uses a completely different, unstructured DOM). The
+      // "Card View" toggle is a <button>, not a link with a URL param, so it
+      // has to be clicked rather than requested via a query string. This is
+      // a no-op (fails harmlessly, caught below) for libraries already
+      // defaulting to Card view.
+      await page.click('.s-lc-nav-card').catch(() => null);
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      // Wait for LibCal events container. LibCal renamed all its event-card
+      // classes at some point after this scraper was generated (old
+      // .s-lc-ea-e/.s-lc-whw-row selectors matched 0 elements, silently
+      // returning 0 events for every library with no error — caught
+      // 2026-07-06 by inspecting the live rendered DOM, current markup uses
+      // .s-lc-eventcard).
+      await page.waitForSelector('.s-lc-eventcard', { timeout: 10000 }).catch(() => null);
 
       const libraryEvents = await page.evaluate((libName) => {
         const events = [];
 
-        // LibCal event cards
-        document.querySelectorAll('.s-lc-ea-e, .s-lc-whw-row').forEach(card => {
+        document.querySelectorAll('.s-lc-eventcard').forEach(card => {
           try {
-            const titleEl = card.querySelector('.s-lc-ea-ttl, h3');
-            const dateEl = card.querySelector('.s-lc-ea-date, .event-date');
-            const timeEl = card.querySelector('.s-lc-ea-time, .event-time');
-            const descEl = card.querySelector('.s-lc-ea-desc, .event-description');
-            const linkEl = card.querySelector('a[href]');
-            const imageEl = card.querySelector('img');
-            const locationEl = card.querySelector('.s-lc-ea-loc, .event-location');
-            const ageEl = card.querySelector('.s-lc-ea-audience, .s-lc-ea-cat, [class*="audience"], [class*="age"], .event-category');
+            const titleEl = card.querySelector('.s-lc-eventcard-title a');
+            const monthEl = card.querySelector('.s-lc-evt-date-m');
+            const dayEl = card.querySelector('.s-lc-evt-date-d');
+            const headingTextEls = card.querySelectorAll('.s-lc-eventcard-heading-text');
+            const descEl = card.querySelector('.s-lc-eventcard-description');
+            const imageEl = card.querySelector('.s-lc-eventcard-heading-image img');
+            const tagEls = card.querySelectorAll('.s-lc-event-category-link');
 
-            if (titleEl && dateEl) {
-              const event = {
-                title: titleEl.textContent.trim(),
-                date: dateEl.textContent.trim(),
-                time: timeEl ? timeEl.textContent.trim() : '',
-                description: descEl ? descEl.textContent.trim() : '',
-                url: linkEl ? linkEl.href : window.location.href,
-                imageUrl: imageEl ? imageEl.src : '',
-                ageRange: ageEl ? ageEl.textContent.trim() : '',
-                location: locationEl ? locationEl.textContent.trim() : libName,
-                venueName: libName
-              };
+            if (!titleEl || !monthEl || !dayEl) return;
 
-              events.push(event);
+            // First heading-text div holds either "Sat, 10:00 AM - 12:00 PM"
+            // (single occurrence) or "Jun 22 - Jul 31" (multi-day range, no
+            // time); second holds the room/location (often blank for
+            // multi-day ranges with no fixed room).
+            const dateTimeText = headingTextEls[0] ? headingTextEls[0].textContent.trim().replace(/\s+/g, ' ') : '';
+            const timeMatch = dateTimeText.match(/(\d{1,2}:\d{2}\s*(?:AM|PM))\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM))/i);
+            const location = headingTextEls[1] ? headingTextEls[1].textContent.trim() : '';
+
+            // Infer year: LibCal's month/day-only date has no year. Assume
+            // current year unless that would place the event more than ~30
+            // days in the past, in which case it must be next year
+            // (calendar always shows "today forward").
+            const now = new Date();
+            const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const monthIdx = monthNames.indexOf(monthEl.textContent.trim());
+            const day = parseInt(dayEl.textContent.trim(), 10);
+            let year = now.getFullYear();
+            if (monthIdx >= 0 && !isNaN(day)) {
+              const candidate = new Date(year, monthIdx, day);
+              if (candidate < new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30)) {
+                year += 1;
+              }
             }
+
+            const dateStr = monthIdx >= 0
+              ? `${monthNames[monthIdx]} ${day}, ${year}${timeMatch ? ' ' + timeMatch[1] : ''}`
+              : '';
+
+            const rawDescription = descEl ? descEl.textContent.replace(/\s*More\s*$/i, '').trim() : '';
+            const tags = Array.from(tagEls).map(t => t.getAttribute('data-original-title') || t.textContent.trim()).filter(Boolean);
+
+            const event = {
+              title: titleEl.textContent.trim(),
+              date: dateStr,
+              time: timeMatch ? `${timeMatch[1]} - ${timeMatch[2]}` : '',
+              description: rawDescription,
+              url: titleEl.href || window.location.href,
+              imageUrl: imageEl ? imageEl.src : '',
+              ageRange: tags.join(', '),
+              location: location || libName,
+              venueName: libName
+            };
+
+            events.push(event);
           } catch (e) {
             console.error('Error parsing event:', e);
           }
@@ -193,7 +235,7 @@ async function scrapeLibCalEvents() {
 }
 
 async function saveToDatabase(events) {
-  await saveEventsWithGeocoding(events, LIBRARIES, {
+  return await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'NH',
     category: 'library',
@@ -201,32 +243,36 @@ async function saveToDatabase(events) {
   });
 }
 
+// Entry point used by local-scraper-runner.js (registry exportName:
+// 'scrapeLibCalNH'). Previously this name was aliased directly to
+// scrapeLibCalEvents() (scrape-only, never saves) instead of a function that
+// also calls saveToDatabase() — meaning events were scraped but never
+// persisted when run through the registry (caught 2026-07-06: scraper log
+// showed "Found: 192" internally but the runner reported "Found: 0, New: 0"
+// since scrapeLibCalEvents() returns a bare array with no save-result
+// fields). Also must not call process.exit() here — that would kill the
+// whole Node process mid-run when invoked as part of a multi-scraper group.
+async function scrapeLibCalNH() {
+  const events = await scrapeLibCalEvents();
+
+  const result = events.length > 0
+    ? await saveToDatabase(events)
+    : { saved: 0, skipped: 0, errors: 0, deleted: 0 };
+
+  await logScraperResult('Libcal Libraries NH', {
+    found: events.length,
+    new: result.saved,
+  }, { state: 'NH', source: 'libcal' });
+
+  return { found: events.length, ...result };
+}
+
 async function main() {
   console.log(`\n╔════════════════════════════════════════════════════════╗`);
   console.log(`║  LibCal Scraper - NH (${LIBRARIES.length} libraries)  ║`);
   console.log(`╚════════════════════════════════════════════════════════╝\n`);
 
-  const events = await scrapeLibCalEvents();
-
-  if (events.length > 0) {
-    await saveToDatabase(events);
-  }
-
-  // Log to database for monitoring
-
-
-  await logScraperResult('Libcal Libraries NH', {
-
-
-    found: events.length,
-
-
-    new: events.length,
-
-
-  }, { state: 'NH', source: 'libcal' });
-
-
+  await scrapeLibCalNH();
 
   process.exit(0);
 }
@@ -235,4 +281,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { scrapeLibCalNH: scrapeLibCalEvents, saveToDatabase };
+module.exports = { scrapeLibCalNH, saveToDatabase };

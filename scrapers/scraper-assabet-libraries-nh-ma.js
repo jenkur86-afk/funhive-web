@@ -23,6 +23,12 @@ const LIBRARIES = [
   { name: 'Bedford Public Library', slug: 'bedfordnhlibrary', eventsUrl: 'https://bedfordnhlibrary.assabetinteractive.com/calendar/', city: 'Bedford', state: 'NH', zipCode: '03110' },
   { name: 'Amherst Town Library', slug: 'amherstlibrary', eventsUrl: 'https://amherstlibrary.assabetinteractive.com/calendar/', city: 'Amherst', state: 'NH', zipCode: '03031' },
   { name: 'Nesmith Library', slug: 'nesmithlibrary', eventsUrl: 'https://nesmithlibrary.assabetinteractive.com/calendar/', city: 'Windham', state: 'NH', zipCode: '03087' },
+  // Moved here 2026-07-06 from scraper-libcal-libraries-nh.js: Kelley Library
+  // is on Assabet Interactive, not LibCal. Its old LibCal-NH config
+  // (cityofsalemlibrary.libcal.com) was actually Salem, OREGON's library
+  // system (Pacific Time, "West Salem Branch") — a wrong-subdomain
+  // false-positive that would have imported mismatched out-of-state events.
+  { name: 'Kelley Library', slug: 'kelleylibrary', eventsUrl: 'https://kelleylibrary.assabetinteractive.com/calendar/', city: 'Salem', state: 'NH', zipCode: '03079' },
   // Massachusetts
   { name: 'Thomas Crane Public Library', slug: 'thomascranelibrary', eventsUrl: 'https://thomascranelibrary.assabetinteractive.com/calendar/', city: 'Quincy', state: 'MA', zipCode: '02169' },
   { name: 'Somerville Public Library', slug: 'somervillepubliclibrary', eventsUrl: 'https://somervillepubliclibrary.assabetinteractive.com/calendar/', city: 'Somerville', state: 'MA', zipCode: '02143' },
