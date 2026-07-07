@@ -114,6 +114,30 @@ function logSummary(message) {
   }
 }
 
+// Fixed-width columns shared by EVERY per-scraper line written to scraper-summary.log —
+// both the live line logged the moment each scraper finishes, and the recap table at the
+// end of a run. Previously the live line only appended "InvalidDate: N" when N > 0, so a
+// scraper with 0 invalid-date skips looked indistinguishable from one that was never
+// measured at all (this is why `Get-Content scraper-summary.log -Tail 80` looked like it
+// was missing Dupes/Invalid data for most scrapers — the field was silently omitted, not
+// broken). Every row now always shows Dupes and Invalid, and the live line uses the exact
+// same column layout as the recap table so the two never drift out of sync again.
+const SUMMARY_COL_WIDTH = 34;
+const SUMMARY_TABLE_HEADER = `${'SCRAPER'.padEnd(SUMMARY_COL_WIDTH)} ${'FOUND'.padStart(6)} ${'NEW'.padStart(6)} ${'DUPES'.padStart(6)} ${'INVALID'.padStart(7)} ${'TIME(s)'.padStart(8)}`;
+const SUMMARY_TABLE_DIVIDER = '-'.repeat(SUMMARY_TABLE_HEADER.length);
+
+function formatSummaryRow(r) {
+  if (!r.success) {
+    const name = ('❌ ' + r.name).padEnd(SUMMARY_COL_WIDTH);
+    const time = typeof r.duration === 'number' ? `  (${r.duration.toFixed(1)}s)` : '';
+    return `${name} FAILED — ${(r.error || 'unknown error').slice(0, 40)}${time}`;
+  }
+  const found = r.stats?.found ?? 0;
+  const prefix = found === 0 ? '⚠️  ' : '   ';
+  const name = (prefix + r.name).padEnd(SUMMARY_COL_WIDTH);
+  return `${name} ${String(found).padStart(6)} ${String(r.stats?.new ?? 0).padStart(6)} ${String(r.stats?.duplicates ?? 0).padStart(6)} ${String(r.stats?.invalidDate ?? 0).padStart(7)} ${String(r.duration?.toFixed(1) ?? '?').padStart(8)}`;
+}
+
 // ============================================================================
 // CHECKPOINT MANAGEMENT
 // ============================================================================
@@ -238,10 +262,9 @@ async function runScraper(name, config) {
       errors: errCount
     };
 
-    const zeroFlag = stats.found === 0 ? ' ⚠️ ZERO EVENTS' : '';
     const invalidDateFlag = stats.invalidDate > 0 ? `, InvalidDate: ${stats.invalidDate}` : '';
     log(`✅ ${name} completed in ${duration}s - Found: ${stats.found}, New: ${stats.new}, Duplicates: ${stats.duplicates}${invalidDateFlag}`);
-    logSummary(`✅ ${name} | Found: ${stats.found}  New: ${stats.new}  Dupes: ${stats.duplicates}${stats.invalidDate > 0 ? `  InvalidDate: ${stats.invalidDate}` : ''}  Time: ${duration}s${zeroFlag}`);
+    logSummary(formatSummaryRow({ success: true, name, stats, duration: parseFloat(duration) }));
 
     // Log to database
     await logToFirestore(name, 'success', stats, null, parseFloat(duration));
@@ -251,7 +274,7 @@ async function runScraper(name, config) {
   } catch (error) {
     const duration = ((Date.now() - startTime) / 1000).toFixed(1);
     log(`❌ ${name} failed after ${duration}s: ${error.message}`, 'error');
-    logSummary(`❌ ${name} | FAILED after ${duration}s — ${error.message}`);
+    logSummary(formatSummaryRow({ success: false, name, error: error.message, duration: parseFloat(duration) }));
 
     // Log to database
     await logToFirestore(name, 'failed', {}, error.message, parseFloat(duration));
@@ -527,6 +550,11 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
   log(`${'='.repeat(60)}\n`);
   logSummary(`${'='.repeat(60)}`);
   logSummary(`🐝 FunHive Scraper Run — ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })} EST`);
+  // Print the column header up front too, not just in the recap table at the end —
+  // otherwise tailing the log mid-run shows unlabeled columns.
+  logSummary(SUMMARY_TABLE_DIVIDER);
+  logSummary(SUMMARY_TABLE_HEADER);
+  logSummary(SUMMARY_TABLE_DIVIDER);
 
   let results;
 
@@ -638,37 +666,23 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
       ...results.success.filter(r => (r.stats?.found ?? 0) > 0).sort((a, b) => (b.stats?.found ?? 0) - (a.stats?.found ?? 0)).map(r => ({ ...r, sortKey: 2 })),
     ];
 
-    const colW = 34;
-    const tableHeader = `${'SCRAPER'.padEnd(colW)} ${'FOUND'.padStart(6)} ${'NEW'.padStart(6)} ${'DUPES'.padStart(6)} ${'INVALID'.padStart(7)} ${'TIME(s)'.padStart(8)}`;
-    const divider = '-'.repeat(tableHeader.length);
-
     log(`\n📋 PER-SCRAPER RESULTS`);
-    log(divider);
-    log(tableHeader);
-    log(divider);
+    log(SUMMARY_TABLE_DIVIDER);
+    log(SUMMARY_TABLE_HEADER);
+    log(SUMMARY_TABLE_DIVIDER);
     logSummary(`\n📋 PER-SCRAPER RESULTS — ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })} EST (${totalDuration} min)`);
-    logSummary(divider);
-    logSummary(tableHeader);
-    logSummary(divider);
+    logSummary(SUMMARY_TABLE_DIVIDER);
+    logSummary(SUMMARY_TABLE_HEADER);
+    logSummary(SUMMARY_TABLE_DIVIDER);
 
     for (const r of allResults) {
-      if (!r.success) {
-        const row = `${'❌ ' + r.name}`;
-        log(`${row.padEnd(colW + 1)} FAILED — ${r.error?.slice(0, 40) ?? 'unknown error'}`);
-        logSummary(`${row.padEnd(colW + 1)} FAILED — ${r.error?.slice(0, 40) ?? 'unknown error'}`);
-      } else {
-        const found = r.stats?.found ?? 0;
-        const isZero = found === 0;
-        const prefix = isZero ? '⚠️  ' : '   ';
-        const name = (prefix + r.name).padEnd(colW);
-        const row = `${name} ${String(found).padStart(6)} ${String(r.stats?.new ?? 0).padStart(6)} ${String(r.stats?.duplicates ?? 0).padStart(6)} ${String(r.stats?.invalidDate ?? 0).padStart(7)} ${String(r.duration?.toFixed(1) ?? '?').padStart(8)}`;
-        log(row);
-        logSummary(row);
-      }
+      const row = formatSummaryRow(r);
+      log(row);
+      logSummary(row);
     }
 
-    log(divider);
-    logSummary(divider);
+    log(SUMMARY_TABLE_DIVIDER);
+    logSummary(SUMMARY_TABLE_DIVIDER);
     logSummary(`✅ ${results.success.length} succeeded  ❌ ${results.failed.length} failed  ⏭️ ${results.skipped.length} skipped  ⏱️ ${totalDuration} min total\n`);
 
   } catch (error) {
