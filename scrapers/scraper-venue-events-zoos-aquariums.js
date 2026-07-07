@@ -59,7 +59,7 @@ const VENUES = [
   { name: "Alabama Gulf Coast Zoo", eventsUrl: "https://www.alabamagulfcoastzoo.com/events/", city: "Gulf Shores", state: "AL", zip: "36542" },
   // Connecticut
   { name: "Mystic Aquarium", eventsUrl: "https://www.mysticaquarium.org/events/", city: "Mystic", state: "CT", zip: "06355" },
-  { name: "Beardsley Zoo", eventsUrl: "https://www.beardsleyzoo.org/events.html", city: "Bridgeport", state: "CT", zip: "06610" },
+  { name: "Beardsley Zoo", eventsUrl: "https://beardsleyzoo.org/tickets/", city: "Bridgeport", state: "CT", zip: "06610" },
   // DC
   { name: "Smithsonian National Zoo", eventsUrl: "https://nationalzoo.si.edu/events", city: "Washington", state: "DC", zip: "20008" },
   // Delaware
@@ -72,7 +72,7 @@ const VENUES = [
   { name: "Florida Aquarium", eventsUrl: "https://www.flaquarium.org/events", city: "Tampa", state: "FL", zip: "33602" },
   { name: "Clearwater Marine Aquarium", eventsUrl: "https://www.cmaquarium.org/events/", city: "Clearwater", state: "FL", zip: "33767" },
   // Georgia
-  { name: "Georgia Aquarium", eventsUrl: "https://www.georgiaaquarium.org/events/", city: "Atlanta", state: "GA", zip: "30313" },
+  { name: "Georgia Aquarium", eventsUrl: "https://www.georgiaaquarium.org/tickets/", city: "Atlanta", state: "GA", zip: "30313" },
   { name: "Zoo Atlanta", eventsUrl: "https://zooatlanta.org/events/", city: "Atlanta", state: "GA", zip: "30315" },
   // Illinois
   { name: "Lincoln Park Zoo", eventsUrl: "https://www.lpzoo.org/events/", city: "Chicago", state: "IL", zip: "60614" },
@@ -83,22 +83,22 @@ const VENUES = [
   { name: "Fort Wayne Children's Zoo", eventsUrl: "https://kidszoo.org/events/", city: "Fort Wayne", state: "IN", zip: "46807" },
   // Kentucky
   { name: "Louisville Zoo", eventsUrl: "https://louisvillezoo.org/events/", city: "Louisville", state: "KY", zip: "40213" },
-  { name: "Newport Aquarium", eventsUrl: "https://www.newportaquarium.com/events/", city: "Newport", state: "KY", zip: "41071" },
+  { name: "Newport Aquarium", eventsUrl: "https://www.newportaquarium.com/", city: "Newport", state: "KY", zip: "41071" },
   // Maine
   { name: "Maine Wildlife Park", eventsUrl: "https://www.mainewildlifepark.com/events/", city: "Gray", state: "ME", zip: "04039" },
   // Maryland
   { name: "Maryland Zoo", eventsUrl: "https://www.marylandzoo.org/events/", city: "Baltimore", state: "MD", zip: "21217" },
-  { name: "National Aquarium", eventsUrl: "https://aqua.org/events", city: "Baltimore", state: "MD", zip: "21202" },
+  { name: "National Aquarium", eventsUrl: "https://aqua.org/education/programs", city: "Baltimore", state: "MD", zip: "21202" },
   // Massachusetts
-  { name: "New England Aquarium", eventsUrl: "https://www.neaq.org/visit/programs-and-events/", city: "Boston", state: "MA", zip: "02110" },
-  { name: "Franklin Park Zoo", eventsUrl: "https://www.zoonewengland.org/franklin-park-zoo/events", city: "Boston", state: "MA", zip: "02121" },
+  { name: "New England Aquarium", eventsUrl: "https://www.neaq.org/visit/tickets/", city: "Boston", state: "MA", zip: "02110" },
+  { name: "Franklin Park Zoo", eventsUrl: "https://www.zoonewengland.org/", city: "Boston", state: "MA", zip: "02121" },
   // Michigan
   { name: "Detroit Zoo", eventsUrl: "https://detroitzoo.org/events/", city: "Royal Oak", state: "MI", zip: "48067" },
   { name: "John Ball Zoo", eventsUrl: "https://www.jbzoo.org/events", city: "Grand Rapids", state: "MI", zip: "49504" },
   // New Jersey
-  { name: "Adventure Aquarium", eventsUrl: "https://www.adventureaquarium.com/events", city: "Camden", state: "NJ", zip: "08103" },
+  { name: "Adventure Aquarium", eventsUrl: "https://www.adventureaquarium.com/Plan/Calendar", city: "Camden", state: "NJ", zip: "08103" },
   { name: "Turtle Back Zoo", eventsUrl: "https://www.turtlebackzoo.com/events/", city: "West Orange", state: "NJ", zip: "07052" },
-  { name: "Cape May County Zoo", eventsUrl: "https://www.cmczoo.com/events/", city: "Cape May", state: "NJ", zip: "08210" },
+  { name: "Cape May County Zoo", eventsUrl: "https://www.capemaycountynj.gov/1679/Park-Zoo", city: "Cape May", state: "NJ", zip: "08210" },
   // New York
   { name: "Bronx Zoo", eventsUrl: "https://www.bronxzoo.com/events", city: "Bronx", state: "NY", zip: "10460" },
   { name: "Central Park Zoo", eventsUrl: "https://centralparkzoo.com/events", city: "New York", state: "NY", zip: "10065" },
@@ -109,7 +109,7 @@ const VENUES = [
   // Ohio
   { name: "Cincinnati Zoo", eventsUrl: "https://cincinnatizoo.org/events/", city: "Cincinnati", state: "OH", zip: "45220" },
   { name: "Columbus Zoo and Aquarium", eventsUrl: "https://www.columbuszoo.org/events", city: "Powell", state: "OH", zip: "43065" },
-  { name: "Cleveland Metroparks Zoo", eventsUrl: "https://www.clevelandmetroparks.com/zoo/zoo-events", city: "Cleveland", state: "OH", zip: "44109" },
+  { name: "Cleveland Metroparks Zoo", eventsUrl: "https://www.clevelandmetroparks.com/", city: "Cleveland", state: "OH", zip: "44109" },
   { name: "Toledo Zoo", eventsUrl: "https://www.toledozoo.org/events", city: "Toledo", state: "OH", zip: "43614" },
   { name: "Akron Zoo", eventsUrl: "https://www.akronzoo.org/events", city: "Akron", state: "OH", zip: "44307" },
   // Pennsylvania
@@ -121,20 +121,20 @@ const VENUES = [
   { name: "Riverbanks Zoo & Garden", eventsUrl: "https://www.riverbanks.org/events/", city: "Columbia", state: "SC", zip: "29210" },
   { name: "SC Aquarium", eventsUrl: "https://scaquarium.org/calendar-of-events", city: "Charleston", state: "SC", zip: "29401", waitStrategy: "domcontentloaded" },
   // Tennessee
-  { name: "Nashville Zoo", eventsUrl: "https://www.nashvillezoo.org/events", city: "Nashville", state: "TN", zip: "37211" },
+  { name: "Nashville Zoo", eventsUrl: "https://www.nashvillezoo.org/tickets", city: "Nashville", state: "TN", zip: "37211" },
   { name: "Memphis Zoo", eventsUrl: "https://www.memphiszoo.org/events", city: "Memphis", state: "TN", zip: "38112" },
   { name: "Tennessee Aquarium", eventsUrl: "https://www.tnaqua.org/events/", city: "Chattanooga", state: "TN", zip: "37402" },
-  { name: "Knoxville Zoo", eventsUrl: "https://www.knoxvillezoo.org/events", city: "Knoxville", state: "TN", zip: "37914" },
+  { name: "Knoxville Zoo", eventsUrl: "https://www.zooknoxville.org/special-events/events/", city: "Knoxville", state: "TN", zip: "37914" },
   // Virginia
-  { name: "Virginia Aquarium", eventsUrl: "https://www.virginiaaquarium.com/events/", city: "Virginia Beach", state: "VA", zip: "23451" },
+  { name: "Virginia Aquarium", eventsUrl: "https://virginiaaquarium.com/", city: "Virginia Beach", state: "VA", zip: "23451" },
   { name: "Virginia Zoo", eventsUrl: "https://virginiazoo.org/events/", city: "Norfolk", state: "VA", zip: "23504" },
   { name: "Metro Richmond Zoo", eventsUrl: "https://www.metrorichmondzoo.com/events/", city: "Moseley", state: "VA", zip: "23120" },
   // West Virginia
-  { name: "Oglebay Good Zoo", eventsUrl: "https://oglebay.com/good-zoo/events/", city: "Wheeling", state: "WV", zip: "26003" },
+  { name: "Oglebay Good Zoo", eventsUrl: "https://oglebay.com/calendar/", city: "Wheeling", state: "WV", zip: "26003" },
   // Wisconsin
   { name: "Milwaukee County Zoo", eventsUrl: "https://milwaukeezoo.org/events/", city: "Milwaukee", state: "WI", zip: "53226" },
   { name: "Henry Vilas Zoo", eventsUrl: "https://www.henryvilaszoo.gov/events/", city: "Madison", state: "WI", zip: "53715" },
-  { name: "Racine Zoo", eventsUrl: "https://www.racinezoo.org/events", city: "Racine", state: "WI", zip: "53402" },
+  { name: "Racine Zoo", eventsUrl: "https://racinezoo.org/", city: "Racine", state: "WI", zip: "53402" },
 ];
 
 // ==========================================
