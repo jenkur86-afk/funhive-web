@@ -81,7 +81,7 @@ const VENUES = [
     extraction: { platform: 'artic', container: 'li.m-listing', title: 'strong.title.f-list-2', date: 'time[datetime]', link: 'a.m-listing__link', desc: 'span.short-description' } },
   // Indiana
   { name: "Indiana State Museum", eventsUrl: "https://www.indianamuseum.org/events/", city: "Indianapolis", state: "IN", zip: "46204" },
-  { name: "Conner Prairie Living History", eventsUrl: "https://www.connerprairie.org/visit/events/", city: "Fishers", state: "IN", zip: "46038" },
+  { name: "Conner Prairie Living History", eventsUrl: "https://connerp.ticketapp.org/portal/pages/tickets", city: "Fishers", state: "IN", zip: "46038" },
   // Maryland
   { name: "Maryland Science Center", eventsUrl: "https://www.mdsci.org/whats-happening/events/", city: "Baltimore", state: "MD", zip: "21230",
     extraction: { platform: 'custom', container: 'article.event-slide', title: 'p.event-slide-title a', date: 'p.event-slide-date time[datetime], p.event-slide-date', link: 'p.event-slide-title a', desc: '' } },
@@ -91,10 +91,10 @@ const VENUES = [
     extraction: { platform: 'tec' } },
   // Michigan
   { name: "Michigan Science Center", eventsUrl: "https://www.mi-sci.org/calendar/", city: "Detroit", state: "MI", zip: "48202" },
-  { name: "Impression 5 Science Center", eventsUrl: "https://impression5.org/events/", city: "Lansing", state: "MI", zip: "48933" },
-  { name: "Henry Ford Museum", eventsUrl: "https://www.thehenryford.org/visit/events/", city: "Dearborn", state: "MI", zip: "48124" },
+  { name: "Impression 5 Science Center", eventsUrl: "https://impression5.org/", city: "Lansing", state: "MI", zip: "48933" },
+  { name: "Henry Ford Museum", eventsUrl: "https://www.thehenryford.org/visit/things-to-do/calendar", city: "Dearborn", state: "MI", zip: "48124" },
   // New Hampshire
-  { name: "McAuliffe-Shepard Discovery Center", eventsUrl: "https://www.starhop.com/events/", city: "Concord", state: "NH", zip: "03301" },
+  { name: "McAuliffe-Shepard Discovery Center", eventsUrl: "https://www.starhop.com/programs", city: "Concord", state: "NH", zip: "03301" },
   // New York
   { name: "American Museum of Natural History", eventsUrl: "https://www.amnh.org/calendar", city: "New York", state: "NY", zip: "10024",
     extraction: { platform: 'amnh', container: 'a.amnh-calendar-new-event', title: 'div.amnh-calendar-new-event__info h3', date: 'div.amnh-calendar-new-event__info p:last-child', link: 'a.amnh-calendar-new-event', desc: 'p.small-paragraph' } },

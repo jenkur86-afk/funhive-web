@@ -47,7 +47,7 @@ const VENUES = [
   { name: 'Aldridge Botanical Gardens', url: 'https://www.aldridgegardens.com', eventsUrl: 'https://www.aldridgegardens.com/education/events/spring_event_calendar.html', city: 'Hoover', state: 'AL', platform: 'custom' },
 
   // Connecticut
-  { name: 'Connecticut College Arboretum', url: 'https://www.conncoll.edu/the-arboretum/', eventsUrl: 'https://www.conncoll.edu/the-arboretum/events/', city: 'New London', state: 'CT', platform: 'custom' },
+  { name: 'Connecticut College Arboretum', url: 'https://www.conncoll.edu/the-arboretum/', eventsUrl: 'https://events.conncoll.edu/', city: 'New London', state: 'CT', platform: 'custom' },
   { name: 'Bartlett Arboretum', url: 'https://www.bartlettarboretum.org', eventsUrl: 'https://www.bartlettarboretum.org/events', city: 'Stamford', state: 'CT', platform: 'wordpress' },
   { name: 'Roaring Brook Nature Center', url: 'https://www.roaringbrook.org', eventsUrl: 'https://www.roaringbrook.org/programs-events/', city: 'Canton', state: 'CT', platform: 'custom' },
 
@@ -70,7 +70,7 @@ const VENUES = [
 
   // Georgia
   { name: 'Atlanta Botanical Garden', url: 'https://atlantabg.org', eventsUrl: 'https://atlantabg.org/events/', city: 'Atlanta', state: 'GA', platform: 'custom' },
-  { name: 'Callaway Gardens', url: 'https://www.callawaygardens.com', eventsUrl: 'https://www.callawaygardens.com/events', city: 'Pine Mountain', state: 'GA', platform: 'custom' },
+  { name: 'Callaway Gardens', url: 'https://www.callawaygardens.com', eventsUrl: 'https://www.callawaygardens.com/calendar', city: 'Pine Mountain', state: 'GA', platform: 'custom' },
   { name: 'State Botanical Garden of Georgia', url: 'https://botgarden.uga.edu', eventsUrl: 'https://botgarden.uga.edu/events/', city: 'Athens', state: 'GA', platform: 'wordpress' },
   { name: 'Chattahoochee Nature Center', url: 'https://www.chattnaturecenter.org', eventsUrl: 'https://www.chattnaturecenter.org/events/', city: 'Roswell', state: 'GA', platform: 'wordpress' },
 
@@ -87,12 +87,12 @@ const VENUES = [
 
   // Indiana
   { name: 'Indianapolis Museum of Art at Newfields', url: 'https://discovernewfields.org', eventsUrl: 'https://discovernewfields.org/calendar', city: 'Indianapolis', state: 'IN', platform: 'custom' },
-  { name: 'Garfield Park Conservatory', url: 'https://www.garfieldgardensconservatory.org', eventsUrl: 'https://www.garfieldgardensconservatory.org/events/', city: 'Indianapolis', state: 'IN', platform: 'wordpress' },
+  { name: 'Garfield Park Conservatory', url: 'https://www.garfieldgardensconservatory.org', eventsUrl: 'https://www.garfieldgardensconservatory.org/', city: 'Indianapolis', state: 'IN', platform: 'wordpress' },
   { name: 'Foellinger-Freimann Botanical Conservatory', url: 'https://www.cityoffortwayne.org', eventsUrl: 'https://www.cityoffortwayne.in.gov/calendar.aspx?CID=9', city: 'Fort Wayne', state: 'IN', platform: 'custom' },
 
   // Kentucky
   { name: 'Bernheim Arboretum and Research Forest', url: 'https://bernheim.org', eventsUrl: 'https://bernheim.org/events/', city: 'Clermont', state: 'KY', platform: 'wordpress' },
-  { name: 'Louisville Nature Center', url: 'https://www.louisvillenaturecenter.org', eventsUrl: 'https://www.louisvillenaturecenter.org/events/', city: 'Louisville', state: 'KY', platform: 'wordpress' },
+  { name: 'Louisville Nature Center', url: 'https://www.louisvillenaturecenter.org', eventsUrl: 'https://www.louisvillenaturecenter.org/', city: 'Louisville', state: 'KY', platform: 'wordpress' },
   { name: 'Yew Dell Botanical Gardens', url: 'https://www.yewdellgardens.org', eventsUrl: 'https://www.yewdellgardens.org/classes-events', city: 'Crestwood', state: 'KY', platform: 'wordpress' },
 
   // Massachusetts
@@ -143,7 +143,7 @@ const VENUES = [
   { name: 'Buffalo Botanical Gardens', url: 'https://www.buffalogardens.com', eventsUrl: 'https://www.buffalogardens.com/pages/events', city: 'Buffalo', state: 'NY', platform: 'custom' },
 
   // Ohio
-  { name: 'Cleveland Botanical Garden', url: 'https://holdenfg.org', eventsUrl: 'https://holdenfg.org/events/', city: 'Cleveland', state: 'OH', platform: 'wordpress' },
+  { name: 'Cleveland Botanical Garden', url: 'https://holdenfg.org', eventsUrl: 'https://holdenfg.org/tickets/', city: 'Cleveland', state: 'OH', platform: 'wordpress' },
   { name: 'Franklin Park Conservatory', url: 'https://www.fpconservatory.org', eventsUrl: 'https://www.fpconservatory.org/events/', city: 'Columbus', state: 'OH', platform: 'custom' },
   { name: 'Cincinnati Nature Center', url: 'https://www.cincynature.org', eventsUrl: 'https://www.cincynature.org/things-to-do', city: 'Milford', state: 'OH', platform: 'custom' },
   { name: 'Dawes Arboretum', url: 'https://dawesarb.org', eventsUrl: 'https://dawesarb.org/events/', city: 'Newark', state: 'OH', platform: 'wordpress' },

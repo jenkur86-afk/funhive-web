@@ -46,14 +46,14 @@ const VENUES = [
   // the `www.` host responds and the calendar lives at /calendar (not /events).
   { name: "Imagine Nation Museum", eventsUrl: "https://www.imaginenation.org/calendar", city: "Bristol", state: "CT", zip: "06010" },
   // DC
-  { name: "National Children's Museum", eventsUrl: "https://nationalchildrensmuseum.org/events", city: "Washington", state: "DC", zip: "20004" },
+  { name: "National Children's Museum", eventsUrl: "https://nationalchildrensmuseum.org/tickets", city: "Washington", state: "DC", zip: "20004" },
   // Delaware
   { name: "Delaware Children's Museum", eventsUrl: "https://delawarechildrensmuseum.org/events/", city: "Wilmington", state: "DE", zip: "19801" },
   // Florida
   { name: "Miami Children's Museum", eventsUrl: "https://www.miamichildrensmuseum.org/events/", city: "Miami", state: "FL", zip: "33132",
     extraction: 'webflow' },
   // www. host 404s; bare domain works. TEC REST API confirmed 2026-06-29.
-  { name: "Glazer Children's Museum", eventsUrl: "https://glazermuseum.org/visit/calendar", city: "Tampa", state: "FL", zip: "33602",
+  { name: "Glazer Children's Museum", eventsUrl: "https://glazermuseum.org/events/", city: "Tampa", state: "FL", zip: "33602",
     extraction: 'tec-api', tecApiUrl: 'https://glazermuseum.org/wp-json/tribe/events/v1/events' },
   // The cmonaples.org domain was decommissioned (DNS no longer resolves).
   // The museum (CMON) now lives at cmon.org. Verified 2026-04-30: HTTP 200.
@@ -82,13 +82,13 @@ const VENUES = [
   { name: "Kentucky Science Center", eventsUrl: "https://kysciencecenter.org/events/", city: "Louisville", state: "KY", zip: "40202",
     extraction: 'tec' },
   // Maine
-  { name: "Children's Museum & Theatre of Maine", eventsUrl: "https://www.kitetails.org/calendar/", city: "Portland", state: "ME", zip: "04101",
+  { name: "Children's Museum & Theatre of Maine", eventsUrl: "https://www.kitetails.org/", city: "Portland", state: "ME", zip: "04101",
     extraction: 'squarespace' },
   { name: "Maine Discovery Museum", eventsUrl: "https://www.mainediscoverymuseum.org/special-events", city: "Bangor", state: "ME", zip: "04401",
     extraction: 'squarespace' },
   // Massachusetts
   // www. host returns 404; bare domain works.
-  { name: "Boston Children's Museum", eventsUrl: "https://bostonchildrensmuseum.org/programs-events", city: "Boston", state: "MA", zip: "02210" },
+  { name: "Boston Children's Museum", eventsUrl: "https://bostonchildrensmuseum.org/calendar/", city: "Boston", state: "MA", zip: "02210" },
   // /visit/programs returns 404; /visit/events-programs is the correct Drupal path.
   { name: "Discovery Museum", eventsUrl: "https://www.discoveryacton.org/visit/events-programs", city: "Acton", state: "MA", zip: "01720",
     extraction: 'drupal' },
@@ -100,15 +100,15 @@ const VENUES = [
   // New Hampshire
   { name: "Children's Museum of New Hampshire", eventsUrl: "https://childrens-museum.org/calendar/", city: "Dover", state: "NH", zip: "03820" },
   // New Jersey
-  { name: "Garden State Discovery Museum", eventsUrl: "https://www.discoverymuseum.com/events/", city: "Cherry Hill", state: "NJ", zip: "08003" },
+  { name: "Garden State Discovery Museum", eventsUrl: "https://www.discoverymuseum.com/", city: "Cherry Hill", state: "NJ", zip: "08003" },
   // New York
-  { name: "Children's Museum of Manhattan", eventsUrl: "https://cmom.org/visit/calendar/", city: "New York", state: "NY", zip: "10024" },
+  { name: "Children's Museum of Manhattan", eventsUrl: "https://cmom.org/", city: "New York", state: "NY", zip: "10024" },
   { name: "Brooklyn Children's Museum", eventsUrl: "https://www.brooklynkids.org/calendar/", city: "Brooklyn", state: "NY", zip: "11213",
     extraction: 'events-manager' },
   // /events/ returns 404; /calendar/ returns 200. Uses custom .event-result layout.
   { name: "Long Island Children's Museum", eventsUrl: "https://www.licm.org/calendar/", city: "Garden City", state: "NY", zip: "11530",
     extraction: 'licm' },
-  { name: "Strong National Museum of Play", eventsUrl: "https://www.museumofplay.org/visit/calendar/", city: "Rochester", state: "NY", zip: "14607",
+  { name: "Strong National Museum of Play", eventsUrl: "https://www.museumofplay.org/events/", city: "Rochester", state: "NY", zip: "14607",
     extraction: 'tec-api', tecApiUrl: 'https://www.museumofplay.org/wp-json/tribe/events/v1/events' },
   // North Carolina
   // www. host redirects to bare domain; use canonical form.
@@ -126,7 +126,7 @@ const VENUES = [
   { name: "Children's Museum of Cleveland", eventsUrl: "https://cmcleveland.org/events/", city: "Cleveland", state: "OH", zip: "44106" },
   // Pennsylvania
   // /visit/events/ returns 404. TEC REST API confirmed available 2026-06-28.
-  { name: "Please Touch Museum", eventsUrl: "https://www.pleasetouchmuseum.org/events/", city: "Philadelphia", state: "PA", zip: "19131",
+  { name: "Please Touch Museum", eventsUrl: "https://www.pleasetouchmuseum.org/learn/programs/", city: "Philadelphia", state: "PA", zip: "19131",
     extraction: 'tec-api', tecApiUrl: 'https://www.pleasetouchmuseum.org/wp-json/tribe/events/v1/events' },
   { name: "Children's Museum of Pittsburgh", eventsUrl: "https://pittsburghkids.org/events", city: "Pittsburgh", state: "PA", zip: "15212" },
   // Rhode Island
@@ -164,7 +164,7 @@ const VENUES = [
   { name: "Madison Children's Museum", eventsUrl: "https://madisonchildrensmuseum.org/events/", city: "Madison", state: "WI", zip: "53703",
     extraction: 'tec' },
   // www. redirects to bare domain. TEC REST API confirmed 2026-06-29 (62 events).
-  { name: "Discovery World", eventsUrl: "https://discoveryworld.org/events/", city: "Milwaukee", state: "WI", zip: "53202",
+  { name: "Discovery World", eventsUrl: "https://discoveryworld.org/", city: "Milwaukee", state: "WI", zip: "53202",
     extraction: 'tec-api', tecApiUrl: 'https://discoveryworld.org/wp-json/tribe/events/v1/events' },
 ];
 

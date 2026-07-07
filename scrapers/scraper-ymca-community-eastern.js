@@ -53,7 +53,7 @@ const CENTERS = [
 
   // DC
   { name: 'YMCA of Metropolitan Washington', url: 'https://www.ymcadc.org', eventsUrl: 'https://www.ymcadc.org/events/', city: 'Washington', state: 'DC', type: 'ymca' },
-  { name: 'Washington DCJCC', url: 'https://www.washingtondcjcc.org', eventsUrl: 'https://www.washingtondcjcc.org/events/', city: 'Washington', state: 'DC', type: 'jcc' },
+  { name: 'Washington DCJCC', url: 'https://www.washingtondcjcc.org', eventsUrl: 'https://washingtondcjcc.org/', city: 'Washington', state: 'DC', type: 'jcc' },
   { name: 'Boys & Girls Clubs of Greater Washington', url: 'https://www.bgcgw.org', eventsUrl: 'https://www.bgcgw.org/events/', city: 'Washington', state: 'DC', type: 'community' },
 
   // Delaware
@@ -71,7 +71,7 @@ const CENTERS = [
 
   // Iowa
   { name: 'YMCA of Greater Des Moines', url: 'https://www.dmymca.org', eventsUrl: 'https://www.dmymca.org/events', city: 'Des Moines', state: 'IA', type: 'ymca' },
-  { name: 'Cedar Rapids Metro YMCA', url: 'https://www.crmetroymca.org', eventsUrl: 'https://www.crmetroymca.org/events', city: 'Cedar Rapids', state: 'IA', type: 'ymca' },
+  { name: 'Cedar Rapids Metro YMCA', url: 'https://www.crmetroymca.org', eventsUrl: 'https://www.crmetroymca.org/programs/', city: 'Cedar Rapids', state: 'IA', type: 'ymca' },
 
   // Illinois
   { name: 'YMCA of Metropolitan Chicago', url: 'https://www.ymcachicago.org', eventsUrl: 'https://www.ymcachicago.org/events', city: 'Chicago', state: 'IL', type: 'ymca' },
@@ -93,7 +93,7 @@ const CENTERS = [
   // Maryland
   { name: 'Y of Central Maryland', url: 'https://www.ymaryland.org', eventsUrl: 'https://www.ymaryland.org/events', city: 'Baltimore', state: 'MD', type: 'ymca' },
   { name: 'JCC of Greater Baltimore', url: 'https://www.jcc.org', eventsUrl: 'https://www.jcc.org/events/', city: 'Owings Mills', state: 'MD', type: 'jcc' },
-  { name: 'Bender JCC of Greater Washington', url: 'https://www.benderjccgw.org', eventsUrl: 'https://www.benderjccgw.org/events/', city: 'Rockville', state: 'MD', type: 'jcc' },
+  { name: 'Bender JCC of Greater Washington', url: 'https://www.benderjccgw.org', eventsUrl: 'https://www.benderjccgw.org/programs/', city: 'Rockville', state: 'MD', type: 'jcc' },
 
   // Maine
   { name: 'YMCA of Southern Maine', url: 'https://www.ymcaofsouthernmaine.org', eventsUrl: 'https://www.ymcaofsouthernmaine.org/events', city: 'Portland', state: 'ME', type: 'ymca' },
@@ -103,7 +103,6 @@ const CENTERS = [
   { name: 'JCC St. Paul', url: 'https://www.stpauljcc.org', eventsUrl: 'https://www.stpauljcc.org/events/', city: 'Saint Paul', state: 'MN', type: 'jcc' },
 
   // Mississippi
-  { name: 'YMCA of Metropolitan Jackson', url: 'https://www.metrojacksonymca.org', eventsUrl: 'https://www.metrojacksonymca.org/events', city: 'Jackson', state: 'MS', type: 'ymca' },
 
   // North Carolina
   { name: 'YMCA of Greater Charlotte', url: 'https://www.ymcacharlotte.org', eventsUrl: 'https://www.ymcacharlotte.org/events', city: 'Charlotte', state: 'NC', type: 'ymca' },
@@ -119,19 +118,18 @@ const CENTERS = [
 
   // New York
   { name: 'YMCA of Greater New York', url: 'https://www.ymcanyc.org', eventsUrl: 'https://www.ymcanyc.org/events', city: 'New York', state: 'NY', type: 'ymca' },
-  { name: 'JCC Manhattan', url: 'https://www.jccmanhattan.org', eventsUrl: 'https://www.jccmanhattan.org/events/', city: 'New York', state: 'NY', type: 'jcc' },
+  { name: 'JCC Manhattan', url: 'https://www.jccmanhattan.org', eventsUrl: 'https://www.mmjccm.org/event', city: 'New York', state: 'NY', type: 'jcc' },
   { name: 'JCC of Mid-Westchester', url: 'https://www.jccmw.org', eventsUrl: 'https://www.jccmw.org/events/', city: 'Scarsdale', state: 'NY', type: 'jcc' },
   { name: 'YMCA of Greater Rochester', url: 'https://www.rochesterymca.org', eventsUrl: 'https://www.rochesterymca.org/events', city: 'Rochester', state: 'NY', type: 'ymca' },
 
   // Ohio
   { name: 'YMCA of Greater Cleveland', url: 'https://www.clevelandymca.org', eventsUrl: 'https://www.clevelandymca.org/events', city: 'Cleveland', state: 'OH', type: 'ymca' },
-  { name: 'YMCA of Central Ohio', url: 'https://www.ymcacolumbus.org', eventsUrl: 'https://www.ymcacolumbus.org/events', city: 'Columbus', state: 'OH', type: 'ymca' },
+  { name: 'YMCA of Central Ohio', url: 'https://www.ymcacolumbus.org', eventsUrl: 'https://www.ymcacolumbus.org/programs', city: 'Columbus', state: 'OH', type: 'ymca' },
   { name: 'Mandel JCC Cleveland', url: 'https://www.mandeljcc.org', eventsUrl: 'https://www.mandeljcc.org/events/', city: 'Beachwood', state: 'OH', type: 'jcc' },
 
   // Pennsylvania
   { name: 'YMCA of Greater Pittsburgh', url: 'https://www.ymcapgh.org', eventsUrl: 'https://www.ymcapgh.org/events', city: 'Pittsburgh', state: 'PA', type: 'ymca' },
   { name: 'Philadelphia Freedom Valley YMCA', url: 'https://www.philaymca.org', eventsUrl: 'https://www.philaymca.org/events', city: 'Philadelphia', state: 'PA', type: 'ymca' },
-  { name: 'JCC of Greater Philadelphia', url: 'https://www.jccphilly.org', eventsUrl: 'https://www.jccphilly.org/events/', city: 'Philadelphia', state: 'PA', type: 'jcc' },
 
   // Rhode Island
   { name: 'YMCA of Greater Providence', url: 'https://www.gpymca.org', eventsUrl: 'https://www.gpymca.org/events', city: 'Providence', state: 'RI', type: 'ymca' },
@@ -139,12 +137,10 @@ const CENTERS = [
 
   // South Carolina
   { name: 'YMCA of Columbia', url: 'https://www.columbiaymca.org', eventsUrl: 'https://www.columbiaymca.org/events', city: 'Columbia', state: 'SC', type: 'ymca' },
-  { name: 'YMCA of Greater Charleston', url: 'https://www.charlestonymca.org', eventsUrl: 'https://www.charlestonymca.org/events', city: 'Charleston', state: 'SC', type: 'ymca' },
 
   // Tennessee
-  { name: 'YMCA of Middle Tennessee', url: 'https://www.ymcamidtn.org', eventsUrl: 'https://www.ymcamidtn.org/events', city: 'Nashville', state: 'TN', type: 'ymca' },
+  { name: 'YMCA of Middle Tennessee', url: 'https://www.ymcamidtn.org', eventsUrl: 'https://www.ymcamidtn.org/', city: 'Nashville', state: 'TN', type: 'ymca' },
   { name: 'YMCA of Memphis & the Mid-South', url: 'https://www.ymcamemphis.org', eventsUrl: 'https://www.ymcamemphis.org/events', city: 'Memphis', state: 'TN', type: 'ymca' },
-  { name: 'Gordon JCC Nashville', url: 'https://www.gordonjcc.org', eventsUrl: 'https://www.gordonjcc.org/events/', city: 'Nashville', state: 'TN', type: 'jcc' },
 
   // Virginia
   { name: 'YMCA of Greater Richmond', url: 'https://www.ymcarichmond.org', eventsUrl: 'https://www.ymcarichmond.org/events', city: 'Richmond', state: 'VA', type: 'ymca' },
@@ -155,13 +151,11 @@ const CENTERS = [
   { name: 'Greater Burlington YMCA', url: 'https://www.gbymca.org', eventsUrl: 'https://www.gbymca.org/events', city: 'Burlington', state: 'VT', type: 'ymca' },
 
   // Wisconsin
-  { name: 'YMCA of Metropolitan Milwaukee', url: 'https://www.ymcamke.org', eventsUrl: 'https://www.ymcamke.org/events', city: 'Milwaukee', state: 'WI', type: 'ymca' },
+  { name: 'YMCA of Metropolitan Milwaukee', url: 'https://www.ymcamke.org', eventsUrl: 'https://www.ymcamke.org/programs/', city: 'Milwaukee', state: 'WI', type: 'ymca' },
   { name: 'YMCA of Dane County', url: 'https://www.ymcadanecounty.org', eventsUrl: 'https://www.ymcadanecounty.org/events', city: 'Madison', state: 'WI', type: 'ymca' },
-  { name: 'Harry & Rose Samson Family JCC', url: 'https://www.jccmilwaukee.org', eventsUrl: 'https://www.jccmilwaukee.org/events/', city: 'Whitefish Bay', state: 'WI', type: 'jcc' },
+  { name: 'Harry & Rose Samson Family JCC', url: 'https://www.jccmilwaukee.org', eventsUrl: 'https://www.jccmilwaukee.org/programs/', city: 'Whitefish Bay', state: 'WI', type: 'jcc' },
 
   // West Virginia
-  { name: 'YMCA of Kanawha Valley', url: 'https://www.ymcakvwv.org', eventsUrl: 'https://www.ymcakvwv.org/events', city: 'Charleston', state: 'WV', type: 'ymca' },
-  { name: 'YMCA of the Eastern Panhandle', url: 'https://www.ymcaep.org', eventsUrl: 'https://www.ymcaep.org/events', city: 'Martinsburg', state: 'WV', type: 'ymca' },
 ];
 
 // ==========================================

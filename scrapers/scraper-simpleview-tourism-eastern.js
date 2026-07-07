@@ -34,7 +34,7 @@ const SCRAPER_NAME = 'Simpleview-Tourism-Eastern';
 const CVB_SITES = [
   // Alabama
   { name: 'Visit Alabama', url: 'https://www.alabama.travel', eventsUrl: 'https://www.alabama.travel/events', city: 'Montgomery', state: 'AL' },
-  { name: 'Visit Birmingham', url: 'https://www.visitbirmingham.com', eventsUrl: 'https://www.visitbirmingham.com/events/', city: 'Birmingham', state: 'AL' },
+  { name: 'Visit Birmingham', url: 'https://www.visitbirmingham.com', eventsUrl: 'https://visitbirmingham.com/whats-on/', city: 'Birmingham', state: 'AL' },
   // Connecticut
   { name: 'Visit Connecticut', url: 'https://www.ctvisit.com', eventsUrl: 'https://www.ctvisit.com/events', city: 'Hartford', state: 'CT' },
   { name: 'Visit New Haven', url: 'https://www.visitnewhaven.com', eventsUrl: 'https://www.visitnewhaven.com/events/', city: 'New Haven', state: 'CT' },
@@ -44,7 +44,7 @@ const CVB_SITES = [
   { name: 'Visit Delaware', url: 'https://www.visitdelaware.com', eventsUrl: 'https://www.visitdelaware.com/events/', city: 'Dover', state: 'DE' },
   // Florida
   { name: 'Visit Florida', url: 'https://www.visitflorida.com', eventsUrl: 'https://www.visitflorida.com/things-to-do/events/', city: 'Tallahassee', state: 'FL' },
-  { name: 'Visit Orlando', url: 'https://www.visitorlando.com', eventsUrl: 'https://www.visitorlando.com/things-to-do/events/', city: 'Orlando', state: 'FL' },
+  { name: 'Visit Orlando', url: 'https://www.visitorlando.com', eventsUrl: 'https://www.visitorlando.com/events/', city: 'Orlando', state: 'FL' },
   { name: 'Visit Tampa Bay', url: 'https://www.visittampabay.com', eventsUrl: 'https://www.visittampabay.com/events/', city: 'Tampa', state: 'FL' },
   // Georgia
   { name: 'Discover Atlanta', url: 'https://discoveratlanta.com', eventsUrl: 'https://discoveratlanta.com/events/', city: 'Atlanta', state: 'GA' },
@@ -82,7 +82,7 @@ const CVB_SITES = [
   // New Jersey
   { name: 'Visit New Jersey', url: 'https://www.visitnj.org', eventsUrl: 'https://www.visitnj.org/events', city: 'Trenton', state: 'NJ' },
   // New York
-  { name: 'I Love NY', url: 'https://www.iloveny.com', eventsUrl: 'https://www.iloveny.com/things-to-do/events/', city: 'Albany', state: 'NY' },
+  { name: 'I Love NY', url: 'https://www.iloveny.com', eventsUrl: 'https://www.iloveny.com/events/', city: 'Albany', state: 'NY' },
   { name: 'NYC Go', url: 'https://www.nycgo.com', eventsUrl: 'https://www.nycgo.com/events/', city: 'New York', state: 'NY' },
   { name: 'Visit Buffalo Niagara', url: 'https://www.visitbuffaloniagara.com', eventsUrl: 'https://www.visitbuffaloniagara.com/events/', city: 'Buffalo', state: 'NY' },
   // Ohio
@@ -94,12 +94,12 @@ const CVB_SITES = [
   { name: 'Visit Philly', url: 'https://www.visitphilly.com', eventsUrl: 'https://www.visitphilly.com/things-to-do/events/', city: 'Philadelphia', state: 'PA' },
   { name: 'Visit Pittsburgh', url: 'https://www.visitpittsburgh.com', eventsUrl: 'https://www.visitpittsburgh.com/events/', city: 'Pittsburgh', state: 'PA' },
   // Rhode Island
-  { name: 'Visit Rhode Island', url: 'https://www.visitrhodeisland.com', eventsUrl: 'https://www.visitrhodeisland.com/things-to-do/events/', city: 'Providence', state: 'RI' },
+  { name: 'Visit Rhode Island', url: 'https://www.visitrhodeisland.com', eventsUrl: 'https://www.visitrhodeisland.com/events/', city: 'Providence', state: 'RI' },
   // South Carolina
-  { name: 'Discover South Carolina', url: 'https://discoversouthcarolina.com', eventsUrl: 'https://discoversouthcarolina.com/events', city: 'Columbia', state: 'SC' },
+  { name: 'Discover South Carolina', url: 'https://discoversouthcarolina.com', eventsUrl: 'https://discoversouthcarolina.com/', city: 'Columbia', state: 'SC' },
   { name: 'Visit Charleston', url: 'https://www.charlestoncvb.com', eventsUrl: 'https://www.charlestoncvb.com/events/', city: 'Charleston', state: 'SC' },
   // Tennessee
-  { name: 'Tennessee Vacation', url: 'https://www.tnvacation.com', eventsUrl: 'https://www.tnvacation.com/events', city: 'Nashville', state: 'TN' },
+  { name: 'Tennessee Vacation', url: 'https://www.tnvacation.com', eventsUrl: 'https://www.tnvacation.com/', city: 'Nashville', state: 'TN' },
   { name: 'Visit Nashville', url: 'https://www.visitmusiccity.com', eventsUrl: 'https://www.visitmusiccity.com/events/', city: 'Nashville', state: 'TN' },
   // Virginia
   { name: 'Visit Virginia', url: 'https://www.virginia.org', eventsUrl: 'https://www.virginia.org/events/', city: 'Richmond', state: 'VA' },
