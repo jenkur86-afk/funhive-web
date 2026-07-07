@@ -41,136 +41,135 @@ const NON_FAMILY_PATTERNS = /\b(gun\s*show|beer\s*fest|wine\s*tasting|brew\s*fes
 // ==========================================
 const THEATERS = [
   // Alabama
-  { name: 'Red Mountain Theatre', url: 'https://www.redmountaintheatre.org', eventsUrl: 'https://www.redmountaintheatre.org/events/', city: 'Birmingham', state: 'AL' },
-  { name: 'Alabama Shakespeare Festival', url: 'https://www.asf.net', eventsUrl: 'https://www.asf.net/shows-events/', city: 'Montgomery', state: 'AL' },
+  { name: 'Red Mountain Theatre', url: 'https://www.redmountaintheatre.org', eventsUrl: 'https://redmountaintheatre.org/', city: 'Birmingham', state: 'AL' },
+  { name: 'Alabama Shakespeare Festival', url: 'https://www.asf.net', eventsUrl: 'https://asf.net/', city: 'Montgomery', state: 'AL' },
 
   // Connecticut
   { name: 'Westport Country Playhouse', url: 'https://www.westportplayhouse.org', eventsUrl: 'https://www.westportplayhouse.org/shows-events/', city: 'Westport', state: 'CT' },
-  { name: 'Hartford Stage', url: 'https://www.hartfordstage.org', eventsUrl: 'https://www.hartfordstage.org/shows-tickets/', city: 'Hartford', state: 'CT' },
-  { name: 'Playhouse on Park', url: 'https://www.playhouseonpark.org', eventsUrl: 'https://www.playhouseonpark.org/shows/', city: 'West Hartford', state: 'CT' },
+  { name: 'Hartford Stage', url: 'https://www.hartfordstage.org', eventsUrl: 'https://www.hartfordstage.org/show/', city: 'Hartford', state: 'CT' },
+  { name: 'Playhouse on Park', url: 'https://www.playhouseonpark.org', eventsUrl: 'https://www.playhouseonpark.org/', city: 'West Hartford', state: 'CT' },
 
   // DC
   { name: 'Adventure Theatre MTC', url: 'https://www.adventuretheatre-mtc.org', eventsUrl: 'https://www.adventuretheatre-mtc.org/on-stage/', city: 'Glen Echo', state: 'DC' },
-  { name: 'Imagination Stage', url: 'https://www.imaginationstage.org', eventsUrl: 'https://www.imaginationstage.org/on-stage/', city: 'Bethesda', state: 'DC' },
+  { name: 'Imagination Stage', url: 'https://www.imaginationstage.org', eventsUrl: 'https://imaginationstage.org/', city: 'Bethesda', state: 'DC' },
   { name: 'Kennedy Center Family Theater', url: 'https://www.kennedy-center.org', eventsUrl: 'https://www.kennedy-center.org/whats-on/explore-by-genre/theater-for-young-audiences/', city: 'Washington', state: 'DC' },
 
   // Delaware
-  { name: 'Delaware Children\'s Theatre', url: 'https://www.dechildrenstheatre.org', eventsUrl: 'https://www.dechildrenstheatre.org/events/', city: 'Wilmington', state: 'DE' },
-  { name: 'Delaware Theatre Company', url: 'https://www.delawaretheatre.org', eventsUrl: 'https://www.delawaretheatre.org/whats-on/', city: 'Wilmington', state: 'DE' },
+  { name: 'Delaware Children\'s Theatre', url: 'https://www.dechildrenstheatre.org', eventsUrl: 'https://www.dechildrenstheatre.org/', city: 'Wilmington', state: 'DE' },
+  { name: 'Delaware Theatre Company', url: 'https://www.delawaretheatre.org', eventsUrl: 'https://www.delawaretheatre.org/', city: 'Wilmington', state: 'DE' },
 
   // Florida
   { name: 'Orlando Repertory Theatre', url: 'https://www.orlandorep.com', eventsUrl: 'https://www.orlandorep.com/shows/', city: 'Orlando', state: 'FL' },
   { name: 'Broward Center for the Performing Arts', url: 'https://www.browardcenter.org', eventsUrl: 'https://www.browardcenter.org/events', city: 'Fort Lauderdale', state: 'FL' },
-  { name: 'Kravis Center - Family Fare', url: 'https://www.kravis.org', eventsUrl: 'https://www.kravis.org/events/', city: 'West Palm Beach', state: 'FL' },
+  { name: 'Kravis Center - Family Fare', url: 'https://www.kravis.org', eventsUrl: 'https://www.kravis.org/', city: 'West Palm Beach', state: 'FL' },
   { name: 'Patel Conservatory at Straz Center', url: 'https://www.strazcenter.org', eventsUrl: 'https://www.strazcenter.org/events', city: 'Tampa', state: 'FL' },
 
   // Georgia
-  { name: 'Alliance Theatre', url: 'https://www.alliancetheatre.org', eventsUrl: 'https://www.alliancetheatre.org/production/', city: 'Atlanta', state: 'GA' },
-  { name: 'Center for Puppetry Arts', url: 'https://puppet.org', eventsUrl: 'https://puppet.org/performances/', city: 'Atlanta', state: 'GA' },
-  { name: 'Horizon Theatre Company', url: 'https://www.horizontheatre.com', eventsUrl: 'https://www.horizontheatre.com/season/', city: 'Atlanta', state: 'GA' },
+  { name: 'Alliance Theatre', url: 'https://www.alliancetheatre.org', eventsUrl: 'https://www.alliancetheatre.org/shows/', city: 'Atlanta', state: 'GA' },
+  { name: 'Center for Puppetry Arts', url: 'https://puppet.org', eventsUrl: 'https://puppet.org/programs/', city: 'Atlanta', state: 'GA' },
+  { name: 'Horizon Theatre Company', url: 'https://www.horizontheatre.com', eventsUrl: 'https://www.horizontheatre.com/tickets/', city: 'Atlanta', state: 'GA' },
 
   // Iowa
   { name: 'Des Moines Community Playhouse', url: 'https://www.dmplayhouse.com', eventsUrl: 'https://www.dmplayhouse.com/shows-events/', city: 'Des Moines', state: 'IA' },
   { name: 'Old Creamery Theatre', url: 'https://www.oldcreamery.com', eventsUrl: 'https://www.oldcreamery.com/season/', city: 'Amana', state: 'IA' },
 
   // Illinois
-  { name: 'Chicago Children\'s Theatre', url: 'https://chicagochildrenstheatre.org', eventsUrl: 'https://chicagochildrenstheatre.org/shows/', city: 'Chicago', state: 'IL' },
+  { name: 'Chicago Children\'s Theatre', url: 'https://chicagochildrenstheatre.org', eventsUrl: 'https://chicagochildrenstheatre.org/', city: 'Chicago', state: 'IL' },
   { name: 'Emerald City Theatre', url: 'https://www.emeraldcitytheatre.com', eventsUrl: 'https://www.emeraldcitytheatre.com/shows/', city: 'Chicago', state: 'IL' },
-  { name: 'Marriott Theatre for Young Audiences', url: 'https://www.marriotttheatre.com', eventsUrl: 'https://www.marriotttheatre.com/theatre-for-young-audiences', city: 'Lincolnshire', state: 'IL' },
-  { name: 'Paramount Theatre Aurora', url: 'https://www.paramountaurora.com', eventsUrl: 'https://www.paramountaurora.com/shows-events/', city: 'Aurora', state: 'IL' },
+  { name: 'Marriott Theatre for Young Audiences', url: 'https://www.marriotttheatre.com', eventsUrl: 'https://www.marriotttheatre.com/shows/calendar', city: 'Lincolnshire', state: 'IL' },
+  { name: 'Paramount Theatre Aurora', url: 'https://www.paramountaurora.com', eventsUrl: 'https://paramountaurora.com/events/?search_type=event_class&', city: 'Aurora', state: 'IL' },
 
   // Indiana
   { name: 'Beef & Boards Dinner Theatre', url: 'https://www.beefandboards.com', eventsUrl: 'https://www.beefandboards.com/shows/', city: 'Indianapolis', state: 'IN' },
   { name: 'Indiana Repertory Theatre', url: 'https://www.irtlive.com', eventsUrl: 'https://www.irtlive.com/season/', city: 'Indianapolis', state: 'IN' },
 
   // Kentucky
-  { name: 'Actors Theatre of Louisville', url: 'https://www.actorstheatre.org', eventsUrl: 'https://www.actorstheatre.org/shows-events/', city: 'Louisville', state: 'KY' },
-  { name: 'Lexington Children\'s Theatre', url: 'https://www.lctonstage.org', eventsUrl: 'https://www.lctonstage.org/shows/', city: 'Lexington', state: 'KY' },
+  { name: 'Actors Theatre of Louisville', url: 'https://www.actorstheatre.org', eventsUrl: 'https://www.actorstheatre.org/', city: 'Louisville', state: 'KY' },
+  { name: 'Lexington Children\'s Theatre', url: 'https://www.lctonstage.org', eventsUrl: 'https://lctonstage.org/tickets/', city: 'Lexington', state: 'KY' },
 
   // Massachusetts
   { name: 'Boston Children\'s Theatre', url: 'https://www.bostonchildrenstheatre.org', eventsUrl: 'https://www.bostonchildrenstheatre.org/shows/', city: 'Boston', state: 'MA' },
-  { name: 'Wheelock Family Theatre', url: 'https://www.wheelockfamilytheatre.org', eventsUrl: 'https://www.wheelockfamilytheatre.org/shows/', city: 'Boston', state: 'MA' },
-  { name: 'Puppet Showplace Theater', url: 'https://www.puppetshowplace.org', eventsUrl: 'https://www.puppetshowplace.org/shows/', city: 'Brookline', state: 'MA' },
+  { name: 'Wheelock Family Theatre', url: 'https://www.wheelockfamilytheatre.org', eventsUrl: 'https://www.wheelockfamilytheatre.org/', city: 'Boston', state: 'MA' },
+  { name: 'Puppet Showplace Theater', url: 'https://www.puppetshowplace.org', eventsUrl: 'https://www.puppetshowplace.org/calendar', city: 'Brookline', state: 'MA' },
 
   // Maryland
-  { name: 'Chesapeake Shakespeare Company', url: 'https://www.chesapeakeshakespeare.com', eventsUrl: 'https://www.chesapeakeshakespeare.com/shows-events/', city: 'Baltimore', state: 'MD' },
-  { name: 'Olney Theatre Center', url: 'https://www.olneytheatre.org', eventsUrl: 'https://www.olneytheatre.org/performances/', city: 'Olney', state: 'MD' },
-  { name: 'Toby\'s Dinner Theatre', url: 'https://www.tobysdinnertheatre.com', eventsUrl: 'https://www.tobysdinnertheatre.com/events/', city: 'Columbia', state: 'MD' },
+  { name: 'Chesapeake Shakespeare Company', url: 'https://www.chesapeakeshakespeare.com', eventsUrl: 'https://www.chesapeakeshakespeare.com/', city: 'Baltimore', state: 'MD' },
+  { name: 'Olney Theatre Center', url: 'https://www.olneytheatre.org', eventsUrl: 'https://www.olneytheatre.org/', city: 'Olney', state: 'MD' },
+  { name: 'Toby\'s Dinner Theatre', url: 'https://www.tobysdinnertheatre.com', eventsUrl: 'https://tobysdinnertheatre.com/now-playing/shows/', city: 'Columbia', state: 'MD' },
 
   // Maine
   { name: 'Portland Stage Company', url: 'https://www.portlandstage.org', eventsUrl: 'https://www.portlandstage.org/season/', city: 'Portland', state: 'ME' },
-  { name: 'Children\'s Museum & Theatre of Maine', url: 'https://www.kitetails.org', eventsUrl: 'https://www.kitetails.org/events/', city: 'Portland', state: 'ME' },
+  { name: 'Children\'s Museum & Theatre of Maine', url: 'https://www.kitetails.org', eventsUrl: 'https://www.kitetails.org/', city: 'Portland', state: 'ME' },
 
   // Minnesota
-  { name: 'Children\'s Theatre Company', url: 'https://www.childrenstheatre.org', eventsUrl: 'https://www.childrenstheatre.org/shows-events/', city: 'Minneapolis', state: 'MN' },
+  { name: 'Children\'s Theatre Company', url: 'https://www.childrenstheatre.org', eventsUrl: 'https://childrenstheatre.org/calendar/', city: 'Minneapolis', state: 'MN' },
   { name: 'SteppingStone Theatre', url: 'https://www.steppingstonetheatre.org', eventsUrl: 'https://www.steppingstonetheatre.org/season/', city: 'Saint Paul', state: 'MN' },
   { name: 'In the Heart of the Beast Puppet Theatre', url: 'https://hobt.org', eventsUrl: 'https://hobt.org/events/', city: 'Minneapolis', state: 'MN' },
 
   // Mississippi
   { name: 'New Stage Theatre', url: 'https://www.newstagetheatre.com', eventsUrl: 'https://www.newstagetheatre.com/season/', city: 'Jackson', state: 'MS' },
-  { name: 'Hattiesburg Saenger Theater', url: 'https://www.saengertheater.com', eventsUrl: 'https://www.saengertheater.com/events/', city: 'Hattiesburg', state: 'MS' },
 
   // North Carolina
-  { name: 'Children\'s Theatre of Charlotte', url: 'https://www.ctcharlotte.org', eventsUrl: 'https://www.ctcharlotte.org/shows/', city: 'Charlotte', state: 'NC' },
-  { name: 'Flat Rock Playhouse', url: 'https://www.flatrockplayhouse.org', eventsUrl: 'https://www.flatrockplayhouse.org/shows/', city: 'Flat Rock', state: 'NC' },
+  { name: 'Children\'s Theatre of Charlotte', url: 'https://www.ctcharlotte.org', eventsUrl: 'https://www.ctcharlotte.org/Online/default.asp', city: 'Charlotte', state: 'NC' },
+  { name: 'Flat Rock Playhouse', url: 'https://www.flatrockplayhouse.org', eventsUrl: 'https://www.flatrockplayhouse.org/events', city: 'Flat Rock', state: 'NC' },
   { name: 'Durham Performing Arts Center', url: 'https://www.dpacnc.com', eventsUrl: 'https://www.dpacnc.com/events', city: 'Durham', state: 'NC' },
 
   // New Hampshire
   { name: 'Palace Theatre', url: 'https://www.palacetheatre.org', eventsUrl: 'https://www.palacetheatre.org/events/', city: 'Manchester', state: 'NH' },
-  { name: 'Winnipesaukee Playhouse', url: 'https://www.winnipesaukeeplayhouse.org', eventsUrl: 'https://www.winnipesaukeeplayhouse.org/shows/', city: 'Meredith', state: 'NH' },
+  { name: 'Winnipesaukee Playhouse', url: 'https://www.winnipesaukeeplayhouse.org', eventsUrl: 'https://www.winnipesaukeeplayhouse.org/', city: 'Meredith', state: 'NH' },
 
   // New Jersey
-  { name: 'Paper Mill Playhouse', url: 'https://papermill.org', eventsUrl: 'https://papermill.org/shows-and-events/', city: 'Millburn', state: 'NJ' },
+  { name: 'Paper Mill Playhouse', url: 'https://papermill.org', eventsUrl: 'https://papermill.org/support-us/events/', city: 'Millburn', state: 'NJ' },
   { name: 'Growing Stage Children\'s Theatre', url: 'https://www.growingstage.com', eventsUrl: 'https://www.growingstage.com/season/', city: 'Netcong', state: 'NJ' },
-  { name: 'George Street Playhouse', url: 'https://www.georgestreetplayhouse.org', eventsUrl: 'https://www.georgestreetplayhouse.org/shows-events/', city: 'New Brunswick', state: 'NJ' },
+  { name: 'George Street Playhouse', url: 'https://www.georgestreetplayhouse.org', eventsUrl: 'https://www.georgestreetplayhouse.org/events', city: 'New Brunswick', state: 'NJ' },
 
   // New York
   { name: 'New Victory Theater', url: 'https://www.newvictory.org', eventsUrl: 'https://www.newvictory.org/shows/', city: 'New York', state: 'NY' },
-  { name: 'TADA! Youth Theater', url: 'https://www.tadatheater.com', eventsUrl: 'https://www.tadatheater.com/shows/', city: 'New York', state: 'NY' },
+  { name: 'TADA! Youth Theater', url: 'https://www.tadatheater.com', eventsUrl: 'https://tadatheater.com/', city: 'New York', state: 'NY' },
   { name: 'Swedish Cottage Marionette Theatre', url: 'https://www.cityparksfoundation.org/swedish-cottage-marionette-theatre/', eventsUrl: 'https://www.cityparksfoundation.org/swedish-cottage-marionette-theatre/', city: 'New York', state: 'NY' },
-  { name: 'Syracuse Stage', url: 'https://www.syracusestage.org', eventsUrl: 'https://www.syracusestage.org/shows/', city: 'Syracuse', state: 'NY' },
+  { name: 'Syracuse Stage', url: 'https://www.syracusestage.org', eventsUrl: 'https://www.syracusestage.org/2627', city: 'Syracuse', state: 'NY' },
 
   // Ohio
-  { name: 'Columbus Children\'s Theatre', url: 'https://www.columbuschildrenstheatre.org', eventsUrl: 'https://www.columbuschildrenstheatre.org/shows/', city: 'Columbus', state: 'OH' },
-  { name: 'Cleveland Play House', url: 'https://www.clevelandplayhouse.com', eventsUrl: 'https://www.clevelandplayhouse.com/shows-events/', city: 'Cleveland', state: 'OH' },
+  { name: 'Columbus Children\'s Theatre', url: 'https://www.columbuschildrenstheatre.org', eventsUrl: 'https://www.columbuschildrenstheatre.org/beetlejuice-jr', city: 'Columbus', state: 'OH' },
+  { name: 'Cleveland Play House', url: 'https://www.clevelandplayhouse.com', eventsUrl: 'https://www.clevelandplayhouse.com/calendar', city: 'Cleveland', state: 'OH' },
   { name: 'Cincinnati Playhouse in the Park', url: 'https://www.cincyplay.com', eventsUrl: 'https://www.cincyplay.com/shows-events/', city: 'Cincinnati', state: 'OH' },
 
   // Pennsylvania
-  { name: 'Walnut Street Theatre', url: 'https://www.walnutstreettheatre.org', eventsUrl: 'https://www.walnutstreettheatre.org/whats-on/', city: 'Philadelphia', state: 'PA' },
-  { name: 'Arden Theatre Company', url: 'https://www.ardentheatre.org', eventsUrl: 'https://www.ardentheatre.org/shows-events/', city: 'Philadelphia', state: 'PA' },
+  { name: 'Walnut Street Theatre', url: 'https://www.walnutstreettheatre.org', eventsUrl: 'https://www.walnutstreettheatre.org/season/mainstage.php', city: 'Philadelphia', state: 'PA' },
+  { name: 'Arden Theatre Company', url: 'https://www.ardentheatre.org', eventsUrl: 'https://ardentheatre.org/tickets/', city: 'Philadelphia', state: 'PA' },
   { name: 'Pittsburgh CLO', url: 'https://www.pittsburghclo.org', eventsUrl: 'https://www.pittsburghclo.org/shows/', city: 'Pittsburgh', state: 'PA' },
-  { name: 'People\'s Light Theatre', url: 'https://www.peopleslight.org', eventsUrl: 'https://www.peopleslight.org/events/', city: 'Malvern', state: 'PA' },
+  { name: 'People\'s Light Theatre', url: 'https://www.peopleslight.org', eventsUrl: 'https://www.peopleslight.org/tickets/', city: 'Malvern', state: 'PA' },
 
   // Rhode Island
-  { name: 'Trinity Repertory Company', url: 'https://www.trinityrep.com', eventsUrl: 'https://www.trinityrep.com/whats-on/', city: 'Providence', state: 'RI' },
-  { name: 'Gamm Theatre', url: 'https://www.gammtheatre.org', eventsUrl: 'https://www.gammtheatre.org/season/', city: 'Warwick', state: 'RI' },
+  { name: 'Trinity Repertory Company', url: 'https://www.trinityrep.com', eventsUrl: 'https://www.trinityrep.com/shows/', city: 'Providence', state: 'RI' },
+  { name: 'Gamm Theatre', url: 'https://www.gammtheatre.org', eventsUrl: 'https://www.gammtheatre.org/', city: 'Warwick', state: 'RI' },
 
   // South Carolina
-  { name: 'Columbia Children\'s Theatre', url: 'https://www.columbiachildrenstheatre.com', eventsUrl: 'https://www.columbiachildrenstheatre.com/shows/', city: 'Columbia', state: 'SC' },
-  { name: 'Charleston Stage Company', url: 'https://www.charlestonstage.com', eventsUrl: 'https://www.charlestonstage.com/shows/', city: 'Charleston', state: 'SC' },
+  { name: 'Columbia Children\'s Theatre', url: 'https://www.columbiachildrenstheatre.com', eventsUrl: 'https://www.columbiachildrenstheatre.com/', city: 'Columbia', state: 'SC' },
+  { name: 'Charleston Stage Company', url: 'https://www.charlestonstage.com', eventsUrl: 'https://charlestonstage.com/shows-and-tickets/calendar', city: 'Charleston', state: 'SC' },
 
   // Tennessee
-  { name: 'Nashville Children\'s Theatre', url: 'https://www.nashvillechildrenstheatre.org', eventsUrl: 'https://www.nashvillechildrenstheatre.org/shows/', city: 'Nashville', state: 'TN' },
+  { name: 'Nashville Children\'s Theatre', url: 'https://www.nashvillechildrenstheatre.org', eventsUrl: 'https://nashvillechildrenstheatre.org/whats-on/', city: 'Nashville', state: 'TN' },
   { name: 'Orpheum Theatre Memphis', url: 'https://www.orpheum-memphis.com', eventsUrl: 'https://www.orpheum-memphis.com/events/', city: 'Memphis', state: 'TN' },
-  { name: 'Chattanooga Theatre Centre', url: 'https://www.theatrecentre.com', eventsUrl: 'https://www.theatrecentre.com/shows/', city: 'Chattanooga', state: 'TN' },
+  { name: 'Chattanooga Theatre Centre', url: 'https://www.theatrecentre.com', eventsUrl: 'https://www.theatrecentre.com/', city: 'Chattanooga', state: 'TN' },
 
   // Virginia
-  { name: 'Virginia Rep', url: 'https://va-rep.org', eventsUrl: 'https://va-rep.org/performances/', city: 'Richmond', state: 'VA' },
+  { name: 'Virginia Rep', url: 'https://va-rep.org', eventsUrl: 'https://va-rep.org/events/', city: 'Richmond', state: 'VA' },
   { name: 'Signature Theatre', url: 'https://www.sigtheatre.org', eventsUrl: 'https://www.sigtheatre.org/events/', city: 'Arlington', state: 'VA' },
   { name: 'Wolf Trap - Theatre-in-the-Woods', url: 'https://www.wolftrap.org', eventsUrl: 'https://www.wolftrap.org/calendar.aspx', city: 'Vienna', state: 'VA' },
 
   // Vermont
   { name: 'Flynn Center for the Performing Arts', url: 'https://www.flynnvt.org', eventsUrl: 'https://www.flynnvt.org/events/', city: 'Burlington', state: 'VT' },
-  { name: 'Northern Stage', url: 'https://northernstage.org', eventsUrl: 'https://northernstage.org/season/', city: 'White River Junction', state: 'VT' },
+  { name: 'Northern Stage', url: 'https://northernstage.org', eventsUrl: 'https://northernstage.org/', city: 'White River Junction', state: 'VT' },
 
   // Wisconsin
-  { name: 'First Stage', url: 'https://www.firststage.org', eventsUrl: 'https://www.firststage.org/shows-events/', city: 'Milwaukee', state: 'WI' },
-  { name: 'Children\'s Theater of Madison', url: 'https://www.ctmtheater.org', eventsUrl: 'https://www.ctmtheater.org/season/', city: 'Madison', state: 'WI' },
-  { name: 'Milwaukee Repertory Theater', url: 'https://www.milwaukeerep.com', eventsUrl: 'https://www.milwaukeerep.com/shows-events/', city: 'Milwaukee', state: 'WI' },
+  { name: 'First Stage', url: 'https://www.firststage.org', eventsUrl: 'https://www.firststage.org/', city: 'Milwaukee', state: 'WI' },
+  { name: 'Children\'s Theater of Madison', url: 'https://www.ctmtheater.org', eventsUrl: 'https://ctmtheater.org/events/', city: 'Madison', state: 'WI' },
+  { name: 'Milwaukee Repertory Theater', url: 'https://www.milwaukeerep.com', eventsUrl: 'https://www.milwaukeerep.com/', city: 'Milwaukee', state: 'WI' },
 
   // West Virginia
-  { name: 'Contemporary American Theater Festival', url: 'https://www.catf.org', eventsUrl: 'https://www.catf.org/plays/', city: 'Shepherdstown', state: 'WV' },
-  { name: 'Greenbrier Valley Theatre', url: 'https://www.gvtheatre.org', eventsUrl: 'https://www.gvtheatre.org/season/', city: 'Lewisburg', state: 'WV' },
+  { name: 'Contemporary American Theater Festival', url: 'https://www.catf.org', eventsUrl: 'https://catf.org/calendar/', city: 'Shepherdstown', state: 'WV' },
+  { name: 'Greenbrier Valley Theatre', url: 'https://www.gvtheatre.org', eventsUrl: 'https://gvtheatre.org/', city: 'Lewisburg', state: 'WV' },
 ];
 
 // ==========================================
