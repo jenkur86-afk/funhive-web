@@ -630,14 +630,53 @@ async function scrapeGenericEvents() {
                 card.querySelector('a')
               ].filter(el => el && el.textContent.trim().length > 0);
 
-              const possibleDates = [
+              // A real calendar date needs a month name or MM/DD numeral —
+              // matches calendar-grid day cells ("28", "1 event, 30"),
+              // navigation chrome ("Select Month...Year", "Date Range...
+              // Today Tomorrow"), and bare time-only strings ("6:30 PM -
+              // 8:00 PM" with no date at all) all fail this and are
+              // rejected, instead of being blindly accepted as a date the
+              // way [class*="date"] used to (that selector matches date
+              // *picker*/filter UI as often as it matches a real event
+              // date — caught 2026-07-06, ~91% of scraped items across PA
+              // were being rejected downstream as "invalid date" because of
+              // exactly this).
+              const looksLikeRealDate = (text) => {
+                if (!text) return false;
+                const t = text.trim();
+                // Real date strings from a single date/time element are
+                // short. Anything longer is almost always calendar-widget
+                // chrome (a whole mini-calendar's day grid, month/year
+                // picker dropdown, etc. dumped as one text blob) — reject
+                // outright rather than pattern-matching inside it, since a
+                // long blob can easily contain a stray "2026" and "Jul"
+                // that have nothing to do with each other.
+                if (t.length > 40) return false;
+                if (/^\d{1,2}$/.test(t)) return false; // bare day-of-month
+                if (/^\d+\s*events?,?\s*$/i.test(t)) return false; // calendar cell "1 event, 30"
+                if (/^(sun|mon|tue|wed|thu|fri|sat)[a-z]*\s*\d{1,2}$/i.test(t)) return false; // "Mon 6"
+                return /\d{1,2}\/\d{1,2}\/\d{2,4}/.test(t) ||
+                       /\d{4}-\d{2}-\d{2}/.test(t) ||
+                       /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}(st|nd|rd|th)?,?\s*\d{0,4}\b/i.test(t) ||
+                       /(mon|tue|wed|thu|fri|sat|sun)[a-z]*,?\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}/i.test(t);
+              };
+
+              // Prefer a real <time datetime="..."> attribute (semantic,
+              // most reliable) before falling back to loosely-matched text.
+              const timeEl = card.querySelector('time[datetime]');
+              const timeAttr = timeEl ? timeEl.getAttribute('datetime') : null;
+
+              const dateCandidates = [
                 card.querySelector('[class*="date"]'),
-                card.querySelector('[class*="time"]'),
                 card.querySelector('time'),
                 ...Array.from(card.querySelectorAll('*')).filter(el =>
-                  el.textContent.match(/\d{1,2}\/\d{1,2}\/\d{2,4}|\w+ \d{1,2},? \d{4}|^\d{1,2}:\d{2}/i)
+                  el.textContent.match(/\d{1,2}\/\d{1,2}\/\d{2,4}|\w+ \d{1,2},? \d{4}/i)
                 )
-              ].filter(el => el);
+              ].filter(el => el && looksLikeRealDate(el.textContent));
+
+              const possibleTimes = [
+                card.querySelector('[class*="time"]')
+              ].filter(el => el && /\d{1,2}:\d{2}/.test(el.textContent));
 
               const possibleDescs = [
                 card.querySelector('[class*="description"]'),
@@ -658,11 +697,25 @@ async function scrapeGenericEvents() {
                 card.querySelector('[class*="category"]')
               ].find(el => el && el.textContent.trim().length > 0 && el.textContent.trim().length < 80);
 
-              if (possibleTitles.length > 0) {
+              const titleText = possibleTitles.length > 0 ? possibleTitles[0].textContent.trim() : '';
+              // Reject generic nav/filter chrome and date-header/divider
+              // elements that sometimes match the title selectors too (seen
+              // on Bedework-style date-grouped list calendars, where a day
+              // divider like "Sunday, June 28, 2026" gets matched as if it
+              // were an event card, and "Toggle the date picker" / "Ongoing
+              // events for..." navigation text along with it).
+              const normalizedTitle = titleText.trim();
+              const isJunkTitle = /^(events?|upcoming events?|filter( events?)?|open filter|close filter|events? search and views navigation|primary tabs)$/i.test(normalizedTitle) ||
+                /^toggle the date picker/i.test(normalizedTitle) ||
+                /^ongoing events for/i.test(normalizedTitle) ||
+                /^(sunday|monday|tuesday|wednesday|thursday|friday|saturday),?\s+(january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2},?\s+\d{4}$/i.test(normalizedTitle);
+
+              if (titleText && !isJunkTitle) {
+                const dateText = timeAttr || (dateCandidates.length > 0 ? dateCandidates[0].textContent.trim() : '');
                 const event = {
-                  title: possibleTitles[0].textContent.trim(),
-                  date: possibleDates.length > 0 ? possibleDates[0].textContent.trim() : '',
-                  time: possibleDates.length > 1 ? possibleDates[1].textContent.trim() : '',
+                  title: titleText,
+                  date: dateText,
+                  time: possibleTimes.length > 0 ? possibleTimes[0].textContent.trim() : '',
                   description: possibleDescs.length > 0 ? possibleDescs[0].textContent.trim() : '',
                   url: linkEl ? linkEl.href : window.location.href,
                   imageUrl: imageEl ? imageEl.src : '',
@@ -671,8 +724,8 @@ async function scrapeGenericEvents() {
                   venueName: libName
                 };
 
-                // Only add if it looks like an event (has title and some other field)
-                if (event.title && (event.date || event.description)) {
+                // Only add if it looks like an event (has title and a real date)
+                if (event.title && event.date) {
                   events.push(event);
                 }
               }
