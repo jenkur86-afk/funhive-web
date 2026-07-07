@@ -16,6 +16,7 @@ const ngeohash = require('ngeohash');
 
 const LIBRARIES = [
   // Major Metro Libraries
+  { name: 'Birmingham Public Library', url: 'https://www.cobpl.org', eventsUrl: 'https://www.cobpl.org/calendar/', city: 'Birmingham', state: 'AL', zipCode: '35203', county: 'Birmingham County'},
   { name: 'Huntsville-Madison County Public Library', url: 'https://www.hmcpl.org', eventsUrl: 'https://www.hmcpl.org/events', city: 'Huntsville', state: 'AL', zipCode: '35801', county: 'Huntsville County'},
   { name: 'Mobile Public Library', url: 'https://www.mplonline.org', eventsUrl: 'https://www.mplonline.org/events', city: 'Mobile', state: 'AL', zipCode: '36602', county: 'Mobile County'},
   { name: 'Montgomery City-County Public Library', url: 'https://www.mccpl.lib.al.us', eventsUrl: 'https://www.mccpl.lib.al.us/events', city: 'Montgomery', state: 'AL', zipCode: '36104', county: 'Montgomery County'},
