@@ -162,6 +162,21 @@ Scrapers like `scraper-gardens-nature-eastern.js` and `scraper-venue-events-chil
 
 Fix URL rot and selector issues without asking. List WAF-blocked, down, and genuinely empty sites at the end.
 
+**14. [TEMPORARY — verify then delete this section] WordPress library domain cleanup fallout**
+
+Commits `6734fe7`, `4b388ee`, `cf70bb1`, `4f3718f` (2026-07-07) removed ~5,500 fabricated `{city}library.org`-pattern domains across all 44 `scraper-wordpress-libraries-{state}.js` files and repointed ~900 more to a real calendar/events page found via an automated homepage crawl. That cleanup only verified each domain responds over HTTP — it did **not** confirm the generic-parser selectors (`[class*="event"]`, `[class*="program"]`, etc.) actually extract real event cards from the repointed pages. A homepage-crawl fix can land on a page that mentions "library" and returns 200 but isn't actually a calendar (e.g. a reading-program blurb page).
+
+**What to check in this log**: for every `WordPress-{state}` scraper, confirm it reports `Found: N` with a plausible N, not a crash or a suspicious `0` across every remaining library. Prioritize the states that lost the largest share of entries in the cleanup, since those have the most repointed URLs to validate: CA (911→199), TX (600→170), NY (792→422), PA (543→213), WA (288→59), FL (324→65), SC (158→44), WV (164→45), MN (333→108), NC (300→89), KY (165→69).
+
+If a state's scraper returns 0 (or near-0) events across most of its libraries, check whether the repointed `eventsUrl` for those libraries actually lands on a real events listing vs. a generic page that only happened to pass the "mentions library" sanity check during cleanup. Fix by finding the real calendar path manually (same approach as the original cleanup: look for a nav link containing "calendar" or "events").
+
+**Group tracking** (WordPress-{state} scrapers are split across the 3-day rotation by state) — check off as each group is diagnosed against this item:
+- [ ] Group 1 checked
+- [ ] Group 2 checked
+- [ ] Group 3 checked
+
+**Once all three boxes above are checked, delete this entire section (14) from this file** — it's a one-time verification for the 2026-07-07 cleanup, not a permanent diagnosis category.
+
 ### Bandwidth management (Supabase free plan — 5.5 GB egress limit)
 
 - The venue cache in `venue-matcher.js` is the single largest egress source. It loads all activities into memory with a **30-minute TTL** and selective columns (id, name, city, state, address, location, geohash, category). Do NOT reduce the TTL or add more columns to the cache query.
