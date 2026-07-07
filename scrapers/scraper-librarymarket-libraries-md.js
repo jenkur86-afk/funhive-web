@@ -3,7 +3,7 @@ const { normalizeDateString } = require('./date-normalization-helper');
 const { saveEventsWithGeocoding } = require('./event-save-helper');
 const { logScraperResult } = require('./scraper-logger');
 const { getBranchAddress } = require('./library-addresses');
-const ngeohash = require('ngeohash');const admin = require('firebase-admin');
+const ngeohash = require('ngeohash');
 const { ScraperLogger } = require('./scraper-logger');
 
 /**

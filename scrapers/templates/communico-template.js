@@ -1,5 +1,6 @@
-const puppeteer = require('puppeteer');
-const admin = require('firebase-admin');
+const { launchBrowser } = require('../puppeteer-config');
+const { saveEventsWithGeocoding } = require('../event-save-helper');
+const { logScraperResult } = require('../scraper-logger');
 
 /**
  * AUTO-GENERATED COMMUNICO SCRAPER
@@ -12,7 +13,7 @@ const LIBRARIES = {{libraries}};
 const SCRAPER_NAME = 'communico-{{state}}';
 
 async function scrapeCommunicoEvents() {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await launchBrowser();
   const events = [];
 
   for (const library of LIBRARIES) {
@@ -102,32 +103,31 @@ async function scrapeCommunicoEvents() {
 }
 
 async function saveToDatabase(events) {
-  if (!admin.apps.length) {
-    const serviceAccount = require('../../firebase-service-account.json');
-    admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-  }
+  return await saveEventsWithGeocoding(events, LIBRARIES, {
+    scraperName: SCRAPER_NAME,
+    state: '{{state}}',
+    category: 'library',
+    platform: 'communico'
+  });
+}
 
-  const db = admin.firestore();
-  const batch = db.batch();
-  let count = 0;
+// Entry point for local-scraper-runner.js's registry (exportName should
+// match this function, e.g. 'scrapeCommunico{{state}}'). Must not call
+// process.exit() here — that would kill the whole Node process if this
+// scraper is ever run as part of a multi-scraper group.
+async function scrapeCommunico{{state}}() {
+  const events = await scrapeCommunicoEvents();
 
-  for (const event of events) {
-    const eventId = `${SCRAPER_NAME}-${Date.now()}-${count}`;
-    const docRef = db.collection('events').doc(eventId);
-    batch.set(docRef, event);
-    count++;
+  const result = events.length > 0
+    ? await saveToDatabase(events)
+    : { saved: 0, skipped: 0, errors: 0, deleted: 0 };
 
-    if (count % 500 === 0) {
-      await batch.commit();
-      console.log(`   💾 Saved ${count} events...`);
-    }
-  }
+  await logScraperResult(SCRAPER_NAME, {
+    found: events.length,
+    new: result.saved,
+  }, { state: '{{state}}' });
 
-  if (count % 500 !== 0) {
-    await batch.commit();
-  }
-
-  console.log(`✅ Saved ${count} events to Firebase`);
+  return { found: events.length, ...result };
 }
 
 async function main() {
@@ -135,11 +135,7 @@ async function main() {
   console.log(`║  Communico Scraper - {{state}} (${LIBRARIES.length} libraries)  ║`);
   console.log(`╚════════════════════════════════════════════════════════╝\n`);
 
-  const events = await scrapeCommunicoEvents();
-
-  if (events.length > 0) {
-    await saveToDatabase(events);
-  }
+  await scrapeCommunico{{state}}();
 
   process.exit(0);
 }
@@ -148,4 +144,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { scrapeCommunicoEvents, saveToDatabase };
+module.exports = { scrapeCommunicoEvents, saveToDatabase, scrapeCommunico{{state}} };

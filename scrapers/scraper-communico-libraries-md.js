@@ -2,7 +2,6 @@ const { launchBrowser } = require('./puppeteer-config');
 const { saveEventsWithGeocoding } = require('./event-save-helper');
 const { getBranchAddress } = require('./library-addresses');
 const ngeohash = require('ngeohash');
-const admin = require('firebase-admin');
 
 /**
  * AUTO-GENERATED COMMUNICO SCRAPER

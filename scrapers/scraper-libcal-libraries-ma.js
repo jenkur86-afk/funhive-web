@@ -3,7 +3,7 @@ const chromium = require('@sparticuz/chromium');
 
 const { saveEventsWithGeocoding } = require('./event-save-helper');
 const { logScraperResult } = require('./scraper-logger');
-const ngeohash = require('ngeohash');const admin = require('firebase-admin');
+const ngeohash = require('ngeohash');
 
 /**
  * AUTO-GENERATED LIBCAL SCRAPER

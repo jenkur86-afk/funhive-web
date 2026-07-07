@@ -1,10 +1,5 @@
-const admin = require('firebase-admin');
 const axios = require('axios');
-const { getFirestore } = require('firebase-admin/firestore');
 const { getOrCreateActivity } = require('./venue-matcher');
-
-// Get Firestore instance (initialized in index.js)
-const db = getFirestore();
 
 // ==========================================
 // CONFIGURATION
@@ -328,7 +323,7 @@ async function scrapeUSActivities(statesToScrape = null) {
                 verifiedBy: 'openstreetmap',
                 verifiedDate: null,
                 freshnessScore: 85,
-                lastUpdated: admin.firestore.FieldValue.serverTimestamp()
+                lastUpdated: new Date().toISOString()
               },
               notes: 'Data from OpenStreetMap',
               location: {

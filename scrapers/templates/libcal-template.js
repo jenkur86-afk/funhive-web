@@ -1,5 +1,6 @@
-const puppeteer = require('puppeteer');
-const admin = require('firebase-admin');
+const { launchBrowser } = require('../puppeteer-config');
+const { saveEventsWithGeocoding } = require('../event-save-helper');
+const { logScraperResult } = require('../scraper-logger');
 
 /**
  * AUTO-GENERATED LIBCAL SCRAPER
@@ -12,7 +13,7 @@ const LIBRARIES = {{libraries}};
 const SCRAPER_NAME = 'libcal-{{state}}';
 
 async function scrapeLibCalEvents() {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await launchBrowser();
   const events = [];
 
   for (const library of LIBRARIES) {
@@ -25,37 +26,75 @@ async function scrapeLibCalEvents() {
         timeout: 30000
       });
 
-      // Wait for LibCal events container
-      await page.waitForSelector('.s-lc-ea-e, .s-lc-whw-row', { timeout: 10000 }).catch(() => null);
+      // Some LibCal calendars default to Monthly/grid view instead of Card
+      // view — the grid view has no structured per-event markup. The "Card
+      // View" toggle is a <button>, not a link with a URL param, so it must
+      // be clicked. Fails harmlessly (caught below) if already in Card view.
+      await page.click('.s-lc-nav-card').catch(() => null);
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      // LibCal's event-card markup as of 2026-07 uses .s-lc-eventcard (older
+      // .s-lc-ea-e/.s-lc-whw-row selectors matched 0 elements with no error —
+      // confirmed live against several NH libraries).
+      await page.waitForSelector('.s-lc-eventcard', { timeout: 10000 }).catch(() => null);
 
       const libraryEvents = await page.evaluate((libName) => {
         const events = [];
 
-        // LibCal event cards
-        document.querySelectorAll('.s-lc-ea-e, .s-lc-whw-row').forEach(card => {
+        document.querySelectorAll('.s-lc-eventcard').forEach(card => {
           try {
-            const titleEl = card.querySelector('.s-lc-ea-ttl, h3');
-            const dateEl = card.querySelector('.s-lc-ea-date, .event-date');
-            const timeEl = card.querySelector('.s-lc-ea-time, .event-time');
-            const descEl = card.querySelector('.s-lc-ea-desc, .event-description');
-            const linkEl = card.querySelector('a[href]');
-            const imageEl = card.querySelector('img');
-            const locationEl = card.querySelector('.s-lc-ea-loc, .event-location');
+            const titleEl = card.querySelector('.s-lc-eventcard-title a');
+            const monthEl = card.querySelector('.s-lc-evt-date-m');
+            const dayEl = card.querySelector('.s-lc-evt-date-d');
+            const headingTextEls = card.querySelectorAll('.s-lc-eventcard-heading-text');
+            const descEl = card.querySelector('.s-lc-eventcard-description');
+            const imageEl = card.querySelector('.s-lc-eventcard-heading-image img');
+            const tagEls = card.querySelectorAll('.s-lc-event-category-link');
 
-            if (titleEl && dateEl) {
-              const event = {
-                title: titleEl.textContent.trim(),
-                date: dateEl.textContent.trim(),
-                time: timeEl ? timeEl.textContent.trim() : '',
-                description: descEl ? descEl.textContent.trim() : '',
-                url: linkEl ? linkEl.href : window.location.href,
-                imageUrl: imageEl ? imageEl.src : '',
-                location: locationEl ? locationEl.textContent.trim() : libName,
-                venueName: libName
-              };
+            if (!titleEl || !monthEl || !dayEl) return;
 
-              events.push(event);
+            // First heading-text div holds either "Sat, 10:00 AM - 12:00 PM"
+            // (single occurrence) or "Jun 22 - Jul 31" (multi-day range, no
+            // time); second holds the room/location (often blank).
+            const dateTimeText = headingTextEls[0] ? headingTextEls[0].textContent.trim().replace(/\s+/g, ' ') : '';
+            const timeMatch = dateTimeText.match(/(\d{1,2}:\d{2}\s*(?:AM|PM))\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM))/i);
+            const location = headingTextEls[1] ? headingTextEls[1].textContent.trim() : '';
+
+            // Infer year: LibCal's month/day-only date has no year. Assume
+            // current year unless that would place the event more than ~30
+            // days in the past (calendar always shows "today forward").
+            const now = new Date();
+            const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const monthIdx = monthNames.indexOf(monthEl.textContent.trim());
+            const day = parseInt(dayEl.textContent.trim(), 10);
+            let year = now.getFullYear();
+            if (monthIdx >= 0 && !isNaN(day)) {
+              const candidate = new Date(year, monthIdx, day);
+              if (candidate < new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30)) {
+                year += 1;
+              }
             }
+
+            const dateStr = monthIdx >= 0
+              ? `${monthNames[monthIdx]} ${day}, ${year}${timeMatch ? ' ' + timeMatch[1] : ''}`
+              : '';
+
+            const rawDescription = descEl ? descEl.textContent.replace(/\s*More\s*$/i, '').trim() : '';
+            const tags = Array.from(tagEls).map(t => t.getAttribute('data-original-title') || t.textContent.trim()).filter(Boolean);
+
+            const event = {
+              title: titleEl.textContent.trim(),
+              date: dateStr,
+              time: timeMatch ? `${timeMatch[1]} - ${timeMatch[2]}` : '',
+              description: rawDescription,
+              url: titleEl.href || window.location.href,
+              imageUrl: imageEl ? imageEl.src : '',
+              ageRange: tags.join(', '),
+              location: location || libName,
+              venueName: libName
+            };
+
+            events.push(event);
           } catch (e) {
             console.error('Error parsing event:', e);
           }
@@ -100,32 +139,31 @@ async function scrapeLibCalEvents() {
 }
 
 async function saveToDatabase(events) {
-  if (!admin.apps.length) {
-    const serviceAccount = require('../../firebase-service-account.json');
-    admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-  }
+  return await saveEventsWithGeocoding(events, LIBRARIES, {
+    scraperName: SCRAPER_NAME,
+    state: '{{state}}',
+    category: 'library',
+    platform: 'libcal'
+  });
+}
 
-  const db = admin.firestore();
-  const batch = db.batch();
-  let count = 0;
+// Entry point for local-scraper-runner.js's registry (exportName should
+// match this function, e.g. 'scrapeLibCal{{state}}'). Must not call
+// process.exit() here — that would kill the whole Node process if this
+// scraper is ever run as part of a multi-scraper group.
+async function scrapeLibCal{{state}}() {
+  const events = await scrapeLibCalEvents();
 
-  for (const event of events) {
-    const eventId = `${SCRAPER_NAME}-${Date.now()}-${count}`;
-    const docRef = db.collection('events').doc(eventId);
-    batch.set(docRef, event);
-    count++;
+  const result = events.length > 0
+    ? await saveToDatabase(events)
+    : { saved: 0, skipped: 0, errors: 0, deleted: 0 };
 
-    if (count % 500 === 0) {
-      await batch.commit();
-      console.log(`   💾 Saved ${count} events...`);
-    }
-  }
+  await logScraperResult(SCRAPER_NAME, {
+    found: events.length,
+    new: result.saved,
+  }, { state: '{{state}}' });
 
-  if (count % 500 !== 0) {
-    await batch.commit();
-  }
-
-  console.log(`✅ Saved ${count} events to Firebase`);
+  return { found: events.length, ...result };
 }
 
 async function main() {
@@ -133,11 +171,7 @@ async function main() {
   console.log(`║  LibCal Scraper - {{state}} (${LIBRARIES.length} libraries)  ║`);
   console.log(`╚════════════════════════════════════════════════════════╝\n`);
 
-  const events = await scrapeLibCalEvents();
-
-  if (events.length > 0) {
-    await saveToDatabase(events);
-  }
+  await scrapeLibCal{{state}}();
 
   process.exit(0);
 }
@@ -146,4 +180,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { scrapeLibCalEvents, saveToDatabase };
+module.exports = { scrapeLibCalEvents, saveToDatabase, scrapeLibCal{{state}} };

@@ -2,7 +2,6 @@ const { launchBrowser } = require('./puppeteer-config');
 const { saveEventsWithGeocoding } = require('./event-save-helper');
 const { logScraperResult } = require('./scraper-logger');
 const ngeohash = require('ngeohash');
-const admin = require('firebase-admin');
 
 /**
  * LIBCAL SCRAPER - MARYLAND LIBRARIES

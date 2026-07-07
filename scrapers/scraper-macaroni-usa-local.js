@@ -1,17 +1,7 @@
 #!/usr/bin/env node
 
-const admin = require('firebase-admin');
 const fs = require('fs');
 const path = require('path');
-
-// Initialize Firebase Admin
-const serviceAccount = require('../firebase-service-account.json');
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-
-const db = admin.firestore();
 
 // ==========================================
 // ALL MACARONI KID STATE SCRAPERS
@@ -129,21 +119,11 @@ async function runStateScraper(stateCode, stateInfo) {
     console.log(`   ❌ Error: ${error.message}`);
     console.log(`   ⏱️  Failed after ${duration}s`);
 
-    // Note: ScraperLogger handles error logging via trackError() and finish()
-    // Only log here if scraper crashed before logger could finish
-    try {
-      await db.collection('scraperLogs').add({
-        scraperName: `Macaroni Kid ${stateName}`,
-        timestamp: admin.firestore.FieldValue.serverTimestamp(),
-        success: false,
-        errors: 1,
-        error: error.message,
-        executionTime: parseFloat(duration),
-        source: 'local-mac-error'
-      });
-    } catch (logError) {
-      console.log(`   ⚠️  Failed to log error: ${logError.message}`);
-    }
+    // Note: ScraperLogger already handles error logging via trackError() and
+    // finish() inside each individual state scraper — this console line is
+    // just a fallback in case the scraper crashed before the logger could
+    // finish, not a duplicate persistence path.
+    console.log(`   ⚠️  Scraper crashed before its own logger could finish: ${error.message}`);
 
     return {
       stateCode,
@@ -319,7 +299,7 @@ async function main() {
       });
     }
 
-    console.log('\n✅ Done! Events are already in Firebase (imported by individual scrapers)');
+    console.log('\n✅ Done! Events are already in Supabase (imported by individual scrapers)');
     process.exit(0);
 
   } catch (error) {
