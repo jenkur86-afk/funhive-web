@@ -12,18 +12,12 @@ const LIBRARIES = [
   { name: 'Siouxland Libraries', url: 'https://www.siouxlandlib.org', eventsUrl: 'https://www.siouxlandlib.org/events', city: 'Sioux Falls', state: 'SD', zipCode: '57104', county: 'Sioux Falls County'},
   { name: 'Rapid City Public Library', url: 'https://www.rapidcitylibrary.org', eventsUrl: 'https://www.rapidcitylibrary.org/events', city: 'Rapid City', state: 'SD', zipCode: '57701', county: 'Rapid City County'},
   { name: 'Aberdeen Public Library', url: 'https://www.aberdeen.sd.us/library', eventsUrl: 'https://www.aberdeen.sd.us/library/events', city: 'Aberdeen', state: 'SD', zipCode: '57401', county: 'Aberdeen County'},
-  { name: 'Brookings Public Library', url: 'https://www.brookingslibrary.org', eventsUrl: 'https://www.brookingslibrary.org/events', city: 'Brookings', state: 'SD', zipCode: '57006', county: 'Brookings County'},
+  { name: 'Brookings Public Library', url: 'https://www.brookingslibrary.org/', eventsUrl: 'https://www.brookingslibrary.org/', city: 'Brookings', state: 'SD', zipCode: '57006', county: 'Brookings County'},
   { name: 'Watertown Regional Library', url: 'https://www.watertownsd.us/library', eventsUrl: 'https://www.watertownsd.us/library/events', city: 'Watertown', state: 'SD', zipCode: '57201', county: 'Watertown County'},
-  { name: 'Mitchell Public Library', url: 'https://www.mitchelllibrary.org', eventsUrl: 'https://www.mitchelllibrary.org/events', city: 'Mitchell', state: 'SD', zipCode: '57301', county: 'Mitchell County'},
-  { name: 'Yankton Community Library', url: 'https://www.yanktonlibrary.org', eventsUrl: 'https://www.yanktonlibrary.org/events', city: 'Yankton', state: 'SD', zipCode: '57078', county: 'Yankton County'},
-  { name: 'Pierre Carnegie Library', url: 'https://www.pierrecarnegielibrary.org', eventsUrl: 'https://www.pierrecarnegielibrary.org/events', city: 'Pierre', state: 'SD', zipCode: '57501', county: 'Pierre County'},
-  { name: 'Huron Public Library', url: 'https://www.huronlibrary.org', eventsUrl: 'https://www.huronlibrary.org/events', city: 'Huron', state: 'SD', zipCode: '57350', county: 'Huron County'},
+  { name: 'Mitchell Public Library', url: 'https://www.mitchelllibrary.org/', eventsUrl: 'https://www.mitchelllibrary.org/virtualmitchell/', city: 'Mitchell', state: 'SD', zipCode: '57301', county: 'Mitchell County'},
+  { name: 'Huron Public Library', url: 'https://www.huronlibrary.org/', eventsUrl: 'https://www.huronlibrary.org/', city: 'Huron', state: 'SD', zipCode: '57350', county: 'Huron County'},
   { name: 'Vermillion Public Library', url: 'https://www.vermillionpubliclibrary.org', eventsUrl: 'https://www.vermillionpubliclibrary.org/events', city: 'Vermillion', state: 'SD', zipCode: '57069', county: 'Vermillion County'},
-  { name: 'Spearfish Public Library', url: 'https://www.spearfishlibrary.org', eventsUrl: 'https://www.spearfishlibrary.org/events', city: 'Spearfish', state: 'SD', zipCode: '57783', county: 'Spearfish County'},
-  { name: 'Madison Public Library', url: 'https://www.madisonsdlibrary.com', eventsUrl: 'https://www.madisonsdlibrary.com/events', city: 'Madison', state: 'SD', zipCode: '57042', county: 'Madison County'},
   { name: 'Sturgis Public Library', url: 'https://www.sturgislibrary.org', eventsUrl: 'https://www.sturgislibrary.org/events', city: 'Sturgis', state: 'SD', zipCode: '57785', county: 'Sturgis County'},
-  { name: 'Belle Fourche Public Library', url: 'https://www.bellefourchelibrary.org', eventsUrl: 'https://www.bellefourchelibrary.org/events', city: 'Belle Fourche', state: 'SD', zipCode: '57717', county: 'Belle Fourche County'},
-  { name: 'Box Elder Public Library', url: 'https://www.boxelderlibrary.org', eventsUrl: 'https://www.boxelderlibrary.org/events', city: 'Box Elder', state: 'SD', zipCode: '57719', county: 'Box Elder County'}
 ];
 
 const SCRAPER_NAME = 'wordpress-SD';

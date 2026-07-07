@@ -10,22 +10,19 @@ const ngeohash = require('ngeohash');
  */
 const LIBRARIES = [
   // Major Libraries
-  { name: 'Fargo Public Library', url: 'https://www.fargolibrary.org', eventsUrl: 'https://www.fargolibrary.org/events', city: 'Fargo', state: 'ND', zipCode: '58102', county: 'Fargo County'},
+  { name: 'Fargo Public Library', url: 'https://fargond.gov/', eventsUrl: 'https://fargond.gov/news-events/calendar', city: 'Fargo', state: 'ND', zipCode: '58102', county: 'Fargo County'},
   { name: 'Bismarck Veterans Memorial Public Library', url: 'https://www.bismarcklibrary.org', eventsUrl: 'https://bismarcklib.librarycalendar.com/events/upcoming', city: 'Bismarck', state: 'ND', zipCode: '58501', county: 'Bismarck County'},
-  { name: 'Grand Forks Public Library', url: 'https://www.gflibrary.com', eventsUrl: 'https://www.gflibrary.com/events', city: 'Grand Forks', state: 'ND', zipCode: '58201', county: 'Grand Forks County'},
-  { name: 'Minot Public Library', url: 'https://www.minotlibrary.org', eventsUrl: 'https://www.minotlibrary.org/events', city: 'Minot', state: 'ND', zipCode: '58701', county: 'Minot County'},
+  { name: 'Grand Forks Public Library', url: 'https://www.gflibrary.com/', eventsUrl: 'https://www.gflibrary.com/', city: 'Grand Forks', state: 'ND', zipCode: '58201', county: 'Grand Forks County'},
+  { name: 'Minot Public Library', url: 'https://www.minotlibrary.org/', eventsUrl: 'https://www.minotlibrary.org/calendar/', city: 'Minot', state: 'ND', zipCode: '58701', county: 'Minot County'},
   { name: 'West Fargo Public Library', url: 'https://www.westfargolibrary.org', eventsUrl: 'https://westfargolibrary.org/calendar.aspx', city: 'West Fargo', state: 'ND', zipCode: '58078', county: 'West Fargo County'},
   // Regional Libraries
   { name: 'Dickinson Area Public Library', url: 'https://www.dickinsonlibrary.org', eventsUrl: 'https://www.dickinsonlibrary.org/events', city: 'Dickinson', state: 'ND', zipCode: '58601', county: 'Dickinson County'},
-  { name: 'Mandan Public Library', url: 'https://www.mandanlibrary.org', eventsUrl: 'https://www.mandanlibrary.org/events', city: 'Mandan', state: 'ND', zipCode: '58554', county: 'Mandan County'},
-  { name: 'Williston Community Library', url: 'https://www.willistonndlibrary.com', eventsUrl: 'https://www.willistonndlibrary.com/events', city: 'Williston', state: 'ND', zipCode: '58801', county: 'Williston County'},
+  { name: 'Mandan Public Library', url: 'https://www.mandanlibrary.org/', eventsUrl: 'https://www.mandanlibrary.org/', city: 'Mandan', state: 'ND', zipCode: '58554', county: 'Mandan County'},
+  { name: 'Williston Community Library', url: 'https://www.willistonndlibrary.com/', eventsUrl: 'https://www.willistonndlibrary.com/', city: 'Williston', state: 'ND', zipCode: '58801', county: 'Williston County'},
   { name: 'Jamestown Stutsman County Library', url: 'https://www.jamestownlibrary.org', eventsUrl: 'https://www.jamestownlibrary.org/events', city: 'Jamestown', state: 'ND', zipCode: '58401', county: 'Jamestown County'},
-  { name: 'Valley City Barnes County Public Library', url: 'https://www.vcbclibrary.org', eventsUrl: 'https://www.vcbclibrary.org/events', city: 'Valley City', state: 'ND', zipCode: '58072', county: 'Valley City County'},
-  { name: 'Devils Lake Public Library', url: 'https://www.devilslakelibrary.org', eventsUrl: 'https://www.devilslakelibrary.org/events', city: 'Devils Lake', state: 'ND', zipCode: '58301', county: 'Devils Lake County'},
-  { name: 'Wahpeton Public Library', url: 'https://www.wahpetonlibrary.com', eventsUrl: 'https://www.wahpetonlibrary.com/events', city: 'Wahpeton', state: 'ND', zipCode: '58075', county: 'Wahpeton County'},
+  { name: 'Valley City Barnes County Public Library', url: 'https://www.vcbclibrary.org/', eventsUrl: 'https://www.vcbclibrary.org/upcoming-events', city: 'Valley City', state: 'ND', zipCode: '58072', county: 'Valley City County'},
   { name: 'North Dakota State Library', url: 'https://www.library.nd.gov', eventsUrl: 'https://www.library.nd.gov/events', city: 'Bismarck', state: 'ND', zipCode: '58505', county: 'Bismarck County'},
-  { name: 'Leach Public Library', url: 'https://www.leachpubliclibrary.org', eventsUrl: 'https://www.leachpubliclibrary.org/events', city: 'Wahpeton', state: 'ND', zipCode: '58075', county: 'Wahpeton County'},
-  { name: 'Bottineau County Library', url: 'https://www.bottineaucountylibrary.org', eventsUrl: 'https://www.bottineaucountylibrary.org/events', city: 'Bottineau', state: 'ND', zipCode: '58318' }
+  { name: 'Leach Public Library', url: 'https://www.leachpubliclibrary.org/', eventsUrl: 'https://www.leachpubliclibrary.org/', city: 'Wahpeton', state: 'ND', zipCode: '58075', county: 'Wahpeton County'},
 ];
 
 const SCRAPER_NAME = 'wordpress-ND';

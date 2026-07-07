@@ -13,12 +13,10 @@ const LIBRARIES = [
   { name: 'Missoula Public Library', url: 'https://www.missoulapubliclibrary.org', eventsUrl: 'https://www.missoulapubliclibrary.org/events', city: 'Missoula', state: 'MT', zipCode: '59801', county: 'Missoula County'},
   { name: 'Great Falls Public Library', url: 'https://www.greatfallslibrary.org', eventsUrl: 'https://www.greatfallslibrary.org/events', city: 'Great Falls', state: 'MT', zipCode: '59401', county: 'Great Falls County'},
   { name: 'Bozeman Public Library', url: 'https://www.bozemanlibrary.org', eventsUrl: 'https://www.bozemanlibrary.org/events', city: 'Bozeman', state: 'MT', zipCode: '59715', county: 'Bozeman County'},
-  { name: 'Butte-Silver Bow Public Library', url: 'https://www.buttepubliclibrary.info', eventsUrl: 'https://www.buttepubliclibrary.info/events', city: 'Butte', state: 'MT', zipCode: '59701', county: 'Butte County'},
-  { name: 'Helena Public Library', url: 'https://www.helenalibrary.org', eventsUrl: 'https://www.helenalibrary.org/events', city: 'Helena', state: 'MT', zipCode: '59601', county: 'Helena County'},
+  { name: 'Butte-Silver Bow Public Library', url: 'https://www.buttepubliclibrary.info/', eventsUrl: 'https://www.buttepubliclibrary.info/', city: 'Butte', state: 'MT', zipCode: '59701', county: 'Butte County'},
+  { name: 'Helena Public Library', url: 'https://www.lclibrary.org/', eventsUrl: 'https://www.lclibrary.org/', city: 'Helena', state: 'MT', zipCode: '59601', county: 'Helena County'},
   { name: 'Kalispell Public Library', url: 'https://www.imagineiflibraries.org', eventsUrl: 'https://www.imagineiflibraries.org/events', city: 'Kalispell', state: 'MT', zipCode: '59901', county: 'Kalispell County'},
-  { name: 'Havre-Hill County Library', url: 'https://www.havrelibrary.org', eventsUrl: 'https://www.havrelibrary.org/events', city: 'Havre', state: 'MT', zipCode: '59501', county: 'Havre County'},
-  { name: 'Miles City Public Library', url: 'https://www.milescitylibrary.org', eventsUrl: 'https://www.milescitylibrary.org/events', city: 'Miles City', state: 'MT', zipCode: '59301', county: 'Miles City County'},
-  { name: 'Belgrade Community Library', url: 'https://www.belgradelibrary.org', eventsUrl: 'https://www.belgradelibrary.org/events', city: 'Belgrade', state: 'MT', zipCode: '59714', county: 'Belgrade County'},
+  { name: 'Belgrade Community Library', url: 'https://www.belgrademt.gov/', eventsUrl: 'https://www.belgrademt.gov/544/Library', city: 'Belgrade', state: 'MT', zipCode: '59714', county: 'Belgrade County'},
   { name: 'Livingston-Park County Library', url: 'https://www.livingstonlibrary.org', eventsUrl: 'https://www.livingstonlibrary.org/events', city: 'Livingston', state: 'MT', zipCode: '59047', county: 'Livingston County'},
   { name: 'Whitefish Community Library', url: 'https://www.whitefishlibrary.org', eventsUrl: 'https://www.whitefishlibrary.org/events', city: 'Whitefish', state: 'MT', zipCode: '59937', county: 'Whitefish County'}
 ];

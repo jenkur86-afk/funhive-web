@@ -11,18 +11,16 @@ const ngeohash = require('ngeohash');
 const LIBRARIES = [
   { name: 'Laramie County Library System', url: 'https://www.lclsonline.org', eventsUrl: 'https://www.lclsonline.org/events', city: 'Cheyenne', state: 'WY', zipCode: '82001', county: 'Cheyenne County'},
   { name: 'Natrona County Public Library', url: 'https://www.natronacountylibrary.org', eventsUrl: 'https://www.natronacountylibrary.org/events', city: 'Casper', state: 'WY', zipCode: '82601' },
-  { name: 'Albany County Public Library', url: 'https://www.acplwy.org', eventsUrl: 'https://www.acplwy.org/events', city: 'Laramie', state: 'WY', zipCode: '82070', county: 'Laramie County'},
+  { name: 'Albany County Public Library', url: 'https://www.acplwy.org/', eventsUrl: 'https://www.acplwy.org/library-events', city: 'Laramie', state: 'WY', zipCode: '82070', county: 'Laramie County'},
   { name: 'Sweetwater County Library System', url: 'https://www.swcl.us', eventsUrl: 'https://www.swcl.us/events', city: 'Green River', state: 'WY', zipCode: '82935', county: 'Green River County'},
   { name: 'Campbell County Public Library', url: 'https://www.ccpls.org', eventsUrl: 'https://www.ccpls.org/events', city: 'Gillette', state: 'WY', zipCode: '82716', county: 'Gillette County'},
   { name: 'Sheridan County Fulmer Public Library', url: 'https://www.sheridanwyolibrary.org', eventsUrl: 'https://www.sheridanwyolibrary.org/events', city: 'Sheridan', state: 'WY', zipCode: '82801', county: 'Sheridan County'},
   { name: 'Fremont County Library System', url: 'https://www.fremontcountylibraries.org', eventsUrl: 'https://www.fremontcountylibraries.org/events', city: 'Riverton', state: 'WY', zipCode: '82501' },
   { name: 'Teton County Library', url: 'https://www.tclib.org', eventsUrl: 'https://www.tclib.org/events', city: 'Jackson', state: 'WY', zipCode: '83001', county: 'Jackson County'},
-  { name: 'Park County Library System', url: 'https://www.parkcountylibrary.org', eventsUrl: 'https://www.parkcountylibrary.org/events', city: 'Cody', state: 'WY', zipCode: '82414' },
+  { name: 'Park County Library System', url: 'https://www.parkcountylibrary.org/', eventsUrl: 'https://www.parkcountylibrary.org/', city: 'Cody', state: 'WY', zipCode: '82414' },
   { name: 'Uinta County Library', url: 'https://www.uintalibrary.org', eventsUrl: 'https://www.uintalibrary.org/events', city: 'Evanston', state: 'WY', zipCode: '82930', county: 'Evanston County'},
   { name: 'Lincoln County Library', url: 'https://www.linclib.org', eventsUrl: 'https://www.linclib.org/events', city: 'Kemmerer', state: 'WY', zipCode: '83101', county: 'Kemmerer County'},
-  { name: 'Carbon County Library System', url: 'https://www.carbonlibraries.org', eventsUrl: 'https://www.carbonlibraries.org/events', city: 'Rawlins', state: 'WY', zipCode: '82301', county: 'Rawlins County'},
-  { name: 'Big Horn County Library', url: 'https://www.bighorncountylibrary.org', eventsUrl: 'https://www.bighorncountylibrary.org/events', city: 'Basin', state: 'WY', zipCode: '82410' },
-  { name: 'Converse County Library', url: 'https://www.conversecountylibrary.org', eventsUrl: 'https://www.conversecountylibrary.org/events', city: 'Douglas', state: 'WY', zipCode: '82633' },
+  { name: 'Carbon County Library System', url: 'https://carbonlibraries.org/', eventsUrl: 'https://carbonlibraries.org/', city: 'Rawlins', state: 'WY', zipCode: '82301', county: 'Rawlins County'},
   { name: 'Goshen County Library', url: 'https://www.goshencountylibrary.org', eventsUrl: 'https://www.goshencountylibrary.org/events', city: 'Torrington', state: 'WY', zipCode: '82240' }
 ];
 

@@ -18,30 +18,22 @@ const LIBRARIES = [
   // Regional Libraries
   { name: 'Las Cruces Public Library', url: 'https://www.las-cruces.org/library', eventsUrl: 'https://www.las-cruces.org/library/events', city: 'Las Cruces', state: 'NM', zipCode: '88001', county: 'Las Cruces County'},
   { name: 'Rio Rancho Public Library', url: 'https://www.riorancholibrary.org', eventsUrl: 'https://www.riorancholibrary.org/events', city: 'Rio Rancho', state: 'NM', zipCode: '87124', county: 'Rio Rancho County'},
-  { name: 'Roswell Public Library', url: 'https://www.roswellpubliclibrary.org', eventsUrl: 'https://www.roswellpubliclibrary.org/events', city: 'Roswell', state: 'NM', zipCode: '88201', county: 'Roswell County'},
-  { name: 'Farmington Public Library', url: 'https://www.infoway.org', eventsUrl: 'https://www.infoway.org/events', city: 'Farmington', state: 'NM', zipCode: '87401', county: 'Farmington County'},
-  { name: 'Hobbs Public Library', url: 'https://www.hobbspubliclibrary.org', eventsUrl: 'https://www.hobbspubliclibrary.org/events', city: 'Hobbs', state: 'NM', zipCode: '88240', county: 'Hobbs County'},
+  { name: 'Roswell Public Library', url: 'https://www.roswellpubliclibrary.org/', eventsUrl: 'https://www.roswellpubliclibrary.org/', city: 'Roswell', state: 'NM', zipCode: '88201', county: 'Roswell County'},
+  { name: 'Farmington Public Library', url: 'https://www.infoway.org/', eventsUrl: 'https://www.infoway.org/welcome', city: 'Farmington', state: 'NM', zipCode: '87401', county: 'Farmington County'},
+  { name: 'Hobbs Public Library', url: 'https://www.hobbspubliclibrary.org/', eventsUrl: 'https://www.hobbspubliclibrary.org/', city: 'Hobbs', state: 'NM', zipCode: '88240', county: 'Hobbs County'},
   { name: 'Clovis-Carver Public Library', url: 'https://www.cityofclovis.org/library', eventsUrl: 'https://www.cityofclovis.org/library/events', city: 'Clovis', state: 'NM', zipCode: '88101', county: 'Clovis County'},
   { name: 'Alamogordo Public Library', url: 'https://www.ci.alamogordo.nm.us/library', eventsUrl: 'https://www.ci.alamogordo.nm.us/library/events', city: 'Alamogordo', state: 'NM', zipCode: '88310', county: 'Alamogordo County'},
   { name: 'Carlsbad Public Library', url: 'https://www.cityofcarlsbadnm.com/library', eventsUrl: 'https://www.cityofcarlsbadnm.com/library/events', city: 'Carlsbad', state: 'NM', zipCode: '88220', county: 'Carlsbad County'},
-  { name: 'Gallup Public Library', url: 'https://www.galluplibrary.com', eventsUrl: 'https://www.galluplibrary.com/events', city: 'Gallup', state: 'NM', zipCode: '87301', county: 'Gallup County'},
-  { name: 'Los Alamos County Library', url: 'https://www.losalamoslibrary.org', eventsUrl: 'https://www.losalamoslibrary.org/events', city: 'Los Alamos', state: 'NM', zipCode: '87544', county: 'Los Alamos County'},
-  { name: 'Deming Public Library', url: 'https://www.demingpubliclibrary.org', eventsUrl: 'https://www.demingpubliclibrary.org/events', city: 'Deming', state: 'NM', zipCode: '88030', county: 'Deming County'},
+  { name: 'Gallup Public Library', url: 'https://www.gallupnm.gov/', eventsUrl: 'https://www.gallupnm.gov/718/Home', city: 'Gallup', state: 'NM', zipCode: '87301', county: 'Gallup County'},
+  { name: 'Los Alamos County Library', url: 'https://www.losalamoslibrary.org/', eventsUrl: 'https://www.losalamoslibrary.org/Home', city: 'Los Alamos', state: 'NM', zipCode: '87544', county: 'Los Alamos County'},
   { name: 'Las Vegas Carnegie Public Library', url: 'https://www.lasvegasnm.gov/library', eventsUrl: 'https://www.lasvegasnm.gov/library/events', city: 'Las Vegas', state: 'NM', zipCode: '87701', county: 'Las Vegas County'},
-  { name: 'Lovington Public Library', url: 'https://www.lovingtonlibrary.org', eventsUrl: 'https://www.lovingtonlibrary.org/events', city: 'Lovington', state: 'NM', zipCode: '88260', county: 'Lovington County'},
   { name: 'Portales Public Library', url: 'https://www.portalesnm.gov/library', eventsUrl: 'https://www.portalesnm.gov/library/events', city: 'Portales', state: 'NM', zipCode: '88130', county: 'Portales County'},
-  { name: 'Artesia Public Library', url: 'https://www.artesiapubliclibrary.com', eventsUrl: 'https://www.artesiapubliclibrary.com/events', city: 'Artesia', state: 'NM', zipCode: '88210', county: 'Artesia County'},
   { name: 'Silver City Public Library', url: 'https://www.silvercitypubliclibrary.org', eventsUrl: 'https://www.silvercitypubliclibrary.org/events', city: 'Silver City', state: 'NM', zipCode: '88061', county: 'Silver City County'},
-  { name: 'Espanola Public Library', url: 'https://www.espanolalibrary.org', eventsUrl: 'https://www.espanolalibrary.org/events', city: 'Espanola', state: 'NM', zipCode: '87532', county: 'Espanola County'},
-  { name: 'Ruidoso Public Library', url: 'https://www.rfrlib.org', eventsUrl: 'https://www.rfrlib.org/events', city: 'Ruidoso', state: 'NM', zipCode: '88345', county: 'Ruidoso County'},
   { name: 'Taos Public Library', url: 'https://www.taoslibrary.org', eventsUrl: 'https://www.taoslibrary.org/events', city: 'Taos', state: 'NM', zipCode: '87571', county: 'Taos County'},
-  { name: 'Socorro Public Library', url: 'https://www.socorrolibrary.org', eventsUrl: 'https://www.socorrolibrary.org/events', city: 'Socorro', state: 'NM', zipCode: '87801', county: 'Socorro County'},
   { name: 'Aztec Public Library', url: 'https://www.azteclibrary.org', eventsUrl: 'https://www.azteclibrary.org/events', city: 'Aztec', state: 'NM', zipCode: '87410', county: 'Aztec County'},
-  { name: 'Bloomfield Public Library', url: 'https://www.bloomfieldlibrary.org', eventsUrl: 'https://www.bloomfieldlibrary.org/events', city: 'Bloomfield', state: 'NM', zipCode: '87413', county: 'Bloomfield County'},
   { name: 'Truth or Consequences Public Library', url: 'https://www.torcnm.org/library', eventsUrl: 'https://www.torcnm.org/library/events', city: 'Truth or Consequences', state: 'NM', zipCode: '87901', county: 'Truth or Consequences County'},
-  { name: 'Tucumcari Public Library', url: 'https://www.tucumcarinm.gov/library', eventsUrl: 'https://www.tucumcarinm.gov/library/events', city: 'Tucumcari', state: 'NM', zipCode: '88401', county: 'Tucumcari County'},
   { name: 'Raton Public Library', url: 'https://www.ratonnm.gov/library', eventsUrl: 'https://www.ratonnm.gov/library/events', city: 'Raton', state: 'NM', zipCode: '87740', county: 'Raton County'},
-  { name: 'Clayton Public Library', url: 'https://www.claytonpubliclibrary.org', eventsUrl: 'https://www.claytonpubliclibrary.org/events', city: 'Clayton', state: 'NM', zipCode: '88415', county: 'Clayton County'}
+  { name: 'Clayton Public Library', url: 'https://www.claytonpubliclibrary.org/', eventsUrl: 'https://www.claytonpubliclibrary.org/calendar', city: 'Clayton', state: 'NM', zipCode: '88415', county: 'Clayton County'}
 ];
 
 const SCRAPER_NAME = 'wordpress-NM';

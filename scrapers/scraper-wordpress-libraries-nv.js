@@ -13,19 +13,13 @@ const LIBRARIES = [
   { name: 'Las Vegas-Clark County Library District', url: 'https://www.lvccld.org', eventsUrl: 'https://www.lvccld.org/events', city: 'Las Vegas', state: 'NV', zipCode: '89101', county: 'Las Vegas County'},
   { name: 'Washoe County Library System', url: 'https://www.washoecountylibrary.us', eventsUrl: 'https://www.washoecountylibrary.us/events', city: 'Reno', state: 'NV', zipCode: '89501' },
   { name: 'Henderson Libraries', url: 'https://www.hendersonlibraries.com', eventsUrl: 'https://www.hendersonlibraries.com/events', city: 'Henderson', state: 'NV', zipCode: '89015', county: 'Henderson County'},
-  { name: 'North Las Vegas Library District', url: 'https://www.cityofnorthlasvegas.com/library', eventsUrl: 'https://www.cityofnorthlasvegas.com/library/events', city: 'North Las Vegas', state: 'NV', zipCode: '89030', county: 'North Las Vegas County'},
+  { name: 'North Las Vegas Library District', url: 'https://www.cityofnorthlasvegas.com/', eventsUrl: 'https://www.cityofnorthlasvegas.com/things-to-do/events-calendar', city: 'North Las Vegas', state: 'NV', zipCode: '89030', county: 'North Las Vegas County'},
   // Regional Libraries
   { name: 'Carson City Library', url: 'https://www.carsoncitylibrary.org', eventsUrl: 'https://www.carsoncitylibrary.org/events', city: 'Carson City', state: 'NV', zipCode: '89701', county: 'Carson City County'},
-  { name: 'Sparks Library', url: 'https://www.sparkslibrary.org', eventsUrl: 'https://www.sparkslibrary.org/events', city: 'Sparks', state: 'NV', zipCode: '89431', county: 'Sparks County'},
   { name: 'Douglas County Public Library', url: 'https://www.douglascountynv.gov/library', eventsUrl: 'https://www.douglascountynv.gov/library/events', city: 'Minden', state: 'NV', zipCode: '89423' },
-  { name: 'Elko County Library', url: 'https://www.elkocountylibrary.org', eventsUrl: 'https://www.elkocountylibrary.org/events', city: 'Elko', state: 'NV', zipCode: '89801' },
-  { name: 'Churchill County Library', url: 'https://www.churchillcountylibrary.org', eventsUrl: 'https://www.churchillcountylibrary.org/events', city: 'Fallon', state: 'NV', zipCode: '89406' },
+  { name: 'Elko County Library', url: 'https://www.exploremybrary.org/', eventsUrl: 'https://www.exploremybrary.org/', city: 'Elko', state: 'NV', zipCode: '89801' },
+  { name: 'Churchill County Library', url: 'https://churchillcountylibrary.org/', eventsUrl: 'https://churchillcountylibrary.org/library-events', city: 'Fallon', state: 'NV', zipCode: '89406' },
   { name: 'Lyon County Library System', url: 'https://www.lyon-county.org/library', eventsUrl: 'https://www.lyon-county.org/library/events', city: 'Yerington', state: 'NV', zipCode: '89447' },
-  { name: 'Humboldt County Library', url: 'https://www.humboldtcountylibrary.us', eventsUrl: 'https://www.humboldtcountylibrary.us/events', city: 'Winnemucca', state: 'NV', zipCode: '89445' },
-  { name: 'Pershing County Library', url: 'https://www.pershingcountylibrary.org', eventsUrl: 'https://www.pershingcountylibrary.org/events', city: 'Lovelock', state: 'NV', zipCode: '89419' },
-  { name: 'White Pine County Library', url: 'https://www.whitepinecountylibrary.org', eventsUrl: 'https://www.whitepinecountylibrary.org/events', city: 'Ely', state: 'NV', zipCode: '89301' },
-  { name: 'Nye County Library', url: 'https://www.nyecountylibrary.org', eventsUrl: 'https://www.nyecountylibrary.org/events', city: 'Pahrump', state: 'NV', zipCode: '89048' },
-  { name: 'Storey County Library', url: 'https://www.storeycountylibrary.org', eventsUrl: 'https://www.storeycountylibrary.org/events', city: 'Virginia City', state: 'NV', zipCode: '89440' }
 ];
 
 const SCRAPER_NAME = 'wordpress-NV';

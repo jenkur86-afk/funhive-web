@@ -22,27 +22,18 @@ const LIBRARIES = [
   // Kent County Libraries
   { name: 'Dover Public Library', url: 'https://www.doverpubliclibrary.org', eventsUrl: 'https://www.doverpubliclibrary.org/events', city: 'Dover', state: 'DE', zipCode: '19901', county: 'Dover County'},
   { name: 'Kent County Library', url: 'https://www.kentcountyde.gov/library', eventsUrl: 'https://www.kentcountyde.gov/library/events', city: 'Dover', state: 'DE', zipCode: '19904' },
-  { name: 'Smyrna Public Library', url: 'https://www.smyrnapubliclibrary.org', eventsUrl: 'https://www.smyrnapubliclibrary.org/events', city: 'Smyrna', state: 'DE', zipCode: '19977', county: 'Smyrna County'},
-  { name: 'Harrington Public Library', url: 'https://www.harringtonpubliclibrary.org', eventsUrl: 'https://www.harringtonpubliclibrary.org/events', city: 'Harrington', state: 'DE', zipCode: '19952', county: 'Harrington County'},
-  { name: 'Milford Public Library', url: 'https://www.milfordpubliclibrary.org', eventsUrl: 'https://www.milfordpubliclibrary.org/events', city: 'Milford', state: 'DE', zipCode: '19963', county: 'Milford County'},
   // Sussex County Libraries
   { name: 'Georgetown Public Library', url: 'https://www.georgetownpubliclibrary.org', eventsUrl: 'https://www.georgetownpubliclibrary.org/events', city: 'Georgetown', state: 'DE', zipCode: '19947', county: 'Georgetown County'},
   { name: 'Lewes Public Library', url: 'https://www.leweslibrary.org', eventsUrl: 'https://www.leweslibrary.org/events', city: 'Lewes', state: 'DE', zipCode: '19958', county: 'Lewes County'},
-  { name: 'Rehoboth Beach Public Library', url: 'https://www.rehobothbeachde.gov/library', eventsUrl: 'https://www.rehobothbeachde.gov/library/events', city: 'Rehoboth Beach', state: 'DE', zipCode: '19971', county: 'Rehoboth Beach County'},
-  { name: 'Seaford District Library', url: 'https://www.seafordlibrary.org', eventsUrl: 'https://www.seafordlibrary.org/events', city: 'Seaford', state: 'DE', zipCode: '19973', county: 'Seaford County'},
-  { name: 'South Coastal Library', url: 'https://www.southcoastallibrary.org', eventsUrl: 'https://www.southcoastallibrary.org/events', city: 'Bethany Beach', state: 'DE', zipCode: '19930', county: 'Bethany Beach County'},
-  { name: 'Bridgeville Public Library', url: 'https://www.bridgevillelibrary.org', eventsUrl: 'https://www.bridgevillelibrary.org/events', city: 'Bridgeville', state: 'DE', zipCode: '19933', county: 'Bridgeville County'},
+  { name: 'Rehoboth Beach Public Library', url: 'https://www.rehobothbeachde.gov/library', eventsUrl: 'https://www.rehobothbeachde.gov/experience-rehoboth-beach/calendar/', city: 'Rehoboth Beach', state: 'DE', zipCode: '19971', county: 'Rehoboth Beach County'},
+  { name: 'Seaford District Library', url: 'https://seafordlibrary.org/', eventsUrl: 'https://seafordlibrary.org/library-events/', city: 'Seaford', state: 'DE', zipCode: '19973', county: 'Seaford County'},
+  { name: 'Bridgeville Public Library', url: 'https://bridgevillelibrary.org/', eventsUrl: 'https://bridgevillelibrary.org/', city: 'Bridgeville', state: 'DE', zipCode: '19933', county: 'Bridgeville County'},
   { name: 'Laurel Public Library', url: 'https://www.laurellibrary.org', eventsUrl: 'https://www.laurellibrary.org/events', city: 'Laurel', state: 'DE', zipCode: '19956', county: 'Laurel County'},
   { name: 'Milton Public Library', url: 'https://www.miltonlibrary.org', eventsUrl: 'https://www.miltonlibrary.org/events', city: 'Milton', state: 'DE', zipCode: '19968', county: 'Milton County'},
-  { name: 'Selbyville Public Library', url: 'https://www.selbypubliclibrary.org', eventsUrl: 'https://www.selbypubliclibrary.org/events', city: 'Selbyville', state: 'DE', zipCode: '19975', county: 'Selbyville County'},
-  { name: 'Delmar Public Library', url: 'https://www.delmarlibrary.org', eventsUrl: 'https://www.delmarlibrary.org/events', city: 'Delmar', state: 'DE', zipCode: '19940', county: '' },
   // Additional libraries from coverage audit
-  { name: 'Delaware City Public Library', url: 'https://www.delawarecitylibrary.org', platform: 'wordpress', eventsUrl: 'https://www.delawarecitylibrary.org/events', city: 'Delaware City', state: 'DE', zipCode: '19706', county: '' },
   { name: 'Frankford Public Library', url: 'https://www.frankfordlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.frankfordlibrary.org/events', city: 'Frankford', state: 'DE', zipCode: '19945', county: '' },
   { name: 'Greenwood Public Library', url: 'https://www.greenwoodlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.greenwoodlibrary.org/events', city: 'Greenwood', state: 'DE', zipCode: '19950', county: '' },
   { name: 'Appoquinimink Public Library', url: 'https://www.nccde.org/appoquinimink', platform: 'wordpress', eventsUrl: 'https://www.nccde.org/appoquinimink/events', city: 'Middletown', state: 'DE', zipCode: '19709', county: '' },
-  { name: 'Millsboro Public Library', url: 'https://www.millsborolibrary.org', platform: 'wordpress', eventsUrl: 'https://www.millsborolibrary.org/events', city: 'Millsboro', state: 'DE', zipCode: '19966', county: '' },
-  { name: 'Corbit-Calloway Memorial Library', url: 'https://www.corbitcalloway.org', platform: 'wordpress', eventsUrl: 'https://www.corbitcalloway.org/events', city: 'Odessa', state: 'DE', zipCode: '19730', county: '' }
 ];
 
 const SCRAPER_NAME = 'wordpress-DE';

@@ -10,19 +10,19 @@ const ngeohash = require('ngeohash');
  */
 const LIBRARIES = [
   // Major Metro Libraries
-  { name: 'Phoenix Public Library', url: 'https://www.phoenixpubliclibrary.org', eventsUrl: 'https://www.phoenixpubliclibrary.org/events', city: 'Phoenix', state: 'AZ', zipCode: '85003', county: 'Phoenix County'},
+  { name: 'Phoenix Public Library', url: 'https://www.phoenixpubliclibrary.org/', eventsUrl: 'https://www.phoenixpubliclibrary.org/', city: 'Phoenix', state: 'AZ', zipCode: '85003', county: 'Phoenix County'},
   { name: 'Mesa Public Library', url: 'https://www.mesalibrary.org', eventsUrl: 'https://events.mesalibrary.org/events/month', city: 'Mesa', state: 'AZ', zipCode: '85201', county: 'Mesa County'},
   { name: 'Scottsdale Public Library', url: 'https://www.scottsdalelibrary.org', eventsUrl: 'https://scottsdale.libnet.info/events', city: 'Scottsdale', state: 'AZ', zipCode: '85251', county: 'Scottsdale County'},
   { name: 'Tucson-Pima Public Library', url: 'https://www.library.pima.gov', eventsUrl: 'https://www.library.pima.gov/events', city: 'Tucson', state: 'AZ', zipCode: '85701', county: 'Tucson County'},
   { name: 'Tempe Public Library', url: 'https://www.tempe.gov/city-hall/community-development/tempe-public-library', eventsUrl: 'https://www.tempe.gov/city-hall/community-development/tempe-public-library/events-programs', city: 'Tempe', state: 'AZ', zipCode: '85281', county: 'Tempe County'},
   { name: 'Glendale Public Library', url: 'https://www.glendaleaz.com/live/departments/library', eventsUrl: 'https://www.glendaleaz.com/live/departments/library/events', city: 'Glendale', state: 'AZ', zipCode: '85301', county: 'Glendale County'},
   { name: 'Chandler Public Library', url: 'https://www.chandlerlibrary.org', eventsUrl: 'https://www.chandlerlibrary.org/events', city: 'Chandler', state: 'AZ', zipCode: '85225', county: 'Chandler County'},
-  { name: 'Gilbert Public Library', url: 'https://www.gilbertlibrary.org', eventsUrl: 'https://www.gilbertlibrary.org/events', city: 'Gilbert', state: 'AZ', zipCode: '85234', county: 'Gilbert County'},
+  { name: 'Gilbert Public Library', url: 'https://www.gilbertlibrary.org/', eventsUrl: 'https://www.gilbertlibrary.org/', city: 'Gilbert', state: 'AZ', zipCode: '85234', county: 'Gilbert County'},
   { name: 'Peoria Public Library', url: 'https://www.peoriaaz.gov/residents/city-services/peoria-public-library', eventsUrl: 'https://www.peoriaaz.gov/residents/city-services/peoria-public-library/events-programs', city: 'Peoria', state: 'AZ', zipCode: '85345', county: 'Peoria County'},
   { name: 'Surprise Public Library', url: 'https://www.surpriseaz.gov/179/Library', eventsUrl: 'https://www.surpriseaz.gov/179/Library', city: 'Surprise', state: 'AZ', zipCode: '85374', county: 'Surprise County'},
   // Regional Libraries
-  { name: 'Flagstaff City-Coconino County Public Library', url: 'https://www.flagstaffpubliclibrary.org', eventsUrl: 'https://www.flagstaffpubliclibrary.org/events', city: 'Flagstaff', state: 'AZ', zipCode: '86001', county: 'Flagstaff County'},
-  { name: 'Yuma County Library District', url: 'https://www.yumalibrary.org', eventsUrl: 'https://www.yumalibrary.org/events', city: 'Yuma', state: 'AZ', zipCode: '85364', county: 'Yuma County'},
+  { name: 'Flagstaff City-Coconino County Public Library', url: 'https://www.flagstaffpubliclibrary.org/', eventsUrl: 'https://www.flagstaffpubliclibrary.org/', city: 'Flagstaff', state: 'AZ', zipCode: '86001', county: 'Flagstaff County'},
+  { name: 'Yuma County Library District', url: 'https://yumalibrary.org/', eventsUrl: 'https://yumalibrary.org/', city: 'Yuma', state: 'AZ', zipCode: '85364', county: 'Yuma County'},
   { name: 'Prescott Public Library', url: 'https://www.prescottlibrary.info', eventsUrl: 'https://www.prescottlibrary.info/events', city: 'Prescott', state: 'AZ', zipCode: '86301', county: 'Prescott County'},
   { name: 'Lake Havasu City Public Library', url: 'https://www.lhcaz.gov/library', eventsUrl: 'https://www.lhcaz.gov/library/events', city: 'Lake Havasu City', state: 'AZ', zipCode: '86403', county: 'Lake Havasu City County'},
   { name: 'Mohave County Library District', url: 'https://www.mohavecounty.us/library', eventsUrl: 'https://www.mohavecounty.us/library/events', city: 'Kingman', state: 'AZ', zipCode: '86401' },

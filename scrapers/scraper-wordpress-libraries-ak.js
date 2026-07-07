@@ -11,21 +11,17 @@ const ngeohash = require('ngeohash');
 const LIBRARIES = [
   // Major Libraries
   { name: 'Anchorage Public Library', url: 'https://www.anchoragelibrary.org', eventsUrl: 'https://anchorage.librarycalendar.com/events/upcoming', city: 'Anchorage', state: 'AK', zipCode: '99501', county: 'Anchorage County'},
-  { name: 'Fairbanks North Star Borough Public Library', url: 'https://www.fnsblibrary.org', eventsUrl: 'https://www.fnsblibrary.org/events', city: 'Fairbanks', state: 'AK', zipCode: '99701', county: 'Fairbanks County'},
+  { name: 'Fairbanks North Star Borough Public Library', url: 'https://www.fnsb.gov/', eventsUrl: 'https://www.fnsb.gov/1119/Public-Libraries', city: 'Fairbanks', state: 'AK', zipCode: '99701', county: 'Fairbanks County'},
   { name: 'Juneau Public Libraries', url: 'https://juneau.org/library', eventsUrl: 'https://www.trumba.com/calendars/juneau-public-libraries', city: 'Juneau', state: 'AK', zipCode: '99801', county: 'Juneau County'},
   { name: 'Alaska State Library', url: 'https://library.alaska.gov', eventsUrl: 'https://library.alaska.gov/events', city: 'Juneau', state: 'AK', zipCode: '99811', county: 'Juneau County'},
   // Regional Libraries
-  { name: 'Matanuska-Susitna Borough Libraries', url: 'https://www.matsulibrary.org', eventsUrl: 'https://www.matsulibrary.org/events', city: 'Wasilla', state: 'AK', zipCode: '99654', county: 'Wasilla County'},
   { name: 'Kenai Community Library', url: 'https://www.kenailibrary.org', eventsUrl: 'https://www.kenailibrary.org/events', city: 'Kenai', state: 'AK', zipCode: '99611', county: 'Kenai County'},
-  { name: 'Soldotna Public Library', url: 'https://www.soldotna.org/library', eventsUrl: 'https://www.soldotna.org/library/events', city: 'Soldotna', state: 'AK', zipCode: '99669', county: 'Soldotna County'},
+  { name: 'Soldotna Public Library', url: 'https://www.soldotna.org/', eventsUrl: 'https://www.soldotna.org/departments/library/index.php', city: 'Soldotna', state: 'AK', zipCode: '99669', county: 'Soldotna County'},
   { name: 'Kodiak Public Library', url: 'https://www.city.kodiak.ak.us/library', eventsUrl: 'https://www.city.kodiak.ak.us/library/events', city: 'Kodiak', state: 'AK', zipCode: '99615', county: 'Kodiak County'},
-  { name: 'Ketchikan Public Library', url: 'https://www.firstcitylibraries.org', eventsUrl: 'https://www.firstcitylibraries.org/events', city: 'Ketchikan', state: 'AK', zipCode: '99901', county: 'Ketchikan County'},
   { name: 'Sitka Public Library', url: 'https://www.cityofsitka.com/library', eventsUrl: 'https://www.cityofsitka.com/library/events', city: 'Sitka', state: 'AK', zipCode: '99835', county: 'Sitka County'},
   { name: 'Palmer Public Library', url: 'https://www.cityofpalmer.org/library', eventsUrl: 'https://www.cityofpalmer.org/library/events', city: 'Palmer', state: 'AK', zipCode: '99645', county: 'Palmer County'},
-  { name: 'Valdez Consortium Library', url: 'https://www.ci.valdez.ak.us/library', eventsUrl: 'https://www.ci.valdez.ak.us/library/events', city: 'Valdez', state: 'AK', zipCode: '99686', county: 'Valdez County'},
-  { name: 'Homer Public Library', url: 'https://www.cityofhomer-ak.gov/library', eventsUrl: 'https://www.cityofhomer-ak.gov/library/events', city: 'Homer', state: 'AK', zipCode: '99603', county: 'Homer County'},
+  { name: 'Homer Public Library', url: 'https://www.cityofhomer-ak.gov/', eventsUrl: 'https://www.cityofhomer-ak.gov/calendar', city: 'Homer', state: 'AK', zipCode: '99603', county: 'Homer County'},
   { name: 'Seward Community Library', url: 'https://www.cityofseward.us/library', eventsUrl: 'https://www.cityofseward.us/library/events', city: 'Seward', state: 'AK', zipCode: '99664', county: 'Seward County'},
-  { name: 'Bethel Public Library', url: 'https://www.cityofbethel.net/library', eventsUrl: 'https://www.cityofbethel.net/library/events', city: 'Bethel', state: 'AK', zipCode: '99559', county: 'Bethel County'}
 ];
 
 const SCRAPER_NAME = 'wordpress-AK';
