@@ -185,6 +185,7 @@ const LIBRARIES = [
   { name: 'Winfield Public Library', url: 'https://www.winfieldlibrary.org/', eventsUrl: 'https://www.winfieldlibrary.org/', city: 'Winfield', state: 'IA', zipCode: '52659', county: 'Winfield County'},
   { name: 'Winterset Public Library', url: 'https://www.wintersetlibrary.org/', eventsUrl: 'https://www.wintersetlibrary.org/calendar/', city: 'Winterset', state: 'IA', zipCode: '50273', county: 'Winterset County'},
   { name: 'Winthrop Public Library', url: 'https://www.winthroplibrary.org/', eventsUrl: 'https://www.winthroplibrary.org/', city: 'Winthrop', state: 'IA', zipCode: '50682', county: 'Winthrop County'},
+  { name: 'Johnston Public Library', url: 'https://www.johnstonlibrary.org', eventsUrl: 'https://www.johnstonlibrary.org/events', city: 'Johnston', state: 'IA', zipCode: '50131', county: 'Johnston County'},
 
 ];
 

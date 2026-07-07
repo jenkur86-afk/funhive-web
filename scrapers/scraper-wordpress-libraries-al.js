@@ -88,6 +88,7 @@ const LIBRARIES = [
   { name: 'Pine Hill Branch Public Library', url: 'https://pinehilllibrary.org/', eventsUrl: 'https://pinehilllibrary.org/calendar/', city: 'Pine Hill', state: 'AL', zipCode: '36769', county: 'Pine Hill County'},
   { name: 'Clay Public Library', url: 'https://www.pinsonlibrary.org', eventsUrl: 'https://www.pinsonlibrary.org/events', city: 'Pinson', state: 'AL', zipCode: '35126', county: 'Pinson County'},
   { name: 'Satsuma Public Library', url: 'https://www.satsumalibrary.com/', eventsUrl: 'https://www.satsumalibrary.com/upcoming-events', city: 'Satsuma', state: 'AL', zipCode: '36572', county: 'Satsuma County'},
+  { name: 'Evergreen Public Library', url: 'https://www.evergreenlibrary.org', eventsUrl: 'https://www.evergreenlibrary.org/events', city: 'Evergreen', state: 'AL', zipCode: '36401', county: 'Evergreen County'},
   { name: 'Sheffield Public Library', url: 'https://www.sheffieldlibrary.org/', eventsUrl: 'https://www.sheffieldlibrary.org/', city: 'Sheffield', state: 'AL', zipCode: '35660', county: 'Sheffield County'},
   { name: 'Somerville Public Library', url: 'https://www.somervillelibrary.org/', eventsUrl: 'https://www.somervillelibrary.org/', city: 'Somerville', state: 'AL', zipCode: '35670', county: 'Somerville County'},
   { name: 'Stevenson Public Library', url: 'https://www.stevensonlibrary.org', eventsUrl: 'https://www.stevensonlibrary.org/events', city: 'Stevenson', state: 'AL', zipCode: '35772', county: 'Stevenson County'},

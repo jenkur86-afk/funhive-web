@@ -59,7 +59,9 @@ const LIBRARIES = [
   { name: 'Garfield County Library - Silt', url: 'https://www.garfieldcountylibrary.org/', platform: 'wordpress', eventsUrl: 'https://www.garfieldcountylibrary.org/', city: 'Silt', state: 'CO', zipCode: '81652', county: '' },
   { name: 'Sterling Public Library', url: 'https://sterlinglibrary.org/', platform: 'wordpress', eventsUrl: 'https://sterlinglibrary.org/calendar/', city: 'Sterling', state: 'CO', zipCode: '80751', county: '' },
   { name: 'Westminster Public Library', url: 'https://www.westminsterlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.westminsterlibrary.org/events', city: 'Westminster', state: 'CO', zipCode: '80031', county: '' },
-  { name: 'Yuma Public Library', url: 'https://yumalibrary.org/', platform: 'wordpress', eventsUrl: 'https://yumalibrary.org/', city: 'Yuma', state: 'CO', zipCode: '80759', county: '' }
+  { name: 'Yuma Public Library', url: 'https://yumalibrary.org/', platform: 'wordpress', eventsUrl: 'https://yumalibrary.org/', city: 'Yuma', state: 'CO', zipCode: '80759', county: '' },
+  { name: 'Evergreen Library', url: 'https://www.evergreenlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.evergreenlibrary.org/events', city: 'Evergreen', state: 'CO', zipCode: '', county: '' },
+  { name: 'Naturita Library', url: 'https://www.naturitalibrary.org', platform: 'wordpress', eventsUrl: 'https://www.naturitalibrary.org/events', city: 'Naturita', state: 'CO', zipCode: '', county: '' }
 ];
 
 const SCRAPER_NAME = 'generic-CO';
