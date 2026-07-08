@@ -10,7 +10,8 @@
     "lint": "next lint",
     "scraper": "node scrapers/local-scraper-runner.js",
     "scraper:dry-run": "node scrapers/local-scraper-runner.js --dry-run",
-    "scraper:monitor": "node scrapers/local-scraper-monitor.js"
+    "scraper:monitor": "node scrapers/local-scraper-monitor.js",
+    "scraper:trends": "node scripts/scraper-fix-trends.js"
   },
   "dependencies": {
     "@stripe/stripe-js": "^5.5.0",

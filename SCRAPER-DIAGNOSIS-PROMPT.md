@@ -210,6 +210,7 @@ If a state's scraper returns 0 (or near-0) events across most of its libraries, 
 - For date normalization changes, verify against the test cases in the date helper
 - For library-branch-detector changes, run a sanity test like `outputs/test-branch-detector.js` covering at least one positive case, one negative case, and the wrong-state guard.
 - Summarize what you fixed and what I need to do (e.g., `npm install`, re-run a specific scraper)
+- **Log the fix**: append one line per logical fix (not per commit, not per file) to `SCRAPER-FIX-LOG.jsonl` at the repo root — a JSON object with `date` (`"YYYY-MM-DD"`), `scrapers` (array of registry keys from `scrapers/scraper-registry.js`; for a shared-helper fix touching many scrapers at once, use a sentinel like `"event-save-helper.js"` or `"MacaroniKid-ALL"` instead of enumerating them), `category` (exactly one of `site-change` | `code-bug` | `seed-data` | `new-coverage` | `other`), and `summary` (1-2 plain sentences: what broke, what you did). Stage this file in the same `git add` group as the fix it documents — see `scripts/scraper-fix-trends.js` for how the log gets used (category trends, repeat-offender detection, staleness gap-check).
 
 ### Final summary — REQUIRED format
 
@@ -235,6 +236,8 @@ End your response with a section titled **"Changes to push"** that I cannot miss
 5. **State which scrapers I should re-run** to confirm the fixes worked, and what specific log line to look for (e.g. "Master line should now show `Found: N, New: M, Duplicates: K` instead of `0/0/0`").
 
 6. If any change does NOT need to be pushed (e.g. the fix only affects scraper behavior locally and I run scrapers from this machine), say so explicitly. Default assumption: I want changes committed and pushed for backup.
+
+7. **Staleness self-check**: before finishing, confirm `SCRAPER-FIX-LOG.jsonl` has an entry dated today covering any non-`new-coverage` fix you made, and that it's included in the `git add` commands above. If it's missing, add the entry and the add command now — don't leave this for a future session to notice via `scripts/scraper-fix-trends.js`'s gap-check.
 
 Do not bury push instructions in prose. Make them a checklist I can follow without re-reading the rest of the response.
 
