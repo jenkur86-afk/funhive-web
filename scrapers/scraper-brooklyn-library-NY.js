@@ -208,6 +208,7 @@ async function scrapeBrooklynLibrary() {
   let imported = 0;
   let skipped = 0;
   let failed = 0;
+  let foundCount = 0;
   const events = [];
 
   let browser;
@@ -233,15 +234,9 @@ async function scrapeBrooklynLibrary() {
     // Wait for event cards to render (React SPA)
     console.log('⏳ Waiting for events to load...');
     try {
-      await Promise.race([
-        page.waitForSelector('[class*="event"]', { timeout: 15000 }),
-        page.waitForSelector('article', { timeout: 15000 }),
-        page.waitForSelector('[class*="card"]', { timeout: 15000 })
-      ]).catch(() => {
-        console.log('⚠️ Event selectors not found, proceeding with page evaluation');
-      });
+      await page.waitForSelector('.result-container', { timeout: 15000 });
     } catch (e) {
-      console.log('⚠️ Timeout waiting for events, proceeding');
+      console.log('⚠️ .result-container not found, proceeding with page evaluation');
     }
 
     // Additional wait for React rendering
@@ -252,83 +247,45 @@ async function scrapeBrooklynLibrary() {
     const pageEvents = await page.evaluate(() => {
       const results = [];
 
-      // Try multiple selector strategies
-      let eventElements = [];
-
-      // Strategy 1: Look for article tags
-      eventElements = Array.from(document.querySelectorAll('article'));
-
-      // Strategy 2: Look for divs with event-like classes
-      if (eventElements.length === 0) {
-        eventElements = Array.from(document.querySelectorAll('[class*="event"], [class*="card"]'));
-      }
-
-      // Strategy 3: Look for links with event-like paths
-      if (eventElements.length === 0) {
-        eventElements = Array.from(document.querySelectorAll('a[href*="/event"], a[href*="/events"]'));
-      }
+      // The site migrated from a standalone calendar to a BiblioCommons-style
+      // discovery/search portal (discover.bklynlibrary.org?event=true). Real
+      // event cards live under `.result-container`; the old `[class*="event"]`
+      // selector only matched sub-fragments of each card (date/time/venue rows,
+      // hidden error-message divs, etc.), never the card itself.
+      const eventElements = Array.from(document.querySelectorAll('.result-container'));
 
       eventElements.forEach(el => {
         try {
-          const fullText = el.textContent || '';
-          if (!fullText.trim()) return;
+          const titleEl = el.querySelector('.result-title a');
+          if (!titleEl) return;
+          const title = titleEl.textContent.trim();
+          const url = titleEl.href || '';
+          if (!title) return;
 
-          // Extract title
-          let title = '';
-          const titleEl = el.querySelector('h2, h3, h4, .title, [class*="title"]');
-          if (titleEl) {
-            title = titleEl.textContent.trim();
-          } else {
-            const parts = fullText.split(/\d{1,2}[\/-]\d{1,2}/);
-            if (parts[0]) {
-              title = parts[0].trim().substring(0, 100);
-            }
-          }
-
-          // Extract URL
-          let url = '';
-          const linkEl = el.querySelector('a[href*="/event"], a[href*="/calendar"]');
-          if (linkEl) {
-            url = linkEl.href || '';
-          } else if (el.tagName === 'A') {
-            url = el.href || '';
-          }
-
-          // Extract date and time
+          // Each of date/time/venue lives in its own `.flex` row inside
+          // `.event-date-location-container`: an icon <div> followed by a
+          // text <div> (venue's text div additionally has class "notranslate").
+          // Order is fixed: date, time, venue.
+          const flexRows = el.querySelectorAll('.event-date-location-container .flex');
           let eventDate = '';
-          let startTime = '';
-          let endTime = '';
-
-          const dateMatch = fullText.match(
-            /(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4}|\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2},?\s+\d{4})/i
-          );
-          if (dateMatch) {
-            eventDate = dateMatch[0];
-          }
-
-          const timeMatch = fullText.match(/(\d{1,2}):(\d{2})\s*(am|pm)/gi);
-          if (timeMatch && timeMatch.length >= 1) {
-            startTime = timeMatch[0].toUpperCase().replace(/([AP])M/, ' $1M');
-          }
-          if (timeMatch && timeMatch.length >= 2) {
-            endTime = timeMatch[1].toUpperCase().replace(/([AP])M/, ' $1M');
-          }
-
-          // Extract location/branch
+          let timeRange = '';
           let venue = '';
-          const locationMatch = fullText.match(/(?:at|location|branch):\s*([^,\n]+)/i);
-          if (locationMatch) {
-            venue = locationMatch[1].trim();
-          }
+          flexRows.forEach((row, i) => {
+            const textDiv = row.children[1];
+            const text = textDiv ? textDiv.textContent.trim() : '';
+            if (i === 0) eventDate = text;       // e.g. "Wed, Jul 8" (no year - normalizeDateString infers it)
+            else if (i === 1) timeRange = text;  // e.g. "1:00am to 3:00pm"
+            else if (i === 2) venue = text;      // e.g. "Paerdegat Library"
+          });
 
-          // Extract description
-          let description = '';
-          const descEl = el.querySelector('[class*="description"], [class*="desc"], p');
-          if (descEl) {
-            description = descEl.textContent.trim().substring(0, 500);
-          }
+          const timeMatch = timeRange.match(/(\d{1,2}:\d{2}\s*[ap]m)\s*(?:to|-)\s*(\d{1,2}:\d{2}\s*[ap]m)/i);
+          const startTime = timeMatch ? timeMatch[1].toUpperCase().replace(/([AP])M/, ' $1M') : '';
+          const endTime = timeMatch ? timeMatch[2].toUpperCase().replace(/([AP])M/, ' $1M') : '';
+
+          const description = (el.querySelector('.web-summary')?.textContent || '').trim().substring(0, 500);
 
           // Extract age range if present
+          const fullText = el.textContent || '';
           let ageRange = '';
           if (fullText.match(/baby|infant|toddler|0[–-]?2/i)) ageRange = 'Babies & Toddlers (0-2)';
           else if (fullText.match(/preschool|3[–-]?5|ages 3-5/i)) ageRange = 'Preschool (3-5)';
@@ -357,6 +314,7 @@ async function scrapeBrooklynLibrary() {
     });
 
     console.log(`  ✅ Found ${pageEvents.length} events\n`);
+    foundCount = pageEvents.length;
 
     // Process extracted events
     for (const event of pageEvents) {
@@ -420,8 +378,7 @@ async function scrapeBrooklynLibrary() {
     });
 
     imported = result.saved;
-    skipped = result.skipped;
-    failed += result.errors;
+    skipped = result.skipped + (result.invalidDate || 0);
 
   } catch (saveError) {
     console.error('❌ Error saving events:', saveError.message);
@@ -438,17 +395,17 @@ async function scrapeBrooklynLibrary() {
   console.log('='.repeat(60) + '\n');
 
   // Log for monitoring
-  await logScraperResult({
-    scraperName: 'Brooklyn Public Library',
+  await logScraperResult('Brooklyn Public Library', {
+    found: foundCount,
+    new: imported,
+    duplicates: skipped,
+    errors: failed
+  }, {
     state: 'NY',
-    city: 'Brooklyn',
-    imported,
-    skipped,
-    failed,
-    status: failed > 0 ? 'warning' : 'success'
+    source: 'Brooklyn Public Library'
   });
 
-  return { imported, skipped, failed };
+  return { found: foundCount, new: imported, imported, skipped, failed };
 }
 
 /**

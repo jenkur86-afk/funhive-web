@@ -923,8 +923,12 @@ const SCRAPERS = {
   // --- WordPress new state files ---
   'WordPress-NH': { file: './scraper-wordpress-libraries-nh.js', exportName: 'scrapeWordpressNHCloudFunction', type: 'puppeteer', group: 3, state: 'NH' },
   'WordPress-IA': { file: './scraper-wordpress-libraries-ia.js', exportName: 'scrapeWordpressIACloudFunction', type: 'puppeteer', group: 1, state: 'IA' },
-  'WordPress-MN': { file: './scraper-wordpress-libraries-mn.js', exportName: 'scrapeWordpressMNCloudFunction', type: 'puppeteer', group: 2, state: 'MN' },
-  'WordPress-RI': { file: './scraper-wordpress-libraries-ri.js', exportName: 'scrapeWordpressRICloudFunction', type: 'puppeteer', group: 1, state: 'RI' },
+  // WordPress-MN and WordPress-RI were already registered above (lines ~793,
+  // ~819) - this block re-declared them by accident. Since object literals
+  // keep the last key, the RI re-declaration silently overrode its group from
+  // 3 to 1, so it always ran on Group 1 days instead of Group 3 (confirmed by
+  // the 2026-07-07 run log). Removed the duplicates rather than the originals
+  // to restore RI to its originally-registered group.
 
   // --- Assabet Interactive platform scraper ---
   'Assabet-NH-MA': { file: './scraper-assabet-libraries-nh-ma.js', exportName: 'scrapeAssabetLibrariesCloudFunction', type: 'puppeteer', group: 3, state: 'Multi' },

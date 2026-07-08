@@ -39,6 +39,7 @@ Active scraper counts (July 2026): Group 1 = 51, Group 2 = 49, Group 3 = 45.
 - Check `date-normalization-helper.js` — does it handle the date format being skipped?
 - Common formats to watch for: "Month Day @ Time", timezone abbreviations (EST/PST), localized day abbreviations (Sá., Lu.), periods in month abbreviations (Apr.), date ranges with dashes
 - Add new normalization rules if needed, and verify all existing date tests still pass
+- **Suspiciously high `past event` counts, especially "all or nearly all events skipped as past" on a single-source scraper**: `normalizeDateString()` always strips time-of-day and returns a date-only string, so the past-event check in `event-save-helper.js` builds `dateObj` at midnight local time. Before 2026-07-08 this meant ANY same-day event looked "already past" the instant the scraper ran later than 00:00 — a today's-events listing scraped at 2pm would have every single row rejected as past, even ones still hours from starting or actively ongoing. Fixed 2026-07-08 by re-checking against the event's actual `startTime`/`endTime` (whichever is available, preferring end) before confirming a same-day event is truly over — see the `timeForPastCheck` block right after `// Skip past events`. If you see this exact symptom again (one scraper's `past event` count ≈ its total found count, and the scraper covers same-day/today listings), verify the scraper is actually passing `startTime`/`endTime` fields through to `saveEventsWithGeocoding` — this fix only helps if that data reaches the helper.
 
 **3. Database errors**
 - `23505` duplicate key / unique constraint (`idx_events_unique_content`): Ensure row-by-row fallback with `ignoreDuplicates: true` exists in `supabase-adapter.js`
@@ -171,9 +172,9 @@ Commits `6734fe7`, `4b388ee`, `cf70bb1`, `4f3718f` (2026-07-07) removed ~5,500 f
 If a state's scraper returns 0 (or near-0) events across most of its libraries, check whether the repointed `eventsUrl` for those libraries actually lands on a real events listing vs. a generic page that only happened to pass the "mentions library" sanity check during cleanup. Fix by finding the real calendar path manually (same approach as the original cleanup: look for a nav link containing "calendar" or "events").
 
 **Group tracking** (WordPress-{state} scrapers are split across the 3-day rotation by state) — check off as each group is diagnosed against this item:
-- [ ] Group 1 checked
-- [ ] Group 2 checked
-- [ ] Group 3 checked
+- [x] Group 1 checked (2026-07-07 run: VA, GA, NC, CT, TN, AL, VT, RI all reported healthy nonzero Found counts, e.g. WordPress-GA 1953 found/99 new)
+- [x] Group 2 checked (2026-07-08 run: MD, NY, FL, NJ, MS, ME all reported healthy nonzero Found counts, e.g. WordPress-NY 6097 found/451 new)
+- [ ] Group 3 checked (PA, MA, KY, SC, WV, DE, NH — not yet run since the cleanup; next Group 3 day is 2026-07-09)
 
 **Once all three boxes above are checked, delete this entire section (14) from this file** — it's a one-time verification for the 2026-07-07 cleanup, not a permanent diagnosis category.
 

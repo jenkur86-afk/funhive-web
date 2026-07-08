@@ -567,11 +567,22 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
         try {
           const dateObj = new Date(dateStr);
           if (!isNaN(dateObj.getTime())) {
-            // Skip past events
+            // Skip past events. dateObj is always midnight (normalizeDateString
+            // strips time), so a same-day event looks "past" the instant any time
+            // passes 00:00 local, even if it hasn't started or is still ongoing.
+            // Before concluding it's over, re-check using the event's actual
+            // end/start time when available (caught 2026-07-08 via
+            // Brooklyn-Library: a 1am-3pm event scraped at 10am was skipped as
+            // past even though it was still running).
             if (dateObj < new Date()) {
-              skipped++;
-              skippedPastEvent++;
-              continue;
+              const timeForPastCheck = extractedEndTime || extractedStartTime;
+              const withTime = timeForPastCheck ? new Date(`${dateStr} ${timeForPastCheck}`) : null;
+              const stillUpcoming = withTime && !isNaN(withTime.getTime()) && withTime >= new Date();
+              if (!stillUpcoming) {
+                skipped++;
+                skippedPastEvent++;
+                continue;
+              }
             }
             dateTimestamp = admin.firestore.Timestamp.fromDate(dateObj);
           }
