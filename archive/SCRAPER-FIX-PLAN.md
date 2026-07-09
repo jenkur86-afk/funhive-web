@@ -1,5 +1,7 @@
 # Scraper Fix Plan
 
+> **ARCHIVED 2026-07-09.** This was a one-time phased plan for activating scraper regions (DMV → eastern → central → western), not a recurring workflow. Phases 1–4 (DMV, eastern) are done — `dmv` and `eastern` are both active in `scrapers/region-config.json`. Phases 5–6 (central, western) were never started; the checklists below are still a reasonable starting point if that work resumes. For day-to-day scraper fixes, use `SCRAPER-DIAGNOSIS-PROMPT.md` at the repo root instead — this file's own "Progress log" went stale (last entry 2026-05-15) once that became the actual workflow.
+
 Single source of truth for the scraper triage that started 2026-05-14 after the data-quality-check on 2026-05-10. Any Cowork/Claude Code session picking up this work should read this file first, scan the **Progress log** at the bottom for the latest state, then resume at the next un-checked item.
 
 ---
