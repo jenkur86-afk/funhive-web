@@ -3,32 +3,57 @@
 /**
  * BARNES & NOBLE EVENTS SCRAPER - EASTERN US
  *
- * Scrapes family-friendly events from Barnes & Noble store events pages across 28 eastern US states.
- * Events include: storytimes, author signings, book clubs, craft events, LEGO builds, and more.
+ * Rewritten 2026-07-09: B&N rebuilt stores.barnesandnoble.com as a Next.js/MUI
+ * app. All 136 previously-hardcoded store IDs (storeSlug) went stale — some
+ * now silently resolve to a DIFFERENT physical store than before (e.g. the
+ * old Dover-DE id started resolving to a real store in Eugene, OR) — and the
+ * old `a[href*="/event/"]` DOM selector no longer matches anything, so every
+ * store returned 0 events. Rather than re-discover 136 current store IDs and
+ * DOM-scrape a new page structure, this now calls the site's own JSON API
+ * directly (found via live network inspection, not publicly documented):
  *
- * Source: Barnes & Noble store events pages
- * URL pattern: https://stores.barnesandnoble.com/event/{store-slug}
+ *   1. GET /locator-api/v1/location/change/{zip}  — sets a session location
+ *      (returns cookies), response body: {lat,lng,city,state,zip}
+ *   2. GET /locator-api/v1/events  (same cookies) — returns every event
+ *      within ~40mi of that location, each item carrying its OWN live store
+ *      info (storeId, storeName, address, city, state) straight from B&N,
+ *      not from our config. That live data is what makes the old
+ *      stale-ID data-corruption risk moot: venue city/state now always
+ *      reflects reality, so there's nothing to cross-check against a
+ *      hardcoded id anymore.
  *
- * Coverage: AL, CT, DC, DE, FL, GA, IA, IL, IN, KY, MA, MD, ME, MN, MS, NC, NH, NJ, NY,
- *           OH, PA, RI, SC, TN, VA, VT, WI, WV
+ * No Puppeteer needed — plain fetch(). STORES below is now used purely as a
+ * list of search points (zip codes); a 40mi-radius search naturally covers
+ * overlapping ground between nearby points, so results are deduped by
+ * eventId and filtered to ACTIVE_STATES using the API's own live `state`
+ * field.
  *
- * Estimated Events: 200-600 per run (varies by store event schedules)
+ * Coverage (search points; results are filtered to FunHive's active region —
+ * see ACTIVE_STATES below): AL, CT, DC, DE, FL, GA, IA, IL, IN, KY, MA, MD,
+ * ME, MN, MS, NC, NH, NJ, NY, OH, PA, RI, SC, TN, VA, VT, WI, WV
  *
  * Usage:
- *   node scraper-barnes-noble-eastern.js                # All stores
- *   node scraper-barnes-noble-eastern.js --state NY     # Single state
+ *   node scraper-barnes-noble-eastern.js                # All search points
+ *   node scraper-barnes-noble-eastern.js --state NY     # Single state's search points
  *   node scraper-barnes-noble-eastern.js --dry          # Dry run (no DB save)
  *
  * Cloud Function: scrapeBarnesNobleCloudFunction
  * Schedule: Every 3 days (Group 1: days 1,4,7,10...)
  */
 
-const { launchBrowser, createStealthPage } = require('./puppeteer-config');
 const { saveEventsWithGeocoding } = require('./event-save-helper');
 
 const SCRAPER_NAME = 'BarnesNoble-Eastern';
 
 const delay = (ms) => new Promise(r => setTimeout(r, ms));
+
+// Matches scrapers/region-config.json's dmv + eastern active regions. The
+// 40mi-radius API search can occasionally pick up a store just across a
+// state line into a region FunHive doesn't serve yet — filter those out.
+const ACTIVE_STATES = new Set([
+  'DC', 'MD', 'VA', 'ME', 'NH', 'VT', 'MA', 'RI', 'CT', 'NY', 'NJ', 'PA', 'DE',
+  'WV', 'NC', 'SC', 'GA', 'FL', 'AL', 'MS', 'TN', 'KY'
+]);
 
 // ==========================================
 // ADULT-ONLY / NON-FAMILY KEYWORDS
@@ -43,7 +68,9 @@ const ADULT_KEYWORDS = [
 ];
 
 // ==========================================
-// STORES CONFIGURATION (5-10 per state, major locations)
+// SEARCH POINTS (reused as zip codes only — storeSlug/name/city here are
+// historical labels for the search point, not authoritative venue data;
+// the API response's own storeName/city/state is what actually gets saved)
 // ==========================================
 
 const STORES = [
@@ -173,9 +200,6 @@ const STORES = [
 
   // New York (NY)
   { name: 'Barnes & Noble Union Square NYC', storeSlug: '2675', city: 'New York', state: 'NY', zip: '10003' },
-  // Tribeca NYC: DISABLED — storeSlug '2289' is actually Paramus NJ (duplicate).
-  // TODO: Find correct Tribeca store slug from stores.barnesandnoble.com
-  // { name: 'Barnes & Noble Tribeca NYC', storeSlug: 'FIXME', city: 'New York', state: 'NY', zip: '10013' },
   { name: 'Barnes & Noble Brooklyn', storeSlug: '2676', city: 'Brooklyn', state: 'NY', zip: '11201' },
   { name: 'Barnes & Noble Manhasset', storeSlug: '2677', city: 'Manhasset', state: 'NY', zip: '11030' },
   { name: 'Barnes & Noble Rochester', storeSlug: '2679', city: 'Rochester', state: 'NY', zip: '14623' },
@@ -258,7 +282,8 @@ function isAdultEvent(name, description) {
 /**
  * Parse date string from Barnes & Noble event listing.
  * Typical formats: "May 10, 2026", "Saturday, May 10, 2026 11:00 AM",
- *                  "05/10/2026", or ISO strings
+ *                  "05/10/2026", ISO strings, or "2026-07-11, 11:00 AM"
+ *                  (the API's ISO date plus separately-tracked time).
  */
 function parseBNDate(dateStr) {
   if (!dateStr || typeof dateStr !== 'string') return { eventDate: '', date: null };
@@ -354,278 +379,37 @@ function detectCategory(name, description) {
 }
 
 // ==========================================
-// SCRAPING FUNCTIONS
+// API FUNCTIONS
 // ==========================================
 
+const API_HEADERS = {
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+  'Accept': 'application/json',
+};
+
 /**
- * Scrape events from a single Barnes & Noble store's events page.
+ * Fetch all B&N events within ~40mi of a zip code via the site's own
+ * (undocumented) locator API. Two-step: set the session location, then
+ * read events for it — the events endpoint ignores a bare storeId query
+ * param and only respects the session set by step 1.
  */
-async function scrapeStore(browser, store) {
-  // B&N store pages show events at /store/{slug} — /event/{slug} returns 404
-  const storePageUrl = `https://stores.barnesandnoble.com/store/${store.storeSlug}`;
-
-  console.log(`  🔍 Scraping ${store.name}: ${storePageUrl}`);
-
-  const events = [];
-  let page = null;
-
-  try {
-    page = await createStealthPage(browser);
-    await page.setViewport({ width: 1920, height: 1080 });
-
-    // Navigate to the store page (events are listed here)
-    let navigated = false;
-    try {
-      const response = await page.goto(storePageUrl, { waitUntil: 'networkidle2', timeout: 30000 });
-      if (response && response.status() < 400) {
-        // Check for Cloudflare challenge or empty body
-        const bodyText = await page.evaluate(() => document.body?.innerText?.substring(0, 200) || '');
-        if (bodyText.includes('Checking your browser') || bodyText.includes('Just a moment') || bodyText.length < 50) {
-          console.log(`    ⏳ Anti-bot challenge detected, waiting up to 20s...`);
-          // Two-stage wait: 10s, then check, then another 10s if still blocked.
-          // The previous 8s wait was too short for B&N's Cloudflare challenge — 77/136 stores failed.
-          await new Promise(resolve => setTimeout(resolve, 10000));
-          let retryBody = await page.evaluate(() => document.body?.innerText?.substring(0, 200) || '');
-          if (retryBody.includes('Checking your browser') || retryBody.includes('Just a moment') || retryBody.length < 50) {
-            await new Promise(resolve => setTimeout(resolve, 10000));
-            retryBody = await page.evaluate(() => document.body?.innerText?.substring(0, 200) || '');
-          }
-          if (retryBody.includes('Checking your browser') || retryBody.includes('Just a moment') || retryBody.length < 50) {
-            console.log(`    ⚠️  Challenge not resolved for ${storePageUrl}`);
-          } else {
-            navigated = true;
-          }
-        } else {
-          navigated = true;
-        }
-      }
-    } catch (navErr) {
-      // On timeout, check if page still has usable content
-      if (navErr.message.includes('timeout') || navErr.message.includes('Timeout')) {
-        try {
-          const bodyLen = await page.evaluate(() => document.body?.innerHTML?.length || 0);
-          if (bodyLen > 1000) {
-            console.log(`    ⚠️  Timeout but page has content (${bodyLen} chars), continuing...`);
-            navigated = true;
-          }
-        } catch (e) { /* page not usable */ }
-      }
-      if (!navigated) {
-        console.log(`    ⚠️  Could not load ${storePageUrl}: ${navErr.message.substring(0, 80)}`);
-      }
-    }
-
-    if (!navigated) {
-      console.log(`    ❌ Could not access store page for ${store.name}`);
-      return [];
-    }
-
-    // Wait for dynamic content to render
-    await new Promise(resolve => setTimeout(resolve, 3000));
-
-    // Extract events from the page
-    // B&N store pages have a flat DOM structure (no CSS class containers).
-    // Events appear as flat sibling elements under a main container:
-    //   heading(month) → heading(day) → image → "In Store"/"Virtual" text →
-    //   link(title, href=/event/...) → text(full date) → text(event type) →
-    //   link("VIEW DETAILS") → optional button("Buy Tickets")
-    // Two sections: "Upcoming Events at This Store" (local) and "Featured Events" (virtual/national)
-    const rawEvents = await page.evaluate((sourceUrl) => {
-      const results = [];
-      const seenHrefs = new Set();
-
-      // JUNK link text to skip
-      const JUNK_LINKS = new Set([
-        'view details', 'buy tickets', 'register here', 'register now',
-        'get tickets', 'rsvp', 'learn more', 'see all', 'view all',
-      ]);
-
-      // Date patterns — multiple formats B&N uses:
-      // "Saturday, April 25, 2026 11:00 AM ET" (full)
-      // "Apr 25, 2026" or "April 25, 2026" (no day name)
-      // "04/25/2026" (numeric)
-      const DATE_FULL = /(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday),?\s+(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+\d{1,2},?\s+\d{4}/i;
-      const DATE_SHORT = /\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+\d{1,2},?\s+\d{4}/i;
-      const DATE_NUMERIC = /\b\d{1,2}\/\d{1,2}\/\d{4}\b/;
-      const hasDate = (t) => DATE_FULL.test(t) || DATE_SHORT.test(t) || DATE_NUMERIC.test(t);
-
-      // Find all links pointing to /event/ pages — these are event title links
-      const allLinks = document.querySelectorAll('a[href*="/event/"]');
-
-      for (const link of allLinks) {
-        const title = link.textContent.trim();
-
-        // Skip junk links
-        if (!title || title.length < 5 || title.length > 300) continue;
-        if (JUNK_LINKS.has(title.toLowerCase())) continue;
-
-        // Skip duplicate hrefs (same event linked multiple times)
-        const href = link.getAttribute('href') || '';
-        if (seenHrefs.has(href)) continue;
-        seenHrefs.add(href);
-
-        // Determine if this is a virtual/national event by checking nearby "Virtual" text
-        let isVirtual = false;
-        let dateText = '';
-        let eventType = '';
-        let imageUrl = '';
-
-        // Walk siblings and nearby elements to find date, type, and virtual flag
-        // The DOM is flat: elements are siblings of the link or siblings of link's parent
-        const parent = link.parentElement;
-        const grandparent = parent ? parent.parentElement : null;
-        const searchRoot = grandparent || parent || link;
-
-        // Look at previous siblings of the link for "In Store"/"Virtual" text and image
-        let el = link.previousElementSibling;
-        let lookback = 0;
-        while (el && lookback < 6) {
-          const text = el.textContent.trim();
-          if (/^virtual$/i.test(text)) isVirtual = true;
-          if (/^in store$/i.test(text)) isVirtual = false;
-          if (!imageUrl && el.tagName === 'IMG') {
-            imageUrl = el.src || '';
-          }
-          // Also check inside the element for images
-          if (!imageUrl) {
-            const img = el.querySelector && el.querySelector('img');
-            if (img) imageUrl = img.src || '';
-          }
-          el = el.previousElementSibling;
-          lookback++;
-        }
-
-        // Look at next siblings for date text and event type (check up to 8 siblings)
-        el = link.nextElementSibling;
-        let lookahead = 0;
-        while (el && lookahead < 8) {
-          const text = el.textContent.trim();
-
-          // Date: various formats
-          if (!dateText && text.length > 3 && text.length < 200 && hasDate(text)) {
-            dateText = text;
-          }
-
-          // Event type: "Author Event", "Special Event", etc.
-          if (!eventType && /^(author|special|community|kids|children|family|store)\s*(event|signing|reading)/i.test(text)) {
-            eventType = text;
-          }
-          // Also catch multi-type like "Author Event, Special Event"
-          if (!eventType && text.includes('Event') && text.length < 60 && !hasDate(text)) {
-            eventType = text;
-          }
-
-          el = el.nextElementSibling;
-          lookahead++;
-        }
-
-        // If no date found in siblings, check text within the link's parent container
-        if (!dateText && parent) {
-          const parentText = parent.textContent || '';
-          // Try to extract date from the container text
-          const fullMatch = parentText.match(DATE_FULL);
-          const shortMatch = parentText.match(DATE_SHORT);
-          const numMatch = parentText.match(DATE_NUMERIC);
-          if (fullMatch) dateText = fullMatch[0];
-          else if (shortMatch) dateText = shortMatch[0];
-          else if (numMatch) dateText = numMatch[0];
-        }
-
-        // Also check grandparent container as last resort
-        if (!dateText && grandparent) {
-          // Look for date in nearby child elements of grandparent
-          const allText = grandparent.querySelectorAll('*');
-          for (const child of allText) {
-            if (child === link) continue;
-            const ct = child.textContent.trim();
-            if (ct.length > 3 && ct.length < 200 && hasDate(ct)) {
-              dateText = ct;
-              break;
-            }
-          }
-        }
-
-        // Build full URL
-        let fullUrl = href;
-        if (href.startsWith('/')) {
-          fullUrl = 'https://stores.barnesandnoble.com' + href;
-        }
-
-        results.push({
-          name: title.substring(0, 200),
-          dateText: dateText.substring(0, 150),
-          timeText: '',
-          description: eventType || '',
-          url: fullUrl || sourceUrl,
-          imageUrl: imageUrl,
-          isVirtual: isVirtual,
-        });
-      }
-
-      return results;
-    }, storePageUrl);
-
-    // Filter out virtual/national events and count
-    const localEvents = rawEvents.filter(e => !e.isVirtual);
-    const virtualCount = rawEvents.length - localEvents.length;
-    console.log(`    📦 Raw: ${rawEvents.length} total (${localEvents.length} local, ${virtualCount} virtual/national skipped)`);
-
-    // Process and filter local events
-    for (const raw of localEvents) {
-      // Skip adult-only events
-      if (isAdultEvent(raw.name, raw.description)) {
-        console.log(`    ⏭️  Skipping adult event: ${raw.name.substring(0, 40)}...`);
-        continue;
-      }
-
-      // Parse date
-      const { eventDate, date } = parseBNDate(raw.dateText);
-
-      // Skip events with no date at all
-      if (!eventDate && !date) {
-        console.log(`    ⏭️  Skipping dateless event: ${raw.name.substring(0, 40)}...`);
-        continue;
-      }
-
-      // Detect category
-      const category = detectCategory(raw.name, raw.description);
-
-      events.push({
-        title: raw.name,
-        name: raw.name,
-        eventDate: eventDate || '',
-        date: date,
-        description: raw.description || `${category} event at ${store.name}`,
-        url: raw.url || storePageUrl,
-        imageUrl: raw.imageUrl || '',
-        venue: store.name,
-        venueName: store.name,
-        address: `${store.city}, ${store.state} ${store.zip}`,
-        city: store.city,
-        state: store.state,
-        zipCode: store.zip,
-        category: category,
-        source_url: storePageUrl,
-        scraper_name: SCRAPER_NAME,
-        metadata: {
-          sourceName: store.name,
-          sourceUrl: storePageUrl,
-          scrapedAt: new Date().toISOString()
-        }
-      });
-    }
-
-    console.log(`    ✅ ${events.length} family events after filtering`);
-
-  } catch (error) {
-    console.error(`    ❌ Error scraping ${store.name}: ${error.message}`);
-  } finally {
-    if (page) {
-      try { await page.close(); } catch (e) { /* ignore */ }
-    }
+async function fetchEventsNearZip(zip) {
+  const changeRes = await fetch(`https://stores.barnesandnoble.com/locator-api/v1/location/change/${zip}`, {
+    headers: API_HEADERS
+  });
+  if (!changeRes.ok) {
+    throw new Error(`location/change returned HTTP ${changeRes.status}`);
   }
+  const cookies = changeRes.headers.getSetCookie().map(c => c.split(';')[0]).join('; ');
 
-  return events;
+  const eventsRes = await fetch('https://stores.barnesandnoble.com/locator-api/v1/events', {
+    headers: { ...API_HEADERS, Cookie: cookies }
+  });
+  if (!eventsRes.ok) {
+    throw new Error(`events fetch returned HTTP ${eventsRes.status}`);
+  }
+  const data = await eventsRes.json();
+  return data.content || [];
 }
 
 // ==========================================
@@ -642,70 +426,89 @@ async function scrapeBarnesNoble(options = {}) {
   console.log(`📚 BARNES & NOBLE EVENTS SCRAPER - EASTERN US`);
   console.log(`${'='.repeat(70)}`);
 
-  // Filter stores
   let stores = STORES;
   if (filterState) {
     stores = stores.filter(s => s.state.toUpperCase() === filterState.toUpperCase());
     console.log(`📍 Filtering by state: ${filterState.toUpperCase()}`);
   }
 
-  console.log(`📊 Stores to scrape: ${stores.length}`);
+  // Dedupe zip codes — multiple stores can share a metro area / zip, and a
+  // 40mi radius search will naturally re-find the same real stores from
+  // several nearby zips anyway (handled below via eventId dedup).
+  const zips = [...new Set(stores.map(s => s.zip))];
+
+  console.log(`📊 Search points (zips): ${zips.length}`);
   if (dry) console.log(`🧪 DRY RUN — will not save to database`);
   console.log(`${'='.repeat(70)}\n`);
 
-  let browser = null;
+  const seenEventIds = new Set();
   const allEvents = [];
-  let sitesSinceRestart = 0;
-  const RESTART_INTERVAL = 20; // Restart browser every 20 stores
+  let failedZips = 0;
 
-  try {
-    browser = await launchBrowser({ stealth: true });
+  for (let i = 0; i < zips.length; i++) {
+    const zip = zips[i];
+    const progress = `[${i + 1}/${zips.length}]`;
 
-    for (let i = 0; i < stores.length; i++) {
-      const store = stores[i];
-      const progress = `[${i + 1}/${stores.length}]`;
+    try {
+      const rawEvents = await fetchEventsNearZip(zip);
+      let newCount = 0;
 
-      console.log(`\n${progress} 📚 ${store.name} (${store.city}, ${store.state})`);
+      for (const raw of rawEvents) {
+        if (seenEventIds.has(raw.eventId)) continue; // already captured from an overlapping search
+        seenEventIds.add(raw.eventId);
 
-      // Restart browser periodically
-      if (sitesSinceRestart >= RESTART_INTERVAL) {
-        console.log('\n🔄 Restarting browser to prevent memory issues...');
-        try { await browser.close(); } catch (e) { /* ignore */ }
-        browser = await launchBrowser({ stealth: true });
-        sitesSinceRestart = 0;
+        if (!ACTIVE_STATES.has(raw.state)) continue; // outside FunHive's active region
+        if (raw.isVirtualEvent) continue; // not tied to a real, geocodable venue
+        if (isAdultEvent(raw.name, raw.descriptionText)) continue;
+
+        const { eventDate, date } = parseBNDate(`${raw.date}, ${raw.time || ''}`.trim());
+        if (!eventDate && !date) continue;
+
+        const category = detectCategory(raw.name, raw.descriptionText);
+        const storeUrl = `https://stores.barnesandnoble.com/store/${raw.storeId}`;
+        const venueName = `Barnes & Noble ${raw.storeName}`;
+        const address = [raw.storeAddress1, raw.storeAddress2].filter(Boolean).join(', ') || `${raw.city}, ${raw.state} ${raw.zip}`;
+
+        allEvents.push({
+          title: raw.name,
+          name: raw.name,
+          eventDate: eventDate || '',
+          date: date,
+          startTime: raw.time || '',
+          description: raw.descriptionText || `${category} event at ${venueName}`,
+          url: storeUrl,
+          imageUrl: raw.largeIcon ? `https://cdn.shopify.com${raw.largeIcon}` : '',
+          venue: venueName,
+          venueName: venueName,
+          address: address,
+          city: raw.city,
+          state: raw.state,
+          zipCode: raw.zip,
+          category: category,
+          source_url: storeUrl,
+          scraper_name: SCRAPER_NAME,
+          metadata: {
+            sourceName: venueName,
+            sourceUrl: storeUrl,
+            scrapedAt: new Date().toISOString()
+          }
+        });
+        newCount++;
       }
 
-      try {
-        const storeEvents = await scrapeStore(browser, store);
-        allEvents.push(...storeEvents);
-        sitesSinceRestart++;
-      } catch (error) {
-        console.error(`  ❌ Fatal error for ${store.name}: ${error.message}`);
-        // Restart browser on protocol errors
-        if (error.message.includes('Protocol error') || error.message.includes('Connection closed') ||
-            error.message.includes('Target closed') || error.message.includes('detached')) {
-          console.log('  🔄 Browser crashed, restarting...');
-          try { if (browser) await browser.close(); } catch (e) { /* ignore */ }
-          browser = await launchBrowser({ stealth: true });
-          sitesSinceRestart = 0;
-        }
-      }
-
-      // Rate limiting: 3-5 second random delay between stores
-      if (i < stores.length - 1) {
-        const delayMs = 3000 + Math.floor(Math.random() * 2000);
-        await delay(delayMs);
-      }
+      console.log(`${progress} zip ${zip}: ${rawEvents.length} events in range, ${newCount} new/in-region/family`);
+    } catch (error) {
+      failedZips++;
+      console.error(`${progress} zip ${zip}: ❌ ${error.message}`);
     }
 
-  } finally {
-    if (browser) {
-      try { await browser.close(); } catch (e) { /* ignore */ }
+    if (i < zips.length - 1) {
+      await delay(400 + Math.floor(Math.random() * 300));
     }
   }
 
   console.log(`\n${'='.repeat(70)}`);
-  console.log(`📥 Total events extracted: ${allEvents.length}`);
+  console.log(`📥 Total unique family events in active region: ${allEvents.length}${failedZips > 0 ? ` (${failedZips} zip searches failed)` : ''}`);
   console.log(`${'='.repeat(70)}\n`);
 
   // Save events grouped by state — saveEventsWithGeocoding requires `state` in options
@@ -781,7 +584,7 @@ async function scrapeBarnesNoble(options = {}) {
     console.log('🧪 Dry run — skipping database save');
     console.log(`   Would have saved ${allEvents.length} events`);
     for (const evt of allEvents.slice(0, 5)) {
-      console.log(`   - ${evt.name} | ${evt.event_date} | ${evt.venue}`);
+      console.log(`   - ${evt.name} | ${evt.eventDate} | ${evt.venue}`);
     }
   } else {
     console.log('⚠️  No events found — nothing to save');
@@ -849,4 +652,5 @@ module.exports = {
   scrapeBarnesNoble,
   scrapeBarnesNobleCloudFunction,
   STORES,
+  fetchEventsNearZip,
 };

@@ -174,7 +174,7 @@ If a state's scraper returns 0 (or near-0) events across most of its libraries, 
 **Group tracking** (WordPress-{state} scrapers are split across the 3-day rotation by state) — check off as each group is diagnosed against this item:
 - [x] Group 1 checked (2026-07-07 run: VA, GA, NC, CT, TN, AL, VT, RI all reported healthy nonzero Found counts, e.g. WordPress-GA 1953 found/99 new)
 - [x] Group 2 checked (2026-07-08 run: MD, NY, FL, NJ, MS, ME all reported healthy nonzero Found counts, e.g. WordPress-NY 6097 found/451 new)
-- [ ] Group 3 checked (PA, MA, KY, SC, WV, DE, NH — not yet run since the cleanup; next Group 3 day is 2026-07-09)
+- [ ] Group 3 checked (2026-07-09 run: PA, MA, KY, SC, WV, DE all reported healthy nonzero Found counts, e.g. WordPress-PA 988 found/290 new. NH did not run in this window before the run log was diagnosed — its last confirmed result was 2026-07-06 [1190 found/102 new], which predates the 2026-07-07 domain cleanup, so it still needs re-verification against the new domain list on its next Group 3 run.)
 
 **Once all three boxes above are checked, delete this entire section (14) from this file** — it's a one-time verification for the 2026-07-07 cleanup, not a permanent diagnosis category.
 
