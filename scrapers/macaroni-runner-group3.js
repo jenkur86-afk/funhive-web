@@ -54,7 +54,9 @@ const { saveScraperLog } = require('./helpers/supabase-adapter');
 // Import scraper registry
 const {
   MACARONI_SCRAPERS,
-  getMacaroniSiteCounts
+  getMacaroniSiteCounts,
+  getActiveStates,
+  isScraperActive
 } = require('./scraper-registry');
 
 // ============================================================================
@@ -252,8 +254,9 @@ Group 3 States: ${Object.values(MACARONI_SCRAPERS)
 
   // Get Group 3 scrapers
   let scrapers = {};
+  const activeStates = getActiveStates();
   for (const [name, config] of Object.entries(MACARONI_SCRAPERS)) {
-    if (config.group === CONFIG.GROUP) {
+    if (config.group === CONFIG.GROUP && isScraperActive(config, activeStates)) {
       scrapers[name] = config;
     }
   }
