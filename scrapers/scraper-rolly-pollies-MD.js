@@ -466,9 +466,13 @@ async function scrapeRollyPollies(options = {}) {
           eventDoc.activityId = activityId;
         }
 
-        await db.collection('events').add(eventDoc);
+        const addResult = await db.collection('events').add(eventDoc);
+        if (addResult.skipped) {
+          console.log(`  ⏭️  ${addResult.skipReason}`);
+        } else {
           console.log(`  ✅ ${event.name} - ${event.eventDate} ${event.time}`);
           imported++;
+        }
         } else {
           skipped++;
         }

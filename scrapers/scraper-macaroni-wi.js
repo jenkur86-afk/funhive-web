@@ -588,12 +588,16 @@ async function scrapeMacaroniKidWisconsin() {
       const events = await scrapeSite(browser, site, maxEventsPerSite);
       for (const event of events) {
         try {
-          await db.collection('events').add(event);
-          imported++;
+          const addResult = await db.collection('events').add(event);
+          if (addResult.skipped) {
+            console.log(`  ⏭️  ${addResult.skipReason}`);
+          } else {
+            imported++;
+          }
         } catch (saveErr) {
-          // saveEvent throws for junk titles, non-family, past dates, etc.
-          // These are intentional skips — log and continue with the next event
-          // so one bad row doesn't kill the whole site's batch.
+          // Genuine errors only reach here now — known skip reasons (junk titles,
+          // non-family, past dates, cancelled, etc.) are caught inside .add() and
+          // returned as {skipped:true} above instead of thrown.
           if (/^Skipping /.test(saveErr.message)) {
             console.log(`  ⏭️  ${saveErr.message}`);
           } else {

@@ -349,8 +349,12 @@ async function scrapeMacaroniKid() {
       try {
         const events = await scrapeSite(browser, site, maxEventsPerSite);
         for (const event of events) {
-          await db.collection('events').add(event);
-          imported++;
+          const addResult = await db.collection('events').add(event);
+          if (addResult.skipped) {
+            console.log(`  ⏭️  ${addResult.skipReason}`);
+          } else {
+            imported++;
+          }
         }
       } catch (error) {
         console.error(`❌ Error scraping ${site.name}:`, error.message);

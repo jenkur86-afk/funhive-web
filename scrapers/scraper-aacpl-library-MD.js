@@ -424,9 +424,13 @@ async function scrapeAACPLEvents() {
           eventDoc.activityId = activityId;
         }
 
-        await db.collection('events').add(eventDoc);
+        const addResult = await db.collection('events').add(eventDoc);
+        if (addResult.skipped) {
+          console.log(`  ⏭️  ${addResult.skipReason}`);
+        } else {
           console.log(`  ✅ ${event.name} - ${branchName}`);
           imported++;
+        }
         } else {
           console.log(`  ⏭️  Duplicate: ${event.name}`);
           skipped++;

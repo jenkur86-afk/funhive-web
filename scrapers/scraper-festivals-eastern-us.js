@@ -694,9 +694,13 @@ async function processAndSaveEvents(stateObj, rawEvents) {
       };
 
       // Save to database
-      await db.collection('events').add(eventDoc);
-      saved++;
-      console.log(`    ✅ ${event.name.substring(0, 50)}`);
+      const addResult = await db.collection('events').add(eventDoc);
+      if (addResult.skipped) {
+        console.log(`    ⏭️  ${addResult.skipReason}`);
+      } else {
+        saved++;
+        console.log(`    ✅ ${event.name.substring(0, 50)}`);
+      }
 
     } catch (error) {
       console.error(`    ❌ Error saving "${(event.name || '').substring(0, 40)}": ${error.message}`);

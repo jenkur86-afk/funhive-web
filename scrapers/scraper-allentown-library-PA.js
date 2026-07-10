@@ -344,9 +344,13 @@ async function scrapeAllentownLibrary() {
             eventDoc.activityId = activityId;
           }
 
-          await db.collection('events').add(eventDoc);
+          const addResult = await db.collection('events').add(eventDoc);
+          if (addResult.skipped) {
+            console.log(`  ⏭️  ${addResult.skipReason}`);
+          } else {
           console.log(`  ✅ ${event.title.substring(0, 50)}${event.title.length > 50 ? '...' : ''}`);
           imported++;
+          }
         } else {
           skipped++;
         }
@@ -452,9 +456,13 @@ async function scrapeAllentownLibrary() {
             .get();
 
           if (existing.empty) {
-            await db.collection('events').add(eventDoc);
+            const addResult = await db.collection('events').add(eventDoc);
+            if (addResult.skipped) {
+              console.log(`  ⏭️  ${addResult.skipReason}`);
+            } else {
             console.log(`  ✅ ${event.title.substring(0, 50)}${event.title.length > 50 ? '...' : ''}`);
             imported++;
+            }
           } else {
             skipped++;
           }

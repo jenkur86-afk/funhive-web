@@ -414,9 +414,13 @@ async function scrapeLAPublicLibrary() {
           eventDoc.activityId = activityId;
         }
 
-        await db.collection('events').add(eventDoc);
+        const addResult = await db.collection('events').add(eventDoc);
+        if (addResult.skipped) {
+          console.log(`  ⏭️  ${addResult.skipReason}`);
+        } else {
           console.log(`  ✅ ${eventData.title.substring(0, 60)}${eventData.title.length > 60 ? '...' : ''}`);
           totalImported++;
+        }
         } else {
           totalSkipped++;
         }

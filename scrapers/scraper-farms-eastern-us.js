@@ -1004,19 +1004,24 @@ async function saveFarmEvents(stateObj, rawEvents) {
         }
       };
 
+      let addResult;
       try {
-        await db.collection('events').add(eventDoc);
+        addResult = await db.collection('events').add(eventDoc);
       } catch (saveErr) {
         // If foreign key constraint fails (activity doesn't exist), retry without activity_id
         if (saveErr.message?.includes('activity_id_fkey') || saveErr.message?.includes('foreign key constraint')) {
           delete eventDoc.activityId;
-          await db.collection('events').add(eventDoc);
+          addResult = await db.collection('events').add(eventDoc);
         } else {
           throw saveErr;
         }
       }
-      process.stdout.write(`    ✅ ${event.name.substring(0, 50)}\n`);
-      saved++;
+      if (addResult.skipped) {
+        console.log(`    ⏭️  ${addResult.skipReason}`);
+      } else {
+        process.stdout.write(`    ✅ ${event.name.substring(0, 50)}\n`);
+        saved++;
+      }
 
     } catch (err) {
       if (err.message?.includes('Skipping')) { skipped++; continue; }

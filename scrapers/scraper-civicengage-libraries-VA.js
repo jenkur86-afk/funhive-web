@@ -452,9 +452,13 @@ async function scrapeLibraryEvents(library, browser) {
           eventDoc.activityId = activityId;
         }
 
-        await db.collection('events').add(eventDoc);
+        const addResult = await db.collection('events').add(eventDoc);
+        if (addResult.skipped) {
+          console.log(`  ⏭️  ${addResult.skipReason}`);
+        } else {
           console.log(`  ✅ ${event.name.substring(0, 60)}${event.name.length > 60 ? '...' : ''}`);
           imported++;
+        }
         } else {
           skipped++;
         }

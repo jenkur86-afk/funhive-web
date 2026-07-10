@@ -233,9 +233,13 @@ async function scrapeSanDiegoLibrary() {
       const activityId = await linkEventToVenue(eventDoc);
       if (activityId) eventDoc.activityId = activityId;
 
-      await db.collection('events').add(eventDoc);
+      const addResult = await db.collection('events').add(eventDoc);
+      if (addResult.skipped) {
+        console.log(`  ⏭️  ${addResult.skipReason}`);
+      } else {
       console.log(`  ✅ ${item.title.substring(0, 65)}${item.title.length > 65 ? '...' : ''}`);
       newCount++;
+      }
 
     } catch (err) {
       console.error(`  ❌ ${item.title?.substring(0, 40)}:`, err.message);

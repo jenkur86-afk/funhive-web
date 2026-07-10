@@ -621,9 +621,13 @@ async function processLexingtonEvents() {
           eventDoc.activityId = activityId;
         }
 
-        await db.collection('events').add(eventDoc);
+        const addResult = await db.collection('events').add(eventDoc);
+        if (addResult.skipped) {
+          console.log(`  ⏭️  ${addResult.skipReason}`);
+        } else {
           console.log(`  ✅ ${title.substring(0, 60)}${title.length > 60 ? '...' : ''}`);
           imported++;
+        }
         } else {
           skipped++;
         }

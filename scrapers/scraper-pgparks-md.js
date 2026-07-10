@@ -330,9 +330,13 @@ async function scrapePGParks(options = {}) {
       const activityId = await linkEventToVenue(eventDoc);
       if (activityId) eventDoc.activityId = activityId;
 
-      await db.collection('events').add(eventDoc);
+      const addResult = await db.collection('events').add(eventDoc);
+      if (addResult.skipped) {
+        console.log(`  ⏭️  ${addResult.skipReason}`);
+      } else {
       console.log(`  ✅ ${raw.title.substring(0, 65)}${raw.title.length > 65 ? '...' : ''}`);
       saved++;
+      }
 
     } catch (error) {
       console.error(`  ❌ ${raw.title?.substring(0, 40)}:`, error.message);

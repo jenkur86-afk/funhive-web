@@ -288,9 +288,13 @@ async function scrapeSanAntonioLibrary() {
           eventDoc.activityId = activityId;
         }
 
-        await db.collection('events').add(eventDoc);
+        const addResult = await db.collection('events').add(eventDoc);
+        if (addResult.skipped) {
+          console.log(`  ⏭️  ${addResult.skipReason}`);
+        } else {
           console.log(`  ✅ ${event.title.substring(0, 60)}${event.title.length > 60 ? '...' : ''}`);
           totalImported++;
+        }
         } else {
           totalSkipped++;
         }
