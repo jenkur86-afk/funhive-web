@@ -256,7 +256,12 @@ async function saveActivities(activities) {
   }
 
   try {
-    await batch.commit();
+    const commitResult = await batch.commit();
+    const skippedCount = commitResult?.skippedReasons?.length || 0;
+    if (skippedCount > 0) {
+      saved -= skippedCount;
+      console.log(`  ⏭️  ${skippedCount} event(s) rejected at save time (past/cancelled/junk-title/etc.)`);
+    }
   } catch (error) {
     console.error('Batch commit error:', error.message);
     failed = activities.length;

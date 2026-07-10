@@ -300,7 +300,9 @@ async function saveToDatabase(events) {
       batchCount++;
 
       if (batchCount >= 400) {
-        await batch.commit();
+        const commitResult = await batch.commit();
+        const skippedCount = commitResult?.skippedReasons?.length || 0;
+        if (skippedCount > 0) { imported -= skippedCount; skipped += skippedCount; }
         batch = db.batch();
         batchCount = 0;
         console.log(`   💾 Committed batch (${imported} imported so far)`);
@@ -311,7 +313,9 @@ async function saveToDatabase(events) {
   }
 
   if (batchCount > 0) {
-    await batch.commit();
+    const commitResult = await batch.commit();
+    const skippedCount = commitResult?.skippedReasons?.length || 0;
+    if (skippedCount > 0) { imported -= skippedCount; skipped += skippedCount; }
   }
 
   console.log(`\n✅ ${LIBRARY_NAME} complete!`);

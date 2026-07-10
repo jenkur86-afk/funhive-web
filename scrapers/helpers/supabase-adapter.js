@@ -1321,7 +1321,10 @@ function createFirestoreCompatibleDB() {
                 flattened = flattenForTable(table, data);
               } catch (e) {
                 if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event') || e.message?.includes('Skipping junk-title event') || e.message?.includes('Skipping dateless event') || e.message?.includes('Skipping time-only event_date') || e.message?.includes('Skipping "Invalid Date" event')) {
-                  return; // silently skip
+                  // See the .add() fix (SCRAPER-FIX-LOG.jsonl 2026-07-10) — same
+                  // silent-skip-vs-success ambiguity, same fix: expose it on the
+                  // return value instead of returning bare undefined either way.
+                  return { skipped: true, skipReason: e.message };
                 }
                 throw e;
               }
@@ -1333,10 +1336,11 @@ function createFirestoreCompatibleDB() {
                 // Gracefully handle duplicate content constraint violations
                 if (error.code === '23505' || error.message?.includes('duplicate key') || error.message?.includes('unique constraint')) {
                   console.log(`  ℹ️ Duplicate content for ${table}/${docId}, skipping`);
-                  return;
+                  return { skipped: true, duplicate: true };
                 }
                 throw error;
               }
+              return { skipped: false };
             },
             async get() {
               // Default to the same lean projection used by createQuery — every observed
@@ -1430,6 +1434,12 @@ function createFirestoreCompatibleDB() {
           // Group operations by table
           const upsertByTable = {};
           const deleteByTable = {};
+          // Callers that increment their own "saved" counter at .set() time (queue
+          // time, not actual-insert time) need this to correct that count after
+          // commit — otherwise events silently dropped here (past, cancelled,
+          // junk-title, etc.) still get counted as saved. See SCRAPER-FIX-LOG.jsonl
+          // 2026-07-10 for the .add()-path version of this same bug.
+          const skippedReasons = [];
 
           for (const op of operations) {
             const table = op.table || 'events';
@@ -1440,6 +1450,7 @@ function createFirestoreCompatibleDB() {
               } catch (e) {
                 // Skip past events and invalid events gracefully
                 if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event') || e.message?.includes('Skipping junk-title event') || e.message?.includes('Skipping dateless event') || e.message?.includes('Skipping time-only event_date') || e.message?.includes('Skipping "Invalid Date" event')) {
+                  skippedReasons.push(e.message);
                   continue;
                 }
                 throw e;
@@ -1503,6 +1514,7 @@ function createFirestoreCompatibleDB() {
           }
 
           operations.length = 0;
+          return { skippedReasons };
         },
       };
     },

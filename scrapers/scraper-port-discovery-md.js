@@ -367,8 +367,12 @@ async function saveEvents(events) {
           event.activityId = activityId;
         }
 
-        await db.collection('events').doc(eventId).set(event);
-      saved++;
+        const setResult = await db.collection('events').doc(eventId).set(event);
+      if (!setResult || !setResult.skipped) {
+        saved++;
+      } else {
+        skipped++;
+      }
 
       // Rate limiting
       await new Promise(resolve => setTimeout(resolve, 100));

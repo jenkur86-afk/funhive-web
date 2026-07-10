@@ -507,8 +507,10 @@ async function scrapeSite(browser, site, maxEvents = 50) {
         // Update existing event with fresh data (address, venue, coordinates, etc.)
         const existingDoc = existing.docs[0];
         try {
-          await db.collection('events').doc(existingDoc.id).set(eventDoc);
-          updated++;
+          const setResult = await db.collection('events').doc(existingDoc.id).set(eventDoc);
+          if (!setResult || !setResult.skipped) {
+            updated++;
+          }
         } catch (updateErr) {
           console.log(`  ⚠️ Update failed for ${url}: ${updateErr.message}`);
         }

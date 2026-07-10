@@ -639,8 +639,10 @@ async function scrapeSite(browser, site, logger, maxEvents = 50) {
       if (isExistingEvent) {
         // Update existing event with fresh data (address, venue, coordinates, etc.)
         try {
-          await db.collection('events').doc(eventId).set(eventDoc);
-          updated++;
+          const setResult = await db.collection('events').doc(eventId).set(eventDoc);
+          if (!setResult || !setResult.skipped) {
+            updated++;
+          }
         } catch (updateErr) {
           console.log(`  ⚠️ Update failed for ${url}: ${updateErr.message}`);
         }
@@ -705,8 +707,12 @@ async function scrapeMacaroniKidMaryland() {
       for (const event of events) {
         const eventId = generateEventId(event.url);
         try {
-          await db.collection('events').doc(eventId).set(event);
-          imported++;
+          const setResult = await db.collection('events').doc(eventId).set(event);
+          if (setResult && setResult.skipped) {
+            console.log(`  ⏭️  ${setResult.skipReason}`);
+          } else {
+            imported++;
+          }
         } catch (saveErr) {
           if (/^Skipping /.test(saveErr.message)) {
             console.log(`  ⏭️  ${saveErr.message}`);

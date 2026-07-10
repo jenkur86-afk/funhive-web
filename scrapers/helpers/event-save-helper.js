@@ -25,6 +25,33 @@ const { generateEventId, generateEventIdFromDetails } = require('./event-id-help
 const activityCache = new Map();
 
 /**
+ * batch.commit() silently drops rows that fail flattenEvent()'s content checks
+ * (past event, cancelled, junk-title, non-family, adult-only, dateless, invalid
+ * date, etc.) and returns their skip reasons instead of throwing. Callers that
+ * increment `saved` at batch.set() time (queue time, not actual-insert time)
+ * need to walk those reasons after each commit and correct saved/skipped —
+ * otherwise every commit-time rejection still gets counted as saved. Routes to
+ * the existing categorized counters where there's a clean match; everything
+ * else (junk-title, non-family, cancelled, adult-only, placeholder-venue,
+ * empty-name) falls back to the generic skipped count only.
+ */
+function categorizeCommitSkips(skippedReasons) {
+  const result = { skippedCount: 0, pastEventCount: 0, noDateCount: 0, invalidDateCount: 0 };
+  if (!skippedReasons || skippedReasons.length === 0) return result;
+  for (const reason of skippedReasons) {
+    result.skippedCount++;
+    if (reason.includes('Skipping past event')) {
+      result.pastEventCount++;
+    } else if (reason.includes('Skipping dateless event')) {
+      result.noDateCount++;
+    } else if (reason.includes('Skipping time-only event_date') || reason.includes('Skipping "Invalid Date" event')) {
+      result.invalidDateCount++;
+    }
+  }
+  return result;
+}
+
+/**
  * Extract start/end time from a raw date string before normalization strips it.
  * Handles: "Wed, April 8 9:00am – 10:30am", "April 10, 2026 6:00pm", "10am-2pm"
  */
@@ -708,7 +735,13 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
 
       // Commit batch every 500 documents
       if (batchCount >= 500) {
-        await batch.commit();
+        const commitResult = await batch.commit();
+        const c = categorizeCommitSkips(commitResult?.skippedReasons);
+        saved -= c.skippedCount;
+        skipped += c.skippedCount;
+        skippedPastEvent += c.pastEventCount;
+        skippedNoDate += c.noDateCount;
+        skippedInvalidDate += c.invalidDateCount;
         batch = db.batch();
         batchCount = 0;
         console.log(`   💾 Committed ${saved} events...`);
@@ -722,7 +755,13 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
 
   // Commit remaining
   if (batchCount > 0) {
-    await batch.commit();
+    const commitResult = await batch.commit();
+    const c = categorizeCommitSkips(commitResult?.skippedReasons);
+    saved -= c.skippedCount;
+    skipped += c.skippedCount;
+    skippedPastEvent += c.pastEventCount;
+    skippedNoDate += c.noDateCount;
+    skippedInvalidDate += c.invalidDateCount;
   }
 
   console.log(`\n✅ Save complete: ${saved} saved, ${skipped} skipped, ${errors} errors`);
@@ -888,14 +927,22 @@ async function saveEventsSimple(events, options = {}) {
     batchCount++;
 
     if (batchCount >= 500) {
-      await batch.commit();
+      const commitResult = await batch.commit();
+      const c = categorizeCommitSkips(commitResult?.skippedReasons);
+      saved -= c.skippedCount;
+      skipped += c.skippedCount;
+      skippedInvalidDate += c.invalidDateCount;
       batch = db.batch();
       batchCount = 0;
     }
   }
 
   if (batchCount > 0) {
-    await batch.commit();
+    const commitResult = await batch.commit();
+    const c = categorizeCommitSkips(commitResult?.skippedReasons);
+    saved -= c.skippedCount;
+    skipped += c.skippedCount;
+    skippedInvalidDate += c.invalidDateCount;
   }
 
   // Verify and cleanup events that are no longer on source

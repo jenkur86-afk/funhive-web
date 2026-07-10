@@ -276,10 +276,15 @@ async function scrapePrattLibrary() {
           : generateEventIdFromDetails(eventDoc.name, eventDoc.eventDate, eventDoc.location.name);
 
         // Use set with merge to update existing or create new
-        await db.collection('events').doc(eventId).set(eventDoc, { merge: true });
+        const setResult = await db.collection('events').doc(eventId).set(eventDoc, { merge: true });
 
-        console.log(`  ✅ ${title.substring(0, 60)}${title.length > 60 ? '...' : ''}`);
-        imported++;
+        if (setResult && setResult.skipped) {
+          console.log(`  ⏭️ ${title.substring(0, 60)}${title.length > 60 ? '...' : ''} (${setResult.skipReason || 'duplicate'})`);
+          skipped++;
+        } else {
+          console.log(`  ✅ ${title.substring(0, 60)}${title.length > 60 ? '...' : ''}`);
+          imported++;
+        }
 
         // Brief delay for Firestore writes
         await new Promise(resolve => setTimeout(resolve, 50));
