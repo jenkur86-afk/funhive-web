@@ -703,8 +703,21 @@ const LIBRARY_SYSTEMS = [
     zipCode: '40507'
   },
 
-  // MASSACHUSETTS — Worcester Public Library uses LibNet (SirsiDynix), not Communico.
-  // Moved to scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js under MA.
+  // MASSACHUSETTS (1 library)
+  // Added 2026-07-10: the comment that used to be here ("moved to LibCal-MA") was
+  // wrong — LibCal-MA only ever had a TODO stub for Worcester, never a real entry,
+  // so this library had zero scraper coverage. Verified live: mywpl.libnet.info/events
+  // is a real Communico/LibNet calendar with real event content (same platform as the
+  // other .libnet.info entries in this file).
+  {
+    name: 'Worcester Public Library',
+    url: 'https://mywpl.libnet.info/events',
+    county: 'Worcester',
+    state: 'MA',
+    website: 'https://www.mywpl.org',
+    city: 'Worcester',
+    zipCode: '01608'
+  },
 
   // MARYLAND (9 libraries)
   {
@@ -1983,8 +1996,8 @@ async function scrapeCommunicoGA() { return scrapeCommunicoLibraries('GA'); }
 async function scrapeCommunicoIA() { return scrapeCommunicoLibraries('IA'); }
 async function scrapeCommunicoIL() { return scrapeCommunicoLibraries('IL'); }
 async function scrapeCommunicoIN() { return scrapeCommunicoLibraries('IN'); }
-// scrapeCommunicoMA removed 2026-07-10: LIBRARY_SYSTEMS has zero MA entries (see
-// comment above), so this always returned 0 events. Registry entry removed too.
+// scrapeCommunicoMA re-added 2026-07-10 with Worcester Public Library (see comment above).
+async function scrapeCommunicoMA() { return scrapeCommunicoLibraries('MA'); }
 async function scrapeCommunicoMD() { return scrapeCommunicoLibraries('MD'); }
 async function scrapeCommunicoNJ() { return scrapeCommunicoLibraries('NJ'); }
 async function scrapeCommunicoNV() { return scrapeCommunicoLibraries('NV'); }
@@ -2050,6 +2063,7 @@ module.exports = {
   scrapeCommunicoIA,
   scrapeCommunicoIL,
   scrapeCommunicoIN,
+  scrapeCommunicoMA,
   scrapeCommunicoMD,
   scrapeCommunicoNJ,
   scrapeCommunicoNV,

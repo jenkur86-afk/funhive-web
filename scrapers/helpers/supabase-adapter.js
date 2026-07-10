@@ -788,7 +788,7 @@ function isJunkTitle(name) {
     /page\s+not\s+found/i,
     /^(cookies?|gdpr|accept|decline|opt\s*out)$/i,
     /^(view|browse|filter|sort|reset|clear|apply|submit|cancel|close|save)$/i,
-    /^(skip\s+to\s+(content|main|navigation))$/i,
+    /^(skip\s+to\s+(content|main(\s+content)?|navigation|current\s+day))$/i,
     /^(toggle\s+(menu|navigation|search))$/i,
     /^(rss|feed|share|tweet|like|follow|email)$/i,
     // Aggregate/listing-page junk that slips through individual scrapers

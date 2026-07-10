@@ -244,11 +244,18 @@ const SCRAPERS = {
     group: 2,
     state: 'IN'
   },
-  // 'Communico-MA' removed 2026-07-10: the only MA library (Worcester Public
-  // Library) uses LibNet/SirsiDynix, not Communico, and was already relocated to
-  // scraper-libcal-libraries-...js under LibCal-MA years ago (see comment in the
-  // Communico file's LIBRARY_SYSTEMS array). This entry's array had zero MA
-  // entries, so it always logged a pointless "0 found" every run.
+  // 'Communico-MA' re-added 2026-07-10: the prior removal (earlier same day) trusted
+  // a stale comment claiming Worcester Public Library had "already relocated to
+  // LibCal-MA" — checked, and LibCal-MA only ever had a TODO stub for it, never a
+  // real entry. Worcester was actually uncovered. Verified mywpl.libnet.info/events
+  // is a live Communico/LibNet calendar and added it back with the correct URL.
+  'Communico-MA': {
+    file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js',
+    exportName: 'scrapeCommunicoMA',
+    type: 'puppeteer',
+    group: 1,
+    state: 'MA'
+  },
   'Communico-MD': {
     file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js',
     exportName: 'scrapeCommunicoMD',

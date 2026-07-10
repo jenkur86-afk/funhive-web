@@ -23,7 +23,7 @@ Active scraper counts (July 2026): Group 1 = 51, Group 2 = 49, Group 3 = 45.
 **1. Zero-event scrapers (Found 0 URLs / 0 new / 0 updated)**
 - Check if the scraper URL is correct by visiting the live site
 - Check if the site changed platforms (e.g., Communico vs LibraryCalendar vs LibNet)
-- Check if the scraper is already covered by a different scraper (remove duplicates)
+- Check if the scraper is already covered by a different scraper (remove duplicates) — **verify this live, don't trust an existing comment claiming it.** A 2026-07-10 incident: a comment said "Worcester Public Library moved to LibCal-MA," so Communico-MA was deleted as redundant — but LibCal-MA only ever had a TODO stub for Worcester, never a real entry, so the library silently lost all coverage. Before deleting/archiving an entry as "covered elsewhere," actually run the alleged replacement (or the specific library's URL) and confirm it returns real events for that specific library, not just that the replacement scraper exists and works for other libraries in its array.
 - Check page rendering issues (domcontentloaded vs networkidle2 for SPAs)
 - Check if CSS selectors still match the live site structure
 - Check if the site now blocks scrapers (User-Agent, rate limiting, CAPTCHAs)
@@ -206,6 +206,7 @@ If a state's scraper returns 0 (or near-0) events across most of its libraries, 
   - Promo regex list: insert after `/^plan\s+your\s+family\s+fun\b/i,` (or the most recently added pattern).
   - New `require` lines: insert after `const { normalizeDateString } = require('./date-normalization-helper');`.
   - State literal per file: read it from the `state: 'XX'` literal in the existing `findMatchingVenue({...})` call.
+- **Verify-then-archive, not comment-then-forget**: when a scraper/library entry turns out to be genuinely dead (URL decommissioned, redirects to a placeholder, 404 "no longer online") and you've confirmed — by actually running it, not by reading an old comment — that another scraper already covers the same library with real event output, fully remove the dead code: delete the function, delete the registry entry, delete the array entry (or replace it with a corrected live entry if you found the library's new platform). Don't leave it commented out "for reference" — a commented-out entry with a wrong or unverified claim is exactly what caused the Worcester incident above. If you disable an entry WITHOUT confirming replacement coverage (e.g., the site is dead and you couldn't quickly build a verified replacement), say so explicitly in the fix-log summary and the chat response — do not describe it as "resolved" or "no longer an issue." A real coverage gap should read as a coverage gap.
 - Run `node -c filename.js` syntax check on every modified file
 - For date normalization changes, verify against the test cases in the date helper
 - For library-branch-detector changes, run a sanity test like `outputs/test-branch-detector.js` covering at least one positive case, one negative case, and the wrong-state guard.
