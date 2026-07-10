@@ -18,6 +18,7 @@ const { normalizeDateString } = require('./date-normalization-helper');
 const { generateEventId, generateEventIdFromDetails } = require('./event-id-helper');
 const { logScraperResult } = require('./scraper-logger');
 const { linkEventToVenue } = require('./venue-matcher');
+const { geocodeWithFallback } = require('./helpers/geocoding-helper');
 
 // Library configuration
 const LIBRARY = {
@@ -30,33 +31,6 @@ const LIBRARY = {
   city: 'Philadelphia',
   zipCode: '19103'
 };
-
-// Geocode address
-async function geocodeAddress(address) {
-  try {
-    const response = await axios.get('https://nominatim.openstreetmap.org/search', {
-      params: {
-        q: address,
-        format: 'json',
-        limit: 1,
-        countrycodes: 'us'
-      },
-      headers: {
-        'User-Agent': 'FunHive/1.0'
-      }
-    });
-
-    if (response.data && response.data.length > 0) {
-      return {
-        latitude: parseFloat(response.data[0].lat),
-        longitude: parseFloat(response.data[0].lon)
-      };
-    }
-  } catch (error) {
-    console.error('Geocoding error:', error.message);
-  }
-  return null;
-}
 
 // Parse age range from text
 function parseAgeRange(text) {
@@ -156,12 +130,15 @@ async function scrapePage(page, pageNum) {
       titleLinks.forEach(linkEl => {
         try {
           const href = linkEl.getAttribute('href');
-          if (processedUrls.has(href)) return;
-          processedUrls.add(href);
 
-          // Get title from link text
+          // Get title from link text. Each event now renders TWO <a href="/calendar/event/ID">
+          // tags (one wrapping a thumbnail <img> with no text, one wrapping the title text) -
+          // check for a real title BEFORE consuming the href from processedUrls, otherwise the
+          // empty image-link claims the href first and the real title-link gets skipped.
           const title = linkEl.textContent.trim();
           if (!title || title.length < 3) return;
+          if (processedUrls.has(href)) return;
+          processedUrls.add(href);
 
           // Find the parent row container (go up to find the event block)
           let container = linkEl.closest('.row') || linkEl.parentElement.parentElement.parentElement;
@@ -286,11 +263,18 @@ async function scrapeFreeLibraryPhiladelphia() {
           description: event.description
         });
 
-        // Try to geocode location
-        let coordinates = null;
-        if (event.location) {
-          coordinates = await geocodeAddress(`${event.location}, Philadelphia, PA`);
-        }
+        // Try to geocode location — shared helper handles caching, Nominatim
+        // rate-limit cooldown, and Photon/centroid fallback.
+        let coordinates = event.location
+          ? await geocodeWithFallback(`${event.location}, Philadelphia, PA`, {
+              city: LIBRARY.city,
+              state: LIBRARY.state,
+              zipCode: LIBRARY.zipCode,
+              county: LIBRARY.county,
+              venueName: event.location,
+              sourceName: LIBRARY.name
+            })
+          : null;
 
         // Normalize date format
         const rawDate = `${event.date} ${event.time}`;
@@ -402,10 +386,16 @@ async function scrapeFreeLibraryPhiladelphia() {
             description: event.description
           });
 
-          let coordinates = null;
-          if (event.location) {
-            coordinates = await geocodeAddress(`${event.location}, Philadelphia, PA`);
-          }
+          let coordinates = event.location
+            ? await geocodeWithFallback(`${event.location}, Philadelphia, PA`, {
+                city: LIBRARY.city,
+                state: LIBRARY.state,
+                zipCode: LIBRARY.zipCode,
+                county: LIBRARY.county,
+                venueName: event.location,
+                sourceName: LIBRARY.name
+              })
+            : null;
 
           // Normalize date format
           const rawDate2 = `${event.date} ${event.time}`;

@@ -25,6 +25,7 @@ const { generateEventId, generateEventIdFromDetails } = require('./event-id-help
 const { ScraperLogger, logScraperResult } = require('./scraper-logger');
 const { normalizeDateString } = require('./date-utils');
 const { linkEventToVenue } = require('./venue-matcher');
+const { geocodeWithFallback } = require('./helpers/geocoding-helper');
 
 // Library Systems using Custom Drupal with HTML feed
 const LIBRARY_SYSTEMS = [
@@ -49,33 +50,6 @@ const LIBRARY_SYSTEMS = [
     zipCode: '17401'
   }
 ];
-
-// Geocode address
-async function geocodeAddress(address) {
-  try {
-    const response = await axios.get('https://nominatim.openstreetmap.org/search', {
-      params: {
-        q: address,
-        format: 'json',
-        limit: 1,
-        countrycodes: 'us'
-      },
-      headers: {
-        'User-Agent': 'FunHive/1.0'
-      }
-    });
-
-    if (response.data && response.data.length > 0) {
-      return {
-        latitude: parseFloat(response.data[0].lat),
-        longitude: parseFloat(response.data[0].lon)
-      };
-    }
-  } catch (error) {
-    console.error('Geocoding error:', error.message);
-  }
-  return null;
-}
 
 // Map age groups to standard categories
 function mapAgeRange(ageGroupText) {
@@ -335,11 +309,19 @@ async function scrapeLibraryEvents(library, browser) {
             description: event.description
           });
 
-          // Try to geocode location
-          let coordinates = null;
-          if (event.location) {
-            coordinates = await geocodeAddress(`${event.location}, ${library.county} County, PA`);
-          }
+          // Try to geocode location — shared helper handles caching, Nominatim
+          // rate-limit cooldown, and Photon/centroid fallback (this scraper's old
+          // ad-hoc axios call had none of those and hammered Nominatim uncapped).
+          let coordinates = event.location
+            ? await geocodeWithFallback(`${event.location}, ${library.county} County, PA`, {
+                city: library.city,
+                state: library.state,
+                zipCode: library.zipCode,
+                county: library.county,
+                venueName: event.location,
+                sourceName: library.name
+              })
+            : null;
 
           // If no coordinates from venue, use library default coordinates
           if (!coordinates) {
@@ -452,10 +434,16 @@ async function scrapeLibraryEvents(library, browser) {
             name: event.title, description: event.description
           });
 
-          let coordinates = null;
-          if (event.location) {
-            coordinates = await geocodeAddress(`${event.location}, ${library.county} County, PA`);
-          }
+          let coordinates = event.location
+            ? await geocodeWithFallback(`${event.location}, ${library.county} County, PA`, {
+                city: library.city,
+                state: library.state,
+                zipCode: library.zipCode,
+                county: library.county,
+                venueName: event.location,
+                sourceName: library.name
+              })
+            : null;
           if (!coordinates) {
             const defaultCoords = {
               'Lancaster': { latitude: 40.0379, longitude: -76.3055 },

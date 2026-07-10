@@ -178,7 +178,9 @@ const SCRAPERS = {
   },
   // LibCal-WV: WV Library Commission had no events; Morgantown Public Library added to file
   'LibCal-WV': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalWV', type: 'puppeteer', group: 2, state: 'WV' },
-  'LibCal-AL': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalAL', type: 'puppeteer', group: 1, state: 'AL' },
+  // 'LibCal-AL' removed 2026-07-10: its only AL library (Huntsville-Madison County)
+  // was disabled in the source array — see comment there. AL still has coverage via
+  // WordPress-AL and Communico-AL for its other libraries.
   'LibCal-ME': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalME', type: 'puppeteer', group: 3, state: 'ME' },
   'LibCal-VT': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalVT', type: 'puppeteer', group: 2, state: 'VT' },
   'LibCal-KY': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalKY', type: 'puppeteer', group: 1, state: 'KY' },
@@ -242,13 +244,11 @@ const SCRAPERS = {
     group: 2,
     state: 'IN'
   },
-  'Communico-MA': {
-    file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js',
-    exportName: 'scrapeCommunicoMA',
-    type: 'puppeteer',
-    group: 1,
-    state: 'MA'
-  },
+  // 'Communico-MA' removed 2026-07-10: the only MA library (Worcester Public
+  // Library) uses LibNet/SirsiDynix, not Communico, and was already relocated to
+  // scraper-libcal-libraries-...js under LibCal-MA years ago (see comment in the
+  // Communico file's LIBRARY_SYSTEMS array). This entry's array had zero MA
+  // entries, so it always logged a pointless "0 found" every run.
   'Communico-MD': {
     file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js',
     exportName: 'scrapeCommunicoMD',
@@ -849,7 +849,12 @@ const SCRAPERS = {
   // PHASE 2: DEDICATED LIBRARY SCRAPERS (custom platforms)
   // ============================================================================
   'Louisville-Library': { file: './scraper-louisville-library-KY.js', exportName: 'scrapeLouisvilleLibrary', type: 'puppeteer', group: 2, state: 'KY' },
-  'Miami-Dade-Library': { file: './scraper-miami-dade-library-FL.js', exportName: 'scrapeMiamiDadeLibrary', type: 'puppeteer', group: 1, state: 'FL' },
+  // 'Miami-Dade-Library' removed 2026-07-10: duplicate of mdpls.org/events, which
+  // Communico-FL already scrapes successfully via the Communico API (520 found/345
+  // new in recent runs). This bespoke scraper fought a client-side widget whose JS
+  // crashes under Puppeteer ("Loading events..." never resolves) and every event it
+  // did extract was misdated to the calendar's "focused day" label, so all 7 got
+  // rejected as past. File left on disk, unregistered.
   'Orange-County-Library-FL': { file: './scraper-orange-county-library-FL.js', exportName: 'scrapeOrangeCountyLibraryFL', type: 'puppeteer', group: 3, state: 'FL' },
 
   // ============================================================================
@@ -902,7 +907,9 @@ const SCRAPERS = {
   'Communico-WA': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoWA', type: 'puppeteer', group: 1, state: 'WA' },
   'Communico-AL': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoAL', type: 'puppeteer', group: 2, state: 'AL' },
   'Communico-WV': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoWV', type: 'puppeteer', group: 3, state: 'WV' },
-  'Communico-MS': { file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js', exportName: 'scrapeCommunicoMS', type: 'puppeteer', group: 1, state: 'MS' },
+  // 'Communico-MS' removed 2026-07-10: its only MS library (Jackson-Hinds) was
+  // disabled in the source array — see comment there. MS still has coverage via
+  // WordPress-MS for its other libraries.
 
   // --- BiblioCommons new state wrapper ---
   'BiblioCommons-WI': { file: './scraper-bibliocommons-libraries-CA-CO-IL-MA-TX-VA-WA.js', exportName: 'scrapeBiblioCommonsWI', type: 'puppeteer', group: 2, state: 'WI' },

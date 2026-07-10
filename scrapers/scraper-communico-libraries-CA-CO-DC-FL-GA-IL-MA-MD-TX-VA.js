@@ -1140,15 +1140,22 @@ const LIBRARY_SYSTEMS = [
   },
 
   // MISSISSIPPI (1 library)
-  {
-    name: 'Jackson-Hinds Library System',
-    url: 'https://jhlibrary.libnet.info/events',
-    county: 'Hinds',
-    state: 'MS',
-    website: 'https://www.jhlibrary.com',
-    city: 'Jackson',
-    zipCode: '39201'
-  }
+  // Jackson-Hinds Library System: DISABLED 2026-07-10 — jhlibrary.libnet.info/events
+  // 302-redirects to http://www.google.co.uk (Communico account deliberately
+  // decommissioned, not a transient outage). Library migrated to a new Drupal 10 site
+  // at https://www.jhlibrary.org/events/month (jhlibrary.com also still resolves with
+  // an older-looking calendar-for-location structure — unclear which is canonical).
+  // Needs a proper new scraper with live-verified selectors against the new site
+  // rather than a guessed DOM fix. See SCRAPER-FIX-LOG.jsonl 2026-07-10.
+  // {
+  //   name: 'Jackson-Hinds Library System',
+  //   url: 'https://jhlibrary.libnet.info/events',
+  //   county: 'Hinds',
+  //   state: 'MS',
+  //   website: 'https://www.jhlibrary.com',
+  //   city: 'Jackson',
+  //   zipCode: '39201'
+  // }
 ];
 
 // Note: geocodeAddress is now imported from geocoding-helper.js with fallback support
@@ -1976,7 +1983,8 @@ async function scrapeCommunicoGA() { return scrapeCommunicoLibraries('GA'); }
 async function scrapeCommunicoIA() { return scrapeCommunicoLibraries('IA'); }
 async function scrapeCommunicoIL() { return scrapeCommunicoLibraries('IL'); }
 async function scrapeCommunicoIN() { return scrapeCommunicoLibraries('IN'); }
-async function scrapeCommunicoMA() { return scrapeCommunicoLibraries('MA'); }
+// scrapeCommunicoMA removed 2026-07-10: LIBRARY_SYSTEMS has zero MA entries (see
+// comment above), so this always returned 0 events. Registry entry removed too.
 async function scrapeCommunicoMD() { return scrapeCommunicoLibraries('MD'); }
 async function scrapeCommunicoNJ() { return scrapeCommunicoLibraries('NJ'); }
 async function scrapeCommunicoNV() { return scrapeCommunicoLibraries('NV'); }
@@ -1996,7 +2004,9 @@ async function scrapeCommunicoTN() { return scrapeCommunicoLibraries('TN'); }
 async function scrapeCommunicoWA() { return scrapeCommunicoLibraries('WA'); }
 async function scrapeCommunicoAL() { return scrapeCommunicoLibraries('AL'); }
 async function scrapeCommunicoWV() { return scrapeCommunicoLibraries('WV'); }
-async function scrapeCommunicoMS() { return scrapeCommunicoLibraries('MS'); }
+// scrapeCommunicoMS removed 2026-07-10: its one MS entry (Jackson-Hinds) was
+// disabled above (Communico account decommissioned, redirects to google.co.uk).
+// Registry entry removed too.
 
 // Cloud Function wrapper
 async function scrapeCommunicoLibrariesCloudFunction() {
@@ -2040,7 +2050,6 @@ module.exports = {
   scrapeCommunicoIA,
   scrapeCommunicoIL,
   scrapeCommunicoIN,
-  scrapeCommunicoMA,
   scrapeCommunicoMD,
   scrapeCommunicoNJ,
   scrapeCommunicoNV,
@@ -2059,6 +2068,5 @@ module.exports = {
   scrapeCommunicoTN,
   scrapeCommunicoWA,
   scrapeCommunicoAL,
-  scrapeCommunicoWV,
-  scrapeCommunicoMS
+  scrapeCommunicoWV
 };

@@ -1289,15 +1289,25 @@ const LIBRARY_SYSTEMS = [
   },
 
   // ALABAMA
-  {
-    name: 'Huntsville-Madison County Public Library',
-    url: 'https://hmcpl.libcal.com/calendar?cid=-1&t=d',
-    county: 'Madison',
-    state: 'AL',
-    website: 'https://www.hmcpl.org',
-    city: 'Huntsville',
-    zipCode: '35801'
-  },
+  // Huntsville-Madison County Public Library: DISABLED 2026-07-10 — hmcpl.libcal.com
+  // returns 404 "no longer online" (Springshare). Library migrated off LibCal entirely
+  // to Bibliotheca's "Intercept" platform at https://events.hmcpl.org/events (Drupal 10
+  // + a React/MUI event-list widget mounted at #eventListRoot). Unlike the simpler
+  // Intercept-Camden-NJ scraper, events don't appear in the DOM after a normal wait —
+  // they're likely fetched from a separate JSON API the widget calls client-side (same
+  // pattern as the MDPLS Communico endpoint found this session). Needs proper
+  // reverse-engineering of that API before a new scraper can be built; a DOM-scraping
+  // attempt risked shipping unverified/empty extraction, so this was left disabled
+  // rather than guessed at. See SCRAPER-FIX-LOG.jsonl 2026-07-10.
+  // {
+  //   name: 'Huntsville-Madison County Public Library',
+  //   url: 'https://hmcpl.libcal.com/calendar?cid=-1&t=d',
+  //   county: 'Madison',
+  //   state: 'AL',
+  //   website: 'https://www.hmcpl.org',
+  //   city: 'Huntsville',
+  //   zipCode: '35801'
+  // },
 
   // KENTUCKY
   {
@@ -1919,7 +1929,8 @@ async function scrapeLibCalTN() { return scrapeLibCalLibraries('TN'); }
 async function scrapeLibCalTX() { return scrapeLibCalLibraries('TX'); }
 async function scrapeLibCalVA() { return scrapeLibCalLibraries('VA'); }
 async function scrapeLibCalWA() { return scrapeLibCalLibraries('WA'); }
-async function scrapeLibCalAL() { return scrapeLibCalLibraries('AL'); }
+// scrapeLibCalAL removed 2026-07-10: its one AL entry (Huntsville-Madison) was
+// disabled above (site migrated off LibCal). Registry entry removed too.
 async function scrapeLibCalKY() { return scrapeLibCalLibraries('KY'); }
 async function scrapeLibCalME() { return scrapeLibCalLibraries('ME'); }
 async function scrapeLibCalVT() { return scrapeLibCalLibraries('VT'); }
@@ -1959,7 +1970,6 @@ module.exports = {
   scrapeLibCalTX,
   scrapeLibCalVA,
   scrapeLibCalWA,
-  scrapeLibCalAL,
   scrapeLibCalKY,
   scrapeLibCalME,
   scrapeLibCalVT,
