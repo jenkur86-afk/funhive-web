@@ -1412,9 +1412,14 @@ async function scrapeLibraryEvents(library, browser) {
         if (existing.empty) {
           const activityId = await linkEventToVenue(eventDoc);
           if (activityId) { eventDoc.activityId = activityId; }
-          await db.collection('events').add(eventDoc);
-          console.log(`  ✅ ${event.name.substring(0, 60)}${event.name.length > 60 ? '...' : ''}`);
-          imported++;
+          const addResult = await db.collection('events').add(eventDoc);
+          if (addResult.skipped) {
+            console.log(`  ⏭️ ${event.name.substring(0, 60)}${event.name.length > 60 ? '...' : ''} (${addResult.skipReason})`);
+            skipped++;
+          } else {
+            console.log(`  ✅ ${event.name.substring(0, 60)}${event.name.length > 60 ? '...' : ''}`);
+            imported++;
+          }
         } else {
           skipped++;
         }
@@ -1902,9 +1907,14 @@ async function scrapeLibraryEvents(library, browser) {
           eventDoc.activityId = activityId;
         }
 
-        await db.collection('events').add(eventDoc);
-          console.log(`  ✅ ${event.name.substring(0, 60)}${event.name.length > 60 ? '...' : ''}`);
-          imported++;
+        const addResult = await db.collection('events').add(eventDoc);
+          if (addResult.skipped) {
+            console.log(`  ⏭️ ${event.name.substring(0, 60)}${event.name.length > 60 ? '...' : ''} (${addResult.skipReason})`);
+            skipped++;
+          } else {
+            console.log(`  ✅ ${event.name.substring(0, 60)}${event.name.length > 60 ? '...' : ''}`);
+            imported++;
+          }
         } else {
           skipped++;
         }

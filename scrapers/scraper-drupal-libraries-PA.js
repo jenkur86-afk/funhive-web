@@ -398,9 +398,14 @@ async function scrapeLibraryEvents(library, browser) {
           eventDoc.activityId = activityId;
         }
 
-        await db.collection('events').add(eventDoc);
-            console.log(`  ✅ ${event.title.substring(0, 50)}${event.title.length > 50 ? '...' : ''}`);
-            imported++;
+        const addResult = await db.collection('events').add(eventDoc);
+            if (addResult.skipped) {
+              console.log(`  ⏭️ ${event.title.substring(0, 50)}${event.title.length > 50 ? '...' : ''} (${addResult.skipReason})`);
+              skipped++;
+            } else {
+              console.log(`  ✅ ${event.title.substring(0, 50)}${event.title.length > 50 ? '...' : ''}`);
+              imported++;
+            }
           } else {
             skipped++;
           }
@@ -483,9 +488,14 @@ async function scrapeLibraryEvents(library, browser) {
           const activityId = await linkEventToVenue(eventDoc);
           if (activityId) eventDoc.activityId = activityId;
 
-          await db.collection('events').add(eventDoc);
-          console.log(`  ✅ ${event.title.substring(0, 50)}${event.title.length > 50 ? '...' : ''}`);
-          imported++;
+          const addResult = await db.collection('events').add(eventDoc);
+          if (addResult.skipped) {
+            console.log(`  ⏭️ ${event.title.substring(0, 50)}${event.title.length > 50 ? '...' : ''} (${addResult.skipReason})`);
+            skipped++;
+          } else {
+            console.log(`  ✅ ${event.title.substring(0, 50)}${event.title.length > 50 ? '...' : ''}`);
+            imported++;
+          }
           await new Promise(resolve => setTimeout(resolve, 100));
         } catch (error) {
           console.error(`  ❌ Error processing fallback event:`, error.message);

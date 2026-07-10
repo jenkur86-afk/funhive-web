@@ -1390,7 +1390,13 @@ function createFirestoreCompatibleDB() {
             flattened = flattenForTable(collectionName, data);
           } catch (e) {
             if (e.message?.includes('Skipping past event') || e.message?.includes('empty/null name') || e.message?.includes('Skipping non-family event') || e.message?.includes('Skipping cancelled/closed event') || e.message?.includes('Skipping placeholder-venue') || e.message?.includes('Skipping adult-only event') || e.message?.includes('Skipping junk-title event') || e.message?.includes('Skipping dateless event') || e.message?.includes('Skipping time-only event_date') || e.message?.includes('Skipping "Invalid Date" event')) {
-              return { id }; // silently skip
+              // `skipped: true` lets callers that check the return value distinguish this
+              // from a real insert (both used to return the bare {id} shape, so 200+
+              // scrapers that log "✅ saved" and increment their own counter right after
+              // .add() without checking the result were silently miscounting rejected
+              // events as imported — e.g. every "CANCELLED ..." event still got logged
+              // and counted even though flattenEvent() correctly dropped it here).
+              return { id, skipped: true, skipReason: e.message };
             }
             throw e;
           }
