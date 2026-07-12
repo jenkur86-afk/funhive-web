@@ -27,6 +27,8 @@ const { normalizeDateString } = require('./date-normalization-helper');
 const { generateEventId } = require('./event-id-helper');
 const { logScraperResult } = require('./scraper-logger');
 const { linkEventToVenue } = require('./venue-matcher');
+const { launchBrowser } = require('./puppeteer-config');
+const { geocodeWithFallback } = require('./helpers/geocoding-helper');
 
 const SCRAPER_NAME = 'MontgomeryParks-MD';
 const BASE_URL = 'https://montgomeryparks.org';
@@ -139,6 +141,35 @@ async function fetchRssFeed() {
 }
 
 /**
+ * The RSS feed's <pubDate> is when the post was PUBLISHED to the feed, not when
+ * the event actually happens - using it as eventDate meant every event looked
+ * "past" the moment it aged out of pubDate's own recency, and got silently
+ * rejected. The real date/time/location only exist on the individual event
+ * page, and the site is behind Cloudflare (blocks plain HTTP clients), so this
+ * needs a real Puppeteer page load, not axios.
+ */
+async function fetchEventDateTimeLocation(page, url) {
+  try {
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    return await page.evaluate(() => {
+      const date = document.querySelector('.content .date')?.textContent.trim() || '';
+      const time = document.querySelector('.content .time')?.textContent.trim() || '';
+      const all = [...document.querySelectorAll('div')];
+      const locBlock = all.find(el => el.children.length && el.textContent.trim().startsWith('Location:') && el.querySelector('strong'));
+      let address = '';
+      if (locBlock) {
+        address = locBlock.textContent.replace(/^\s*Location:\s*/i, '').trim();
+      }
+      return { date, time, address };
+    });
+  } catch (error) {
+    console.log(`  ⚠️ Error fetching event page ${url}: ${error.message}`);
+    return { date: '', time: '', address: '' };
+  }
+}
+
+/**
  * Save events to database
  */
 async function saveEvents(events) {
@@ -188,13 +219,19 @@ async function scrapeMontgomeryParks(options = {}) {
   // Fetch RSS feed
   const rssItems = await fetchRssFeed();
 
+  // The RSS feed only gives us pubDate (when the post was published), not the
+  // real event date - visit each event page via Puppeteer (site is behind
+  // Cloudflare) to get the actual date/time/location.
+  const browser = await launchBrowser();
+  const page = await browser.newPage();
+  await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
   // Process each RSS item
   for (const item of rssItems) {
     try {
       const title = item.title || '';
       const link = item.link || '';
       const description = stripHtml(item['content:encoded'] || item.description || '');
-      const pubDate = item.pubDate ? new Date(item.pubDate) : new Date();
 
       // Skip if no title
       if (!title || title.length < 3) continue;
@@ -208,9 +245,32 @@ async function scrapeMontgomeryParks(options = {}) {
         continue;
       }
 
-      // Find park in title/description
+      if (!link) {
+        console.log(`  Skipping event with no link: ${title.substring(0, 40)}...`);
+        continue;
+      }
+
+      const { date: realDate, time: realTime, address: realAddress } = await fetchEventDateTimeLocation(page, link);
+      if (!realDate) {
+        console.log(`  Skipping event, could not find real date on page: ${title.substring(0, 40)}...`);
+        continue;
+      }
+
+      const timeMatch = realTime.match(/(\d{1,2}:\d{2}\s*[AP]M)\s*[-–]\s*(\d{1,2}:\d{2}\s*[AP]M)/i);
+      const eventStartTime = timeMatch ? timeMatch[1].replace(/\s+/, ' ') : null;
+      const eventEndTime = timeMatch ? timeMatch[2].replace(/\s+/, ' ') : null;
+
+      // Normalize date format
+      const normalizedDate = normalizeDateString(eventStartTime ? `${realDate} ${eventStartTime}` : realDate);
+      if (!normalizedDate) {
+        console.log(`  Skipping event with invalid date: "${realDate}"`);
+        continue;
+      }
+
+      // Find park in title/description/address (fall back to static list only if
+      // the real address didn't geocode)
       let venue = 'Montgomery Parks';
-      const fullText = `${title} ${description}`;
+      const fullText = `${title} ${description} ${realAddress}`;
       for (const parkName of Object.keys(PARK_LOCATIONS)) {
         if (fullText.toLowerCase().includes(parkName.toLowerCase())) {
           venue = parkName;
@@ -218,8 +278,16 @@ async function scrapeMontgomeryParks(options = {}) {
         }
       }
 
-      // Get coordinates
-      const coords = getLocationCoordinates(venue);
+      // Geocode the real address first; fall back to the static park list, then county center
+      let coordinates = realAddress
+        ? await geocodeWithFallback(`${realAddress}, MD`, {
+            state: 'MD', county: 'Montgomery', venueName: venue, sourceName: 'Montgomery Parks'
+          })
+        : null;
+      const staticCoords = getLocationCoordinates(venue);
+      const coords = coordinates
+        ? { latitude: coordinates.latitude, longitude: coordinates.longitude, city: staticCoords.city, zip: staticCoords.zip }
+        : staticCoords;
 
       // Categorize
       const { parentCategory, displayCategory, subcategory } = categorizeEvent({
@@ -233,22 +301,14 @@ async function scrapeMontgomeryParks(options = {}) {
       const priceMatch = description.match(/\$(\d+(?:\.\d{2})?)/);
       if (priceMatch) cost = `$${priceMatch[1]}`;
 
-      // Normalize date format
-      const rawDate = pubDate.toISOString();
-      const normalizedDate = normalizeDateString(rawDate);
-      if (!normalizedDate) {
-        console.log(`  Skipping event with invalid date: "${rawDate}"`);
-        continue;
-      }
-
       const event = {
         name: title,
         eventDate: normalizedDate,
-        startTime: null,  // RSS pubDate has no time info
-        endTime: null,
+        startTime: eventStartTime,
+        endTime: eventEndTime,
         description: description.substring(0, 1000),
         venue,
-        address: '',
+        address: realAddress || '',
         city: coords.city || 'Montgomery County',
         state: 'MD',
         zipCode: coords.zip || '',
@@ -287,6 +347,8 @@ async function scrapeMontgomeryParks(options = {}) {
       console.log(`  ⚠️ Error parsing event: ${error.message}`);
     }
   }
+
+  await browser.close();
 
   console.log(`\n📊 SAVING TO FIRESTORE`);
   console.log('-'.repeat(40));
