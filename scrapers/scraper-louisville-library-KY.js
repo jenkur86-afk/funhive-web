@@ -321,9 +321,17 @@ async function scrapeLouisvilleLibrary() {
   // Log final results
   await logger.finish();
 
+  // local-scraper-runner.js's stats normalizer only unwraps a `result.result`
+  // nesting (the CloudFunction-wrapper convention) - it never reads a `stats`
+  // key, so returning the raw {success, stats} shape here made every run
+  // report Found: 0, New: 0 in the summary log even when saves succeeded
+  // (2026-07-11: this scraper actually saved 144 events but was logged as a
+  // total failure). Flatten to match the convention every other
+  // logger.finish()-based scraper in this codebase already uses.
   return {
-    success: logger.stats.errors === 0,
-    stats: logger.stats
+    imported: logger.stats.new,
+    skipped: logger.stats.pastDate,
+    failed: logger.stats.errors
   };
 }
 

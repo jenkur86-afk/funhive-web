@@ -238,9 +238,18 @@ async function runScraper(name, config) {
     // stats are nested one level deep. Unwrap before normalizing.
     // When a CloudFunction wrapper returns { success, result: stateDict, found, new, duplicates },
     // the inner stateDict (e.g. { AL: 12, FL: 100 }) has no count fields — use outer object instead.
+    // ScraperLogger.finish() returns { success, stats: {...} } — the same nesting
+    // trap under a different key. 2026-07-11: Louisville-Library returned this
+    // raw shape (forgot to flatten it, unlike every other logger.finish()-based
+    // scraper) and every run logged Found: 0, New: 0 despite saving 144 real
+    // events. Fixed at the source, but also unwrap `result.stats` here as a
+    // safety net for the next scraper that makes the same mistake.
     const hasCountFields = (obj) => obj && ('found' in obj || 'new' in obj || 'saved' in obj || 'imported' in obj);
-    const stats_src = (result && result.success === true && result.result && typeof result.result === 'object')
-      ? (hasCountFields(result.result) ? result.result : result)
+    const nestedKey = result && result.success === true && typeof result.result === 'object' ? 'result'
+      : result && typeof result.stats === 'object' ? 'stats'
+      : null;
+    const stats_src = nestedKey
+      ? (hasCountFields(result[nestedKey]) ? result[nestedKey] : result)
       : result;
     const num = (v) => (typeof v === 'number' && !isNaN(v)) ? v : 0;
     const newCount = num(stats_src?.new) || (num(stats_src?.saved) + num(stats_src?.updated)) || num(stats_src?.imported);

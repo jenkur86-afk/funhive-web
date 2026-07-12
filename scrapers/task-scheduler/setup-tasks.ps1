@@ -16,12 +16,25 @@ New-Item -ItemType Directory -Force $logDir | Out-Null
 
 # ── Task 1: Daily scraper runner at 3:00 AM ──────────────────────────────────
 # Equivalent: com.funhive.scrapers.plist
+#
+# Action points at run-scrapers.bat, NOT node directly - the bat file is what
+# actually captures stdout/stderr to logs\ (Task Scheduler doesn't do this on
+# its own, see the note at the bottom of this file) and, as of 2026-07-11,
+# chains scripts\fix-all.ps1 --recent-only after the scraper run finishes so
+# same-day data quality issues get cleaned up automatically each morning
+# instead of requiring a separate manual/scheduled pass.
+#
+# ExecutionTimeLimit is 12h, not 4h: observed group runs have taken 5-10+
+# hours depending on how much content changed since the last rotation, and
+# the fix-all step adds more time on top of that. A tighter limit risks
+# Task Scheduler killing a legitimately-still-running job (and skipping the
+# fix-all step entirely that day) rather than catching a genuinely stuck one.
 $action1  = New-ScheduledTaskAction `
-    -Execute $nodeExe `
-    -Argument "local-scraper-runner.js" `
+    -Execute "cmd.exe" `
+    -Argument "/c `"$scraperDir\run-scrapers.bat`"" `
     -WorkingDirectory $scraperDir
 $trigger1 = New-ScheduledTaskTrigger -Daily -At "3:00AM"
-$settings1 = New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Hours 4) -Priority 7
+$settings1 = New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Hours 12) -Priority 7
 Register-ScheduledTask `
     -TaskName "FunHive-Scrapers" `
     -Action $action1 `
@@ -29,7 +42,7 @@ Register-ScheduledTask `
     -Settings $settings1 `
     -RunLevel Highest `
     -Force | Out-Null
-Write-Host "Registered: FunHive-Scrapers (daily 3:00 AM)"
+Write-Host "Registered: FunHive-Scrapers (daily 3:00 AM, runs scrapers then fix-all --recent-only)"
 
 # ── Task 2: Daily monitor at 8:00 AM ─────────────────────────────────────────
 # Equivalent: com.funhive.monitor.plist
@@ -56,6 +69,8 @@ Write-Host ""
 Write-Host "Done. To verify: Get-ScheduledTask | Where-Object { `$_.TaskName -like 'FunHive*' }"
 Write-Host "Logs will be written to: $logDir"
 Write-Host ""
-Write-Host "NOTE: stdout/stderr are not automatically captured by Task Scheduler."
-Write-Host "To capture logs, pipe inside local-scraper-runner.js or wrap in a .bat:"
-Write-Host "  node local-scraper-runner.js >> logs\scraper-stdout.log 2>> logs\scraper-stderr.log"
+Write-Host "NOTE: Task Scheduler itself does not capture stdout/stderr - run-scrapers.bat"
+Write-Host "handles that by redirecting into logs\scraper-stdout.log, logs\scraper-stderr.log,"
+Write-Host "and (as of 2026-07-11) logs\fix-all-recent.log for the chained data-quality pass."
+Write-Host "FunHive-Monitor (8:00 AM) may run while a still-in-progress scraper batch is"
+Write-Host "running past its usual window - that's fine, it just reports current state."
