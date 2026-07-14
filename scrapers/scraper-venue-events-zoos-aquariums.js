@@ -519,13 +519,21 @@ async function scrapeZooAquariumEvents(filterState = null) {
   // Log final results — count totals across all venue results
   const totalNew = Object.values(results).reduce((sum, r) => sum + (r?.new || r?.imported || 0), 0);
   const totalDuplicates = Object.values(results).reduce((sum, r) => sum + (r?.duplicates || 0), 0);
+  const totalInvalidDate = Object.values(results).reduce((sum, r) => sum + (r?.invalidDate || 0), 0);
   logScraperResult(SCRAPER_NAME, {
     found: totalNew + totalDuplicates,
     new: totalNew,
     duplicates: totalDuplicates,
+    invalidDate: totalInvalidDate,
   });
 
-  return results;
+  return {
+    ...results,
+    found: totalNew + totalDuplicates,
+    new: totalNew,
+    duplicates: totalDuplicates,
+    invalidDate: totalInvalidDate,
+  };
 }
 
 // ==========================================

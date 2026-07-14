@@ -307,6 +307,7 @@ async function scrapeLouisvilleLibrary() {
 
     logger.stats.new = saveResult.saved;
     logger.stats.pastDate = saveResult.skipped;
+    logger.stats.invalidDate = saveResult.invalidDate || 0;
     logger.stats.errors = saveResult.errors;
 
   } catch (error) {
@@ -331,6 +332,8 @@ async function scrapeLouisvilleLibrary() {
   return {
     imported: logger.stats.new,
     skipped: logger.stats.pastDate,
+    duplicates: logger.stats.pastDate,
+    invalidDate: logger.stats.invalidDate || 0,
     failed: logger.stats.errors
   };
 }

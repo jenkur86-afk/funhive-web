@@ -1557,6 +1557,7 @@ async function scrapeStateParksEvents() {
 
   let totalSaved = 0;
   let totalSkipped = 0;
+  let totalInvalidDate = 0;
   let totalErrors = 0;
   let totalDeleted = 0;
 
@@ -1568,6 +1569,7 @@ async function scrapeStateParksEvents() {
       const result = await scrapeStateParks(config, browser);
       totalSaved += result.saved;
       totalSkipped += result.skipped;
+      totalInvalidDate += result.invalidDate || 0;
       totalErrors += result.errors;
       totalDeleted += result.deleted || 0;
 
@@ -1590,7 +1592,7 @@ async function scrapeStateParksEvents() {
   console.log(`   Deleted: ${totalDeleted}`);
   console.log('='.repeat(60) + '\n');
 
-  return { saved: totalSaved, skipped: totalSkipped, errors: totalErrors, deleted: totalDeleted };
+  return { saved: totalSaved, skipped: totalSkipped, duplicates: totalSkipped, invalidDate: totalInvalidDate, errors: totalErrors, deleted: totalDeleted };
 }
 
 /**

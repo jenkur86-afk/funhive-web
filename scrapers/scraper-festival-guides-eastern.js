@@ -367,6 +367,7 @@ async function scrapeFestivalGuides(filterStates = null) {
   const stateResults = {};
   let totalSaved = 0;
   let totalSkipped = 0;
+  let totalInvalidDate = 0;
   let totalErrors = 0;
 
   try {
@@ -420,9 +421,11 @@ async function scrapeFestivalGuides(filterStates = null) {
             );
             const saved = result?.saved || result?.new || result?.imported || 0;
             const skipped = result?.skipped || 0;
+            const invalidDate = result?.invalidDate || 0;
             const errors = result?.errors || 0;
             totalSaved += saved;
             totalSkipped += skipped;
+            totalInvalidDate += invalidDate;
             totalErrors += errors;
             console.log(`   💾 Saved: ${saved} | ⏭️ Skipped: ${skipped} | ❌ Errors: ${errors}`);
           } catch (err) {
@@ -466,6 +469,7 @@ async function scrapeFestivalGuides(filterStates = null) {
     saved: totalSaved,
     duplicates: totalSkipped,
     skipped: totalSkipped,
+    invalidDate: totalInvalidDate,
     errors: totalErrors,
     stateResults,
   };

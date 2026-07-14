@@ -374,9 +374,9 @@ function isDateInRange(normalizedDate, maxDays = 90) {
  * Process extracted events and save to database
  */
 async function processAndSaveVenueEvents(venue, extractedEvents) {
-  if (extractedEvents.length === 0) return { saved: 0, skipped: 0, failed: 0 };
+  if (extractedEvents.length === 0) return { saved: 0, skipped: 0, failed: 0, invalidDate: 0 };
 
-  let saved = 0, skipped = 0, failed = 0;
+  let saved = 0, skipped = 0, failed = 0, invalidDate = 0;
   const allEvents = [];
   const seenEvents = new Set();
 
@@ -476,18 +476,19 @@ async function processAndSaveVenueEvents(venue, extractedEvents) {
   // Batch save all events for this venue
   if (allEvents.length > 0) {
     try {
-      await saveEventsWithGeocoding(allEvents, [{ name: venue.name, city: venue.city, state: venue.state, zipCode: venue.zip }], {
+      const result = await saveEventsWithGeocoding(allEvents, [{ name: venue.name, city: venue.city, state: venue.state, zipCode: venue.zip }], {
         scraperName: SCRAPER_NAME,
         state: venue.state,
         category: 'learning-culture',
         platform: 'museum-arts-venue'
       });
+      invalidDate += result?.invalidDate || 0;
     } catch (err) {
       console.error(`    Error batch saving: ${err.message}`);
     }
   }
 
-  return { saved, skipped, failed };
+  return { saved, skipped, failed, invalidDate };
 }
 
 /**
@@ -513,7 +514,7 @@ async function scrapeVenueEvents(options = {}) {
     browser = await launchBrowser({ stealth: true });
     const page = await createStealthPage(browser);
 
-    let totalSaved = 0, totalSkipped = 0, totalFailed = 0;
+    let totalSaved = 0, totalSkipped = 0, totalFailed = 0, totalInvalidDate = 0;
     let venuesProcessed = 0;
 
     const filteredVenues = state
@@ -529,10 +530,11 @@ async function scrapeVenueEvents(options = {}) {
         console.log(`   Found: ${events.length} events`);
 
         if (events.length > 0) {
-          const { saved, skipped, failed } = await processAndSaveVenueEvents(venue, events);
+          const { saved, skipped, failed, invalidDate } = await processAndSaveVenueEvents(venue, events);
           totalSaved += saved;
           totalSkipped += skipped;
           totalFailed += failed;
+          totalInvalidDate += invalidDate || 0;
 
           console.log(`   Saved: ${saved}, Skipped: ${skipped}, Failed: ${failed}`);
         }
@@ -564,13 +566,14 @@ async function scrapeVenueEvents(options = {}) {
       await logScraperResult(SCRAPER_NAME, {
         found: totalSaved + totalSkipped,
         new: totalSaved,
-        duplicates: totalSkipped
+        duplicates: totalSkipped,
+        invalidDate: totalInvalidDate
       }, { dataType: 'events', state });
     } catch (error) {
       console.error('Failed to log results:', error.message);
     }
 
-    return { imported: totalSaved, skipped: totalSkipped, failed: totalFailed };
+    return { imported: totalSaved, skipped: totalSkipped, duplicates: totalSkipped, failed: totalFailed, invalidDate: totalInvalidDate };
 
   } catch (error) {
     console.error('Fatal error:', error);

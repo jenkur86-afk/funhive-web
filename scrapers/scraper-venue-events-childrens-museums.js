@@ -922,7 +922,7 @@ async function scrapeChildrensMuseumEvents(options = {}) {
   console.log(`${'='.repeat(70)}\n`);
 
   // Save events with geocoding
-  let saveStats = { saved: 0, skipped: 0, errors: 0 };
+  let saveStats = { saved: 0, skipped: 0, invalidDate: 0, errors: 0 };
   if (allEvents.length > 0) {
     console.log('💾 Saving events to database...');
     const saveOptions = {
@@ -945,6 +945,7 @@ async function scrapeChildrensMuseumEvents(options = {}) {
       if (result) {
         saveStats.saved = result.saved || 0;
         saveStats.skipped = result.skipped || 0;
+        saveStats.invalidDate = result.invalidDate || 0;
         saveStats.errors = result.errors || 0;
         console.log(`   💾 Saved: ${saveStats.saved} | ⏭️ Skipped: ${saveStats.skipped} | ❌ Errors: ${saveStats.errors}`);
       }
@@ -967,6 +968,7 @@ async function scrapeChildrensMuseumEvents(options = {}) {
     saved: saveStats.saved,
     duplicates: saveStats.skipped,
     skipped: saveStats.skipped,
+    invalidDate: saveStats.invalidDate,
     errors: saveStats.errors,
   };
 }

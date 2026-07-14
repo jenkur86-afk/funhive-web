@@ -289,6 +289,7 @@ async function scrapeFairsFestivals(filterStates = null) {
   const stateResults = {};
   let totalSaved = 0;
   let totalDuplicates = 0;
+  let totalInvalidDate = 0;
 
   try {
     for (let i = 0; i < statesToScrape.length; i++) {
@@ -348,9 +349,11 @@ async function scrapeFairsFestivals(filterStates = null) {
             );
             const saved = result?.saved || result?.new || result?.imported || 0;
             const dup = result?.skipped || result?.duplicates || 0;
+            const invalidDate = result?.invalidDate || 0;
             console.log(`   💾 Saved: ${saved}`);
             totalSaved += saved;
             totalDuplicates += dup;
+            totalInvalidDate += invalidDate;
           } catch (err) {
             console.error(`   ❌ Save error: ${err.message}`);
           }
@@ -389,6 +392,7 @@ async function scrapeFairsFestivals(filterStates = null) {
     new: totalSaved,
     saved: totalSaved,
     duplicates: totalDuplicates,
+    invalidDate: totalInvalidDate,
     stateResults,
   };
 }
@@ -432,6 +436,7 @@ async function scrapeFairsFestivalsCloudFunction() {
       new: result?.new || 0,
       saved: result?.saved || 0,
       duplicates: result?.duplicates || 0,
+      invalidDate: result?.invalidDate || 0,
       result,
     };
   } catch (err) {

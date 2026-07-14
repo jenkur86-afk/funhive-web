@@ -553,6 +553,7 @@ async function scrapeGardensNature(filterStates = null) {
   let totalFound = 0;
   let totalSaved = 0;
   let totalSkipped = 0;
+  let totalInvalidDate = 0;
   let totalErrors = 0;
 
   try {
@@ -591,9 +592,11 @@ async function scrapeGardensNature(filterStates = null) {
             );
             const saved = result?.saved || result?.new || result?.imported || 0;
             const skipped = result?.skipped || result?.duplicates || 0;
+            const invalidDate = result?.invalidDate || 0;
             const errors = result?.errors || result?.failed || 0;
             totalSaved += saved;
             totalSkipped += skipped;
+            totalInvalidDate += invalidDate;
             totalErrors += errors;
             console.log(`   💾 Saved: ${saved} | ⏭️ Skipped: ${skipped} | ❌ Errors: ${errors}`);
           } catch (err) {
@@ -637,6 +640,7 @@ async function scrapeGardensNature(filterStates = null) {
     found: totalFound,
     new: totalSaved,
     duplicates: totalSkipped,
+    invalidDate: totalInvalidDate,
     errors: totalErrors,
     stateResults,
   };

@@ -525,6 +525,7 @@ async function scrapeBarnesNoble(options = {}) {
 
     let totalSaved = 0;
     let totalSkipped = 0;
+    let totalInvalidDate = 0;
     let totalErrors = 0;
 
     for (const [st, stateEvents] of Object.entries(eventsByState)) {
@@ -557,6 +558,7 @@ async function scrapeBarnesNoble(options = {}) {
         console.log(`  📊 ${st}: ${result.saved} saved, ${result.skipped} skipped, ${result.errors} errors`);
         totalSaved += result.saved || 0;
         totalSkipped += result.skipped || 0;
+        totalInvalidDate += result.invalidDate || 0;
         totalErrors += result.errors || 0;
       } catch (saveError) {
         console.error(`  ❌ Error saving ${st} events: ${saveError.message}`);
@@ -576,6 +578,7 @@ async function scrapeBarnesNoble(options = {}) {
       saved: totalSaved,
       duplicates: totalSkipped,
       skipped: totalSkipped,
+      invalidDate: totalInvalidDate,
       errors: totalErrors,
       total: allEvents.length,
       events: allEvents
@@ -594,7 +597,7 @@ async function scrapeBarnesNoble(options = {}) {
   console.log(`✅ BARNES & NOBLE EVENTS SCRAPER COMPLETE`);
   console.log(`${'='.repeat(70)}\n`);
 
-  return { found: allEvents.length, new: 0, saved: 0, duplicates: 0, errors: 0, total: allEvents.length, events: allEvents };
+  return { found: allEvents.length, new: 0, saved: 0, duplicates: 0, invalidDate: 0, errors: 0, total: allEvents.length, events: allEvents };
 }
 
 // ==========================================

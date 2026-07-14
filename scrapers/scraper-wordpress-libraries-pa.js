@@ -494,13 +494,15 @@ async function scrapeWordpressPACloudFunction() {
   await logScraperResult('WordPress-PA', {
     found: events.length,
     new: result?.saved || 0,
-    duplicates: result?.skipped || 0
+    duplicates: result?.skipped || 0,
+    invalidDate: result?.invalidDate || 0
   }, { dataType: 'events' });
 
   return {
     found: events.length,
     new: result?.saved || 0,
-    duplicates: result?.skipped || 0
+    duplicates: result?.skipped || 0,
+    invalidDate: result?.invalidDate || 0
   };
 }
 

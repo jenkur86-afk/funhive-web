@@ -467,6 +467,7 @@ async function scrapeSportsEngineYouth(filterStates = null) {
   let allEvents = [];
   let totalSaved = 0;
   let totalDuplicates = 0;
+  let totalInvalidDate = 0;
 
   try {
     // Step 1: Scrape the discovery page (returns ~4-10 featured programs)
@@ -539,6 +540,7 @@ async function scrapeSportsEngineYouth(filterStates = null) {
         );
         totalSaved = result?.saved || result?.new || result?.imported || 0;
         totalDuplicates = result?.skipped || result?.duplicates || 0;
+        totalInvalidDate = result?.invalidDate || 0;
         console.log(`   💾 Saved: ${totalSaved}`);
       } catch (err) {
         console.error(`   ❌ Save error: ${err.message}`);
@@ -578,6 +580,7 @@ async function scrapeSportsEngineYouth(filterStates = null) {
     new: totalSaved,
     saved: totalSaved,
     duplicates: totalDuplicates,
+    invalidDate: totalInvalidDate,
   };
 }
 
@@ -619,6 +622,7 @@ async function scrapeSportsEngineYouthCloudFunction() {
       new: result?.new || 0,
       saved: result?.saved || 0,
       duplicates: result?.duplicates || 0,
+      invalidDate: result?.invalidDate || 0,
       result,
     };
   } catch (err) {

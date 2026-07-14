@@ -379,6 +379,7 @@ async function scrapeKidsOutAndAbout(filterStates = null, daysToScrape = 60) {
   const stateResults = {};
   let totalSaved = 0;
   let totalDuplicates = 0;
+  let totalInvalidDate = 0;
 
   try {
     for (let i = 0; i < regionsToScrape.length; i++) {
@@ -416,9 +417,11 @@ async function scrapeKidsOutAndAbout(filterStates = null, daysToScrape = 60) {
             );
             const saved = result?.saved || result?.new || result?.imported || 0;
             const dup = result?.skipped || result?.duplicates || 0;
+            const invalidDate = result?.invalidDate || 0;
             console.log(`   💾 Saved: ${saved}`);
             totalSaved += saved;
             totalDuplicates += dup;
+            totalInvalidDate += invalidDate;
           } catch (err) {
             console.error(`   ❌ Save error: ${err.message}`);
           }
@@ -457,6 +460,7 @@ async function scrapeKidsOutAndAbout(filterStates = null, daysToScrape = 60) {
     new: totalSaved,
     saved: totalSaved,
     duplicates: totalDuplicates,
+    invalidDate: totalInvalidDate,
     stateResults,
   };
 }
@@ -502,6 +506,7 @@ async function scrapeKidsOutAndAboutCloudFunction() {
       new: result?.new || 0,
       saved: result?.saved || 0,
       duplicates: result?.duplicates || 0,
+      invalidDate: result?.invalidDate || 0,
       result,
     };
   } catch (err) {

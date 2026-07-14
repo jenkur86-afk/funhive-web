@@ -428,6 +428,10 @@ async function scrapePatchCommunity(filterStates = null) {
   const browser = await launchBrowser();
   let allEvents = [];
   const stateResults = {};
+  let totalSaved = 0;
+  let totalSkipped = 0;
+  let totalInvalidDate = 0;
+  let totalErrors = 0;
 
   try {
     for (let i = 0; i < communitiesToScrape.length; i++) {
@@ -480,8 +484,13 @@ async function scrapePatchCommunity(filterStates = null) {
               );
               const saved = result?.saved || result?.new || result?.imported || 0;
               console.log(`   💾 ${st}: Saved ${saved}`);
+              totalSaved += saved;
+              totalSkipped += result?.skipped || result?.duplicates || 0;
+              totalInvalidDate += result?.invalidDate || 0;
+              totalErrors += result?.errors || 0;
             } catch (err) {
               console.error(`   ❌ Save error (${st}): ${err.message}`);
+              totalErrors++;
             }
           }
         }
@@ -511,11 +520,12 @@ async function scrapePatchCommunity(filterStates = null) {
 
   logScraperResult(SCRAPER_NAME, {
     found: totalEvents,
-    new: totalEvents,
-    duplicates: 0,
+    new: totalSaved,
+    duplicates: totalSkipped,
+    invalidDate: totalInvalidDate,
   });
 
-  return stateResults;
+  return { stateResults, found: totalEvents, new: totalSaved, saved: totalSaved, duplicates: totalSkipped, invalidDate: totalInvalidDate, errors: totalErrors };
 }
 
 // ==========================================
@@ -549,15 +559,15 @@ if (require.main === module) {
 
 async function scrapePatchCommunityCloudFunction() {
   try {
-    const stateResults = await scrapePatchCommunity();
-    // stateResults is { AL: 12, DC: 19, ... } — collapse to runner-friendly shape
-    const total = Object.values(stateResults || {}).reduce((s, n) => s + (n || 0), 0);
+    const result = await scrapePatchCommunity();
     return {
       success: true,
-      result: stateResults,
-      found: total,
-      new: total,
-      duplicates: 0,
+      result: result.stateResults,
+      found: result.found,
+      new: result.new,
+      duplicates: result.duplicates,
+      invalidDate: result.invalidDate,
+      errors: result.errors,
     };
   } catch (err) {
     console.error('Cloud Function Error:', err);

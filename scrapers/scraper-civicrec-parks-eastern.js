@@ -624,6 +624,7 @@ async function scrapeCivicRecParks(statesToScrape, dryRun) {
   const stateResults = {};
   let totalSaved = 0;
   let totalSkipped = 0;
+  let totalInvalidDate = 0;
   let totalErrors = 0;
 
   try {
@@ -661,6 +662,7 @@ async function scrapeCivicRecParks(statesToScrape, dryRun) {
           console.log(`   Result: ${result.saved} saved, ${result.skipped} skipped, ${result.errors} errors`);
           totalSaved += result.saved;
           totalSkipped += result.skipped;
+          totalInvalidDate += result.invalidDate || 0;
           totalErrors += result.errors;
           stateResults[dept.state] = (stateResults[dept.state] || 0) + result.saved;
         } catch (saveErr) {
@@ -699,7 +701,7 @@ async function scrapeCivicRecParks(statesToScrape, dryRun) {
   }
   console.log('='.repeat(60) + '\n');
 
-  return stateResults;
+  return { stateResults, saved: totalSaved, skipped: totalSkipped, duplicates: totalSkipped, invalidDate: totalInvalidDate, errors: totalErrors };
 }
 
 // ──────────────────────────────────────────────────────────────────────
@@ -729,16 +731,17 @@ if (require.main === module) {
 
 async function scrapeCivicRecParksCloudFunction() {
   try {
-    const stateResults = await scrapeCivicRecParks();
-    // stateResults is { AL: 86, FL: 1100, ... } — collapse for runner
-    const total = Object.values(stateResults || {}).reduce((s, n) => s + (n || 0), 0);
+    const result = await scrapeCivicRecParks();
+    const total = Object.values(result.stateResults || {}).reduce((s, n) => s + (n || 0), 0);
     return {
       success: true,
       scraper: SCRAPER_NAME,
-      result: stateResults,
+      result: result.stateResults,
       found: total,
-      new: total,
-      duplicates: 0,
+      new: result.saved,
+      duplicates: result.skipped,
+      invalidDate: result.invalidDate,
+      errors: result.errors,
     };
   } catch (err) {
     console.error('Cloud Function Error:', err);

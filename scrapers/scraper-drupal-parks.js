@@ -437,12 +437,14 @@ async function scrapeDrupalParks() {
 
   let totalSaved = 0;
   let totalSkipped = 0;
+  let totalInvalidDate = 0;
   let totalErrors = 0;
 
   for (const config of configsToScrape) {
     const result = await scrapeDrupalState(config);
     totalSaved += result.saved;
     totalSkipped += result.skipped;
+    totalInvalidDate += result.invalidDate || 0;
     totalErrors += result.errors;
 
     if (config !== configsToScrape[configsToScrape.length - 1]) {
@@ -458,7 +460,7 @@ async function scrapeDrupalParks() {
   console.log(`   Errors: ${totalErrors}`);
   console.log('='.repeat(60) + '\n');
 
-  return { saved: totalSaved, skipped: totalSkipped, errors: totalErrors };
+  return { saved: totalSaved, skipped: totalSkipped, duplicates: totalSkipped, invalidDate: totalInvalidDate, errors: totalErrors };
 }
 
 async function scrapeDrupalParksCloudFunction(req, res) {

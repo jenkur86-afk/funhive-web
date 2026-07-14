@@ -274,7 +274,7 @@ async function scrapeGenericEvents() {
 }
 
 async function saveToDatabase(events) {
-  await saveEventsWithGeocoding(events, LIBRARIES, {
+  return await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'CT',
     category: 'library',
@@ -322,10 +322,16 @@ if (require.main === module) {
 async function scrapeLibraryMarketCTCloudFunction() {
   console.log('☁️ Running librarymarket-CT as Cloud Function');
   const events = await scrapeGenericEvents();
-  if (events.length > 0) {
-    await saveToDatabase(events);
+  if (events.length === 0) {
+    return { found: 0, new: 0, duplicates: 0, invalidDate: 0 };
   }
-  return { imported: events.length, total: events.length };
+  const result = await saveToDatabase(events);
+  return {
+    found: events.length,
+    new: result?.saved || 0,
+    duplicates: result?.skipped || 0,
+    invalidDate: result?.invalidDate || 0
+  };
 }
 
 module.exports = { scrapeGenericEvents, saveToDatabase, scrapeLibraryMarketCTCloudFunction };

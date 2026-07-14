@@ -603,6 +603,7 @@ async function scrapeActiveNetParks(statesToScrape, dryRun) {
   const stateResults = {};
   let totalSaved = 0;
   let totalSkipped = 0;
+  let totalInvalidDate = 0;
   let totalErrors = 0;
 
   try {
@@ -640,6 +641,7 @@ async function scrapeActiveNetParks(statesToScrape, dryRun) {
           console.log(`   Result: ${result.saved} saved, ${result.skipped} skipped, ${result.errors} errors`);
           totalSaved += result.saved;
           totalSkipped += result.skipped;
+          totalInvalidDate += result.invalidDate || 0;
           totalErrors += result.errors;
           stateResults[jurisdiction.state] = (stateResults[jurisdiction.state] || 0) + result.saved;
         } catch (saveErr) {
@@ -684,6 +686,7 @@ async function scrapeActiveNetParks(statesToScrape, dryRun) {
     saved: totalSaved,
     duplicates: totalSkipped,
     skipped: totalSkipped,
+    invalidDate: totalInvalidDate,
     errors: totalErrors,
     stateResults,
   };

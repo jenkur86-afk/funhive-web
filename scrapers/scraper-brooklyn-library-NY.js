@@ -207,6 +207,7 @@ async function scrapeBrooklynLibrary() {
 
   let imported = 0;
   let skipped = 0;
+  let invalidDate = 0;
   let failed = 0;
   let foundCount = 0;
   const events = [];
@@ -378,7 +379,8 @@ async function scrapeBrooklynLibrary() {
     });
 
     imported = result.saved;
-    skipped = result.skipped + (result.invalidDate || 0);
+    skipped = result.skipped;
+    invalidDate = result.invalidDate || 0;
 
   } catch (saveError) {
     console.error('❌ Error saving events:', saveError.message);
@@ -399,13 +401,14 @@ async function scrapeBrooklynLibrary() {
     found: foundCount,
     new: imported,
     duplicates: skipped,
+    invalidDate,
     errors: failed
   }, {
     state: 'NY',
     source: 'Brooklyn Public Library'
   });
 
-  return { found: foundCount, new: imported, imported, skipped, failed };
+  return { found: foundCount, new: imported, imported, duplicates: skipped, skipped, invalidDate, failed };
 }
 
 /**
