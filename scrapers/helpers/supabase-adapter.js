@@ -809,8 +809,11 @@ function isJunkTitle(name) {
     /^(events?|programs?|activities)\s+and\s+activities/i,
     // Calendar-widget day-cell badge text (e.g. "0 events", "3 events") — generic
     // WordPress library scrapers sometimes match a mini-calendar day cell instead
-    // of a real event card; the cell's summary badge reads as a fake "title".
-    /^\d+\s+events?$/i,
+    // of a real event card; the cell's summary badge reads as a fake "title". Not
+    // anchored at the end: the real DOM text glues the day number on after the
+    // badge via newlines/whitespace (e.g. "3 events,\n\t\t\t\t30"), so a $-anchored
+    // match never fired and this junk kept falling through to the invalid-date path.
+    /^\d+\s+events?\b/i,
   ];
   for (const pattern of NAV_JUNK) {
     if (pattern.test(trimmed)) return true;

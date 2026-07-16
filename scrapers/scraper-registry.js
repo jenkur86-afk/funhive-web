@@ -679,7 +679,13 @@ const SCRAPERS = {
   },
   'Drupal-Pennsylvania': {
     file: './scraper-drupal-libraries-PA.js',
-    exportName: 'scrapeDrupalPennsylvaniaLibraries',
+    // Was pointed at scrapeDrupalPennsylvaniaLibraries, the plain function with
+    // no return statement — it does real work (10 imported, 1718 correctly
+    // skipped as non-family on 2026-07-16) but the runner received `undefined`
+    // back and logged Found:0/New:0/Duplicates:0 every run. The CloudFunction
+    // wrapper below returns the flattened {imported, skipped, failed} shape
+    // local-scraper-runner.js's normalizer expects.
+    exportName: 'scrapeDrupalPennsylvaniaLibrariesCloudFunction',
     type: 'puppeteer',
     group: 1,
     state: 'PA'
