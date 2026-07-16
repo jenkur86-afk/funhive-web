@@ -139,6 +139,22 @@ The `click_events` table (see Database Schema above) has no SELECT policy — th
 - **Shell scripts**: `bash scripts/fix-all.sh` works in Git Bash (installed with Git for Windows); PowerShell users: `.\scripts\fix-all.ps1`
 - **Scheduled tasks**: `scrapers/task-scheduler/setup-tasks.ps1` (run once as admin) replaces the Mac launchd plists
 
+## Automated Maintenance
+
+Three things run on a schedule — two via Windows Task Scheduler, one via Claude Code:
+
+- **`FunHive-Scrapers`** (Task Scheduler, daily 3:00 AM, 12h limit) — runs the day's rotation group, then chains `scripts/fix-all.ps1 --recent-only`. Writes `scrapers/logs/scraper-summary.log` (cumulative per-scraper table: FOUND/NEW/DUPES/INVALID/TIME) and `logs/fix-all-recent.log`.
+- **`FunHive-Monitor`** (Task Scheduler, daily 8:00 AM).
+- **`funhive-scraper-diagnosis`** (Claude Code scheduled task, daily 2:12 PM) — reads the tail of `scraper-summary.log`, diagnoses per `SCRAPER-DIAGNOSIS-PROMPT.md`, applies fixes, and auto-commits/pushes scraper-side files only. It will **not** commit `src/**`, `public/**`, `next.config.*`, or `package.json` — those auto-deploy to Vercel and are left for human review. Prompt lives at `~/.claude/scheduled-tasks/funhive-scraper-diagnosis/SKILL.md`; permissions in `.claude/settings.json`. Only runs while the Claude Code app is open; a missed run fires at next launch.
+  - It deliberately references `CLAUDE.md` and `SCRAPER-DIAGNOSIS-PROMPT.md` rather than copying their contents. Keep it that way — an inlined copy silently forks from these files the first time either is edited.
+
+### `SCRAPER-FIX-LOG.jsonl` (repo root)
+One JSON object per line, append-only, one entry per **logical fix** (not per commit or per file). Written by the diagnosis routine and by any session that fixes a scraper; read at the start of each diagnosis so known-dead or already-diagnosed scrapers aren't re-investigated daily.
+
+Schema: `date` (`"YYYY-MM-DD"`), `scrapers` (array of `scraper-registry.js` keys; for shared-helper fixes spanning many scrapers use a sentinel like `"event-save-helper.js"` or `"MacaroniKid-ALL"`), `category` (exactly one of `site-change` | `code-bug` | `seed-data` | `new-coverage` | `other`), `summary` (1–2 plain sentences: what broke, what was done).
+
+Stage it in the same `git add` group as the fix it documents. `scripts/scraper-fix-trends.js` consumes it for category trends, repeat-offender detection, and a staleness gap-check.
+
 ## File Map
 
 ### Core Application
