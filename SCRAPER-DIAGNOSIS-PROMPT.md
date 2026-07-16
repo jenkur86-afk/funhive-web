@@ -20,6 +20,8 @@ Active scraper counts (July 2026): Group 1 = 51, Group 2 = 49, Group 3 = 45.
 
 ### What to look for and fix
 
+**Read every row of the table, not just the ones flagged with ⚠️ or with an obviously huge INVALID count.** A 2026-07-16 incident: a full diagnosis pass only chased the rows with warning markers and skipped past `Pratt-Library 837 837 0 0`, `BiblioCommons-NJ 438 438 0 0`, `Fairfax-Parks 77 77 0 0`, and five `Activities-*-DMV` rows that all showed 0 in the DUPES column — a real bug (see Section 15) sitting in plain sight in otherwise-unflagged, healthy-looking rows. Before finishing, scan FOUND/NEW/DUPES/INVALID for every single line in the table, not just the ones the runner marked with ⚠️. If the user asks "were all these looked at?", the honest answer should already be yes.
+
 **1. Zero-event scrapers (Found 0 URLs / 0 new / 0 updated)**
 - Check if the scraper URL is correct by visiting the live site
 - Check if the site changed platforms (e.g., Communico vs LibraryCalendar vs LibNet)
@@ -177,6 +179,18 @@ If a state's scraper returns 0 (or near-0) events across most of its libraries, 
 - [ ] Group 3 checked (2026-07-09 run: PA, MA, KY, SC, WV, DE all reported healthy nonzero Found counts, e.g. WordPress-PA 988 found/290 new. NH did not run in this window before the run log was diagnosed — its last confirmed result was 2026-07-06 [1190 found/102 new], which predates the 2026-07-07 domain cleanup, so it still needs re-verification against the new domain list on its next Group 3 run.)
 
 **Once all three boxes above are checked, delete this entire section (14) from this file** — it's a one-time verification for the 2026-07-07 cleanup, not a permanent diagnosis category.
+
+**15. Suspiciously perfect duplicate detection (DUPES column stuck at 0, ~100% New) across multiple consecutive runs**
+
+**What it looks like**: A scraper reports `Found == New` with `Dupes: 0` — not once, but on two or more consecutive runs for the same scraper. One run showing 0 dupes is not automatically a bug (a brand-new scraper's first run has nothing to dupe against). The tell is the *pattern repeating* day after day for a source that should have heavy overlap with its own previous scrape (e.g., a library calendar publishing 30–60 days out will mostly re-show the same events tomorrow).
+
+**Do not assume this is either "everything's fine" or "duplicate rows are piling up in the DB" — check which of two distinct causes applies, they need different responses:**
+
+a. **Egress-conscious upsert-by-stable-ID, no read-before-write** — the scraper calls `db.collection('events').doc(eventId).set(eventDoc, { merge: true })` (or the direct Supabase equivalent) with a deterministic content-hash ID, and never queries first to check if the row already existed. Confirm by grepping the scraper file for `.set(` and checking `helpers/supabase-adapter.js`'s Firestore-compat `.set()` — it should map to `supabase.from(table).upsert(row, { onConflict: 'id' })`. If so, there is **no real duplicate-row problem** — same ID always overwrites the same row — this is a known, intentional trade-off documented in `CLAUDE.md`'s bandwidth-management section (an extra existence-check read costs more egress than it's worth). The "New" count is just an overcount label (it really means "new or re-confirmed"); leave it alone, do not add a read-before-write check to "fix" it.
+
+b. **The scraper genuinely tracks new-vs-updated, but `local-scraper-runner.js` hides it** — "Activity scrapers" (venues, not events) commonly return `{ saved, updated, failed }` from `getOrCreateActivity()`'s `isNew` flag, where `updated` means "already existed, just refreshed." Check the runner's stats-normalizer in `local-scraper-runner.js` (search for `newCount` and `dupCount`) — if it folds `saved + updated` into the New column with no path for `updated` to reach Duplicates, that's a real bug: fix the normalizer, not the scraper. (Fixed 2026-07-16 for the `{saved, updated, failed}` shape — `updated` now flows into `dupCount`. If a new scraper shape shows the same symptom, look for an analogous field being silently dropped rather than routed to the right column.)
+
+To tell them apart quickly: grep the scraper file for `updated` — if the scraper's own save function tracks a distinct `updated` counter and returns it, you're in case (b), a runner bug. If there's no `updated` concept anywhere in the scraper and it's a direct merge-upsert, you're in case (a), working as intended.
 
 ### Bandwidth management (Supabase free plan — 5.5 GB egress limit)
 
