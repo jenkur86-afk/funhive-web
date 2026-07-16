@@ -252,16 +252,23 @@ async function runScraper(name, config) {
       ? (hasCountFields(result[nestedKey]) ? result[nestedKey] : result)
       : result;
     const num = (v) => (typeof v === 'number' && !isNaN(v)) ? v : 0;
-    const newCount = num(stats_src?.new) || (num(stats_src?.saved) + num(stats_src?.updated)) || num(stats_src?.imported);
+    // 2026-07-16: "Activity scrapers" ({ saved, updated, failed }) genuinely
+    // distinguish new-venue-created (saved) from already-existed-so-refreshed
+    // (updated) via getOrCreateActivity()'s isNew flag — but this normalizer
+    // used to fold saved+updated into `new`, so every Activities-*-DMV run
+    // showed 100% "new" and a permanent 0 in Duplicates even when most venues
+    // were just being re-confirmed. `updated` now flows into dupCount below
+    // instead, alongside the true "new" count.
+    const newCount = num(stats_src?.new) || num(stats_src?.saved) || num(stats_src?.imported);
     // event-save-helper.js now returns a `duplicates`/`invalidDate` breakdown
     // instead of one combined `skipped` bucket. Scrapers that call it (or pass
     // its result straight through) expose both fields, so prefer them over the
     // old combined `skipped` fallback — otherwise invalid-date rejections get
     // mislabeled as "Duplicates" in this table (2026-07-05 incident: OCLS
     // reported "Duplicates: 4805" when all 4805 were actually invalid-date skips).
-    const hasBreakdown = stats_src && ('duplicates' in stats_src || 'invalidDate' in stats_src);
+    const hasBreakdown = stats_src && ('duplicates' in stats_src || 'invalidDate' in stats_src || 'updated' in stats_src);
     const invalidDateCount = num(stats_src?.invalidDate);
-    const dupCount = hasBreakdown ? num(stats_src?.duplicates) : num(stats_src?.skipped);
+    const dupCount = hasBreakdown ? (num(stats_src?.duplicates) || num(stats_src?.updated)) : num(stats_src?.skipped);
     const errCount = num(stats_src?.errors) || num(stats_src?.failed);
     const stats = {
       found: num(stats_src?.found) || num(stats_src?.total) || (newCount + dupCount + invalidDateCount + errCount) || 0,
