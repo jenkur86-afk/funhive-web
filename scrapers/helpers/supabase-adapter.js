@@ -807,6 +807,10 @@ function isJunkTitle(name) {
     /^the\s+content\s+you\s+were\s+looking/i,
     /^it\s+appears\s+we\s+have\s+a/i,
     /^(events?|programs?|activities)\s+and\s+activities/i,
+    // Calendar-widget day-cell badge text (e.g. "0 events", "3 events") — generic
+    // WordPress library scrapers sometimes match a mini-calendar day cell instead
+    // of a real event card; the cell's summary badge reads as a fake "title".
+    /^\d+\s+events?$/i,
   ];
   for (const pattern of NAV_JUNK) {
     if (pattern.test(trimmed)) return true;
@@ -1899,4 +1903,5 @@ module.exports = {
   deriveVenueFallback,
   stripPromoBracketCruft,
   normalizeShoutedTitle,
+  isJunkTitle,
 };

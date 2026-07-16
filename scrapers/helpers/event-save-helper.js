@@ -14,7 +14,7 @@
  *   await saveEventsWithGeocoding(events, LIBRARIES, { scraperName: 'my-scraper', state: 'MD' });
  */
 
-const { admin, db } = require('./supabase-adapter');
+const { admin, db, isJunkTitle } = require('./supabase-adapter');
 const ngeohash = require('ngeohash');
 const { geocodeWithFallback } = require('./geocoding-helper');
 const { normalizeDateString } = require('./date-normalization-helper');
@@ -478,11 +478,25 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
   let skippedNoDate = 0;
   let skippedPastEvent = 0;
   let skippedDuplicate = 0;
+  let skippedJunkTitle = 0;
 
   console.log(`\n💾 Saving ${events.length} events with geocoding...`);
 
   for (const event of events) {
     try {
+      // Reject junk titles (calendar day-cell badges like "3 events", bare day
+      // numbers, nav junk) before spending a geocode call on them. Generic
+      // WordPress library scrapers sometimes match mini-calendar day cells
+      // instead of real event cards — those never had a real date to begin
+      // with, so without this check they fell through to the invalid-date
+      // skip below and were miscounted as a date-parsing bug.
+      if (isJunkTitle(event.title || event.name)) {
+        console.log(`  ⏭️ Skipping junk-title event: "${event.title || event.name}"`);
+        skipped++;
+        skippedJunkTitle++;
+        continue;
+      }
+
       // Find matching library for this event
       const library = findLibraryForEvent(event, libraries);
       if (!library) {
@@ -765,7 +779,7 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
   }
 
   console.log(`\n✅ Save complete: ${saved} saved, ${skipped} skipped, ${errors} errors`);
-  console.log(`   Skip breakdown: ${skippedInvalidDate} invalid date, ${skippedDuplicate} duplicate, ${skippedNoVenue} no venue match, ${skippedNoGeocode} geocode failed, ${skippedNoDate} no date, ${skippedPastEvent} past event`);
+  console.log(`   Skip breakdown: ${skippedInvalidDate} invalid date, ${skippedDuplicate} duplicate, ${skippedNoVenue} no venue match, ${skippedNoGeocode} geocode failed, ${skippedNoDate} no date, ${skippedPastEvent} past event, ${skippedJunkTitle} junk title`);
 
   // Verify and cleanup events that are no longer on source
   let deleted = 0;
@@ -788,7 +802,8 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
     noVenue: skippedNoVenue,
     noGeocode: skippedNoGeocode,
     noDate: skippedNoDate,
-    pastEvent: skippedPastEvent
+    pastEvent: skippedPastEvent,
+    junkTitle: skippedJunkTitle
   };
 }
 
@@ -829,9 +844,19 @@ async function saveEventsSimple(events, options = {}) {
   let skipped = 0;
   let skippedDuplicate = 0;
   let skippedInvalidDate = 0;
+  let skippedJunkTitle = 0;
   let batchCount = 0;
 
   for (const event of events) {
+    // Reject junk titles up front — see saveEventsWithGeocoding for why this
+    // must run before the date/duplicate checks below.
+    if (isJunkTitle(event.name)) {
+      console.log(`  ⏭️ Skipping junk-title event: "${event.name}"`);
+      skipped++;
+      skippedJunkTitle++;
+      continue;
+    }
+
     // Ensure required fields exist
     if (!event.geohash && event.location?.latitude && event.location?.longitude) {
       event.geohash = ngeohash.encode(event.location.latitude, event.location.longitude, 7);
@@ -956,7 +981,7 @@ async function saveEventsSimple(events, options = {}) {
     }
   }
 
-  return { saved, skipped, deleted, duplicates: skippedDuplicate, invalidDate: skippedInvalidDate };
+  return { saved, skipped, deleted, duplicates: skippedDuplicate, invalidDate: skippedInvalidDate, junkTitle: skippedJunkTitle };
 }
 
 module.exports = {
