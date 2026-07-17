@@ -73,6 +73,43 @@ New-Item -ItemType Directory -Force $logDir | Out-Null
 # ending (lock/logoff/RDP disconnect) instead of dying with it; requires the
 # "Log on as a batch job" right, which local admins have by default.
 #
+# 2026-07-17 follow-up. The incident above is REAL - re-verified in
+# scrapers\logs\scraper-summary.log, which is the authoritative record of what
+# the scrapers did (Task Scheduler metadata is not; check the log first):
+#   10:00:01Z  scheduled run starts (6:00:01 AM local)
+#   11:05:20Z  last scraper completes (Communico-PA) - 65.3 min in
+#              ...no completion line. Run died here.
+#   11:47:59Z  second run header - the manual --resume
+#   16:05:52Z  "40 succeeded, 0 failed, 257.9 min" - that's the RESUME's
+#              duration (11:47:59Z -> 16:05:52Z = 258 min), NOT the full day
+# 7/12 shows 40 scrapers where neighbouring days show 50-52, and 257.9 min
+# where they show ~460. Those two outliers are the fingerprint of the
+# interruption. Anyone re-checking this: grep the day's *run headers*, not
+# just its completion line - 7/12 has two, and 7/14 has five.
+#
+# What is NOT the cause: the 7/12 power outage (System log Kernel-Power 41 +
+# 6008, recovery boot 7/13 6:54 AM, last event before the gap 7/12 3:26 PM).
+# That landed ~8 hours after the run died. Unrelated.
+#
+# What the cause actually was: still unproven. The battery inference above
+# rests on StopIfGoingOnBatteries=True being *set*, which is not evidence it
+# *fired*. The host is now a desktop (Win32_Battery reports no device, chassis
+# type 3, no UPS), so the battery pair is inert here going forward - kept only
+# for portability, and it cannot explain any future kill on this machine.
+# Whether 7/12 predates the move to the desktop is not recorded anywhere.
+# S4U is likewise plausible-but-unproven: LogonType=Interactive genuinely does
+# die with the session, but nothing ties that to this run. Treat both as cheap
+# defensive settings, not as a diagnosis. If it recurs, the log above is where
+# to look.
+#
+# Same follow-up found the tasks had been firing 3 hours late (6:00 AM and
+# 11:00 AM instead of 3:00 and 8:00). Task Scheduler bakes a fixed UTC offset
+# into each trigger's StartBoundary; these were registered as 03:00:00-07:00
+# (Pacific) and kept that instant after the host moved to Eastern. Re-running
+# this script rewrites StartBoundary to the current zone, which is what fixed
+# it. If the host ever changes timezone again, re-run this script - the tasks
+# will NOT follow the clock on their own.
+#
 # 2026-07-17: the S4U change above was originally written as -LogonType S4U
 # passed straight to Register-ScheduledTask, which has no such parameter (it
 # lives on New-ScheduledTaskPrincipal) - the same wrong-parameter-name bug
