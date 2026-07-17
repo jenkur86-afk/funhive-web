@@ -25,8 +25,11 @@ const { supabase } = require('../scrapers/helpers/supabase-adapter');
 // Import scraper registry to know which scrapers are currently active
 let ACTIVE_SCRAPERS = {};
 try {
-  const { SCRAPERS } = require('../scrapers/scraper-registry');
-  ACTIVE_SCRAPERS = SCRAPERS || {};
+  const { SCRAPERS, getActiveStates, isScraperActive } = require('../scrapers/scraper-registry');
+  const activeStates = getActiveStates();
+  for (const [name, scraper] of Object.entries(SCRAPERS || {})) {
+    if (isScraperActive(scraper, activeStates)) ACTIVE_SCRAPERS[name] = scraper;
+  }
 } catch (e) {
   // Registry not available — skip active scraper filtering
 }
