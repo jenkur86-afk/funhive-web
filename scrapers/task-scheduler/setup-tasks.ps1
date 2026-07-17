@@ -91,16 +91,34 @@ New-Item -ItemType Directory -Force $logDir | Out-Null
 # 6008, recovery boot 7/13 6:54 AM, last event before the gap 7/12 3:26 PM).
 # That landed ~8 hours after the run died. Unrelated.
 #
-# What the cause actually was: still unproven. The battery inference above
-# rests on StopIfGoingOnBatteries=True being *set*, which is not evidence it
-# *fired*. The host is now a desktop (Win32_Battery reports no device, chassis
-# type 3, no UPS), so the battery pair is inert here going forward - kept only
-# for portability, and it cannot explain any future kill on this machine.
-# Whether 7/12 predates the move to the desktop is not recorded anywhere.
-# S4U is likewise plausible-but-unproven: LogonType=Interactive genuinely does
-# die with the session, but nothing ties that to this run. Treat both as cheap
-# defensive settings, not as a diagnosis. If it recurs, the log above is where
-# to look.
+# What the cause was: almost certainly the console window being closed from
+# the interactive desktop. Not the battery - that inference only ever rested on
+# StopIfGoingOnBatteries being *set*, which is no evidence it *fired*, and the
+# host is a desktop anyway (no battery device, chassis type 3, no UPS), so that
+# pair is inert here and kept only for portability.
+#
+# The evidence that does line up:
+#   - 0xC000013A is STATUS_CONTROL_C_EXIT. A console process gets that from
+#     exactly three things: Ctrl+C, its window being closed, or session logoff.
+#     Nothing else produces it.
+#   - Nothing crashed. Application log is clean 7:00-7:50 on 7/12; the runner
+#     logged no error because it was killed with no chance to. It died mid-
+#     scraper (started BiblioCommons-MA 11:05:22.927Z, then 42 min of silence),
+#     and that same scraper ran fine in 315s on the resume.
+#   - The task was LogonType=Interactive, so cmd.exe ran in the user's desktop
+#     session with a VISIBLE console window. Confirmed empirically 2026-07-17:
+#     the in-flight run's cmd.exe/node.exe were both SessionId 1, the same
+#     session as the interactive shell.
+#   - The user was at the machine around that time.
+#
+# So: a console window sat on the desktop and something closed it. This is why
+# S4U is the fix, and the reason is NOT "survives logoff" as earlier notes here
+# claimed - it's that S4U runs the task in session 0, with no window on the
+# desktop to close, Ctrl+C, or lose to a logoff. All three modes go away.
+#
+# Caveat worth keeping: this was never confirmed against the Security log
+# (4634/4647 around 07:05), which needs an elevated read. It's a strong
+# convergence of evidence, not a logged fact.
 #
 # Same follow-up found the tasks had been firing 3 hours late (6:00 AM and
 # 11:00 AM instead of 3:00 and 8:00). Task Scheduler bakes a fixed UTC offset
