@@ -12,10 +12,32 @@
 # ones are -AllowStartIfOnBatteries/-DontStopIfGoingOnBatteries, both
 # switches, not $true/$false-valued) made both Register-ScheduledTask calls
 # fail, but the script kept going and printed "Registered: ..." anyway since
-# nothing was checking for errors. $ErrorActionPreference below makes any
-# cmdlet failure stop the script immediately instead of silently lying about
-# what happened.
+# nothing was checking for errors.
+#
+# $ErrorActionPreference = 'Stop' alone does NOT fix that, despite what this
+# comment used to claim. Register-ScheduledTask is a CDXML/CIM cmdlet and its
+# errors do not honor the preference variable - verified 2026-07-17 by running
+# an unelevated repro: the Register call printed "Access is denied", the script
+# sailed straight past it to the next line, and a surrounding try/catch did not
+# catch it either. Only an explicit per-call -ErrorAction Stop actually aborts,
+# so both Register calls below pass it. The preference is still set for the
+# non-CIM cmdlets in this script (Get-Command, New-Item).
 $ErrorActionPreference = 'Stop'
+
+# Fail fast and legibly if not elevated. Without this, Register-ScheduledTask
+# throws a bare "Access is denied" (HRESULT 0x80070005) per call, which reads
+# like a bug in the script rather than a missing admin prompt.
+$identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$isAdmin = (New-Object Security.Principal.WindowsPrincipal($identity)).IsInRole(
+    [Security.Principal.WindowsBuiltInRole]::Administrator)
+if (-not $isAdmin) {
+    Write-Host "This script must run from an ELEVATED PowerShell." -ForegroundColor Red
+    Write-Host "Right-click PowerShell -> 'Run as administrator', then re-run:" -ForegroundColor Red
+    Write-Host "  cd $PSScriptRoot; .\setup-tasks.ps1" -ForegroundColor Red
+    Write-Host "(An admin account is not enough - the window itself has to be elevated;" -ForegroundColor Red
+    Write-Host " its title bar will read 'Administrator: Windows PowerShell'.)" -ForegroundColor Red
+    exit 1
+}
 
 $nodeExe = (Get-Command node -ErrorAction Stop).Source
 $projectRoot = "C:\dev\funhive-web"
@@ -79,7 +101,8 @@ Register-ScheduledTask `
     -Trigger $trigger1 `
     -Settings $settings1 `
     -Principal $principal `
-    -Force | Out-Null
+    -Force `
+    -ErrorAction Stop | Out-Null
 Write-Host "Registered: FunHive-Scrapers (daily 3:00 AM, runs scrapers then fix-all --recent-only)"
 
 # ── Task 2: Daily monitor at 8:00 AM ─────────────────────────────────────────
@@ -100,7 +123,8 @@ Register-ScheduledTask `
     -Trigger $trigger2 `
     -Settings $settings2 `
     -Principal $principal `
-    -Force | Out-Null
+    -Force `
+    -ErrorAction Stop | Out-Null
 Write-Host "Registered: FunHive-Monitor (daily 8:00 AM)"
 
 # ── Note: com.funhive.eventseries.plist ──────────────────────────────────────
