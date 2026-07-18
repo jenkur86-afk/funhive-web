@@ -28,7 +28,9 @@ const { linkEventToVenue } = require('./venue-matcher');
 const LIBRARY = {
   name: 'Allentown Public Library',
   baseUrl: 'https://www.allentownpl.org',
-  eventsPath: '/events/',
+  // /events/ is a stale WordPress post archive stuck at Feb 2024 (confirmed live 2026-07-18).
+  // Real upcoming events live at /library-calendar/, same /page/N/ pagination pattern.
+  eventsPath: '/library-calendar/',
   county: 'Lehigh',
   state: 'PA',
   website: 'https://www.allentownpl.org',
