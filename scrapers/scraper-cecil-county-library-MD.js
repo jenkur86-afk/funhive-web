@@ -367,7 +367,7 @@ async function scrapeCecilEvents() {
     errors: failed
   }, { dataType: 'events', state: 'MD' });
 
-  return { imported, failed };
+  return { imported, skipped, failed };
 }
 
 // Run if executed directly
