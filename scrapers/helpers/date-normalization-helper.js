@@ -186,8 +186,20 @@ function normalizeDateString(dateString) {
   // Remove "All Day" or "all day" text
   cleaned = cleaned.replace(/\ball\s*day\b/gi, '');
 
-  // Remove trailing numeric date ranges like "4/1–4/22" when a text date is already present
-  cleaned = cleaned.replace(/\s+\d{1,2}\/\d{1,2}[-–—]\d{1,2}\/\d{1,2}(?:\/\d{2,4})?\s*$/, '');
+  // Remove trailing numeric date ranges like "4/1–4/22" ONLY when a text month
+  // date is already present earlier in the string (e.g. "April 21 4/1–4/22").
+  // Bug found 2026-07-20: this used to fire unconditionally, so an "All Day"
+  // event whose ONLY date info was a numeric range (e.g. "All Day 6/20–9/26",
+  // common on WordPress library calendar day-badges) had its range deleted
+  // right after the "All Day" text was stripped a few lines up, leaving
+  // nothing for Pattern 0's numericRangeMatch to parse — a real date silently
+  // became an invalid-date skip. Guard on a month name still being present.
+  {
+    const trailingRangeMatch = cleaned.match(/^(.*\S)\s+\d{1,2}\/\d{1,2}[-–—]\d{1,2}\/\d{1,2}(?:\/\d{2,4})?\s*$/);
+    if (trailingRangeMatch && /[A-Za-z]{3,9}\s+\d{1,2}/.test(trailingRangeMatch[1])) {
+      cleaned = trailingRangeMatch[1];
+    }
+  }
 
   // Remove periods from abbreviated month names (e.g., "Sep." → "Sep", "Apr." → "Apr")
   cleaned = cleaned.replace(/\b([A-Za-z]{3,4})\./g, '$1');

@@ -98,6 +98,27 @@ async function scrapeGenericEvents() {
         const eventSelectors = ['[class*="event"]', '[class*="program"]', 'article', '.post'];
         const foundElements = new Set();
 
+        // Calendar-grid sites render each day as a day-cell container
+        // carrying the real date, while individual event cards inside only
+        // show a clock time with no day/month at all. Walk up from the
+        // event card looking for that ancestor date before giving up.
+        // Confirmed live 2026-07-20 on ypl.org/events (same platform
+        // family): <div class="calendar__day" data-date="2026-06-28">
+        // <h2 class="calendar__day-header">Sunday, June 28, 2026</h2>...
+        function findAncestorDate(el) {
+          let node = el;
+          for (let i = 0; i < 8 && node; i++) {
+            if (node.getAttribute) {
+              const attr = node.getAttribute('data-date') || node.getAttribute('data-current_date') || node.getAttribute('data-day');
+              if (attr && /\d{4}-\d{1,2}-\d{1,2}/.test(attr)) return attr;
+              const header = node.querySelector && node.querySelector('.calendar__day-header, [class*="day-header"]');
+              if (header && header.textContent.trim()) return header.textContent.trim();
+            }
+            node = node.parentElement;
+          }
+          return null;
+        }
+
         eventSelectors.forEach(selector => {
           document.querySelectorAll(selector).forEach(card => {
             if (foundElements.has(card)) return;
@@ -109,10 +130,16 @@ async function scrapeGenericEvents() {
               const link = card.querySelector('a[href]');
               const ageEl = [card.querySelector('[class*="audience"]'), card.querySelector('[class*="age"]'), card.querySelector('[class*="category"]')].find(el => el && el.textContent.trim().length > 0 && el.textContent.trim().length < 80);
 
+              let dateText = date ? date.textContent.trim() : '';
+              if (!/[A-Za-z]{3,9}\s+\d{1,2}|\d{1,2}\/\d{1,2}|\d{4}-\d{1,2}-\d{1,2}/.test(dateText)) {
+                const ancestorDate = findAncestorDate(card);
+                if (ancestorDate) dateText = dateText ? `${ancestorDate} ${dateText}` : ancestorDate;
+              }
+
               if (title && title.textContent.trim()) {
                 events.push({
                   title: title.textContent.trim(),
-                  date: date ? date.textContent.trim() : '',
+                  date: dateText,
                   description: desc ? desc.textContent.trim() : '',
                   url: link ? link.href : window.location.href,
                   ageRange: ageEl ? ageEl.textContent.trim() : '',
