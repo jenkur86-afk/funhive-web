@@ -489,6 +489,16 @@ const LIBRARY_SYSTEMS = [
   },
 
   {
+    name: 'Massanutten Regional Library',
+    url: 'https://mrlib.libcal.com/calendar?cid=22185&t=d&d=0000-00-00&cal=22185&inc=0',
+    county: 'Rockingham',
+    state: 'VA',
+    website: 'https://mrlib.org',
+    city: 'Harrisonburg',
+    zipCode: '22801'
+  },
+
+  {
     name: 'Fairfax County Public Library',
     url: 'https://librarycalendar.fairfaxcounty.gov/calendar?cid=6524&t=d&d=0000-00-00&cal=6524&inc=0',
     county: 'Fairfax',

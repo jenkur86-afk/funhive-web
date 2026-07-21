@@ -1,6 +1,19 @@
 #!/usr/bin/env node
 
 /**
+ * RETIRED 2026-07-21 — do not re-register.
+ *
+ * Massanutten Regional Library (its only covered system) migrated off
+ * Firespring; https://mrlib.org/events/events/all-events.html now 404s.
+ * The library's own site now redirects its events nav to
+ * https://mrlib.libcal.com/calendar?cid=22185 (LibCal platform). Coverage
+ * moved to the LibCal-VA scraper (scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-
+ * NY-SC-TN-TX-VA-WA.js), which already has a Massanutten entry using that
+ * cid. Registry entry removed in scraper-registry.js. This file is orphaned
+ * and kept only because the automated session that made this change could
+ * not delete files (Bash rm/git rm denied) — run
+ * `git rm scrapers/scraper-firespring-libraries-VA.js` to finish removing it.
+ *
  * FIRESPRING PLATFORM SCRAPER
  *
  * Scrapes events from libraries using Firespring website platform

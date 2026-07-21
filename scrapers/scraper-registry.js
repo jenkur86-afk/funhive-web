@@ -617,13 +617,6 @@ const SCRAPERS = {
     group: 2,
     state: 'VA'
   },
-  'Firespring-Libraries': {
-    file: './scraper-firespring-libraries-VA.js',
-    exportName: 'scrapeFirespringLibraries',
-    type: 'puppeteer',
-    group: 3,
-    state: 'VA'
-  },
   'FullCalendar-Libraries': {
     file: './scraper-fullcalendar-libraries-VA.js',
     exportName: 'scrapeFullCalendarLibraries',
@@ -762,13 +755,6 @@ const SCRAPERS = {
     type: 'axios',
     group: 2,
     state: 'NJ'
-  },
-  'CalendarWiz-Beaufort': {
-    file: './scraper-calendarwiz-beaufort-county-sc.js',
-    exportName: 'scrapeCalendarWizBeaufort',
-    type: 'puppeteer',
-    group: 3,
-    state: 'SC'
   },
   'WordPress-Abbe-Regional': {
     file: './scraper-wordpress-abbe-regional-sc.js',

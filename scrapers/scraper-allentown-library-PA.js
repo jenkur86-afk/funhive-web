@@ -141,8 +141,15 @@ async function scrapePage(page, pageNum) {
     const events = await page.evaluate(() => {
       const results = [];
 
-      // WordPress Events Manager selectors - try multiple patterns
+      // WordPress Events Manager selectors - try multiple patterns.
+      // The calendar page is a month-grid table (<td> per day), so a lone
+      // <article>/.entry page wrapper can match first with length 1 and win
+      // outright, extracting the page's own H1 ("Library Events") and the
+      // first stray date in the grid instead of real events. Prefer whichever
+      // selector actually yields multiple elements; only fall back to a
+      // single-element match if nothing better is found.
       const selectors = [
+        'td',
         'article',
         '.event-item',
         '.wp-block-post',
@@ -151,9 +158,19 @@ async function scrapePage(page, pageNum) {
       ];
 
       let eventElements = [];
+      let singleFallback = [];
       for (const selector of selectors) {
-        eventElements = document.querySelectorAll(selector);
-        if (eventElements.length > 0) break;
+        const found = document.querySelectorAll(selector);
+        if (found.length > 1) {
+          eventElements = found;
+          break;
+        }
+        if (found.length === 1 && singleFallback.length === 0) {
+          singleFallback = found;
+        }
+      }
+      if (eventElements.length === 0) {
+        eventElements = singleFallback;
       }
 
       eventElements.forEach(el => {
@@ -165,8 +182,8 @@ async function scrapePage(page, pageNum) {
           const title = titleEl.textContent.trim();
           if (!title || title.length < 3) return;
 
-          // Find event URL
-          const linkEl = el.querySelector('a[href*="/events/"]');
+          // Find event URL - permalinks live under /library-calendar/, not /events/
+          const linkEl = el.querySelector('a[href*="/library-calendar/"], a[href*="/events/"]');
           const eventUrl = linkEl ? linkEl.href : '';
 
           // Get all text content

@@ -1,6 +1,23 @@
 #!/usr/bin/env node
 
 /**
+ * RETIRED 2026-07-21 — do not re-register.
+ *
+ * Beaufort County Library migrated off CalendarWiz; the CalendarWiz URL now
+ * renders a blank "CalendarWiz Welcome" placeholder with no calendar embed.
+ * The library's own site nav now points to
+ * https://beaufort.librarycalendar.com/events/upcoming (LibraryMarket/
+ * librarycalendar.com platform) — which is already registered and actively
+ * scraped by LibraryMarket-SC (scraper-librarymarket-libraries-sc.js), whose
+ * LIBRARIES array already lists this exact URL for Beaufort County Library.
+ * LibraryMarket-SC last ran 2026-07-16 with 38 found / 14 new (real,
+ * non-suspicious counts across its 2-library SC array), confirming live
+ * coverage. Registry entry removed in scraper-registry.js. This file is
+ * orphaned and kept only because the automated session that made this
+ * change could not delete files (Bash rm/git rm denied) — run
+ * `git rm scrapers/scraper-calendarwiz-beaufort-county-sc.js` to finish
+ * removing it.
+ *
  * CALENDARWIZ SCRAPER - Beaufort County Library (SC)
  *
  * Scrapes events from Beaufort County Library using CalendarWiz platform

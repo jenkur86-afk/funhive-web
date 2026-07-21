@@ -20,7 +20,7 @@ Active scraper counts (July 2026): Group 1 = 51, Group 2 = 49, Group 3 = 45.
 
 ### What to look for and fix
 
-**Read every row of the table, not just the ones flagged with ⚠️ or with an obviously huge INVALID count.** A 2026-07-16 incident: a full diagnosis pass only chased the rows with warning markers and skipped past `Pratt-Library 837 837 0 0`, `BiblioCommons-NJ 438 438 0 0`, `Fairfax-Parks 77 77 0 0`, and five `Activities-*-DMV` rows that all showed 0 in the DUPES column — a real bug (see Section 15) sitting in plain sight in otherwise-unflagged, healthy-looking rows. Before finishing, scan FOUND/NEW/DUPES/INVALID for every single line in the table, not just the ones the runner marked with ⚠️. If the user asks "were all these looked at?", the honest answer should already be yes.
+**Read every row of the table, not just the ones flagged with ⚠️ or with an obviously huge INVALID count.** A 2026-07-16 incident: a full diagnosis pass only chased the rows with warning markers and skipped past `Pratt-Library 837 837 0 0`, `BiblioCommons-NJ 438 438 0 0`, `Fairfax-Parks 77 77 0 0`, and five `Activities-*-DMV` rows that all showed 0 in the DUPES column — a real bug (see Section 14) sitting in plain sight in otherwise-unflagged, healthy-looking rows. Before finishing, scan FOUND/NEW/DUPES/INVALID for every single line in the table, not just the ones the runner marked with ⚠️. If the user asks "were all these looked at?", the honest answer should already be yes.
 
 **1. Zero-event scrapers (Found 0 URLs / 0 new / 0 updated)**
 - Check if the scraper URL is correct by visiting the live site
@@ -165,22 +165,7 @@ Scrapers like `scraper-gardens-nature-eastern.js` and `scraper-venue-events-chil
 
 Fix URL rot and selector issues without asking. List WAF-blocked, down, and genuinely empty sites at the end.
 
-**14. [TEMPORARY — verify then delete this section] WordPress library domain cleanup fallout**
-
-Commits `6734fe7`, `4b388ee`, `cf70bb1`, `4f3718f` (2026-07-07) removed ~5,500 fabricated `{city}library.org`-pattern domains across all 44 `scraper-wordpress-libraries-{state}.js` files and repointed ~900 more to a real calendar/events page found via an automated homepage crawl. That cleanup only verified each domain responds over HTTP — it did **not** confirm the generic-parser selectors (`[class*="event"]`, `[class*="program"]`, etc.) actually extract real event cards from the repointed pages. A homepage-crawl fix can land on a page that mentions "library" and returns 200 but isn't actually a calendar (e.g. a reading-program blurb page).
-
-**What to check in this log**: for every `WordPress-{state}` scraper, confirm it reports `Found: N` with a plausible N, not a crash or a suspicious `0` across every remaining library. Prioritize the states that lost the largest share of entries in the cleanup, since those have the most repointed URLs to validate: CA (911→199), TX (600→170), NY (792→422), PA (543→213), WA (288→59), FL (324→65), SC (158→44), WV (164→45), MN (333→108), NC (300→89), KY (165→69).
-
-If a state's scraper returns 0 (or near-0) events across most of its libraries, check whether the repointed `eventsUrl` for those libraries actually lands on a real events listing vs. a generic page that only happened to pass the "mentions library" sanity check during cleanup. Fix by finding the real calendar path manually (same approach as the original cleanup: look for a nav link containing "calendar" or "events").
-
-**Group tracking** (WordPress-{state} scrapers are split across the 3-day rotation by state) — check off as each group is diagnosed against this item:
-- [x] Group 1 checked (2026-07-07 run: VA, GA, NC, CT, TN, AL, VT, RI all reported healthy nonzero Found counts, e.g. WordPress-GA 1953 found/99 new)
-- [x] Group 2 checked (2026-07-08 run: MD, NY, FL, NJ, MS, ME all reported healthy nonzero Found counts, e.g. WordPress-NY 6097 found/451 new)
-- [ ] Group 3 checked (2026-07-09 run: PA, MA, KY, SC, WV, DE all reported healthy nonzero Found counts, e.g. WordPress-PA 988 found/290 new. NH did not run in this window before the run log was diagnosed — its last confirmed result was 2026-07-06 [1190 found/102 new], which predates the 2026-07-07 domain cleanup, so it still needs re-verification against the new domain list on its next Group 3 run.)
-
-**Once all three boxes above are checked, delete this entire section (14) from this file** — it's a one-time verification for the 2026-07-07 cleanup, not a permanent diagnosis category.
-
-**15. Suspiciously perfect duplicate detection (DUPES column stuck at 0, ~100% New) across multiple consecutive runs**
+**14. Suspiciously perfect duplicate detection (DUPES column stuck at 0, ~100% New) across multiple consecutive runs**
 
 **What it looks like**: A scraper reports `Found == New` with `Dupes: 0` — not once, but on two or more consecutive runs for the same scraper. One run showing 0 dupes is not automatically a bug (a brand-new scraper's first run has nothing to dupe against). The tell is the *pattern repeating* day after day for a source that should have heavy overlap with its own previous scrape (e.g., a library calendar publishing 30–60 days out will mostly re-show the same events tomorrow).
 
