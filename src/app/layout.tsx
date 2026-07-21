@@ -4,6 +4,7 @@ import SuggestButton from '@/components/SuggestButton'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { FavoritesProvider } from '@/contexts/FavoritesContext'
 import { Analytics } from '@vercel/analytics/react'
+import AcquisitionTracker from '@/components/AcquisitionTracker'
 import './globals.css'
 
 const SITE_URL = 'https://myfunhive.com'
@@ -42,6 +43,7 @@ export default function RootLayout({
               {children}
             </main>
             <SuggestButton />
+            <AcquisitionTracker />
             <Analytics />
           </FavoritesProvider>
         </AuthProvider>

@@ -41,3 +41,6 @@ scripts/exports/*.json
 # Data quality reports
 scripts/data-quality-reports/
 scrapers/.geocode-cache.json
+
+.vercel
+.env*
