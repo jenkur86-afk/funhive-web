@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { logInteraction, getFirstTouch } from '@/lib/track-click'
 import type { User } from '@supabase/supabase-js'
 import type { Database } from '@/lib/database.types'
 
@@ -132,6 +133,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (error) {
       throw error
     }
+
+    logInteraction('signin')
   }
 
   const signUp = async (email: string, password: string, displayName: string) => {
@@ -157,6 +160,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error('Error updating display name:', updateError)
       }
     }
+
+    // Attribute the signup to the visitor's original acquisition channel.
+    logInteraction('signup', getFirstTouch())
   }
 
   const signOut = async () => {

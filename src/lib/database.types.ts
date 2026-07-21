@@ -444,6 +444,10 @@ export interface Database {
           user_lat: number | null
           user_lng: number | null
           session_id: string | null
+          referrer: string | null
+          utm_source: string | null
+          utm_medium: string | null
+          utm_campaign: string | null
           created_at: string
         }
         Insert: {
@@ -460,6 +464,10 @@ export interface Database {
           user_lat?: number | null
           user_lng?: number | null
           session_id?: string | null
+          referrer?: string | null
+          utm_source?: string | null
+          utm_medium?: string | null
+          utm_campaign?: string | null
           created_at?: string
         }
         Update: {
@@ -476,6 +484,10 @@ export interface Database {
           user_lat?: number | null
           user_lng?: number | null
           session_id?: string | null
+          referrer?: string | null
+          utm_source?: string | null
+          utm_medium?: string | null
+          utm_campaign?: string | null
           created_at?: string
         }
         Relationships: []

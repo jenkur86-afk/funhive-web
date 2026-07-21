@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { logInteraction } from '@/lib/track-click'
 
 export default function PricingPage() {
   const [loadingPlan, setLoadingPlan] = useState<'monthly' | 'annual' | null>(null)
@@ -16,6 +17,7 @@ export default function PricingPage() {
     }
 
     setLoadingPlan(priceType)
+    logInteraction('checkout_start', { category: priceType })
     try {
       const response = await fetch('/api/checkout', {
         method: 'POST',

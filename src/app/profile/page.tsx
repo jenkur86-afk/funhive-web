@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
+import { logInteraction, getFirstTouch } from '@/lib/track-click'
 
 interface Kid {
   name: string
@@ -25,6 +26,15 @@ function ProfileContent() {
   const [newKidName, setNewKidName] = useState('')
   const [newKidMonth, setNewKidMonth] = useState('1')
   const [newKidYear, setNewKidYear] = useState(new Date().getFullYear().toString())
+
+  // Log the subscription conversion once when Stripe redirects back with
+  // ?success=true. Guarded so a refresh doesn't double-count.
+  useEffect(() => {
+    if (!showSuccessBanner) return
+    if (sessionStorage.getItem('funhive_subscribe_logged')) return
+    sessionStorage.setItem('funhive_subscribe_logged', '1')
+    logInteraction('subscribe_success', getFirstTouch())
+  }, [showSuccessBanner])
 
   // Load kids from localStorage
   useEffect(() => {
