@@ -601,6 +601,7 @@ async function scrapeActiveNetParks(statesToScrape, dryRun) {
 
   const browser = await launchBrowser();
   const stateResults = {};
+  let totalFound = 0;
   let totalSaved = 0;
   let totalSkipped = 0;
   let totalInvalidDate = 0;
@@ -609,6 +610,7 @@ async function scrapeActiveNetParks(statesToScrape, dryRun) {
   try {
     for (const jurisdiction of configs) {
       const events = await scrapeJurisdiction(browser, jurisdiction, dryRun);
+      totalFound += events.length;
 
       if (events.length > 0 && !dryRun) {
         // Build venue entries for geocoding
@@ -664,12 +666,11 @@ async function scrapeActiveNetParks(statesToScrape, dryRun) {
   }
 
   // Summary
-  const totalEvents = Object.values(stateResults).reduce((sum, n) => sum + n, 0);
   console.log('\n' + '='.repeat(60));
   console.log('ACTIVENET PARKS & REC SCRAPING COMPLETE!\n');
   console.log('Summary:');
   console.log(`   Jurisdictions scraped: ${configs.length}`);
-  console.log(`   Total events: ${totalEvents}`);
+  console.log(`   Total events: ${totalFound}`);
   if (!dryRun) {
     console.log(`   Saved: ${totalSaved}`);
     console.log(`   Skipped: ${totalSkipped}`);
@@ -681,7 +682,7 @@ async function scrapeActiveNetParks(statesToScrape, dryRun) {
   console.log('='.repeat(60) + '\n');
 
   return {
-    found: totalEvents,
+    found: totalFound,
     new: totalSaved,
     saved: totalSaved,
     duplicates: totalSkipped,
