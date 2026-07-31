@@ -446,10 +446,14 @@ async function scrapeCity(browser, cityConfig) {
 
         for (const endpoint of endpoints) {
           try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
             const resp = await fetch(endpoint, {
               headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
               credentials: 'same-origin',
+              signal: controller.signal,
             });
+            clearTimeout(timeoutId);
             if (resp.ok) {
               const json = await resp.json();
               // Check if this response has actual event data
@@ -747,7 +751,10 @@ async function scrapeEventbriteFamily(options = {}) {
       }
 
       try {
-        const cityEvents = await scrapeCity(browser, cityConfig);
+        const cityEvents = await Promise.race([
+          scrapeCity(browser, cityConfig),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('City scrape timed out after 90s')), 90000)),
+        ]);
         allEvents.push(...cityEvents);
         sitesSinceRestart++;
       } catch (error) {
