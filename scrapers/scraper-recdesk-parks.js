@@ -10,6 +10,9 @@
  *   POST https://{slug}.recdesk.com/Community/Calendar/GetCalendarItems
  *   Body: { facilityId, startDate, endDate, getChildren, SelectedView, SelectedMonth, SelectedYear }
  *   Returns: { Events: [{ EventName, FacilityName, StartTimeISO8601, EndTimeISO8601, ... }] }
+ *   facilityId must be -1 ("All Facilities") — 0 is not a valid facility and
+ *   silently returns an empty Events array on every tenant (found 2026-08-01,
+ *   see SCRAPER-FIX-LOG.jsonl).
  *
  * Detail endpoint (for descriptions):
  *   POST https://{slug}.recdesk.com/Community/Calendar/GetCalendarItem
@@ -417,7 +420,7 @@ async function fetchCalendarItems(config, startDate, endDate) {
   const endYear = endDate.getFullYear();
 
   const body = {
-    facilityId: 0,
+    facilityId: -1,
     startDate: `${startMonth}/${startDay}/${startYear}`,
     endDate: `${endMonth}/${endDay}/${endYear}`,
     getChildren: 'false',
