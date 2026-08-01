@@ -3,6 +3,7 @@ const { admin, db } = require('./helpers/supabase-adapter');
 
 const { logScraperResult } = require('./scraper-logger');
 const { saveEventsWithGeocoding } = require('./event-save-helper');
+const { tryFetchTecEvents } = require('./helpers/tec-rest-helper');
 const ngeohash = require('ngeohash');
 /**
  * Vermont Public Libraries Scraper - Coverage: All Vermont public libraries
@@ -115,6 +116,13 @@ async function scrapeGenericEvents() {
   const events = [];
   for (const library of LIBRARIES) {
     try {
+      // Try the site's TEC REST API before falling back to DOM scraping —
+      // see helpers/tec-rest-helper.js for why (2026-07-31 diagnosis).
+      const tecEvents = await tryFetchTecEvents(library.url, library.name);
+      if (tecEvents) {
+        tecEvents.forEach(event => events.push({ ...event, metadata: { sourceName: library.name, sourceUrl: library.url, scrapedAt: new Date().toISOString(), scraperName: SCRAPER_NAME, category: 'library', state: 'VT', city: library.city, zipCode: library.zipCode }}));
+        continue;
+      }
       const page = await browser.newPage();
       await page.goto(library.eventsUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
       await new Promise(resolve => setTimeout(resolve, 1000));

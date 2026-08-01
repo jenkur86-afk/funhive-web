@@ -16,7 +16,7 @@ const fs = require('fs');
 
 const SAVE = process.argv.includes('--save');
 const RECENT_ONLY = process.argv.includes('--recent-only');
-const FIX_WINDOW_HOURS = parseInt(process.env.FIX_WINDOW_HOURS || '72', 10);
+const FIX_WINDOW_HOURS = parseInt(process.env.FIX_WINDOW_HOURS || '24', 10);
 const RECENT_THRESHOLD_ISO = RECENT_ONLY
   ? new Date(Date.now() - FIX_WINDOW_HOURS * 60 * 60 * 1000).toISOString()
   : null;

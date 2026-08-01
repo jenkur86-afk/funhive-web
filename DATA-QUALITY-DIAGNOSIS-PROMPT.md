@@ -18,7 +18,7 @@ The pipeline runs on a tiered cadence (Apr 2026):
 
 **Daily** (~5 MB + 50–150 MB egress):
 - `node scripts/data-quality-quick.js` — Count-only audit using Postgres aggregates (no row downloads).
-- `.\scripts\fix-all.ps1 --recent-only` — Runs all four fix steps against the last 72h only (configurable via `$env:FIX_WINDOW_HOURS=N`). Git Bash: `bash scripts/fix-all.sh --recent-only`. Deletion-style steps (past events, junk titles, dateless events) always full-scan.
+- `.\scripts\fix-all.ps1 --recent-only` — Runs all four fix steps against the last 24h only (configurable via `$env:FIX_WINDOW_HOURS=N`). Git Bash: `bash scripts/fix-all.sh --recent-only`. Deletion-style steps (past events, junk titles, dateless events) always full-scan.
 
 **Monthly** (~2.5 GB egress):
 - `.\scripts\fix-all.ps1` — Full sweep across all four steps. Git Bash: `bash scripts/fix-all.sh`.

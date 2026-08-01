@@ -3,8 +3,8 @@
 #
 # CADENCE (run from project root):
 #   Daily:    bash scripts/fix-all.sh --recent-only
-#             Cheap (~50–150 MB egress) — checks last 72h of new rows only.
-#             Set FIX_WINDOW_HOURS=N to override the 72h window.
+#             Cheap (~15–50 MB egress) — checks last 24h of new rows only.
+#             Set FIX_WINDOW_HOURS=N to override the 24h window.
 #   Monthly:  bash scripts/fix-all.sh
 #             Full table sweep (~1.5–2 GB egress). Catches accumulated drift.
 #

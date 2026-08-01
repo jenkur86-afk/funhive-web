@@ -2,8 +2,8 @@
 #
 # CADENCE (run from project root):
 #   Daily:   .\scripts\fix-all.ps1 --recent-only
-#            Cheap (~50-150 MB egress) -- checks last 72h of new rows only.
-#            Set $env:FIX_WINDOW_HOURS before running to override the 72h window.
+#            Cheap (~15-50 MB egress) -- checks last 24h of new rows only.
+#            Set $env:FIX_WINDOW_HOURS before running to override the 24h window.
 #   Monthly: .\scripts\fix-all.ps1
 #            Full table sweep (~1.5-2 GB egress). Catches accumulated drift.
 #

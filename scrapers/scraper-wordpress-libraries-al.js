@@ -3,6 +3,7 @@ const { admin, db } = require('./helpers/supabase-adapter');
 
 const { logScraperResult } = require('./scraper-logger');
 const { saveEventsWithGeocoding } = require('./event-save-helper');
+const { tryFetchTecEvents } = require('./helpers/tec-rest-helper');
 const ngeohash = require('ngeohash');
 /**
  * Alabama Public Libraries Scraper
@@ -111,6 +112,15 @@ async function scrapeGenericEvents() {
   for (const library of LIBRARIES) {
     try {
       console.log(`\n📚 Scraping ${library.name}...`);
+
+      // Try the site's TEC REST API before falling back to DOM scraping —
+      // see helpers/tec-rest-helper.js for why (2026-07-31 diagnosis).
+      const tecEvents = await tryFetchTecEvents(library.url, library.name);
+      if (tecEvents) {
+        console.log(`   ✅ TEC REST API: ${tecEvents.length} events`);
+        tecEvents.forEach(event => events.push({ ...event, metadata: { sourceName: library.name, sourceUrl: library.url, scrapedAt: new Date().toISOString(), scraperName: SCRAPER_NAME, category: 'library', platform: 'generic', state: 'AL', city: library.city, zipCode: library.zipCode, needsReview: true }}));
+        continue;
+      }
 
       const page = await browser.newPage();
       await page.goto(library.eventsUrl, {

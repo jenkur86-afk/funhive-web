@@ -67,7 +67,7 @@ The current save-time validations (don't re-implement these) are: `isJunkTitle`,
  * Usage:
  *   node scripts/<filename>.js              # Dry run
  *   node scripts/<filename>.js --save       # Write changes to DB
- *   node scripts/<filename>.js --recent-only  # Last FIX_WINDOW_HOURS only (default 72h)
+ *   node scripts/<filename>.js --recent-only  # Last FIX_WINDOW_HOURS only (default 24h)
  *   FIX_WINDOW_HOURS=168 node scripts/<filename>.js --recent-only  # 7-day window
  */
 
@@ -75,7 +75,7 @@ const { supabase } = require('../scrapers/helpers/supabase-adapter');
 
 const SAVE = process.argv.includes('--save');
 const RECENT_ONLY = process.argv.includes('--recent-only');
-const FIX_WINDOW_HOURS = parseInt(process.env.FIX_WINDOW_HOURS || '72', 10);
+const FIX_WINDOW_HOURS = parseInt(process.env.FIX_WINDOW_HOURS || '24', 10);
 const RECENT_THRESHOLD_ISO = RECENT_ONLY
   ? new Date(Date.now() - FIX_WINDOW_HOURS * 60 * 60 * 1000).toISOString()
   : null;
@@ -250,7 +250,7 @@ Match the existing fix scripts so your output blends in:
 ```
 ══════════════════════════════════════════════════════════
   <TITLE> (DRY RUN)
-  Mode: --recent-only (last 72h, since 2026-04-27T...)
+  Mode: --recent-only (last 24h, since 2026-04-27T...)
 ══════════════════════════════════════════════════════════
 
 🗑️  STEP 1: <step name>

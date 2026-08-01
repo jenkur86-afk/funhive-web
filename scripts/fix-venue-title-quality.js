@@ -17,7 +17,7 @@
  * Usage:
  *   node scripts/fix-venue-title-quality.js                # Dry run (preview)
  *   node scripts/fix-venue-title-quality.js --save          # Save changes to DB
- *   node scripts/fix-venue-title-quality.js --recent-only   # Last 72h only (FIX_WINDOW_HOURS to override)
+ *   node scripts/fix-venue-title-quality.js --recent-only   # Last 24h only (FIX_WINDOW_HOURS to override)
  */
 
 const {
@@ -30,7 +30,7 @@ const {
 
 const SAVE = process.argv.includes('--save');
 const RECENT_ONLY = process.argv.includes('--recent-only');
-const FIX_WINDOW_HOURS = parseInt(process.env.FIX_WINDOW_HOURS || '72', 10);
+const FIX_WINDOW_HOURS = parseInt(process.env.FIX_WINDOW_HOURS || '24', 10);
 const RECENT_THRESHOLD_ISO = RECENT_ONLY
   ? new Date(Date.now() - FIX_WINDOW_HOURS * 60 * 60 * 1000).toISOString()
   : null;

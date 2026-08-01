@@ -75,10 +75,10 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - Filter out reported items in queries with `.eq('reported', false)` and client-side `!e.reported` for RPC results.
 - Use selective `.select()` columns in all Supabase queries. Events list: `id, name, event_date, date, start_time, end_time, venue, city, state, zip_code, category, age_range, description, address, location, activity_id, reported`. Activities list: `id, name, city, state, address, location, zip_code, category, description, age_range, min_age, max_age, hours, is_free, reported`. **Never** add `min_age`, `max_age`, or `is_free` to an events `.select(...)` — those columns don't exist on events and the request will 400.
 - Run data quality fix scripts on a tiered cadence:
-  - **Daily**: `node scripts/data-quality-quick.js` (count-only audit, ~5 MB egress) and `bash scripts/fix-all.sh --recent-only` (last 72h only, ~50–150 MB). Windows PowerShell: `.\scripts\fix-all.ps1 --recent-only`
+  - **Daily**: `node scripts/data-quality-quick.js` (count-only audit, ~5 MB egress) and `bash scripts/fix-all.sh --recent-only` (last 24h only, ~15–50 MB). Windows PowerShell: `.\scripts\fix-all.ps1 --recent-only`
   - **Monthly**: `bash scripts/fix-all.sh` (full sweep, ~1.5–2 GB) and `node scripts/data-quality-check.js` (deep audit, ~500 MB). Windows: `.\scripts\fix-all.ps1`
   - The scrapers' `saveEvent()` and `saveActivity()` now handle: junk-title rejection (`isJunkTitle()`), non-family rejection (sexy/cannabis/420/firearms/etc. all in `NON_FAMILY_PATTERNS`), cancelled rejection, past-event rejection, age-range normalization, adult-only rejection, time extraction, venue cleaning, geohash compute from lat/lng, and `event_date` text → `date` TIMESTAMPTZ parsing. Most rows no longer need backfill.
-  - Override the recent-only window via `FIX_WINDOW_HOURS=N bash scripts/fix-all.sh --recent-only` (default 72).
+  - Override the recent-only window via `FIX_WINDOW_HOURS=N bash scripts/fix-all.sh --recent-only` (default 24).
   - Deletion-style steps inside `fix-event-quality.js` (past events, junk titles, dateless events) bypass `--recent-only` and always full-scan — those checks use selective columns and are cheap, and we always want stale junk gone regardless of when it was scraped.
   - Description backfill is intentionally disabled — descriptions stay empty if the scraper didn't supply one.
 
@@ -214,7 +214,7 @@ Stage it in the same `git add` group as the fix it documents. `scripts/scraper-f
 ### Data Quality Scripts (`scripts/` — run locally)
 **Daily** (cheap, recent-only):
 - `scripts/data-quality-quick.js` — Count-only audit using Postgres aggregates (~5 MB egress). No row downloads.
-- `bash scripts/fix-all.sh --recent-only` (Git Bash) or `.\scripts\fix-all.ps1 --recent-only` (PowerShell) — Runs Steps 1–4 against the last 72h only (configurable via `FIX_WINDOW_HOURS`). Deletion steps (past, junk, dateless) always full-scan.
+- `bash scripts/fix-all.sh --recent-only` (Git Bash) or `.\scripts\fix-all.ps1 --recent-only` (PowerShell) — Runs Steps 1–4 against the last 24h only (configurable via `FIX_WINDOW_HOURS`). Deletion steps (past, junk, dateless) always full-scan.
 
 **Monthly** (full sweep):
 - `bash scripts/fix-all.sh` (Git Bash) or `.\scripts\fix-all.ps1` (PowerShell) — Full sweep across all 4 steps.

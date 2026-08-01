@@ -19,8 +19,8 @@ const { normalizeAgeRange } = require('../scrapers/helpers/age-range-normalizer'
 
 const SAVE = process.argv.includes('--save');
 const RECENT_ONLY = process.argv.includes('--recent-only');
-// Window (hours) for --recent-only mode; defaults to 72h. Override via FIX_WINDOW_HOURS.
-const FIX_WINDOW_HOURS = parseInt(process.env.FIX_WINDOW_HOURS || '72', 10);
+// Window (hours) for --recent-only mode; defaults to 24h. Override via FIX_WINDOW_HOURS.
+const FIX_WINDOW_HOURS = parseInt(process.env.FIX_WINDOW_HOURS || '24', 10);
 const RECENT_THRESHOLD_ISO = RECENT_ONLY
   ? new Date(Date.now() - FIX_WINDOW_HOURS * 60 * 60 * 1000).toISOString()
   : null;

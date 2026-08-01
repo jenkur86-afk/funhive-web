@@ -18,7 +18,7 @@ I'm working on FunHive, a family event discovery platform (Next.js 15 + Supabase
 ## Daily maintenance commands (run from `C:\dev\funhive-web`)
 ```
 node scripts/data-quality-quick.js           # quick audit (~5 MB egress)
-.\scripts\fix-all.ps1 --recent-only          # fix last 72h (~50-150 MB egress)
+.\scripts\fix-all.ps1 --recent-only          # fix last 24h (~15-50 MB egress)
 npm run scraper -- --group N                 # run scraper group N manually
 npm run scraper:monitor                      # check scraper results
 ```

@@ -15,14 +15,14 @@
  * Usage:
  *   node scripts/fix-missing-venue.js                # Dry run (preview)
  *   node scripts/fix-missing-venue.js --save         # Save changes to DB
- *   node scripts/fix-missing-venue.js --recent-only  # Last 72h only
+ *   node scripts/fix-missing-venue.js --recent-only  # Last 24h only
  */
 
 const { supabase } = require('../scrapers/helpers/supabase-adapter');
 
 const SAVE = process.argv.includes('--save');
 const RECENT_ONLY = process.argv.includes('--recent-only');
-const FIX_WINDOW_HOURS = parseInt(process.env.FIX_WINDOW_HOURS || '72', 10);
+const FIX_WINDOW_HOURS = parseInt(process.env.FIX_WINDOW_HOURS || '24', 10);
 const RECENT_THRESHOLD_ISO = RECENT_ONLY
   ? new Date(Date.now() - FIX_WINDOW_HOURS * 60 * 60 * 1000).toISOString()
   : null;
