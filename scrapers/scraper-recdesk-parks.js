@@ -648,18 +648,40 @@ function isLikelyAdultOnly(title) {
   const adultPatterns = [
     /\b(40\+|50\+|55\+|60\+|65\+)\b/,
     /\bsenior\b/,
-    /\badult\s+(league|sports?|fitness|basketball|volleyball|softball|soccer|flag football)\b/,
     /\bbeer\b/, /\bwine tasting\b/, /\bbrewery\b/,
-    /\bpickleball\b.*\b(league|tournament|open play)\b/,
-    /\bmen'?s\s+(basketball|softball|volleyball|soccer|league)\b/,
-    /\bwomen'?s\s+(basketball|softball|volleyball|soccer|league)\b/,
-    /\bco-?ed\s+(volleyball|softball|basketball|soccer|league)\b/
+    /\bpickleball\b.*\b(league|tournament|open play)\b/
   ];
 
   for (const pat of adultPatterns) {
     if (pat.test(lower)) return true;
   }
+
+  // "adult" itself is unambiguous regardless of what else is in the title.
+  if (/\badult\b/.test(lower)) return true;
+
+  // men's/women's/coed marker + a team-sport term anywhere in the title,
+  // co-occurrence rather than adjacency since titles like "Men's Fall
+  // Softball - Tuesdays" don't have the marker directly next to the sport
+  // (found 2026-08-01 — the old adjacency-only patterns let these through,
+  // see SCRAPER-FIX-LOG.jsonl). Skipped when a youth marker is also present,
+  // since some park districts run coed youth leagues (e.g. "Coed Youth
+  // Soccer") that shouldn't be swept up with the adult ones.
+  const hasLeagueMarker = /\b(men'?s|mens|women'?s|womens|co-?ed)\b/.test(lower);
+  const hasTeamSportTerm = /\b(basketball|softball|volleyball|soccer|flag football|kickball|league)\b/.test(lower);
+  const hasYouthMarker = /\b(youth|kids?|junior|teen|peewee|pee-wee|grade|k-\d|\dst|\dnd|\drd|\dth)\b/.test(lower);
+  if (hasLeagueMarker && hasTeamSportTerm && !hasYouthMarker) return true;
+
   return false;
+}
+
+/**
+ * RecDesk calendars mix real events with registration/roster line items
+ * that have no event content of their own (found 2026-08-01 alongside the
+ * facilityId fix — see SCRAPER-FIX-LOG.jsonl).
+ */
+function isFeeOrRegistrationOnly(title) {
+  const lower = (title || '').toLowerCase();
+  return /\b(free agent|player fee|team fee|league fee|registration fee|membership fee|season fee)\b/.test(lower);
 }
 
 // ──────────────────────────────────────────────────────────────────────
@@ -686,6 +708,9 @@ async function scrapeRecDeskSite(config) {
         return false;
       }
       if (isLikelyAdultOnly(evt.EventName || evt.eventName)) {
+        return false;
+      }
+      if (isFeeOrRegistrationOnly(evt.EventName || evt.eventName)) {
         return false;
       }
       return true;
