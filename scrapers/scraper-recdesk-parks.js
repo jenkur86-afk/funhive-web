@@ -532,23 +532,11 @@ async function fetchAllEvents(config) {
 // Event transformation
 // ──────────────────────────────────────────────────────────────────────
 
-function detectAgeRange(title, description) {
-  const fullText = `${title || ''} ${description || ''}`.toLowerCase();
-  if (fullText.includes('toddler') || fullText.includes('baby') || fullText.match(/\b0[-–]?3\b/)) {
-    return 'Babies & Toddlers (0-2)';
-  } else if (fullText.includes('preschool') || fullText.match(/\b3[-–]?5\b/)) {
-    return 'Preschool (3-5)';
-  } else if (fullText.includes('junior') || fullText.match(/\b6[-–]?8\b/)) {
-    return 'Kids (6-8)';
-  } else if (fullText.includes('tween') || fullText.match(/\b9[-–]?12\b/)) {
-    return 'Tweens (9-12)';
-  } else if ((fullText.includes('teen') && !fullText.includes('volunteer')) || fullText.match(/\b13[-–]?18\b/)) {
-    return 'Teens (13-18)';
-  } else if (fullText.includes('youth') || fullText.includes('kid') || fullText.includes('child')) {
-    return 'Kids (6-8)';
-  }
-  return 'All Ages';
-}
+// Age detection is handled centrally by supabase-adapter.js's detectAgeRange()
+// + normalizeAgeRange() pipeline, which is richer than any local keyword check
+// (grade patterns, numeric ranges, etc) — removed this scraper's own weaker
+// copy 2026-08-03 so raw title/description reach that pipeline instead of
+// being pre-empted by it. See SCRAPER-FIX-LOG.jsonl.
 
 /**
  * Transform a RecDesk calendar event into our standard format.
@@ -613,8 +601,6 @@ function transformEvent(raw, detail, config) {
     url = `https://${config.slug}.recdesk.com${url}`;
   }
 
-  const ageRange = detectAgeRange(title, description);
-
   return {
     title,
     name: title,
@@ -629,7 +615,6 @@ function transformEvent(raw, detail, config) {
     venueName: venue,
     city: config.city,
     zipCode: '',
-    ageRange,
     metadata: {
       sourceName: config.name,
       sourceUrl: `https://${config.slug}.recdesk.com`,

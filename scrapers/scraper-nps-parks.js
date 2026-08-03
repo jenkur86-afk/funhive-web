@@ -95,23 +95,14 @@ function stripHtml(html) {
     .replace(/\s+/g, ' ').trim();
 }
 
-function detectAgeRange(title, description) {
-  const fullText = `${title || ''} ${description || ''}`.toLowerCase();
-  if (fullText.includes('toddler') || fullText.includes('baby') || fullText.match(/\b0[-–]?3\b/)) {
-    return 'Babies & Toddlers (0-2)';
-  } else if (fullText.includes('preschool') || fullText.match(/\b3[-–]?5\b/)) {
-    return 'Preschool (3-5)';
-  } else if (fullText.includes('junior ranger') || fullText.includes('jr ranger') || fullText.includes('jr. ranger')) {
-    return 'Kids (6-8)';
-  } else if (fullText.includes('child') && !fullText.includes('adult')) {
-    return 'Kids (6-8)';
-  } else if (fullText.includes('tween') || fullText.match(/\b9[-–]?12\b/)) {
-    return 'Tweens (9-12)';
-  } else if (fullText.includes('teen') && !fullText.includes('volunteer') || fullText.match(/\b13[-–]?18\b/)) {
-    return 'Teens (13-18)';
-  }
-  return 'All Ages';
-}
+// Age detection is handled centrally by supabase-adapter.js's detectAgeRange()
+// + normalizeAgeRange() pipeline — removed this scraper's own weaker copy
+// 2026-08-03 so raw title/description reach that pipeline instead of being
+// pre-empted by it. NOTE: this drops the NPS-specific "Junior Ranger" keyword
+// match (an official NPS kids-program name the shared detector doesn't know
+// about) — those events now fall back to whatever the shared pipeline finds,
+// likely All Ages. Low-volume scraper (~140 events), accepted tradeoff for
+// consistency; see SCRAPER-FIX-LOG.jsonl.
 
 // ──────────────────────────────────────────────────────────────────────
 // Event transformation
@@ -147,7 +138,6 @@ function transformEvent(raw) {
   // spaces, which produced ugly geocode strings like "The White House , Washington, DC".
   const venue = (raw.parkfullname || 'National Park Service').replace(/\s+/g, ' ').trim();
   const title = (raw.title || '').substring(0, 200).replace(/\s+/g, ' ').trim();
-  const ageRange = detectAgeRange(title, description);
 
   // Get time info
   const timeInfo = raw.times?.[0];
@@ -189,7 +179,6 @@ function transformEvent(raw) {
       venueName: venue,
       city: 'Washington',
       zipCode: '',
-      ageRange,
       // DC coordinates — NPS events often don't have lat/lng
       latitude: raw.latitude ? parseFloat(raw.latitude) : null,
       longitude: raw.longitude ? parseFloat(raw.longitude) : null,

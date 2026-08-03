@@ -249,29 +249,15 @@ function isAdultOnly(title, description) {
 // Age range detection
 // ──────────────────────────────────────────────────────────────────────
 
-function detectAgeRange(title, description) {
-  const text = `${title || ''} ${description || ''}`.toLowerCase();
-  if (text.match(/\btoddler|baby|babies|infant/)) return 'Babies & Toddlers (0-2)';
-  if (text.match(/\bpreschool|pre-?k|prek\b/)) return 'Preschool (3-5)';
-  if (text.match(/\btween/)) return 'Tweens (9-12)';
-  if (text.match(/\bteen\b/) && !text.match(/\bvolunteer/)) return 'Teens (13-18)';
-  if (text.match(/\byouth|kid|child|children|elementary/)) return 'Kids (6-8)';
-  if (text.match(/\bfamily|families|all\s*ages/)) return 'All Ages';
-
-  // Try numeric ranges
-  const ageMatch = text.match(/(\d{1,2})\s*[-–to]+\s*(\d{1,2})\s*(y|yr|year|mo)?/);
-  if (ageMatch) {
-    const minAge = parseInt(ageMatch[1]);
-    const maxAge = parseInt(ageMatch[2]);
-    if (maxAge <= 2) return 'Babies & Toddlers (0-2)';
-    if (maxAge <= 5) return 'Preschool (3-5)';
-    if (maxAge <= 8) return 'Kids (6-8)';
-    if (maxAge <= 12) return 'Tweens (9-12)';
-    if (maxAge <= 18) return 'Teens (13-18)';
-  }
-
-  return 'All Ages';
-}
+// Age detection is handled centrally by supabase-adapter.js's detectAgeRange()
+// + normalizeAgeRange() pipeline, which is richer than this local keyword
+// check was (grade patterns, numeric ranges, etc) — removed 2026-08-03. The
+// per-event structured raw.ageText field (e.g. "6-12", "All Ages", "18+")
+// is passed straight through as data.ageRange below instead of being reduced
+// through a weak keyword scan first — normalizeAgeRange() parses raw ranges
+// like that natively. Previously raw.ageText was only used transiently here
+// and never reached the saved description either, so this also recovers
+// signal that was being discarded outright. See SCRAPER-FIX-LOG.jsonl.
 
 // ──────────────────────────────────────────────────────────────────────
 // Category detection
@@ -543,7 +529,7 @@ async function scrapeDepartment(browser, dept, dryRun) {
         }
       }
 
-      const ageRange = detectAgeRange(raw.title, `${raw.description} ${raw.ageText}`);
+      const ageRange = raw.ageText || undefined;
       const { category, subcategory } = detectCategory(raw.title, raw.description);
 
       const venue = raw.location || dept.name;

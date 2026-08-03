@@ -1009,13 +1009,12 @@ async function saveEvent(id, data) {
     age_range: null,  // set below after normalization
   });
 
-  // Normalize age_range: use scraper-provided value or auto-detect, then normalize to standard brackets
-  const rawAgeRange = data.ageRange || detectAgeRange(data.name, data.description) || null;
-  if (rawAgeRange) {
-    row.age_range = normalizeAgeRange(rawAgeRange);
-  } else {
-    row.age_range = 'All Ages';
-  }
+  // Normalize age_range: use scraper-provided value, auto-detect from name/description, or fall
+  // back to normalizing the raw name itself. That last step catches grade/numeric patterns (e.g.
+  // "Gr 4-8", "K-1st Grade") that detectAgeRange's phrase matching misses but normalizeAgeRange's
+  // own regexes handle fine once they actually see the text (found 2026-08-03, see SCRAPER-FIX-LOG.jsonl).
+  const rawAgeRange = data.ageRange || detectAgeRange(data.name, data.description) || data.name || '';
+  row.age_range = normalizeAgeRange(rawAgeRange);
 
   // Reject adult-only events — not family content
   if (row.age_range === 'Adults') {
@@ -1765,13 +1764,11 @@ function flattenEvent(data) {
     console.warn(`  ⚠️  scraper_name missing for event "${(row.name || '').substring(0, 50)}" — derived as "${row.scraper_name}". Set metadata.scraperName in the scraper.`);
   }
 
-  // Auto-detect age range from event name/description, then normalize to standard brackets
-  const rawAge = data.ageRange || data.age_range || detectAgeRange(data.name, data.description) || null;
-  if (rawAge) {
-    row.age_range = normalizeAgeRange(rawAge);
-  } else {
-    row.age_range = 'All Ages';
-  }
+  // Auto-detect age range from event name/description, then normalize to standard brackets.
+  // Falls back to normalizing the raw name itself when nothing else matched — catches grade/
+  // numeric patterns detectAgeRange's phrase matching misses (see SCRAPER-FIX-LOG.jsonl).
+  const rawAge = data.ageRange || data.age_range || detectAgeRange(data.name, data.description) || data.name || '';
+  row.age_range = normalizeAgeRange(rawAge);
 
   // Reject adult-only events — not family content
   if (row.age_range === 'Adults') {
