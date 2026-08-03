@@ -440,7 +440,11 @@ function detectAgeRange(name, description) {
   if (/\b(preschool|pre-k|prek|pre\s*k)\b/.test(text)) return '3-5';
   if (/\btween/.test(text)) return '9-12';
   if (/\bteen\b/.test(text) && !/\bfamil(y|ies)\b/.test(text)) return '11-18';
-  if (/\belementary/.test(text)) return '5-11';
+  // "elementary" alone is too broad — it's usually a venue name ("held at Lincoln
+  // Elementary", "Clinton Elementary Building A"), not an audience descriptor.
+  // Require it to actually describe who the event is for (found 2026-08-03 while
+  // testing the grade-pattern fix above — see SCRAPER-FIX-LOG.jsonl).
+  if (/\belementary\s*(?:school\s*)?(?:aged?|students?|kids?|children)\b/.test(text) || /\bfor\s+elementary\b/.test(text)) return '5-11';
 
   // "kids" or "children" without "family" context → likely 4-12
   if (/\b(kids?|children)\b/.test(text) && !/\bfamil(y|ies)\b/.test(text)) return '4-12';
@@ -448,6 +452,34 @@ function detectAgeRange(name, description) {
   // Family / all ages
   if (/\ball\s*ages\b/.test(text)) return 'All Ages';
   if (/\bfamil(y|ies)\b/.test(text)) return 'All Ages';
+
+  // Grade-level phrasing: "Gr 4-8", "K-1st Grade", "6-8th Grade", "Grades 3-5".
+  // Deliberately anchored to "grade"/"gr"/"k-...grade" context — NOT a bare
+  // digit-range scan. A bare scan over arbitrary titles matches too much noise
+  // (times like "1:00 - 2:30p", registration-ID/year pairs like "2608-2026",
+  // skill levels, prices) and was found live-misclassifying events during this
+  // fix's own verification (see SCRAPER-FIX-LOG.jsonl, 2026-08-03).
+  //
+  // Converts grade number -> approximate age (grade N ~= age N+5, K ~= age 5)
+  // and returns a plain age-range string ("9-13"), NOT a "grades X-Y" string.
+  // normalizeAgeRange() has its own grade regexes, but its generic numeric-
+  // range check runs BEFORE them, so a synthesized "grades 7-12" string gets
+  // misread as literal ages 7-12 (-> wrong bracket) rather than reaching its
+  // grade-aware logic at all. Doing the conversion here sidesteps that
+  // ordering issue entirely (also found 2026-08-03).
+  const gradeToAge = (g) => g + 5; // grade 0 (kindergarten) -> age 5
+  const gradeAbbrev = text.match(/\bgr\.?\s*(\d{1,2})\s*[-–to]+\s*(\d{1,2})\b/);
+  if (gradeAbbrev) return `${gradeToAge(parseInt(gradeAbbrev[1], 10))}-${gradeToAge(parseInt(gradeAbbrev[2], 10))}`;
+  const kToGrade = text.match(/\bk(?:inder(?:garten)?)?[\s-]+(\d{1,2})(?:st|nd|rd|th)?\s*grade\b/);
+  if (kToGrade) return `${gradeToAge(0)}-${gradeToAge(parseInt(kToGrade[1], 10))}`;
+  const ordGradeRange = text.match(/\b(\d{1,2})(?:st|nd|rd|th)?\s*[-–to]+\s*(\d{1,2})(?:st|nd|rd|th)?\s*grade\b/);
+  if (ordGradeRange) return `${gradeToAge(parseInt(ordGradeRange[1], 10))}-${gradeToAge(parseInt(ordGradeRange[2], 10))}`;
+  const gradeWordRange = text.match(/\bgrades?\s*(?:(k|kindergarten)|(\d{1,2}))(?:st|nd|rd|th)?\s*[-–to]+\s*(\d{1,2})\b/);
+  if (gradeWordRange) {
+    const lo = gradeWordRange[1] ? 0 : parseInt(gradeWordRange[2], 10);
+    const hi = parseInt(gradeWordRange[3], 10);
+    return `${gradeToAge(lo)}-${gradeToAge(hi)}`;
+  }
 
   return null;
 }
@@ -1009,12 +1041,15 @@ async function saveEvent(id, data) {
     age_range: null,  // set below after normalization
   });
 
-  // Normalize age_range: use scraper-provided value, auto-detect from name/description, or fall
-  // back to normalizing the raw name itself. That last step catches grade/numeric patterns (e.g.
-  // "Gr 4-8", "K-1st Grade") that detectAgeRange's phrase matching misses but normalizeAgeRange's
-  // own regexes handle fine once they actually see the text (found 2026-08-03, see SCRAPER-FIX-LOG.jsonl).
-  const rawAgeRange = data.ageRange || detectAgeRange(data.name, data.description) || data.name || '';
-  row.age_range = normalizeAgeRange(rawAgeRange);
+  // Normalize age_range: use scraper-provided value or auto-detect, then normalize to standard
+  // brackets. detectAgeRange() now also recognizes grade-level phrasing ("Gr 4-8", "K-1st Grade")
+  // as of 2026-08-03 — see SCRAPER-FIX-LOG.jsonl. (An earlier version of this fix fell back to
+  // normalizeAgeRange(name) on the raw title when nothing matched; that was reverted the same day
+  // after it started misreading unrelated numbers in titles — times like "1:00 - 2:30p", ID/year
+  // pairs like "2608-2026" — as age ranges. detectAgeRange()'s explicit, anchored checks are the
+  // only safe way to pull an age signal out of an arbitrary raw title.)
+  const rawAgeRange = data.ageRange || detectAgeRange(data.name, data.description) || null;
+  row.age_range = rawAgeRange ? normalizeAgeRange(rawAgeRange) : 'All Ages';
 
   // Reject adult-only events — not family content
   if (row.age_range === 'Adults') {
@@ -1765,10 +1800,12 @@ function flattenEvent(data) {
   }
 
   // Auto-detect age range from event name/description, then normalize to standard brackets.
-  // Falls back to normalizing the raw name itself when nothing else matched — catches grade/
-  // numeric patterns detectAgeRange's phrase matching misses (see SCRAPER-FIX-LOG.jsonl).
-  const rawAge = data.ageRange || data.age_range || detectAgeRange(data.name, data.description) || data.name || '';
-  row.age_range = normalizeAgeRange(rawAge);
+  // detectAgeRange() also recognizes grade-level phrasing as of 2026-08-03 — see the longer
+  // note above flattenEvent()'s equivalent block and SCRAPER-FIX-LOG.jsonl. Deliberately does
+  // NOT fall back to normalizing the raw name directly — that misreads unrelated numbers in
+  // titles (times, IDs, prices) as ages; detectAgeRange()'s anchored checks are the safe path.
+  const rawAge = data.ageRange || data.age_range || detectAgeRange(data.name, data.description) || null;
+  row.age_range = rawAge ? normalizeAgeRange(rawAge) : 'All Ages';
 
   // Reject adult-only events — not family content
   if (row.age_range === 'Adults') {
@@ -1904,4 +1941,5 @@ module.exports = {
   stripPromoBracketCruft,
   normalizeShoutedTitle,
   isJunkTitle,
+  detectAgeRange,
 };
