@@ -7,8 +7,12 @@
  * COVERAGE:
  * - Somerset County, MD (26,000+ population)
  *
- * Note: Somerset library has a Google Calendar embedded on their website.
- * This scraper uses Puppeteer request interception to capture Google Calendar API calls.
+ * Note: Somerset library still embeds a Google Calendar widget, but as of a
+ * 2026-08-02 site redesign it moved off the homepage onto three separate
+ * "programs" pages (adultprograms.php / childprograms.php / teenprograms.php),
+ * each with its own set of Google Calendar IDs. This scraper visits all three
+ * and uses Puppeteer request interception to capture the Google Calendar API
+ * calls on each, same as the old homepage-only approach.
  */
 
 const { admin, db } = require('./helpers/supabase-adapter');
@@ -31,6 +35,61 @@ const LIBRARY = {
   city: 'Princess Anne',
   zipCode: '21853'
 };
+
+// The redesigned site (as of 2026-08-02) no longer embeds a calendar on the
+// homepage. The real Google Calendar widgets now live on these three pages.
+const PROGRAM_PAGES = [
+  'https://www.somelibrary.org/adultprograms.php',
+  'https://www.somelibrary.org/childprograms.php',
+  'https://www.somelibrary.org/teenprograms.php'
+];
+
+// Branch lookup — the Google Calendar API's `location` field on each event
+// identifies which physical branch it's at (confirmed live 2026-08-03: values
+// like "Crisfield Library, 100 Collins St, Crisfield, MD 21817, USA" or the
+// bare name "Princess Anne Library"). Coordinates geocoded once via Nominatim.
+// Falls back to the Princess Anne branch (the county's main branch) when an
+// event has no location field at all, matching the scraper's prior behavior
+// of defaulting every event to Princess Anne's coordinates.
+const BRANCHES = [
+  {
+    match: /crisfield/i,
+    name: 'Crisfield Library',
+    address: '100 Collins St',
+    city: 'Crisfield',
+    zipCode: '21817',
+    latitude: 37.9852,
+    longitude: -75.8544
+  },
+  {
+    match: /ewell|smith island/i,
+    name: 'Ewell Library',
+    address: '4005 Smith Island Rd',
+    city: 'Ewell',
+    zipCode: '21824',
+    latitude: 37.9945,
+    longitude: -76.0341
+  },
+  {
+    match: /princess anne/i,
+    name: 'Somerset County Library',
+    address: '11767 Beechwood St',
+    city: 'Princess Anne',
+    zipCode: '21853',
+    latitude: 38.2044,
+    longitude: -75.6921
+  }
+];
+const DEFAULT_BRANCH = BRANCHES[2]; // Princess Anne — matches prior default
+
+function resolveBranch(locationText) {
+  if (locationText) {
+    for (const branch of BRANCHES) {
+      if (branch.match.test(locationText)) return branch;
+    }
+  }
+  return DEFAULT_BRANCH;
+}
 
 // Geocode address
 async function geocodeAddress(address) {
@@ -83,8 +142,7 @@ function parseAgeRange(eventText) {
 // Scrape events from Somerset
 async function scrapeSomersetEvents() {
   console.log(`\n📚 ${LIBRARY.name} (${LIBRARY.county} County, ${LIBRARY.state})`);
-  console.log(`   URL: ${LIBRARY.url}\n`);
-  console.log('   Note: Somerset uses PDF program booklets. Limited online event data available.');
+  console.log(`   Pages: ${PROGRAM_PAGES.join(', ')}\n`);
 
   let imported = 0;
   let skipped = 0;
@@ -93,11 +151,14 @@ async function scrapeSomersetEvents() {
   const browser = await launchBrowser();
 
   try {
+    // Intercept network requests to find calendar data API calls. Each of the
+    // three program pages embeds its own Google Calendar widget(s), so we
+    // navigate to all three (reusing one page + one set of listeners) and
+    // aggregate the API responses across all of them before extracting events.
+    const apiResponses = [];
+
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
-
-    // Intercept network requests to find calendar data API calls
-    const apiResponses = [];
     await page.setRequestInterception(true);
 
     page.on('request', request => {
@@ -122,17 +183,23 @@ async function scrapeSomersetEvents() {
       }
     });
 
-    // Navigate to main page
-    await page.goto(LIBRARY.url, {
-      waitUntil: 'networkidle2',
-      timeout: 30000
-    });
+    for (const pageUrl of PROGRAM_PAGES) {
+      try {
+        console.log(`   🌐 Navigating to ${pageUrl}`);
+        await page.goto(pageUrl, {
+          waitUntil: 'networkidle2',
+          timeout: 30000
+        });
 
-    // Wait for page to load and any calendar widgets to initialize
-    await page.waitForSelector('body', { timeout: 5000 });
-    await new Promise(resolve => setTimeout(resolve, 8000)); // Longer wait for calendar rendering
+        // Wait for page to load and any calendar widgets to initialize
+        await page.waitForSelector('body', { timeout: 5000 });
+        await new Promise(resolve => setTimeout(resolve, 8000)); // Longer wait for calendar rendering
+      } catch (navErr) {
+        console.log(`   ⚠️  Error navigating to ${pageUrl}: ${navErr.message}`);
+      }
+    }
 
-    console.log(`   📡 Captured ${apiResponses.length} API responses\n`);
+    console.log(`   📡 Captured ${apiResponses.length} API responses across ${PROGRAM_PAGES.length} pages\n`);
 
     // Try to extract events from API responses first (Google Calendar)
     // Somerset has MULTIPLE calendars, so we need to aggregate events from all of them
@@ -172,7 +239,10 @@ async function scrapeSomersetEvents() {
             return {
               name: item.summary || '',
               eventDate: eventDate,
-              venue: item.location || '',
+              // Raw Google Calendar `location` text — used only to resolve which
+              // physical branch (Princess Anne / Crisfield / Ewell) the event is
+              // at. It's NOT the final venue name saved to the DB.
+              rawLocation: item.location || '',
               description: item.description || '',
               url: item.htmlLink || ''
             };
@@ -198,7 +268,27 @@ async function scrapeSomersetEvents() {
 
     if (totalItemsFound > 0) {
       console.log(`   🔍 Found ${totalItemsFound} total items across all calendars`);
-      console.log(`   ✅ Extracted ${events.length} library events (filtered out holidays)`);
+    }
+
+    // Dedup: each program page loads its calendar widget twice (a desktop
+    // agenda view + a separate mobile view), and a couple of calendar IDs are
+    // shared across pages (e.g. the "Programs To Go" calendar appears on both
+    // adultprograms.php and childprograms.php), so the same Google Calendar
+    // item can show up in apiResponses several times. Collapse on
+    // name+eventDate+rawLocation before processing so we don't do redundant
+    // duplicate-check DB round-trips or inflate the found/new counts.
+    if (events.length > 0) {
+      const seen = new Set();
+      const deduped = [];
+      for (const e of events) {
+        const key = `${e.name.toLowerCase().trim()}|${e.eventDate}|${e.rawLocation.toLowerCase().trim()}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          deduped.push(e);
+        }
+      }
+      console.log(`   ✅ Extracted ${deduped.length} unique library events (from ${events.length} raw, holidays filtered)`);
+      events = deduped;
     }
 
     // If no events from API, try scraping the DOM
@@ -286,13 +376,15 @@ async function scrapeSomersetEvents() {
           description: event.description
         });
 
-        // Default coordinates for Somerset County Library (Princess Anne, MD)
-        const defaultCoords = { latitude: 38.2029, longitude: -75.6924 };
+        // Resolve which physical branch this event is at from the Google
+        // Calendar item's raw location text (falls back to Princess Anne,
+        // the county's main branch, same as the scraper's prior behavior).
+        const branch = resolveBranch(event.rawLocation);
 
         // Build event document
         const eventDoc = {
           name: event.name,
-          venue: LIBRARY.name,
+          venue: branch.name,
           state: LIBRARY.state, // CRITICAL: Add state field
           eventDate: normalizedDate,
           scheduleDescription: event.eventDate,
@@ -303,21 +395,39 @@ async function scrapeSomersetEvents() {
           cost: 'Free',
           description: (event.description || '').substring(0, 1000),
           moreInfo: '',
-          geohash: ngeohash.encode(defaultCoords.latitude, defaultCoords.longitude, 7), // Add geohash
+          geohash: ngeohash.encode(branch.latitude, branch.longitude, 7), // Add geohash
           location: {
-            name: LIBRARY.name,
-            address: '11767 Beechwood St',
-            city: LIBRARY.city,
+            name: branch.name,
+            address: branch.address,
+            city: branch.city,
             state: LIBRARY.state,
-            zipCode: LIBRARY.zipCode,
-            latitude: defaultCoords.latitude,
-            longitude: defaultCoords.longitude
+            zipCode: branch.zipCode,
+            latitude: branch.latitude,
+            longitude: branch.longitude
           },
           contact: {
             website: LIBRARY.website,
             phone: '(410) 651-0852'
           },
-          url: LIBRARY.website,
+          // CRITICAL: use the per-event Google Calendar htmlLink (event.url,
+          // populated from item.htmlLink), NOT the generic library homepage.
+          // Bug found 2026-08-03: this used to hardcode LIBRARY.website for
+          // every single event. _stableEventId() (supabase-adapter.js) derives
+          // each row's id primarily from a hash of the `url` field, so every
+          // event from this scraper collapsed onto the SAME id and only the
+          // very first insert ever landed — every event after that silently
+          // hit a 23505 duplicate-key conflict (returned as `{duplicate:true}`,
+          // not `{skipped:true}`), which this file's own success-logging only
+          // checks for `.skipped`, so it kept logging "✅ imported" and
+          // incrementing `imported` on every run while writing at most one
+          // real row to the DB. Confirmed live: before this fix, a DB query
+          // for `url = 'https://www.somelibrary.org'` returned 483 rows
+          // accumulated from the pre-2026-05-14 random-UUID era, but only ONE
+          // row existed with today's stable hash id. Each Google Calendar item
+          // has a unique, stable per-occurrence htmlLink, so using it gives
+          // every event its own id (and a real deep link instead of the
+          // homepage as a bonus).
+          url: event.url || LIBRARY.website,
           metadata: {
             source: 'Somerset Scraper',
             sourceName: LIBRARY.name,
@@ -350,6 +460,19 @@ async function scrapeSomersetEvents() {
         const addResult = await db.collection('events').add(eventDoc);
         if (addResult.skipped) {
           console.log(`  ⏭️  ${addResult.skipReason}`);
+          skipped++;
+        } else if (addResult.duplicate) {
+          // The pre-check above only matches on name+eventDate+sourceName (no
+          // venue), so it can miss a real conflict on the DB's content-based
+          // unique index (name+event_date+venue+description+city+address).
+          // Bug found 2026-08-03 verifying the site-change fix: this branch
+          // used to fall into the `else` below and count as imported even
+          // though nothing was actually written — e.g. this scraper's
+          // recurring-series events (Gaming, Mother Goose on the Loose,
+          // S.T.E.A.M., etc) were already captured with future dates out to
+          // April 2027 before the 2026-08-02 outage, so most re-scraped
+          // occurrences are genuine duplicates, not new rows.
+          skipped++;
         } else {
           console.log(`  ✅ ${event.name.substring(0, 60)}${event.name.length > 60 ? '...' : ''}`);
           imported++;
