@@ -188,6 +188,8 @@ async function scrapeGenericEvents() {
   const browser = await launchBrowser();
   const events = [];
   for (const library of LIBRARIES) {
+    const __eventCountBefore = events.length;
+    console.log(`📍 ${library.name} (${library.city}, ${library.state})`);
     try {
       // Try the site's TEC REST API before falling back to DOM scraping —
       // see helpers/tec-rest-helper.js for why (2026-07-31 diagnosis).
@@ -334,6 +336,8 @@ async function scrapeGenericEvents() {
 
     } catch (error) {
       console.error(`   ❌ Error scraping ${library.name}:`, error.message);
+    } finally {
+      console.log(`   Found ${events.length - __eventCountBefore} events`);
     }
   }
 

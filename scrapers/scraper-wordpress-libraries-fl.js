@@ -140,6 +140,8 @@ async function scrapeGenericEvents() {
   const events = [];
 
   for (const library of LIBRARIES) {
+    const __eventCountBefore = events.length;
+    console.log(`📍 ${library.name} (${library.city}, ${library.state})`);
     try {
       console.log(`\n📚 Scraping ${library.name}...`);
 
@@ -306,6 +308,8 @@ async function scrapeGenericEvents() {
 
     } catch (error) {
       console.error(`   ❌ Error scraping ${library.name}:`, error.message);
+    } finally {
+      console.log(`   Found ${events.length - __eventCountBefore} events`);
     }
   }
 

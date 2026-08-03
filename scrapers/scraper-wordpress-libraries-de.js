@@ -42,6 +42,8 @@ async function scrapeGenericEvents() {
   const browser = await launchBrowser();
   const events = [];
   for (const library of LIBRARIES) {
+    const __eventCountBefore = events.length;
+    console.log(`📍 ${library.name} (${library.city}, ${library.state})`);
     try {
       const page = await browser.newPage();
       await page.goto(library.eventsUrl, { waitUntil: 'networkidle2', timeout: 30000 });
@@ -64,7 +66,9 @@ async function scrapeGenericEvents() {
       libraryEvents.forEach(event => events.push({ ...event, metadata: { sourceName: library.name, sourceUrl: library.url, scrapedAt: new Date().toISOString(), scraperName: SCRAPER_NAME, category: 'library', state: 'DE', city: library.city, zipCode: library.zipCode }}));
       await page.close();
       await new Promise(resolve => setTimeout(resolve, 3000));
-    } catch (error) { console.error(`Error: ${library.name}:`, error.message); }
+    } catch (error) { console.error(`Error: ${library.name}:`, error.message); } finally {
+      console.log(`   Found ${events.length - __eventCountBefore} events`);
+    }
   }
   await browser.close();
   return events;

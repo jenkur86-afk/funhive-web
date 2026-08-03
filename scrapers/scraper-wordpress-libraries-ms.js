@@ -88,6 +88,8 @@ async function scrapeGenericEvents() {
   const events = [];
 
   for (const library of LIBRARIES) {
+    const __eventCountBefore = events.length;
+    console.log(`📍 ${library.name} (${library.city}, ${library.state})`);
     try {
       console.log(`\n📚 Scraping ${library.name}...`);
       // Try the site's TEC REST API before falling back to DOM scraping —
@@ -190,6 +192,8 @@ async function scrapeGenericEvents() {
       await new Promise(resolve => setTimeout(resolve, 3000));
     } catch (error) {
       console.error(`   ❌ Error scraping ${library.name}:`, error.message);
+    } finally {
+      console.log(`   Found ${events.length - __eventCountBefore} events`);
     }
   }
 
