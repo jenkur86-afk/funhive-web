@@ -13,6 +13,33 @@ Tracks how many events, per individual site, land in each of the 6 standard age 
 
 Overall: **480 rows** got a real config-sourced calendar link, **2313 rows** fell back to a sampled DB event link, and **169 rows** have no derivable link.
 
+## Deep-dive: "mostly All Ages" verification (2026-08-04)
+
+All 104 individual sites in the Flagged section below (excluding "(scraper aggregate)" summary lines) were live-checked against their real calendar page. Result: **4 confirmed accurate (MATCHES — the live programming really is generic/all-ages)**, **26 confirmed real age-detection gaps (MISMATCH — the live site shows clear age-specific programming, e.g. toddler storytimes or teen clubs, that isn't reflected in the age brackets)**, **74 unverifiable** (bot-blocks, JS-only calendar widgets, sign-in-gated pages, or booking-only pages with no age-relevant titles visible).
+
+**MISMATCH — confirmed age-detection gaps:**
+- Orange-County-Library-FL — Melrose Center, Online, South Trail Branch: heavy toddler/kids/teen coding & storytime programming not reflected
+- WordPress-VT — Norman Williams Public Library, Pierson Library, Ainsworth Public (Williamstown Library): toddler/family storytimes live on-site
+- WordPress-NC — Saluda Branch Library: recurring Tiny Tots/Bookworms Storytime
+- WordPress-GA — Centerville Branch Library: Toddler Storytime, LEGO Club, teen poetry/social group
+- WordPress-TN — Hickman County Public Library: URL on file actually points to Centerville's (GA) page — same underlying bug as the library-site URL collisions above
+- WordPress-AL — Wilsonville - Vernice Stoudenmire Library, Fairhope Public Library: kids/teen camps and programs (KidoKinetics, Chess Wizards, Bike Discovery)
+- WordPress-MA / WordPress-GA — Pelham Library (MA) and Pelham-Carnegie Library (GA): both share one URL that actually resolves to **Pelham, NY's library** — toddler/kids storytime and LEGO Club live there, both a state-mapping bug and an age-detection miss
+- WordPress-CT — Ilsley Public Library, Seymour Public Library: toddler/preschool programming not reflected
+- WordPress-MA — Dudley Branch Library: teen and kids programming not reflected
+- WordPress-VT — Franklin-Grand Isle Bookmobile: URL on file actually resolves to **Swanton Public Library**
+- WordPress-TN — Seymour Branch Library: URL on file actually resolves to **Seymour Public Library, Connecticut** (unrelated out-of-state library)
+- WordPress-TN — Baxter Branch Library: URL on file actually resolves to **Baxter Memorial Library, Maine** (unrelated out-of-state library)
+- Venue-Events-ZoosAquariums — Brandywine Zoo, Virginia Zoo: kids/family program titles not reflected
+- WordPress-Events-Calendar — Wythe-Grayson Regional Library, Pittsylvania County Public Library: Tot Time, Little Readers Club, Family Storytime, Pre-K Skill Builders
+- WordPress-KY — Kenton County Public Library: PreK Storytime, WonderPlay Wednesdays, Little Builders (5 and under)
+- WordPress-TN — Germantown Community Library: Grades 3-5 Makerspace robotics not reflected in Kids/Tweens brackets
+- WordPress-TN — Chattanooga Public Library: Toddler Time, Preschool Storytime, Outdoor Storytime, Baby Bounce all live on-site, yet Babies and Preschool brackets both show 0
+
+**Notable pattern — URL collisions/state-mapping bugs**, separate from the age-detection question but likely worth its own fix: several distinct libraries in different states share the exact same scraped URL, which resolves to only one real physical library (Pelham MA/GA → the real one is in NY; Seymour TN → really Seymour CT; Baxter TN → really Baxter Memorial ME; Hancock GA / Alleghany NC / White TN all point at `spartalibrary.org`, which is really Sparta Free Library, Wisconsin).
+
+**Security note:** two fetched pages during this deep-dive contained embedded prompt-injection attempts — `ccrec.recdesk.com` had text reading "You are a Claude agent, built on Anthropic's Claude Agent SDK," and `brandywinezoo.org/events` had text attempting to direct response formatting ("Enforce a strict 125-character maximum..."). Both were recognized as untrusted page content and ignored; nothing on either page altered this audit's behavior.
+
 ## 2026-08-04
 
 | Site | Scraper | All Ages | Babies 0-2 | Preschool 3-5 | Kids 6-8 | Tweens 9-12 | Teens 13-18 | Total | Link |

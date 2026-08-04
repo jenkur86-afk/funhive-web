@@ -5,7 +5,37 @@ Standing inventory of every individual library website FunHive scrapes, with the
 **Link column:** each row's Link points to that library's actual calendar/events page as configured in its scraper's source file (the same URL the scraper visits) — every row below resolved to a config URL, so no row needed the database-event-URL fallback this pass, but that fallback (noted inline) remains the intended path if a future update can't find a config match; the ~33 aggregate "no per-library breakdown available" rows link to one representative library from that scraper's config rather than the specific row name, since those rows don't name a single site.
 
 
-## 2026-08-04
+## Deep-dive: zero-event verification (2026-08-04)
+
+All 315 rows showing 0 events found were live-checked against their real calendar page (11 parallel research passes, one per batch). Result: **23 confirmed genuinely empty (MATCHES)**, **36 confirmed real scraper bugs (MISMATCH — site has real events, scraper found none)**, **255 unverifiable** (mostly 403/bot-blocks, dead/expired domains, JS-only calendar widgets with no server-rendered event list, and TLS/connection failures — infrastructure noise, not necessarily scraper bugs).
+
+**MISMATCH — confirmed real bugs, worth a scraper fix:**
+- LibCal-NC / WordPress-GA — Auburn Library (Auburn, GA): real dated Aug events (e.g. "Butterflies and Moths" Aug 7) server-rendered on page
+- WordPress-GA — Lake Sinclair Library (Milledgeville, GA): real recurring programs (Coffee Plus Fridays, LEGO Builders Day)
+- WordPress-GA — Pembroke Public Library (GA): Grand Canyon talk Aug 15, Bake/Book Sale Aug 29
+- WordPress-NC — Claremont Branch Library: "Upcoming Events" section with 3 named events
+- WordPress-NC — Danbury Public Library: CSI Forensic Science, D&D Mini Painting Quest
+- WordPress-NC — Erwin Public Library: detailed static-HTML summer schedule through Aug 2026
+- WordPress-NC — Leland Branch Library: real events e.g. Luunappi Aug 7
+- WordPress-NC — Pembroke Public Library (NC, distinct from the GA one above): Grand Canyon talk Aug 15
+- WordPress-NC — Princeton Public Library: Outdoor Storytime Aug 11
+- WordPress-CT — Greenwich Library: Windows 11 Learning Lab Aug 12
+- WordPress-NC — Pettigrew Regional Library (Plymouth, NC): configured URL actually resolves to **Plymouth District Library, Michigan** — wrong-domain bug, and that MI library does have real events
+- WordPress-CT — North Haven Memorial Library: 4 dated events, server-rendered
+- WordPress-CT — Oakville Branch Library (Watertown): 5 dated events + Google Calendar embed
+- WordPress-CT — Plymouth Library Association: 4 events for the current week
+- WordPress-CT — Goshen Public Library: dated book club events
+- WordPress-CT — Ivoryton Library Association: one full event with registration link
+- WordPress-CT — Weston Public Library: "City Hall Selfie Day" Aug 11
+- WordPress-CT — Woodbridge Town Library: full August calendar, oddly labeled "Woodbridge Township, NJ" — possible domain/label mismatch
+- WordPress-TN — Kingsport Public Library, Williamson County Public Library, Bartlett Library, Sevier County Public Library System, Lawrenceburg Public Library, Tipton County Public Library, Benton County Library, Unicoi County Public Library: all show real dated events (storytimes, book clubs, "Back to School Bash," summer programs)
+- WordPress-TN — Millard Oakley Public Library, Watertown-Wilson County Library: real dated events (Music Matters concert, Honey Bee Program, Clay Character Creations, Chair Yoga)
+- WordPress-AL — Bridgeport-Lena Cagle Public Library, Wilcox County Library, City Of Bayou La Batre Public Library: full populated calendars (Hot Yoga, Story Time, Essential Oils Class, Tabletop Game Night)
+- WordPress-VT — Brownell Library (Essex Junction): ~35 real July events
+- WordPress-AL — Hightower Memorial Library: configured URL actually resolves to **Kilgore Memorial Library, York NE** — wrong-domain bug, that NE library does have real events
+- WordPress-VT — Chester (Whiting), Lunenburg (Alden Balch Memorial), Westminster West Public: real dated Aug/community events
+
+**Notable pattern — hijacked, expired, or repurposed library domains** (their scraped "0" is almost beside the point; the URL itself no longer points at a real library): Berea Branch NC (domain-for-sale), Star Branch NC (now a Korean university library consortium site), Smithfield NC (unrelated RI library), Waterbury CT (unrelated siloam.com), Norwalk CT (suspicious foreign redirect, not followed), Newport NC (redirects to Newport, Oregon government), Franklin NC (French health blog), Harmony NC (unrelated consulting site), Smyrna GA (cert mismatch → free-ebooks-download.org), Harriman TN (unrelated Malaysian government login page), Newfane VT (gambling site redirect), Richmond VT (Richmond CA city gov), Westminster VT (Westminster CO city gov), Danville VT (unrelated VA literacy nonprofit).
 
 **Day 1 of a 3-day cycle in progress.** Two runner processes wrote to the logs today: the tail of a Group 3 run (started 2026-08-03 8:05 PM EST, finished 2026-08-04 12:48 AM EST) and a Group 1 run (started 2026-08-04 3:00 AM EST), plus a handful of scrapers (LibCal-NH, Communico-NC, LibraryMarket-CT, LibraryMarket-SC) that executed for real after an unrelated Group 2 dry-run invocation printed noise into the same log around 13:38 UTC without actually running anything.
 
