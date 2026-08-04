@@ -1321,90 +1321,6 @@ const MACARONI_SCRAPERS = {
 };
 
 // ============================================================================
-// OSM SCRAPERS (Monthly - Days 1-10)
-// These run monthly, not on the 3-day rotation
-// ============================================================================
-const OSM_SCRAPERS = {
-  'OSM-Batch1': {
-    file: './scraper-osm-batch-activities.js',
-    exportName: 'scrapeOSMBatch1',
-    type: 'axios',
-    day: 1,
-    states: ['AL', 'AK', 'AZ', 'AR', 'CA']
-  },
-  'OSM-Batch2': {
-    file: './scraper-osm-batch-activities.js',
-    exportName: 'scrapeOSMBatch2',
-    type: 'axios',
-    day: 2,
-    states: ['CO', 'CT', 'DE', 'FL', 'GA']
-  },
-  'OSM-Batch3': {
-    file: './scraper-osm-batch-activities.js',
-    exportName: 'scrapeOSMBatch3',
-    type: 'axios',
-    day: 3,
-    states: ['HI', 'ID', 'IL', 'IN', 'IA']
-  },
-  'OSM-Batch4': {
-    file: './scraper-osm-batch-activities.js',
-    exportName: 'scrapeOSMBatch4',
-    type: 'axios',
-    day: 4,
-    states: ['KS', 'KY', 'LA', 'ME', 'MD']
-  },
-  'OSM-Batch5': {
-    file: './scraper-osm-batch-activities.js',
-    exportName: 'scrapeOSMBatch5',
-    type: 'axios',
-    day: 5,
-    states: ['MA', 'MI', 'MN', 'MS', 'MO']
-  },
-  'OSM-Batch6': {
-    file: './scraper-osm-batch-activities.js',
-    exportName: 'scrapeOSMBatch6',
-    type: 'axios',
-    day: 6,
-    states: ['MT', 'NE', 'NV', 'NH', 'NJ']
-  },
-  'OSM-Batch7': {
-    file: './scraper-osm-batch-activities.js',
-    exportName: 'scrapeOSMBatch7',
-    type: 'axios',
-    day: 7,
-    states: ['NM', 'NY', 'NC', 'ND', 'OH']
-  },
-  'OSM-Batch8': {
-    file: './scraper-osm-batch-activities.js',
-    exportName: 'scrapeOSMBatch8',
-    type: 'axios',
-    day: 8,
-    states: ['OK', 'OR', 'PA', 'RI', 'SC']
-  },
-  'OSM-Batch9': {
-    file: './scraper-osm-batch-activities.js',
-    exportName: 'scrapeOSMBatch9',
-    type: 'axios',
-    day: 9,
-    states: ['SD', 'TN', 'TX', 'UT', 'VT']
-  },
-  'OSM-Batch10': {
-    file: './scraper-osm-batch-activities.js',
-    exportName: 'scrapeOSMBatch10',
-    type: 'axios',
-    day: 10,
-    states: ['VA', 'WA', 'WV', 'WI', 'WY']
-  },
-  'OSM-California': {
-    file: './scraper-osm-california.js',
-    exportName: 'scrapeOSMCalifornia',
-    type: 'axios',
-    day: 1,
-    states: ['CA']
-  }
-};
-
-// ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
 
@@ -1429,21 +1345,6 @@ function getScrapersForGroup(group) {
   const result = {};
   for (const [name, config] of Object.entries(SCRAPERS)) {
     if (config.group === group) {
-      result[name] = config;
-    }
-  }
-  return result;
-}
-
-/**
- * Get OSM scrapers for a specific day
- * @param {number} dayOfMonth - Day of the month (1-10)
- * @returns {Object} Object with scraper names as keys
- */
-function getOSMScrapersForDay(dayOfMonth) {
-  const result = {};
-  for (const [name, config] of Object.entries(OSM_SCRAPERS)) {
-    if (config.day === dayOfMonth) {
       result[name] = config;
     }
   }
@@ -1519,7 +1420,6 @@ function getMacaroniSiteCounts() {
 
 function getScrapersForGroupByRegion(g, o={}) { const as = o.regionFilter||getActiveStates(); const r={}; for (const [n,c] of Object.entries(SCRAPERS)) { if (c.group===g && isScraperActive(c,as)) r[n]=c; } return r; }
 function getMacaroniScrapersForGroupByRegion(g, o={}) { const as = o.regionFilter||getActiveStates(); const r={}; for (const [n,c] of Object.entries(MACARONI_SCRAPERS)) { if (c.group===g && isScraperActive(c,as)) r[n]=c; } return r; }
-function getOSMScrapersForDayByRegion(d, o={}) { const as = o.regionFilter||getActiveStates(); if (!as) return getOSMScrapersForDay(d); const r={}; for (const [n,c] of Object.entries(OSM_SCRAPERS)) { if (c.day===d) { const bs=c.states||[]; const ab=bs.filter(s=>as.includes(s)); if (ab.length>0) r[n]={...c,activeStates:ab}; } } return r; }
 function getRegionSummary() { const c=loadRegionConfig(); if(!c) return null; const s={}; for (const [k,r] of Object.entries(c.regions)) { const st=r.states; let sc=0,mc=0; for (const v of Object.values(SCRAPERS)){if(st.includes(v.state))sc++;} for (const v of Object.values(MACARONI_SCRAPERS)){if(st.includes(v.state))mc++;} s[k]={name:r.name,active:r.active,phase:r.phase,states:st.length,scrapers:sc,macaroni:mc,total:sc+mc}; } return s; }
 
-module.exports = { SCRAPERS, MACARONI_SCRAPERS, OSM_SCRAPERS, getDayGroup, getScrapersForGroup, getMacaroniScrapersForGroup, getOSMScrapersForDay, getAllScraperNames, getAllMacaroniScraperNames, getGroupCounts, getMacaroniGroupCounts, getMacaroniSiteCounts, getActiveStates, getRegionForState, isScraperActive, getScrapersForGroupByRegion, getMacaroniScrapersForGroupByRegion, getOSMScrapersForDayByRegion, getRegionSummary, loadRegionConfig };
+module.exports = { SCRAPERS, MACARONI_SCRAPERS, getDayGroup, getScrapersForGroup, getMacaroniScrapersForGroup, getAllScraperNames, getAllMacaroniScraperNames, getGroupCounts, getMacaroniGroupCounts, getMacaroniSiteCounts, getActiveStates, getRegionForState, isScraperActive, getScrapersForGroupByRegion, getMacaroniScrapersForGroupByRegion, getRegionSummary, loadRegionConfig };

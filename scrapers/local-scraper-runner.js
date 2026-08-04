@@ -8,7 +8,6 @@
  *   node local-scraper-runner.js                    # Run today's group automatically
  *   node local-scraper-runner.js --group 1         # Run specific group (1, 2, or 3)
  *   node local-scraper-runner.js --scraper LibCal-MD  # Run specific scraper
- *   node local-scraper-runner.js --osm             # Run OSM scrapers for today
  *   node local-scraper-runner.js --all             # Run all scrapers (takes hours)
  *   node local-scraper-runner.js --resume          # Resume from last checkpoint
  *   node local-scraper-runner.js --dry-run         # Preview what would run
@@ -53,15 +52,13 @@ const { db, supabase, saveScraperLog } = require('./helpers/supabase-adapter');
 const {
   SCRAPERS,
   MACARONI_SCRAPERS,
-  OSM_SCRAPERS,
   getDayGroup,
   getScrapersForGroup,
   getMacaroniScrapersForGroup,
-  getOSMScrapersForDay,
   getGroupCounts,
   getMacaroniGroupCounts,
   getMacaroniSiteCounts,
-  getActiveStates, getScrapersForGroupByRegion, getMacaroniScrapersForGroupByRegion, getOSMScrapersForDayByRegion, getRegionSummary, loadRegionConfig
+  getActiveStates, getScrapersForGroupByRegion, getMacaroniScrapersForGroupByRegion, getRegionSummary, loadRegionConfig
 } = require('./scraper-registry');
 
 // ============================================================================
@@ -421,52 +418,8 @@ async function runMacaroniGroup(group, options = {}) {
     : { success: [], failed: [{ name: `MacaroniKid-Group${group}`, error: `exit code ${result.status}` }], skipped: [] };
 }
 
-async function runOSMScrapers(options = {}) {
-  const dayOfMonth = new Date().getDate();
-
-  if (dayOfMonth > 10) {
-    log(`ℹ️  OSM scrapers only run on days 1-10. Today is day ${dayOfMonth}.`);
-    return { success: [], failed: [], skipped: [] };
-  }
-
-  const scrapers = getOSMScrapersForDay(dayOfMonth);
-  const scraperNames = Object.keys(scrapers);
-
-  log(`\n${'='.repeat(60)}`);
-  log(`🗺️  Running OSM scrapers for day ${dayOfMonth} (${scraperNames.length} total)`);
-  log(`${'='.repeat(60)}\n`);
-
-  const results = {
-    success: [],
-    failed: [],
-    skipped: []
-  };
-
-  for (const name of scraperNames) {
-    const config = scrapers[name];
-
-    if (options.dryRun) {
-      log(`[DRY RUN] Would run: ${name} (${config.states.join(', ')})`);
-      continue;
-    }
-
-    const result = await runScraper(name, config);
-
-    if (result.success) {
-      results.success.push(result);
-    } else {
-      results.failed.push(result);
-    }
-
-    // Delay between scrapers
-    await new Promise(resolve => setTimeout(resolve, CONFIG.DELAY_BETWEEN_SCRAPERS));
-  }
-
-  return results;
-}
-
 async function runSingleScraper(scraperName, options = {}) {
-  const config = SCRAPERS[scraperName] || MACARONI_SCRAPERS[scraperName] || OSM_SCRAPERS[scraperName];
+  const config = SCRAPERS[scraperName] || MACARONI_SCRAPERS[scraperName];
 
   if (!config) {
     log(`❌ Scraper '${scraperName}' not found in registry`, 'error');
@@ -505,7 +458,6 @@ async function main() {
     scraper: null,
     region: null,
     regionFilter: null,
-    osm: false,
     macaroni: false,
     macaroniOnly: false,
     noMacaroni: false,
@@ -527,8 +479,6 @@ async function main() {
       console.log('FunHive Region Configuration - Active: ' + (as ? as.join(', ') : 'ALL'));
       for (const [k,i] of Object.entries(summary)) console.log('  ' + (i.active?'ACTIVE':'INACTIVE') + ' ' + k.toUpperCase() + ' - ' + i.name + ' (' + i.total + ' scrapers)');
       process.exit(0);
-    } else if (arg === '--osm') {
-      options.osm = true;
     } else if (arg === '--macaroni') {
       options.macaroniOnly = true;
     } else if (arg === '--no-macaroni') {
@@ -551,7 +501,6 @@ Usage:
   node local-scraper-runner.js --scraper LibCal-MD # Run specific scraper
   node local-scraper-runner.js --macaroni          # Run only Macaroni Kid for today's group
   node local-scraper-runner.js --no-macaroni       # Run today's group WITHOUT Macaroni Kid
-  node local-scraper-runner.js --osm               # Run OSM scrapers for today
   node local-scraper-runner.js --all               # Run ALL scrapers (slow!)
   node local-scraper-runner.js --resume            # Resume from last checkpoint
   node local-scraper-runner.js --dry-run           # Preview without running
@@ -589,10 +538,6 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
     if (options.scraper) {
       // Run single scraper
       results = await runSingleScraper(options.scraper, options);
-
-    } else if (options.osm) {
-      // Run OSM scrapers
-      results = await runOSMScrapers(options);
 
     } else if (options.macaroniOnly) {
       // Run only Macaroni Kid scrapers for today's group
