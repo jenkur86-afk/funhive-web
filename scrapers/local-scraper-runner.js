@@ -18,6 +18,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { spawnSync } = require('child_process');
 
 // ─── Defensive firebase-admin shim resolution ───
 // The shim lives at scrapers/node_modules/firebase-admin/. Node only finds it
@@ -395,19 +396,48 @@ async function runScraperGroup(group, options = {}) {
   return results;
 }
 
-// NOTE: MacaroniKid scrapers have been separated into their own runners
-// See macaroni-runner-group1.js, macaroni-runner-group2.js, macaroni-runner-group3.js
-// These runners should be invoked separately on their own schedule
-// This avoids memory and timing issues when running alongside other scrapers
-//
-// Usage for MacaroniKid runners:
-//   node macaroni-runner-group1.js   # Days 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31
-//   node macaroni-runner-group2.js   # Days 2, 5, 8, 11, 14, 17, 20, 23, 26, 29
-//   node macaroni-runner-group3.js   # Days 3, 6, 9, 12, 15, 18, 21, 24, 27, 30
+// MacaroniKid scrapers were separated into their own standalone runners
+// (macaroni-runner-group1.js, macaroni-runner-group2.js, macaroni-runner-group3.js)
+// to avoid memory and timing issues when running alongside other scrapers.
+// This function spawns the correct group's runner as a child process rather
+// than requiring it in-process — each file calls process.exit() unconditionally
+// at the end of its main(), which would kill this parent process if imported
+// directly. stdio is inherited so the child's output flows into whatever this
+// process's own stdout/stderr are already redirected to (run-scrapers.bat
+// sends both to logs/scraper-stdout.log and logs/scraper-stderr.log).
 async function runMacaroniGroup(group, options = {}) {
-  log(`ℹ️  MacaroniKid scrapers have been moved to separate runners.`);
-  log(`   Use: node macaroni-runner-group${group}.js`);
-  return { success: [], failed: [], skipped: [] };
+  const scriptPath = path.join(__dirname, `macaroni-runner-group${group}.js`);
+
+  if (options.dryRun) {
+    log(`[DRY RUN] Would run: macaroni-runner-group${group}.js`);
+    return { success: [], failed: [], skipped: [] };
+  }
+
+  if (!fs.existsSync(scriptPath)) {
+    log(`❌ MacaroniKid runner not found: ${scriptPath}`, 'error');
+    return { success: [], failed: [{ name: `MacaroniKid-Group${group}`, error: 'runner script not found' }], skipped: [] };
+  }
+
+  log(`\n${'='.repeat(60)}`);
+  log(`🍝 Running MacaroniKid scrapers for Group ${group} (macaroni-runner-group${group}.js)`);
+  log(`${'='.repeat(60)}\n`);
+
+  const result = spawnSync(process.execPath, [scriptPath], {
+    cwd: __dirname,
+    stdio: 'inherit',
+  });
+
+  if (result.error) {
+    log(`❌ Failed to launch macaroni-runner-group${group}.js: ${result.error.message}`, 'error');
+    return { success: [], failed: [{ name: `MacaroniKid-Group${group}`, error: result.error.message }], skipped: [] };
+  }
+
+  const ok = result.status === 0;
+  log(`${ok ? '✅' : '❌'} macaroni-runner-group${group}.js finished with exit code ${result.status}`);
+
+  return ok
+    ? { success: [{ name: `MacaroniKid-Group${group}` }], failed: [], skipped: [] }
+    : { success: [], failed: [{ name: `MacaroniKid-Group${group}`, error: `exit code ${result.status}` }], skipped: [] };
 }
 
 async function runOSMScrapers(options = {}) {
