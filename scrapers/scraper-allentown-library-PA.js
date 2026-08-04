@@ -141,81 +141,103 @@ async function scrapePage(page, pageNum) {
     const events = await page.evaluate(() => {
       const results = [];
 
-      // WordPress Events Manager selectors - try multiple patterns.
-      // The calendar page is a month-grid table (<td> per day), so a lone
-      // <article>/.entry page wrapper can match first with length 1 and win
-      // outright, extracting the page's own H1 ("Library Events") and the
-      // first stray date in the grid instead of real events. Prefer whichever
-      // selector actually yields multiple elements; only fall back to a
-      // single-element match if nothing better is found.
+      // Site now renders a WP Events Manager *calendar grid* (em-cal-* classes),
+      // not the old list/archive markup this scraper originally targeted.
+      // Each event is a `.em-cal-event` pill with a `data-event-url`; the exact
+      // date lives on the enclosing day cell's `.em-cal-day-date[data-date]`
+      // (ISO yyyy-mm-dd) rather than in any visible text - the grid only shows
+      // a bare day-of-month number, so a text-based date regex always came up
+      // empty and every event was silently dropped.
+      const calEvents = document.querySelectorAll('.em-cal-event');
+
+      calEvents.forEach(el => {
+        try {
+          const linkEl = el.querySelector('a');
+          const title = linkEl ? linkEl.textContent.trim() : '';
+          if (!title || title.length < 3) return;
+
+          const eventUrl = el.getAttribute('data-event-url') || (linkEl ? linkEl.href : '');
+
+          const dayCell = el.closest('[class*="em-cal-day"]');
+          const dateEl = dayCell ? dayCell.querySelector('.em-cal-day-date[data-date]') : null;
+          const isoDate = dateEl ? dateEl.getAttribute('data-date') : '';
+          let eventDate = '';
+          if (isoDate) {
+            const [y, m, d] = isoDate.split('-');
+            if (y && m && d) eventDate = `${m}/${d}/${y}`;
+          }
+
+          const timeMatch = el.textContent.match(/\d{1,2}:\d{2}\s*(?:AM|PM)(?:\s*-\s*\d{1,2}:\d{2}\s*(?:AM|PM))?/i);
+          const eventTime = timeMatch ? timeMatch[0] : '';
+
+          if (title && eventDate) {
+            results.push({
+              title,
+              url: eventUrl,
+              date: eventDate,
+              time: eventTime,
+              location: '',
+              description: title
+            });
+          }
+        } catch (err) {
+          console.error('Error parsing calendar event:', err);
+        }
+      });
+
+      if (results.length > 0) return results;
+
+      // Fallback for the old list/archive markup, in case the site reverts.
       const selectors = [
-        'td',
         'article',
         '.event-item',
         '.wp-block-post',
-        '[class*="event"]',
         '.entry'
       ];
 
       let eventElements = [];
-      let singleFallback = [];
       for (const selector of selectors) {
         const found = document.querySelectorAll(selector);
         if (found.length > 1) {
           eventElements = found;
           break;
         }
-        if (found.length === 1 && singleFallback.length === 0) {
-          singleFallback = found;
-        }
-      }
-      if (eventElements.length === 0) {
-        eventElements = singleFallback;
       }
 
       eventElements.forEach(el => {
         try {
-          // Find title
           const titleEl = el.querySelector('h1, h2, h3, h4, .entry-title, .event-title, a');
           if (!titleEl) return;
 
           const title = titleEl.textContent.trim();
           if (!title || title.length < 3) return;
 
-          // Find event URL - permalinks live under /library-calendar/, not /events/
           const linkEl = el.querySelector('a[href*="/library-calendar/"], a[href*="/events/"]');
           const eventUrl = linkEl ? linkEl.href : '';
 
-          // Get all text content
           const fullText = el.textContent;
 
-          // Extract date/time - MM/DD/YYYY HH:MM am/pm format
           let eventDate = '';
           let eventTime = '';
 
-          // Look for date patterns
           const dateMatch = fullText.match(/\d{1,2}\/\d{1,2}\/\d{4}/);
           if (dateMatch) {
             eventDate = dateMatch[0];
           }
 
-          // Look for time patterns
           const timeMatch = fullText.match(/\d{1,2}:\d{2}\s*(?:am|pm)(?:\s*-\s*\d{1,2}:\d{2}\s*(?:am|pm))?/i);
           if (timeMatch) {
             eventTime = timeMatch[0];
           }
 
-          // Extract description
           let description = '';
           const descEl = el.querySelector('p, .entry-content, .event-description, .excerpt');
           if (descEl) {
             description = descEl.textContent.trim();
           } else {
-            // Use full text as fallback, truncated
             description = fullText.substring(0, 300);
           }
 
-          // Extract location if available
           let location = '';
           const locationMatch = fullText.match(/(?:Location|Where|Venue):\s*([^\n]+)/i);
           if (locationMatch) {
@@ -385,6 +407,11 @@ async function scrapeAllentownLibrary() {
 
     // Scrape additional pages (up to 30 pages to avoid overload)
     const maxPages = 30;
+    // The calendar-grid widget's /page/N/ URLs don't advance the month like the
+    // old list-archive pagination did - past a certain page they all re-render
+    // the same default view. Break on a repeated page instead of looping to
+    // maxPages every run.
+    let previousPageKey = firstPageEvents.map(e => e.url).sort().join('|');
     for (let pageNum = 2; pageNum <= maxPages; pageNum++) {
       const events = await scrapePage(page, pageNum);
 
@@ -392,6 +419,13 @@ async function scrapeAllentownLibrary() {
         console.log(`   No more events found at page ${pageNum}. Stopping.`);
         break;
       }
+
+      const pageKey = events.map(e => e.url).sort().join('|');
+      if (pageKey === previousPageKey) {
+        console.log(`   Page ${pageNum} repeats the previous page's events. Stopping.`);
+        break;
+      }
+      previousPageKey = pageKey;
 
       console.log(`   Page ${pageNum}: Found ${events.length} events`);
 
