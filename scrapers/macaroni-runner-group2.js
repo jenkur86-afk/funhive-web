@@ -51,6 +51,11 @@ process.on('uncaughtException', (err) => {
 // Initialize Supabase
 const { saveScraperLog } = require('./helpers/supabase-adapter');
 
+// Shared with local-scraper-runner.js so per-state rows land in the same
+// scrapers/logs/scraper-summary.log table instead of only this runner's own
+// logs/macaroni-group{N}-<date>.log file.
+const { SUMMARY_TABLE_HEADER, SUMMARY_TABLE_DIVIDER, logSummary, formatSummaryRow } = require('./helpers/scraper-summary-logger');
+
 // Import scraper registry
 const {
   MACARONI_SCRAPERS,
@@ -166,6 +171,7 @@ async function runScraper(name, config) {
     };
 
     log(`✅ ${stateName} completed in ${durationMinutes}m - Found: ${stats.found}, New: ${stats.new}, Duplicates: ${stats.duplicates}`);
+    logSummary(formatSummaryRow({ success: true, name, stats, duration: parseFloat(duration) }));
 
     // Log to Supabase
     await logToSupabase(name, 'success', stats, null, parseFloat(duration));
@@ -176,6 +182,7 @@ async function runScraper(name, config) {
     const duration = ((Date.now() - startTime) / 1000).toFixed(1);
     const durationMinutes = (duration / 60).toFixed(1);
     log(`❌ ${stateName} failed after ${durationMinutes}m: ${error.message}`, 'error');
+    logSummary(formatSummaryRow({ success: false, name, error: error.message, duration: parseFloat(duration) }));
 
     // Log to Supabase
     await logToSupabase(name, 'failed', {}, error.message, parseFloat(duration));
@@ -283,6 +290,17 @@ Group 2 States: ${Object.values(MACARONI_SCRAPERS)
   log(`📋 Running ${scraperNames.length} state(s) - ~${siteCounts[CONFIG.GROUP]} total sites`);
   log(`${'='.repeat(70)}\n`);
 
+  // Header for scraper-summary.log. When this runner is spawned as a child of
+  // local-scraper-runner.js's nightly run, the parent already wrote a table
+  // header for the whole night — this adds a second one so the MacaroniKid
+  // section is still clearly labeled, and so standalone invocations (e.g.
+  // `node macaroni-runner-group2.js --state MD`) get a labeled table too.
+  logSummary(SUMMARY_TABLE_DIVIDER);
+  logSummary(`🍝 MacaroniKid Group ${CONFIG.GROUP} — ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })} EST`);
+  logSummary(SUMMARY_TABLE_DIVIDER);
+  logSummary(SUMMARY_TABLE_HEADER);
+  logSummary(SUMMARY_TABLE_DIVIDER);
+
   const results = {
     success: [],
     failed: [],
@@ -344,6 +362,8 @@ Group 2 States: ${Object.values(MACARONI_SCRAPERS)
   }
 
   log(`\n${'='.repeat(70)}\n`);
+  logSummary(SUMMARY_TABLE_DIVIDER);
+  logSummary(`✅ ${results.success.length} succeeded  ❌ ${results.failed.length} failed  ⏱️ ${totalDuration} min total (MacaroniKid Group ${CONFIG.GROUP})`);
 
   // Exit with error code if any failed
   process.exit(results.failed.length > 0 ? 1 : 0);

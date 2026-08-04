@@ -104,40 +104,21 @@ function log(message, level = 'info') {
   }
 }
 
-// Write only to the summary log — never called for per-event scraper output,
-// only for run headers, per-scraper completion/failure lines, and the final table.
-function logSummary(message) {
-  try {
-    const ts = new Date().toISOString();
-    fs.appendFileSync(CONFIG.SUMMARY_FILE, `[${ts}] ${message}\n`);
-  } catch (err) {
-    // Ignore
-  }
-}
-
-// Fixed-width columns shared by EVERY per-scraper line written to scraper-summary.log —
-// both the live line logged the moment each scraper finishes, and the recap table at the
-// end of a run. Previously the live line only appended "InvalidDate: N" when N > 0, so a
-// scraper with 0 invalid-date skips looked indistinguishable from one that was never
-// measured at all (this is why `Get-Content scraper-summary.log -Tail 80` looked like it
-// was missing Dupes/Invalid data for most scrapers — the field was silently omitted, not
-// broken). Every row now always shows Dupes and Invalid, and the live line uses the exact
-// same column layout as the recap table so the two never drift out of sync again.
-const SUMMARY_COL_WIDTH = 34;
-const SUMMARY_TABLE_HEADER = `${'SCRAPER'.padEnd(SUMMARY_COL_WIDTH)} ${'FOUND'.padStart(6)} ${'NEW'.padStart(6)} ${'DUPES'.padStart(6)} ${'INVALID'.padStart(7)} ${'TIME(s)'.padStart(8)}`;
-const SUMMARY_TABLE_DIVIDER = '-'.repeat(SUMMARY_TABLE_HEADER.length);
-
-function formatSummaryRow(r) {
-  if (!r.success) {
-    const name = ('❌ ' + r.name).padEnd(SUMMARY_COL_WIDTH);
-    const time = typeof r.duration === 'number' ? `  (${r.duration.toFixed(1)}s)` : '';
-    return `${name} FAILED — ${(r.error || 'unknown error').slice(0, 40)}${time}`;
-  }
-  const found = r.stats?.found ?? 0;
-  const prefix = found === 0 ? '⚠️  ' : '   ';
-  const name = (prefix + r.name).padEnd(SUMMARY_COL_WIDTH);
-  return `${name} ${String(found).padStart(6)} ${String(r.stats?.new ?? 0).padStart(6)} ${String(r.stats?.duplicates ?? 0).padStart(6)} ${String(r.stats?.invalidDate ?? 0).padStart(7)} ${String(r.duration?.toFixed(1) ?? '?').padStart(8)}`;
-}
+// logSummary/formatSummaryRow/table constants live in helpers/scraper-summary-logger.js
+// so macaroni-runner-group{1,2,3}.js (separate child processes, not routed through this
+// file's runScraper()) can write rows into the exact same scraper-summary.log table
+// instead of only their own logs/macaroni-group{N}-<date>.log file. Previously the live
+// line only appended "InvalidDate: N" when N > 0, so a scraper with 0 invalid-date skips
+// looked indistinguishable from one that was never measured at all (this is why
+// `Get-Content scraper-summary.log -Tail 80` looked like it was missing Dupes/Invalid data
+// for most scrapers — the field was silently omitted, not broken). Every row now always
+// shows Dupes and Invalid.
+const {
+  SUMMARY_TABLE_HEADER,
+  SUMMARY_TABLE_DIVIDER,
+  logSummary,
+  formatSummaryRow,
+} = require('./helpers/scraper-summary-logger');
 
 // ============================================================================
 // CHECKPOINT MANAGEMENT
