@@ -129,3 +129,55 @@ live before saving. Never save an unverified domain.
       Wayne County Public Library, Fremont
   Wilson County Public Library
       Black Creek Branch Library, East Branch Library
+
+---
+
+## Branch-level verification of Group A (2026-08-05)
+
+Queried the `events` table (NC only, columns `venue, scraper_name, city`, paginated with
+`.order('id')` before `.range()`). 6,273 NC rows, of which **824** come from library scrapers
+across 19 distinct `scraper_name` values.
+
+**Headline: branch-level verification is largely INCONCLUSIVE, and that is itself the finding.**
+Platform scrapers record `venue` as a *room* ("Rourk Meeting Room (rear half)", "Children's
+Room", "STEAM Lab") or as the bare system name, not as the branch. Gaston County Public Library
+has 10 rows whose venue is literally "Branch Library". So a branch not appearing by name is not
+evidence it is uncovered.
+
+Two matching passes were run. The first matched each branch against all NC venues and produced
+false positives — "Cary Branch Library" matched "Cary Night Market VI" (FestivalGuides),
+"Graham Public Library" matched "John Graham Gym" (a park in Warrenton), "Alamance County Public
+Library" matched "Barnes & Noble Alamance Crossing". Those are not coverage. The second pass
+restricted candidates to each system's own library scraper first.
+
+### Branch-level confirmed (4)
+| Branch | Matched venue | Via |
+|---|---|---|
+| Bragtown Branch Library | "Bragtown Branch Library (3200 Dearborn Dr)" | Durham County Library |
+| Leland Branch Library | "Leland Meeting Room" | Brunswick County Public Library |
+| Brunswick County Library | "Brunswick County Public Library" | Brunswick County Public Library |
+| Union County Public Library | "Union West Meeting Room" | Union County Public Library |
+
+### Systems with NO library-scraper output at all — "covered elsewhere" is FALSE
+These produce zero library events in the database. The 6 entries below must move to **Group B**
+and get a real URL; deleting them as redundant would have silently dropped the library entirely.
+
+| System | Entries affected | What the DB actually shows |
+|---|---|---|
+| Cleveland County Library System | Cleveland County Memorial Library | 0 rows |
+| Craven-Pamlico Regional Library | Havelock-Craven County Public, Craven-Pamlico-Carteret Regional Library | 0 rows |
+| Madison County Public Library | Madison County Public Library | 0 rows |
+| Greensboro Public Library | Blanche Benjamin Branch Library | only BarnesNoble-Eastern rows |
+| Wake County Public Libraries | Cary Branch Library | only Macaroni Kid Wake Forest rows |
+
+### Systems with real library output — system-level coverage proven (18 entries)
+Alamance (33 rows), Brunswick (12), Charlotte Mecklenburg (31), Cumberland (25), Durham (15),
+Gaston (10), Henderson (6), Iredell (6), New Hanover (20), Rowan (23), Union (14).
+
+Deleting these 18 rests on system-level evidence plus the assumption that a system calendar
+covers its branches. That assumption is now *better supported* — we know each system's scraper
+really does emit events — but it was not directly provable, because the DB does not record
+branch granularity. Decision deferred to the owner.
+
+**Revised Group A/B split: 18 deletable (pending decision), 6 reclassified to Group B.**
+Group B therefore grows from 55 to 61 entries.
