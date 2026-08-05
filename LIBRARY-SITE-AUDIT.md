@@ -730,3 +730,962 @@ Not complete — this is day 1 of 3. Only Group 3 (partial/aggregate-only, see g
 - Howard-County, Brooklyn-Library, Cecil-County, Somerset-County, Berks-County, Rockbridge-Regional, EventActions-Libraries, CustomDrupal-Libraries, Graniculator-Morris, Louisville-Library, Tockify-Horry
 
 (This pending list was compiled from the literal Group 2 dry-run scraper list printed in `scraper-run-2026-08-04.log` at 13:38 UTC, cross-referenced against `scraper-registry.js` for library-matching names. It has not been independently verified against `isScraperActive()` output for every entry, so treat it as a best-effort punch list rather than an exhaustive audit.)
+
+## 2026-08-05
+
+Day 2 of the 3-day rotation. Group 2 ran today (2026-08-05 03:00 EST start), covering the 33 library-family/standalone scrapers listed as pending at the end of the 2026-08-04 section, minus two non-library entries (`Graniculator-Morris`, `Tockify-Horry`) that another process handles. Per-library counts below are paired from `scrapers/logs/scraper-stdout.log`, bounded by each scraper's start/end timestamp; WordPress-state rows are paired against each scraper's `LIBRARIES` config array by scrape order (both arrays' lengths were confirmed to match exactly before pairing, so there is no off-by-one risk).
+
+**Notes on individual entries:**
+- **LibCal-TN / LibCal-WV / LibCal-VT** each had one library (Knox County Public Library TN, Martinsburg-Berkeley County Public Libraries WV, Kellogg-Hubbard Library VT) that errored out before printing a per-library `Found` count; each state's run summary shows exactly 1 error, consistent with one silent failure per state. Flagged inline rather than guessed at.
+- **Communico-NJ / Communico-SC**: several libraries fall back through API → Puppeteer → link-based extraction when the primary method fails (visible in the raw log); the counts below are each library's final successful count after fallback, not the first attempt. Two SC systems (Greenville, Richland) and one NJ system (Montclair) came up empty after every fallback.
+- **Rockbridge-Regional**: logged as a single row per the standing convention — it's one library system (Rockbridge Regional Library) scraping 6 *branch* calendars, not 6 distinct systems. The 117 events found is the deduplicated total across all 6 branches.
+- **CustomDrupal-Libraries**: the scraper file's own header comment says "5 libraries across 4 states (GA, NC, SC, WV)," but the actual `LIBRARIES` config array and today's run (`📍 7 sites tracked` in the summary) cover **7** distinct systems across GA/NC/SC/WV — Richland, Greenville County, Anderson County, and Florence County (all SC), plus Rowan County (NC), Cobb County (GA), and Kanawha County (WV). All 7 are broken out below individually; the header comment is stale and worth fixing separately.
+- **WordPress-FL**: the scraper's `LIBRARIES` array actually holds 65 entries, not the ~60 suggested by a quick scan — 5 major systems (Miami-Dade, Orange County, Tampa-Hillsborough, Broward, Palm Beach) are defined with only `name`/`url`/`eventsUrl` and no `city`/`state`/`county` (the `county` field for all 5 is even hardcoded to `'Baltimore City'`, an apparent copy-paste artifact from an MD file). That's why the raw log shows `(undefined, undefined)` for those 5 — a real scraper bug worth a follow-up, left as-is here since this pass is data collection, not a fix.
+
+| Library Website | State | Scraper | Events Found | Link |
+|---|---|---|---|---|
+| Bridgeport Public Library | CT | LibCal-CT | 10 | [Link](https://bportlibrary.libcal.com) |
+| New Haven Free Public Library | CT | LibCal-CT | 20 | [Link](https://nhfpl.libcal.com/calendar?cid=-1&t=d) |
+| Stratford Library | CT | LibCal-CT | 20 | [Link](https://stratfordlibrary.libcal.com/calendar/events?cid=-1&t=d) |
+| Hartford Public Library | CT | LibCal-CT | 0 | [Link](https://hplct.libcal.com/calendar?cid=-1&t=d) |
+| East Hartford Public Library | CT | LibCal-CT | 20 | [Link](https://easthartfordct.libcal.com/calendar?cid=-1&t=d) |
+| Greenwich Library | CT | LibCal-CT | 48 | [Link](https://greenwichlibrary.libcal.com/calendar/events) |
+| Silas Bronson Library | CT | LibCal-CT | 0 | [Link](https://bronsonlibrary.libcal.com/) |
+| Hamden Public Library | CT | LibCal-CT | 48 | [Link](https://hamdenlibrary.libcal.com/calendar/programs/) |
+| Athens-Clarke County Library | GA | LibCal-GA | 5 | [Link](https://athenslibrary.libcal.com/) |
+| Hall County Library System | GA | LibCal-GA | 10 | [Link](https://hallcountylibrary.libcal.com/) |
+| Cambridge Public Library | MA | LibCal-MA | 10 | [Link](https://cambridgepl.libcal.com) |
+| Newton Free Library | MA | LibCal-MA | 20 | [Link](https://newtonfreelibrary.libcal.com/calendar?cid=-1&t=d) |
+| Brookline Public Library | MA | LibCal-MA | 20 | [Link](https://brooklinelibrary.libcal.com/calendar?cid=-1&t=d) |
+| Buffalo & Erie County Public Library | NY | LibCal-NY1 | 20 | [Link](https://buffalolib.libcal.com/calendar/events?cid=-1&t=d) |
+| Monroe County Library System | NY | LibCal-NY1 | 20 | [Link](https://calendar.libraryweb.org/calendar) |
+| Onondaga County Public Libraries | NY | LibCal-NY1 | 20 | [Link](https://onlib-central.libcal.com/calendar?cid=-1&t=d) |
+| Northern Onondaga Public Libraries | NY | LibCal-NY1 | 10 | [Link](https://onlib-nopl.libcal.com/) |
+| Westchester Library System | NY | LibCal-NY1 | 20 | [Link](https://westchesterlibraries.libcal.com/calendar?cid=-1&t=d) |
+| Suffolk Cooperative Library System | NY | LibCal-NY1 | 8 | [Link](https://suffolk.libcal.com/calendar?cid=-1&t=d) |
+| Albany Public Library | NY | LibCal-NY1 | 24 | [Link](https://albany.librarycalendar.com/) |
+| Great Neck Library | NY | LibCal-NY1 | 20 | [Link](https://greatnecklibrary.libcal.com/calendar?cid=-1&t=d) |
+| Hicksville Public Library | NY | LibCal-NY1 | 20 | [Link](https://hicksvillelibrary.libcal.com/calendar?cid=-1&t=d) |
+| Long Beach Public Library | NY | LibCal-NY1 | 41 | [Link](https://longbeachpl.librarycalendar.com/) |
+| Garden City Public Library | NY | LibCal-NY1 | 10 | [Link](https://gardencitypl.libcal.com/) |
+| Montgomery County-Norristown Public Library | PA | LibCal-PA | 20 | [Link](https://mnl.libcal.com/calendar?cid=-1&t=d) |
+| Erie County Public Library | PA | LibCal-PA | 10 | [Link](https://events.erielibrary.org/) |
+| Chester County Library System | PA | LibCal-PA | 20 | [Link](https://ccls.libcal.com/calendar/ChesterCountyLibrary?cid=-1&t=d) |
+| Delaware County Library System | PA | LibCal-PA | 20 | [Link](https://delcolibraries.libcal.com/calendar?cid=-1&t=d) |
+| Bucks County Free Library | PA | LibCal-PA | 25 | [Link](https://calendar.buckslib.org/) |
+| Dauphin County Library System | PA | LibCal-PA | 10 | [Link](https://dcls.libcal.com/) |
+| Easton Area Public Library | PA | LibCal-PA | 48 | [Link](https://eastonpl.libcal.com/calendar) |
+| Clarksville-Montgomery County Public Library | TN | LibCal-TN | 48 | [Link](https://mcgtn.libcal.com/calendar?cid=14859) |
+| Memphis Public Libraries | TN | LibCal-TN | 0 | [Link](https://memphislibrary.libcal.com/calendar?cid=-1&t=d) |
+| Knox County Public Library | TN | LibCal-TN | error *(scraper errored before printing a Found count — run summary shows 1 error for this state; no per-library number recoverable)* | [Link](https://knoxlib.libcal.com/calendar?cid=-1&t=d) |
+| Morgantown Public Library | WV | LibCal-WV | 10 | [Link](https://mympls.libcal.com/) |
+| Martinsburg-Berkeley County Public Libraries | WV | LibCal-WV | error *(scraper errored before printing a Found count — run summary shows 1 error for this state; no per-library number recoverable)* | [Link](https://bcpls.libcal.com/calendar?cid=-1&t=d&d=0000-00-00) |
+| Fletcher Free Library | VT | LibCal-VT | 20 | [Link](https://fletcherfree.libcal.com/calendar?cid=-1&t=d&d=0000-00-00) |
+| Kellogg-Hubbard Library | VT | LibCal-VT | error *(scraper errored before printing a Found count — run summary shows 1 error for this state; no per-library number recoverable)* | [Link](https://kellogghubbard.libcal.com/calendar?cid=-1&t=d&d=0000-00-00) |
+| Clayton County Library System | GA | Communico-GA | 12 | [Link](https://claytonpl.libnet.info/events) |
+| Gwinnett County Public Library | GA | Communico-GA | 19 | [Link](https://gwinnettpl.libnet.info/events) |
+| DeKalb County Public Library | GA | Communico-GA | 13 | [Link](https://events.dekalblibrary.org/events) |
+| Chattahoochee Valley Libraries | GA | Communico-GA | 11 | [Link](https://cvl.libnet.info/events) |
+| Forsyth County Public Library | GA | Communico-GA | 7 | [Link](https://events.forsythpl.org/events) |
+| Henry County Library System | GA | Communico-GA | 15 | [Link](https://henrylibraries.libnet.info/events) |
+| Ocean County Library | NJ | Communico-NJ | 58 | [Link](https://theoceancountylibrary.libnet.info/ocean-county-library/events) |
+| Somerset County Library System | NJ | Communico-NJ | 25 | [Link](https://sclsnj.libnet.info/events) |
+| Middlesex County Library | NJ | Communico-NJ | 19 | [Link](https://middlesex.libnet.info/events) |
+| Camden County Library System | NJ | Communico-NJ | 11 *(API 404'd, Puppeteer scrape also came up empty; recovered via link-based fallback extraction)* | [Link](https://events.camdencountylibrary.org/) |
+| Montclair Public Library | NJ | Communico-NJ | 0 *(all three extraction methods — API, Puppeteer, link-based fallback — came up empty)* | [Link](https://montclairlibrary.libnet.info/events) |
+| Warren County Library | NJ | Communico-NJ | 6 | [Link](https://warrenlib.libnet.info/events) |
+| Cape May County Library | NJ | Communico-NJ | 15 | [Link](https://events.cmclibrary.org/events) |
+| Hoboken Public Library | NJ | Communico-NJ | 8 | [Link](https://hobokenlibrary.libnet.info/events) |
+| Fulton County Library System | GA | BiblioCommons-GA | 495 | [Link](https://fulcolibrary.bibliocommons.com/v2/events) |
+| Charlotte Mecklenburg Library | NC | BiblioCommons-NC | 497 | [Link](https://cmlibrary.bibliocommons.com/v2/events) |
+| Howard County Library System | MD | Howard-County | 120 | [Link](https://howardcounty.librarycalendar.com/events) |
+| Pikes Peak Library District | CO | LibraryMarket | 120 *(across 5 pages)* | [Link](https://ppld.librarymarket.com/events/upcoming) |
+| Lee County Library System | FL | LibraryMarket | 119 *(across 5 pages)* | [Link](https://leelibrary.librarymarket.com/events/upcoming) |
+| Sarasota County Libraries | FL | LibraryMarket | 120 *(across 5 pages)* | [Link](https://scgovlibrary.librarymarket.com/events/upcoming) |
+| Allegany County Library System | MD | LibraryMarket | 120 *(across 5 pages)* | [Link](https://allegany.librarymarket.com/events/upcoming) |
+| Carroll County Public Library | MD | LibraryMarket | 2250 *(across 5 pages)* | [Link](https://ccpl.librarymarket.com/events/month) |
+| Washington County Free Library | MD | LibraryMarket | 120 *(across 5 pages)* | [Link](https://wcfl.librarymarket.com/events/upcoming) |
+| Rochester Public Library | NY | LibraryMarket | 115 *(across 5 pages)* | [Link](https://rochesterpubliclibrary.librarymarket.com/events/upcoming) |
+| Dallas Public Library | TX | LibraryMarket | 120 *(across 5 pages; TX is outside FunHive's 22-state active region, included here because it's part of this shared scraper's real output, not a fabrication)* | [Link](https://dallaslibrary.librarymarket.com/events/upcoming) |
+| Virginia Beach Public Library | VA | LibraryMarket | 120 *(across 5 pages)* | [Link](https://vbpl.librarymarket.com/events/upcoming) |
+| Brooklyn Public Library | NY | Brooklyn-Library | 20 | [Link](https://www.bklynlibrary.org/calendar/list) |
+| Cecil County Public Library | MD | Cecil-County | 24 | [Link](https://www.cecilcountylibrary.org/events) |
+| Somerset County Library | MD | Somerset-County | 355 *(aggregated across adult/child/teen program pages via Google Calendar API capture; single system despite the multi-page scrape)* | [Link](https://www.somelibrary.org/adultprograms.php) |
+| Berks County Public Libraries | PA | Berks-County | 146 | [Link](https://www.berkslibraries.org) |
+| Rockbridge Regional Library | VA | Rockbridge-Regional | 117 *(single system; 117 unique events aggregated across its 6 branch ICS calendars — Lexington 32, Buena Vista 9, Glasgow 12, Goshen 5, Bath County 21, Bookmobile 38 — not 6 distinct library systems)* | [Link](https://www.rrlib.net/lexington-ics-calendar/) |
+| Jefferson-Madison Regional Library | VA | EventActions-Libraries | 500 *(from Trumba API)* | [Link](https://www.trumba.com/calendars/jefferson-madison-regional-library-events.json) |
+| Richland Library | SC | CustomDrupal-Libraries | 30 | [Link](https://www.richlandlibrary.com/events) |
+| Greenville County Library System | SC | CustomDrupal-Libraries | 10 | [Link](https://www.greenvillelibrary.org/events) |
+| Anderson County Library System | SC | CustomDrupal-Libraries | 74 | [Link](https://www.andersonlibrary.org/events/month) |
+| Florence County Library System | SC | CustomDrupal-Libraries | 49 | [Link](https://www.florencelibrary.org/events) |
+| Rowan County Public Library | NC | CustomDrupal-Libraries | 24 | [Link](https://www.rowancountylibrary.org/events/upcoming) |
+| Cobb County Public Library System | GA | CustomDrupal-Libraries | 10 | [Link](https://www.cobbcounty.gov/events?department=85) |
+| Kanawha County Public Library | WV | CustomDrupal-Libraries | 184 | [Link](https://www.kcpls.org/events/upcoming) |
+| Louisville Free Public Library | KY | Louisville-Library | 144 | [Link](https://www.lfpl.org/events) |
+| Lexington Public Library | KY | Communico-KY | 12 | [Link](https://lexpublib.libnet.info/events) |
+| Muhlenberg County Public Libraries | KY | Communico-KY | 2 | [Link](https://mcplib.libnet.info/events) |
+| Anderson Public Library | KY | Communico-KY | 1 | [Link](https://aplkentucky.libnet.info/events) |
+| Pike County Public Library | KY | Communico-KY | 2 | [Link](https://informationplace.libnet.info/events) |
+| Greenville County Library System | SC | Communico-SC | 0 *(API, Puppeteer, and link-based fallback all came up empty)* | [Link](https://greenville.libnet.info/events) |
+| Richland Library | SC | Communico-SC | 0 *(API, Puppeteer, and link-based fallback all came up empty)* | [Link](https://richland.libnet.info/events) |
+| Pickens County Library | SC | Communico-SC | 3 | [Link](https://pickenscountylibrarysystem.libnet.info/events) |
+| Hoover Public Library | AL | Communico-AL | 2 | [Link](https://hoover.libnet.info/events) |
+| Trussville Public Library | AL | Communico-AL | 1 | [Link](https://jclctrussville.libnet.info/events) |
+| Homewood Public Library | AL | Communico-AL | 2 | [Link](https://homewood.libnet.info/events) |
+| Portland Public Library | ME | LibraryMarket-ME-NH-MA | 23 | [Link](https://portlandme.librarycalendar.com/events/upcoming) |
+| Auburn Public Library | ME | LibraryMarket-ME-NH-MA | 24 | [Link](https://www.auburnpubliclibrary.org/events/upcoming) |
+| Rochester Public Library | NH | LibraryMarket-ME-NH-MA | 29 | [Link](https://rochesterpubliclibrary.librarymarket.com/events/upcoming) |
+| Springfield City Library | MA | LibraryMarket-ME-NH-MA | 33 | [Link](https://springfield.librarycalendar.com/events/upcoming) |
+| West Hartford Library | CT | LibraryMarket-ME-NH-MA | 34 | [Link](https://westhartford.librarymarket.com/events/upcoming) |
+| Augusta-Richmond County Library | GA | LibraryMarket-GA | 22 | [Link](https://arcpls.librarycalendar.com/events/upcoming) |
+| Charles County Public Library | MD | WordPress-MD | 0 | [Link](https://www.ccplonline.org/events) |
+| St. Mary's County Library | MD | WordPress-MD | 0 | [Link](https://www.stmalib.org/events) |
+| Washington County Free Library | MD | WordPress-MD | 1 | [Link](https://www.washcolibrary.org/events) |
+| Wicomico Public Libraries | MD | WordPress-MD | 25 | [Link](https://www.wicomicolibrary.org/events) |
+| Cecil County Public Library | MD | WordPress-MD | 24 | [Link](https://cecilcountylibrary.org/events) |
+| Dorchester County Public Library | MD | WordPress-MD | 0 | [Link](https://www.dorchesterlibrary.org/events) |
+| Somerset County Library | MD | WordPress-MD | 0 | [Link](https://www.somelibrary.org/events) |
+| Queen Anne's County Library | MD | WordPress-MD | 1 | [Link](https://www.qaclibrary.org/events) |
+| Talbot County Free Library | MD | WordPress-MD | 0 | [Link](https://www.tcfl.org/events) |
+| Worcester County Library | MD | WordPress-MD | 38 | [Link](https://worcesterlibrary.libcal.com/calendar/Library_Events) |
+| New York Public Library | NY | WordPress-NY | 0 | [Link](https://www.nypl.org/events/calendar) |
+| Brooklyn Public Library | NY | WordPress-NY | 0 | [Link](https://www.bklynlibrary.org/calendar) |
+| Queens Public Library | NY | WordPress-NY | 1 | [Link](https://www.queenslibrary.org/calendar) |
+| Great Neck Library | NY | WordPress-NY | 65 | [Link](https://greatnecklibrary.libcal.com/calendar) |
+| Hicksville Public Library | NY | WordPress-NY | 13 | [Link](https://hicksvillelibrary.libcal.com/calendar) |
+| Freeport Memorial Library | NY | WordPress-NY | 8 | [Link](https://freeportlibrary.libcal.com/calendar) |
+| Rockville Centre Public Library | NY | WordPress-NY | 62 | [Link](https://rvcpl.libcal.com/calendar) |
+| Oceanside Library | NY | WordPress-NY | 70 | [Link](https://oceansidelibrary.libcal.com/calendar) |
+| North Merrick Public Library | NY | WordPress-NY | 46 | [Link](https://nmerricklibrary.libcal.com/calendar) |
+| Baldwin Public Library | NY | WordPress-NY | 0 | [Link](https://baldwinlib.libcal.com/calendar) |
+| Garden City Public Library | NY | WordPress-NY | 74 | [Link](https://gardencitypl.libcal.com/calendar) |
+| Buffalo & Erie County Public Library | NY | WordPress-NY | 127 | [Link](https://events.erielibrary.org/calendar) |
+| Rochester Public Library | NY | WordPress-NY | 23 | [Link](https://rochesterpubliclibrary.librarymarket.com/events) |
+| Syracuse Public Library | NY | WordPress-NY | 76 | [Link](https://onlib-central.libcal.com/calendar) |
+| Albany Public Library | NY | WordPress-NY | 24 | [Link](https://albany.librarycalendar.com/events) |
+| Westchester Library System | NY | WordPress-NY | 0 | [Link](https://www.westchesterlibraries.org/events) |
+| Yonkers Public Library | NY | WordPress-NY | 35 | [Link](https://www.ypl.org/events) |
+| White Plains Public Library | NY | WordPress-NY | 0 | [Link](https://whiteplainslibrary.org/events) |
+| Schenectady County Public Library | NY | WordPress-NY | 0 | [Link](https://www.scpl.org/events) |
+| Utica Public Library | NY | WordPress-NY | 35 | [Link](https://www.uticapubliclibrary.org/events) |
+| Poughkeepsie Public Library District | NY | WordPress-NY | 1 | [Link](https://www.poklib.org/events) |
+| New Rochelle Public Library | NY | WordPress-NY | 0 | [Link](https://nrpl.org/) |
+| Mount Vernon Public Library | NY | WordPress-NY | 35 | [Link](https://www.mountvernonpubliclibrary.org/events) |
+| Ithaca Tompkins County Public Library | NY | WordPress-NY | 41 | [Link](https://www.tcpl.org/events) |
+| Adams Free Library | NY | WordPress-NY | 26 | [Link](https://www.adamslibrary.org/events) |
+| Addison Public Library | NY | WordPress-NY | 14 | [Link](https://www.addisonlibrary.org/events) |
+| Newstead Public Library | NY | WordPress-NY | 0 | [Link](https://www.akronlibrary.org/events) |
+| Shelter Rock Public Library | NY | WordPress-NY | 1 | [Link](https://www.albertsonlibrary.org/events) |
+| Swan Library | NY | WordPress-NY | 0 | [Link](https://www.albionlibrary.org/) |
+| Alden Ewell Free Library | NY | WordPress-NY | 0 | [Link](https://www.aldenlibrary.org/) |
+| Alfred Box Of Books Library | NY | WordPress-NY | 12 | [Link](https://www.alfredlibrary.org/events) |
+| Allegany Public Library | NY | WordPress-NY | 1 | [Link](https://alleganylibrary.org/) |
+| Almond Twentieth Century Club Library | NY | WordPress-NY | 10 | [Link](https://almondlibrary.org/calendar/) |
+| Amagansett Free Library | NY | WordPress-NY | 0 | [Link](https://amagansettlibrary.org/calendar/) |
+| Amenia Free Library | NY | WordPress-NY | 0 | [Link](https://amenialibrary.org/) |
+| Audubon Branch | NY | WordPress-NY | 1 | [Link](https://www.amherstlibrary.org/events) |
+| Andes Public Library | NY | WordPress-NY | 0 | [Link](https://www.andeslibrary.org/events) |
+| Andover Free Library | NY | WordPress-NY | 0 | [Link](https://www.andoverlibrary.org/events) |
+| Apalachin Library Association | NY | WordPress-NY | 0 | [Link](https://www.apalachinlibrary.org/events) |
+| Arcade Free Library | NY | WordPress-NY | 0 | [Link](https://www.arcadelibrary.org/events) |
+| Ardsley Public Library | NY | WordPress-NY | 0 | [Link](https://www.ardsleylibrary.org/events) |
+| Queens Borough Public Library - Astoria | NY | WordPress-NY | 0 | [Link](https://www.astoria.gov/calendar?deptid=6) |
+| D.R. Evarts Library | NY | WordPress-NY | 55 | [Link](https://www.athenslibrary.org/events) |
+| Seymour Public Library District | NY | WordPress-NY | 1 | [Link](https://auburnlibrary.org/) |
+| Aurora Free Library | NY | WordPress-NY | 2 | [Link](https://www.auroralibrary.org/events) |
+| Avon Free Library | NY | WordPress-NY | 0 | [Link](https://www.avonlibrary.org/events) |
+| Babylon School District Public Library | NY | WordPress-NY | 3 | [Link](https://babylonlibrary.org/) |
+| Bainbridge Free Library | NY | WordPress-NY | 0 | [Link](https://www.bainbridgelibrary.org/events) |
+| Barker Free Library | NY | WordPress-NY | 14 | [Link](https://www.barkerlibrary.org/events) |
+| Barneveld Free Library Association | NY | WordPress-NY | 0 | [Link](https://www.barneveldlibrary.org/) |
+| Richmond Memorial Library | NY | WordPress-NY | 0 | [Link](https://www.batavialibrary.org/events) |
+| Dormann Library | NY | WordPress-NY | 21 | [Link](https://www.bathlibrary.org/events) |
+| Howland Public Library | NY | WordPress-NY | 2 | [Link](https://beaconlibrary.org/calendar) |
+| Beaver Falls Library | NY | WordPress-NY | 0 | [Link](https://www.beaverfallslibrary.org/events) |
+| Bedford Free Library | NY | WordPress-NY | 1 | [Link](https://www.bedfordlibrary.org/events) |
+| Bedford Hills Free Library | NY | WordPress-NY | 18 | [Link](https://www.bedfordhillsfreelibrary.org/events/upcoming) |
+| Belfast Public Library | NY | WordPress-NY | 150 | [Link](https://www.belfastlibrary.org/events) |
+| Belleville Free Library | NY | WordPress-NY | 3 | [Link](https://bellevillelibrary.org/) |
+| Bellmore Memorial Library | NY | WordPress-NY | 1 | [Link](https://www.bellmorelibrary.org/events) |
+| Free Library Of The Belmont Literary And Historical Society | NY | WordPress-NY | 13 | [Link](https://smcl.org/) |
+| Bemus Point Public Library | NY | WordPress-NY | 0 | [Link](https://www.bemuspointlibrary.org/events) |
+| Berlin Free Town Library | NY | WordPress-NY | 10 | [Link](https://www.berlinlibrary.org/events) |
+| Eagle Free Library | NY | WordPress-NY | 13 | [Link](https://www.blisslibrary.org/) |
+| Erwin Library Institute | NY | WordPress-NY | 0 | [Link](https://www.boonvillelib.org/) |
+| Boston Free Library | NY | WordPress-NY | 5 | [Link](https://www.bostonlibrary.org/events) |
+| Modeste Bedient Memorial Library | NY | WordPress-NY | 14 | [Link](https://www.branchportlibrary.org/events) |
+| Brentwood Public Library | NY | WordPress-NY | 0 | [Link](https://www.brentwoodlibrary.org/events) |
+| Brewster Public Library | NY | WordPress-NY | 37 | [Link](https://brewsterlibrary.libcal.com/) |
+| Briarcliff Manor Public Library | NY | WordPress-NY | 24 | [Link](https://briarcliffmanorlibrary.org/calendar/) |
+| Sullivan Free Library Of Bridgeport | NY | WordPress-NY | 21 | [Link](https://www.bridgeportlibrary.org/calendar) |
+| Bronxville Public Library | NY | WordPress-NY | 22 | [Link](https://bronxvillelibrary.org/) |
+| Brownville-Glen Park Library | NY | WordPress-NY | 0 | [Link](https://www.brownvillelibrary.org/events) |
+| Cairo Public Library | NY | WordPress-NY | 1 | [Link](https://cairolibrary.org/calendar/) |
+| Caledonia Library Association | NY | WordPress-NY | 1 | [Link](https://www.caledonialibrary.org/events) |
+| Cambridge Public Library | NY | WordPress-NY | 12 | [Link](https://www.cambridgelibrary.org/events) |
+| Camden Library Association | NY | WordPress-NY | 2 | [Link](https://www.camdenlibrary.org/) |
+| Canajoharie Library And Art Gallery | NY | WordPress-NY | 0 | [Link](https://www.canajoharielibrary.org/) |
+| Canastota Public Library | NY | WordPress-NY | 0 | [Link](https://www.canastotalibrary.org/) |
+| Canton Free Library | NY | WordPress-NY | 0 | [Link](https://www.cantonlibrary.org/events) |
+| Cape Vincent Community Library | NY | WordPress-NY | 43 | [Link](https://www.capevincentlibrary.org/events) |
+| Reed Memorial Library | NY | WordPress-NY | 1 | [Link](https://carmellibrary.org/calendar/) |
+| Carthage Free Library | NY | WordPress-NY | 0 | [Link](https://www.carthagelibrary.org/events) |
+| Cattaraugus Free Library | NY | WordPress-NY | 1 | [Link](https://www.cattarauguslibrary.org/events) |
+| Cazenovia Public Library Society | NY | WordPress-NY | 1 | [Link](https://cazenoviapubliclibrary.org/) |
+| Center Moriches Free Public Library | NY | WordPress-NY | 1 | [Link](https://www.centermoricheslibrary.org/events) |
+| Central Islip Public Library | NY | WordPress-NY | 0 | [Link](https://www.centralisliplibrary.org/events) |
+| Central Square Library | NY | WordPress-NY | 25 | [Link](https://www.centralsquarelibrary.org/events) |
+| Chappaqua Library | NY | WordPress-NY | 36 | [Link](https://www.chappaqualibrary.org/events) |
+| Chatham Public Library | NY | WordPress-NY | 78 | [Link](https://chathamlibrary.librarycalendar.com/events/month/) |
+| Cherry Valley Memorial Library | NY | WordPress-NY | 10 | [Link](https://cherryvalleylibrary.org/) |
+| Chester Public Library | NY | WordPress-NY | 0 | [Link](https://www.chesterlibrary.org/) |
+| Claverack Library | NY | WordPress-NY | 1 | [Link](https://claveracklibrary.org/calendar/) |
+| Hawn Memorial Library | NY | WordPress-NY | 0 | [Link](https://www.claytonlibrary.org/events) |
+| Kirkland Town Library | NY | WordPress-NY | 0 | [Link](https://www.clintonlibrary.org/events) |
+| Clyde-Savannah Public Library | NY | WordPress-NY | 2 | [Link](https://www.clydelibrary.org/) |
+| Clymer-French Creek Free Library | NY | WordPress-NY | 0 | [Link](https://www.clymerlibrary.org/) |
+| Cohocton Public Library | NY | WordPress-NY | 28 | [Link](https://cohoctonlibrary.org/calendar/) |
+| Cohoes Public Library | NY | WordPress-NY | 0 | [Link](https://www.cohoeslibrary.org/events) |
+| Village Library Of Cooperstown | NY | WordPress-NY | 0 | [Link](https://www.cooperstownlibrary.org/events) |
+| Copiague Memorial Public Library | NY | WordPress-NY | 1 | [Link](https://www.copiaguelibrary.org/events) |
+| Corfu Free Library | NY | WordPress-NY | 0 | [Link](https://www.corfulibrary.org/) |
+| Cornwall Public Library | NY | WordPress-NY | 4 | [Link](https://www.cornwalllibrary.org/events) |
+| Hammond Library Of Crown Point | NY | WordPress-NY | 1 | [Link](https://www.crownpointlibrary.org/events) |
+| Cuba Circulating Library Association | NY | WordPress-NY | 60 | [Link](https://www.cubalibrary.org/events) |
+| Cutchogue New Suffolk Free Library | NY | WordPress-NY | 0 | [Link](https://cutchoguelibrary.org/) |
+| Dansville Public Library | NY | WordPress-NY | 0 | [Link](https://dansvillelibrary.org/calendar/) |
+| Deer Park Public Library | NY | WordPress-NY | 0 | [Link](https://www.deerparklibrary.org/events) |
+| Delevan-Yorkshire Public Library | NY | WordPress-NY | 0 | [Link](https://www.delevanlibrary.org/events) |
+| Deruyter Free Library | NY | WordPress-NY | 1 | [Link](https://deruyterlibrary.org/) |
+| Dewitt Community Library Assoc., Inc | NY | WordPress-NY | 15 | [Link](https://www.dewittlibrary.org/events) |
+| Dobbs Ferry Public Library | NY | WordPress-NY | 34 | [Link](https://www.dobbsferrylibrary.org/events) |
+| Dolgeville-Manheim Public Library | NY | WordPress-NY | 0 | [Link](https://dolgevillelibrary.org/) |
+| Dunkirk Free Library | NY | WordPress-NY | 1 | [Link](https://dunkirklibrary.org/) |
+| Earlville Free Library | NY | WordPress-NY | 1 | [Link](https://www.earlvillelibrary.org/) |
+| East Greenbush Community Library | NY | WordPress-NY | 4 | [Link](https://eglibrary.org/) |
+| East Hampton Library | NY | WordPress-NY | 27 | [Link](https://www.easthamptonlibrary.org/events) |
+| East Islip Public Library | NY | WordPress-NY | 0 | [Link](https://www.eastisliplibrary.org/events) |
+| East Rochester Public Library | NY | WordPress-NY | 0 | [Link](https://www.eastrochesterlibrary.org/events) |
+| East Rockaway Public Library | NY | WordPress-NY | 7 | [Link](https://www.eastrockawaylibrary.org/events) |
+| Eastchester Public Library | NY | WordPress-NY | 5 | [Link](https://www.eastchesterlibrary.org/events) |
+| Elbridge Free Library | NY | WordPress-NY | 0 | [Link](https://www.elbridgelibrary.org/events) |
+| Ellicottville Memorial Library | NY | WordPress-NY | 4 | [Link](https://www.ellicottvillelibrary.org/events) |
+| Farman Free Library Association Of Ellington | NY | WordPress-NY | 0 | [Link](https://www.ellingtonlibrary.org/events) |
+| Ellisburg Free Library | NY | WordPress-NY | 25 | [Link](https://www.ellisburglibrary.org/events) |
+| Queens Borough Public Library - Elmhurst | NY | WordPress-NY | 0 | [Link](https://www.elmhurstlibrary.org/events) |
+| Elmont Public Library | NY | WordPress-NY | 1 | [Link](https://www.elmontlibrary.org/events) |
+| Elwood Public Library | NY | WordPress-NY | 1 | [Link](https://www.elwoodlibrary.org/events) |
+| Belden Noble Memorial Library Of Essex | NY | WordPress-NY | 0 | [Link](https://www.essexlibrary.org/events) |
+| Fair Haven Public Library | NY | WordPress-NY | 1 | [Link](https://fairhavenlibrary.org/) |
+| Fairport Public Library | NY | WordPress-NY | 8 | [Link](https://www.fairportlibrary.org/) |
+| Falconer Public Library | NY | WordPress-NY | 7 | [Link](https://www.falconerlibrary.org/events) |
+| Farmingdale Public Library | NY | WordPress-NY | 0 | [Link](https://www.farmingdalelibrary.org/events) |
+| Fayetteville Free Library | NY | WordPress-NY | 0 | [Link](https://www.fayettevillelibrary.org/events) |
+| Wide Awake Club Library | NY | WordPress-NY | 0 | [Link](https://fillmoreutlibrary.gov/upcoming-events/) |
+| Blodgett Memorial Library District Of Fishkill | NY | WordPress-NY | 0 | [Link](https://www.fishkilllibrary.org/events) |
+| Floral Park Public Library | NY | WordPress-NY | 2 | [Link](https://floralparklibrary.org/) |
+| Frankfort Free Library | NY | WordPress-NY | 1 | [Link](https://www.frankfortlibrary.org/) |
+| Franklin Free Library | NY | WordPress-NY | 3 | [Link](https://www.franklinlibrary.org/events) |
+| Blount Library | NY | WordPress-NY | 17 | [Link](https://franklinvillelibrary.org/) |
+| Fulton Public Library | NY | WordPress-NY | 0 | [Link](https://www.facebook.com/fultonlibrary) |
+| Galway Public Library | NY | WordPress-NY | 0 | [Link](https://www.galwaylibrary.org/events) |
+| Gardiner Library | NY | WordPress-NY | 0 | [Link](https://www.gardinerlibrary.org/) |
+| Wadsworth Library | NY | WordPress-NY | 0 | [Link](https://www.geneseolibrary.org/) |
+| Germantown Library | NY | WordPress-NY | 150 | [Link](https://www.germantownlibrary.org/events) |
+| Glen Cove Public Library | NY | WordPress-NY | 0 | [Link](https://www.glencovelibrary.org/) |
+| Queens Borough Public Library - Glendale | NY | WordPress-NY | 0 | [Link](https://www.glendalelibrary.org/events) |
+| Gloversville Public Library | NY | WordPress-NY | 1 | [Link](https://gloversvillelibrary.org/events-calendar/) |
+| Gorham Free Library | NY | WordPress-NY | 1 | [Link](https://gorhamlibrary.org/calendar/) |
+| Goshen Public Library And Historical Society | NY | WordPress-NY | 0 | [Link](https://www.goshenlibrary.org/) |
+| Reading Room Association Of Gouverneur | NY | WordPress-NY | 0 | [Link](https://www.gouverneurlibrary.org/events) |
+| Gowanda Free Library | NY | WordPress-NY | 4 | [Link](https://gowandalibrary.org/) |
+| Grafton Community Library | NY | WordPress-NY | 0 | [Link](https://www.graftonlibrary.org/events) |
+| Pember Library Museum | NY | WordPress-NY | 3 | [Link](https://www.granvillelibrary.org/) |
+| Moore Memorial Library | NY | WordPress-NY | 0 | [Link](https://www.greenelibrary.org/events) |
+| Greenville Public Library | NY | WordPress-NY | 269 | [Link](https://www.greenvillelibrary.org/events) |
+| Easton Library | NY | WordPress-NY | 0 | [Link](https://www.greenwichlibrary.org/) |
+| Guilderland Public Library | NY | WordPress-NY | 1 | [Link](https://www.guilderlandlibrary.org/events) |
+| Hamburg Library | NY | WordPress-NY | 0 | [Link](https://www.hamburglibrary.org/) |
+| Hamilton Public Library | NY | WordPress-NY | 0 | [Link](https://hamiltonlibrary.org/) |
+| Hamlin Public Library | NY | WordPress-NY | 0 | [Link](https://www.hamlinlibrary.org/) |
+| Hammond Free Library | NY | WordPress-NY | 0 | [Link](https://www.hammondlibrary.org/events) |
+| Fred And Harriet Taylor Memorial Library | NY | WordPress-NY | 50 | [Link](https://hammondsportlibrary.org/calendar/) |
+| Hampton Bays Public Library | NY | WordPress-NY | 6 | [Link](https://www.hamptonbayslibrary.org/) |
+| Louise Adelia Read Memorial Library | NY | WordPress-NY | 4 | [Link](https://hancocklibrary.org/) |
+| Hannibal Free Library | NY | WordPress-NY | 0 | [Link](https://www.hanniballibrary.org/events) |
+| Harrison Public Library | NY | WordPress-NY | 10 | [Link](https://www.harrisonpl.org/) |
+| Hauppauge Public Library | NY | WordPress-NY | 0 | [Link](https://www.hauppaugelibrary.org/events) |
+| Haverstraw Kings Daughters Public Library - Village Branch | NY | WordPress-NY | 0 | [Link](https://www.haverstrawlibrary.org/events) |
+| Highland Public Library | NY | WordPress-NY | 0 | [Link](https://highlandlibrary.org/) |
+| Highland Falls Library | NY | WordPress-NY | 0 | [Link](https://highlandfallslibrary.org/calendar/) |
+| Roeliff Jansen Community Library Association | NY | WordPress-NY | 0 | [Link](https://www.cityofsanmateo.org/507/Library) |
+| Sachem Public Library | NY | WordPress-NY | 0 | [Link](https://holbrooklibrary.org/) |
+| Holland Patent Free Library | NY | WordPress-NY | 0 | [Link](https://hollandpatentlibrary.org/) |
+| Community Free Library | NY | WordPress-NY | 19 | [Link](https://www.holleylibrary.org/events) |
+| Queens Borough Public Library - Hollis | NY | WordPress-NY | 0 | [Link](https://www.hollislibrary.org/events) |
+| Phillips Free Library | NY | WordPress-NY | 85 | [Link](https://www.homerlibrary.org/events) |
+| Hudson Area Association Library | NY | WordPress-NY | 1 | [Link](https://www.hudsonlibrary.org/events) |
+| Huntington Public Library | NY | WordPress-NY | 0 | [Link](https://www.huntingtonlibrary.org/events) |
+| Hurley Library District | NY | WordPress-NY | 7 | [Link](https://hurleylibrary.org/) |
+| Hyde Park Free Library | NY | WordPress-NY | 42 | [Link](https://www.hydeparklibrary.org/events) |
+| Ilion Free Public Library | NY | WordPress-NY | 0 | [Link](https://www.ilionlibrary.org/) |
+| Seneca Nation Of Indians Library Cattaraugus Territory | NY | WordPress-NY | 0 | [Link](https://www.irvinglibrary.org/events) |
+| Irvington Pub Lib Guiteau Foundation | NY | WordPress-NY | 3 | [Link](https://irvingtonlibrary.org/) |
+| Island Park Public Library | NY | WordPress-NY | 1 | [Link](https://islandparklibrary.org/) |
+| Islip Public Library | NY | WordPress-NY | 0 | [Link](https://isliplibrary.org/) |
+| Chautauqua-Cattaraugus Library System | NY | WordPress-NY | 0 | [Link](https://www.jamestownlibrary.org/events) |
+| Jericho Public Library | NY | WordPress-NY | 69 | [Link](https://www.jericholibrary.org/events) |
+| Your Home Public Library | NY | WordPress-NY | 0 | [Link](https://www.johnsoncitylibrary.org/events) |
+| Jordan Bramley Library | NY | WordPress-NY | 0 | [Link](https://www.jordanlibrary.org/events) |
+| Jordanville Public Library | NY | WordPress-NY | 0 | [Link](https://jordanvillelibrary.org/upcoming-events/) |
+| Katonah Village Library | NY | WordPress-NY | 7 | [Link](https://katonahlibrary.org/) |
+| Keene Valley Public Library | NY | WordPress-NY | 0 | [Link](https://www.keenevalleylibrary.org/events) |
+| Kennedy Free Library | NY | WordPress-NY | 0 | [Link](https://www.kennedylibrary.org/events) |
+| Kinderhook Memorial Library | NY | WordPress-NY | 150 | [Link](https://www.kinderhooklibrary.org/events) |
+| Kingston Library | NY | WordPress-NY | 11 | [Link](https://www.kingstonlibrary.org/events) |
+| Orleans Public Library | NY | WordPress-NY | 0 | [Link](https://www.lafargevillelibrary.org/events) |
+| Lafayette Public Library | NY | WordPress-NY | 0 | [Link](https://lafayettelibrary.org/) |
+| Lake Placid Public Library | NY | WordPress-NY | 12 | [Link](https://www.lakeplacidlibrary.org/events) |
+| Lakewood Memorial Library | NY | WordPress-NY | 0 | [Link](https://lakewoodlibrary.org/events/event/) |
+| Lancaster Public Library | NY | WordPress-NY | 0 | [Link](https://www.lancasterlibrary.org/component/tags/tag/events) |
+| Lansing Community Library | NY | WordPress-NY | 11 | [Link](https://www.lansinglibrary.org/events) |
+| Larchmont Public Library | NY | WordPress-NY | 9 | [Link](https://www.larchmontlibrary.org/events) |
+| Peninsula Public Library | NY | WordPress-NY | 4 | [Link](https://lawrencelibrary.org/) |
+| Woodward Memorial Library | NY | WordPress-NY | 8 | [Link](https://www.leroylibrary.org/) |
+| Lewiston Public Library | NY | WordPress-NY | 0 | [Link](https://www.lewistonlibrary.org/) |
+| Liberty Public Library | NY | WordPress-NY | 0 | [Link](https://libertylibrary.org/) |
+| Lindenhurst Memorial Library | NY | WordPress-NY | 85 | [Link](https://www.lindenhurstlibrary.org/events) |
+| Lisle Free Library | NY | WordPress-NY | 0 | [Link](https://www.lislelibrary.org/) |
+| Little Falls Public Library | NY | WordPress-NY | 75 | [Link](https://www.littlefallslibrary.org/events) |
+| Memorial Library Of Little Valley | NY | WordPress-NY | 3 | [Link](https://littlevalleylibrary.org/) |
+| Livingston Free Library | NY | WordPress-NY | 0 | [Link](https://www.livingstonlibrary.org/events) |
+| Livingston Manor Free Library | NY | WordPress-NY | 30 | [Link](https://www.livingstonmanorlibrary.org/events) |
+| Livonia Public Library | NY | WordPress-NY | 1 | [Link](https://livonialibrary.org/) |
+| Lockport Public Library | NY | WordPress-NY | 39 | [Link](https://www.lockportlibrary.org/events) |
+| Locust Valley Library | NY | WordPress-NY | 0 | [Link](https://www.locustvalleylibrary.org/events) |
+| Long Beach Public Library | NY | WordPress-NY | 1 | [Link](https://www.longbeachlibrary.org/events) |
+| William K Sanford Town Library | NY | WordPress-NY | 1 | [Link](https://loudonvillelibrary.org/) |
+| Lynbrook Public Library | NY | WordPress-NY | 48 | [Link](https://www.lynbrooklibrary.org/events) |
+| Lyons Public Library | NY | WordPress-NY | 0 | [Link](https://lyonslibrary.org/) |
+| Lyons Falls Library | NY | WordPress-NY | 7 | [Link](https://www.lyonsfallslibrary.org/events) |
+| King Memorial Library | NY | WordPress-NY | 16 | [Link](https://www.machiaslibrary.org/events) |
+| Mahopac Public Library | NY | WordPress-NY | 10 | [Link](https://www.mahopaclibrary.org/events) |
+| Malverne Public Library | NY | WordPress-NY | 1 | [Link](https://malvernelibrary.org/) |
+| Mamaroneck Public Library District | NY | WordPress-NY | 150 | [Link](https://www.mamaronecklibrary.org/events) |
+| Manhasset Public Library | NY | WordPress-NY | 12 | [Link](https://manhassetlibrary.org/site/) |
+| Manlius Library | NY | WordPress-NY | 1 | [Link](https://www.manliuslibrary.org/events) |
+| Mannsville Free Library | NY | WordPress-NY | 42 | [Link](https://www.mannsvillelibrary.org/events) |
+| Marcellus Free Library | NY | WordPress-NY | 0 | [Link](https://www.marcelluslibrary.org/events) |
+| Marion Public Library | NY | WordPress-NY | 2 | [Link](https://www.marionlibrary.org/) |
+| Marlboro Free Library | NY | WordPress-NY | 8 | [Link](https://www.marlborolibrary.org/events) |
+| William H. Bush Memorial Library | NY | WordPress-NY | 0 | [Link](https://www.martinsburglibrary.org/events) |
+| Plainedge Public Library | NY | WordPress-NY | 5 | [Link](https://massapequalibrary.org/) |
+| Mayville Library | NY | WordPress-NY | 0 | [Link](https://www.mayvillelibrary.org/calendar) |
+| Menands Public Library | NY | WordPress-NY | 0 | [Link](https://www.menandslibrary.org/events) |
+| Merrick Library | NY | WordPress-NY | 1 | [Link](https://www.merricklibrary.org/events) |
+| Middleburgh Library | NY | WordPress-NY | 35 | [Link](https://www.middleburghlibrary.org/) |
+| Ramapo Catskill Library System | NY | WordPress-NY | 0 | [Link](https://www.middletownlibrary.org/events) |
+| Middleville Free Library | NY | WordPress-NY | 0 | [Link](https://middlevillelibrary.org/) |
+| Milford Free Library | NY | WordPress-NY | 0 | [Link](https://www.milfordlibrary.org/events) |
+| Millbrook Free Library | NY | WordPress-NY | 0 | [Link](https://millbrooklibrary.org/) |
+| Sarah Hull Hallock Free Library | NY | WordPress-NY | 0 | [Link](https://www.miltonlibrary.org/events) |
+| Minoa Library | NY | WordPress-NY | 0 | [Link](https://www.minoalibrary.org/events) |
+| Monroe Free Library | NY | WordPress-NY | 0 | [Link](https://www.monroelibrary.org/events) |
+| Montauk Library | NY | WordPress-NY | 12 | [Link](https://www.montauklibrary.org/events) |
+| Montgomery Free Library | NY | WordPress-NY | 0 | [Link](https://www.montgomerylibrary.org/events) |
+| Ethelbert B. Crawford Public Library | NY | WordPress-NY | 18 | [Link](https://www.allertonpubliclibrary.org/calendar) |
+| Montour Falls Memorial Library | NY | WordPress-NY | 60 | [Link](https://www.montourfallslibrary.org/events) |
+| Hendrick Hudson Free Library | NY | WordPress-NY | 0 | [Link](https://www.montroselibrary.org/events) |
+| Mooers Free Library | NY | WordPress-NY | 0 | [Link](https://www.mooerslibrary.org/events) |
+| Morristown Public Library | NY | WordPress-NY | 2 | [Link](https://www.morristownlibrary.org/events) |
+| Mount Morris Library | NY | WordPress-NY | 0 | [Link](https://www.mountmorrislibrary.org/events) |
+| Nanuet Public Library | NY | WordPress-NY | 1 | [Link](https://nanuetpubliclibrary.org/) |
+| Naples Library | NY | WordPress-NY | 0 | [Link](https://www.napleslibrary.org/events) |
+| Nassau Free Library | NY | WordPress-NY | 1 | [Link](https://nassaulibrary.org/) |
+| New Berlin Library | NY | WordPress-NY | 34 | [Link](https://www.newberlinlibrary.org/events) |
+| Library Association Of Rockland County | NY | WordPress-NY | 58 | [Link](https://www.newcitylibrary.org/events) |
+| New Lebanon Library | NY | WordPress-NY | 33 | [Link](https://newlebanonlibrary.org/calendar/) |
+| New Woodstock Free Library | NY | WordPress-NY | 0 | [Link](https://newwoodstocklibrary.org/) |
+| New York Mills Public Library | NY | WordPress-NY | 0 | [Link](https://www.newyorkmillslibrary.org/) |
+| Newark Public Library | NY | WordPress-NY | 1 | [Link](https://newarklibrary.org/) |
+| Newburgh Free Library | NY | WordPress-NY | 2 | [Link](https://newburghlibrary.org/) |
+| Newfane Free Library | NY | WordPress-NY | 0 | [Link](https://www.newfanelibrary.org/events) |
+| Newport Free Library | NY | WordPress-NY | 13 | [Link](https://www.newportlibrary.org/events) |
+| Hepburn Library Of Norfolk | NY | WordPress-NY | 13 | [Link](https://www.norfolklibrary.org/events) |
+| North Bellmore Public Library | NY | WordPress-NY | 1 | [Link](https://www.northbellmorelibrary.org/events) |
+| North Chatham Free Library | NY | WordPress-NY | 48 | [Link](https://www.northchathamlibrary.org/events) |
+| Northville Public Library | NY | WordPress-NY | 0 | [Link](https://www.northvillelibrary.org/events) |
+| Guernsey Memorial Library Of Norwich | NY | WordPress-NY | 1 | [Link](https://www.norwichlibrary.org/category/events/) |
+| Norwood Library | NY | WordPress-NY | 0 | [Link](https://norwoodlibrary.org/) |
+| Nyack Library | NY | WordPress-NY | 1 | [Link](https://www.nyacklibrary.org/events) |
+| Haxton Memorial Library | NY | WordPress-NY | 11 | [Link](https://www.oakfieldlibrary.org/events) |
+| Old Forge Library | NY | WordPress-NY | 1 | [Link](https://oldforgelibrary.org/) |
+| Olean Public Library | NY | WordPress-NY | 2 | [Link](https://oleanlibrary.org/events/event/) |
+| Orangeburg Library | NY | WordPress-NY | 9 | [Link](https://orangeburglibrary.org/) |
+| Oriskany Public Library | NY | WordPress-NY | 0 | [Link](https://oriskanylibrary.org/) |
+| C. W. Clark Memorial Library | NY | WordPress-NY | 0 | [Link](https://oriskanyfallslibrary.org/) |
+| Ossining Public Library | NY | WordPress-NY | 4 | [Link](https://ossininglibrary.org/) |
+| Oswego School District Public Library | NY | WordPress-NY | 0 | [Link](https://oswego.mykansaslibrary.org/) |
+| Edith B. Ford Memorial Library | NY | WordPress-NY | 0 | [Link](https://www.ovidlibrary.org/events) |
+| Oxford Memorial Library | NY | WordPress-NY | 0 | [Link](https://oxfordlibrary.org/) |
+| Oyster Bay-East Norwich Public Library | NY | WordPress-NY | 1 | [Link](https://oysterbaylibrary.org/) |
+| Palisades Free Library | NY | WordPress-NY | 1 | [Link](https://palisadeslibrary.org/) |
+| Parish Public Library | NY | WordPress-NY | 0 | [Link](https://www.parishlibrary.org/events) |
+| Patterson Library | NY | WordPress-NY | 1 | [Link](https://pattersonlibrary.org/calendar/) |
+| Pawling Free Library | NY | WordPress-NY | 0 | [Link](https://www.pawlinglibrary.org/events) |
+| Pearl River Public Library | NY | WordPress-NY | 1 | [Link](https://pearlriverlibrary.org/) |
+| Town Of Pelham Public Library | NY | WordPress-NY | 47 | [Link](https://www.pelhamlibrary.org/calendar/) |
+| Penfield Public Library | NY | WordPress-NY | 0 | [Link](https://www.penfieldlibrary.org/events) |
+| Perry Public Library | NY | WordPress-NY | 0 | [Link](https://www.perrylibrary.org/calendar) |
+| Peru Free Library | NY | WordPress-NY | 28 | [Link](https://www.perulibrary.org/events) |
+| Phelps Community Memorial Library | NY | WordPress-NY | 0 | [Link](https://www.phelpslibrary.org/events) |
+| Phoenicia Library | NY | WordPress-NY | 1 | [Link](https://phoenicialibrary.org/calendar/) |
+| Phoenix Public Library | NY | WordPress-NY | 1 | [Link](https://www.phoenixlibrary.org/events) |
+| Piermont Library District | NY | WordPress-NY | 1 | [Link](https://www.piermontlibrary.org/events) |
+| Pike Library | NY | WordPress-NY | 0 | [Link](https://www.pikelibrary.org/events) |
+| Morton Memorial Library | NY | WordPress-NY | 1 | [Link](https://pinehilllibrary.org/calendar/) |
+| Pine Plains Free Library | NY | WordPress-NY | 150 | [Link](https://www.pineplainslibrary.org/events) |
+| Pleasant Valley Free Library | NY | WordPress-NY | 1 | [Link](https://www.pleasantvalleylibrary.org/events) |
+| Poestenkill Library | NY | WordPress-NY | 4 | [Link](https://www.poestenkilllibrary.org/events) |
+| Port Byron Library | NY | WordPress-NY | 1 | [Link](https://www.portbyronlibrary.org/events) |
+| Port Chester Public Library | NY | WordPress-NY | 9 | [Link](https://portchesterlibrary.org/) |
+| Port Jervis Free Library | NY | WordPress-NY | 0 | [Link](https://www.portjervislibrary.org/) |
+| Port Leyden Community Library | NY | WordPress-NY | 0 | [Link](https://www.portleydenlibrary.org/events) |
+| Portville Free Library | NY | WordPress-NY | 3 | [Link](https://www.portvillelibrary.org/events) |
+| Potsdam Public Library | NY | WordPress-NY | 40 | [Link](https://www.potsdamlibrary.org/events) |
+| Pound Ridge Library District | NY | WordPress-NY | 0 | [Link](https://www.poundridgelibrary.org/events) |
+| Prospect Free Library | NY | WordPress-NY | 0 | [Link](https://www.prospectlibrary.org/calendar) |
+| Putnam Valley Free Library | NY | WordPress-NY | 1 | [Link](https://putnamvalleylibrary.org/calendar/) |
+| Quogue Library | NY | WordPress-NY | 0 | [Link](https://www.quoguelibrary.org/) |
+| Randolph Free Library | NY | WordPress-NY | 0 | [Link](https://www.randolphlibrary.org/events) |
+| Ransomville Free Library | NY | WordPress-NY | 0 | [Link](https://www.ransomvillelibrary.org/) |
+| Red Hook Public Library | NY | WordPress-NY | 1 | [Link](https://redhooklibrary.org/calendar/) |
+| Didymus Thomas Library | NY | WordPress-NY | 0 | [Link](https://remsenlibrary.org/) |
+| Rensselaer Public Library | NY | WordPress-NY | 8 | [Link](https://www.rensselaerlibrary.org/events) |
+| Rensselaerville Public Library | NY | WordPress-NY | 0 | [Link](https://www.rensselaervillelibrary.org/events) |
+| Queens Borough Public Library - Ridgewood | NY | WordPress-NY | 1 | [Link](https://ridgewoodlibrary.org/) |
+| Ripley Free Library | NY | WordPress-NY | 7 | [Link](https://ripleylibrary.org/) |
+| Riverhead Free Library | NY | WordPress-NY | 101 | [Link](https://www.riverheadlibrary.org/events) |
+| Rodman Public Library | NY | WordPress-NY | 0 | [Link](https://www.rodmanlibrary.org/events) |
+| The Jervis Public Library Association, Inc. | NY | WordPress-NY | 0 | [Link](https://www.romelibrary.org/events) |
+| Roosevelt Public Library | NY | WordPress-NY | 0 | [Link](https://www.rooseveltlibrary.org/events) |
+| Rose Free Library | NY | WordPress-NY | 0 | [Link](https://www.roselibrary.org/events) |
+| Rosendale Library | NY | WordPress-NY | 1 | [Link](https://rosendalelibrary.org/) |
+| Bryant Library | NY | WordPress-NY | 0 | [Link](https://www.roslynlibrary.org/events) |
+| Womens Round Lake Improvement Society Lib | NY | WordPress-NY | 3 | [Link](https://roundlake.sals.edu/) |
+| Rouses Point Dodge Memorial Library | NY | WordPress-NY | 2 | [Link](https://www.rousespointlibrary.org/events) |
+| Roxbury Library Association | NY | WordPress-NY | 41 | [Link](https://www.roxburylibrary.org/events) |
+| Rush Public Library | NY | WordPress-NY | 1 | [Link](https://rushlibrary.org/) |
+| Russell Public Library | NY | WordPress-NY | 1 | [Link](https://russelllibrary.org/) |
+| Rye Free Reading Room | NY | WordPress-NY | 2 | [Link](https://www.ryelibrary.org/) |
+| John Jermain Memorial Library | NY | WordPress-NY | 0 | [Link](https://www.sagharborlibrary.org/events) |
+| Salamanca Public Library | NY | WordPress-NY | 7 | [Link](https://www.salamancalibrary.org/events) |
+| Bancroft Public Library | NY | WordPress-NY | 0 | [Link](https://www.salemlibrary.org/events) |
+| Annie Porter Ainsworth Memorial Library | NY | WordPress-NY | 150 | [Link](https://ainsworthmemoriallibrary.org/) |
+| Sayville Library | NY | WordPress-NY | 136 | [Link](https://www.sayvillelibrary.org/events) |
+| Scarsdale Public Library | NY | WordPress-NY | 54 | [Link](https://www.scarsdalelibrary.org/events) |
+| Schoharie Free Library Assn. | NY | WordPress-NY | 0 | [Link](https://www.schoharielibrary.org/) |
+| Schroon Lake Public Library | NY | WordPress-NY | 150 | [Link](https://www.schroonlakelibrary.org/events) |
+| Scio Memorial Library | NY | WordPress-NY | 0 | [Link](https://www.sciolibrary.org/events) |
+| Scottsville Free Library | NY | WordPress-NY | 1 | [Link](https://www.scottsvillelibrary.org/events) |
+| Sea Cliff Village Library | NY | WordPress-NY | 1 | [Link](https://www.seaclifflibrary.org/events) |
+| Seaford Public Library | NY | WordPress-NY | 0 | [Link](https://seafordlibrary.org/library-events/) |
+| Seneca Falls Library | NY | WordPress-NY | 0 | [Link](https://senecafallslibrary.org/) |
+| Shelter Island Public Library Society | NY | WordPress-NY | 0 | [Link](https://www.shelterislandlibrary.org/events) |
+| Sherburne Public Library | NY | WordPress-NY | 2 | [Link](https://www.sherburnelibrary.org/events) |
+| Minerva Free Library | NY | WordPress-NY | 1 | [Link](https://www.shermanlibrary.org/) |
+| Mastics-Moriches-Shirley Community Lib | NY | WordPress-NY | 1 | [Link](https://www.shirleylibrary.org/) |
+| John C. Hart Memorial Library | NY | WordPress-NY | 0 | [Link](https://www.shruboaklibrary.org/events) |
+| Sidney Memorial Public Library | NY | WordPress-NY | 0 | [Link](https://www.sidneylibrary.org/index.php/calendar/) |
+| Sinclairville Free Library | NY | WordPress-NY | 17 | [Link](https://www.sinclairvillelibrary.org/events) |
+| Sloatsburg Public Library | NY | WordPress-NY | 1 | [Link](https://sloatsburglibrary.org/) |
+| Smyrna Public Library | NY | WordPress-NY | 0 | [Link](https://www.smyrnalibrary.org/events) |
+| Sodus Free Library | NY | WordPress-NY | 0 | [Link](https://www.soduslibrary.org/events) |
+| Solvay Public Library | NY | WordPress-NY | 0 | [Link](https://www.solvaylibrary.org/events) |
+| Somers Library | NY | WordPress-NY | 14 | [Link](https://www.somerslibrary.org/events) |
+| Lewisboro Library | NY | WordPress-NY | 150 | [Link](https://lewisborolibrary.org/events/) |
+| Rogers Memorial Library | NY | WordPress-NY | 12 | [Link](https://www.southamptonlibrary.org/events) |
+| Southold Free Library | NY | WordPress-NY | 0 | [Link](https://southoldlibrary.org/) |
+| Finkelstein Memorial Library | NY | WordPress-NY | 1 | [Link](https://www.springvalleylibrary.org/events) |
+| Staatsburg Library | NY | WordPress-NY | 18 | [Link](https://staatsburglibrary.org/calendar/) |
+| Stamford Village Library | NY | WordPress-NY | 0 | [Link](https://www.stamfordlibrary.org/events) |
+| Stephentown Memorial Library | NY | WordPress-NY | 1 | [Link](https://www.stephentownlibrary.org/events) |
+| Stillwater Free Library | NY | WordPress-NY | 6 | [Link](https://www.stillwaterlibrary.org/events) |
+| Mary E. Seymour Memorial Free Library | NY | WordPress-NY | 0 | [Link](https://stocktonlibrary.org/) |
+| Stone Ridge Public Library | NY | WordPress-NY | 0 | [Link](https://stoneridgelibrary.org/) |
+| Rose Memorial Library Association | NY | WordPress-NY | 1 | [Link](https://www.rosememoriallibrary.org/events/) |
+| Suffern Free Library | NY | WordPress-NY | 3 | [Link](https://www.suffernlibrary.org/events) |
+| Syosset Public Library | NY | WordPress-NY | 0 | [Link](https://www.syossetlibrary.org/events) |
+| Tappan Library | NY | WordPress-NY | 0 | [Link](https://tappanlibrary.org/) |
+| Warner Library | NY | WordPress-NY | 0 | [Link](https://www.tarrytownlibrary.org/events) |
+| Tivoli Free Library | NY | WordPress-NY | 0 | [Link](https://engagedpatrons.org/EventsCalendar.cfm?SiteID=6141) |
+| Tomkins Cove Public Library | NY | WordPress-NY | 2 | [Link](https://www.tomkinscovelibrary.org/) |
+| Brunswick Community Library | NY | WordPress-NY | 0 | [Link](https://www.troylibrary.org/events) |
+| Ulysses Philomathic Library | NY | WordPress-NY | 2 | [Link](https://www.trumansburglibrary.org/) |
+| Tuckahoe Public Library | NY | WordPress-NY | 0 | [Link](https://www.tuckahoelibrary.org/events) |
+| B. Elizabeth Strong Memorial Library | NY | WordPress-NY | 2 | [Link](https://www.turinlibrary.org/events) |
+| Tuxedo Park Library | NY | WordPress-NY | 0 | [Link](https://www.tuxedoparklibrary.org/calendar/) |
+| Unadilla Public Library | NY | WordPress-NY | 1 | [Link](https://www.unadillalibrary.org/events) |
+| Nassau Library System | NY | WordPress-NY | 0 | [Link](https://uniondalelibrary.org/) |
+| Brookhaven National Laboratory | NY | WordPress-NY | 0 | [Link](https://uptonlibrarystaff.wixsite.com/uptontownlibrary) |
+| Valley Cottage Free Library | NY | WordPress-NY | 0 | [Link](https://www.valleycottagelibrary.org/) |
+| Valley Falls Free Library | NY | WordPress-NY | 2 | [Link](https://www.valleyfallslibrary.org/events) |
+| Henry Waldinger Memorial Library | NY | WordPress-NY | 58 | [Link](https://www.valleystreamlibrary.org/events) |
+| Vernon Public Library | NY | WordPress-NY | 7 | [Link](https://www.vernonlibrary.org/) |
+| Voorheesville Public Library | NY | WordPress-NY | 0 | [Link](https://www.voorheesvillelibrary.org/events) |
+| Hepburn Library Of Waddington | NY | WordPress-NY | 7 | [Link](https://www.waddingtonlibrary.org/events) |
+| Walworth-Seely Public Library | NY | WordPress-NY | 0 | [Link](https://www.walworthlibrary.org/) |
+| Wantagh Public Library | NY | WordPress-NY | 0 | [Link](https://wantaghlibrary.org/) |
+| Warsaw Public Library | NY | WordPress-NY | 14 | [Link](https://www.warsawlibrary.org/) |
+| Albert Wisner Public Library | NY | WordPress-NY | 8 | [Link](https://warwicklibrary.org/) |
+| Waterford Public Library | NY | WordPress-NY | 0 | [Link](https://www.waterfordlibrary.org/events) |
+| Waterloo Library And Historical Society | NY | WordPress-NY | 0 | [Link](https://www.waterloolibrary.org/events) |
+| East Hounsfield Free Library | NY | WordPress-NY | 0 | [Link](https://www.watertownlibrary.org/) |
+| Waterville Public Library | NY | WordPress-NY | 21 | [Link](https://www.watervillelibrary.org/events) |
+| Watkins Glen Cen Sch Dis Free Pub Lib | NY | WordPress-NY | 150 | [Link](https://www.watkinsglenlibrary.org/events) |
+| Waverly Free Library | NY | WordPress-NY | 2 | [Link](https://www.waverlylibrary.com/) |
+| Wayland Free Library | NY | WordPress-NY | 0 | [Link](https://www.waylandlibrary.org/events) |
+| Webster Public Library | NY | WordPress-NY | 15 | [Link](https://www.websterlibrary.org/events) |
+| Weedsport Free Library | NY | WordPress-NY | 17 | [Link](https://www.weedsportlibrary.org/calendar) |
+| David A Howe Public Library | NY | WordPress-NY | 0 | [Link](https://www.wellsvillelibrary.org/events) |
+| West Hurley Public Library | NY | WordPress-NY | 5 | [Link](https://westhurleylibrary.org/) |
+| West Islip Public Library | NY | WordPress-NY | 0 | [Link](https://westisliplibrary.org/) |
+| West Nyack Free Library | NY | WordPress-NY | 0 | [Link](https://www.westnyacklibrary.org/) |
+| West Winfield Library | NY | WordPress-NY | 0 | [Link](https://westwinfieldlibrary.org/calendar/) |
+| Westbury Memorial Public Library | NY | WordPress-NY | 2 | [Link](https://www.westburylibrary.org/) |
+| Town Of Westerlo Public Library | NY | WordPress-NY | 16 | [Link](https://www.westerlolibrary.org/events) |
+| Patterson Library | NY | WordPress-NY | 1 | [Link](https://www.westfieldlibrary.org/events) |
+| Westport Library Association | NY | WordPress-NY | 41 | [Link](https://www.westportlibrary.org/events) |
+| Dunham Public Library | NY | WordPress-NY | 0 | [Link](https://whitesborolibrary.org/) |
+| Whitesville Public Library | NY | WordPress-NY | 0 | [Link](https://www.whitesvillelibrary.org/events) |
+| Williamson Free Public Library | NY | WordPress-NY | 0 | [Link](https://www.williamsonlibrary.org/) |
+| Williamstown Library | NY | WordPress-NY | 150 | [Link](https://www.williamstownlibrary.org/events) |
+| Amherst Public Library Clearfield Branch | NY | WordPress-NY | 0 | [Link](https://www.williamsvillelibrary.org/) |
+| Williston Park Public Library | NY | WordPress-NY | 65 | [Link](https://www.willistonparklibrary.org/events) |
+| Wilmington E.M. Cooper Memorial Public Library | NY | WordPress-NY | 3 | [Link](https://www.wilmingtonlibrary.org/events) |
+| Wilson Free Library | NY | WordPress-NY | 0 | [Link](https://www.wilsonlibrary.org/events) |
+| Windham Public Library | NY | WordPress-NY | 2 | [Link](https://windhamlibrary.org/) |
+| Wolcott Civic Free Library | NY | WordPress-NY | 1 | [Link](https://www.wolcottlibrary.org/events) |
+| Woodgate Free Library | NY | WordPress-NY | 0 | [Link](https://woodgatelibrary.org/calendar/) |
+| Queens Borough Public Library - Woodside | NY | WordPress-NY | 13 | [Link](https://smcl.org/) |
+| Worcester Free Library | NY | WordPress-NY | 1 | [Link](https://www.worcesterlibrary.org/events) |
+| Wyandanch Public Library | NY | WordPress-NY | 0 | [Link](https://www.wyandanchlibrary.org/events) |
+| Miami-Dade Public Library System | FL | WordPress-FL | 95 | [Link](https://www.mdpls.org/events) |
+| Orange County Library System | FL | WordPress-FL | 17 | [Link](https://www.ocls.org/events) |
+| Tampa-Hillsborough County Public Library | FL | WordPress-FL | 0 | [Link](https://attend.hcplc.org) |
+| Broward County Library | FL | WordPress-FL | 1 | [Link](https://www.broward.org/library/events) |
+| Palm Beach County Library System | FL | WordPress-FL | 28 | [Link](https://www.pbclibrary.org/events) |
+| Alachua Branch Library | FL | WordPress-FL | 0 | [Link](https://www.alachualibrary.org/events) |
+| Desoto County Library | FL | WordPress-FL | 0 | [Link](https://www.arcadialibrary.org/events) |
+| Archer Branch Library | FL | WordPress-FL | 1 | [Link](https://www.archerlibrary.org/) |
+| Auburndale Public Library | FL | WordPress-FL | 23 | [Link](https://auburndalelibrary.org/calendar/) |
+| Bartow Public Library | FL | WordPress-FL | 0 | [Link](https://www.bartowlibrary.org/events) |
+| Brandon Branch | FL | WordPress-FL | 50 | [Link](https://www.brandonlibrary.org/events-calendar) |
+| Levy County Public Library System | FL | WordPress-FL | 0 | [Link](https://www.bronsonlibrary.org/calendar) |
+| East Hernando Branch Library | FL | WordPress-FL | 29 | [Link](https://www.brooksvillelibrary.org/events) |
+| Celebration Library | FL | WordPress-FL | 0 | [Link](https://www.celebrationlibrary.org/events) |
+| Cooper Memorial Library | FL | WordPress-FL | 0 | [Link](https://www.clermontlibrary.org/) |
+| Coleman Library | FL | WordPress-FL | 1 | [Link](https://www.colemanlibrary.org/calendar) |
+| Edgewater Public Library | FL | WordPress-FL | 0 | [Link](https://www.edgewaterlibrary.org/events) |
+| Elsie Quirk Library | FL | WordPress-FL | 0 | [Link](https://www.englewoodlibrary.org/events) |
+| Eustis Memorial Library | FL | WordPress-FL | 1 | [Link](https://eustislibrary.org/) |
+| Freeport Branch Library | FL | WordPress-FL | 0 | [Link](https://www.freeportlibrary.org/events) |
+| Fruitland Park Library | FL | WordPress-FL | 0 | [Link](https://www.fruitlandparklibrary.org/events) |
+| Greenville Public Library | FL | WordPress-FL | 125 | [Link](https://www.greenvillelibrary.org/events) |
+| Hastings Branch Library | FL | WordPress-FL | 17 | [Link](https://hastingslibrary.org/calendar/) |
+| Havana Public Library | FL | WordPress-FL | 1 | [Link](https://www.havanalibrary.org/calendar) |
+| Hawthorne Branch Library | FL | WordPress-FL | 0 | [Link](https://www.hawthornelibrary.org/events) |
+| Homestead Branch Library | FL | WordPress-FL | 0 | [Link](https://www.homesteadlibrary.org/events) |
+| Hudson Regional Library | FL | WordPress-FL | 1 | [Link](https://www.hudsonlibrary.org/events) |
+| Lake Placid Memorial Library | FL | WordPress-FL | 10 | [Link](https://www.lakeplacidlibrary.org/events) |
+| Lakeland Public Library | FL | WordPress-FL | 0 | [Link](https://www.lakelandlibrary.org/events) |
+| Land Olakes Branch Library | FL | WordPress-FL | 150 | [Link](https://www.landolakeslibrary.org/events) |
+| Lantana Public Library | FL | WordPress-FL | 1 | [Link](https://www.lantanalibrary.org/) |
+| Largo Public Library | FL | WordPress-FL | 0 | [Link](https://www.largolibrary.org/events) |
+| West Branch Library | FL | WordPress-FL | 185 | [Link](https://www.longwoodlibrary.org/events) |
+| Madison County Library | FL | WordPress-FL | 11 | [Link](https://www.madisonlibrary.org/events) |
+| Margate Catharine Young Branch | FL | WordPress-FL | 11 | [Link](https://www.margatelibrary.org/events) |
+| Milton Library | FL | WordPress-FL | 0 | [Link](https://www.miltonlibrary.org/events) |
+| Jefferson County R. J. Bailar Public Library | FL | WordPress-FL | 0 | [Link](https://www.monticellolibrary.org/events) |
+| Collier County Public Library | FL | WordPress-FL | 0 | [Link](https://www.napleslibrary.org/events) |
+| Newberry Branch Library | FL | WordPress-FL | 0 | [Link](https://www.newberrylibrary.org/events) |
+| Oldsmar Public Library | FL | WordPress-FL | 1 | [Link](https://myoldsmar.com/1379/Oldsmar-Public-Library) |
+| Orange City Dickinson Memorial Library | FL | WordPress-FL | 0 | [Link](https://www.orangecitylibrary.org/events) |
+| East Lake Community Library | FL | WordPress-FL | 0 | [Link](https://www.palmharborlibrary.org/events) |
+| Palm Springs Public Library | FL | WordPress-FL | 1 | [Link](https://www.palmspringsca.gov/government/departments/library) |
+| Parker Public Library | FL | WordPress-FL | 0 | [Link](https://www.parkerlibrary.org/events) |
+| Parkland Library | FL | WordPress-FL | 1 | [Link](https://www.parklandlibrary.org/calendar/) |
+| Taylor County Public Library | FL | WordPress-FL | 0 | [Link](https://www.perrylibrary.org/calendar) |
+| Pierson Public Library | FL | WordPress-FL | 43 | [Link](https://www.piersonlibrary.org/events) |
+| Polk City Library | FL | WordPress-FL | 1 | [Link](https://www.polkcitylibrary.org/events) |
+| Gadsden County Public Library | FL | WordPress-FL | 126 | [Link](https://www.quincylibrary.org/events) |
+| Reddick Public Library | FL | WordPress-FL | 0 | [Link](https://www.reddicklibrary.org/) |
+| Safety Harbor Public Library | FL | WordPress-FL | 140 | [Link](https://www.safetyharborlibrary.org/events) |
+| Little Red Schoolhouse Branch | FL | WordPress-FL | 0 | [Link](https://www.springhilllibrary.org/events) |
+| Springfield Branch | FL | WordPress-FL | 1 | [Link](https://www.springfieldlibrary.org/library/) |
+| Blake Library | FL | WordPress-FL | 15 | [Link](https://stuartlibrary.org/calendar/) |
+| Sunrise Dan Pearl Branch | FL | WordPress-FL | 0 | [Link](https://www.sunriselibrary.org/events) |
+| Lake County Library System | FL | WordPress-FL | 0 | [Link](https://www.tavareslibrary.org/events) |
+| Umatilla Public Library | FL | WordPress-FL | 0 | [Link](https://www.umatillalibrary.org/) |
+| Jacaranda Public Library | FL | WordPress-FL | 0 | [Link](https://www.venicelibrary.org/events) |
+| Vernon Branch Library | FL | WordPress-FL | 0 | [Link](https://www.vernonlibrary.org/) |
+| E.C. Rowell Public Library | FL | WordPress-FL | 0 | [Link](https://www.websterlibrary.org/events) |
+| Mandel Public Library Of West Palm Beach | FL | WordPress-FL | 8 | [Link](https://www.westpalmbeachlibrary.org/events) |
+| Weston Reading Center | FL | WordPress-FL | 5 | [Link](https://www.westonlibrary.org/events) |
+| Wildwood Public Library | FL | WordPress-FL | 0 | [Link](https://www.wildwoodlibrary.org/events) |
+| Winter Park Public Library | FL | WordPress-FL | 129 | [Link](https://www.winterparklibrary.org/events) |
+| Zephyrhills Library | FL | WordPress-FL | 1 | [Link](https://www.zephyrhillslibrary.org/events) |
+| Lee Memorial Library | NJ | WordPress-NJ | 75 | [Link](https://www.allendalelibrary.org/events) |
+| Asbury Park Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.asburyparklibrary.org/) |
+| Atlantic City Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.atlanticcitylibrary.org/events) |
+| Audubon Free Public Library | NJ | WordPress-NJ | 14 | [Link](https://www.audubonlibrary.org/events) |
+| Avalon Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://avalonlibrary.org/) |
+| Bayonne Free Public Library | NJ | WordPress-NJ | 1 | [Link](https://www.bayonnelibrary.org/events) |
+| Beach Haven Free Public Library | NJ | WordPress-NJ | 57 | [Link](https://www.beachhavenlibrary.org/events) |
+| Belleville Public Library | NJ | WordPress-NJ | 3 | [Link](https://bellevillelibrary.org/) |
+| Belmar Public Library | NJ | WordPress-NJ | 150 | [Link](https://www.belmarlibrary.org/events) |
+| Bergenfield Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.bergenfieldlibrary.org/calendar/) |
+| Marie Fleche Memorial Library | NJ | WordPress-NJ | 11 | [Link](https://www.berlinlibrary.org/events) |
+| Bernardsville Public Library | NJ | WordPress-NJ | 1 | [Link](https://www.bernardsvillelibrary.org/events) |
+| Beverly Free Library | NJ | WordPress-NJ | 0 | [Link](https://www.beverlylibrary.org/events) |
+| Bloomingdale Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.bloomingdalelibrary.org/) |
+| Boonton Holmes Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.boontonlibrary.org/events) |
+| Bradley Beach Public Library | NJ | WordPress-NJ | 0 | [Link](https://bradleybeachlibrary.org/) |
+| Bridgeton Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://bridgetonlibrary.org/) |
+| Library Company Of Burlington | NJ | WordPress-NJ | 40 | [Link](https://www.burlingtonlibrary.org/events) |
+| Butler Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.butlerlibrary.org/events) |
+| Camden Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.camdenlibrary.org/) |
+| William E. Dermody Free Public Library | NJ | WordPress-NJ | 21 | [Link](https://carlstadtlibrary.org/) |
+| Carteret Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.carteretlibrary.org/events) |
+| Cedar Grove Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.cedargrovelibrary.org/events) |
+| Chathams Joint Free Public Library | NJ | WordPress-NJ | 188 | [Link](https://chathamlibrary.librarycalendar.com/events/month/) |
+| Chester Library | NJ | WordPress-NJ | 0 | [Link](https://www.chesterlibrary.org/) |
+| Clark Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.clarklibrary.org/events) |
+| Cliffside Park Free Public Library | NJ | WordPress-NJ | 106 | [Link](https://www.cliffsideparklibrary.org/events) |
+| Cranford Public Library | NJ | WordPress-NJ | 47 | [Link](https://www.cranfordlibrary.org/calendar/) |
+| Cresskill Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.cresskilllibrary.org/) |
+| Crosswicks Library Company | NJ | WordPress-NJ | 1 | [Link](https://www.crosswickslibrary.org/) |
+| Delanco Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.delancolibrary.org/) |
+| Demarest Public Library Association | NJ | WordPress-NJ | 0 | [Link](https://www.demarestlibrary.org/calendar/) |
+| Denville Free Public Library | NJ | WordPress-NJ | 44 | [Link](https://www.denvillelibrary.org/) |
+| Dover Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.doverlibrary.org/events) |
+| Dixon Homestead Library | NJ | WordPress-NJ | 1 | [Link](https://www.dumontlibrary.org/) |
+| Dunellen Free Public Library | NJ | WordPress-NJ | 5 | [Link](https://www.dunellenlibrary.org/events) |
+| Edgewater Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.edgewaterlibrary.org/events) |
+| Elmwood Park Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.elmwoodparklibrary.org/events) |
+| Emerson Public Library | NJ | WordPress-NJ | 2 | [Link](https://www.emersonlibrary.com/) |
+| Englewood Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.englewoodlibrary.org/events) |
+| Fair Haven Public Library | NJ | WordPress-NJ | 1 | [Link](https://fairhavenlibrary.org/) |
+| Maurice M. Pine Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.fairlawnlibrary.org/calendar) |
+| Anthony Pio Costa Memorial Library | NJ | WordPress-NJ | 1 | [Link](https://fairfieldlibrary.org/) |
+| Fairview Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.fairviewlibrary.org/events) |
+| Fanwood Memorial Library | NJ | WordPress-NJ | 10 | [Link](https://fanwoodlibrary.org/) |
+| Flemington Free Public Library | NJ | WordPress-NJ | 1 | [Link](https://www.flemingtonlibrary.org/events) |
+| Fort Lee Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.fortleelibrary.org/events) |
+| Franklin Lakes Free Public Library | NJ | WordPress-NJ | 34 | [Link](https://www.franklinlakeslibrary.org/events) |
+| Franklin Twp Public Library-Gloucester | NJ | WordPress-NJ | 17 | [Link](https://franklinvillelibrary.org/) |
+| Glen Ridge Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.glenridgelibrary.org/) |
+| Glen Rock Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.glenrocklibrary.org/) |
+| Gloucester City Library | NJ | WordPress-NJ | 150 | [Link](https://www.gloucestercitylibrary.org/events) |
+| Hackettstown Free Public Library | NJ | WordPress-NJ | 150 | [Link](https://www.hackettstownlibrary.org/events) |
+| Haddonfield Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.haddonfieldlibrary.org/) |
+| Hamilton Township Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://hamiltonlibrary.org/) |
+| Harrison Public Library | NJ | WordPress-NJ | 8 | [Link](https://www.harrisonpl.org/) |
+| Hasbrouck Heights Free Public Library | NJ | WordPress-NJ | 1 | [Link](https://www.hasbrouckheightslibrary.org/events) |
+| Haworth Municipal Library | NJ | WordPress-NJ | 0 | [Link](https://www.haworthlibrary.org/) |
+| Louis Bay 2nd Library | NJ | WordPress-NJ | 0 | [Link](https://www.hawthornelibrary.org/events) |
+| Hillsdale Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.cityofsanmateo.org/507/Library) |
+| Hillside Free Public Library | NJ | WordPress-NJ | 87 | [Link](https://www.hillsidelibrary.org/events) |
+| Worth Pinkham Memorial Library | NJ | WordPress-NJ | 1 | [Link](https://www.hohokuslibrary.org/events) |
+| Hoboken Public Library | NJ | WordPress-NJ | 59 | [Link](https://www.hobokenlibrary.org/events) |
+| Irvington Public Library | NJ | WordPress-NJ | 0 | [Link](https://irvingtonlibrary.org/) |
+| Jamesburg Public Library | NJ | WordPress-NJ | 6 | [Link](https://jamesburglibrary.org/) |
+| Kearny Public Library | NJ | WordPress-NJ | 134 | [Link](https://www.kearnylibrary.org/events) |
+| Kenilworth Public Library | NJ | WordPress-NJ | 10 | [Link](https://kenilworthlibrary.org/) |
+| Keyport Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.keyportlibrary.org/events) |
+| Kinnelon Public Library | NJ | WordPress-NJ | 1 | [Link](https://kinnelonlibrary.org/calendar/) |
+| Lambertville Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.lambertvillelibrary.org/events) |
+| Leonia Public Library | NJ | WordPress-NJ | 1 | [Link](https://www.leonialibrary.org/events) |
+| Lincoln Park Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.lincolnparklibrary.org/calendar) |
+| Linwood Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.linwoodlibrary.org/events) |
+| Little Falls Public Library | NJ | WordPress-NJ | 75 | [Link](https://www.littlefallslibrary.org/events) |
+| Little Silver Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.littlesilverlibrary.org/) |
+| Ruth L. Rockwood Memorial Library | NJ | WordPress-NJ | 1 | [Link](https://www.livingstonlibrary.org/events) |
+| Lyndhurst Free Public Library | NJ | WordPress-NJ | 12 | [Link](https://lyndhurstlibrary.org/) |
+| Madison Public Library | NJ | WordPress-NJ | 11 | [Link](https://www.madisonlibrary.org/events) |
+| Maplewood Memorial Library | NJ | WordPress-NJ | 1 | [Link](https://www.maplewoodlibrary.org/) |
+| Margate City Public Library | NJ | WordPress-NJ | 11 | [Link](https://www.margatelibrary.org/events) |
+| Maywood Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.maywoodlibrary.org/events) |
+| Metuchen Public Library | NJ | WordPress-NJ | 90 | [Link](https://www.metuchenlibrary.org/calendar/) |
+| Middletown Township Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.middletownlibrary.org/events) |
+| Midland Park Memorial Library | NJ | WordPress-NJ | 11 | [Link](https://www.midlandparklibrary.org/) |
+| Holland Township Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.milfordlibrary.org/events) |
+| Millburn Free Public Library | NJ | WordPress-NJ | 2 | [Link](https://www.millburnlibrary.org/events) |
+| Milltown Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.milltownlibrary.org/) |
+| Millville Public Library | NJ | WordPress-NJ | 8 | [Link](https://www.millvillelibrary.org/events) |
+| Monmouth Beach Public Library | NJ | WordPress-NJ | 0 | [Link](https://monmouthbeachlibrary.org/) |
+| Monroe Twp Public Library-Middlesex | NJ | WordPress-NJ | 0 | [Link](http://monroetpl.org/) |
+| Montclair Public Library | NJ | WordPress-NJ | 109 | [Link](https://www.montclairlibrary.org/events) |
+| Montville Township Public Library | NJ | WordPress-NJ | 13 | [Link](https://montvillelibrary.org/) |
+| Moorestown Library | NJ | WordPress-NJ | 27 | [Link](https://www.moorestownlibrary.org/events) |
+| Morris Plains Library | NJ | WordPress-NJ | 4 | [Link](https://morrisplainslibrary.org/) |
+| Morristown-Morris Twp Joint Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.morristownlibrary.org/events) |
+| Mount Arlington Public Library | NJ | WordPress-NJ | 0 | [Link](https://mountarlingtonlibrary.org/) |
+| Mount Laurel Library | NJ | WordPress-NJ | 198 | [Link](https://www.mountlaurellibrary.org/events) |
+| Mountain Lakes Free Public Library | NJ | WordPress-NJ | 4 | [Link](https://www.mountainlakeslibrary.org/events) |
+| Mountainside Free Public Library | NJ | WordPress-NJ | 17 | [Link](https://www.mountainsidelibrary.org/) |
+| New Milford Public Library | NJ | WordPress-NJ | 5 | [Link](https://newmilfordlibrary.org/) |
+| New Providence Memorial Library | NJ | WordPress-NJ | 0 | [Link](https://www.newprovidencelibrary.org/) |
+| Newark Public Library | NJ | WordPress-NJ | 1 | [Link](https://newarklibrary.org/) |
+| Sussex County Library | NJ | WordPress-NJ | 0 | [Link](https://www.newtonlibrary.org/events) |
+| North Arlington Public Library | NJ | WordPress-NJ | 12 | [Link](https://www.northarlingtonlibrary.org/events) |
+| North Brunswick Free Public Library | NJ | WordPress-NJ | 12 | [Link](https://northbrunswicklibrary.org/) |
+| North Haledon Free Public Library | NJ | WordPress-NJ | 14 | [Link](https://www.northhaledonlibrary.org/events) |
+| Norwood Public Library | NJ | WordPress-NJ | 1 | [Link](https://norwoodlibrary.org/) |
+| Oakland Public Library | NJ | WordPress-NJ | 36 | [Link](https://www.oaklandlibrary.org/events) |
+| Ocean City Free Public Library | NJ | WordPress-NJ | 4 | [Link](https://www.oceancitylibrary.org/) |
+| Old Bridge Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.oldbridgelibrary.org/events) |
+| Old Tappan Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.oldtappanlibrary.com/calendar) |
+| Oxford Public Library | NJ | WordPress-NJ | 0 | [Link](https://oxfordlibrary.org/) |
+| Palisades Park Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.palisadesparklibrary.org/events) |
+| Paramus Public Library | NJ | WordPress-NJ | 1 | [Link](https://www.paramuslibrary.org/events) |
+| Park Ridge Free Public Library | NJ | WordPress-NJ | 5 | [Link](https://www.parkridgelibrary.org/) |
+| Parsippany-Troy Hills Public Library | NJ | WordPress-NJ | 1 | [Link](https://www.parsippanylibrary.org/events) |
+| Passaic Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.passaicpubliclibrary.org/) |
+| Pennington Free Public Library | NJ | WordPress-NJ | 18 | [Link](https://www.penningtonlibrary.org/events) |
+| Pennsauken Free Public Library | NJ | WordPress-NJ | 1 | [Link](https://www.pennsaukenlibrary.org/events) |
+| Pennsville Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.pennsvillelibrary.org/events) |
+| Piscataway Public Library | NJ | WordPress-NJ | 127 | [Link](https://www.piscatawaylibrary.org/events) |
+| Plainfield Free Public Library | NJ | WordPress-NJ | 7 | [Link](https://www.plainfieldlibrary.org/events) |
+| Plainsboro Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.plainsborolibrary.org/events) |
+| Pompton Lakes Borough Free Public Library | NJ | WordPress-NJ | 6 | [Link](https://www.pomptonlakeslibrary.org/) |
+| Princeton Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.princetonlibrary.org/events) |
+| Rahway Public Library | NJ | WordPress-NJ | 11 | [Link](https://www.rahwaylibrary.org/) |
+| Ramsey Free Public Library | NJ | WordPress-NJ | 41 | [Link](https://www.ramseylibrary.org/events) |
+| Randolph Township Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.randolphlibrary.org/events) |
+| Red Bank Public Library | NJ | WordPress-NJ | 27 | [Link](https://www.redbanklibrary.org/calendar) |
+| Ridgefield Free Public Library | NJ | WordPress-NJ | 29 | [Link](https://ridgefieldlibrary.org/) |
+| Ridgewood Public Library | NJ | WordPress-NJ | 0 | [Link](https://ridgewoodlibrary.org/) |
+| Ringwood Public Library | NJ | WordPress-NJ | 150 | [Link](https://www.ringwoodlibrary.org/events) |
+| River Vale Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.rivervalelibrary.org/calendar) |
+| Riverdale Public Library | NJ | WordPress-NJ | 1 | [Link](https://www.riverdalelibrary.org/events) |
+| Riverside Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.riversidelibrary.org/events) |
+| Roseland Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.roselandlibrary.org/events) |
+| Roselle Free Public Library | NJ | WordPress-NJ | 54 | [Link](https://www.rosellelibrary.org/events) |
+| Roselle Park Veterans Memorial Library | NJ | WordPress-NJ | 1 | [Link](https://www.roselleparklibrary.org/events) |
+| Runnemede Public Library | NJ | WordPress-NJ | 4 | [Link](https://www.runnemedelibrary.org/events) |
+| Rutherford Free Public Library | NJ | WordPress-NJ | 1 | [Link](https://www.rutherfordlibrary.org/events) |
+| Saddle Brook Free Public Library | NJ | WordPress-NJ | 14 | [Link](https://saddlebrooklibrary.org/) |
+| Salem Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.salemlibrary.org/events) |
+| Scotch Plains Public Library | NJ | WordPress-NJ | 2 | [Link](https://www.scotchplainslibrary.org/events) |
+| Secaucus Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.secaucuslibrary.org/events) |
+| Franklin Twp Public Library-Somerset | NJ | WordPress-NJ | 1 | [Link](https://www.somersetlibrary.org/events) |
+| Dowdell Library Of South Amboy | NJ | WordPress-NJ | 0 | [Link](https://www.southamboylibrary.org/events) |
+| South River Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.southriverlibrary.org/events) |
+| Sparta Public Library | NJ | WordPress-NJ | 39 | [Link](https://www.spartalibrary.org/events) |
+| Spring Lake Public Library | NJ | WordPress-NJ | 4 | [Link](https://www.springlakelibrary.org/events) |
+| Springfield Free Public Library | NJ | WordPress-NJ | 1 | [Link](https://www.springfieldlibrary.org/library/) |
+| Stratford Public Library | NJ | WordPress-NJ | 1 | [Link](https://www.stratfordlibrary.org/events) |
+| Summit Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.summitlibrary.org/) |
+| Teaneck Public Library | NJ | WordPress-NJ | 1 | [Link](https://www.teanecklibrary.org/events) |
+| Tenafly Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.tenaflylibrary.org/calendar) |
+| Dwight D. Eisenhower Library | NJ | WordPress-NJ | 0 | [Link](https://www.totowalibrary.org/events) |
+| Union Free Public Library | NJ | WordPress-NJ | 110 | [Link](https://www.unionlibrary.org/events) |
+| Verona Free Public Library | NJ | WordPress-NJ | 71 | [Link](https://www.veronalibrary.org/events) |
+| Sally Stretch Keen Memorial Library | NJ | WordPress-NJ | 0 | [Link](https://www.vincentownlibrary.org/events) |
+| Vineland Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.vinelandlibrary.org/events) |
+| Waldwick Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.waldwicklibrary.org/library-events) |
+| Wanaque Borough Free Public Library | NJ | WordPress-NJ | 150 | [Link](https://www.wanaquelibrary.org/events) |
+| West Orange Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.westorangelibrary.org/) |
+| Westfield Memorial Library | NJ | WordPress-NJ | 1 | [Link](https://www.westfieldlibrary.org/events) |
+| Westwood Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.westwoodlibrary.org/events) |
+| Wharton Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.whartonlibrary.org/events) |
+| Monroe Twp Public Library-Gloucester | NJ | WordPress-NJ | 150 | [Link](https://www.williamstownlibrary.org/events) |
+| Wood-Ridge Memorial Library | NJ | WordPress-NJ | 26 | [Link](https://www.woodridgelibrary.org/events) |
+| Woodbridge Public Library | NJ | WordPress-NJ | 13 | [Link](https://www.woodbridgelibrary.org/calendar.aspx) |
+| Woodbury Public Library | NJ | WordPress-NJ | 26 | [Link](https://www.woodburylibrary.org/events) |
+| Woodstown-Pilesgrove Library | NJ | WordPress-NJ | 0 | [Link](https://www.woodstownlibrary.org/) |
+| Wyckoff Free Public Library | NJ | WordPress-NJ | 0 | [Link](https://www.wyckofflibrary.org/events) |
+| Jackson-Hinds Library System | MS | WordPress-MS | 19 | [Link](https://www.jhlibrary.org/events) |
+| Harrison County Library System | MS | WordPress-MS | 24 | [Link](https://www.harrison.lib.ms.us/) |
+| First Regional Library | MS | WordPress-MS | 0 | [Link](https://www.firstregional.org/events) |
+| Lee-Itawamba Library System | MS | WordPress-MS | 24 | [Link](https://www.leeitawambalibrary.org/events) |
+| Jackson-George Regional Library System | MS | WordPress-MS | 32 | [Link](https://www.jgrls.org/events) |
+| Columbus-Lowndes Public Library | MS | WordPress-MS | 0 | [Link](https://www.lowndeslibrary.com/) |
+| Warren County-Vicksburg Public Library | MS | WordPress-MS | 1 | [Link](https://www.warren.lib.ms.us/) |
+| Laurel-Jones County Library | MS | WordPress-MS | 150 | [Link](https://www.laurel.lib.ms.us/events) |
+| Pine Forest Regional Library | MS | WordPress-MS | 1 | [Link](https://www.pineforest.lib.ms.us/) |
+| Starkville-Oktibbeha County Public Library | MS | WordPress-MS | 1 | [Link](https://www.starkville.lib.ms.us/) |
+| Bolivar County Library System | MS | WordPress-MS | 1 | [Link](https://www.bolivar.lib.ms.us/) |
+| Pearl River County Library System | MS | WordPress-MS | 101 | [Link](https://www.pearlriver.lib.ms.us/events) |
+| Lincoln-Lawrence-Franklin Regional Library | MS | WordPress-MS | 12 | [Link](https://www.llf.lib.ms.us/events) |
+| Dixie Regional Library System | MS | WordPress-MS | 0 | [Link](https://dixie.lib.ms.us/) |
+| Northeast Regional Library | MS | WordPress-MS | 0 | [Link](https://www.nereg.lib.ms.us/events) |
+| Central Mississippi Regional Library System | MS | WordPress-MS | 0 | [Link](https://www.cmrls.lib.ms.us/events) |
+| Tombigbee Regional Library System | MS | WordPress-MS | 1 | [Link](https://www.tombigbee.lib.ms.us/) |
+| Benton County Library | MS | WordPress-MS | 0 | [Link](https://www.ashlandlibrary.org/events) |
+| Avon Public Library | MS | WordPress-MS | 0 | [Link](https://www.avonlibrary.org/events) |
+| William Estes Powell Memorial Library | MS | WordPress-MS | 0 | [Link](https://www.beaumontlibrary.org/events) |
+| Belmont Public Library | MS | WordPress-MS | 6 | [Link](https://smcl.org/) |
+| Brooksville Public Library | MS | WordPress-MS | 29 | [Link](https://www.brooksvillelibrary.org/events) |
+| Caledonia Public Library | MS | WordPress-MS | 1 | [Link](https://www.caledonialibrary.org/events) |
+| Charleston Public Library | MS | WordPress-MS | 0 | [Link](https://charlestonlibrary.org/library-events) |
+| A. E. Wood Library | MS | WordPress-MS | 0 | [Link](https://www.clintonlibrary.org/events) |
+| Columbia-Marion County Library | MS | WordPress-MS | 0 | [Link](https://www.columbialibrary.org/events) |
+| Crawford Public Library | MS | WordPress-MS | 1 | [Link](https://crawfordlibrary.org/) |
+| Crosby Public Library | MS | WordPress-MS | 0 | [Link](https://www.crosbylibrary.org/events) |
+| Decatur Public Library | MS | WordPress-MS | 62 | [Link](https://www.decaturlibrary.org/events) |
+| Dekalb Public Library | MS | WordPress-MS | 4 | [Link](https://www.dekalblibrary.org/events) |
+| Enterprise Public Library | MS | WordPress-MS | 0 | [Link](https://www.enterpriselibrary.org/events) |
+| Jefferson County Public Library | MS | WordPress-MS | 28 | [Link](https://www.fayettelibrary.org/events) |
+| Florence Public Library | MS | WordPress-MS | 28 | [Link](https://www.florencelibrary.org/events) |
+| Forest Public Library | MS | WordPress-MS | 6 | [Link](https://www.forestlibrary.org/) |
+| Itawamba County-Pratt Memorial Library | MS | WordPress-MS | 0 | [Link](https://www.facebook.com/fultonlibrary) |
+| Greenwood-Leflore Public Library | MS | WordPress-MS | 3 | [Link](https://www.greenwoodlibrary.org/events) |
+| Hamilton Public Library | MS | WordPress-MS | 0 | [Link](https://hamiltonlibrary.org/) |
+| Houston Carnegie Library | MS | WordPress-MS | 0 | [Link](https://www.houstonlibrary.org/events) |
+| Leland Public Library | MS | WordPress-MS | 0 | [Link](https://www.lelandlibrary.org/events) |
+| Lexington Public Library | MS | WordPress-MS | 0 | [Link](https://www.lexingtonlibrary.org/events) |
+| Liberty Public Library | MS | WordPress-MS | 0 | [Link](https://libertylibrary.org/) |
+| Long Beach Public Library | MS | WordPress-MS | 1 | [Link](https://www.longbeachlibrary.org/events) |
+| Winston County Library | MS | WordPress-MS | 0 | [Link](https://www.louisvillelibrary.org/events) |
+| Ada S. Fant Memorial Library | MS | WordPress-MS | 0 | [Link](https://www.maconlibrary.org/events) |
+| Rebecca Baine Rigby Library | MS | WordPress-MS | 7 | [Link](https://www.madisonlibrary.org/events) |
+| Magnolia Public Library | MS | WordPress-MS | 0 | [Link](https://www.magnolialibrary.org/events) |
+| William And Dolores Mauldin Library | MS | WordPress-MS | 0 | [Link](https://www.mchenrylibrary.org/) |
+| Franklin County Public Library | MS | WordPress-MS | 0 | [Link](https://www.meadvillelibrary.org/events) |
+| Lawrence County Public Library | MS | WordPress-MS | 1 | [Link](https://www.allertonpubliclibrary.org/calendar) |
+| Morton Public Library | MS | WordPress-MS | 0 | [Link](https://mortonlibrary.org/) |
+| J. Elliott Mcmullan Library | MS | WordPress-MS | 0 | [Link](https://www.newtonlibrary.org/events) |
+| Oakland Public Library | MS | WordPress-MS | 36 | [Link](https://www.oaklandlibrary.org/events) |
+| Lafayette County-Oxford Public Library | MS | WordPress-MS | 0 | [Link](https://oxfordlibrary.org/) |
+| Clarke County-Quitman Public Library | MS | WordPress-MS | 0 | [Link](https://www.quitmanlibrary.org/) |
+| Richland Public Library | MS | WordPress-MS | 22 | [Link](https://www.richlandlibrary.org/Calendar) |
+| Ripley Public Library | MS | WordPress-MS | 1 | [Link](https://ripleylibrary.org/) |
+| Field Memorial Library | MS | WordPress-MS | 0 | [Link](https://www.shawlibrary.org/) |
+| Dr. Robert T. Hollingsworth Library | MS | WordPress-MS | 17 | [Link](https://www.shelbylibrary.org/events) |
+| Sherman Library | MS | WordPress-MS | 1 | [Link](https://www.shermanlibrary.org/) |
+| Sturgis Public Library | MS | WordPress-MS | 150 | [Link](https://www.sturgislibrary.org/events) |
+| Kemper-Newton Regional Library | MS | WordPress-MS | 110 | [Link](https://www.unionlibrary.org/events) |
+| Evelyn Taylor Majure Library | MS | WordPress-MS | 0 | [Link](https://www.uticalibrary.org/events) |
+| Woodville Public Library | MS | WordPress-MS | 0 | [Link](https://www.woodvillelibrary.org/events) |
+| Portland Public Library | ME | WordPress-ME | 7 | [Link](https://www.portlandlibrary.com/events) |
+| Bangor Public Library | ME | WordPress-ME | 1 | [Link](https://bangorpubliclibrary.org/) |
+| Lewiston Public Library | ME | WordPress-ME | 0 | [Link](https://www.lplonline.org/events) |
+| Auburn Public Library | ME | WordPress-ME | 23 | [Link](https://www.auburnpubliclibrary.org/events) |
+| South Portland Public Library | ME | WordPress-ME | 34 | [Link](https://www.southportlandlibrary.com/events) |
+| Biddeford-McArthur Library | ME | WordPress-ME | 41 | [Link](https://www.mcarthurlibrary.org/events) |
+| Augusta - Lithgow Public Library | ME | WordPress-ME | 1 | [Link](https://www.lithgowlibrary.org/) |
+| Scarborough Public Library | ME | WordPress-ME | 2 | [Link](https://www.scarboroughlibrary.org/events) |
+| Waterville Public Library | ME | WordPress-ME | 21 | [Link](https://www.watervillelibrary.org/events) |
+| Westbrook Public Library | ME | WordPress-ME | 90 | [Link](https://www.westbrooklibrary.org/events) |
+| Brunswick Curtis Memorial Library | ME | WordPress-ME | 4 | [Link](https://curtislibrary.com/) |
+| Gorham Baxter Memorial Library | ME | WordPress-ME | 150 | [Link](https://www.baxterlibrary.org/events) |
+| Windham Public Library | ME | WordPress-ME | 0 | [Link](https://www.windham.lib.me.us/calendar) |
+| Kennebunk Free Library | ME | WordPress-ME | 0 | [Link](https://kennebunklibrary.org/calendar/) |
+| Belfast Free Library | ME | WordPress-ME | 150 | [Link](https://www.belfastlibrary.org/events) |
+| Rockland Public Library | ME | WordPress-ME | 0 | [Link](https://www.rocklandlibrary.org/events) |
+| Camden Public Library | ME | WordPress-ME | 150 | [Link](https://www.librarycamden.org/events) |
+| Acton Public Library | ME | WordPress-ME | 2 | [Link](https://www.actonlibrary.org/events) |
+| Mayhew Library Assn | ME | WordPress-ME | 14 | [Link](https://www.addisonlibrary.org/events) |
+| Albion Public Library | ME | WordPress-ME | 0 | [Link](https://www.albionlibrary.org/) |
+| Parsons Memorial Library | ME | WordPress-ME | 12 | [Link](https://www.alfredlibrary.org/events) |
+| Andover Public Library | ME | WordPress-ME | 0 | [Link](https://www.andoverlibrary.org/events) |
+| Ashland Community Library | ME | WordPress-ME | 0 | [Link](https://www.ashlandlibrary.org/events) |
+| Patten Free Library | ME | WordPress-ME | 21 | [Link](https://www.bathlibrary.org/events) |
+| Belgrade Public Library | ME | WordPress-ME | 0 | [Link](https://www.belgrademt.gov/544/Library) |
+| Bethel Library Assn | ME | WordPress-ME | 0 | [Link](https://www.bethellibrary.org/events) |
+| Blue Hill Library | ME | WordPress-ME | 0 | [Link](https://www.bluehilllibrary.org/events) |
+| Boothbay Harbor Memorial Library | ME | WordPress-ME | 0 | [Link](https://www.boothbayharborlibrary.org/events) |
+| Bowdoinham Public Library | ME | WordPress-ME | 6 | [Link](https://www.bowdoinhamlibrary.org/events) |
+| John B. Curtis Free Public Library | ME | WordPress-ME | 0 | [Link](https://bradfordlibrary.org/) |
+| Bremen Public Library | ME | WordPress-ME | 0 | [Link](https://www.bremenlibrary.org/events) |
+| Bridgton Public Library | ME | WordPress-ME | 1 | [Link](https://www.bridgtonlibrary.org/events) |
+| Brooksville Free Public Library | ME | WordPress-ME | 30 | [Link](https://www.brooksvillelibrary.org/events) |
+| Brownville Public Library | ME | WordPress-ME | 0 | [Link](https://www.brownvillelibrary.org/events) |
+| Canaan Public Library | ME | WordPress-ME | 18 | [Link](https://www.canaanlibrary.org/events) |
+| Simpson Memorial Library | ME | WordPress-ME | 1 | [Link](https://carmellibrary.org/calendar/) |
+| Charleston Public Library | ME | WordPress-ME | 0 | [Link](https://charlestonlibrary.org/library-events) |
+| Cumberland - Chebeague Island Library | ME | WordPress-ME | 2 | [Link](https://www.chebeaguelibrary.org/events) |
+| Brown Memorial Library - Clinton | ME | WordPress-ME | 0 | [Link](https://www.clintonlibrary.org/events) |
+| Prince Memorial Library | ME | WordPress-ME | 2 | [Link](https://www.cumberlandlibrary.org/events) |
+| Louise Clements Library | ME | WordPress-ME | 0 | [Link](https://www.cutlerlibrary.org/) |
+| Chase Emerson Memorial Library | ME | WordPress-ME | 0 | [Link](https://www.deerislelibrary.org/) |
+| Lawrence Public Library | ME | WordPress-ME | 1 | [Link](https://fairfieldlibrary.org/) |
+| Farmington Public Library | ME | WordPress-ME | 9 | [Link](https://www.farmingtonpublic.org/) |
+| Underwood Memorial Library | ME | WordPress-ME | 28 | [Link](https://www.fayettelibrary.org/events) |
+| Fort Fairfield Public Library | ME | WordPress-ME | 0 | [Link](https://www.fortfairfieldlibrary.org/) |
+| Frankfort - Pierce Reading Room Library | ME | WordPress-ME | 1 | [Link](https://www.frankfortlibrary.org/) |
+| Freeport Community Library | ME | WordPress-ME | 0 | [Link](https://www.freeportlibrary.org/events) |
+| Gardiner Public Library | ME | WordPress-ME | 0 | [Link](https://www.gardinerlibrary.org/) |
+| Julia Adams Morse Memorial Library | ME | WordPress-ME | 0 | [Link](https://www.greenelibrary.org/events) |
+| Shaw Public Library - Greenville | ME | WordPress-ME | 269 | [Link](https://www.greenvillelibrary.org/events) |
+| Bolsters Mills Village Library | ME | WordPress-ME | 10 | [Link](https://www.harrisonpl.org/) |
+| Hartland Public Library | ME | WordPress-ME | 0 | [Link](https://www.hartlandlibrary.org/events) |
+| Hollis Center Public Library | ME | WordPress-ME | 0 | [Link](https://www.hollislibrary.org/events) |
+| Hope Library | ME | WordPress-ME | 0 | [Link](https://www.hopelibrary.org/events) |
+| Thomas Free Library | ME | WordPress-ME | 0 | [Link](https://www.howlandlibrary.org/events) |
+| Katahdin Public Library | ME | WordPress-ME | 0 | [Link](https://www.islandfallslibrary.org/) |
+| Parsonsfield Public Library | ME | WordPress-ME | 0 | [Link](https://www.kezarfallslibrary.org/upcoming-events) |
+| Lebanon Town Library | ME | WordPress-ME | 0 | [Link](https://lebanonlibrary.org/) |
+| Ivan O. Davis-Liberty Library | ME | WordPress-ME | 0 | [Link](https://libertylibrary.org/) |
+| Limerick Public Library | ME | WordPress-ME | 0 | [Link](https://www.limericklibrary.org/events) |
+| Frost Memorial Library | ME | WordPress-ME | 8 | [Link](https://www.limestonelibrary.org/) |
+| Lincoln Memorial Library | ME | WordPress-ME | 0 | [Link](https://www.lincolnlibrary.org/events) |
+| Lyman Community Library | ME | WordPress-ME | 1 | [Link](https://www.lymanlibrary.org/) |
+| Machias - Porter Memorial Library | ME | WordPress-ME | 16 | [Link](https://www.machiaslibrary.org/events) |
+| Madawaska Public Library | ME | WordPress-ME | 0 | [Link](https://www.madawaskalibrary.org/events) |
+| Madison Public Library | ME | WordPress-ME | 8 | [Link](https://www.madisonlibrary.org/events) |
+| Mercer - Shaw Library | ME | WordPress-ME | 0 | [Link](https://www.mercerlibrary.org/events) |
+| Milbridge Public Library | ME | WordPress-ME | 0 | [Link](https://www.milbridgelibrary.org/events) |
+| Monroe Community Library | ME | WordPress-ME | 0 | [Link](https://www.monroelibrary.org/events) |
+| Naples Public Library | ME | WordPress-ME | 0 | [Link](https://www.napleslibrary.org/events) |
+| New Gloucester Public Library | ME | WordPress-ME | 0 | [Link](https://www.newgloucesterlibrary.org/) |
+| New Vineyard Public Library | ME | WordPress-ME | 0 | [Link](https://www.newvineyardlibrary.org/events) |
+| Newport Public Library | ME | WordPress-ME | 13 | [Link](https://www.newportlibrary.org/events) |
+| North Haven Public Library | ME | WordPress-ME | 0 | [Link](https://www.northhavenlibrary.org/events) |
+| Oakland Public Library | ME | WordPress-ME | 62 | [Link](https://www.oaklandlibrary.org/events) |
+| Ogunquit Memorial Library | ME | WordPress-ME | 0 | [Link](https://www.ogunquitlibrary.org/events) |
+| Orrs Island Library | ME | WordPress-ME | 53 | [Link](https://www.orrsislandlibrary.org/events) |
+| Owls Head Village Library | ME | WordPress-ME | 0 | [Link](https://www.owlsheadlibrary.org/events) |
+| Freeland Holmes Library | ME | WordPress-ME | 0 | [Link](https://oxfordlibrary.org/) |
+| Pembroke Library | ME | WordPress-ME | 0 | [Link](https://www.pembrokelibrary.org/upcoming-events) |
+| Pittsfield Public Library | ME | WordPress-ME | 3 | [Link](https://www.pittsfieldlibrary.org/) |
+| Mark And Emily Turner Memorial Library | ME | WordPress-ME | 27 | [Link](https://www.presqueislelibrary.org/events) |
+| Princeton Public Library | ME | WordPress-ME | 1 | [Link](https://www.princetonlibrary.org/events) |
+| Rangeley Public Library | ME | WordPress-ME | 88 | [Link](https://www.rangeleylibrary.org/events) |
+| Isaac F Umberhine Public Library | ME | WordPress-ME | 0 | [Link](https://www.richmondlibrary.org/events) |
+| Rockport Public Library | ME | WordPress-ME | 0 | [Link](https://www.rockportlibrary.org/events) |
+| Sargentville Library Assn | ME | WordPress-ME | 2 | [Link](https://www.sargentvillelibrary.org/) |
+| Sherman Public Library | ME | WordPress-ME | 1 | [Link](https://www.shermanlibrary.org/) |
+| South Berwick Public Library | ME | WordPress-ME | 0 | [Link](https://www.southberwicklibrary.org/events) |
+| South China Public Library | ME | WordPress-ME | 15 | [Link](https://www.southchinalibrary.org/events) |
+| Southport Memorial Library | ME | WordPress-ME | 0 | [Link](https://www.southportlibrary.org/events) |
+| Springvale Public Library | ME | WordPress-ME | 0 | [Link](https://www.springvalelibrary.org/events) |
+| Standish - Richville Library | ME | WordPress-ME | 1 | [Link](https://standishlibrary.org/) |
+| Steep Falls Library | ME | WordPress-ME | 0 | [Link](https://www.steepfallslibrary.org/events) |
+| Henry D. Moore Library | ME | WordPress-ME | 0 | [Link](https://www.steubenlibrary.org/events) |
+| Stockton Springs Community Library | ME | WordPress-ME | 0 | [Link](https://www.stocktonspringslibrary.org/events) |
+| Stonington Public Library | ME | WordPress-ME | 0 | [Link](https://www.stoningtonlibrary.org/) |
+| Frenchmans Bay Library | ME | WordPress-ME | 0 | [Link](https://www.sullivanil.us/departments/library/index.php) |
+| Swans Island Public Library | ME | WordPress-ME | 0 | [Link](https://swansislandeducationalsociety.org/events/) |
+| Thomaston Public Library | ME | WordPress-ME | 0 | [Link](https://thomastonlibrary.org/) |
+| Topsham Public Library | ME | WordPress-ME | 0 | [Link](https://www.topshamlibrary.org/events) |
+| Vose Library | ME | WordPress-ME | 110 | [Link](https://www.unionlibrary.org/events) |
+| Dorothy W Quimby Library | ME | WordPress-ME | 0 | [Link](https://www.unitylibrary.org/) |
+| Abel J.Morneault Memorial Library | ME | WordPress-ME | 0 | [Link](https://www.vbdl.org/events/) |
+| Waldoboro Public Library | ME | WordPress-ME | 0 | [Link](https://www.waldoborolibrary.org/events) |
+| Warren Free Public Library | ME | WordPress-ME | 1 | [Link](https://www.warrenlibrary.org/events) |
+| Washburn Memorial Library | ME | WordPress-ME | 9 | [Link](https://www.washburnlibrary.org/events) |
+| Waterford Library Association | ME | WordPress-ME | 0 | [Link](https://www.waterfordlibrary.org/events) |
+| Wells Public Library | ME | WordPress-ME | 0 | [Link](https://wellslibrary.org/) |
+| West Paris Public Library | ME | WordPress-ME | 0 | [Link](https://www.westparislibrary.org/) |
+| Wilton Free Public Library | ME | WordPress-ME | 1 | [Link](https://www.wiltonlibrary.org/events) |
+| Winterport Memorial Library | ME | WordPress-ME | 1 | [Link](https://www.winterportlibrary.org/events) |
+| Bailey Public Library | ME | WordPress-ME | 1 | [Link](https://www.winthroplibrary.org/) |
+| Merrill Memorial Library | ME | WordPress-ME | 41 | [Link](https://www.yarmouthlibrary.org/events) |
+| York Public Library | ME | WordPress-ME | 0 | [Link](https://yorklibrary.org/) |
+
+### Cycle-completion check
+
+All three rotation groups have now run at least once as of today: Group 1 (2026-08-04, full per-library breakdown), Group 3 (2026-08-04, aggregate-only due to the `scraper-stdout.log` gap noted in the 2026-08-04 section), and Group 2 (2026-08-05, full per-library breakdown, this section). That closes out the first pass of the 3-day cycle, though Group 3's rows remain aggregate-only until it runs again with intact stdout logging — treat those as the one gap still worth re-verifying on the next Group 3 day rather than a completed inventory.

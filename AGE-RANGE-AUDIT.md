@@ -3164,3 +3164,1237 @@ These ran today per `scraper-summary.log` but either found 0 new events, or thei
 - **WordPress-NC** — Alleghany County Public Library — 71.4% All Ages (21 events)
 - **WordPress-TN** — White County Public Library — 71.4% All Ages (21 events)
 - **Orange-County-Library-FL** — Winter Garden Branch — 70.3% All Ages (128 events)
+
+## 2026-08-05
+
+Group 2's rotation day. Covers every Group 2 scraper that completed before this audit was run, using the same time-window attribution method as 2026-08-04 (rows attributed by matching `scraped_at` against each scraper's [start, end] window from today's run, padded ~2 minutes, since `scraper_name` frequently holds a per-library/per-site value instead of the registry display name — reconfirmed today for LibCal-*, Communico-*, and `WordPress-MD` (which stores the generic label `generic-MD`), while `BiblioCommons-*`, `CustomDrupal-Libraries`, and `LibraryMarket*` do store their own per-site names directly). `MacaroniKid-2` is excluded entirely — it started at 14:47:58 UTC and was still running when this audit was built, so its data is incomplete and would misrepresent that day's coverage. As with 2026-08-04, a scraper's own run-log "New" count can run higher than the Total column here, because some "new" events collide server-side with an existing row's stable ID (an UPDATE, which does not reset `created_at`/`scraped_at`) — the 12 scrapers below with zero attributable rows in their window are the extreme case of this: `Activities-Eastern-US` is explicitly monthly-scheduled per its own file header ("curated data doesn't change often"), and the five `Activities-*-DMV` hand-curated venue-list scrapers ran for well under 30 seconds each today, consistent with re-scraping already-known venues whose events didn't change ID and so didn't get a fresh `scraped_at`. This is expected, not a bug in this audit.
+
+**Link column derivation**, same three-tier priority as the methodology note above: (1) matched the DB venue name against that scraper's own static config array (`LIBRARY_SYSTEMS`/`LIBRARIES`/`JURISDICTIONS`/`LOCALIST_CONFIGS`/etc., extracted from each scraper's source file) by exact/substring/token-overlap match, using its `url`/`eventsUrl`/`calendarUrl`/`website` field (`ActiveNet-Parks-Eastern` computes `https://anc.apm.activecommunities.com/{slug}/activity/search` from its `slug` field since it has no literal URL field) — labeled **"link"**; single-venue scrapers with no per-site array at all (`Howard-County`, `Brooklyn-Library`, `PG-Parks`, `Montgomery-Parks`) point every row at that one scraper's own base calendar/events URL under the same label. (2) no config match found, or the scraper has no config array (`NPS-Parks`, `Activities-Eastern-US`, `Festivals-Eastern-US`, `FestivalGuides-Eastern`, `BarnesNoble-Eastern` — the last two search dynamically/via live API rather than iterating a fixed site list) — falls back to a representative `events.url` sampled from that exact venue's rows in today's window, labeled **"link (event, DB fallback)"**. (3) `—` if neither produced anything (did not occur today — every row below has a link).
+
+| Site | Scraper | All Ages | Babies 0-2 | Preschool 3-5 | Kids 6-8 | Tweens 9-12 | Teens 13-18 | Total | Link |
+|---|---|---|---|---|---|---|---|---|---|
+| Makerspace | LibCal-CT | 0 | 0 | 0 | 3 | 0 | 1 | 4 | [link (event, DB fallback)](https://easthartfordct.libcal.com/event/17025642) |
+| Greenwich Library | LibCal-CT | 0 | 0 | 1 | 2 | 0 | 0 | 3 | [link](https://greenwichlibrary.libcal.com/calendar/events) |
+| Readmobile | LibCal-CT | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [link (event, DB fallback)](https://nhfpl.libcal.com/event/16930291) |
+| Children's Program Room | LibCal-CT | 0 | 0 | 1 | 1 | 0 | 0 | 2 | [link (event, DB fallback)](https://easthartfordct.libcal.com/event/16848955) |
+| Burroughs-Saden Children's Room | LibCal-CT | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [link (event, DB fallback)](https://bportlibrary.libcal.com/event/17246128) |
+| Mitchell-Beecher Park | LibCal-CT | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://nhfpl.libcal.com/event/17161327) |
+| Newfield Teen Room | LibCal-CT | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://bportlibrary.libcal.com/event/17302402) |
+| North Children's Room | LibCal-CT | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://bportlibrary.libcal.com/event/16741645) |
+| Mitchell Program Room | LibCal-CT | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://nhfpl.libcal.com/event/17165824) |
+| Fair Haven Main Floor | LibCal-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://nhfpl.libcal.com/event/17021276) |
+| Burroughs-Saden 3rd Floor Meeting Room | LibCal-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://bportlibrary.libcal.com/event/17190737) |
+| Wilson Branch | LibCal-CT | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://nhfpl.libcal.com/event/15696127) |
+| Black Rock Children's Room | LibCal-CT | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://bportlibrary.libcal.com/event/17018080) |
+| Stratford Library | LibCal-CT | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link](https://stratfordlibrary.libcal.com/calendar/events?cid=-1&t=d) |
+| Burrough-Saden (Small) 1st Floor Meeting Room | LibCal-CT | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://bportlibrary.libcal.com/event/17138101) |
+| Stetson Young Minds Discovery Room | LibCal-CT | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://nhfpl.libcal.com/event/17267046) |
+| Ives Children's Program Room | LibCal-CT | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://nhfpl.libcal.com/event/12530432) |
+| Stetson Active Learning Classroom | LibCal-CT | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://nhfpl.libcal.com/event/16909715) |
+| Wilson Music Room | LibCal-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://nhfpl.libcal.com/event/15696273) |
+| Newfield Community Room | LibCal-CT | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://bportlibrary.libcal.com/event/17294965) |
+| New Haven Free Public Library | LibCal-CT | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link](https://nhfpl.libcal.com/calendar?cid=-1&t=d) |
+| Children's Department | LibCal-CT | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://stratfordlibrary.libcal.com/event/16794499) |
+| Lobby | LibCal-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://stratfordlibrary.libcal.com/event/17131838) |
+| Athens-Clarke County Library | LibCal-GA | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [link](https://athenslibrary.libcal.com/) |
+| North Hall Teen Room | LibCal-GA | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://hallcountylibrary.libcal.com/event/16842018) |
+| North Hall Tech Center Maker Space Room | LibCal-GA | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://hallcountylibrary.libcal.com/event/16841961) |
+| Blackshear Place Library Children's Department | LibCal-GA | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://hallcountylibrary.libcal.com/event/16912860) |
+| Children's Program Room | LibCal-MA | 0 | 0 | 0 | 4 | 0 | 0 | 4 | [link (event, DB fallback)](https://newtonfreelibrary.libcal.com/event/17057343) |
+| Hunneman Hall - Brookline Village | LibCal-MA | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [link (event, DB fallback)](https://brooklinelibrary.libcal.com/event/17175940) |
+| Newton Free Library | LibCal-MA | 1 | 0 | 0 | 0 | 1 | 0 | 2 | [link](https://newtonfreelibrary.libcal.com/calendar?cid=-1&t=d) |
+| 3rd Floor Rear Arc | LibCal-MA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://newtonfreelibrary.libcal.com/event/17011128) |
+| Virtual | LibCal-MA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://newtonfreelibrary.libcal.com/event/17068664) |
+| Tween Room | LibCal-MA | 0 | 0 | 0 | 0 | 1 | 1 | 2 | [link (event, DB fallback)](https://brooklinelibrary.libcal.com/event/17018596) |
+| Meeting Room - Putterham | LibCal-MA | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://brooklinelibrary.libcal.com/event/16888362) |
+| Rey Room | LibCal-MA | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://cambridgepl.libcal.com/event/15756131) |
+| Main Library | LibCal-MA | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://cambridgepl.libcal.com/event/17323028) |
+| Curious George Room | LibCal-MA | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://cambridgepl.libcal.com/event/15757457) |
+| Central Square Children's Room | LibCal-MA | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://cambridgepl.libcal.com/event/15304717) |
+| O'Connell Branch | LibCal-MA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://cambridgepl.libcal.com/event/17062920) |
+| Teen Room | LibCal-MA | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://cambridgepl.libcal.com/event/17029526) |
+| Lewis Room | LibCal-MA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://cambridgepl.libcal.com/event/16151140) |
+| Meeting Room - Coolidge Corner | LibCal-MA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://brooklinelibrary.libcal.com/event/17329500) |
+| Albany Public Library | LibCal-NY1 | 1 | 2 | 2 | 3 | 0 | 2 | 10 | [link](https://albany.librarycalendar.com/) |
+| Long Beach Public Library | LibCal-NY1 | 0 | 1 | 2 | 2 | 0 | 2 | 7 | [link](https://longbeachpl.librarycalendar.com/) |
+| Community Room | LibCal-NY1 | 0 | 0 | 1 | 4 | 0 | 1 | 6 | [link (event, DB fallback)](https://onlib-nopl.libcal.com/event/16636200) |
+| Great Neck Library | LibCal-NY1 | 0 | 0 | 0 | 3 | 0 | 2 | 5 | [link](https://greatnecklibrary.libcal.com/calendar?cid=-1&t=d) |
+| Children | LibCal-NY1 | 0 | 0 | 1 | 3 | 0 | 0 | 4 | [link (event, DB fallback)](https://gardencitypl.libcal.com/event/16891849) |
+| Monroe County Library System | LibCal-NY1 | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link](https://calendar.libraryweb.org/calendar) |
+| Community Room - Betts | LibCal-NY1 | 1 | 0 | 2 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://onlib-central.libcal.com/event/16639389) |
+| Alden Ewell Free Library | LibCal-NY1 | 0 | 0 | 2 | 0 | 0 | 1 | 3 | [link](https://newtonfreelibrary.libcal.com/calendar?cid=-1&t=d) |
+| Aurora Town Public Library | LibCal-NY1 | 0 | 0 | 1 | 0 | 0 | 1 | 2 | [link](https://sanleandro.libcal.com/calendar/events?cid=-1&t=d) |
+| Training Room | LibCal-NY1 | 0 | 0 | 0 | 1 | 0 | 1 | 2 | [link (event, DB fallback)](https://hicksvillelibrary.libcal.com/event/17193974) |
+| Seymour | LibCal-NY1 | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [link (event, DB fallback)](https://calendar.libraryweb.org/event/16579711) |
+| Community Room (E) | LibCal-NY1 | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [link (event, DB fallback)](https://hicksvillelibrary.libcal.com/event/16825300) |
+| Central Library | LibCal-NY1 | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [link](https://ncwlibraries.libcal.com) |
+| Lancaster Public Library | LibCal-NY1 | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [link](https://ocpl.libcal.com/calendar?cid=-1&t=d&d=0000-00-00&cal=-1&inc=0) |
+| Buffalo & Erie County Public Library | LibCal-NY1 | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link](https://buffalolib.libcal.com/calendar/events?cid=-1&t=d) |
+| Mendon - Outdoors by the Library | LibCal-NY1 | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.libraryweb.org/event/16346459) |
+| Parma | LibCal-NY1 | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.libraryweb.org/event/16830749) |
+| Lake Shore Public Library | LibCal-NY1 | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link](https://sanleandro.libcal.com/calendar/events?cid=-1&t=d) |
+| Pittsford - Carpenter Park Gazebo at the Port of Pittsford | LibCal-NY1 | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.libraryweb.org/event/16987297) |
+| KidSpace - Central Library | LibCal-NY1 | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link](https://ncwlibraries.libcal.com) |
+| Penfield | LibCal-NY1 | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.libraryweb.org/event/16810936) |
+| Meeting Room - Hazard Branch | LibCal-NY1 | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://onlib-central.libcal.com/event/17213479) |
+| Children's Area - White Branch | LibCal-NY1 | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://onlib-central.libcal.com/event/17176128) |
+| Laptop Lab - Central Library | LibCal-NY1 | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link](https://ncwlibraries.libcal.com) |
+| Makerspace - Central Library | LibCal-NY1 | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link](https://ncwlibraries.libcal.com) |
+| Winton | LibCal-NY1 | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.libraryweb.org/event/17034512) |
+| Small Meeting Room | LibCal-NY1 | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://onlib-central.libcal.com/event/16412213) |
+| Petit Branch Library | LibCal-NY1 | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://onlib-central.libcal.com/event/16866489) |
+| Gates | LibCal-NY1 | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.libraryweb.org/event/16135066) |
+| Ogden | LibCal-NY1 | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.libraryweb.org/event/16313827) |
+| Lincoln | LibCal-NY1 | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.libraryweb.org/event/17283935) |
+| Scarsdale Community Room | LibCal-NY1 | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://westchesterlibraries.libcal.com/event/17310472) |
+| Brighton - Learning Center | LibCal-NY1 | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.libraryweb.org/event/17227093) |
+| Orchard Park Public Library | LibCal-NY1 | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link](https://sanleandro.libcal.com/calendar/events?cid=-1&t=d) |
+| Event Space | LibCal-NY1 | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://buffalolib.libcal.com/event/16672349) |
+| West Seneca Public Library | LibCal-NY1 | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link](https://wwpl.libcal.com/calendar/WWPL?cid=-1&t=d) |
+| Charlotte | LibCal-NY1 | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.libraryweb.org/event/16857185) |
+| Webster Library | LibCal-NY1 | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.libraryweb.org/event/17047184) |
+| Chili | LibCal-NY1 | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.libraryweb.org/event/16605232) |
+| Chester County Library | LibCal-PA | 2 | 0 | 5 | 1 | 0 | 0 | 8 | [link](https://ccls.libcal.com/calendar/ChesterCountyLibrary?cid=-1&t=d) |
+| Community Room | LibCal-PA | 0 | 0 | 1 | 3 | 0 | 0 | 4 | [link (event, DB fallback)](https://calendar.buckslib.org/event/17095058) |
+| Large Meeting Room | LibCal-PA | 0 | 1 | 0 | 3 | 0 | 0 | 4 | [link (event, DB fallback)](https://calendar.buckslib.org/event/16618794) |
+| Dauphin County Library System | LibCal-PA | 0 | 1 | 0 | 2 | 0 | 1 | 4 | [link](https://dcls.libcal.com/) |
+| Easton Area Public Library | LibCal-PA | 0 | 1 | 0 | 1 | 0 | 1 | 3 | [link](https://eastonpl.libcal.com/calendar) |
+| NPL Community Room | LibCal-PA | 0 | 0 | 1 | 2 | 0 | 0 | 3 | [link (event, DB fallback)](https://mnl.libcal.com/event/16559201) |
+| Struble Room | LibCal-PA | 0 | 0 | 1 | 0 | 0 | 2 | 3 | [link (event, DB fallback)](https://ccls.libcal.com/event/15593081) |
+| New Hope-Solebury | LibCal-PA | 1 | 0 | 0 | 1 | 0 | 1 | 3 | [link (event, DB fallback)](https://calendar.buckslib.org/event/17111564) |
+| Off Site - Please Check Event Listing for Location Details | LibCal-PA | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.erielibrary.org/event/15929948) |
+| Radnor Memorial Library | LibCal-PA | 0 | 1 | 0 | 1 | 0 | 0 | 2 | [link](https://freeportlibrary.libcal.com/calendar?cid=-1&t=d) |
+| Community Classroom | LibCal-PA | 0 | 0 | 1 | 1 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.erielibrary.org/event/16832132) |
+| UPVL Lower Level | LibCal-PA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://mnl.libcal.com/event/16406166) |
+| Delaware County Library System | LibCal-PA | 0 | 2 | 0 | 0 | 0 | 0 | 2 | [link](https://delcolibraries.libcal.com/calendar?cid=-1&t=d) |
+| Kline Community Room | LibCal-PA | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [link (event, DB fallback)](https://dcls.libcal.com/event/16556132) |
+| Off-Site | LibCal-PA | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://mnl.libcal.com/event/16634937) |
+| ROY Community Room | LibCal-PA | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [link (event, DB fallback)](https://mnl.libcal.com/event/16777051) |
+| CFL Community Room | LibCal-PA | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://mnl.libcal.com/event/17241137) |
+| NPL Public Conference Room | LibCal-PA | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://mnl.libcal.com/event/17062053) |
+| Feasterville | LibCal-PA | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.buckslib.org/event/16055860) |
+| Langhorne Study Room | LibCal-PA | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.buckslib.org/event/17228530) |
+| Greenawald Room | LibCal-PA | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://dcls.libcal.com/event/16555066) |
+| EV Community Room | LibCal-PA | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://dcls.libcal.com/event/16555099) |
+| Perkasie | LibCal-PA | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.buckslib.org/event/16758741) |
+| MCK Community Room | LibCal-PA | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.erielibrary.org/event/16187506) |
+| Large Meeting Room (Pearl Buck) | LibCal-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.buckslib.org/event/16932542) |
+| EDB Community Room | LibCal-PA | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.erielibrary.org/event/15859567) |
+| Northampton | LibCal-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://calendar.buckslib.org/event/15186798) |
+| IRQ Community Room | LibCal-PA | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.erielibrary.org/event/15869830) |
+| Middletown Free Library | LibCal-PA | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link](https://nhfpl.libcal.com/calendar?cid=-1&t=d) |
+| BLA Teen Space | LibCal-PA | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://events.erielibrary.org/event/16796532) |
+| NPL Children's Area | LibCal-PA | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://mnl.libcal.com/event/16559220) |
+| NPL Teen Area | LibCal-PA | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://mnl.libcal.com/event/16746896) |
+| Springfield Township Library | LibCal-PA | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://delcolibraries.libcal.com/event/17035190) |
+| PVL @ Schwenkville Borough Hall | LibCal-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://mnl.libcal.com/event/16961222) |
+| Extension Bookmobile | LibCal-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://mnl.libcal.com/event/17284601) |
+| Aston Public Library | LibCal-PA | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link](https://ocpl.libcal.com/calendar?cid=-1&t=d&d=0000-00-00&cal=-1&inc=0) |
+| Upper Darby Township/Sellers Library – Sellers Memorial Branch | LibCal-PA | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link](https://freeportlibrary.libcal.com/calendar?cid=-1&t=d) |
+| Marple Public Library | LibCal-PA | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link](https://ocpl.libcal.com/calendar?cid=-1&t=d&d=0000-00-00&cal=-1&inc=0) |
+| Clarksville-Montgomery County Public Library | LibCal-TN | 0 | 0 | 0 | 2 | 0 | 1 | 3 | [link](https://mcgtn.libcal.com/calendar?cid=14859) |
+| MPL First Floor | LibCal-WV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.mympls.org/event/16895831) |
+| Meeting Room A | LibCal-WV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.mympls.org/event/17084527) |
+| Offsite Location | LibCal-VT | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [link (event, DB fallback)](https://fletcherfree.libcal.com/event/17058319) |
+| Main Reading Room | LibCal-VT | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://fletcherfree.libcal.com/event/17106637) |
+| Fletcher Room | LibCal-VT | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://fletcherfree.libcal.com/event/17097917) |
+| Pickering Room | LibCal-VT | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://fletcherfree.libcal.com/event/17112361) |
+| New North End Branch | LibCal-VT | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://fletcherfree.libcal.com/event/16720361) |
+| Lovejoy Branch | Communico-GA | 2 | 0 | 2 | 0 | 0 | 1 | 5 | [link (event, DB fallback)](https://claytonpl.libnet.info/event/15574152) |
+| Columbus Public Library | Communico-GA | 0 | 0 | 0 | 4 | 0 | 1 | 5 | [link](https://dclibrary.libnet.info/events) |
+| Forest Park | Communico-GA | 2 | 0 | 1 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://claytonpl.libnet.info/event/16942271) |
+| Grayson Branch | Communico-GA | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://gwinnettpl.libnet.info/event/16866608) |
+| Centerville Branch | Communico-GA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://gwinnettpl.libnet.info/event/16919206) |
+| Marion County Public Library | Communico-GA | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [link](https://lacountylibrary.libnet.info/events) |
+| Headquarters Branch | Communico-GA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://claytonpl.libnet.info/event/16998854) |
+| Hampton Park Library | Communico-GA | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [link (event, DB fallback)](https://www.forsythpl.org/event/16644822) |
+| Mountain Park Branch | Communico-GA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://gwinnettpl.libnet.info/event/16883578) |
+| Norcross Branch | Communico-GA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://gwinnettpl.libnet.info/event/16334138) |
+| Collins Hill Branch | Communico-GA | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://gwinnettpl.libnet.info/event/16822190) |
+| Suwanee Branch | Communico-GA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://gwinnettpl.libnet.info/event/16933745) |
+| Bookmobile | Communico-GA | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.forsythpl.org/event/15325911) |
+| Flat Shoals Library | Communico-GA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.dekalblibrary.org/event/16838791) |
+| Mildred L. Terry Public Library | Communico-GA | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link](https://dclibrary.libnet.info/events) |
+| Northwest Branch | Communico-GA | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://claytonpl.libnet.info/event/16820340) |
+| Chattahoochee Valley Libraries | Communico-GA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://cvl.libnet.info/events) |
+| Five Forks Branch | Communico-GA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://gwinnettpl.libnet.info/event/16836145) |
+| Duluth Branch | Communico-GA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://gwinnettpl.libnet.info/event/16774139) |
+| Cumming Library | Communico-GA | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.forsythpl.org/event/16458811) |
+| Virtual | Communico-GA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://gwinnettpl.libnet.info/event/16196654) |
+| Salem-Panola Library | Communico-GA | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://events.dekalblibrary.org/event/16971235) |
+| Dacula Branch | Communico-GA | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://gwinnettpl.libnet.info/event/16780451) |
+| Jackson Branch | Communico-NJ | 3 | 0 | 0 | 3 | 0 | 0 | 6 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/16365588) |
+| Brick Branch | Communico-NJ | 2 | 0 | 0 | 3 | 0 | 1 | 6 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/14946656) |
+| Hillsborough branch | Communico-NJ | 2 | 0 | 0 | 3 | 0 | 0 | 5 | [link (event, DB fallback)](https://sclsnj.libnet.info/event/16763069) |
+| Toms River Branch | Communico-NJ | 2 | 0 | 0 | 3 | 0 | 0 | 5 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/16494825) |
+| Main Library | Communico-NJ | 2 | 1 | 0 | 1 | 0 | 0 | 4 | [link (event, DB fallback)](https://hobokenlibrary.libnet.info/event/17064446) |
+| Raritan Public Library | Communico-NJ | 2 | 0 | 0 | 2 | 0 | 0 | 4 | [link](https://dclibrary.libnet.info/events) |
+| Little Egg Harbor Branch | Communico-NJ | 1 | 0 | 0 | 0 | 0 | 2 | 3 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/15643676) |
+| Upper Shores Branch | Communico-NJ | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/15626060) |
+| Grand Street Branch | Communico-NJ | 0 | 0 | 1 | 2 | 0 | 0 | 3 | [link (event, DB fallback)](https://hobokenlibrary.libnet.info/event/16950897) |
+| Lakewood Branch | Communico-NJ | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/16811984) |
+| Montgomery branch | Communico-NJ | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [link (event, DB fallback)](https://sclsnj.libnet.info/event/16376431) |
+| Warren Township branch | Communico-NJ | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [link (event, DB fallback)](https://sclsnj.libnet.info/event/16467415) |
+| Manchester Branch | Communico-NJ | 0 | 0 | 0 | 1 | 0 | 1 | 2 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/16205030) |
+| Point Pleasant Beach Branch | Communico-NJ | 0 | 0 | 0 | 1 | 0 | 1 | 2 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/16445812) |
+| Bridgewater branch | Communico-NJ | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://sclsnj.libnet.info/event/16201767) |
+| Lacey Branch | Communico-NJ | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/16653719) |
+| North Plainfield branch | Communico-NJ | 0 | 0 | 1 | 1 | 0 | 0 | 2 | [link (event, DB fallback)](https://sclsnj.libnet.info/event/16590364) |
+| Barnegat Branch | Communico-NJ | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/16675826) |
+| Plumsted Branch | Communico-NJ | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/16443647) |
+| Berkeley Branch | Communico-NJ | 0 | 0 | 0 | 1 | 0 | 1 | 2 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/16680255) |
+| Beachwood Branch | Communico-NJ | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/16423302) |
+| Island Heights Branch | Communico-NJ | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/16163792) |
+| Watchung branch | Communico-NJ | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://sclsnj.libnet.info/event/16283588) |
+| Waretown Branch | Communico-NJ | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/14984905) |
+| Manville branch | Communico-NJ | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://sclsnj.libnet.info/event/16803227) |
+| Peapack and Gladstone branch | Communico-NJ | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://sclsnj.libnet.info/event/16978702) |
+| 20 Stirling Rd | Communico-NJ | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://sclsnj.libnet.info/event/16424811) |
+| Point Pleasant Borough Branch | Communico-NJ | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://theoceancountylibrary.libnet.info/event/15417921) |
+| Somerville branch | Communico-NJ | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://sclsnj.libnet.info/event/16439527) |
+| Adams Park Branch | BiblioCommons-GA | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [link (event, DB fallback)](https://fulcolibrary.bibliocommons.com/v2/events/6a72523ee9de653600206ddd) |
+| Cascade Branch | BiblioCommons-GA | 1 | 0 | 0 | 5 | 0 | 0 | 6 | [link (event, DB fallback)](https://fulcolibrary.bibliocommons.com/v2/events/6a725bb6c7e02e3d006de0a4) |
+| East Point Branch | BiblioCommons-GA | 0 | 0 | 5 | 0 | 0 | 0 | 5 | [link (event, DB fallback)](https://fulcolibrary.bibliocommons.com/v2/events/6a7219b4c7e02e3d006dc584) |
+| Joan P. Garner Library at Ponce De Leon | BiblioCommons-GA | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [link (event, DB fallback)](https://fulcolibrary.bibliocommons.com/v2/events/6a72681c614a3e1aa9b6d98e) |
+| Hapeville Branch | BiblioCommons-GA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://fulcolibrary.bibliocommons.com/v2/events/6a70d1e23f18b57d5232f12c) |
+| Auburn Avenue Research Library | BiblioCommons-GA | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://fulcolibrary.bibliocommons.com/v2/events/6a5fa73fdaaaf4f51a207c2c) |
+| Peachtree Branch | BiblioCommons-GA | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://fulcolibrary.bibliocommons.com/v2/events/6a70a857b46787079ead6e18) |
+| East Roswell Branch | BiblioCommons-GA | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://fulcolibrary.bibliocommons.com/v2/events/6a70fe4188e9bf28003542dc) |
+| Central Library | BiblioCommons-GA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://librarypoint.bibliocommons.com/v2/events) |
+| Northwest Branch | BiblioCommons-GA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://fulcolibrary.bibliocommons.com/v2/events/6a21ed3a2ea730c17ab46f96) |
+| Sandy Springs Branch | BiblioCommons-GA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://fulcolibrary.bibliocommons.com/v2/events/6915fad5dff9d93e00cfe06e) |
+| Alpharetta Branch | BiblioCommons-GA | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://fulcolibrary.bibliocommons.com/v2/events/6a67d339898f0d205114df1c) |
+| Pineville | BiblioCommons-NC | 0 | 26 | 5 | 0 | 0 | 0 | 31 | [link (event, DB fallback)](https://cmlibrary.bibliocommons.com/v2/events/6a71ff3f0d65ac3600444495) |
+| South County Regional | BiblioCommons-NC | 0 | 10 | 0 | 0 | 0 | 0 | 10 | [link (event, DB fallback)](https://cmlibrary.bibliocommons.com/v2/events/6a70fabca0b1bdf860d944a6) |
+| Cornelius | BiblioCommons-NC | 2 | 1 | 0 | 0 | 0 | 1 | 4 | [link (event, DB fallback)](https://cmlibrary.bibliocommons.com/v2/events/6a72189574e3b8b75db75a7c) |
+| Library Branch | LibraryMarket | 39 | 7 | 7 | 10 | 1 | 12 | 76 | [link (event, DB fallback)](https://scgovlibrary.librarymarket.com/index.php/event/arts-crafts-303023) |
+| Use Library | LibraryMarket | 4 | 1 | 2 | 0 | 0 | 3 | 10 | [link](https://ppld.librarymarket.com/events/upcoming) |
+| Auditorium Library Branch | LibraryMarket | 1 | 3 | 0 | 5 | 0 | 1 | 10 | [link (event, DB fallback)](https://dallaslibrary.librarymarket.com/event/lego-laboratory-503999) |
+| South Cumberland Library | LibraryMarket | 6 | 0 | 0 | 1 | 0 | 1 | 8 | [link (event, DB fallback)](https://allegany.librarymarket.com/event/kibu-learning-34468) |
+| Kempsville Area Library | LibraryMarket | 3 | 1 | 3 | 0 | 0 | 1 | 8 | [link (event, DB fallback)](https://vbpl.librarymarket.com/youth-placeholder-53) |
+| Great Neck Area Library | LibraryMarket | 2 | 1 | 1 | 0 | 1 | 0 | 5 | [link (event, DB fallback)](https://vbpl.librarymarket.com/drop-combined-preschool-storytime-485) |
+| Princess Anne Area Library | LibraryMarket | 3 | 0 | 2 | 0 | 0 | 0 | 5 | [link (event, DB fallback)](https://vbpl.librarymarket.com/Pirates-2026-151) |
+| Bayside Area Library | LibraryMarket | 3 | 0 | 1 | 0 | 0 | 1 | 5 | [link (event, DB fallback)](https://vbpl.librarymarket.com/src-adventures-5) |
+| Family Central Library | LibraryMarket | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://dallaslibrary.librarymarket.com/event/violin-class-527162) |
+| Fletcher Branch | LibraryMarket | 0 | 0 | 0 | 2 | 0 | 2 | 4 | [link (event, DB fallback)](https://wcfl.librarymarket.com/event/volunteen-orientation-72928) |
+| Washington County Free Library | LibraryMarket | 3 | 0 | 1 | 0 | 0 | 0 | 4 | [link](https://wcfl.librarymarket.com/events/upcoming) |
+| Lobby Library Branch | LibraryMarket | 0 | 0 | 0 | 4 | 0 | 0 | 4 | [link (event, DB fallback)](https://dallaslibrary.librarymarket.com/event/supersnack-kids-merienda-para-ninos-466355) |
+| Oberndorf Central Library | LibraryMarket | 0 | 0 | 2 | 0 | 0 | 2 | 4 | [link (event, DB fallback)](https://vbpl.librarymarket.com/preschool-art-377) |
+| In Library | LibraryMarket | 0 | 0 | 0 | 4 | 0 | 0 | 4 | [link](https://ppld.librarymarket.com/events/upcoming) |
+| Bishop Larry Mcgriff Auditorium Library Branch | LibraryMarket | 0 | 2 | 0 | 0 | 0 | 1 | 3 | [link (event, DB fallback)](https://dallaslibrary.librarymarket.com/event/diy-nail-art-design-495199) |
+| Boonsboro Free Library | LibraryMarket | 0 | 1 | 0 | 1 | 0 | 1 | 3 | [link](https://wcfl.librarymarket.com/events/upcoming) |
+| Area Library Branch | LibraryMarket | 0 | 2 | 0 | 1 | 0 | 0 | 3 | [link (event, DB fallback)](https://dallaslibrary.librarymarket.com/event/here-comes-kindergarten-510756) |
+| Vale Library | LibraryMarket | 2 | 0 | 0 | 0 | 0 | 1 | 3 | [link (event, DB fallback)](https://allegany.librarymarket.com/event/empowerment-success-activity-group-35994) |
+| Rochester Public Library | LibraryMarket | 1 | 0 | 0 | 2 | 0 | 0 | 3 | [link](https://rochesterpubliclibrary.librarymarket.com/events/upcoming) |
+| Oceanfront Area Library | LibraryMarket | 0 | 0 | 3 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://vbpl.librarymarket.com/combined-preschool-storytime-1488) |
+| Black Box Theater Library Branch | LibraryMarket | 1 | 1 | 0 | 1 | 0 | 0 | 3 | [link (event, DB fallback)](https://dallaslibrary.librarymarket.com/event/smart-dallas-arboretum-502171) |
+| Windsor Woods Area Library | LibraryMarket | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [link (event, DB fallback)](https://vbpl.librarymarket.com/copy-pawsitive-reading-therapy-dogs) |
+| Entryway Library Branch | LibraryMarket | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [link (event, DB fallback)](https://dallaslibrary.librarymarket.com/event/summer-snack-kidsmerienda-de-verano-para-ninos-491426) |
+| Adults Hancock Veterans Memorial Library | LibraryMarket | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [link (event, DB fallback)](https://wcfl.librarymarket.com/event/makercricut-club-71664) |
+| Classroom Library Branch | LibraryMarket | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [link (event, DB fallback)](https://dallaslibrary.librarymarket.com/event/free-summer-lunch-511597) |
+| Creek Library | LibraryMarket | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [link (event, DB fallback)](https://allegany.librarymarket.com/event/scrabble-meeting-36005) |
+| Everyone Smithsburg Library | LibraryMarket | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://wcfl.librarymarket.com/event/knitting-crocheting-and-craft-group-74243) |
+| Exhibit Space Library Branch | LibraryMarket | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://dallaslibrary.librarymarket.com/event/equal-heart-snack-507072) |
+| Adults Clear Spring Branch | LibraryMarket | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://wcfl.librarymarket.com/event/stencil-totes-77211) |
+| Smithsburg Library | LibraryMarket | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://wcfl.librarymarket.com/event/preschool-storytime-74349) |
+| Teens Teen Center | LibraryMarket | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://scgovlibrary.librarymarket.com/event/game-night-library-343158) |
+| Mon Manitou Springs Library | LibraryMarket | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://ppld.librarymarket.com/event/manitou-springs-library-will-be-closed-mon-aug-10-due-planned-power-outage-572370) |
+| Clear Spring Branch | LibraryMarket | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://wcfl.librarymarket.com/event/preschool-story-time-70378) |
+| Everyone Clear Spring Branch | LibraryMarket | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://wcfl.librarymarket.com/event/mr-jon-friends-kids-concert-72867) |
+| Westernport Library | LibraryMarket | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://allegany.librarymarket.com/event/star-spangled-chalk-art-34683) |
+| Thu Library | LibraryMarket | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link](https://ppld.librarymarket.com/events/upcoming) |
+| Washington Street Library | LibraryMarket | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link](https://wcfl.librarymarket.com/events/upcoming) |
+| Thu Penrose Library | LibraryMarket | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://ppld.librarymarket.com/event/penrose-open-house-537638) |
+| Brooklyn Public Library | Brooklyn-Library | 3 | 2 | 1 | 1 | 0 | 2 | 9 | [link](https://www.bklynlibrary.org/calendar/list) |
+| Central Library | Brooklyn-Library | 2 | 0 | 1 | 0 | 0 | 0 | 3 | [link](https://www.bklynlibrary.org/calendar/list) |
+| Brooklyn Heights | Brooklyn-Library | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [link](https://www.bklynlibrary.org/calendar/list) |
+| Williamsburg | Brooklyn-Library | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link](https://www.bklynlibrary.org/calendar/list) |
+| Flatbush | Brooklyn-Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.bklynlibrary.org/calendar/list) |
+| Elkton | Cecil-County | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link](https://www.cecilcountylibrary.org/events) |
+| Cecil County Public Library | Cecil-County | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://www.cecilcountylibrary.org/events) |
+| Rising Sun | Cecil-County | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link](https://www.cecilcountylibrary.org/events) |
+| North East | Cecil-County | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.cecilcountylibrary.org/events) |
+| Chesapeake City | Cecil-County | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link](https://www.cecilcountylibrary.org/events) |
+| Perryville | Cecil-County | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.cecilcountylibrary.org/events) |
+| Berks County Public Libraries | Berks-County | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link](https://www.berkslibraries.org) |
+| Richland Library | CustomDrupal-Libraries | 8 | 1 | 1 | 6 | 0 | 1 | 17 | [link](https://www.richlandlibrary.com/events) |
+| Florence County Library System | CustomDrupal-Libraries | 6 | 0 | 0 | 3 | 0 | 2 | 11 | [link](https://www.florencelibrary.org/events) |
+| Bookmobile | CustomDrupal-Libraries | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [link (event, DB fallback)](https://www.kcpls.org/event/kanawha-mall-73252) |
+| Wednesday, August 5, 2026 | CustomDrupal-Libraries | 5 | 0 | 1 | 0 | 0 | 0 | 6 | [link (event, DB fallback)](https://www.cobbcounty.gov/events/2026-08-05technology-help) |
+| Main Branch | CustomDrupal-Libraries | 1 | 0 | 0 | 2 | 0 | 1 | 4 | [link (event, DB fallback)](https://www.rowancountylibrary.org/event/after-school-storytime-18768) |
+| Dunbar Branch Library | CustomDrupal-Libraries | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.kcpls.org/event/lil-bookworms-storytime-63926) |
+| Main Library | CustomDrupal-Libraries | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.kcpls.org/event/little-explorers-storytime-66415) |
+| Kanawha County Public Library | CustomDrupal-Libraries | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.kcpls.org/events/upcoming) |
+| Wednesday, August 5, 2026 – Wednesday, October 14, 2026 | CustomDrupal-Libraries | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://www.cobbcounty.gov/events/2026-08-05teen-summer-gaming-lounge) |
+| Anderson Main Library | CustomDrupal-Libraries | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.andersonlibrary.org/events/month) |
+| PG Parks & Recreation | PG-Parks | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [link](https://pgparks.com/activities-events-events) |
+| Morris County Library | Graniculator-Morris | 0 | 0 | 0 | 1 | 0 | 1 | 2 | [link](https://www.mclib.info/Events) |
+| Worcester County Library | WordPress-MD | 7 | 1 | 0 | 0 | 0 | 0 | 8 | [link](https://worcesterlibrary.libcal.com/calendar/Library_Events) |
+| Cecil County Public Library | WordPress-MD | 5 | 0 | 0 | 1 | 0 | 0 | 6 | [link](https://cecilcountylibrary.org/events) |
+| Wicomico Public Libraries | WordPress-MD | 1 | 1 | 0 | 2 | 1 | 0 | 5 | [link](https://www.wicomicolibrary.org/events) |
+| Germantown Library | WordPress-NY | 36 | 13 | 1 | 1 | 0 | 3 | 54 | [link](https://www.germantownlibrary.org/events) |
+| Lindenhurst Memorial Library | WordPress-NY | 22 | 12 | 0 | 5 | 0 | 11 | 50 | [link](https://www.lindenhurstlibrary.org/events) |
+| Jericho Public Library | WordPress-NY | 14 | 6 | 7 | 3 | 14 | 5 | 49 | [link](https://www.jericholibrary.org/events) |
+| Phillips Free Library | WordPress-NY | 35 | 0 | 0 | 1 | 0 | 6 | 42 | [link](https://www.homerlibrary.org/events) |
+| Kinderhook Memorial Library | WordPress-NY | 24 | 6 | 0 | 0 | 0 | 7 | 37 | [link](https://www.kinderhooklibrary.org/events) |
+| Fred And Harriet Taylor Memorial Library | WordPress-NY | 29 | 4 | 0 | 4 | 0 | 0 | 37 | [link](https://hammondsportlibrary.org/calendar/) |
+| Greenville Public Library | WordPress-NY | 36 | 0 | 0 | 0 | 0 | 0 | 36 | [link](https://www.greenvillelibrary.org/events) |
+| Oceanside Library | WordPress-NY | 11 | 4 | 3 | 0 | 2 | 0 | 20 | [link](https://oceansidelibrary.libcal.com/calendar) |
+| Dobbs Ferry Public Library | WordPress-NY | 6 | 4 | 1 | 3 | 0 | 3 | 17 | [link](https://www.dobbsferrylibrary.org/events) |
+| Garden City Public Library | WordPress-NY | 2 | 3 | 1 | 1 | 2 | 2 | 11 | [link](https://gardencitypl.libcal.com/calendar) |
+| D.R. Evarts Library | WordPress-NY | 8 | 0 | 0 | 0 | 0 | 2 | 10 | [link](https://www.athenslibrary.org/events) |
+| Adams Free Library | WordPress-NY | 3 | 0 | 0 | 3 | 0 | 3 | 9 | [link](https://www.adamslibrary.org/events) |
+| Dormann Library | WordPress-NY | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [link](https://www.bathlibrary.org/events) |
+| Rockville Centre Public Library | WordPress-NY | 5 | 0 | 1 | 1 | 1 | 0 | 8 | [link](https://rvcpl.libcal.com/calendar) |
+| Mount Vernon Public Library | WordPress-NY | 7 | 0 | 0 | 1 | 0 | 0 | 8 | [link](https://www.mountvernonpubliclibrary.org/events) |
+| Cohocton Public Library | WordPress-NY | 4 | 1 | 0 | 0 | 0 | 2 | 7 | [link](https://cohoctonlibrary.org/calendar/) |
+| Pine Plains Free Library | WordPress-NY | 5 | 0 | 1 | 0 | 0 | 1 | 7 | [link](https://www.pineplainslibrary.org/events) |
+| Syracuse Public Library | WordPress-NY | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [link](https://onlib-central.libcal.com/calendar) |
+| Dewitt Community Library Assoc., Inc | WordPress-NY | 5 | 2 | 0 | 0 | 0 | 0 | 7 | [link](https://www.dewittlibrary.org/events) |
+| Falconer Public Library | WordPress-NY | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [link](https://www.falconerlibrary.org/events) |
+| Lake Placid Public Library | WordPress-NY | 5 | 0 | 1 | 0 | 0 | 0 | 6 | [link](https://www.lakeplacidlibrary.org/events) |
+| Kingston Library | WordPress-NY | 4 | 0 | 0 | 0 | 1 | 1 | 6 | [link](https://www.kingstonlibrary.org/events) |
+| Bronxville Public Library | WordPress-NY | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [link](https://bronxvillelibrary.org/) |
+| Peru Free Library | WordPress-NY | 3 | 0 | 0 | 0 | 1 | 1 | 5 | [link](https://www.perulibrary.org/events) |
+| East Rockaway Public Library | WordPress-NY | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [link](https://www.eastrockawaylibrary.org/events) |
+| Westport Library Association | WordPress-NY | 4 | 0 | 0 | 1 | 0 | 0 | 5 | [link](https://www.westportlibrary.org/events) |
+| Great Neck Library | WordPress-NY | 2 | 0 | 0 | 1 | 2 | 0 | 5 | [link](https://greatnecklibrary.libcal.com/calendar) |
+| Belfast Public Library | WordPress-NY | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link](https://www.belfastlibrary.org/events) |
+| Warsaw Public Library | WordPress-NY | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link](https://www.warsawlibrary.org/) |
+| Potsdam Public Library | WordPress-NY | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [link](https://www.potsdamlibrary.org/events) |
+| Albert Wisner Public Library | WordPress-NY | 1 | 1 | 1 | 0 | 0 | 0 | 3 | [link](https://warwicklibrary.org/) |
+| Lewisboro Library | WordPress-NY | 0 | 3 | 0 | 0 | 0 | 0 | 3 | [link](https://lewisborolibrary.org/events/) |
+| Ellicottville Memorial Library | WordPress-NY | 2 | 0 | 0 | 0 | 0 | 1 | 3 | [link](https://www.ellicottvillelibrary.org/events) |
+| Scarsdale Public Library | WordPress-NY | 1 | 0 | 0 | 1 | 0 | 1 | 3 | [link](https://www.scarsdalelibrary.org/events) |
+| Bedford Hills Free Library | WordPress-NY | 2 | 1 | 0 | 0 | 0 | 0 | 3 | [link](https://www.bedfordhillsfreelibrary.org/events/upcoming) |
+| Sayville Library | WordPress-NY | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://www.sayvillelibrary.org/events) |
+| North Merrick Public Library | WordPress-NY | 0 | 1 | 0 | 1 | 0 | 0 | 2 | [link](https://nmerricklibrary.libcal.com/calendar) |
+| Gowanda Free Library | WordPress-NY | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://gowandalibrary.org/) |
+| Rochester Public Library | WordPress-NY | 0 | 2 | 0 | 0 | 0 | 0 | 2 | [link](https://rochesterpubliclibrary.librarymarket.com/events) |
+| New Lebanon Library | WordPress-NY | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://newlebanonlibrary.org/calendar/) |
+| Olean Public Library | WordPress-NY | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://oleanlibrary.org/events/event/) |
+| Newport Free Library | WordPress-NY | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://www.newportlibrary.org/events) |
+| Williamstown Library | WordPress-NY | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [link](https://www.williamstownlibrary.org/events) |
+| Berlin Free Town Library | WordPress-NY | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://www.berlinlibrary.org/events) |
+| Lockport Public Library | WordPress-NY | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [link](https://www.lockportlibrary.org/events) |
+| Library Association Of Rockland County | WordPress-NY | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.newcitylibrary.org/events) |
+| Ithaca Tompkins County Public Library | WordPress-NY | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.tcpl.org/events) |
+| Queens Public Library | WordPress-NY | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.queenslibrary.org/calendar) |
+| Riverhead Free Library | WordPress-NY | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.riverheadlibrary.org/events) |
+| Williston Park Public Library | WordPress-NY | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link](https://www.willistonparklibrary.org/events) |
+| Clyde-Savannah Public Library | WordPress-NY | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.clydelibrary.org/) |
+| Eagle Free Library | WordPress-NY | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.blisslibrary.org/) |
+| Ellisburg Free Library | WordPress-NY | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.ellisburglibrary.org/events) |
+| Cattaraugus Free Library | WordPress-NY | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.cattarauguslibrary.org/events) |
+| Watkins Glen Cen Sch Dis Free Pub Lib | WordPress-NY | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link](https://www.watkinsglenlibrary.org/events) |
+| Marion Public Library | WordPress-NY | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.marionlibrary.org/) |
+| Chatham Public Library | WordPress-NY | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link](https://chathamlibrary.librarycalendar.com/events/month/) |
+| Haxton Memorial Library | WordPress-NY | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link](https://www.oakfieldlibrary.org/events) |
+| Annie Porter Ainsworth Memorial Library | WordPress-NY | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://ainsworthmemoriallibrary.org/) |
+| Chappaqua Library | WordPress-NY | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.chappaqualibrary.org/events) |
+| Schroon Lake Public Library | WordPress-NY | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.schroonlakelibrary.org/events) |
+| Ripley Free Library | WordPress-NY | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://ripleylibrary.org/) |
+| Miami-Dade Public Library System | WordPress-FL | 67 | 3 | 3 | 4 | 2 | 4 | 83 | [link](https://auburndalelibrary.org/calendar/) |
+| Palm Beach County Library System | WordPress-FL | 17 | 0 | 2 | 2 | 0 | 0 | 21 | [link](https://www.tavareslibrary.org/events) |
+| Orange County Library System | WordPress-FL | 9 | 0 | 7 | 0 | 0 | 0 | 16 | [link](https://www.bronsonlibrary.org/calendar) |
+| Margate Catharine Young Branch | WordPress-FL | 4 | 0 | 0 | 3 | 0 | 0 | 7 | [link](https://www.margatelibrary.org/events) |
+| Madison County Library | WordPress-FL | 0 | 0 | 2 | 2 | 0 | 1 | 5 | [link](https://www.madisonlibrary.org/events) |
+| Lake Placid Memorial Library | WordPress-FL | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link](https://www.lakeplacidlibrary.org/events) |
+| Gadsden County Public Library | WordPress-FL | 2 | 0 | 0 | 0 | 0 | 1 | 3 | [link](https://www.quincylibrary.org/events) |
+| Land Olakes Branch Library | WordPress-FL | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://www.landolakeslibrary.org/events) |
+| Winter Park Public Library | WordPress-FL | 1 | 0 | 0 | 0 | 1 | 0 | 2 | [link](https://www.winterparklibrary.org/events) |
+| East Hernando Branch Library | WordPress-FL | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://www.brooksvillelibrary.org/events) |
+| Oakland Public Library | WordPress-NJ | 6 | 3 | 0 | 2 | 2 | 4 | 17 | [link](https://www.oaklandlibrary.org/events) |
+| Hoboken Public Library | WordPress-NJ | 11 | 1 | 0 | 1 | 0 | 1 | 14 | [link](https://www.hobokenlibrary.org/events) |
+| Fanwood Memorial Library | WordPress-NJ | 8 | 1 | 0 | 0 | 0 | 0 | 9 | [link](https://fanwoodlibrary.org/) |
+| Moorestown Library | WordPress-NJ | 6 | 1 | 0 | 0 | 0 | 0 | 7 | [link](https://www.moorestownlibrary.org/events) |
+| Wood-Ridge Memorial Library | WordPress-NJ | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [link](https://www.woodridgelibrary.org/events) |
+| Kearny Public Library | WordPress-NJ | 0 | 0 | 0 | 0 | 0 | 7 | 7 | [link](https://www.kearnylibrary.org/events) |
+| William E. Dermody Free Public Library | WordPress-NJ | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [link](https://carlstadtlibrary.org/) |
+| Margate City Public Library | WordPress-NJ | 3 | 0 | 0 | 3 | 0 | 0 | 6 | [link](https://www.margatelibrary.org/events) |
+| Kenilworth Public Library | WordPress-NJ | 3 | 2 | 0 | 1 | 0 | 0 | 6 | [link](https://kenilworthlibrary.org/) |
+| Madison Public Library | WordPress-NJ | 0 | 0 | 2 | 2 | 0 | 1 | 5 | [link](https://www.madisonlibrary.org/events) |
+| North Brunswick Free Public Library | WordPress-NJ | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [link](https://northbrunswicklibrary.org/) |
+| Montville Township Public Library | WordPress-NJ | 3 | 0 | 0 | 2 | 0 | 0 | 5 | [link](https://montvillelibrary.org/) |
+| Rahway Public Library | WordPress-NJ | 3 | 0 | 0 | 1 | 0 | 1 | 5 | [link](https://www.rahwaylibrary.org/) |
+| Millville Public Library | WordPress-NJ | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [link](https://www.millvillelibrary.org/events) |
+| Ocean City Free Public Library | WordPress-NJ | 3 | 1 | 0 | 0 | 0 | 0 | 4 | [link](https://www.oceancitylibrary.org/) |
+| Hackettstown Free Public Library | WordPress-NJ | 2 | 0 | 0 | 0 | 0 | 2 | 4 | [link](https://www.hackettstownlibrary.org/events) |
+| Woodbridge Public Library | WordPress-NJ | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link](https://www.woodbridgelibrary.org/calendar.aspx) |
+| Ringwood Public Library | WordPress-NJ | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [link](https://www.ringwoodlibrary.org/events) |
+| Hillside Free Public Library | WordPress-NJ | 1 | 1 | 0 | 0 | 0 | 1 | 3 | [link](https://www.hillsidelibrary.org/events) |
+| Mount Laurel Library | WordPress-NJ | 2 | 0 | 0 | 0 | 1 | 0 | 3 | [link](https://www.mountlaurellibrary.org/events) |
+| Belmar Public Library | WordPress-NJ | 2 | 1 | 0 | 0 | 0 | 0 | 3 | [link](https://www.belmarlibrary.org/events) |
+| Saddle Brook Free Public Library | WordPress-NJ | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link](https://saddlebrooklibrary.org/) |
+| Midland Park Memorial Library | WordPress-NJ | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link](https://www.midlandparklibrary.org/) |
+| Lyndhurst Free Public Library | WordPress-NJ | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://lyndhurstlibrary.org/) |
+| Piscataway Public Library | WordPress-NJ | 0 | 2 | 0 | 0 | 0 | 0 | 2 | [link](https://www.piscatawaylibrary.org/events) |
+| Cranford Public Library | WordPress-NJ | 0 | 1 | 1 | 0 | 0 | 0 | 2 | [link](https://www.cranfordlibrary.org/calendar/) |
+| New Milford Public Library | WordPress-NJ | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://newmilfordlibrary.org/) |
+| Beach Haven Free Public Library | WordPress-NJ | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.beachhavenlibrary.org/events) |
+| Plainfield Free Public Library | WordPress-NJ | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.plainfieldlibrary.org/events) |
+| Marie Fleche Memorial Library | WordPress-NJ | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.berlinlibrary.org/events) |
+| Audubon Free Public Library | WordPress-NJ | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.audubonlibrary.org/events) |
+| Wanaque Borough Free Public Library | WordPress-NJ | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link](https://www.wanaquelibrary.org/events) |
+| Margate, NJ | WordPress-NJ | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.margatelibrary.org/events) |
+| Runnemede Public Library | WordPress-NJ | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.runnemedelibrary.org/events) |
+| Jamesburg Public Library | WordPress-NJ | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://jamesburglibrary.org/) |
+| Paramus Public Library | WordPress-NJ | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.paramuslibrary.org/events) |
+| Sparta Public Library | WordPress-NJ | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.spartalibrary.org/events) |
+| Roselle Free Public Library | WordPress-NJ | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link](https://www.rosellelibrary.org/events) |
+| Monroe Twp Public Library-Gloucester | WordPress-NJ | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link](https://www.williamstownlibrary.org/events) |
+| Hasbrouck Heights Free Public Library | WordPress-NJ | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.hasbrouckheightslibrary.org/events) |
+| Laurel-Jones County Library | WordPress-MS | 97 | 12 | 0 | 0 | 3 | 0 | 112 | [link](https://www.laurel.lib.ms.us/events) |
+| Pearl River County Library System | WordPress-MS | 52 | 0 | 0 | 12 | 1 | 0 | 65 | [link](https://www.pearlriver.lib.ms.us/events) |
+| Decatur Public Library | WordPress-MS | 19 | 0 | 1 | 2 | 0 | 5 | 27 | [link](https://www.decaturlibrary.org/events) |
+| Sturgis Public Library | WordPress-MS | 17 | 3 | 0 | 2 | 0 | 0 | 22 | [link](https://www.sturgislibrary.org/events) |
+| Florence Public Library | WordPress-MS | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [link](https://www.florencelibrary.org/events) |
+| Oakland Public Library | WordPress-MS | 7 | 2 | 0 | 2 | 1 | 4 | 16 | [link](https://www.oaklandlibrary.org/events) |
+| Jefferson County Public Library | WordPress-MS | 11 | 0 | 2 | 0 | 1 | 0 | 14 | [link](https://www.fayettelibrary.org/events) |
+| Kemper-Newton Regional Library | WordPress-MS | 0 | 12 | 0 | 0 | 0 | 0 | 12 | [link](https://www.unionlibrary.org/events) |
+| Jackson-Hinds Library System | WordPress-MS | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [link](https://www.jhlibrary.org/events) |
+| Lee-Itawamba Library System | WordPress-MS | 4 | 1 | 1 | 1 | 1 | 0 | 8 | [link](https://www.leeitawambalibrary.org/events) |
+| Dr. Robert T. Hollingsworth Library | WordPress-MS | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [link](https://www.shelbylibrary.org/events) |
+| Forest Public Library | WordPress-MS | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link](https://www.forestlibrary.org/) |
+| Lincoln-Lawrence-Franklin Regional Library | WordPress-MS | 2 | 0 | 0 | 0 | 0 | 1 | 3 | [link](https://www.llf.lib.ms.us/events) |
+| Brooksville Public Library | WordPress-MS | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link](https://www.brooksvillelibrary.org/events) |
+| Greenwood-Leflore Public Library | WordPress-MS | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link](https://www.greenwoodlibrary.org/events) |
+| Jackson-George Regional Library System | WordPress-MS | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://www.jgrls.org/events) |
+| Warren County-Vicksburg Public Library | WordPress-MS | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.warren.lib.ms.us/) |
+| Ripley Public Library | WordPress-MS | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://ripleylibrary.org/) |
+| Camden Public Library | WordPress-ME | 23 | 0 | 0 | 0 | 0 | 0 | 23 | [link](https://www.librarycamden.org/events) |
+| Merrill Memorial Library | WordPress-ME | 3 | 1 | 3 | 0 | 0 | 6 | 13 | [link](https://www.yarmouthlibrary.org/events) |
+| Shaw Public Library - Greenville | WordPress-ME | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [link](https://www.greenvillelibrary.org/events) |
+| Washburn Memorial Library | WordPress-ME | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [link](https://www.washburnlibrary.org/events) |
+| Patten Free Library | WordPress-ME | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [link](https://www.bathlibrary.org/events) |
+| Auburn Public Library | WordPress-ME | 0 | 0 | 2 | 2 | 0 | 0 | 4 | [link](https://www.auburnpubliclibrary.org/events) |
+| Canaan Public Library | WordPress-ME | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link](https://www.canaanlibrary.org/events) |
+| Newport Public Library | WordPress-ME | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://www.newportlibrary.org/events) |
+| Parsons Memorial Library | WordPress-ME | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://www.alfredlibrary.org/events) |
+| Gorham Baxter Memorial Library | WordPress-ME | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link](https://www.baxterlibrary.org/events) |
+| Wheaton Regional Park | Montgomery-Parks | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [link](https://montgomeryparks.org/events/) |
+| Montgomery Parks | Montgomery-Parks | 6 | 2 | 0 | 0 | 0 | 0 | 8 | [link](https://montgomeryparks.org/events/) |
+| St. Matthews | Louisville-Library | 2 | 2 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://events.lfpl.org/event/baby-storytime-5951) |
+| Crescent Hill | Louisville-Library | 0 | 2 | 1 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://events.lfpl.org/event/baby-storytime-9872) |
+| Southwest | Louisville-Library | 0 | 2 | 1 | 0 | 0 | 0 | 3 | [link](https://www.lfpl.org) |
+| South Central | Louisville-Library | 1 | 1 | 1 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://events.lfpl.org/event/maker-lab-open-hours-3503) |
+| Northeast | Louisville-Library | 0 | 2 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.lfpl.org/event/young-toddler-story-time-22845) |
+| Fairdale | Louisville-Library | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.lfpl.org/event/family-story-time-8859) |
+| Iroquois | Louisville-Library | 0 | 1 | 1 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.lfpl.org/event/toddler-storytime-2089) |
+| Western | Louisville-Library | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.lfpl.org/event/infant-storytime-14592) |
+| Bookmobile | Louisville-Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.lfpl.org/event/mis-bookmobile-welcome-place-first-lutheran-church-12580) |
+| Portland | Louisville-Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.lfpl.org/event/storytime-8284) |
+| Shawnee | Louisville-Library | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.lfpl.org/event/preschool-storytime-10603) |
+| Indiana State Parks | Localist-Parks | 50 | 0 | 0 | 1 | 0 | 0 | 51 | [link](https://events.in.gov) |
+| 9312 W Smith Street, Yorktown, IN 47396 | Localist-Parks | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [link (event, DB fallback)](https://events.in.gov/event/police-merit-commission-meeting-7038) |
+| Washington Crossing Historic Park | Localist-Parks | 7 | 1 | 0 | 0 | 0 | 0 | 8 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/critters-in-the-creek) |
+| Colonel Denning State Park | Localist-Parks | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/girl-scouts-love-state-parks-camp-out-2026) |
+| Lackawanna State Park | Localist-Parks | 3 | 0 | 0 | 0 | 1 | 0 | 4 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/the-trees-of-penns-woods-america250-edition) |
+| MADE at Plainfield | Localist-Parks | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://events.in.gov/event/planning-emergency-operations-l0103) |
+| Mounds State Park | Localist-Parks | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://events.in.gov/event/signs-of-fall-hike-mounds-state-park) |
+| Tippecanoe River State Park | Localist-Parks | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [link (event, DB fallback)](https://events.in.gov/event/river-cleanup) |
+| Clay County Courthouse | Localist-Parks | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://events.in.gov/event/drainage-board-meeting-832) |
+| Hardy Lake | Localist-Parks | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [link (event, DB fallback)](https://events.in.gov/event/owl-o-ween-8074) |
+| Prophetstown State Park | Localist-Parks | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://events.in.gov/event/17th-annual-trail-of-scarecrows-prophetstown-state-park) |
+| Tri Township Fire Protection District Headquarters | Localist-Parks | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://events.in.gov/event/ics-300-intermediate-ics-for-expanding-incidents-3072) |
+| Carnegie Center, Lilian Fendig Gallery | Localist-Parks | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://events.in.gov/event/jasper-co-american-the-beautiful-past-present-future) |
+| Monroe Lake | Localist-Parks | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [link (event, DB fallback)](https://events.in.gov/event/activity-center-craft-of-the-day-paynetown-sra-monroe-lake) |
+| VERNON TOWNSHIP FIRE DEPARTMENT (HANCOCK)(1269) | Localist-Parks | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://events.in.gov/event/ics-300-intermediate-ics-for-expanding-incidents-9872) |
+| Fowlers Hollow State Park | Localist-Parks | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/nature-exploration-backpacks) |
+| Ridley Creek State Park | Localist-Parks | 1 | 0 | 0 | 0 | 1 | 0 | 2 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/skulls-bones-horns-and-antlers) |
+| Indiana Wesleyan Kokomo | Localist-Parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.in.gov/event/general-election-2026-early-voting-indiana-wesleyan) |
+| Summit Lake State Park | Localist-Parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.in.gov/event/ghoulish-gathering-scavenger-hunt) |
+| Gifford Pinchot State Park | Localist-Parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/pa-nature-symbols-8278) |
+| McCormick's Creek State Park | Localist-Parks | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.in.gov/event/turtle-feeding-mccormicks-creek-state-park) |
+| Jacobsburg Environmental Education Center | Localist-Parks | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/family-science-night-monarch-madness-9407) |
+| Canoe Creek State Park | Localist-Parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/wildlife-habitat-garden-4021) |
+| UAW Local 685 | Localist-Parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.in.gov/event/general-election-2026-early-voting-uaw-local-685) |
+| Kings Gap Environmental Education Center | Localist-Parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/colonial-wellness) |
+| University of Southern Indiana | Localist-Parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.in.gov/event/preparing-for-cyber-attacks-and-incidents-mgt-384-2427) |
+| Jeff Stout Government Center | Localist-Parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.in.gov/event/general-election-2026-early-voting) |
+| Prince Gallitzin State Park | Localist-Parks | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/katydids-and-crickets-8098) |
+| Dubois County Museum | Localist-Parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.in.gov/event/dubois-co-museum-america-250-exhibit) |
+| University of Southern Indiana Baseball Field, Evansville, IN 47713 | Localist-Parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.in.gov/event/the-wall-that-heals-at-the-university-of-southern-indiana) |
+| Howard County Fairgrounds | Localist-Parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.in.gov/event/general-election-2026-early-voting-greentown-lions-club) |
+| Russiaville Lions Club | Localist-Parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.in.gov/event/general-election-2026-early-voting-russiaville-lions-club) |
+| Alexandria City Hall | Localist-Parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.in.gov/event/city-of-alexandria-city-council-meeting) |
+| Lincoln State Park | Localist-Parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.in.gov/event/hunger-games-hike-lincoln-state-park) |
+| Security Federal Savings Bank | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/secfed-block-party) |
+| Former Roberts Stadium parking lot | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/vanderburgh-county-solid-waste-management-district-tire-recycling-day) |
+| Riverfront Pavilion | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/knox-co-farmers-market-at-riverfront-pavilion) |
+| Charlestown State Park | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/saturday-rose-island-guide-tour-series-charlestown-state-park) |
+| Emergency Operations Center | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/emergency-management-advisory-council-meeting-2259) |
+| Town Hall | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/town-council-meeting-214) |
+| 16065 Prosperity Dr., 4th Floor, Noblesville, IN 46060 | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/veterans-recovery-through-the-ranks) |
+| Rothrock State Forest | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/updated-diy-mushroom-logs) |
+| O'Bannon Woods State Park | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/autumn-adventure-weekend-obannon-woods-state-park-1179) |
+| Bonus Pints | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/block-party-after-party) |
+| Point State Park | Localist-Parks | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/sights-beyond-our-eyes-a-uv-walk-after-dark-at-phipps-299) |
+| Animal Shelter | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/animal-management-commission-2026-184) |
+| Wells County 4H Conference Room | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/crisis-management-for-school-based-incidents-awr-148-6939) |
+| Randolph County Courthouse | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/commissioners-meetings) |
+| 1406 Teal Road, Lafayette, IN, 47905 | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/tippecanoe-county-veterans-stand-down-and-resource-fair) |
+| St. Paul's Episcopal Church | Localist-Parks | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/mess-fest-family-festival) |
+| Columbia City | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/whitley-county-farmers-market-2373) |
+| Memorial Lake State Park | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/archery-101-6569) |
+| United Fidelity Bank, Mt. Vernon | Localist-Parks | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/mt-vernon-community-day) |
+| Potato Creek State Park | Localist-Parks | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/touch-table-of-furs-potato-creek-state-park-1715) |
+| Pokagon State Park | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/halloween-happenings-pokagon-state-park-7742) |
+| Fort Washington State Park | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/a-hike-through-the-leaves-autumn-nature-walk-8395) |
+| West Township Trustee's Office | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/2027-budget-public-hearing-township-meeting) |
+| Town of North Liberty | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/halloween-food-trucks) |
+| North Liberty Community Building | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/town-council-meeting-6546) |
+| Harrison County Government Center | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/copy-of-commissioners-meeting) |
+| Locust Lake State Park | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/oakhemlock-loop-hike-8545) |
+| in person or virtual | Localist-Parks | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/fy27-basic-skills-and-education-program) |
+| Pineview Government Center | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/commissioners-meetings-1309) |
+| Friemann Square | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/push-foundation-back-to-school-bash) |
+| Tuscarora State Park | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/landingville-marsh-hike-2375) |
+| Nockamixon State Park | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.dcnr.pa.gov/event/birding-with-the-bucks-county-birders) |
+| City Hall | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/city-council-meetings) |
+| Ivy Tech Elkart | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/fssa-statewide-town-hall-on-hip-work-requirements) |
+| 9312 W Smith St, Yorktown IN 47396 | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/architectural-review-board-9378) |
+| Gas City | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/park-board) |
+| Covington Public Library | Localist-Parks | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/Storytime-7789) |
+| Statehouse | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/tax-northern-indiana-public-service-co-llc-v-ind-dept-of-revenue-no-24t-ta-00017) |
+| Versailles State Park | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/versailles-state-park-halloween-spooktakular-ii) |
+| Ladoga Clark Twp Public Library | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/lego-club-6516) |
+| Chrisney Town Hall | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/town-of-chrisney-town-council-meeting) |
+| Spring Mill State Park | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/craft-show-6786) |
+| Ivy Tech Fort Wayne | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/fssa-statewide-town-halls-on-hip-work-requirements) |
+| Riverview Health | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/personal-protective-measures-for-biological-events-per-320) |
+| Martin County Courthouse | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/copy-of-council-regular-meeting-8667) |
+| MAAC Training Center | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/homemade-explosives-awareness-recognition-and-response-per-325-3713) |
+| MADE @ Plainfield | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/mobile-integrated-health-committee-meeting-9531) |
+| Curtis Gilber Park, Terre Haute | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/homeless-awareness-day) |
+| Elkhart County Sheriff's Training Room | Localist-Parks | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/crowd-management-for-sport-and-special-events-mgt-475-9014) |
+| Indiana University | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/appeals-state-of-indiana-v-cooper-p-archer-25a-cr-3197) |
+| Cass County 4H Fair Ground | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/the-great-camelot-renaissance-faire) |
+| Bloomfield Junior-Senior High School | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/crisis-management-for-school-based-incidents-awr-148-8133) |
+| North Manchester Center for History | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/wabash-co-exhibit-in-our-nations-defense-presented-by-the-north-manchester-center-for-history) |
+| Seymour Library | Localist-Parks | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/north-vernon-vet-to-vet-peer-support) |
+| Putnam County Emergency Operations Center | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/senior-officials-workshop-for-all-hazards-preparedness-mgt-312-7550) |
+| Jackson County Public Library, 303 W 2nd st, Seymour, IN 47274 | Localist-Parks | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/north-vernon-vet-to-vet-peer-support-meetings) |
+| Natural Resources Building, Indiana State Fairgrounds | Localist-Parks | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link](https://events.in.gov) |
+| Parkview Education Center | Localist-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.in.gov/event/disaster-recovery-public-assistance-programs-an-introduction-mgt-482-9961) |
+| National Mall and Memorial Parks | NPS-Parks | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [link (event, DB fallback)](https://www.nps.gov) |
+| Civil War Defenses of Washington | NPS-Parks | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [link (event, DB fallback)](https://www.nps.gov) |
+| Rock Creek Park | NPS-Parks | 4 | 0 | 0 | 1 | 0 | 0 | 5 | [link (event, DB fallback)](https://www.nps.gov) |
+| George Washington Memorial Parkway | NPS-Parks | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://www.nps.gov) |
+| Kenilworth Park & Aquatic Gardens | NPS-Parks | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://www.nps.gov) |
+| The White House and President's Park | NPS-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.nps.gov) |
+| Chesapeake Bay | NPS-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.seafordhistoricalsociety.com/event/jack-lewis-exhibit/2026-05-07/) |
+| Belmont-Paul Women's Equality National Monument | NPS-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.nps.gov) |
+| Please Touch Museum | Venue-Events-ChildrensMuseums | 15 | 2 | 0 | 0 | 0 | 0 | 17 | [link](https://www.pleasetouchmuseum.org/learn/programs/) |
+| Discovery World | Venue-Events-ChildrensMuseums | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [link](https://discoveryworld.org/) |
+| Children's Museum of New Hampshire | Venue-Events-ChildrensMuseums | 11 | 0 | 0 | 2 | 0 | 0 | 13 | [link](https://childrensmuseumatlanta.org/programs/) |
+| Great Explorations | Venue-Events-ChildrensMuseums | 10 | 1 | 0 | 1 | 0 | 0 | 12 | [link](https://greatex.org/events/) |
+| Children's Museum of the Upstate | Venue-Events-ChildrensMuseums | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [link](https://childrensmuseumatlanta.org/programs/) |
+| Clay Center / Avampato Discovery Museum | Venue-Events-ChildrensMuseums | 4 | 2 | 0 | 0 | 0 | 0 | 6 | [link](https://www.theclaycenter.org/events/) |
+| Madison Children's Museum | Venue-Events-ChildrensMuseums | 3 | 2 | 0 | 0 | 0 | 0 | 5 | [link](https://childrensmuseumatlanta.org/programs/) |
+| Discovery Museum | Venue-Events-ChildrensMuseums | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link](https://www.discoveryacton.org/visit/events-programs) |
+| Adventure Science Center | Venue-Events-ChildrensMuseums | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link](https://www.adventuresci.org/events-programs/events/) |
+| Montshire Museum of Science | Venue-Events-ChildrensMuseums | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://montshire.org/events/) |
+| (no venue) | Festivals-Eastern-US | 243 | 0 | 0 | 0 | 0 | 0 | 243 | [link (event, DB fallback)](https://www.eventbrite.com/e/annual-community-impact-day-ft-back-to-school-health-fair-gospel-fest-tickets-1992134932209?aff=ebdssbdestsearch) |
+| Autumn Awakening - Women's Wellness Fair | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/autumn-awakening-womens-wellness-fair-tickets-1992375380396?aff=ebdssbdestsearch) |
+| General Stanton 2nd Annual Jazz Fest | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/general-stanton-2nd-annual-jazz-fest-tickets-1988515329881?aff=ebdssbdestsearch) |
+| Hippie Fest - Indiana 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/hippie-fest-indiana-2026-tickets-1978630355657?aff=ebdssbdestsearch) |
+| 2026 DELAWARE SEAFOOD FESTIVAL | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/2026-delaware-seafood-festival-tickets-1983457438592?aff=ebdssbdestsearch) |
+| Wild Light 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/wild-light-2026-registration-1991373450597?aff=ebdssbdestsearch) |
+| RIOT GRRRL'S NOT DEAD FEST | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/riot-grrrls-not-dead-fest-tickets-1985639310630?aff=ebdssbdestsearch) |
+| 2026-50th Annual Mountain Heritage Arts & Crafts Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/2026-50th-annual-mountain-heritage-arts-crafts-festival-tickets-1980029522603?aff=ebdssbdestsearch) |
+| FoodieLand  Food Festival - Atlanta \| September 4-6, 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/foodieland-food-festival-atlanta-september-4-6-2026-tickets-1977104417535?aff=ebdssbdestsearch) |
+| The All White Day Party  (Labor Day Sunday) | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/the-all-white-day-party-labor-day-sunday-tickets-1996423042061?aff=ebdssbdestsearch) |
+| Boston Salsa Festival, 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/boston-salsa-festival-2026-registration-1591571175229?aff=ebdssbdestsearch) |
+| Charles Town Car Show 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/charles-town-car-show-2026-tickets-1987939170573?aff=ebdssbdestsearch) |
+| 2026 Philadelphia Folk Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/2026-philadelphia-folk-festival-tickets-1934324690219?aff=ebdssbdestsearch) |
+| 19th Annual Oak Park Microbrew Review | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/19th-annual-oak-park-microbrew-review-tickets-1985820847612?aff=ebdssbdestsearch) |
+| Fairgrounds Takeover PT.2 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/fairgrounds-takeover-pt2-tickets-1986068375976?aff=ebdssbdestsearch) |
+| FoodieLand  Food Festival - Nashville \| August 28-30, 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/foodieland-food-festival-nashville-august-28-30-2026-tickets-1977102228989?aff=ebdssbdestsearch) |
+| 9/5/2026  - Shop Black Fest Nashville (8th Annual - The Creator Edition) | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/952026-shop-black-fest-nashville-8th-annual-the-creator-edition-tickets-1985180783162?aff=ebdssbdestsearch) |
+| 25th Annual Music City Brewers Fest 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/25th-annual-music-city-brewers-fest-2026-tickets-1977301453876?aff=ebdssbdestsearch) |
+| Fresh Fest Cleveland 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/fresh-fest-cleveland-2026-registration-1990995995619?aff=ebdssbdestsearch) |
+| 2026 Soul Picnic | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/2026-soul-picnic-tickets-1990452339529?aff=ebdssbdestsearch) |
+| 2nd Annual Taco & Margarita Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/2nd-annual-taco-margarita-festival-tickets-1983917376278?aff=ebdssbdestsearch) |
+| Hat or Bag Burning: Crafts on Tap  at Henniker Brewery | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/hat-or-bag-burning-crafts-on-tap-at-henniker-brewery-tickets-1989337056688?aff=ebdssbdestsearch) |
+| Up in Maine - Silent Movie Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/up-in-maine-silent-movie-festival-tickets-1986015689389?aff=ebdssbdestsearch) |
+| Delaware African Restaurant Week 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/delaware-african-restaurant-week-2026-tickets-1865330647179?aff=ebdssbdestsearch) |
+| Big Bull Falls Blues Fest 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/big-bull-falls-blues-fest-2026-tickets-1975187160969?aff=ebdssbdestsearch) |
+| Stone Bend Farm | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/the-bbq-8-at-stone-bend-farm-tickets-1987516240578?aff=ebdssbdestsearch) |
+| 2026  Chincoteague Oyster Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/2026-chincoteague-oyster-festival-tickets-1965396551994?aff=ebdssbdestsearch) |
+| One Love Music Fest 2026 \| Newark’s Premier Caribbean Explosion | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/one-love-music-fest-2026-newarks-premier-caribbean-explosion-registration-1988395478402?aff=ebdssbdestsearch) |
+| Backlash Fest 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/backlash-fest-2026-tickets-1989143221923?aff=ebdssbdestsearch) |
+| DeKalb Corn Fest | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/dekalb-corn-fest-beer-garden-sound-stage-tickets-1984238474692?aff=ebdssbdestsearch) |
+| Cultural Enrichment, Music, and Arts Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/cultural-enrichment-music-and-arts-festival-tickets-467182153397?aff=ebdssbdestsearch) |
+| 13th Knox Asian Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/13th-knox-asian-festival-tickets-1985511906561?aff=ebdssbdestsearch) |
+| Hein Farm | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/2026-chickenstock-music-festival-at-hein-farm-tickets-1981796290052?aff=ebdssbdestsearch) |
+| The Other Magazine's  Summer Extravaganja 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/the-other-magazines-summer-extravaganja-2026-tickets-1991243137828?aff=ebdssbdestsearch) |
+| Crazee Lymerz - One Day Bus Excursion- Delaware Caribbean Carnival 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/crazee-lymerz-one-day-bus-excursion-delaware-caribbean-carnival-2026-tickets-1976472143386?aff=ebdssbdestsearch) |
+| FoodieLand  Food Festival - Charlotte \| September 18-20, 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/foodieland-food-festival-charlotte-september-18-20-2026-tickets-1977105705387?aff=ebdssbdestsearch) |
+| 2026 East Haven Fall Festival - Crafting Vendors | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/2026-east-haven-fall-festival-crafting-vendors-tickets-1985318575302?aff=ebdssbdestsearch) |
+| Tudor Place | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/trick-or-treat-at-tudor-place-tickets-1989324689698?aff=ebdssbdestsearch) |
+| 2nd Annual West Hartford Back to School Bash & Backpack Giveaway | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/2nd-annual-west-hartford-back-to-school-bash-backpack-giveaway-tickets-1987496758306?aff=ebdssbdestsearch) |
+| LUV2GLOW - LIQUID FREQUENCY - FANTASY FEST 2026 at Rick's  Key West | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/luv2glow-liquid-frequency-fantasy-fest-2026-at-ricks-key-west-tickets-1992766060932?aff=ebdssbdestsearch) |
+| Pawpaw Festival WV | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/pawpaw-festival-wv-tickets-1990893320515?aff=ebdssbdestsearch) |
+| OKTOBERFEST Table Reservation (Saturday  9/19) | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/oktoberfest-table-reservation-saturday-919-tickets-1991494690228?aff=ebdssbdestsearch) |
+| The Pink Picnic “The Rose Garden” | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/the-pink-picnic-the-rose-garden-tickets-1987774901239?aff=ebdssbdestsearch) |
+| Growth By Giving Music Fest | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/growth-by-giving-music-fest-tickets-1981614143246?aff=ebdssbdestsearch) |
+| The Boston  Margarita Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/the-boston-margarita-festival-tickets-1992007669563?aff=ebdssbdestsearch) |
+| 2026 FuelFest New Jersey | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/2026-fuelfest-new-jersey-tickets-1977953857232?aff=ebdssbdestsearch) |
+| Philadelphia Expo Center 2026 (Live Garba) | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/navratri-festival-at-philadelphia-expo-center-2026-live-garba-tickets-1992798116812?aff=ebdssbdestsearch) |
+| 7th Annual Crabs,Beer & Spirits by the James | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/7th-annual-crabsbeer-spirits-by-the-james-tickets-1985337824878?aff=ebdssbdestsearch) |
+| Fresa Fests  - Pinterest WRLD Market ✨ HUGE Trinket + Fashion Market | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/fresa-fests-pinterest-wrld-market-huge-trinket-fashion-market-tickets-1987578017354?aff=ebdssbdestsearch) |
+| Wisconsin State Fair Blue Ribbon Dairy Products Auction | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/wisconsin-state-fair-blue-ribbon-dairy-products-auction-tickets-1982292601533?aff=ebdssbdestsearch) |
+| Midwest Django Fest - Friday, Sept. 11  AND Weekend Passes | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/midwest-django-fest-friday-sept-11-and-weekend-passes-tickets-1985083632582?aff=ebdssbdestsearch) |
+| Cary  Street Food Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/cary-street-food-festival-tickets-1992939939006?aff=ebdssbdestsearch) |
+| Jollof Festival - DC '26 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/jollof-festival-dc-26-tickets-1988020239051?aff=ebdssbdestsearch) |
+| Atlanta Foodie Festival  The Ultimate Food Experience in Atlanta | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/atlanta-foodie-festival-the-ultimate-food-experience-in-atlanta-tickets-1986031454543?aff=ebdssbdestsearch) |
+| Swarmiefest 5 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/swarmiefest-5-tickets-1991511610838?aff=ebdssbdestsearch) |
+| Essential CareFest 2026 / Festival de Cuidado 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/essential-carefest-2026-festival-de-cuidado-2026-tickets-1989410391033?aff=ebdssbdestsearch) |
+| Dear Summer Festival DC | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/dear-summer-festival-dc-tickets-1990229318467?aff=ebdssbdestsearch) |
+| Sanwar | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/halfway-from-everywhere-summer-music-festival-2026-sanwar-tickets-1987451014485?aff=ebdssbdestsearch) |
+| CHARLESTON  SUMMER  VIBES FEST | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/charleston-summer-vibes-fest-tickets-1993980537464?aff=ebdssbdestsearch) |
+| 2026 Bowling Green International Festival by Service One Credit Union | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/2026-bowling-green-international-festival-by-service-one-credit-union-tickets-1983218653379?aff=ebdssbdestsearch) |
+| Summerstock Music Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/summerstock-music-festival-tickets-1992178505538?aff=ebdssbdestsearch) |
+| 2026 Pupstock ™  Festival: NJ's Best family-friendly dog festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/2026-pupstock-tm-festival-njs-best-family-friendly-dog-festival-tickets-1989410713999?aff=ebdssbdestsearch) |
+| Fahrenheit Flow Arts 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/fahrenheit-flow-arts-2026-tickets-1986764784954?aff=ebdssbdestsearch) |
+| FoodieLand  Food Festival - Memphis \| August 21-23, 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/foodieland-food-festival-memphis-august-21-23-2026-tickets-1984414809113?aff=ebdssbdestsearch) |
+| Oktoberfest 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/oktoberfest-2026-tickets-1963590896229?aff=ebdssbdestsearch) |
+| Garlic Town, USA Festival 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/garlic-town-usa-festival-2026-tickets-1988414436105?aff=ebdssbdestsearch) |
+| 3rd Annual VA SoulFULL Vegan Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/3rd-annual-va-soulfull-vegan-festival-tickets-1985328465885?aff=ebdssbdestsearch) |
+| R&B lemon Drop Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/rb-lemon-drop-festival-tickets-1988961915631?aff=ebdssbdestsearch) |
+| Melanin Pride Weekend 10 Years Strong | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/melanin-pride-weekend-10-years-strong-tickets-1990343176018?aff=ebdssbdestsearch) |
+| Farm Fresh Rhode Island | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/haus-of-codec-third-friday-market-at-farm-fresh-rhode-island-tickets-1982144935861?aff=ebdssbdestsearch) |
+| 2026 Wine on the River Nashville | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/2026-wine-on-the-river-nashville-tickets-1977301608338?aff=ebdssbdestsearch) |
+| Wave Camp Music & Art Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/wave-camp-music-art-festival-tickets-1988249794658?aff=ebdssbdestsearch) |
+| Petersburg Book Fest | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/petersburg-book-fest-tickets-1986788457760?aff=ebdssbdestsearch) |
+| Misquamicut FallFest '26 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/misquamicut-fallfest-26-tickets-1992361087646?aff=ebdssbdestsearch) |
+| 2026 Black Men's Wellness Day - Jackson MS | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/2026-black-mens-wellness-day-jackson-ms-tickets-1944139767379?aff=ebdssbdestsearch) |
+| Jungle Habitat 8/15 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/lunar-faire-night-market-mythical-creatures-at-jungle-habitat-815-tickets-1992398594831?aff=ebdssbdestsearch) |
+| 9th Annual Woodsfest Music Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/9th-annual-woodsfest-music-festival-tickets-1983624240501?aff=ebdssbdestsearch) |
+| Lake Paran | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/new-vermonters-welcome-picnic-at-lake-paran-tickets-1994244054651?aff=ebdssbdestsearch) |
+| 14th Annual NH Monarch Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/14th-annual-nh-monarch-festival-tickets-1989667456924?aff=ebdssbdestsearch) |
+| Island Vibez Reggae Block Party 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/island-vibez-reggae-block-party-2026-tickets-1985551677517?aff=ebdssbdestsearch) |
+| Flavor Fest: Chicken Wing Day Party  ATL w/ Fredo Bang Live | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/flavor-fest-chicken-wing-day-party-atl-w-fredo-bang-live-tickets-1991722954974?aff=ebdssbdestsearch) |
+| ROMANUS FEST VIII | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/romanus-fest-viii-tickets-1991209839231?aff=ebdssbdestsearch) |
+| Art Park Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/art-park-festival-tickets-1985130410496?aff=ebdssbdestsearch) |
+| Freehub PRESENTS Mountain Bike Film Festival \| NRG WV \| Beckley Area Trails | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/freehub-presents-mountain-bike-film-festival-nrg-wv-beckley-area-trails-tickets-1991922371434?aff=ebdssbdestsearch) |
+| MV Vibe Fest 2026  Martha's Vineyard | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/mv-vibe-fest-2026-marthas-vineyard-tickets-1996341233369?aff=ebdssbdestsearch) |
+| Sussex Fairgrounds | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/lunar-faire-night-market-1024-halloweekend-at-sussex-fairgrounds-tickets-1992397535663?aff=ebdssbdestsearch) |
+| Keys to Wealth Fest | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/keys-to-wealth-fest-tickets-1987370019226?aff=ebdssbdestsearch) |
+| 2026 Norwalk Seaport Association Oyster Festival – September 11, 12 & 13th | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/2026-norwalk-seaport-association-oyster-festival-september-11-12-13th-tickets-1975137382079?aff=ebdssbdestsearch) |
+| The Oxford Margarita Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/the-oxford-margarita-festival-tickets-1980398633624?aff=ebdssbdestsearch) |
+| Oddities Flea Market:  Connecticut Halloween 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/oddities-flea-market-connecticut-halloween-2026-tickets-1992585876997?aff=ebdssbdestsearch) |
+| R&B  In The Park Delaware | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/rb-in-the-park-delaware-tickets-1994811833894?aff=ebdssbdestsearch) |
+| Keyport | FestivalGuides-Eastern | 91 | 0 | 0 | 0 | 0 | 0 | 91 | [link (event, DB fallback)](https://jcdowntown.org/event/handmade-market/) |
+| Cassopolis | FestivalGuides-Eastern | 75 | 0 | 0 | 0 | 0 | 0 | 75 | [link (event, DB fallback)](https://turtle-lake.net/music-fest/) |
+| Bergton | FestivalGuides-Eastern | 25 | 0 | 0 | 0 | 0 | 0 | 25 | [link (event, DB fallback)](https://www.dinwiddieva.us/318/Tourism/) |
+| (no venue) | FestivalGuides-Eastern | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [link (event, DB fallback)](https://www.michiganfiberfestival.info/) |
+| Shinglehouse | FestivalGuides-Eastern | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [link (event, DB fallback)](https://koziarschristmasvillage.com) |
+| Clarksdale | FestivalGuides-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://www.facebook.com/HellbenderFestival/) |
+| Wilmington | FestivalGuides-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://www.fantasyfest.com/) |
+| Chesterfield | FestivalGuides-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://chesterfieldcountyfair.org/) |
+| Lambertville | FestivalGuides-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://bellemontfarmnj.com/lambertville-sunflower-festival/) |
+| Hammonton | FestivalGuides-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://townofhammonton.org/event/hammonton-rotary-club-3rd-annual-winterfest/2025-12-05/) |
+| Bay City | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.facebook.com/events/2071815133673852) |
+| Clifton | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.scribblegardencafe.com/fairs--festivals.html) |
+| Montclair | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.montclairjazzfestival.org) |
+| St. Johns | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.facebook.com/mintfestivalmichigan) |
+| Augusta | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.holytrinityaugusta.org/fall-greek-festival) |
+| Pentwater | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](http://www.pentwater.org/event/homecoming-celebration/?instance_id=1988) |
+| Toms River | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://downtowntomsriver.com/tree-lighting/) |
+| South Bound Brook | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.facebook.com/events/785147447331607) |
+| Grand Rapids | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.grgreekfest.com/) |
+| Corbin | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.bearwallowfarms.com/fall-farmfest) |
+| Somerville | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.facebook.com/events/967648562836138/) |
+| Columbia | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.pigontheridgesc.com) |
+| Dunellen | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.facebook.com/events/877028855449111) |
+| Fort Lee | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://mainstreetpops.com/events/) |
+| Caseville | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://casevillechamber.com/cheeseburger-fest) |
+| Greenville | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.palospark.org/426/2025-Autumn-In-The-Park-Festival) |
+| Bedford | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.bedfordvafair.org/) |
+| Saginaw | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.facebook.com/saginawacf) |
+| Milford | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.milfordmemories.com/) |
+| Dearborn | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](http://www.cityofdearborn.org/homecoming) |
+| Jersey City | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.instagram.com/p/DV1xlqbAeQT/) |
+| Onondaga | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.facebook.com/profile.php?id=61559726451654) |
+| Hastings | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.facebook.com/hastingssummerfest/) |
+| Szymanski’s Creekside Acres | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.szymanskiscreeksideacres.com/events-classes-home/the-great-summer-send-off) |
+| Oley | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://oleyfirecompany.com/events) |
+| Nashville | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://franktownsfestivaloflights.com/) |
+| Sparta | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.spartacelticfest.org/home) |
+| Egg Harbor City | FestivalGuides-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://allevents.in/egg-harbor-city/ehc-food-truck-festival-aug2026/200029185540213) |
+| Shelby | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/profile.php?id=61559948941061) |
+| Palmerton | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](http://www.palmertonfestival.com/) |
+| Eastover | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/events/eastover-ball-park/eastover-fall-festival/2000936297188144/) |
+| Merrill | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/photo/?fbid=1362985302656333&amp;set=a.405122225109317) |
+| Denville | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.eventbrite.com/e/denville-food-truck-festival-2026-tickets-1986815693222?aff=erelexpmlt) |
+| Rebel Sheep Wine Co. I | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.marketspacevendorevents.com/2026events?fbclid=IwY2xjawRcxdBleHRuA2FlbQIxMABicmlkETFxNVFCNVpTdmdVZ2pONFk5c3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHrHk8mVClx0M7WgAeN_EZW7boXMFGtguQEBoaZ5ePhEmbbwDvxMy54JNbPgy_aem_SlbH2MChSxnbQ1GUJ5OHXQ) |
+| Bel Air | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://belairrec.org/bel-air-festival-of-arts/) |
+| Six Flags IV | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.sixflags.com/greatadventure/events) |
+| Rebel Sheep Wine Co. II | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.marketspacevendorevents.com/2026events?fbclid=IwY2xjawRcxdBleHRuA2FlbQIxMABicmlkETFxNVFCNVpTdmdVZ2pONFk5c3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHrHk8mVClx0M7WgAeN_EZW7boXMFGtguQEBoaZ5ePhEmbbwDvxMy54JNbPgy_aem_SlbH2MChSxnbQ1GUJ5OHXQ) |
+| Imlay City | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://imlaycitychamberofcommerce.org/festivals/) |
+| PNC Bank Arts Center V | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://magicoflights.com/locations/holmdel-nj/) |
+| Lapeer | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://lapeerdays.com/) |
+| Ferndale | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](http://www.ferndaledreamcruise.com/) |
+| Grosse Ile | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/thevintagemarketmi) |
+| Novi | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/NoviTacoFest) |
+| Alpena | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.alpenaantiquetractor.com/events) |
+| Norz Hill Farm II | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.norzhillfarm.com/events/pre-winter-farm-days) |
+| Long Branch | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://jsjbf.org/jersey-shore-jazz-and-blues-festival/) |
+| Brownstown | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://brownstownsummerfest.com/) |
+| Lancaster | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://visitlancastercity.com/city-events/hispanic-heritage-month-celebration/) |
+| Six Flags II | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.sixflags.com/greatadventure/events) |
+| Menominee | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://menomineefarmersmarket.com/event/giant-pumpkin-festival-no-market/) |
+| Grant | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.rivercountrychamber.com/events/details/grant-festival-2025-43105) |
+| Hackettstown | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://hackettstownbid.com/bid-happenings/hometown-holiday/) |
+| Oscoda | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/OscodaCountyHeritageDays/) |
+| Argos Farm III | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/ArgosFarmNJ) |
+| Six Flags VI | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.sixflags.com/greatadventure/events) |
+| PNC Bank Arts Center III | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://magicoflights.com/locations/holmdel-nj/) |
+| Stone Harbor | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/profile.php?id=61588375204302) |
+| Marquette | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://festofsail.com/) |
+| Berlin | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://berlinmainstreet.com/fiddlers-convention/) |
+| Argos Farm IV | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/ArgosFarmNJ) |
+| Branchburg | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/events/1877886316201991/) |
+| East Rutherford | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/profile.php?id=61560686602188) |
+| Linwood | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.linwoodpicklefestival.com/) |
+| Westfield | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/events/1251236513537751/) |
+| Argos Farm VIII | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/ArgosFarmNJ) |
+| Croft Farm | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.chnj.gov/Calendar.aspx?EID=7115&amp;month=2&amp;year=2026&amp;day=25&amp;calType=0) |
+| Mountain Top | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://mountaintopfireco13.org/) |
+| Medford | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://medfordtownship.com/events/) |
+| Clifford | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/profile.php?id=61561880083574) |
+| Red Bank | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/events/761289236377907/) |
+| Frankfort | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://cca.frankfort-elberta.com/webforms/EvtListing.aspx?dbid2=MIFRANK&amp;evtid=35094&amp;class=E) |
+| Beverly | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/events/beverly-new-jersey/beverly-beats-music-festival/2063466707938663/) |
+| Sugar Island | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://sugarislandfest.org/) |
+| Dragon Village | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.shoppesatdragonvillage.com/shoppes-at-dragon-village-events/christmas-village-1) |
+| Ocoee | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/OcoeeMusicFestival) |
+| Hamilton Township | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://parksrec.egov.basgov.com/hamilton) |
+| Belleville | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://bellevillecentralbusinesscommunity.com/taste-of-belleville) |
+| Bennett | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/BennettAnnualFlatwoodsFestival/) |
+| Charlevoix | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/charlevoixwaterfrontartfair/) |
+| Collingswood | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.collingswoodcraftsandfineartfestival.com/) |
+| Northville | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://northvillearthouse.org/artmarket/) |
+| Clarence | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://renfair.com/ny/) |
+| Kenilworth | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://kenilworthfire.org/carnival/) |
+| Lawrence | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://lawrenceoxroast.com) |
+| North Adams | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/North-Adams-Heritage-Day-357422238095462/) |
+| Lake City | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/events/1675961327098556) |
+| Turtle Back Zoo IV | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/TurtleBackZoo/) |
+| Monmouth Park | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.monmouthpark.com/event/surf-turf-seafood-festival-3/2026-08-15/) |
+| Red Bank Battlefield Park | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://newjerseywineevents.com/events/wine-down-summer-at-red-bank-battlefield-park/) |
+| Franklin | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://fcagfair.com/) |
+| West Milford | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/events/905994342518640) |
+| PNC Bank Arts Center VI | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://magicoflights.com/locations/holmdel-nj/) |
+| Newark | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://newarkartsfestival.com/) |
+| Wildwood | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://villainarts.com/shows/wildwood-nj/) |
+| Iron Mountain | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://downtownironmountain.com/italian-fest/) |
+| South Orange | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.southorangedowntown.org/events-calendar/hometown-holiday) |
+| Saranac | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://saranaccommunityassociation.com/) |
+| Chester | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.justjerseyfest.com/) |
+| Mendon | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](http://www.mendonriverfest.com/) |
+| New Brunswick | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.stnj.org/events-tickets/special-events/new-brunswick-heart-festival) |
+| Lentini Farms IV | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://lentinifarms.com/) |
+| Metuchen | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/events/948928784262396/) |
+| Dalton Farms VIII | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.instagram.com/p/DMQ95eYtGzF/) |
+| Lincoln Park | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/profile.php?id=100057058046764) |
+| Battle Creek | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/events/the-base-bar-grill/battle-creek-caribbean-festival-2026/996109196059119/) |
+| Rock Springs Nature Center | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.maconccd.org/annual-events-mccd/fall-harvest-festival/) |
+| Buckley | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.buckleyoldengineshow.org/) |
+| Shelby Township | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.shelbyartfair.org/) |
+| Buchanan | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.buchanan-va.gov/calendar) |
+| Manasquan | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](http://www.kraftfairs.com/hist.html) |
+| Boyne City | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/boynecitypiratefest/) |
+| Floyd | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.floydcountyfair.com/) |
+| Bloomingdale | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/profile.php?id=100077377350255) |
+| Stanton | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://stantonofd.com/event/sofd-2025/) |
+| PNC Bank Arts Center IV | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://magicoflights.com/locations/holmdel-nj/) |
+| Six Flags III | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.sixflags.com/greatadventure/events) |
+| New Providence | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://visitnj.org/nj-events/new-providence-fall-street-fair) |
+| Almond | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/profile.php?id=61560316061107) |
+| Clawson | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](http://clawsonfest.com/) |
+| Brighton | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.brightoncoc.org/signature-events/) |
+| PNC Bank Arts Center VII | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://magicoflights.com/locations/holmdel-nj/) |
+| Norz Hill Farm I | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.norzhillfarm.com/events/pre-winter-farm-days) |
+| Metamora | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](http://www.metamorachamber.org/metamora-country-days.html) |
+| Beaver Dam | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://beaverdamchamber.com/community-events/corn-roast-event/) |
+| Eau Claire | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/profile.php?id=100081504262692) |
+| Kalamazoo | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/KalamazooBalloonFest/) |
+| Green Lake | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](http://www.greenlakeartshow.com/) |
+| Jackson | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.jacksontwpnj.net/488/Jackson-Day-2026) |
+| Macomb | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://macombcountypride.com/) |
+| Atlanta | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://atlantabtf.org/) |
+| Milwaukee | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.milwaukeedowntown.com/signature-events/milwaukee-holiday-lights-festival/) |
+| Turtle Back Zoo II | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/TurtleBackZoo/) |
+| Howell | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.howellmelonfestival.com/) |
+| Utica | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://rogerscitynauticalcityfestival.com/) |
+| Copper Harbor | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.copperharbortrails.org/copper-harbor-trails-fest) |
+| Argos Farm II | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/ArgosFarmNJ) |
+| Funny Farm Rescue | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://funnyfarmrescue.org/fall-festival-2/) |
+| Paramus | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.justjerseyfest.com/) |
+| Charleston | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.charlestonscottishgames.com/) |
+| Turtle Back Zoo V | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/TurtleBackZoo/) |
+| Cranford | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/events/891152903519303/) |
+| Mannington | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://oglebay.com/calendar/event-calendar/festival-of-lights/) |
+| Snyder’s Farm IV | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.snyders-farm.com/u-picks) |
+| Quincy | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/quincymi) |
+| Terhune Orchards IX | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.terhuneorchards.com/festivals/) |
+| Beardstown | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/BeardstownFallFunFestival/) |
+| Turtle Back Zoo VII | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/TurtleBackZoo/) |
+| Onekama | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.onekama.info/onekamadays) |
+| Harrison | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/HarrisonStreetFair/) |
+| Turtle Back Zoo VI | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/TurtleBackZoo/) |
+| Historic Cold Spring Village | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://hcsv.org/events.php) |
+| Ida | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://phsb.org/port-oneida-fair/) |
+| Oz III | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.landofoznc.com/autumnatoz) |
+| Fox Lake | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.foxlake.org/389/Festival-of-Lights) |
+| Morristown | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.morristownjazzandblues.com/) |
+| Secaucus | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/events/587175937033420) |
+| Sunfield | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/Sunfield-Farmers-Picnic-Inc-219725544730560/) |
+| Stafford | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://staffordfair.com/) |
+| Dragon Village Peach Festival | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.shoppesatdragonvillage.com/shoppes-at-dragon-village-events/peach-festival-3) |
+| Midland | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](http://www.folkmusicsociety.org/p/folk-festival.html) |
+| Troy | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/troyfamilydaze/) |
+| Port Sanilac | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.portsanilac.net/event-schedule) |
+| Saline | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/salinesummerfest/) |
+| Wellsburg | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/wellsburgapplefest/) |
+| Willingboro | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.willingboronj.gov/Home/Components/Calendar/Event/3356/62?curm=8&amp;cury=2026) |
+| Diggerland VII | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://diggerlandusa.com/special-events/holiday-light-show/) |
+| Honor | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/groups/145530746544/) |
+| Cedar | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://cedarpolkafest.org) |
+| Eastampton | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://co.burlington.nj.us/1988/Winterfest) |
+| Amherst | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.amherstcountyfair.com/) |
+| Haddon Township | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://shophaddon.com/event/8th-annual-winterfest-market/) |
+| DeWitt | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.thedewittoxroast.com/) |
+| Duffield | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/profile.php?id=100064600033051) |
+| Rock | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://rockthecountry.com/) |
+| Navity of the Virgin Mary | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/events/43123-ryan-rd-sterling-heights-mi-united-states-michigan-48314/makfest-2025/729723646541303/) |
+| Harbor Springs | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.harborspringschamber.com/car-festival) |
+| Avonmore | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/ACAinc/) |
+| Belding | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.beldinglaborday.org) |
+| Flint | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/FlintDropFest/) |
+| Riverdale | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://jcpromotions.info/product/riverdales-annual-labor-day-street-fair-2025-duplicate-1/) |
+| PNC Bank Arts Center I | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://magicoflights.com/locations/holmdel-nj/) |
+| Smithville | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://historicsmithvillenj.com/27-holiday-light-show) |
+| Terhune Orchards VIII | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.terhuneorchards.com/festivals/) |
+| Edison | FestivalGuides-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.facebook.com/events/1338565677938152) |
+| Marksbury Family Branch | Communico-KY | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [link (event, DB fallback)](https://lexpublib.libnet.info/event/16518689) |
+| Central Library | Communico-KY | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://lexpublib.libnet.info/event/16972124) |
+| Northside Branch | Communico-KY | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://lexpublib.libnet.info/event/17029766) |
+| Beaumont Branch | Communico-KY | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://lexpublib.libnet.info/event/16821949) |
+| Eastside Branch | Communico-KY | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://lexpublib.libnet.info/event/16975659) |
+| Hoover Public Library | Communico-AL | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link](https://hoover.libnet.info/events) |
+| Children's Department | Communico-AL | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://hoover.libnet.info/event/16075780) |
+| West Hartford Library | LibraryMarket-ME-NH-MA | 7 | 0 | 1 | 1 | 0 | 2 | 11 | [link](https://westhartford.librarymarket.com/events/upcoming) |
+| Springfield City Library | LibraryMarket-ME-NH-MA | 2 | 2 | 0 | 0 | 2 | 1 | 7 | [link](https://springfield.librarycalendar.com/events/upcoming) |
+| Portland Public Library | LibraryMarket-ME-NH-MA | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link](https://portlandme.librarycalendar.com/events/upcoming) |
+| Auburn Public Library | LibraryMarket-ME-NH-MA | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link](https://www.auburnpubliclibrary.org/events/upcoming) |
+| Augusta-Richmond County Library | LibraryMarket-GA | 6 | 6 | 0 | 1 | 0 | 4 | 17 | [link](https://arcpls.librarycalendar.com/events/upcoming) |
+| Barnes & Noble Exton | BarnesNoble-Eastern | 12 | 0 | 0 | 55 | 0 | 0 | 67 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2086) |
+| Barnes & Noble Plymouth Meeting | BarnesNoble-Eastern | 58 | 2 | 0 | 3 | 0 | 0 | 63 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2992) |
+| Barnes & Noble Buckland Hills Mall | BarnesNoble-Eastern | 18 | 0 | 0 | 32 | 0 | 0 | 50 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2167) |
+| Barnes & Noble Shops at Stonewall | BarnesNoble-Eastern | 5 | 0 | 0 | 39 | 0 | 0 | 44 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3499) |
+| Barnes & Noble Union Square | BarnesNoble-Eastern | 18 | 1 | 0 | 17 | 0 | 2 | 38 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2675) |
+| Barnes & Noble Hingham | BarnesNoble-Eastern | 16 | 1 | 0 | 19 | 0 | 0 | 36 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2194) |
+| Barnes & Noble South Portland | BarnesNoble-Eastern | 9 | 0 | 0 | 26 | 0 | 0 | 35 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3477) |
+| Barnes & Noble Bethlehem/Easton | BarnesNoble-Eastern | 31 | 1 | 0 | 2 | 0 | 0 | 34 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2210) |
+| Barnes & Noble Clark Commons | BarnesNoble-Eastern | 8 | 13 | 0 | 12 | 0 | 0 | 33 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3558) |
+| Barnes & Noble Wellington | BarnesNoble-Eastern | 3 | 0 | 0 | 29 | 0 | 0 | 32 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2100) |
+| Barnes & Noble Fairfax | BarnesNoble-Eastern | 31 | 1 | 0 | 0 | 0 | 0 | 32 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2937) |
+| Barnes & Noble Pittsford | BarnesNoble-Eastern | 17 | 0 | 0 | 14 | 0 | 0 | 31 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2790) |
+| Barnes & Noble F Street | BarnesNoble-Eastern | 4 | 0 | 0 | 26 | 0 | 0 | 30 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3544) |
+| Barnes & Noble Georgetown | BarnesNoble-Eastern | 6 | 0 | 0 | 22 | 1 | 0 | 29 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3989) |
+| Barnes & Noble Somerset Shopping Center | BarnesNoble-Eastern | 4 | 0 | 0 | 25 | 0 | 0 | 29 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2140) |
+| Barnes & Noble The Streets at Southpoint | BarnesNoble-Eastern | 16 | 0 | 0 | 13 | 0 | 0 | 29 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2109) |
+| Barnes & Noble Hamilton | BarnesNoble-Eastern | 4 | 0 | 13 | 12 | 0 | 0 | 29 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2217) |
+| Barnes & Noble Bowie | BarnesNoble-Eastern | 2 | 26 | 0 | 0 | 0 | 0 | 28 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2093) |
+| Barnes & Noble Woodbridge | BarnesNoble-Eastern | 6 | 0 | 0 | 22 | 0 | 0 | 28 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3410) |
+| Barnes & Noble Walden Galleria | BarnesNoble-Eastern | 2 | 0 | 0 | 26 | 0 | 0 | 28 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3518) |
+| Barnes & Noble Lake Grove | BarnesNoble-Eastern | 14 | 1 | 0 | 13 | 0 | 0 | 28 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2325) |
+| Barnes & Noble Clarendon | BarnesNoble-Eastern | 28 | 0 | 0 | 0 | 0 | 0 | 28 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3537) |
+| Barnes & Noble Carle Place | BarnesNoble-Eastern | 28 | 0 | 0 | 0 | 0 | 0 | 28 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2216) |
+| Barnes & Noble One Loudoun | BarnesNoble-Eastern | 8 | 0 | 0 | 20 | 0 | 0 | 28 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3303) |
+| Barnes & Noble Valley Forge | BarnesNoble-Eastern | 15 | 0 | 0 | 12 | 0 | 0 | 27 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2869) |
+| Barnes & Noble Newport News | BarnesNoble-Eastern | 26 | 0 | 0 | 1 | 0 | 0 | 27 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2773) |
+| Barnes & Noble Francis Scott Key Mall | BarnesNoble-Eastern | 1 | 0 | 0 | 26 | 0 | 0 | 27 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2257) |
+| Barnes & Noble Doylestown | BarnesNoble-Eastern | 12 | 0 | 0 | 12 | 3 | 0 | 27 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3471) |
+| Barnes & Noble Manhasset | BarnesNoble-Eastern | 27 | 0 | 0 | 0 | 0 | 0 | 27 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/1912) |
+| Barnes & Noble Hadley | BarnesNoble-Eastern | 14 | 0 | 0 | 13 | 0 | 0 | 27 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2088) |
+| Barnes & Noble Leominster | BarnesNoble-Eastern | 1 | 0 | 0 | 26 | 0 | 0 | 27 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2903) |
+| Barnes & Noble Princeton | BarnesNoble-Eastern | 13 | 0 | 0 | 13 | 0 | 0 | 26 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2368) |
+| Barnes & Noble Rio Lakefront | BarnesNoble-Eastern | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2971) |
+| Barnes & Noble Germantown | BarnesNoble-Eastern | 0 | 0 | 0 | 26 | 0 | 0 | 26 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3553) |
+| Barnes & Noble Augusta Mall | BarnesNoble-Eastern | 0 | 0 | 0 | 26 | 0 | 0 | 26 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2359) |
+| Barnes & Noble Tysons Corner | BarnesNoble-Eastern | 1 | 0 | 0 | 25 | 0 | 0 | 26 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3513) |
+| Barnes & Noble Cape Cod Mall | BarnesNoble-Eastern | 12 | 0 | 0 | 13 | 0 | 0 | 25 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2092) |
+| Barnes & Noble Westwood | BarnesNoble-Eastern | 12 | 13 | 0 | 0 | 0 | 0 | 25 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2919) |
+| Barnes & Noble Cheshire | BarnesNoble-Eastern | 10 | 0 | 12 | 3 | 0 | 0 | 25 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3529) |
+| Barnes & Noble Union Plaza | BarnesNoble-Eastern | 0 | 25 | 0 | 0 | 0 | 0 | 25 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3424) |
+| Barnes & Noble The Shoppes at Webb Gin | BarnesNoble-Eastern | 2 | 0 | 0 | 23 | 0 | 0 | 25 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2256) |
+| Barnes & Noble Farmington | BarnesNoble-Eastern | 24 | 0 | 0 | 0 | 0 | 0 | 24 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3594) |
+| Barnes & Noble Manassas | BarnesNoble-Eastern | 24 | 0 | 0 | 0 | 0 | 0 | 24 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3493) |
+| Barnes & Noble Wareham | BarnesNoble-Eastern | 24 | 0 | 0 | 0 | 0 | 0 | 24 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3439) |
+| Barnes & Noble Lehigh Valley Mall | BarnesNoble-Eastern | 0 | 24 | 0 | 0 | 0 | 0 | 24 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3470) |
+| Barnes & Noble Triangle Town Center | BarnesNoble-Eastern | 0 | 0 | 0 | 24 | 0 | 0 | 24 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2126) |
+| Barnes & Noble Christiana Mall | BarnesNoble-Eastern | 10 | 0 | 0 | 13 | 0 | 0 | 23 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2366) |
+| Barnes & Noble Oglethorpe Mall | BarnesNoble-Eastern | 11 | 0 | 0 | 12 | 0 | 0 | 23 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2015) |
+| Barnes & Noble Rehoboth Beach | BarnesNoble-Eastern | 0 | 0 | 0 | 22 | 0 | 0 | 22 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3988) |
+| Barnes & Noble Kingston Pike | BarnesNoble-Eastern | 22 | 0 | 0 | 0 | 0 | 0 | 22 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2838) |
+| Barnes & Noble Chesterfield Towne Center | BarnesNoble-Eastern | 8 | 0 | 0 | 14 | 0 | 0 | 22 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2314) |
+| Barnes & Noble Walpole Mall | BarnesNoble-Eastern | 7 | 0 | 0 | 14 | 0 | 1 | 22 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2935) |
+| Barnes & Noble Towne Centre | BarnesNoble-Eastern | 0 | 0 | 0 | 21 | 0 | 0 | 21 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2973) |
+| Barnes & Noble Nashua | BarnesNoble-Eastern | 21 | 0 | 0 | 0 | 0 | 0 | 21 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2791) |
+| Barnes & Noble Ellicott City | BarnesNoble-Eastern | 21 | 0 | 0 | 0 | 0 | 0 | 21 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2831) |
+| Barnes & Noble Carriage Crossing | BarnesNoble-Eastern | 0 | 0 | 0 | 21 | 0 | 0 | 21 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2224) |
+| Barnes & Noble Monmouth Square | BarnesNoble-Eastern | 20 | 0 | 0 | 0 | 0 | 0 | 20 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3422) |
+| Barnes & Noble Cary | BarnesNoble-Eastern | 7 | 13 | 0 | 0 | 0 | 0 | 20 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3431) |
+| Barnes & Noble Marlton | BarnesNoble-Eastern | 4 | 0 | 0 | 16 | 0 | 0 | 20 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2664) |
+| Barnes & Noble Mosaic | BarnesNoble-Eastern | 19 | 0 | 0 | 0 | 0 | 0 | 19 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3314) |
+| Barnes & Noble Eastview Mall | BarnesNoble-Eastern | 6 | 0 | 0 | 13 | 0 | 0 | 19 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3473) |
+| Barnes & Noble Delray Beach | BarnesNoble-Eastern | 19 | 0 | 0 | 0 | 0 | 0 | 19 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3457) |
+| Barnes & Noble Montgomeryville | BarnesNoble-Eastern | 1 | 0 | 0 | 18 | 0 | 0 | 19 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2976) |
+| Barnes & Noble Lancaster | BarnesNoble-Eastern | 3 | 0 | 0 | 16 | 0 | 0 | 19 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2916) |
+| Barnes & Noble Annapolis | BarnesNoble-Eastern | 1 | 0 | 0 | 18 | 0 | 0 | 19 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2866) |
+| Barnes & Noble Morris Plains | BarnesNoble-Eastern | 18 | 0 | 0 | 0 | 0 | 0 | 18 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2980) |
+| Barnes & Noble Erie | BarnesNoble-Eastern | 6 | 0 | 0 | 12 | 0 | 0 | 18 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2572) |
+| Barnes & Noble Hampton | BarnesNoble-Eastern | 16 | 0 | 0 | 2 | 0 | 0 | 18 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2309) |
+| Barnes & Noble Canton | BarnesNoble-Eastern | 0 | 0 | 0 | 18 | 0 | 0 | 18 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2223) |
+| Barnes & Noble Burlington MA | BarnesNoble-Eastern | 18 | 0 | 0 | 0 | 0 | 0 | 18 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2966) |
+| Barnes & Noble Cherry Hill | BarnesNoble-Eastern | 6 | 0 | 0 | 12 | 0 | 0 | 18 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2288) |
+| Barnes & Noble Tuscaloosa | BarnesNoble-Eastern | 18 | 0 | 0 | 0 | 0 | 0 | 18 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2295) |
+| Barnes & Noble The Market Common | BarnesNoble-Eastern | 5 | 0 | 0 | 12 | 0 | 0 | 17 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2289) |
+| Barnes & Noble Seven Corners | BarnesNoble-Eastern | 3 | 0 | 0 | 14 | 0 | 0 | 17 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2712) |
+| Barnes & Noble Broomall | BarnesNoble-Eastern | 2 | 0 | 0 | 15 | 0 | 0 | 17 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/1913) |
+| Barnes & Noble Paramus | BarnesNoble-Eastern | 13 | 0 | 0 | 4 | 0 | 0 | 17 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3448) |
+| Barnes & Noble Reston | BarnesNoble-Eastern | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3432) |
+| Barnes & Noble East Cobb | BarnesNoble-Eastern | 4 | 0 | 0 | 13 | 0 | 0 | 17 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3443) |
+| Barnes & Noble The Shops at Greenridge | BarnesNoble-Eastern | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2221) |
+| Barnes & Noble Waterfront at Homestead | BarnesNoble-Eastern | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2076) |
+| Barnes & Noble Campbell Lane | BarnesNoble-Eastern | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2753) |
+| Barnes & Noble Bay Shore | BarnesNoble-Eastern | 0 | 4 | 0 | 12 | 0 | 0 | 16 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2963) |
+| Barnes & Noble Poughkeepsie | BarnesNoble-Eastern | 4 | 0 | 0 | 12 | 0 | 0 | 16 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2886) |
+| Barnes & Noble Holmdel | BarnesNoble-Eastern | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3421) |
+| Barnes & Noble Biltmore Park Town Square | BarnesNoble-Eastern | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2326) |
+| Barnes & Noble Natick | BarnesNoble-Eastern | 4 | 0 | 0 | 12 | 0 | 0 | 16 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3437) |
+| Barnes & Noble Ledgewood | BarnesNoble-Eastern | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3468) |
+| Barnes & Noble Market Square | BarnesNoble-Eastern | 15 | 0 | 0 | 1 | 0 | 0 | 16 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2711) |
+| Barnes & Noble Colonie Centre | BarnesNoble-Eastern | 12 | 0 | 1 | 3 | 0 | 0 | 16 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2275) |
+| Barnes & Noble Libbie Place | BarnesNoble-Eastern | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2995) |
+| Barnes & Noble Enfield | BarnesNoble-Eastern | 3 | 0 | 0 | 12 | 0 | 0 | 15 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2132) |
+| Barnes & Noble Walt Whitman | BarnesNoble-Eastern | 2 | 0 | 0 | 13 | 0 | 0 | 15 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3474) |
+| Barnes & Noble Staten Island Mall | BarnesNoble-Eastern | 15 | 0 | 0 | 0 | 0 | 0 | 15 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3309) |
+| Barnes & Noble Clifton Commons | BarnesNoble-Eastern | 13 | 0 | 0 | 1 | 0 | 1 | 15 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2932) |
+| Barnes & Noble Moorestown | BarnesNoble-Eastern | 5 | 0 | 4 | 0 | 0 | 6 | 15 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2797) |
+| Barnes & Noble Deptford | BarnesNoble-Eastern | 1 | 1 | 0 | 13 | 0 | 0 | 15 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2891) |
+| Barnes & Noble Virginia Beach Town Center | BarnesNoble-Eastern | 15 | 0 | 0 | 0 | 0 | 0 | 15 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3337) |
+| Barnes & Noble Mohegan Lake | BarnesNoble-Eastern | 1 | 0 | 0 | 14 | 0 | 0 | 15 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2897) |
+| Barnes & Noble Newburgh Crossing | BarnesNoble-Eastern | 2 | 0 | 0 | 13 | 0 | 0 | 15 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2215) |
+| Barnes & Noble Brick | BarnesNoble-Eastern | 12 | 0 | 0 | 3 | 0 | 0 | 15 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2803) |
+| Barnes & Noble Morgantown | BarnesNoble-Eastern | 3 | 0 | 0 | 12 | 0 | 0 | 15 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2189) |
+| Barnes & Noble Manchester | BarnesNoble-Eastern | 0 | 0 | 0 | 15 | 0 | 0 | 15 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2052) |
+| Barnes & Noble Newnan | BarnesNoble-Eastern | 1 | 0 | 0 | 13 | 0 | 0 | 14 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2297) |
+| Barnes & Noble Riverhead | BarnesNoble-Eastern | 1 | 0 | 0 | 13 | 0 | 0 | 14 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3425) |
+| Barnes & Noble Morrison Place | BarnesNoble-Eastern | 0 | 13 | 0 | 1 | 0 | 0 | 14 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2317) |
+| Barnes & Noble Cranberry | BarnesNoble-Eastern | 1 | 0 | 0 | 13 | 0 | 0 | 14 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2819) |
+| Barnes & Noble Neshaminy Mall | BarnesNoble-Eastern | 1 | 0 | 0 | 13 | 0 | 0 | 14 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2351) |
+| Barnes & Noble Congressional Plaza | BarnesNoble-Eastern | 14 | 0 | 0 | 0 | 0 | 0 | 14 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3321) |
+| Barnes & Noble Pikesville | BarnesNoble-Eastern | 1 | 0 | 0 | 13 | 0 | 0 | 14 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3417) |
+| Barnes & Noble Charlottesville | BarnesNoble-Eastern | 2 | 0 | 0 | 11 | 0 | 1 | 14 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2559) |
+| Barnes & Noble Holyoke | BarnesNoble-Eastern | 1 | 13 | 0 | 0 | 0 | 0 | 14 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2747) |
+| Barnes & Noble Eastern Shore Centre | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2186) |
+| Barnes & Noble Salem NH | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2605) |
+| Barnes & Noble Lynnfield | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3428) |
+| Barnes & Noble Perimeter | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2846) |
+| Barnes & Noble Edgewood | BarnesNoble-Eastern | 1 | 0 | 0 | 12 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3583) |
+| Barnes & Noble Amherst | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2958) |
+| Barnes & Noble Saratoga | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2019) |
+| Barnes & Noble The Court at Oxford Valley | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2697) |
+| Barnes & Noble Waterworks | BarnesNoble-Eastern | 0 | 13 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2898) |
+| Barnes & Noble Naples | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3494) |
+| Barnes & Noble Boynton Beach | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2874) |
+| Barnes & Noble Millbury | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2206) |
+| Barnes & Noble Towne Center at Webster | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2229) |
+| Barnes & Noble McKinley Mall | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2306) |
+| Barnes & Noble East Brunswick | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2924) |
+| Barnes & Noble Alamance Crossing | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2285) |
+| Barnes & Noble South Burlington VT | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2776) |
+| Barnes & Noble Menlo Park Mall | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2162) |
+| Barnes & Noble Livingston | BarnesNoble-Eastern | 12 | 1 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3590) |
+| Barnes & Noble Shops at Paddock | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3433) |
+| Barnes & Noble Brier Creek Commons | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2171) |
+| Barnes & Noble Elizabethtown Mall | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2108) |
+| Barnes & Noble Short Pump | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2029) |
+| Barnes & Noble Creeks at Virginia | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3552) |
+| Barnes & Noble Shoppes at Woodhill | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3462) |
+| Barnes & Noble The Collection at Forsyth | BarnesNoble-Eastern | 1 | 0 | 0 | 12 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2330) |
+| Barnes & Noble Pasadena Crossroads | BarnesNoble-Eastern | 2 | 0 | 0 | 11 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3560) |
+| Barnes & Noble Peabody | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2993) |
+| Barnes & Noble Birkdale Village | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2118) |
+| Barnes & Noble Hartsdale | BarnesNoble-Eastern | 1 | 0 | 0 | 12 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3445) |
+| Barnes & Noble Greensboro | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2795) |
+| Barnes & Noble Mooresville | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3461) |
+| Barnes & Noble Wilmington at Concord Square | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3324) |
+| Barnes & Noble Bridgehampton | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3438) |
+| Barnes & Noble Newington/Portsmouth | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2988) |
+| Barnes & Noble Wolf Chase Galleria | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2822) |
+| Barnes & Noble Wilkes-Barre | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2996) |
+| Barnes & Noble Bryn Mawr | BarnesNoble-Eastern | 10 | 0 | 1 | 2 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3509) |
+| Barnes & Noble The Mall at Barnes Crossing | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2346) |
+| Barnes & Noble Westminster | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3534) |
+| Barnes & Noble Clarence Mall | BarnesNoble-Eastern | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2301) |
+| Barnes & Noble Woodland Park | BarnesNoble-Eastern | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/1977) |
+| Barnes & Noble High Ridge | BarnesNoble-Eastern | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3530) |
+| Barnes & Noble Southbury | BarnesNoble-Eastern | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3516) |
+| Barnes & Noble Bel Air | BarnesNoble-Eastern | 1 | 0 | 0 | 11 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2817) |
+| Barnes & Noble Town Center Prado | BarnesNoble-Eastern | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2656) |
+| Barnes & Noble Center City Philadelphia | BarnesNoble-Eastern | 11 | 0 | 0 | 1 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3434) |
+| Barnes & Noble Freehold | BarnesNoble-Eastern | 0 | 0 | 0 | 12 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2609) |
+| Barnes & Noble Milford | BarnesNoble-Eastern | 0 | 0 | 0 | 12 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2240) |
+| Barnes & Noble The Avenue at Murfreesboro | BarnesNoble-Eastern | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2292) |
+| Barnes & Noble Meriden | BarnesNoble-Eastern | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3472) |
+| Barnes & Noble Haywood Road | BarnesNoble-Eastern | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2558) |
+| Barnes & Noble Massapequa | BarnesNoble-Eastern | 0 | 12 | 0 | 0 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2547) |
+| Barnes & Noble Carolina Place Mall | BarnesNoble-Eastern | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2254) |
+| Barnes & Noble Gulfport | BarnesNoble-Eastern | 0 | 0 | 0 | 12 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2961) |
+| Barnes & Noble North Haven | BarnesNoble-Eastern | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/1897) |
+| Barnes & Noble Mount Kisco | BarnesNoble-Eastern | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3488) |
+| Barnes & Noble Promenade Shops of Saucon Valley | BarnesNoble-Eastern | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2259) |
+| Barnes & Noble Dedham | BarnesNoble-Eastern | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3427) |
+| Barnes & Noble Upper West Side (82nd & Broadway) | BarnesNoble-Eastern | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/1979) |
+| Barnes & Noble Smithfield | BarnesNoble-Eastern | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2082) |
+| Barnes & Noble Keene | BarnesNoble-Eastern | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3536) |
+| Barnes & Noble Greece | BarnesNoble-Eastern | 9 | 2 | 0 | 0 | 0 | 0 | 11 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2848) |
+| Barnes & Noble Fifth Avenue | BarnesNoble-Eastern | 8 | 0 | 0 | 2 | 0 | 0 | 10 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2234) |
+| Barnes & Noble New Town | BarnesNoble-Eastern | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2265) |
+| Barnes & Noble Crabtree Mall | BarnesNoble-Eastern | 1 | 9 | 0 | 0 | 0 | 0 | 10 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/1990) |
+| Barnes & Noble Buckhead | BarnesNoble-Eastern | 1 | 0 | 0 | 9 | 0 | 0 | 10 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/1907) |
+| Barnes & Noble Cool Springs | BarnesNoble-Eastern | 5 | 0 | 0 | 4 | 0 | 0 | 9 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2701) |
+| Barnes & Noble Cumberland | BarnesNoble-Eastern | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2794) |
+| Barnes & Noble Atlantic Avenue | BarnesNoble-Eastern | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3419) |
+| Barnes & Noble Pinnacle at Turkey Creek | BarnesNoble-Eastern | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3559) |
+| Barnes & Noble The Shoppes at Plainview | BarnesNoble-Eastern | 0 | 0 | 0 | 8 | 0 | 0 | 8 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2705) |
+| Barnes & Noble Westport | BarnesNoble-Eastern | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3400) |
+| Barnes & Noble Springfield VA | BarnesNoble-Eastern | 7 | 0 | 0 | 1 | 0 | 0 | 8 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2982) |
+| Barnes & Noble Hamburg Pavilion | BarnesNoble-Eastern | 1 | 0 | 0 | 7 | 0 | 0 | 8 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2953) |
+| Barnes & Noble The Avenue at White Marsh | BarnesNoble-Eastern | 3 | 0 | 0 | 5 | 0 | 0 | 8 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3423) |
+| Barnes & Noble Winston-Salem | BarnesNoble-Eastern | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2761) |
+| Barnes & Noble Augusta | BarnesNoble-Eastern | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2742) |
+| Barnes & Noble Virginia Beach/Lynnhaven Mall | BarnesNoble-Eastern | 1 | 0 | 0 | 6 | 0 | 0 | 7 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2195) |
+| Barnes & Noble Potomac Yard | BarnesNoble-Eastern | 4 | 0 | 0 | 3 | 0 | 0 | 7 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2867) |
+| Barnes & Noble San Jose Boulevard | BarnesNoble-Eastern | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2683) |
+| Barnes & Noble Camp Hill Shopping Center | BarnesNoble-Eastern | 0 | 0 | 0 | 7 | 0 | 0 | 7 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2046) |
+| Barnes & Noble Coconut Point | BarnesNoble-Eastern | 0 | 0 | 0 | 6 | 0 | 0 | 6 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3456) |
+| Barnes & Noble Athens | BarnesNoble-Eastern | 1 | 0 | 0 | 5 | 0 | 0 | 6 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2974) |
+| Barnes & Noble Dawsonville | BarnesNoble-Eastern | 0 | 0 | 0 | 6 | 0 | 0 | 6 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3483) |
+| Barnes & Noble Village District | BarnesNoble-Eastern | 2 | 0 | 0 | 4 | 0 | 0 | 6 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3403) |
+| Barnes & Noble Bellingham MA | BarnesNoble-Eastern | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2829) |
+| Barnes & Noble The Forum | BarnesNoble-Eastern | 0 | 0 | 0 | 5 | 0 | 0 | 5 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2070) |
+| Barnes & Noble Flowood | BarnesNoble-Eastern | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3480) |
+| Barnes & Noble Centre of Tallahassee | BarnesNoble-Eastern | 1 | 0 | 0 | 4 | 0 | 0 | 5 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2849) |
+| Barnes & Noble North Dartmouth | BarnesNoble-Eastern | 4 | 0 | 0 | 1 | 0 | 0 | 5 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/1962) |
+| Barnes & Noble West Hartford | BarnesNoble-Eastern | 1 | 0 | 0 | 4 | 0 | 0 | 5 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2279) |
+| Barnes & Noble Mall Of Georgia | BarnesNoble-Eastern | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2972) |
+| Barnes & Noble Renaissance at Colony Park | BarnesNoble-Eastern | 3 | 1 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2318) |
+| Barnes & Noble New Hope Commons | BarnesNoble-Eastern | 0 | 0 | 0 | 3 | 0 | 0 | 3 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2631) |
+| Barnes & Noble The Avenue at West Cobb | BarnesNoble-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2157) |
+| Barnes & Noble The Mall In Columbia | BarnesNoble-Eastern | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3308) |
+| Barnes & Noble York | BarnesNoble-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3538) |
+| Barnes & Noble Commack | BarnesNoble-Eastern | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3595) |
+| Barnes & Noble Monroeville Mall | BarnesNoble-Eastern | 0 | 0 | 0 | 3 | 0 | 0 | 3 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2203) |
+| Barnes & Noble Settlers Ridge | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2367) |
+| Barnes & Noble Riverbend Market Place | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2146) |
+| Barnes & Noble Knightdale | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3603) |
+| Barnes & Noble Park Slope | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2876) |
+| Barnes & Noble Lakeland | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3568) |
+| Barnes & Noble Yonkers | BarnesNoble-Eastern | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2889) |
+| Barnes & Noble The Summit Birmingham | BarnesNoble-Eastern | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2858) |
+| Barnes & Noble Chattanooga | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2337) |
+| Barnes & Noble Chesapeake | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2735) |
+| Barnes & Noble Phoenicia Center | BarnesNoble-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2120) |
+| Barnes & Noble Somerset Square | BarnesNoble-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2862) |
+| Barnes & Noble Colonial Palms Plaza | BarnesNoble-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3543) |
+| Barnes & Noble South Tampa | BarnesNoble-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3429) |
+| Barnes & Noble Fort Lauderdale | BarnesNoble-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/2047) |
+| Barnes & Noble West Lebanon | BarnesNoble-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3441) |
+| Barnes & Noble Coral Springs | BarnesNoble-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://stores.barnesandnoble.com/store/3402) |
+| North Arundel Aquatic Ctr | ActiveNet-Parks-Eastern | 36 | 0 | 0 | 0 | 0 | 0 | 36 | [link (event, DB fallback)](https://apm.activecommunities.com/aarecparks/Activity_Search/naac---lap-pool-aerobics---9-15am-10-00am/40238?locale=en-US) |
+| NOVA Parks (Northern Virginia Regional Park Authority) | ActiveNet-Parks-Eastern | 33 | 0 | 0 | 0 | 0 | 0 | 33 | [link](https://anc.apm.activecommunities.com/novaparks/activity/search) |
+| Franklin Rec Cplx | ActiveNet-Parks-Eastern | 24 | 0 | 0 | 0 | 0 | 0 | 24 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/after-school-kids-crochet-club---august---mon---frc/47501?locale=en-US) |
+| BRSC Learn the Game Safety Class 5:00 PM | ActiveNet-Parks-Eastern | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [link (event, DB fallback)](https://apm.activecommunities.com/novaparks/Activity_Search/learn-the-game-class-september-04-2026/10133?locale=en-US) |
+| Franklin, TN | ActiveNet-Parks-Eastern | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/creek-exploration-and-ecology-frc/49516?locale=en-US) |
+| Broad Ripple Park | ActiveNet-Parks-Eastern | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [link (event, DB fallback)](https://apm.activecommunities.com/indyparks/Activity_Search/sports-jump-bunch-broad-ripple/34429?locale=en-US) |
+| Halle Cultural Arts Center | ActiveNet-Parks-Eastern | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/exploring-the-mini-musical/21199?locale=en-US) |
+| Nolensville Rec Cplx | ActiveNet-Parks-Eastern | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/cake-painting---august-14---nv/49389?locale=en-US) |
+| Longview Rec Ctr | ActiveNet-Parks-Eastern | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/dungeons-and-dragons-liars-night/49024?locale=en-US) |
+| The Halle Cultural Arts Center | ActiveNet-Parks-Eastern | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/fantastical-creatures-afternoon/20557?locale=en-US) |
+| Academy Park Outdoor Pickleball Courts | ActiveNet-Parks-Eastern | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/ap-pickleball-aiming-shots-thur-8-20-9am-10am-smith/49658?locale=en-US) |
+| Lake Crabtree County Park | ActiveNet-Parks-Eastern | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [link (event, DB fallback)](https://apm.activecommunities.com/wakeparks/Activity_Search/homeschool-track-out-macro-mayhem-water-quality/9145?locale=en-US) |
+| ***Meet at boat rentals*** | ActiveNet-Parks-Eastern | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [link (event, DB fallback)](https://apm.activecommunities.com/novaparks/Activity_Search/pohick-bay-sunset-moonrise-kayak-paddle---9-28-26/10333?locale=en-US) |
+| Williamson County Parks & Recreation | ActiveNet-Parks-Eastern | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [link](https://anc.apm.activecommunities.com/wcpr/activity/search) |
+| Naperville Park District | ActiveNet-Parks-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link](https://anc.apm.activecommunities.com/napervilleparks/activity/search) |
+| St. Petersburg Parks & Recreation | ActiveNet-Parks-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link](https://anc.apm.activecommunities.com/stpete/activity/search) |
+| Frank W. Pierce Rec Ctr | ActiveNet-Parks-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://apm.activecommunities.com/stpete/ActiveNet_Home?FileName=onlineDCProgramDetail.sdi&dcprogram_id=3771&online=true&locale=en-US) |
+| Thomas Jet Jackson Rec Ctr | ActiveNet-Parks-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://apm.activecommunities.com/stpete/ActiveNet_Home?FileName=onlineDCProgramDetail.sdi&dcprogram_id=3819&online=true&locale=en-US) |
+| Outdoor Courts at Academy Park | ActiveNet-Parks-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/ap-pickleball-play-with-a-pro-tue-8-18-6pm-7pm-smith/49655?locale=en-US) |
+| Walter Fuller Rec Ctr | ActiveNet-Parks-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://apm.activecommunities.com/stpete/ActiveNet_Home?FileName=onlineDCProgramDetail.sdi&dcprogram_id=3837&online=true&locale=en-US) |
+| Campbell Park Rec Ctr | ActiveNet-Parks-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://apm.activecommunities.com/stpete/ActiveNet_Home?FileName=onlineDCProgramDetail.sdi&dcprogram_id=3746&online=true&locale=en-US) |
+| Peacock Hill Park | ActiveNet-Parks-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/coffee-can-ice-cream-peacock-hill/47557?locale=en-US) |
+| Fairview Rec Cplx | ActiveNet-Parks-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/card-making-and-paper-play---september-10---fv/49567?locale=en-US) |
+| Brentwood Indoor Sports Complex | ActiveNet-Parks-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/cpr-aed-first-aid-adult-pediatric/49636?locale=en-US) |
+| Alpharetta Adult Activity Center - 13450 Cogburn Road Alpharetta GA 30004 | ActiveNet-Parks-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://apm.activecommunities.com/alpharetta/Activity_Search/aaac-art-mindfull-doodling-sept/70462?locale=en-US) |
+| Arbor Glen Outreach Ctr | ActiveNet-Parks-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://apm.activecommunities.com/mecklenburgparks/Activity_Search/agoc-cheer-clinic/179345?locale=en-US) |
+| Timberland Park | ActiveNet-Parks-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/birdhouse-building/48081?locale=en-US) |
+| Bethesda Rec Cplx | ActiveNet-Parks-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/brc-adult-intermediate-2-5-3-0-mon-5-30pm-7-00pm-skaer/48965?locale=en-US) |
+| Lake Vista Rec Ctr | ActiveNet-Parks-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://apm.activecommunities.com/stpete/ActiveNet_Home?FileName=onlineDCProgramDetail.sdi&dcprogram_id=3800&online=true&locale=en-US) |
+| Shore Acres Rec Ctr | ActiveNet-Parks-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://apm.activecommunities.com/stpete/ActiveNet_Home?FileName=onlineDCProgramDetail.sdi&dcprogram_id=3809&online=true&locale=en-US) |
+| The Swanee Theater: 200 West Ave. | ActiveNet-Parks-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://apm.activecommunities.com/kannapolisnc/Activity_Search/swanee-mixology-class/5124?locale=en-US) |
+| 549 Franklin Ave | ActiveNet-Parks-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://apm.activecommunities.com/columbusrecparks1/Activity_Search/acting-with-shakesphere/6084?locale=en-US) |
+| Catherine's Lodge | ActiveNet-Parks-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://apm.activecommunities.com/novaparks/Activity_Search/winkler-preserve-first-aid-merit-badge-9-19-26/10343?locale=en-US) |
+| Art & Crafts Room | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/computer-classes-introduction-to-smartphones/21986?locale=en-US) |
+| Tuttle Park | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/columbusrecparks1/Activity_Search/acroyoga-adult--open-gym/5776?locale=en-US) |
+| Academy Park Outdoor  Pickleball Courts | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/ap-pickleball-beginner-clinic-mon-8-17-5-30pm-7pm-smith/49653?locale=en-US) |
+| Historic Yates Mill County Park | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/wakeparks/Activity_Search/paint-the-parks-en-plein-air-celebration/9135?locale=en-US) |
+| Apex Senior Center | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/apex-genealogy-group/21631?locale=en-US) |
+| Whetstone Park | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/columbusrecparks1/Activity_Search/adult-tennis---adv-beginners-tu/6637?locale=en-US) |
+| Apex Senior Center - Salem/Saunders | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/fitness-plus/21591?locale=en-US) |
+| Meadowlark Botanical Gardens Visitor Center | ActiveNet-Parks-Eastern | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/novaparks/Activity_Search/preschool-nature-nuts---very-yummy-veggies-08-13-26/10295?locale=en-US) |
+| Childs Park Rec Ctr | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/stpete/ActiveNet_Home?FileName=onlineDCProgramDetail.sdi&dcprogram_id=3762&online=true&locale=en-US) |
+| Willis S. Johns Rec Ctr | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/stpete/ActiveNet_Home?FileName=onlineDCProgramDetail.sdi&dcprogram_id=3743&online=true&locale=en-US) |
+| J. W. Cate Rec Ctr | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/stpete/ActiveNet_Home?FileName=onlineDCProgramDetail.sdi&dcprogram_id=3791&online=true&locale=en-US) |
+| Roberts Rec Ctr | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/stpete/ActiveNet_Home?FileName=onlineDCProgramDetail.sdi&dcprogram_id=3802&online=true&locale=en-US) |
+| JMBCC Gym 2 | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/journey-league---specialized-recreation/21259?locale=en-US) |
+| 700 West C Street; Kannapolis, NC 28081 | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/kannapolisnc/Activity_Search/artist-trading-cards-workshop/5133?locale=en-US) |
+| Apex Senior Center Hunter & Hughes Room | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/aerial-silks-for-all-shapes-and-sizes/21889?locale=en-US) |
+| Apex Senior Center Salem, Saunders, Seaboard | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/family-trivia-night/21056?locale=en-US) |
+| Large meeting room | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/culinary-creations-puff-pastry-favorites/48133?locale=en-US) |
+| Meadowlark Botanical Gardens, 9750 Meadowlark Gardens Court, Vienna, VA | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/novaparks/Activity_Search/woodland-nature-therapy-calm-connection-under-the-canopy/10232?locale=en-US) |
+| Apex Senior Center- Friendship | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/learn-to-play-bridge--intermediate-bridge/21610?locale=en-US) |
+| Meadowlark Botanical Gardens, 9750 Meadowlark Gardens Court, Vienna, VA  22182 | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/novaparks/Activity_Search/camp-grow-2026---cardinals-3-where-nature-lives/9819?locale=en-US) |
+| College Grove Outdoor  Pickleball Courts | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/cg-pickleball-adv-beg-clinic-sun-8-23-1pm-2-30pm-mayes/49760?locale=en-US) |
+| Gladden Park Rec Ctr | ActiveNet-Parks-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://apm.activecommunities.com/stpete/ActiveNet_Home?FileName=onlineDCProgramDetail.sdi&dcprogram_id=3777&online=true&locale=en-US) |
+| Apex Senior Center- Hunter and Hughes | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/happy-feet-fitness/21529?locale=en-US) |
+| ***Meet at Reservoir Park Boat Ramp*** | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/novaparks/Activity_Search/reservoir-perseids-meteor-shower-kayak-paddle--8-11-26/10341?locale=en-US) |
+| ***Broad Run Pavilion*** | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/novaparks/Activity_Search/reservoir---pond-prowlers-sampling-event---9-19-2026/10122?locale=en-US) |
+| Kannapolis, NC | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://anc.apm.activecommunities.com/kannapolisnc/activity/search) |
+| Summit Room | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/festive-felt-ornaments/21837?locale=en-US) |
+| ***Meet at visitor center entrance*** | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/novaparks/Activity_Search/meadowlark--wandering-warblers-9-21-26/10216?locale=en-US) |
+| All bus trips leave from Village Park unless otherwise noted. | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/kannapolisnc/Activity_Search/day-trips-perry-lowe-apple-orchard/5131?locale=en-US) |
+| Fairfax, VA | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/novaparks/Activity_Search/mothtober-fest-9-18-26/10215?locale=en-US) |
+| Apex Senior Center - Saunders/Seaboard | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/harvest-hoedown/21592?locale=en-US) |
+| Apex Senior Center - Kitchen | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/healing-herbal-broths-for-winter/21548?locale=en-US) |
+| Alpharetta Adult Activity Center - 13450 Cogburn Road Alpharetta Ga 30004 | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/alpharetta/Activity_Search/aaac-event--first-person-studio-stories/70417?locale=en-US) |
+| Downtown Kannapolis | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/kannapolisnc/Activity_Search/intermediate-shag-lessons-september-2026/5103?locale=en-US) |
+| Apex Senior Center- Chatham | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/cybersecurity-awareness-training/21612?locale=en-US) |
+| Apex Senior Center- Hughes and Hunter | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/intermediate-tap/21533?locale=en-US) |
+| Indoor Arena at Crockett Park | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/fall-2026---adult-indoor-flag-football-brentwood/45994?locale=en-US) |
+| Apex Senior Center Arts & Crafts Room | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/intro-to-watercolor---adult/21828?locale=en-US) |
+| ***Set GPS to Goose Creek Bridge Historic Park*** | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/novaparks/Activity_Search/goose-creek-perseid-meteor-shower-watch-party-8-10-26/10340?locale=en-US) |
+| Carriage Place Park | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/columbusrecparks1/Activity_Search/adult-open-badminton-fitness-pass-required/6029?locale=en-US) |
+| ***Goose Creek Pavilion*** | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/novaparks/Activity_Search/reservoir---trailside-detectives-scavenger-hunt---8-21-26/10121?locale=en-US) |
+| Museum Gift Shop | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/novaparks/Activity_Search/death-comes-to-carlyle-house/10354?locale=en-US) |
+| Renaissance Park | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/mecklenburgparks/Activity_Search/2026-corgi-racing-championship/179643?locale=en-US) |
+| Apex Senior Center- Salem/Saunders | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/classic-tv-time/21608?locale=en-US) |
+| Apex Senior Center - Friendship | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/eat-smart-move-more/21566?locale=en-US) |
+| Outdoor Pickleball Courts at Academy Park | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/ap-pickleball-intermediate-clinic-wed-8-12-9a-10a-smith/49648?locale=en-US) |
+| Monon Cmty Ctr East Building | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/carmelclayparks/Activity_Search/main-stage-theater-ensemble/29538?locale=en-US) |
+| *Meet at Algonkian Regional Park Boat Ramp area* | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/novaparks/Activity_Search/algonkian---sunset-kayak-paddle-8-7-26/10337?locale=en-US) |
+| Beech Bluff County Park | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/wakeparks/Activity_Search/school-s-out-farming-fun/8717?locale=en-US) |
+| Potomac Overlook Regional Park:  2845 N. Marcey Road, Arlington, VA 22207 | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/novaparks/Activity_Search/potomac-overlook---marbled-paper-journals-8-31-26/10338?locale=en-US) |
+| John M. Brown Community Center: Arts and Crafts Room | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/edible-science-workshop/21822?locale=en-US) |
+| John Brown Community Center | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/coed-indoor-volleyball/20403?locale=en-US) |
+| Pleasant Park | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/lacrosse-youth-clinic/20940?locale=en-US) |
+| Enrichment Ctr | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/wcpr/Activity_Search/drawing-by-the-zentangle-method---september-29---ec/49353?locale=en-US) |
+| Charlotte, NC | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/mecklenburgparks/Activity_Search/agoc-girls-volleyball-clinic/178539?locale=en-US) |
+| Apex Senior Center - Salem, Saunders and Seaboard Rooms | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/breakfast-with-santa-registration-required/21850?locale=en-US) |
+| Antrim Park | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/columbusrecparks1/Activity_Search/adult-intermediate-tennis/6294?locale=en-US) |
+| Jaycee Cricket Pitch | ActiveNet-Parks-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/abilities-cricket---specialized-recreation/21234?locale=en-US) |
+| Jessica Hagen Fine Art & Design | Simpleview-Tourism-Eastern | 46 | 0 | 0 | 0 | 0 | 0 | 46 | [link (event, DB fallback)](https://www.iloveny.com/events/) |
+| Chicagoland Area | Simpleview-Tourism-Eastern | 43 | 0 | 0 | 0 | 0 | 0 | 43 | [link (event, DB fallback)](https://visitnewhaven.com/events/madison-ct-farmers-market/var/ri-14.l-L1) |
+| Chicago Cultural Center | Simpleview-Tourism-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://www.choosechicago.com/event/tangible-sound-arrival-to-a-higher-ground/2026-08-05/) |
+| Peppa Pig World of Play Chicago | Simpleview-Tourism-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.choosechicago.com/event/homeschool-days-at-peppa-pig-world-of-play-chicago/2026-08-05/) |
+| Newport Car Museum | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.visitrhodeisland.com/event/early-bird-museum-highlight-tour-at-newport-car-museum/109638/) |
+| Vintage Bar Chicago | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.choosechicago.com/event/tropical-wednesdays/2026-08-05/) |
+| Wrigley Field | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.choosechicago.com/event/chicago-cubs-vs-los-angeles-dodgers-2/2026-08-05/) |
+| Chicago Architecture Center | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.choosechicago.com/event/flyway-city-architecture-for-a-flourishing-ecosystem/2026-08-05/) |
+| Fine Arts Building &#8211; Studebaker Theater | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.choosechicago.com/event/champions-of-magic/2026-08-05/) |
+| Bramble Arts Loft | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.choosechicago.com/event/the-living-canvas-experience/2026-08-05/) |
+| Shedd Aquarium | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.choosechicago.com/event/jazzin-at-the-shedd/2026-08-05/) |
+| Harris Theater | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.choosechicago.com/event/boleros-de-noche-chicago-september-25-at-the-harris-theater-2/) |
+| Driehaus Museum | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.choosechicago.com/event/ink-outrage-18th-century-satirical-prints-in-london-dublin/2026-08-05/) |
+| NoMI Garden | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.choosechicago.com/event/nomi-garden-golden-hour/2026-08-05/) |
+| Chicago Children&#8217;s Museum | Simpleview-Tourism-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.choosechicago.com/event/castle/2026-08-05/) |
+| Chicago, IL | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.choosechicago.com/events/) |
+| American Writers Museum | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.choosechicago.com/event/declarations-250-years-of-writing-toward-independence-3/2026-08-05/) |
+| Flyover | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.choosechicago.com/event/this-summer-flyovers-double-feature-takes-guests-on-two-unforgettable-journeys-under-one-roof/2026-08-05/) |
+| City Cruises Chicago &#8211; Navy Pier | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.choosechicago.com/event/city-cruises-chicago-seadog-speedboat-thrill-rides/2026-08-05/) |
+| National Public Housing Museum | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://www.choosechicago.com/event/nathaniel-mary-quinn-a-love-letter-to-my-mother/2026-08-05/) |
+| Y of Central Maryland | YMCA-Community-Eastern | 9 | 0 | 1 | 0 | 0 | 0 | 10 | [link](https://www.ymaryland.org/events) |
+| JCC of Mid-Westchester | YMCA-Community-Eastern | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [link](https://www.jccmw.org/events/) |
+| YMCA of Greater Rochester | YMCA-Community-Eastern | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [link](https://www.rochesterymca.org/events) |
+| YMCA of Greater Indianapolis | YMCA-Community-Eastern | 6 | 0 | 0 | 2 | 0 | 0 | 8 | [link](https://www.indymca.org/events) |
+| YMCA of Metro Atlanta | YMCA-Community-Eastern | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [link](https://www.ymcaatlanta.org/events/) |
+| YMCA of Greater Hartford | YMCA-Community-Eastern | 3 | 0 | 0 | 3 | 0 | 0 | 6 | [link](https://www.ghymca.org/events) |
+| Granite YMCA | YMCA-Community-Eastern | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [link](https://www.graniteymca.org/events) |
+| JCC MetroWest | YMCA-Community-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link](https://www.jccmetrowest.org/events/) |
+| YMCA of Central Kentucky | YMCA-Community-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link](https://www.ymcacky.org/events) |
+| YMCA of Greater Charlotte | YMCA-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://www.ymcacharlotte.org/events) |
+| Philadelphia Freedom Valley YMCA | YMCA-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://www.philaymca.org/events) |
+| JCC Greater Boston | YMCA-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://www.bostonjcc.org/events/) |
+| YMCA of the Shoals | YMCA-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.ymcashoals.org/events) |
+| YMCA of Greater Louisville | YMCA-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.ymcalouisville.org/events) |
+
+### Scrapers with zero attributable new events today
+
+These ran today per the run windows above but produced no rows with a `scraped_at` falling inside their window (genuinely 0 new/updated events found, or every event they touched already existed with an unchanged stable ID):
+
+- Howard-County
+- Somerset-County
+- Rockbridge-Regional
+- EventActions-Libraries
+- Tockify-Horry
+- Activities-BowlingAlleys-DMV
+- Activities-FamilyEntertainment-DMV
+- Activities-IndoorPlaygrounds-DMV
+- Activities-NatureFarms-DMV
+- Activities-SwimmingPools-DMV
+- Activities-Eastern-US
+- Communico-SC
+
+### Flagged: All Ages >= 70% (total >= 20 events)
+
+Excludes the known-legitimate broad-content sources per standing convention (`FestivalGuides-Eastern`, `FairsFestivals-Eastern`, `KidsOutAndAbout-Eastern`, `KidsOutAndAbout-DMV`, `Eventbrite-Family-Eastern`); `Festivals-Eastern-US` is a distinct scraper name from `FairsFestivals-Eastern`/`Eventbrite-Family-Eastern` and is not on that exclusion list, so it is flagged below where it qualifies — its flagged row is `(no venue)`, meaning most of its rows this window had no venue populated at all, not one specific physical site.
+
+- **Festivals-Eastern-US** — (no venue) — 100.0% All Ages (243 events)
+- **WordPress-MS** — Laurel-Jones County Library — 86.6% All Ages (112 events)
+- **WordPress-FL** — Miami-Dade Public Library System — 80.7% All Ages (83 events)
+- **WordPress-MS** — Pearl River County Library System — 80.0% All Ages (65 events)
+- **BarnesNoble-Eastern** — Barnes & Noble Plymouth Meeting — 92.1% All Ages (63 events)
+- **Localist-Parks** — Indiana State Parks — 98.0% All Ages (51 events)
+- **Simpleview-Tourism-Eastern** — Jessica Hagen Fine Art & Design — 100.0% All Ages (46 events)
+- **Simpleview-Tourism-Eastern** — Chicagoland Area — 100.0% All Ages (43 events)
+- **WordPress-NY** — Phillips Free Library — 83.3% All Ages (42 events)
+- **WordPress-NY** — Fred And Harriet Taylor Memorial Library — 78.4% All Ages (37 events)
+- **WordPress-NY** — Greenville Public Library — 100.0% All Ages (36 events)
+- **ActiveNet-Parks-Eastern** — North Arundel Aquatic Ctr — 100.0% All Ages (36 events)
+- **BarnesNoble-Eastern** — Barnes & Noble Bethlehem/Easton — 91.2% All Ages (34 events)
+- **ActiveNet-Parks-Eastern** — NOVA Parks (Northern Virginia Regional Park Authority) — 100.0% All Ages (33 events)
+- **BarnesNoble-Eastern** — Barnes & Noble Fairfax — 96.9% All Ages (32 events)
+- **BarnesNoble-Eastern** — Barnes & Noble Clarendon — 100.0% All Ages (28 events)
+- **BarnesNoble-Eastern** — Barnes & Noble Carle Place — 100.0% All Ages (28 events)
+- **WordPress-MS** — Decatur Public Library — 70.4% All Ages (27 events)
+- **BarnesNoble-Eastern** — Barnes & Noble Newport News — 96.3% All Ages (27 events)
+- **BarnesNoble-Eastern** — Barnes & Noble Manhasset — 100.0% All Ages (27 events)
+- **BarnesNoble-Eastern** — Barnes & Noble Rio Lakefront — 100.0% All Ages (26 events)
+- **BarnesNoble-Eastern** — Barnes & Noble Farmington — 100.0% All Ages (24 events)
+- **BarnesNoble-Eastern** — Barnes & Noble Manassas — 100.0% All Ages (24 events)
+- **BarnesNoble-Eastern** — Barnes & Noble Wareham — 100.0% All Ages (24 events)
+- **ActiveNet-Parks-Eastern** — Franklin Rec Cplx — 100.0% All Ages (24 events)
+- **WordPress-ME** — Camden Public Library — 100.0% All Ages (23 events)
+- **WordPress-MS** — Sturgis Public Library — 77.3% All Ages (22 events)
+- **BarnesNoble-Eastern** — Barnes & Noble Kingston Pike — 100.0% All Ages (22 events)
+- **WordPress-FL** — Palm Beach County Library System — 81.0% All Ages (21 events)
+- **BarnesNoble-Eastern** — Barnes & Noble Nashua — 100.0% All Ages (21 events)
+- **BarnesNoble-Eastern** — Barnes & Noble Ellicott City — 100.0% All Ages (21 events)
+- **BarnesNoble-Eastern** — Barnes & Noble Monmouth Square — 100.0% All Ages (20 events)

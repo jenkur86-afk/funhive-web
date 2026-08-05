@@ -137,9 +137,9 @@ const LIBRARIES = [
   },
   {
     name: "Talbot County Free Library",
-    url: "https://www.tcfl.org",
+    url: "https://talbot.librarycalendar.com",
     platform: "wordpress",
-    eventsUrl: "https://www.tcfl.org/events",
+    eventsUrl: "https://talbot.librarycalendar.com/events/upcoming",
     city: "Easton", state: "MD", zipCode: "21601", county: "Talbot"
   },
   {

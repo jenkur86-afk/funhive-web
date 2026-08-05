@@ -1220,7 +1220,7 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Memphis Public Libraries',
-    url: 'https://memphislibrary.libcal.com/calendar?cid=-1&t=d',
+    url: 'https://memphis.librarycalendar.com/',
     county: 'Shelby',
     state: 'TN',
     website: 'https://www.memphislibrary.org',

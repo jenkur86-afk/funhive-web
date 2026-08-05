@@ -40,5 +40,30 @@
     "note": "Part of the known WordPress-{state} platform-heterogeneity problem: each library runs a different theme/plugin, so there is no generic patch — this needs per-site DOM work. Confirm the URL is the right institution before blaming extraction.",
     "priority": "normal",
     "added": "2026-08-05"
+  },
+  "WordPress-FL": {
+    "note": "CONFIRMED 2026-08-05 by two independent checks (site-report generation and live verification): the top 5 major systems (Miami-Dade, Orange County, Tampa-Hillsborough, Broward, Palm Beach) in scraper-wordpress-libraries-fl.js are missing city/state entirely and all have county hardcoded to 'Baltimore City' (an MD county), an apparent copy-paste artifact from an MD file. Not yet fixed. Needs the real city/state/county filled in per system before the next run, otherwise these 5 systems geocode wrong.",
+    "priority": "high",
+    "added": "2026-08-05"
+  },
+  "Communico-NJ": {
+    "note": "Montclair Public Library (montclairlibrary.libnet.info) is a dead domain, confirmed 2026-08-05: both root and /events 302-redirect to http://www.google.co.uk/. Not an extraction bug; the library moved off this platform/domain entirely. Needs the real current URL researched. Documented coverage gap, not a scraper failure.",
+    "priority": "normal",
+    "added": "2026-08-05"
+  },
+  "Communico-SC": {
+    "note": "Greenville County Library (greenville.libnet.info) and Richland Library (richland.libnet.info) are both dead domains, confirmed 2026-08-05, same google.co.uk redirect pattern as the Communico-NJ Montclair entry. Same fix needed: research each library real current calendar URL. Documented coverage gaps.",
+    "priority": "normal",
+    "added": "2026-08-05"
+  },
+  "WordPress-MD": {
+    "note": "Talbot County Free Library (tcfl.org, was 403) repointed 2026-08-05 to its real current platform talbot.librarycalendar.com/events/upcoming. URL fixed, but this scraper extraction is WordPress-DOM-specific and librarycalendar.com uses different markup, so extraction is NOT confirmed working yet, re-run and check Talbots count before assuming resolved. Dorchester County Public Library (dorchesterlibrary.org/events, 404) has a real path at /calendar-of-events but that also rendered no static events in a live check, likely a JS widget. Flagged as a lead, not fixed.",
+    "priority": "normal",
+    "added": "2026-08-05"
+  },
+  "LibCal-TN": {
+    "note": "Memphis Public Libraries fixed 2026-08-05: configured URL memphislibrary.libcal.com was dead (404), repointed to the real site memphis.librarycalendar.com, which this shared scraper file already knows how to parse (same format as Albany/Long Beach/Levittown entries). Re-run to confirm a nonzero count.",
+    "priority": "normal",
+    "added": "2026-08-05"
   }
 }

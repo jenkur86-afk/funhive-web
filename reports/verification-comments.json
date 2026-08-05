@@ -2088,5 +2088,125 @@
   "verdict": "UNVERIFIABLE",
   "comment": "Sampled URL is a single adult-only event ('Plant Clinic'), not the full branch calendar — cannot judge the overall mix.",
   "population": "allages"
+ },
+ "Festivals-Eastern-US|||Festivals-Eastern-US": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "No single site to check — 'no venue' means venue field was empty on these rows, a data-population question not a live-site question.",
+  "population": "allages"
+ },
+ "WordPress-MS|||Laurel-Jones County Library": {
+  "verdict": "MISMATCH",
+  "comment": "laurel.lib.ms.us/events (the registry's actual configured URL, not laureljoneslibrary.org) shows a fully populated August-September 2026 calendar with age-specific programs including Baby + Me, Storytime, Tween Teen Cafe, and Sensory Time — clearly not all-ages-only.",
+  "population": "allages"
+ },
+ "WordPress-FL|||Miami-Dade Public Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "mdpls.org/events is JS-rendered so no dated events showed in the fetch, but confirmed a real scraper bug: in scraper-wordpress-libraries-fl.js the top 5 FL systems (Miami-Dade, Orange County, Tampa-Hillsborough, Broward, Palm Beach) are missing city/state fields entirely and all have county copy-pasted as 'Baltimore City' (a Maryland county), the known copy-paste bug the task referenced.",
+  "population": "allages"
+ },
+ "WordPress-MS|||Pearl River County Library System": {
+  "verdict": "MISMATCH",
+  "comment": "pearlriver.lib.ms.us/events shows real dated August 2026 events including Teen Spinner Dominoes, a homeschooler Pokemon Club, and Seniors fitness sessions — age-specific programming exists, contradicting an 'all ages' flag.",
+  "population": "allages"
+ },
+ "BarnesNoble-Eastern|||Barnes & Noble Plymouth Meeting": {
+  "verdict": "MISMATCH",
+  "comment": "Store page/search confirms a recurring Weekly Storytime plus Tuesday/Thursday morning storytimes at this location — kids-specific programming, not all-ages.",
+  "population": "allages"
+ },
+ "BarnesNoble-Eastern|||Barnes & Noble Bethlehem/Easton": {
+  "verdict": "MISMATCH",
+  "comment": "Same pattern as Plymouth Meeting — confirmed Weekly Storytime Tuesdays and Fridays at 10am plus Saturday Storytime at this store.",
+  "population": "allages"
+ },
+ "BarnesNoble-Eastern|||Barnes & Noble Fairfax": {
+  "verdict": "MISMATCH",
+  "comment": "Same pattern — confirmed Saturday Storytime every week at 11:30am, kids-specific programming at this store.",
+  "population": "allages"
+ },
+ "Localist-Parks|||Indiana State Parks": {
+  "verdict": "MATCHES",
+  "comment": "events.in.gov shows genuinely general-audience events (Run the State 5K & Hike races) with no age-bracketed programming — 'all ages' is an accurate characterization here.",
+  "population": "allages"
+ },
+ "WordPress-NY|||Phillips Free Library": {
+  "verdict": "MISMATCH",
+  "comment": "homerlibrary.org (the URL the NY registry entry points to) is actually the Homer Township Public Library District in Homer Glen, ILLINOIS (708 area code, IL zip) — a real URL collision, not the Phillips Free Library in Homer, NY. The events page also renders no static event content (JS calendar).",
+  "population": "allages"
+ },
+ "WordPress-NY|||Greenville Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Confirmed URL collision as flagged: greenvillelibrary.org is definitively the Greenville COUNTY Library SYSTEM in South Carolina (864 area code, branches in Greer/Mauldin/Simpsonville/Taylors), not the NY library. The cached page also only shows stale 2020 events with clear age-specific programming (Bouncing Babies ages 1-18mo, Teen Cuisine) — both a state collision and an age-bracket mismatch.",
+  "population": "allages"
+ },
+ "ActiveNet-Parks-Eastern|||North Arundel Aquatic Ctr": {
+  "verdict": "MISMATCH",
+  "comment": "Anne Arundel County's aquatics pages confirm age-specific swim lesson tracks (pre-school, youth, teen, ages 3+) at this facility — not all-ages-only programming.",
+  "population": "allages"
+ },
+ "WordPress-MS|||Decatur Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "decaturlibrary.org/events is a JS calendar template with no specific dated events rendered in static HTML, but its own filter menu (Babies/Toddlers/Pre-K/Kids/Tweens/Teens) and 'Story Time Live' program type confirm age-specific programming is offered, contradicting an all-ages characterization.",
+  "population": "allages"
+ },
+ "LibCal-CT|||Hartford Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "hplct.libcal.com (the configured URL) loads but says 'No events are scheduled / No calendars have been defined yet' — the library actually runs its real calendar on a separate Communico platform at programs.hplct.org/events, which is JS-rendered and returned no static event listings either; genuinely could not confirm live event content either way.",
+  "population": "zero"
+ },
+ "LibCal-CT|||Silas Bronson Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "bronsonlibrary.libcal.com explicitly states 'No calendars have been defined yet' — this LibCal instance appears never configured. The library's own site links to a separate /calendar page that is a JS-only ASP.NET calendar with no static event content retrievable.",
+  "population": "zero"
+ },
+ "LibCal-TN|||Memphis Public Libraries": {
+  "verdict": "MISMATCH",
+  "comment": "The configured memphislibrary.libcal.com URL 404s — dead/wrong domain. The real site (memphis.librarycalendar.com, reached via a redirect from memphislibrary.org/events/) shows abundant dated August 2026 events including age-specific programs (Sensory Storytime for children with autism, teen robotics, senior activities).",
+  "population": "zero"
+ },
+ "Communico-NJ|||Montclair Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Confirmed dead domain: montclairlibrary.libnet.info (both the root and /events) 302-redirects to http://www.google.co.uk/, a generic unrelated page — the domain no longer belongs to the library, which explains why API+Puppeteer+link-fallback all failed per the audit note.",
+  "population": "zero"
+ },
+ "Communico-SC|||Greenville County Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Same dead-domain pattern as Montclair: greenville.libnet.info 302-redirects to http://www.google.co.uk/ instead of any library content.",
+  "population": "zero"
+ },
+ "Communico-SC|||Richland Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Same dead-domain pattern again: richland.libnet.info 302-redirects to http://www.google.co.uk/ instead of any library content — three Communico libnet.info domains in a row now point at a generic/expired-domain redirect target.",
+  "population": "zero"
+ },
+ "WordPress-MD|||Charles County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "ccplonline.org/events and several other guessed paths (events.php, no-www) all 404'd; could not locate the real events page within a reasonable number of attempts to confirm either way.",
+  "population": "zero"
+ },
+ "WordPress-MD|||St. Mary's County Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "stmalib.org/events loads but is a navigation hub only (links to separate Kids/Teen/Adult/Book Discussion event pages) with no dated events rendered in the static HTML fetched.",
+  "population": "zero"
+ },
+ "WordPress-MD|||Dorchester County Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "The configured dorchesterlibrary.org/events URL 404s — real path is /calendar-of-events (also renders no static events, likely a JS widget). More importantly the homepage itself actively promotes dated program types (summer reading, teen hangout, storytime), so 'zero events' looks like a wrong-URL problem rather than a genuinely empty calendar.",
+  "population": "zero"
+ },
+ "WordPress-MD|||Talbot County Free Library": {
+  "verdict": "MISMATCH",
+  "comment": "Confirmed real bug: tcfl.org/events 403s (bot-blocked/broken), and the library's actual calendar lives on a completely different platform, talbot.librarycalendar.com/events/upcoming, which shows multiple real dated, age-specific August 2026 events (ages 6-12, ages 4-12, children 5 and under, Teen Night) — the scraper is pointed at the wrong URL entirely.",
+  "population": "zero"
+ },
+ "WordPress-NY|||New York Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "nypl.org/events/calendar is JS-rendered (static HTML shows a 'Loading events...' placeholder with no event content).",
+  "population": "zero"
+ },
+ "WordPress-NY|||Brooklyn Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "bklynlibrary.org/calendar returns HTTP 403 Forbidden — bot-blocked, cannot verify.",
+  "population": "zero"
  }
 }
