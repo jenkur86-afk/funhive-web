@@ -35,8 +35,20 @@ const KNOWN_LEGIT_ALL_AGES = [
 // ---------------------------------------------------------------- markdown parsing
 
 // Splits a markdown table row into trimmed cells, dropping the leading/trailing empties.
+// Honors the `\|` escape: venue names legitimately contain pipes (e.g.
+// "Hall Art Foundation | Reading, Vermont"), and the audit files escape them correctly.
+// A naive split('|') shifts every later cell one position right, which silently moved
+// venue-name fragments into the Scraper column and garbled that row's counts.
 function cells(line) {
-  const parts = line.split('|');
+  const parts = [];
+  let cur = '';
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '\\' && line[i + 1] === '|') { cur += '|'; i++; continue; }
+    if (ch === '|') { parts.push(cur); cur = ''; continue; }
+    cur += ch;
+  }
+  parts.push(cur);
   if (parts.length && parts[0].trim() === '') parts.shift();
   if (parts.length && parts[parts.length - 1].trim() === '') parts.pop();
   return parts.map(s => s.trim());
