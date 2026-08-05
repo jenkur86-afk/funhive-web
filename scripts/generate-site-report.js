@@ -21,6 +21,7 @@ const ROOT = path.join(__dirname, '..');
 const LIB_MD = path.join(ROOT, 'LIBRARY-SITE-AUDIT.md');
 const AGE_MD = path.join(ROOT, 'AGE-RANGE-AUDIT.md');
 const COMMENTS_JSON = path.join(ROOT, 'reports', 'verification-comments.json');
+const FIX_NOTES_JSON = path.join(ROOT, 'reports', 'fix-notes.json');
 const OUT_HTML = path.join(ROOT, 'reports', 'site-report.html');
 
 const MISSING = '—';
@@ -152,6 +153,18 @@ function loadComments() {
   }
 }
 
+function loadFixNotes() {
+  if (!fs.existsSync(FIX_NOTES_JSON)) return {};
+  try {
+    const raw = JSON.parse(fs.readFileSync(FIX_NOTES_JSON, 'utf8'));
+    delete raw._README;
+    return raw;
+  } catch (e) {
+    console.warn('  ! fix-notes.json unreadable, continuing without notes:', e.message);
+    return {};
+  }
+}
+
 // Full active roster — the completeness baseline.
 function loadRoster() {
   const reg = require(path.join(ROOT, 'scrapers', 'scraper-registry.js'));
@@ -161,12 +174,103 @@ function loadRoster() {
     Object.keys(map || {}).forEach(name => {
       const s = map[name];
       if (!reg.isScraperActive(s, active)) return;
-      out.push({ name, group: s.group != null ? String(s.group) : MISSING, state: s.state || MISSING, family });
+      out.push({
+        name,
+        group: s.group != null ? String(s.group) : MISSING,
+        state: s.state || MISSING,
+        family,
+        // Where the fix actually goes. Registry paths are './x.js' relative to scrapers/.
+        file: s.file ? 'scrapers/' + String(s.file).replace(/^\.\//, '') : MISSING,
+        exportName: s.exportName || MISSING,
+      });
     });
   };
   add(reg.SCRAPERS, 'standard');
   add(reg.MACARONI_SCRAPERS, 'macaroni');
   return out.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+// ---------------------------------------------------------------- fix queue
+
+// Root-cause buckets come from Step 3d of the diagnosis routine. Each needs a different
+// fix, so mis-bucketing wastes real work — these are keyword HINTS off the verdict text,
+// always shown next to the evidence that produced them, never presented as settled.
+function classify(comments, population) {
+  const blob = comments.join(' ').toLowerCase();
+  if (/\bunrelated\b|parked|gambling|different (state|library|site)|dead domain|expired|for sale/.test(blob)) return 'dead-domain';
+  if (/collision|same url|shared url|both point|points at|resolves to (a )?different/.test(blob)) return 'url-collision';
+  return population === 'allages' ? 'age-detection' : 'extraction-failure';
+}
+
+const BUCKET_ACTION = {
+  'dead-domain': 'The configured URL now serves an unrelated site. Fix the URL in the config array — do NOT touch extraction code.',
+  'url-collision': 'Seed-data bug: several distinct sites share one URL that resolves to only one of them. Fix the per-site URLs in the config array — extraction is fine.',
+  'extraction-failure': 'Right site, real server-rendered events, scraper still returns 0. Per-site DOM work; there is no generic patch for the WordPress-{state} family.',
+  'age-detection': 'Live site shows clearly age-targeted programming that is not landing in a bracket. Check detectAgeRange()/resolveAgeRange() in scrapers/helpers/supabase-adapter.js plus any local detector in this file, then re-run `node scripts/test-age-detection.js`.',
+};
+
+function buildFixQueue({ sites, ages, comments, roster, fixNotes }) {
+  const byScraper = new Map();
+  const get = name => {
+    if (!byScraper.has(name)) {
+      byScraper.set(name, {
+        name, mismatchZero: [], mismatchAges: [], unverifiable: 0,
+        zeroSites: 0, flagged: [], evidence: [],
+      });
+    }
+    return byScraper.get(name);
+  };
+
+  // Zero-event sites that a live check contradicted, plus raw zero counts.
+  sites.forEach(r => { if (r[3] === 0) get(r[2]).zeroSites++; });
+
+  Object.entries(comments).forEach(([key, c]) => {
+    const idx = key.indexOf('|||');
+    if (idx < 0) return;
+    const scraper = key.slice(0, idx);
+    const site = key.slice(idx + 3);
+    const e = get(scraper);
+    if (c.verdict === 'UNVERIFIABLE') { e.unverifiable++; return; }
+    if (c.verdict !== 'MISMATCH') return;
+    (c.population === 'allages' ? e.mismatchAges : e.mismatchZero).push(site);
+    if (e.evidence.length < 3) e.evidence.push(`${site} — ${c.comment}`);
+  });
+
+  // Flagged >=70% All Ages, recomputed here so the queue does not depend on the page.
+  const legit = new Set(KNOWN_LEGIT_ALL_AGES);
+  ages.forEach(r => {
+    if (r[8] >= 20 && !legit.has(r[1]) && (r[2] / r[8]) >= 0.7) get(r[1]).flagged.push(r[0]);
+  });
+
+  Object.keys(fixNotes).forEach(name => { if (name !== '_global') get(name); });
+
+  const rosterByName = new Map(roster.map(r => [r.name, r]));
+
+  const rows = [...byScraper.values()].map(e => {
+    const mism = e.mismatchZero.length + e.mismatchAges.length;
+    const note = fixNotes[e.name] || null;
+    const meta = rosterByName.get(e.name) || {};
+    const pop = e.mismatchAges.length > e.mismatchZero.length ? 'allages' : 'zero';
+    // A pinned note is a human judgement and outranks the keyword hint, so feed it in too.
+    const signal = note ? [...e.evidence, note.note] : e.evidence;
+    const bucket = mism ? classify(signal, pop) : (e.flagged.length ? 'age-detection' : '');
+    // Confirmed bugs dominate; a pinned high-priority note outranks everything.
+    let score = mism * 100 + e.flagged.length * 5 + e.zeroSites;
+    if (note && note.priority === 'high') score += 10000;
+    const affected = [...new Set([...e.mismatchZero, ...e.mismatchAges])];
+    return [
+      e.name, meta.group || MISSING, meta.file || MISSING,
+      mism, e.flagged.length, e.zeroSites, e.unverifiable,
+      bucket, bucket ? BUCKET_ACTION[bucket] : '',
+      affected.slice(0, 12), e.evidence,
+      note ? note.note : '', note ? (note.priority || 'normal') : '',
+      score,
+    ];
+  })
+    .filter(r => r[3] > 0 || r[4] > 0 || r[11])   // confirmed bug, flagged site, or a pinned note
+    .sort((a, b) => b[13] - a[13]);
+
+  return rows;
 }
 
 // ---------------------------------------------------------------- html
@@ -185,7 +289,7 @@ function jsonLiteral(v) {
 }
 
 function buildHtml(data) {
-  const { sites, ages, comments, roster, coverage, runDate, notes } = data;
+  const { sites, ages, comments, roster, coverage, runDate, notes, fixQueue, globalNote } = data;
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -294,6 +398,31 @@ a{color:var(--accent-text)} a:hover{text-decoration:none}
 .status.full{background:var(--ok-soft);color:var(--ok);border:1px solid var(--ok)}
 .status.partial{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn)}
 .status.none{background:var(--crit-soft);color:var(--crit);border:1px solid var(--crit)}
+.notice{background:var(--accent-soft);border:1px solid var(--accent);color:var(--text);
+  border-radius:10px;padding:12px 15px;font-size:13px;margin-bottom:12px}
+.notice code{background:var(--surface);padding:1px 5px;border-radius:4px;font-size:12px}
+.gnote{background:var(--surface-2);border:1px solid var(--border);border-left:3px solid var(--accent);
+  border-radius:8px;padding:10px 14px;font-size:12.5px;color:var(--text-dim);margin-bottom:12px}
+.gnote b{color:var(--text)}
+td.detail{min-width:420px;max-width:720px;font-size:12.5px}
+td.detail .pin{background:var(--surface-2);border-left:3px solid var(--text-faint);
+  padding:6px 10px;border-radius:6px;margin-bottom:6px;color:var(--text)}
+td.detail .pin.hi{border-left-color:var(--crit);background:var(--crit-soft)}
+td.detail .action{color:var(--text-dim);margin-bottom:5px}
+td.detail .filepath{font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;font-size:11.5px;
+  color:var(--accent-text);margin-bottom:5px}
+td.detail .affected{color:var(--text-dim);margin-bottom:5px;line-height:1.45}
+td.detail .unv{color:var(--warn);margin-top:5px;font-size:12px}
+td.detail details.ev{margin-top:4px}
+td.detail details.ev summary{cursor:pointer;color:var(--accent-text);font-weight:600;font-size:12px}
+td.detail details.ev div{color:var(--text-dim);margin:5px 0 0 10px;padding-left:8px;border-left:2px solid var(--border)}
+.bucket{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.03em;padding:2px 7px;
+  border-radius:5px;white-space:nowrap}
+.bucket.b-dead-domain{background:var(--crit-soft);color:var(--crit);border:1px solid var(--crit)}
+.bucket.b-url-collision{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn)}
+.bucket.b-extraction-failure{background:var(--accent-soft);color:var(--accent-text);border:1px solid var(--accent)}
+.bucket.b-age-detection{background:var(--surface-2);color:var(--text-dim);border:1px solid var(--border)}
+b.bug{color:var(--crit)}
 .agebar{display:flex;height:8px;width:104px;border-radius:4px;overflow:hidden;background:var(--surface-2);margin-top:4px}
 .agebar span{display:block;height:100%}
 .seg-all{background:var(--text-faint)} .seg-babies{background:#e8846b} .seg-pre{background:#e8a33c}
@@ -320,7 +449,32 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--border);color
   <button data-panel="age">Age breakdown</button>
   <button data-panel="flag">Flagged ≥70% All Ages</button>
   <button data-panel="cov">Coverage</button>
+  <button data-panel="fix">Fix queue</button>
 </nav>
+
+<section class="panel" id="panel-fix">
+  <div class="notice">
+    <b>Notes for Claude — read this before fixing scrapers.</b>
+    One row per scraper with a confirmed bug, a flagged site, or a pinned note, worst first.
+    <i>Likely bucket</i> is a keyword hint off the verdict text, not a verdict itself — confirm against the
+    evidence and the live site before changing code, since each bucket needs a different fix.
+    Add or edit notes in <code>reports/fix-notes.json</code>; this page is regenerated in full every run,
+    so anything typed here is lost.
+  </div>
+  <div id="global-note"></div>
+  <div class="toolbar"><input type="search" id="fix-search" placeholder="Filter by scraper, bucket, file, or note…"><span class="count" id="fix-count"></span></div>
+  <div class="tablewrap"><table id="fix-table">
+    <thead><tr>
+      <th data-key="scraper">Scraper<span class="arrow">↕</span></th>
+      <th data-key="group">Grp<span class="arrow">↕</span></th>
+      <th data-key="mismatch">Bugs<span class="arrow">↕</span></th>
+      <th data-key="flagged">Flagged<span class="arrow">↕</span></th>
+      <th data-key="zero">Zero<span class="arrow">↕</span></th>
+      <th data-key="bucket">Likely bucket<span class="arrow">↕</span></th>
+      <th>What to do / evidence / notes</th>
+    </tr></thead><tbody></tbody>
+  </table></div>
+</section>
 
 <section class="panel active" id="panel-sites">
   <div class="toolbar"><input type="search" id="sites-search" placeholder="Filter by site, state, or scraper…"><span class="count" id="sites-count"></span></div>
@@ -396,6 +550,8 @@ const AGES = ${jsonLiteral(ages)};
 const COMMENTS = ${jsonLiteral(comments)};
 const ROSTER = ${jsonLiteral(roster)};
 const COVERAGE = ${jsonLiteral(coverage)};
+const FIXQUEUE = ${jsonLiteral(fixQueue)};
+const GLOBAL_NOTE = ${jsonLiteral(globalNote)};
 const NOTES = ${jsonLiteral(notes)};
 const KNOWN_LEGIT = new Set(${jsonLiteral(KNOWN_LEGIT_ALL_AGES)});
 const MISSING = ${jsonLiteral(MISSING)};
@@ -548,6 +704,40 @@ buildTable({
     '<td class="num">'+fmt(r[3])+'</td>'+ linkCell(r[4],r[5]) + commentCell(r[0],r[1]) + '</tr>'
 });
 
+// Fix queue: [scraper,group,file,mismatch,flagged,zero,unverif,bucket,action,affected,evidence,note,priority,score]
+(function(){
+  if(GLOBAL_NOTE && GLOBAL_NOTE.note){
+    document.getElementById('global-note').innerHTML =
+      '<div class="gnote"><b>Always:</b> '+esc(GLOBAL_NOTE.note)+'</div>';
+  }
+  buildTable({
+    rows: FIXQUEUE,
+    tbody: document.querySelector('#fix-table tbody'),
+    ths: Array.from(document.querySelectorAll('#fix-table thead th')),
+    keyMap: {scraper:0,group:1,mismatch:3,flagged:4,zero:5,bucket:7},
+    searchInput: document.getElementById('fix-search'),
+    countEl: document.getElementById('fix-count'),
+    searchFields: r => r[0]+' '+r[7]+' '+r[2]+' '+r[11]+' '+r[9].join(' '),
+    rowRenderer: r => {
+      const bucket = r[7] ? '<span class="bucket b-'+esc(r[7])+'">'+esc(r[7])+'</span>' : MISSING;
+      let detail = '';
+      if(r[11]) detail += '<div class="pin '+(r[12]==='high'?'hi':'')+'"><b>Pinned note'+
+        (r[12]==='high'?' · high':'')+':</b> '+esc(r[11])+'</div>';
+      if(r[8]) detail += '<div class="action">'+esc(r[8])+'</div>';
+      if(r[2] && r[2]!==MISSING) detail += '<div class="filepath">'+esc(r[2])+'</div>';
+      if(r[9].length) detail += '<div class="affected"><b>Affected:</b> '+r[9].map(esc).join(' · ')+
+        (r[3]>r[9].length?' <i>+'+(r[3]-r[9].length)+' more</i>':'')+'</div>';
+      if(r[10].length) detail += '<details class="ev"><summary>Evidence ('+r[10].length+')</summary>'+
+        r[10].map(e=>'<div>'+esc(e)+'</div>').join('')+'</details>';
+      if(r[6]) detail += '<div class="unv">'+r[6]+' site(s) UNVERIFIABLE — recheck before concluding anything.</div>';
+      return '<tr><td class="scraper">'+esc(r[0])+'</td><td class="num">'+esc(r[1])+'</td>'+
+        '<td class="num">'+(r[3]?'<b class="bug">'+r[3]+'</b>':'0')+'</td>'+
+        '<td class="num">'+fmt(r[4])+'</td><td class="num">'+fmt(r[5])+'</td>'+
+        '<td>'+bucket+'</td><td class="detail">'+(detail||MISSING)+'</td></tr>';
+    }
+  });
+})();
+
 // Coverage: [scraper,group,state,siteRows,ageRows,events,status,why]
 buildTable({
   rows: COVERAGE,
@@ -582,6 +772,8 @@ function main() {
 
   const comments = loadComments();
   const roster = loadRoster();
+  const fixNotes = loadFixNotes();
+  const globalNote = fixNotes._global || null;
 
   console.log(`  library rows : ${sites.length}`);
   console.log(`  age rows     : ${ages.length}`);
@@ -645,8 +837,13 @@ function main() {
   const missing = coverage.filter(r => r[6] === 'none').length;
   console.log(`  coverage     : ${coverage.length} rows (${missing} awaiting this cycle, ${orphans.length} not in active registry)`);
 
+  const fixQueue = buildFixQueue({ sites, ages, comments, roster, fixNotes });
+  const pinned = fixQueue.filter(r => r[11]).length;
+  const bugs = fixQueue.reduce((s, r) => s + r[3], 0);
+  console.log(`  fix queue    : ${fixQueue.length} scrapers (${bugs} confirmed bugs, ${pinned} pinned note(s))`);
+
   const runDate = new Date().toISOString().slice(0, 10);
-  const html = buildHtml({ sites, ages, comments, roster, coverage, runDate, notes });
+  const html = buildHtml({ sites, ages, comments, roster, coverage, runDate, notes, fixQueue, globalNote });
 
   fs.mkdirSync(path.dirname(OUT_HTML), { recursive: true });
   fs.writeFileSync(OUT_HTML, html);

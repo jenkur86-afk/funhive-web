@@ -1,0 +1,24 @@
+{
+  "_README": [
+    "Durable notes surfaced in the Fix queue tab of reports/site-report.html.",
+    "The report is regenerated in full every run, so notes MUST live here — anything typed into the HTML is lost on the next run.",
+    "Keys are scraper names exactly as they appear in scrapers/scraper-registry.js, plus the special key _global.",
+    "Each value: { note: string, priority: 'high'|'normal'|'low', added: 'YYYY-MM-DD' }.",
+    "A note on a scraper with no detected issues still shows up in the Fix queue, so this doubles as a to-do list."
+  ],
+  "_global": {
+    "note": "Before fixing anything, read SCRAPER-FIX-LOG.jsonl for whether the scraper is already diagnosed or known-dead. Verify a claim before acting on it — do not archive a scraper as 'covered elsewhere' without confirming the replacement returns real events for that specific site. Run `node -c <file>` on every modified scraper, and append one line per logical fix to SCRAPER-FIX-LOG.jsonl.",
+    "priority": "normal",
+    "added": "2026-08-05"
+  },
+  "WordPress-GA": {
+    "note": "Part of the known WordPress-{state} platform-heterogeneity problem: each library runs a different theme/plugin, so there is no generic patch — this needs per-site DOM work. Confirm against the live page before changing selectors.",
+    "priority": "normal",
+    "added": "2026-08-05"
+  },
+  "WordPress-TN": {
+    "note": "Step 3d found URL collisions in this family on 2026-08-04 (Seymour TN resolving to CT, Baxter TN to ME, and three separate states pointing at spartalibrary.org). Treat as a seed-data bug — fix the per-site URLs in the config array, do not touch extraction code.",
+    "priority": "high",
+    "added": "2026-08-05"
+  }
+}
