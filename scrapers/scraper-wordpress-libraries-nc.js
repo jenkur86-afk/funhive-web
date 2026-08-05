@@ -26,7 +26,10 @@ const LIBRARIES = [
   { name: 'Claremont Branch Library', url: 'https://www.claremontlibrary.org/', eventsUrl: 'https://www.claremontlibrary.org/', city: 'Claremont', state: 'NC', zipCode: '00000', county: 'Claremont County'},
   { name: 'Hocutt Ellington Memorial Library', url: 'https://www.claytonlibrary.org', eventsUrl: 'https://www.claytonlibrary.org/events', city: 'Clayton', state: 'NC', zipCode: '00000', county: 'Clayton County'},
   { name: 'J.C. Holliday Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'NC', zipCode: '00000', county: 'Clinton County'},
-  { name: 'Tyrrell County Library', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'NC', zipCode: '00000', county: 'Columbia County'},
+  // 2026-08-05: was columbialibrary.org, a domain also claimed by AL/CT/IL/KY/MS/PA/SC entries.
+  // Per the State Library of NC directory, Tyrrell County Library is a branch of Pettigrew
+  // Regional Library — same verified system site as the Plymouth entry below.
+  { name: 'Tyrrell County Library', url: 'https://pettigrewlibraries.org/', eventsUrl: 'https://pettigrewlibraries.org/', city: 'Columbia', state: 'NC', zipCode: '27925', county: 'Tyrrell County'},
   { name: 'Polk County Public Library', url: 'https://www.columbuslibrary.org', eventsUrl: 'https://www.columbuslibrary.org/events', city: 'Columbus', state: 'NC', zipCode: '28722', county: 'Columbus County'},
   { name: 'Cabarrus County Public Library', url: 'https://www.concordlibrary.org', eventsUrl: 'https://www.concordlibrary.org/events', city: 'Concord', state: 'NC', zipCode: '28025', county: 'Concord County'},
   { name: 'Dallas Branch Library', url: 'https://www.dallaslibrary.org', eventsUrl: 'https://www.dallaslibrary.org/events', city: 'Dallas', state: 'NC', zipCode: '00000', county: 'Dallas County'},
