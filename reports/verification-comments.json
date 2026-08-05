@@ -1,0 +1,2092 @@
+{
+ "LibCal-NC|||Craven-Pamlico Regional Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page renders only a room-reservation booking widget, not an events list; likely JS-rendered calendar not visible in static fetch.",
+  "population": "zero"
+ },
+ "LibCal-NY2|||Baldwin Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "LibCal 'Search Results' section renders empty in static HTML; JS-dependent widget, real event count can't be confirmed.",
+  "population": "zero"
+ },
+ "LibCal-RI|||North Kingstown Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL returns HTTP 404 Not Found.",
+  "population": "zero"
+ },
+ "LibCal-KY|||Kenton County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL returns HTTP 404 Not Found.",
+  "population": "zero"
+ },
+ "LibCal-KY|||Boone County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL returns HTTP 404 Not Found.",
+  "population": "zero"
+ },
+ "LibCal-KY|||Warren County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL returns HTTP 404 Not Found.",
+  "population": "zero"
+ },
+ "LibraryMarket-CT|||New Britain Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Shows an August 2026 calendar grid with per-day links but no event titles/data server-rendered; JS/AJAX-loaded.",
+  "population": "zero"
+ },
+ "WordPress-VA|||Alexandria Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Only nav/menu rendered; one canceled-event notice seen but the actual event list appears to load dynamically via JS.",
+  "population": "zero"
+ },
+ "WordPress-VA|||Chesapeake Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page shows only nav/header/footer content, no event listing rendered in the static fetch.",
+  "population": "zero"
+ },
+ "WordPress-VA|||Henrico County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Redirects to a LibCal calendar whose 'Search Results' section is empty in static HTML (JS-dependent).",
+  "population": "zero"
+ },
+ "WordPress-VA|||Jefferson-Madison Regional Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar loads via a JS widget (eventactions.com); only filter controls rendered, no event data visible.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Wheeler County Library (Alamo, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch returned no content across repeated attempts.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Auburn Library (Auburn, GA)": {
+  "verdict": "MISMATCH",
+  "comment": "Homepage lists multiple real August 2026 events with dates/times (e.g. Butterflies and Moths Aug 7, Teen Crafting Aug 4), server-rendered HTML — scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Decatur County - Gilbert H. Gragg Library (Bainbridge, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch returned no content across repeated attempts.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Boston Carnegie Library (Boston, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Domain is a parked/for-sale placeholder page, not an active library site.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Warren P. Sewell Memorial Library-Bremen (Bremen, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "TLS certificate mismatch - hostname's cert belongs to a Maine library (bremenmainelibrary.org), suggesting a wrong/stale domain in the registry.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Butler Public Library (Butler, GA)": {
+  "verdict": "MATCHES",
+  "comment": "Page explicitly states 'There are no upcoming events' (shown twice, server-rendered).",
+  "population": "zero"
+ },
+ "WordPress-GA|||Roddenbery Memorial Library System (Cairo, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Only a closure notice is server-rendered; a 'Mini Calendar' is referenced but no event data appears, likely JS-loaded.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Clarkesville-Habersham Co. Lib. (Clarkesville, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "'Events' section renders as an empty heading with no listed programs; likely JS-loaded content.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Clarkston Branch (Clarkston, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch returned no content across repeated attempts.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Rabun Co. Public Library (Clayton, GA)": {
+  "verdict": "MATCHES",
+  "comment": "Page explicitly states '0 events found. There are no upcoming events' (only past events like an Oct 2025 book sale are listed).",
+  "population": "zero"
+ },
+ "WordPress-GA|||Clermont Library (Clermont, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Root page content was truncated by the fetch tool and the /events path 404s; couldn't confirm either way.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Commerce Public Library (Commerce, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "commercelibrary.org now resolves to an unrelated business-directory site, not a library - domain appears repurposed/expired.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Coolidge Public Library (Coolidge, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch returned no content across repeated attempts.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Laurens County Library (Dublin, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage has no events section rendered in the static content; no clear error either.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Duluth (Duluth, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage only links out to an external events platform (duluthlibrary.events.mylibrary.digital) and an Issuu program guide; no dated events rendered on this page itself.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Gibbs Memorial Library (Evans, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection refused (ECONNREFUSED) on repeated attempts - site unreachable.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Fayette County Public Library (Fayetteville, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Server returned HTTP 526 (Cloudflare SSL origin error).",
+  "population": "zero"
+ },
+ "WordPress-GA|||Monroe County Library (Forsyth, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "TLS certificate mismatch - forsythlibrary.org resolves to an unrelated Forsyth County, NC government server, not the actual library site.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Heard County Public Library (Franklin, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL 301-redirects to an unrelated French health/blog domain (running-care.com); domain appears expired/squatted, redirect not followed.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Gordon Public Library (Gordon, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage shows only promotional images with no dates; page directs visitors to phone/Facebook for actual program info.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Greene County Library (Greensboro, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection refused (ECONNREFUSED) on repeated attempts - site unreachable.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Harris County Public Library (Hamilton, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar is hosted externally (events.hamiltonlibrary.org) and not embedded; homepage itself has no dated events.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Oglethorpe County Library (Lexington, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetch failed repeatedly ('Socket is closed').",
+  "population": "zero"
+ },
+ "WordPress-GA|||Nelle Brown Memorial Public Library (Lyons, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage only shows program category headers (Adult/Teen/Kid) with no dates; directs to a separate Programs page.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Middle Georgia Regional Library System (Macon, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "TLS certificate expired for maconlibrary.org - could not load the page.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Manchester Public Library (Manchester, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Server returned HTTP 403 Forbidden - likely bot-blocked.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Maysville Public Library (Maysville, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "TLS SSL error (TLSV1_ALERT_UNRECOGNIZED_NAME) - could not load the page.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Lake Sinclair Library (Milledgeville, GA)": {
+  "verdict": "MISMATCH",
+  "comment": "Page lists real recurring programs with days/times (Coffee Plus Fridays 9-11am, LEGO Builders Day every Saturday, Book Club 4th Tuesday) - standing events without one-off dates, but real content the scraper isn't capturing.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Monroe-Walton County Library (Monroe, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "TLS error 'unable to get local issuer certificate' - could not load the page.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Baker County (Newton, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Domain is now a parked \"this domain is for sale\" landing page, no library site at all.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Pembroke Public Library (Pembroke, GA)": {
+  "verdict": "MISMATCH",
+  "comment": "Page lists specific events (Grand Canyon presentation Aug 15, Bake and Book Sale Aug 29) plus recurring programs -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Houston County Public Libraries System (Perry, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Static HTML has nav/header only with no event data; calendar likely renders via JavaScript.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Webster County Library (Preston, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "\"Events Calendar\" heading present but no events listed; content likely loads dynamically via JS.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Brooks County Public Library System (Quitman, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Shows an empty August 2026 calendar grid with no entries; likely a JS-rendered calendar widget.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Rockmart Library (Rockmart, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection refused (ECONNREFUSED) -- site appears to be down.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Rossville Public Library (Rossville, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "HTTP 403 Forbidden, likely bot-blocked.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Scottdale-Tobie Grant Branch (Scottdale, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetched content was nearly empty (only a \"Home\" heading), too minimal to determine event status.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Lewis A. Ray Library (Smyrna, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "TLS certificate mismatch pointing to an unrelated domain (free-ebooks-download.org) -- domain appears hijacked or expired.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Chattooga County Library System (Summerville, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Only nav/footer markup returned, no event data; page likely requires JavaScript to render events.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Hightower Memorial Library (Thomaston, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage only links to a separate \"Library-Events-Calendar\" page; no events rendered on the fetched URL itself.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Thomson-Mcduffie County Library (Thomson, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page references an embedded Google Calendar widget but no event data is present in static HTML.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Tyrone Public Library (Tyrone, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page titled \"Events Calendar\" but no events rendered in static content; likely JS-dependent.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Warren County Public Library (Warrenton, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL returns a 404 \"There's Nothing Here\" error page -- broken/wrong URL, not a genuine empty calendar.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Harlie Fulford Memorial Library (Wrightsville, GA)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetch returned no usable content after repeated attempts, could not determine event status.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Hazel W. Guilford Memorial Library (Aurora, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL 301-redirects to a city government site (auroragov.org) whose fetched content was truncated before showing any events.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Mary Duncan Public Library (Benson, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "HTTP 403 Forbidden, likely bot-blocked.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Margaret Little Blount Library (Bethel, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page shows a \"chat loading...\" placeholder and nav links only; calendar content appears to require JavaScript.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Watauga County Public Library (Boone, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection refused (ECONNREFUSED) -- site appears to be down.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Boonville Community Public Library (Boonville, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage only links to a separate News & Events page; no events shown on the fetched page itself.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Bunn Branch Library (Bunn, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetch repeatedly failed with no output for both the events page and homepage, could not determine event status.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Canton Branch Library (Canton, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page header claims \"42 events found\" yet the rendered calendar grid shows 0 events for every day -- contradictory result suggesting a JS-rendering issue, worth a closer manual look.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Moore County Library (Carthage, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetch returned no usable content after repeated attempts, could not determine event status.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Claremont Branch Library (Claremont, NC)": {
+  "verdict": "MISMATCH",
+  "comment": "Page lists an \"Upcoming Events\" section with 3 named events (Fourth Saturdays Poetry Aug 29, Claremont Authors Event Sept 19, In-Person Programs Aug 2026) -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Hocutt Ellington Memorial Library (Clayton, NC)": {
+  "verdict": "MATCHES",
+  "comment": "Page explicitly states \"0 events found\" and \"There are no upcoming events\" (shown twice), only past events are listed.",
+  "population": "zero"
+ },
+ "WordPress-NC|||J.C. Holliday Library (Clinton, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetch repeatedly failed with no output, could not determine event status.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Tyrrell County Library (Columbia, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Only nav/header template returned with no event data; likely requires JavaScript to render.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Danbury Public Library (Danbury, NC)": {
+  "verdict": "MISMATCH",
+  "comment": "Homepage shows named events (CSI: Forensic Science Summer Experience, D&D Mini Painting Quest) -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Dobson Community Library (Dobson, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page only tells visitors to \"check our monthly calendar\" elsewhere; no events embedded on the page itself.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Erwin Public Library (Erwin, NC)": {
+  "verdict": "MISMATCH",
+  "comment": "Page lists a detailed summer program schedule (Story Hour, Teddy Bear Workshop, Zoomobile, Dino Escape Room, etc. through July-Aug 2026) as static HTML -- scraper is clearly missing real content.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Fairview Branch Library (Fairview, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "TLS certificate mismatch on www subdomain; non-www variant returned 404 -- could not verify event content.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Farmville Public Library (Farmville, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "LibGuides page shows calendar links (kids/adults) but no rendered event list; likely requires JavaScript.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Bordeaux Branch Library (Fayetteville, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Server returned HTTP 526 (invalid SSL/origin error), could not retrieve page content.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Macon County Public Library (Franklin, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL 301-redirects to an unrelated French-language blog about tendon injuries -- domain appears expired/hijacked, not a real library page.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Graham Public Library (Graham, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection refused (ECONNREFUSED) -- site appears to be down.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Blanche Benjamin Branch Library (Greensboro, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection refused (ECONNREFUSED) -- site appears to be down.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Hampstead Branch Library (Hampstead, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page has an \"Upcoming Events\" heading but the section is empty; other event mentions exist but no list is rendered, likely JS-dependent.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Harmony Branch Library (Harmony, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL 301-redirects to an unrelated consulting-firm training page (ammonconsulting.org) -- domain appears expired/hijacked, not a real library page.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Havelock-Craven County Public (Havelock, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page shows only stale 2022-dated blog posts on a generic multi-library platform (citylibrary.com), no current event list -- unclear if this is even the real events source.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Henderson County Public Library (Hendersonville, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page references August 2026 programming banners and directs to a monthly calendar/social media elsewhere, but no event list is rendered on the page itself.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Hickory Public Library (Hickory, NC)": {
+  "verdict": "MATCHES",
+  "comment": "Page explicitly states 'There are no upcoming events' (shown twice), only past events listed.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Union West Branch Library (Indian Trail, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection refused (ECONNREFUSED) on repeated attempts, site unreachable.",
+  "population": "zero"
+ },
+ "WordPress-NC|||King Public Library (King, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch returned no content on repeated attempts, could not render page.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Leicester Branch Library (Leicester, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "301 redirects to leicesterma.org/157/Library, which is a town hub page linking to a separate Calendar page with no events shown directly.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Leland Branch Library (Leland, NC)": {
+  "verdict": "MISMATCH",
+  "comment": "Lists real upcoming events with dates, e.g. Luunappi Aug 7 and Improv for Kids Aug 14 - scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Davidson County Public Library System (Lexington, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Socket closed / connection reset on repeated attempts, site unreachable.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Liberty Public Library (Liberty, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page shows a single unrelated event ('Conservative Mommy Meetup' at a coffee shop in Spring, TX) - domain appears parked or repurposed, not a real NC library calendar.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Littleton Public Library (Wc Jones Memorial) (Littleton, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection reset (ECONNRESET) on repeated attempts, site unreachable.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Lowell Branch Library (Lowell, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page is a navigation hub listing program categories with no dated events in static content; directs to a separate /events/ calendar page not captured here.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Florence Gallier Library (Magnolia, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page says events are 'shown below' but no events appear in static content - likely a JS-rendered calendar widget.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Madison County Public Library (Marshall, NC)": {
+  "verdict": "MATCHES",
+  "comment": "Site is a 'Coming Soon'/under-construction placeholder page with no calendar or event content at all.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Matthews Branch Library (Matthews, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch returned no content on repeated attempts, could not render page.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Maysville Public Library (Maysville, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "SSL handshake error (TLSV1_ALERT_UNRECOGNIZED_NAME), site unreachable.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Union County Public Library (Monroe, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "TLS certificate error (unable to get local issuer certificate), site unreachable.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Newport Public Library (Newport, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "301 redirects to newportoregon.gov (Newport, Oregon government site) - wrong domain, not the NC library.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Catawba County Library (Newton, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page shows library hours/info but no events section in static content; likely requires JS to render the calendar.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Berea Branch Library (Oxford, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Domain now shows a 'This domain is for sale' parking page - stale/expired URL, cannot verify real library site.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Pembroke Public Library (Pembroke, NC)": {
+  "verdict": "MISMATCH",
+  "comment": "Lists multiple real upcoming events with dates, e.g. Grand Canyon presentation Aug 15 and Bake and Book Sale Aug 29 - scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Pettigrew Regional Library (Plymouth, NC)": {
+  "verdict": "MISMATCH",
+  "comment": "Domain shows real events (Chess Night Aug 4, Storytime Aug 5) but is actually Plymouth District Library in Michigan, not the NC library - wrong domain configured, and that wrong site itself has real events being missed.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Princeton Public Library (Princeton, NC)": {
+  "verdict": "MISMATCH",
+  "comment": "Lists real upcoming events with dates, e.g. Outdoor Storytime Aug 11 and Summer Movie Series Aug 18 - scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Rowan Public Library (Salisbury, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage references a 'News & Events' section but no events/dates appear in static content; likely requires navigating further or JS rendering.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Public Library Of Johnston County Smithfield (Smithfield, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Domain resolves to an unrelated Smithfield, RI library FAQ page (not Johnston County NC) with no event listings - wrong domain configured.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Brunswick County Library (Southport, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Events section shows image thumbnails for named events (e.g. Book and Bake Sale) but no dates in static content - appears to need JS/carousel interaction.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Star Branch (Star, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "302 redirects to starlibrary.org root, which turns out to be an unrelated Korean 'STAR Library' consortium site (KAIST/GIST/DGIST/UNIST) - wrong/expired domain, no events content.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Montgomery County Library (Troy, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page returned only header/footer content referencing an unrelated 'Tri-Township Public Library', no event data retrievable - likely wrong or misconfigured domain.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Warren County Memorial Library (Warrenton, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL returns a 404 error page; nav mentions an Events Calendar link but the events URL itself is broken.",
+  "population": "zero"
+ },
+ "WordPress-NC|||East Branch Library (Wilson, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Repeated fetch failures (SSL handshake failure / empty response), site unreachable.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Lawrence Memorial Library (Windsor, NC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "SSL handshake failure (HANDSHAKE_FAILURE_ON_CLIENT_HELLO) on repeated attempts, site unreachable.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Hartford Public Library (Hartford, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page has a 'What's Happening' section but events load from an external calendar (programs.hplct.org) not rendered in static content.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Stamford Public Library (Stamford, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page says 'SEE OUR MONTHLY CALENDAR' with an empty 'Past Events' placeholder - actual calendar is elsewhere, not rendered in static content.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Waterbury Public Library (Waterbury, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Configured URL (siloam.com) is an unrelated domain and returned empty content - wrong/stale URL, not the actual Waterbury library site.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Norwalk Public Library (Norwalk, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "301 redirects to an unrelated foreign domain (dinaspendidikanpidiejaya.com) - domain appears hijacked/expired, did not follow further for safety.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Danbury Public Library (Danbury, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page shows event promo cards (CSI Summer Experience, D&D Mini Painting Quest) but no dates; full calendar is on an external domain (danburylibrary.events.mylibrary.digital) not rendered here.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Greenwich Library (Greenwich, CT)": {
+  "verdict": "MISMATCH",
+  "comment": "Lists real upcoming events with dates, e.g. Super Mario Galaxy Movie event Aug 12 and Windows 11 Learning Lab Aug 12 - scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Milford Public Library (Milford, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "301 redirects to milfordct.us equivalent path, which returns HTTP 404 - broken/stale URL.",
+  "population": "zero"
+ },
+ "WordPress-CT|||East Hartford Public Library (East Hartford, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "HTTP 403 Forbidden, likely bot-blocked (WAF).",
+  "population": "zero"
+ },
+ "WordPress-CT|||Southington Public Library (Southington, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page only shows links to external calendar filters (whofi.com) with no embedded events/dates in static content.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Torrington Library (Torrington, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "SSL handshake failure (HANDSHAKE_FAILURE_ON_CLIENT_HELLO) on repeated attempts, site unreachable.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Trumbull Library (Trumbull, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page mentions Summer 2026 programs but actual dated events live on an external calendar (trumbull.libcal.com) not rendered in static content.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Vernon Public Library (Vernon, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL and parent path both return HTTP 404 Not Found - broken/stale URL.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Andover Public Library (Andover, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch failed with SSL UNSUPPORTED_PROTOCOL error, site unreachable via this tool.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Ansonia Public Library (Ansonia, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage (root URL, no dedicated events page found) shows no events section or calendar at all; can't confirm whether a separate events page exists with content.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Avon Free Public Library (Avon, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch returned empty page content on three separate attempts; could not inspect the page.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Beacon Falls Public Library (Beacon Falls, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "The /events URL returns a 404 'There's Nothing Here' page; a working Events link exists elsewhere in nav but the given URL itself is dead.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Bethel Public Library (Bethel, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page shows nav links to 'Events & Activities'/'Events Calendar' but no event data in static markup, ends with 'chat loading...' indicating JS-rendered content not visible to WebFetch.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Bethlehem Public Library (Bethlehem, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch returned essentially empty content on three attempts (root and /events); could not inspect the page.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Canterbury Public Library (Canterbury, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page loads with header/nav/hours/contact but no events section, calendar, or 'no events' message present anywhere; likely wrong page for actual event content.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Canton Public Library (Canton, CT)": {
+  "verdict": "MATCHES",
+  "comment": "Page explicitly states 'There are no upcoming events' with a calendar grid showing 0 events for every day in August 2026.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Chester Public Library (Chester, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Root homepage only mentions one dated item ('Next Friends of the Library Meeting: September 11, 2026'); full events calendar lives on a separate /events.html page not captured by this fetch.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Henry Carter Hull Library (Clinton, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch failed with 'Command failed with no output' on two attempts; could not inspect the page.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Easton Public Library (Easton, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch blocked: 'Unable to verify if domain is safe to fetch' (network/policy restriction), could not retrieve content.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Hall Memorial Library (Ellington, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page shows an 'Events' heading with no event titles/dates beneath it, suggesting JS-dependent content not rendered for WebFetch.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Essex Library Association (Essex, CT)": {
+  "verdict": "MATCHES",
+  "comment": "Page explicitly states 'There are no upcoming events' / 'no events on this day' throughout an August 2026 calendar grid.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Goshen Public Library (Goshen, CT)": {
+  "verdict": "MISMATCH",
+  "comment": "Homepage lists a specific dated event, 'Thursday Night Book Club' on Thursday, July 2nd at 6:00pm, plus recurring Silent Book Club meetings -- real content the scraper is missing.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Hartland Public Library (Hartland, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch failed twice with 'Socket is closed'; could not inspect the page.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Douglas Library Of Hebron (Hebron, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch failed: TLS hostname mismatch, cert belongs to Squarespace infrastructure not the library's hostname -- site misconfigured or migrated.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Ivoryton Library Association (Ivoryton, CT)": {
+  "verdict": "MISMATCH",
+  "comment": "After following a redirect, page shows a specific real event: 'Adult Craft Night: Imbolc Intention Jars with Stacia Libby,' Wednesday Feb 12, 6:30-7:30pm, with description and registration link -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Killingworth Library (Killingworth, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page has an 'Events & Activities' header promising listings but shows none; actual calendar lives on an external LibCal link not captured here.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Jonathan Trumbull Library (Lebanon, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage links to an external calendar (events.lebanonlibrary.org) with no events embedded server-side; JS-dependent widget, nothing visible to confirm either way.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Mansfield Public Library (Mansfield, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL redirects (301) to an unrelated domain, mansfieldtexas.gov -- the CT library's own domain appears to be dead/expired and now resolves to a Texas city site.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Levi E.Coe Library (Middlefield, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage (root, no /events page found) has no dated events, only recurring weekly activity times (knitting circle, book discussion); can't confirm an actual events calendar exists elsewhere.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Edith Wheeler Memorial Library (Monroe, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch failed: 'unable to get local issuer certificate' TLS error, could not retrieve content.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Mystic Noank Library (Mystic, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch returned empty page content on two attempts; could not inspect the page.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Cyrenius H. Booth Library (Newtown, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage shows only a closure banner, no events; links to an external LibCal calendar (JS-dependent) not captured by this fetch.",
+  "population": "zero"
+ },
+ "WordPress-CT|||North Haven Memorial Library (North Haven, CT)": {
+  "verdict": "MISMATCH",
+  "comment": "Page lists multiple real, dated upcoming events server-rendered as static HTML: Reopening Celebration Jul 9, Readers Series Jul 28, Writing Workshop Jul 29, 'Writer's Life' event Aug 6 (all 2026) -- clear scraper bug.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Old Lyme - Phoebe Griffin Noyes Library (Old Lyme, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch failed: TLS hostname mismatch (cert issued for oldlymelibrary.org, not the www subdomain used).",
+  "population": "zero"
+ },
+ "WordPress-CT|||Oxford Public Library (Oxford, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage shows 'What's New in the Library' book listings but no events section or calendar at all; likely wrong page for events content.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Plainville Public Library (Plainville, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch failed: 'unable to get local issuer certificate' TLS error, could not retrieve content.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Plymouth Library Association (Plymouth, CT)": {
+  "verdict": "MISMATCH",
+  "comment": "Homepage lists several real dated events for the current week (Chess Night Aug 4, Summer Storytime Aug 5, Author Talk Aug 5, book club Aug 5), server-rendered as static snippets -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Pomfret Public Library (Pomfret, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Server returned HTTP 403 Forbidden -- site is bot-blocking automated fetches.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Portland Public Library (Portland, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Server returned HTTP 403 Forbidden -- site is bot-blocking automated fetches.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Prospect Public Library (Prospect, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar page renders only nav/contact info and two screenshot images, no calendar grid or event data of any kind -- page appears broken or not the real calendar view.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Salem Free Public Library (Salem, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Server returned HTTP 522 (origin unreachable / Cloudflare timeout) -- site appears down.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Scoville Memorial Library (Salisbury, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage mentions a 'News & Events' section exists but doesn't embed any dated events; actual listings live on a separate page not captured.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Pequot Library Association (Southport, CT)": {
+  "verdict": "MISMATCH",
+  "comment": "Page shows a JS carousel with named real programs (John Dingle Author Talk, Book and Bake Sale, Coffee Group) -- real event content exists even though dates aren't visible in the fetched markup, indicating the scraper is likely missing content served by this widget.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Stonington Free Library (Stonington, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Site shows a foreign-language 'SEDANG MAINTENANCE' page with a logo linking to an unrelated furniture-sales domain -- site appears down, hijacked, or misconfigured, not a genuine library page.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Kent Memorial Library (Suffield, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar page shows date headers and 'View All Events' links but no actual event titles/times -- content loads dynamically client-side (JS-only), nothing visible to WebFetch.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Thomaston Public Library (Thomaston, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage references a 'Library Events Calendar' nav link but shows no actual event details on this page.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Waterford Public Library (Waterford, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch failed: TLS certificate has expired, could not retrieve content.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Oakville Branch Library (Watertown, CT)": {
+  "verdict": "MISMATCH",
+  "comment": "Homepage lists multiple real, dated upcoming events as static HTML (Honey Bee Program Aug 5, August Crafts Wed's in Aug, Clay Character Creations Aug 13, Chair Yoga, Mystery Book Club) plus a Google Calendar embed -- clear scraper bug.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Louis Piantino Branch Library (West Haven, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "www subdomain has SSL cert mismatch and apex domain returns 404 Not Found for /events, could not load the page at all.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Weston Public Library (Weston, CT)": {
+  "verdict": "MISMATCH",
+  "comment": "Page lists real upcoming events e.g. 'City Hall Selfie Day' Aug 11 and 'Colonial Crafts for Kids' Aug 18 -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Wethersfield Public Library (Wethersfield, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage has no server-rendered event list and defers to an external LibCal JS widget, so true event status can't be confirmed from this page.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Wilson Branch Library (Windsor, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Persistent SSL handshake failure on every attempt, page could not be fetched.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Windsor Locks Public Library (Windsor Locks, CT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page returned only a bare 'WL Public Library' header with no body content, likely requires JS to render.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Woodbridge Town Library (Woodbridge, CT)": {
+  "verdict": "MISMATCH",
+  "comment": "Page shows a full August calendar of events, though notably the events are labeled for 'Woodbridge Township, NJ' not CT -- possible domain/URL mismatch worth checking separately from the scraper bug.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Clarksville-Montgomery County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL 301-redirects to montgomerytn.gov, and that page only shows an unfilled JS calendar template ('Event Title Here' placeholder text) with no real events server-rendered.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Kingsport Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Page lists specific recurring book club events with dates (e.g. 'After Hours Book Club' Jan 22, meetings continuing through 2026) directly in page text -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Williamson County Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Multi-branch calendar clearly lists events like 'Hobby Hour' Aug 4 and 'Youth D&D' Aug 8 -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Rutherford County Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden, likely bot-blocked.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Blount County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection reset (ECONNRESET) on repeated attempts, page unreachable.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Collierville Burch Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection refused, site appears down or unreachable.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Bartlett Library": {
+  "verdict": "MISMATCH",
+  "comment": "Calendar clearly lists August events like 'Back to School Bash' Aug 1 and 'PreK Readiness' Aug 3 -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Hendersonville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "No server-rendered event list; page only references calendar graphic image files, not extractable as text.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Morristown-Hamblen Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Events page is an empty JS-only LibCal widget shell with no server-rendered event content.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Smyrna Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "SSL certificate mismatch resolves to an unrelated domain ('free-ebooks-download.org'), site appears expired or hijacked.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Sevier County Public Library System": {
+  "verdict": "MISMATCH",
+  "comment": "Homepage promo banners list specific dated items, e.g. 'SCPLB meeting is on August 4' -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Tullahoma Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetch returned completely empty content on two attempts, could not evaluate page.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Lawrenceburg Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Homepage lists dated events like 'June 18, 2026 - Summer Reading Program' -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Crossville-Cumberland County Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Page explicitly states 'There are no upcoming events' multiple times; only past 2025 events are shown.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Manchester Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden, likely bot-blocked.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Rogersville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection reset (ECONNRESET) on repeated attempts, page unreachable.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Tipton County Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Page lists dated programs like 'STEAM Family Storytime' 08/05/26 and 'Perry the Pony' 08/11/26 -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Crockett County Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetch returned completely empty content on two attempts, could not evaluate page.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Southeast Branch Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "SSL certificate is a generic Azure wildcard that doesn't match the custom domain, site hosting appears broken/misconfigured.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Ardmore Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Events are shown only via an embedded Google Calendar image/iframe with no server-rendered event text; static 'Standing Programs' descriptions have no dates.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Sam T. Wilson Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden, likely bot-blocked.",
+  "population": "zero"
+ },
+ "WordPress-TN|||The Brentwood Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch was blocked from verifying the domain as safe to fetch, could not retrieve page.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Benton County Library": {
+  "verdict": "MISMATCH",
+  "comment": "Homepage lists dated items like 'Essential Oils Class Aug 4' and 'Board Meeting Aug 11' -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Smith County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetch returned completely empty content on two attempts, could not evaluate page.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Clinton Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page shows a literal unrendered '[events]' shortcode placeholder -- the WordPress events plugin isn't rendering server-side.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Cordova Branch Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage (not a dedicated events page) shows only blog posts, no event listing; real events page is a separate unfetched 'event-calendar' link.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Stewart County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Events page shows only a category legend and registration instructions with zero actual event items, consistent with a JS-rendered calendar that isn't populating in a static fetch.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Sequatchie County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden on repeated attempts, likely bot-blocked.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Englewood Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page shows a literal unrendered '[events]' shortcode placeholder with only unrelated blog links in the sidebar.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Unicoi County Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Homepage clearly lists multiple dated summer program events, e.g. 'Teddy Bear Workshop' July 16 and 'Annual Summer Book Sale' Aug 22 -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Fairview Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "www subdomain has an SSL hostname/cert mismatch against the apex domain, could not load the page.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Gleason Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Events page is only a search-box template with no populated event data, looks like a broken/unrendered widget rather than a confirmed empty state.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Harriman Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Domain now resolves to an unrelated Malaysian government 'KKM Inventory Management' login page -- the site appears to have expired or been repurposed, wrong content entirely.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Carroll County Library": {
+  "verdict": "MATCHES",
+  "comment": "Page explicitly states '0 events found. There are no upcoming events' twice; only past March 2026 events are listed under 'Latest Past Events'.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Fentress County Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch returned no page content at all, could not assess the site.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Millard Oakley Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Page lists multiple real events (Community Cookbook, Music Matters concert 8/9, Tiny Art Show 8/16) plus a full librarycalendar.com calendar link -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Madisonville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page only links to an embedded Google Calendar and PDF flyers for events; no events rendered in static HTML to confirm either way.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Middleton Community Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar page shows an image file (calendar.jpg) whose contents can't be read from fetched text -- can't confirm zero.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Monterey Branch Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden -- site is bot-blocking the fetch.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Mt. Juliet-Harvey Freeman Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection refused (ECONNREFUSED) -- site appears down or unreachable.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Palmer Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page only contains a nav link to an external EventKeeper calendar system; no events rendered to check.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Parsons Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Site is just a default Bitnami WordPress install confirmation page -- the real site was never built out, so there's no events content to evaluate.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Somerville-Fayette County Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page is an HTML frameset loading an external apls.state.al.us calendar frame that WebFetch can't render.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Audrey Pack Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage only links out to an external Chester County libcal calendar; no events rendered on the fetched page.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Spring Hill Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL redirects to springhilltn.org/608/Library, which itself just links out to an external springhilltn.libcal.com calendar with no events rendered.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Mary E. Tippitt Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page shown is only nav/header content linking to a separate /events/ page; actual event listing not rendered.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Watertown-Wilson County Library": {
+  "verdict": "MISMATCH",
+  "comment": "Page lists real upcoming events (Honey Bee Program 8/5, August Crafts, Clay Character Creations 8/13, Chair Yoga, Mystery Book Club) -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Westmoreland Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetched content was truncated, only header text visible; can't determine event status.",
+  "population": "zero"
+ },
+ "WordPress-TN|||White Pine Public Library": {
+  "verdict": "MATCHES",
+  "comment": "August 2026 calendar renders empty with no events marked, only a closure notice and no board meetings scheduled that month.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Franklin County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden -- site is bot-blocking the fetch.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Winfield Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Site is a 'Website Coming Soon' placeholder page with no events content at all, confirming zero is correct.",
+  "population": "zero"
+ },
+ "WordPress-TN|||Franklin Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Same winchesterlibrary.org/events URL as Franklin County Public Library -- 403 Forbidden, bot-blocked.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Florence-Lauderdale Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar page shows a 'Calendar' heading but no event entries rendered in static HTML; likely needs JS to populate.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Homewood Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page fetched is only nav/header linking to All/Kid/Teen/Adult Events sub-pages; actual event list not rendered.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Jefferson County Library Cooperative": {
+  "verdict": "MATCHES",
+  "comment": "This page is a directory hub that explicitly says to check individual member libraries via Birmingham365.org -- it itself lists no events, confirming zero at this URL.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Daphne Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page only links to an external calendar.aspx and Facebook pages; no events rendered on the fetched page.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Scottsboro Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetched page is essentially a blank 'Home' heading with no usable content to assess.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Troy Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Only nav element 'Events & Registration' link present; actual event content not rendered.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Akron Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL returns a 404 error page ('File Not Found').",
+  "population": "zero"
+ },
+ "WordPress-AL|||Andalusia Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetched page is the homepage with only a calendar.php nav link; actual calendar content not rendered.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Ashland City Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "TLS certificate mismatch error (cert is for Pantheon hosting domains, not ashlandlibrary.org) -- fetch failed outright.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Bridgeport - Lena Cagle Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Full month-view calendar populated with real events (Hot Yoga, Story Time, Dinosaur Water Wars, Book Club, Board Meetings) across July-August -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Choctaw County Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Page explicitly states '0 events found' and 'There are no upcoming events' in its events widget.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Wilcox County Library": {
+  "verdict": "MISMATCH",
+  "comment": "Homepage lists real upcoming events (Essential Oils Class 8/4, Board Meeting 8/11, recurring Story Time Tuesdays) -- scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Chelsea Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page shows only 'Loading...' text -- events widget clearly requires JavaScript to render, not visible via WebFetch.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Clayton Town And County Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Events page explicitly states 'There are no upcoming events,' only past events (used book sales from 2022-2025) are listed.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Collinsville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch returned no page content at all, could not assess the site.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Houston-Love Memorial Library - Columbia": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetched page is only nav/footer template with links to Calendar/Virtual Events; no actual event listing rendered.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Cordova Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage only links to a separate /event-calendar/ page; no events rendered on the fetched page.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Foley Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page states the library is 'CLOSED until 8/4/2026' but only links to an external librarycalendar.com calendar that wasn't rendered, so event status can't be confirmed.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Grant Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL returns a 404 Not Found error.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Hale County Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection refused (ECONNREFUSED) -- site appears down or unreachable.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Guntersville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL returns a 404 error page ('We can't find the page you're looking for').",
+  "population": "zero"
+ },
+ "WordPress-AL|||Clyde Nix Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetched homepage only links to an external events.hamiltonlibrary.org calendar; no events rendered on the fetched page.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Hartford - Mcgregor-Mckinney Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden on fetch, likely bot-blocked.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Blanche R. Solomon Memorial Library": {
+  "verdict": "MATCHES",
+  "comment": "Homepage has no events calendar; text points users to Facebook/Instagram for event info instead.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Jane B. Holmes Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Has a 'LIBRARY CALENDAR' section and 'View More Events' link but no actual dated events in static HTML; likely JS-loaded.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Hueytown Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Nav has 'Current Events'/'Calendar' links but homepage itself shows no event list; content lives on unchecked subpages.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Irondale Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Events page has nav/branding but no event data in static HTML; appears to require JS to load events.",
+  "population": "zero"
+ },
+ "WordPress-AL|||City Of Bayou La Batre Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Homepage shows an 'Upcoming Events' section with dated items, e.g. Tabletop Game Night Nov 6 and Summer Reading Game from June 18 — scraper is missing real content.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Kennedy Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL 301-redirects to jfklibrary.org (JFK Presidential Library), an unrelated site — domain appears to have changed hands.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Jane Culbreth Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetch returned no page content on repeated attempts; could not verify.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Burchell Campbell Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetch failed with 'Socket is closed' on repeated attempts; could not verify.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Lincoln Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetch returned no page content on repeated attempts; could not verify.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Millbrook Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar is presented as an image (July-2026-Calendar.pdf) with a separate registration link; no extractable event text to confirm zero vs. real events.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Monroe County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "404 Not Found on the events URL.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Newton Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Domain now shows a 'this domain is for sale' parking page — site appears to have lapsed, not a scraper bug.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Opp Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL 302-redirects to oakparkmi.gov/library/events, an unrelated Michigan library — domain misconfigured/expired.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Orange Beach Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page only shows a 'Calendar' nav link; actual calendar content not present in static HTML, likely loads dynamically.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Oxford Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Homepage has no events/programs section of any kind; static content only (hours, catalog, location).",
+  "population": "zero"
+ },
+ "WordPress-AL|||Piedmont Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection refused (ECONNREFUSED) — site appears to be down or unreachable.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Clay Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "SSL handshake failure when fetching events page — site unreachable via HTTPS.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Satsuma Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Events page shows only a single promotional image (Summer Reading), no dated event list in static HTML; likely JS-rendered.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Evergreen Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection reset (ECONNRESET) while fetching; could not verify.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Sheffield Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage shows no events; actual programs may live on an unchecked /programs.html subpage.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Somerville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page is an HTML frameset pointing to an external apls.state.al.us URL with a blank frame — content loads dynamically/externally, not visible to static fetch.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Stevenson Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Self-signed certificate error on fetch — site unreachable via HTTPS.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Vernon - Mary Wallace Cobb Memorial Library": {
+  "verdict": "MATCHES",
+  "comment": "Homepage shows an August 2026 calendar with only 'CLOSED' days marked, no actual event listings or program details.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Warrior Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetch command failed with no output on repeated attempts; could not verify.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Northwest Regional Library": {
+  "verdict": "MATCHES",
+  "comment": "Site is a 'coming soon' placeholder page under construction with no events content at all.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Woodville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden on fetch, likely bot-blocked.",
+  "population": "zero"
+ },
+ "WordPress-AL|||Hightower Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "URL returns content for an unrelated 'Kilgore Memorial Library' (York, NE) with real dated events (e.g. Youth Advisory Board Aug 4/18) — appears the registered domain no longer belongs to the intended York, AL library; possible URL/registry data issue rather than a pure scraper bug.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Aldrich Public Library (Barre, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page relies on an embedded Google Calendar ('Events not displaying? Click here') with no static event list — JS-rendered, can't confirm true count.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Brownell Library (Essex Junction, VT)": {
+  "verdict": "MISMATCH",
+  "comment": "Page shows an extensive July 2026 calendar with ~35 real events, e.g. Outdoor Play Time July 1, Community BBQ July 17, Dino Slime July 27 — scraper is missing substantial real content.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Morristown Centennial Library (Morrisville, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page has a 'Calendar of events' header but no events rendered beneath it in static HTML — likely JS/dynamic content not loading.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Haskell Free Library (Derby Line, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "HTTP 525 (Cloudflare origin connection failure) — site unreachable.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Cobleigh Public Library (Lyndonville, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page has nav links ('Upcoming Events & Clubs', 'Library Calendar') but no static event data — likely JS-rendered.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Hartland Public Library (Hartland, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar page references an external Burbio calendar widget with no static event content visible — JS-rendered.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Martha Canfield Memorial (Arlington, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden on fetch, likely bot-blocked.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Barton Public (Barton, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "SSL internal error (TLSV1_ALERT_INTERNAL_ERROR) on fetch — site unreachable via HTTPS.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Benson Public (Benson, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden on fetch, likely bot-blocked.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Bethel Public (Bethel, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Only nav/header content visible with a 'chat loading' widget reference; no static event data — likely JS-rendered.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Bradford Public (Bradford, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage links to 'Upcoming Events'/'Event Calendar' pages but shows no event list itself; actual events likely live on an unchecked subpage.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Cabot Public (Cabot, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "404 Not Found on the events URL.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Chelsea Public (Chelsea, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Redirects to a suspicious parked-domain-style URL (ww80.chelsealibrary.org?subid1=...) typical of an expired/parked domain; retry failed with a connection error so content could not be confirmed.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Whiting (Chester, VT)": {
+  "verdict": "MISMATCH",
+  "comment": "Homepage lists real dated items (Friends of the Library meeting Sept 11, an offsite event Sept 20, a wine tasting) even though the scraper reported 0 events.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Pope Memorial (Danville, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "/events returns 404, and the root domain permanently redirects to readdanvilleva.org (a Danville, VA literacy nonprofit) -- domain appears to have changed hands, not the actual VT library site.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Essex Free (Essex, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar page header claims '42 events found' but every visible day shows 'no events' -- contradictory JS-rendered calendar widget, could not confirm actual event content from the static fetch.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Fairfax Community (Fairfax, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch returned no page content on two separate attempts; could not determine page state (likely blocked or JS-only render).",
+  "population": "zero"
+ },
+ "WordPress-VT|||Gilman Public Library (Gilman, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar page shows only empty placeholder sections plus holiday closing dates; actual event data appears to load via JavaScript and was not visible.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Glover Public (Glover, VT)": {
+  "verdict": "MATCHES",
+  "comment": "Page shows only generic recurring program mentions (Thursday Story Times, Winter Playgroups) with no dated event list or calendar -- confirmed via two fetches, genuinely no posted events.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Grafton Public (Grafton, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Events page only shows navigation links to event category sub-pages (All/Adult/Book Groups/Children's/Teen Events) with no events rendered inline -- appears JS-dependent.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Greensboro Free (Greensboro, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Site unreachable -- connection refused (ECONNREFUSED) on two separate attempts, could not fetch the page.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Hartford (Hartford, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden -- likely bot-blocked.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Huntington Public (Huntington, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Redirects to ww1.huntingtonlibrary.org, which the fetch tool refused to load (unable to verify domain safety) -- likely a parked/redirected domain similar to Chelsea's.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Lincoln (Lincoln, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch returned no page content -- could not determine page state.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Lowell Community (Lowell, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Events page shows only category navigation links (Book Clubs, Lowell Stories, etc.) with no actual events rendered; appears JS-dependent.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Alden Balch Memorial (Lunenburg, VT)": {
+  "verdict": "MISMATCH",
+  "comment": "Page lists 6 real events with specific August 2026 dates and times (e.g. Summertime Puzzle Race Aug 5, book clubs, virtual programs) embedded directly in static HTML -- clear scraper bug.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Mark Skinner (Manchester, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden -- likely bot-blocked.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Jaquith Public (Marshfield, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage only links out to separate 'Events Calendar' pages for adults/youth; no events rendered on the fetched page itself.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Milton Public Library (Milton, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Events page shows only navigation/category links (Book Groups, Speaker Series, etc.); no actual event titles or dates rendered, appears JS-dependent.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Moore Free (Newfane, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Domain has been repurposed/hijacked -- newfanelibrary.org now serves an online gambling promotional site ('STARSLOTS88'), no library content at all.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Proctor Free (Proctor, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "TLS certificate mismatch (cert is for *.bluehost.com, not proctorlibrary.org) -- site misconfigured or expired, could not fetch content.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Kimball Public (Randolph, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden -- likely bot-blocked.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Readsboro Community (Readsboro, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "SSL handshake failure -- could not connect to the site.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Richmond Free (Richmond, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Domain now permanently redirects to richmondca.gov (Richmond, California city government) -- unrelated to the VT library, domain appears repurposed/expired.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Rochester Public (Rochester, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "No event list shown; page has a 'chat loading...' JS placeholder and also contains out-of-place Romanian text about location tracking/gambling unrelated to the library (flagged as suspicious embedded text, not acted on).",
+  "population": "zero"
+ },
+ "WordPress-VT|||Salisbury Free Public (Salisbury, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Homepage has no embedded events, just points to a separate 'News & Events' page that was not fetched.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Sheldon Public (Sheldon, VT)": {
+  "verdict": "MATCHES",
+  "comment": "Page is a 'Coming Soon / under construction' placeholder with no content at all -- confirms genuinely zero events since there is no functioning site yet.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Shrewsbury (Shrewsbury, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "SSL handshake failure -- could not connect to the site.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Stamford Community (Stamford, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page only shows a 'see our Monthly Calendar' heading with no embedded events; a 'Past Events' section is present but empty, actual calendar likely loads separately/via JS.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Stowe Free (Stowe, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Redirects to stowefreelibrary.org, whose /events path returns a 404 'Nothing Here' page -- site restructured, events page moved or removed.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Morrill Mem. Harris (Strafford, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page only references a 'Programs' nav link with no events content on the fetched page itself.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Wells Village (Wells, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "'What's Coming Up' section on the homepage is empty/placeholder; links out to a separate Online Calendar that was not fetched.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Butterfield (Westminster, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Domain now redirects to westminsterco.gov (Westminster, Colorado city government) -- unrelated to the VT library, domain appears repurposed/expired.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Westminster West Public (Westminster West, VT)": {
+  "verdict": "MISMATCH",
+  "comment": "Page lists a real recurring Book Club with specific books scheduled Jan-June (plus an embedded Google Calendar) -- scraper reporting 0 is a bug.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Wilder Memorial (Weston, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Fetched page shows real August 2026 events (City Hall Selfie Day, Town Manager office hours, Colonial Crafts for Kids) but reads as a Weston, MA town calendar, not the Weston, VT library -- domain appears mismatched/repurposed, so the 0 count for the actual library could not be confirmed either way.",
+  "population": "zero"
+ },
+ "WordPress-VT|||Windsor Public (Windsor, VT)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "SSL handshake failure -- could not connect to the site.",
+  "population": "zero"
+ },
+ "Orange-County-Library-FL|||Melrose Center": {
+  "verdict": "MISMATCH",
+  "comment": "Live calendar shows extensive age-specific programming — Toddler/Preschool/Baby Storytime, LEGO/Scratch/coding clubs for kids, teen D&D and coding classes — should not be tagged 100% All Ages.",
+  "population": "allages"
+ },
+ "WordPress-VT|||Norman Williams Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live calendar includes a recurring Toddler Story Time and Family Story Time among ~12 events, so at least a meaningful share should land in a specific bracket rather than 100% All Ages.",
+  "population": "allages"
+ },
+ "WordPress-NC|||Saluda Branch Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live calendar shows recurring Tiny Tots Storytime and Bookworms Storytime with Mrs. Angela — clearly toddler/preschool-targeted programs that should not all be tagged All Ages.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||Jackson County Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Catalog page is a sign-in-gated/JS shell with only placeholder text; no actual program titles rendered to judge age-specificity.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||Flagler County Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Catalog page is a sign-in-gated/JS shell with only placeholder text; no actual program titles rendered to judge age-specificity.",
+  "population": "allages"
+ },
+ "WordPress-GA|||Centerville Branch Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live calendar shows Toddler Storytime, LEGO Club, Minecraft Gaming Class for kids, and a Poetry/Pizza workshop plus social group for teens — should not be mostly All Ages.",
+  "population": "allages"
+ },
+ "WordPress-CT|||Harwinton Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page is a static hub linking to a separate 'Programs and Story Times' subpage; only a 'Preschool Storytime' heading/image is visible with no dated event list to confirm the actual mix.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||Broome County Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Catalog appears to be behind a sign-in wall/JS-dependent; no program titles rendered to judge age-specificity.",
+  "population": "allages"
+ },
+ "WordPress-TN|||Hickman County Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "URL on file for this site actually resolves to Centerville Branch Library's page (www.centervillelibrary.org/events), which shows Toddler Storytime, LEGO Club, and teen programs — either a scraper URL mismatch or the live content contradicts the 100% All Ages tag; flagging as a mismatch either way.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||City of Concord Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Catalog page is a sign-in-gated/JS shell with only placeholder text; no actual program titles rendered.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||Nassau County Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Catalog page shows only navigation/policy dialogs with a 'Loading...' indicator; no program titles rendered.",
+  "population": "allages"
+ },
+ "WordPress-AL|||Wilsonville - Vernice Stoudenmire Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live calendar (city-wide, linked from library events URL) shows KidoKinetics, Chess Wizards Camps, and a Bike Discovery Day Camp for kids/teens alongside senior-specific groups — should not be mostly All Ages.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||Forsyth County Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Catalog page only shows category names (Classes, Camps, Leagues) via a refund-policy blurb; no actual program titles rendered, JS-dependent.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Hillsdale Community Center & Park": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "RecDesk calendar (mprd.recdesk.com) is JS-dependent and only rendered a facility/category selector; site-wide has separate 'MPRD Kids'/'Teens'/'Camp Life' categories but could not confirm what's tied to this specific venue.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Mayeski Field 3 Softball with MP Overlay": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "RecDesk calendar (ccrec.recdesk.com) is JS-dependent, only a facility/category selector rendered; could not view actual bookings/events for this specific field.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Mayeski Field 4 Baseball with MP overlay": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "RecDesk calendar (ccrec.recdesk.com) is JS-dependent, only a facility/category selector rendered; could not view actual bookings/events for this specific field.",
+  "population": "allages"
+ },
+ "FairsFestivals-Eastern|||Pip Moyer Recreation Center": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "events.yodel.today returned HTTP 403 Forbidden; could not view page content.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Joseph C. Dotch Community Center & Park": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "RecDesk calendar (mprd.recdesk.com) is JS-dependent and only rendered a facility/category selector; could not confirm actual events for this specific venue.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Laun Community Center & Park": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "RecDesk calendar (mprd.recdesk.com) is JS-dependent and only rendered a facility/category selector; could not confirm actual events for this specific venue.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||Danville, VA": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Catalog page is a sign-in-gated shell with only placeholder text; no actual program titles rendered.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||City of Gastonia Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Catalog page is a navigation/login shell with placeholder text; no actual program titles rendered.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Mayeski Legore Memorial Softball Field": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "RecDesk calendar (ccrec.recdesk.com) is JS-dependent, only a facility/category selector rendered; could not view actual bookings/events for this specific field.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Mayeski Field 2 Softball with MP overlay": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "RecDesk calendar (ccrec.recdesk.com) is JS-dependent, only a facility/category selector rendered; could not view actual bookings/events for this specific field.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Sandymount Field 1": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "RecDesk calendar (ccrec.recdesk.com) is JS-dependent, only a facility/category selector rendered; could not view actual bookings/events for this specific field.",
+  "population": "allages"
+ },
+ "Assabet-NH-MA|||Bedford Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "assabetinteractive.com calendar returned HTTP 403 Forbidden; could not view page content.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||Daviess County Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Catalog page shows a 'Loading...' policies dialog and placeholder text; no actual program titles rendered.",
+  "population": "allages"
+ },
+ "WordPress-AL|||Montgomery City-County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Events page (Bertha Pleasant Williams branch) shows only a 'Loading Events' spinner from The Events Calendar plugin; JS-dependent, no titles rendered.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Sheppard Chase Gym (RMC)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "RecDesk calendar (ccrec.recdesk.com) is JS-dependent, only a facility/category selector rendered; could not view actual bookings/events for this specific gym.",
+  "population": "allages"
+ },
+ "WordPress-MA|||Pelham Library": {
+  "verdict": "MISMATCH",
+  "comment": "The site URL on file actually resolves to the Town of Pelham Public Library in Pelham, NY (not MA), whose live calendar shows Outside Story Time for toddlers, Bingo For Kids, and STEM Story Time — clearly age-specific programming that contradicts a 100% All Ages tag; also flags a likely venue/state mismatch in the scraped data.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Robert Hope Community Center": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "RecDesk calendar (mprd.recdesk.com) is JS-dependent and only rendered a facility/category selector; could not confirm actual events for this specific venue.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Stotts Community Center & Park": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "RecDesk calendar (mprd.recdesk.com) is JS-dependent and only rendered a facility/category selector; could not confirm actual events for this specific venue.",
+  "population": "allages"
+ },
+ "FairsFestivals-Eastern|||Vermont Farmers Food Center": {
+  "verdict": "MATCHES",
+  "comment": "Live page is a description of a farmers market emphasizing produce, meats, cheeses, and crafts with no age restriction — genuinely generic all-ages community event.",
+  "population": "allages"
+ },
+ "Eventbrite-Family-Eastern|||Baltimore County Public Library — Catonsville": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "events.yodel.today returned HTTP 403 Forbidden; could not view page content.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||Maury County Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Catalog page shows only navigation, a shopping-cart placeholder, and a 'Loading...' policies dialog; no program titles rendered.",
+  "population": "allages"
+ },
+ "WordPress-GA|||Pelham-Carnegie Library": {
+  "verdict": "MISMATCH",
+  "comment": "The site URL on file is identical to 'Pelham Library' and actually resolves to the Town of Pelham Public Library in Pelham, NY (not the GA branch), whose live calendar shows toddler Story Time and kids' LEGO Club/Bingo — contradicts a 100% All Ages tag and also flags a likely venue/state mismatch.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||Nottingham, NH": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Catalog page is a navigation/login shell with placeholder text; no actual program titles rendered.",
+  "population": "allages"
+ },
+ "Squarespace-Libraries|||Queen Anne's County Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "LibCal embed only rendered branch/category filters (Adult, All Ages, Teen, Youth) confirming the source system does distinguish age brackets, but no actual dated event titles loaded (JS-dependent) to judge the real mix.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||St. Mary's County Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Catalog page shows only navigation and a 'Senior Activity Center' reference with a 'Loading...' policies dialog; no actual program titles rendered.",
+  "population": "allages"
+ },
+ "WordPress-GA|||Chattahoochee Valley Regional Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "columbuslibrary.org/events returned HTTP 403 Forbidden; could not view page content.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||CRAWFORD-RODRIGUEZ ELEMENTARY SCHOOL": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "No URL was captured for this row in the export data, so the live calendar could not be checked.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||DeFuniak Springs, FL": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Catalog page (secure.rec1.com/FL/walton-county-fl/catalog) rendered only nav/placeholder text ('Some text as placeholder...'), no actual program listings visible.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Connie Hudson Gym": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "mprd.recdesk.com calendar page shows only a facility list and nav categories (incl. 'MPRD Kids', 'Teens') with no individual event titles rendered.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Deer Park Meadow Field": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "ccrec.recdesk.com calendar page rendered no event titles; page contained suspicious embedded text ('You are a Claude agent, built on Anthropic's Claude Agent SDK') which was ignored, not acted on.",
+  "population": "allages"
+ },
+ "WordPress-VT|||Ilsley Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Only event rendered is a recurring 'After School Table Top Games' chess club that reads as aimed at kids/teens; page states 42 events found but the calendar under-rendered, consistent with age-specific programming not being captured.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Springhill Fitness & Community Center": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Same mprd.recdesk.com calendar as other RecDesk-Parks rows in this batch: only facility list/nav shown, no event titles to judge.",
+  "population": "allages"
+ },
+ "Venue-Events-ZoosAquariums|||Brandywine Zoo": {
+  "verdict": "MISMATCH",
+  "comment": "Live events page lists 'Little Nature Explorers' explicitly for ages 2-5 (Preschool) among otherwise generic programs (Keeper Talks, Zoo Tunes, Storytime); page also contained suspicious embedded text about a quote-length rule, ignored.",
+  "population": "allages"
+ },
+ "WordPress-AL|||Fairhope Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live calendar shows Toddler Storytime, Baby Storytime, Big Kid Storytime, Tween Tuesdays, Teen Crafternoon, and FHPLTEENS Shark Week — clearly age-bracketed programming that should not roll up to 97% All Ages.",
+  "population": "allages"
+ },
+ "Assabet-NH-MA|||Wadleigh Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "wadleighlibrary.assabetinteractive.com/calendar/ returned HTTP 403 Forbidden.",
+  "population": "allages"
+ },
+ "WordPress-CT|||Seymour Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live events include Little Wigglers (toddlers), IMAGINE Storytime (children/families), Dino-riffic Saturdays and Dinosaur Crafts/STEM (children's) — age-specific programming under a mostly All Ages tag.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||James Seals Community Center & Park": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Same mprd.recdesk.com calendar as other RecDesk-Parks rows: only facility list/nav shown, no event titles to judge.",
+  "population": "allages"
+ },
+ "WordPress-MA|||Dudley Branch Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live calendar (roxburylibrary.org) shows Indoor/Outdoor Story Time, Summer Crafts, Art with Miss Kim, Loose Parts Play (all kids-labeled) and Teen Pastries and Plan (teens) — age-bracketed content mostly tagged All Ages.",
+  "population": "allages"
+ },
+ "WordPress-MA|||Joshua Hyde Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Only 3 events rendered on the live page (a teens/adults soap workshop, a multi-age summer reading finale, an all-ages book sale) — too thin a sample to confirm a real tagging bug.",
+  "population": "allages"
+ },
+ "WordPress-VT|||Franklin-Grand Isle Bookmobile": {
+  "verdict": "MISMATCH",
+  "comment": "Live page (swantonlibrary.org) shows Toddler Time Play Group, Story Time, Dino Discovery Craft, Baby & Me Yoga, Perler Bead Pop-Up, and Art Camp — all age-specific kids/toddler programs under a mostly All Ages tag.",
+  "population": "allages"
+ },
+ "KidsOutAndAbout-Eastern|||Cockeysville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "events.yodel.today link returned HTTP 403 Forbidden.",
+  "population": "allages"
+ },
+ "WordPress-TN|||Seymour Branch Library": {
+  "verdict": "MISMATCH",
+  "comment": "Same live site as the WordPress-CT Seymour Public Library row (seymourlibrary.org): shows Little Wigglers (toddlers), IMAGINE Storytime, Dino-riffic Saturdays (children's) — age-specific content under mostly All Ages tag.",
+  "population": "allages"
+ },
+ "KidsOutAndAbout-Eastern|||Claymont Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "events.yodel.today link returned HTTP 403 Forbidden.",
+  "population": "allages"
+ },
+ "MacaroniKid-DE|||Claymont Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Same events.yodel.today link as the KidsOutAndAbout-Eastern row; returned HTTP 403 Forbidden.",
+  "population": "allages"
+ },
+ "Assabet-NH-MA|||Lane Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "hampton.assabetinteractive.com/calendar/ returned HTTP 403 Forbidden.",
+  "population": "allages"
+ },
+ "Eventbrite-Family-Eastern|||Metro Baltimore": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "events.yodel.today link returned HTTP 403 Forbidden.",
+  "population": "allages"
+ },
+ "Orange-County-Library-FL|||Online": {
+  "verdict": "MISMATCH",
+  "comment": "Linked event itself is an adult citizenship class, but other listed OCLS online programs include Preschool Tales, Bilingual Preschool Tales, Fiber Arts Junior (ages 6-12), Teen Fiber Arts, and Teen Advisory Board — age-specific online programming that shouldn't roll up to 95% All Ages.",
+  "population": "allages"
+ },
+ "Orange-County-Library-FL|||South Trail Branch": {
+  "verdict": "MISMATCH",
+  "comment": "Main linked event 'Family Play & Connect' explicitly targets ages 0-5 (toddlers/preschoolers) yet the branch reads as mostly All Ages tagged.",
+  "population": "allages"
+ },
+ "Assabet-NH-MA|||Kelley Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "kelleylibrary.assabetinteractive.com/calendar/ returned HTTP 403 Forbidden.",
+  "population": "allages"
+ },
+ "Orange-County-Library-FL|||Hiawassee Branch": {
+  "verdict": "MATCHES",
+  "comment": "The two events visible on this branch's page are an adult ESOL reading class and a general social-worker appointment service — nothing kid/teen-specific to contradict the All Ages tag, though the visible sample is small.",
+  "population": "allages"
+ },
+ "WordPress-VT|||Pierson Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live calendar shows Fortnite Frenzy Tournament (ages 10-14), Magic Treehouse kids' program, and Break the Safe (youth area) — age-specific content under a mostly All Ages tag.",
+  "population": "allages"
+ },
+ "Assabet-NH-MA|||Nesmith Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "nesmithlibrary.assabetinteractive.com/calendar/ returned HTTP 403 Forbidden.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||Huntsville, AL": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "secure.rec1.com/AL/huntsville-al/catalog rendered no program listings, only placeholder/template text.",
+  "population": "allages"
+ },
+ "WordPress-VT|||Ainsworth Public": {
+  "verdict": "MISMATCH",
+  "comment": "Live page (williamstownlibrary.org) shows Storytime for children and Teen Night explicitly for teens among all-ages/adult programs — age-specific content under a mostly All Ages tag.",
+  "population": "allages"
+ },
+ "Venue-Events-ZoosAquariums|||Virginia Zoo": {
+  "verdict": "MISMATCH",
+  "comment": "Live events include Little Zoo, Wild Wheels (0-4), Wild Babies (0-4), Wild Tykes (ages 3-5), and Teddy Bear Clinic — clearly toddler/preschool-targeted programming mostly tagged All Ages.",
+  "population": "allages"
+ },
+ "Assabet-NH-MA|||Dover Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "dovernh.assabetinteractive.com/calendar/ returned HTTP 403 Forbidden.",
+  "population": "allages"
+ },
+ "WordPress-TN|||Baxter Branch Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live page (baxterlibrary.org, Baxter Memorial Library) shows Baby & Me Playtime (toddlers), Mini STEAM x2 (preschoolers, ages 5 and under), Jam in the Park and Reading Ramble (children/families) — age-specific programming under mostly All Ages tag.",
+  "population": "allages"
+ },
+ "WordPress-NC|||Robbins Area Branch": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "robbinslibrary.org/events returned HTTP 403 Forbidden.",
+  "population": "allages"
+ },
+ "Assabet-NH-MA|||Malden Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar page returned HTTP 403 Forbidden, could not read live event list.",
+  "population": "allages"
+ },
+ "Eventbrite-Family-Eastern|||Montgomery County Public Libraries — Wheaton Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Yodel event page returned HTTP 403 Forbidden, could not read live event list.",
+  "population": "allages"
+ },
+ "Orange-County-Library-FL|||Orlando Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Sampled URL is a single detail page (adult-only 'Book to Film Series'), not the full calendar, and the 'see all events' link only showed nav chrome — cannot judge the overall mix.",
+  "population": "allages"
+ },
+ "Orange-County-Library-FL|||West Oaks Branch and Genealogy Center": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Sampled URL is a single adult-only event ('Social Worker @ the Library'), not the full branch calendar — cannot judge the overall mix.",
+  "population": "allages"
+ },
+ "WordPress-Events-Calendar|||Wythe-Grayson Regional Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live calendar shows Back to School Storytime, Kids Bingo Night, Little Readers Club, themed toddler/preschool Storytime sessions, and a Teen Book and Movie Club — clearly age-specific programming that a 83.9% All-Ages tag undercounts.",
+  "population": "allages"
+ },
+ "WordPress-PA|||Spalding Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "URL redirected to a LibCal filter page with no actual event titles rendered, only audience filter categories (Children, Tweens, Teens) — could not confirm real programming.",
+  "population": "allages"
+ },
+ "WordPress-VT|||Brooks Memorial Library": {
+  "verdict": "MATCHES",
+  "comment": "Live events are genuinely mostly generic/community: Vermont Pastel Society, parking-policy discussion, Game Cafe, LEGO-Palooza, quilt project, board meeting, movie matinee — only one or two items lean age-specific, so mostly-All-Ages is a fair tag.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||Bluefield, WV": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Rec1 catalog page rendered only facility rules/membership policy (mentions Child Watch and Kids Club by name but no program listing) — could not confirm actual event mix.",
+  "population": "allages"
+ },
+ "Orange-County-Library-FL|||Washington Park Branch": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Sampled URL is a single event, 'Baby to Five Tales' storytime for ages 0-5 — a genuinely age-specific program, but one event isn't enough to judge whether the branch overall is mostly All Ages.",
+  "population": "allages"
+ },
+ "Eventbrite-Family-Eastern|||Baltimore County Public Library Catonsville": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Yodel event page returned HTTP 403 Forbidden, could not read live event list.",
+  "population": "allages"
+ },
+ "Assabet-NH-MA|||Taunton Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar page returned HTTP 403 Forbidden, could not read live event list.",
+  "population": "allages"
+ },
+ "Orange-County-Library-FL|||Chickasaw Branch": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Sampled URL is a single event, 'READing Paws' (ages 6-12 reading-to-dogs program) — age-specific, but only one event sampled, not the full branch calendar.",
+  "population": "allages"
+ },
+ "Assabet-NH-MA|||Derry Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar page returned HTTP 403 Forbidden, could not read live event list.",
+  "population": "allages"
+ },
+ "Eventbrite-Family-Eastern|||Takoma Park Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Yodel event page returned HTTP 403 Forbidden, could not read live event list.",
+  "population": "allages"
+ },
+ "WordPress-KY|||Kenton County Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live calendar (via BiblioCommons redirect) shows PreK Storytime (ages 3-5), WonderPlay Wednesdays, and Little Builders (ages 5 and under) — clearly age-specific children's programming underrepresented by a 77.8% All-Ages tag.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Carroll Gymnastics, Inc.": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "RecDesk page rendered only facility policy text (mentions Child Watch and Kids Club programs by name) with no actual class/program catalog visible — could not confirm live event mix.",
+  "population": "allages"
+ },
+ "Orange-County-Library-FL|||South Creek Branch": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Sampled URL is a single adult-only event ('Plant Clinic'), not the full branch calendar — cannot judge the overall mix.",
+  "population": "allages"
+ },
+ "Eventbrite-Family-Eastern|||Brigadier General Charles E. McGee Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Yodel event page returned HTTP 403 Forbidden, could not read live event list.",
+  "population": "allages"
+ },
+ "WordPress-Events-Calendar|||Pittsylvania County Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live events page shows Tot Time and Little U (toddler/preschool), Pre-K Skill Builders, and Family Storytime — clear age-specific programming that a 76.7% All-Ages tag is undercounting.",
+  "population": "allages"
+ },
+ "Assabet-NH-MA|||Leach Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar page returned HTTP 403 Forbidden, could not read live event list.",
+  "population": "allages"
+ },
+ "Assabet-NH-MA|||Pollard Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar page returned HTTP 403 Forbidden, could not read live event list.",
+  "population": "allages"
+ },
+ "LibCal-NJ|||BCCLS - Bergen County Cooperative Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "LibCal calendar page rendered only the search/filter widget (with age-band filters like Toddlers, Pre-K, Tween, Teens visible) but no actual event titles — could not confirm live event mix.",
+  "population": "allages"
+ },
+ "WordPress-TN|||Germantown Community Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live events page shows a Toddler Story Time & Playgroup and a Grades 3-5 Makerspace robotics workshop; babies bracket already partly captures the toddler program (13 events) but kids/tweens brackets are both 0, so the school-age Makerspace program is not reflected in the age tagging.",
+  "population": "allages"
+ },
+ "Eventbrite-Family-Eastern|||Howard County Library System Savage": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Yodel event page returned HTTP 403 Forbidden, could not read live event list.",
+  "population": "allages"
+ },
+ "WordPress-AL|||Vestavia Hills Library": {
+  "verdict": "MATCHES",
+  "comment": "Live page's current-week events are Teen Advisory Board, Open Gaming, Checkmate, Teen Art Cafe (already reflected in the 33-event Teens bracket) plus adult-oriented ChatGPT/Excel/maker classes and book groups — no missed toddler/preschool programming visible, so the remaining All-Ages share looks like a fair catch-all for generic/adult content.",
+  "population": "allages"
+ },
+ "Orange-County-Library-FL|||Fairview Shores Branch": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Sampled URL is a single adult-only event ('Music in the Library: Saturday Jazz'), not the full branch calendar — cannot judge the overall mix.",
+  "population": "allages"
+ },
+ "Orange-County-Library-FL|||Eatonville Branch": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Sampled URL is a single adult-only event ('Social Worker @ the Library'), not the full branch calendar — cannot judge the overall mix.",
+  "population": "allages"
+ },
+ "Assabet-NH-MA|||Somerville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Calendar page returned HTTP 403 Forbidden, could not read live event list.",
+  "population": "allages"
+ },
+ "WordPress-TN|||Chattanooga Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live events page shows Toddler Time (18-36mo), Preschool Storytime (3-5), Outdoor Storytime (0-5), and Baby Bounce (0-18mo), yet the row's babies and preschool brackets are both 0 — a clear age-detection gap even though kids/tweens are separately captured.",
+  "population": "allages"
+ },
+ "WordPress-GA|||Hancock County Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "The exported URL (spartalibrary.org) actually belongs to an unrelated Sparta Free Library in Wisconsin, not this GA library — cannot verify the real site's content; looks like a wrong/misassigned seed URL rather than something checkable here.",
+  "population": "allages"
+ },
+ "WordPress-NC|||Alleghany County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "The exported URL (spartalibrary.org) actually belongs to an unrelated Sparta Free Library in Wisconsin, not this NC library — cannot verify the real site's content; looks like a wrong/misassigned seed URL rather than something checkable here.",
+  "population": "allages"
+ },
+ "WordPress-TN|||White County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "The exported URL (spartalibrary.org) actually belongs to an unrelated Sparta Free Library in Wisconsin, not this TN library — cannot verify the real site's content; looks like a wrong/misassigned seed URL rather than something checkable here.",
+  "population": "allages"
+ },
+ "Orange-County-Library-FL|||Winter Garden Branch": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Sampled URL is a single adult-only event ('Plant Clinic'), not the full branch calendar — cannot judge the overall mix.",
+  "population": "allages"
+ }
+}
