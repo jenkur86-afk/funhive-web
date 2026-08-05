@@ -77,7 +77,10 @@ const LIBRARIES = [
   { name: 'Berea Branch Library', url: 'https://oxfordlibrary.org/', eventsUrl: 'https://oxfordlibrary.org/', city: 'Oxford', state: 'NC', zipCode: '00000', county: 'Oxford County'},
   { name: 'Pembroke Public Library', url: 'https://www.pembrokelibrary.org/', eventsUrl: 'https://www.pembrokelibrary.org/upcoming-events', city: 'Pembroke', state: 'NC', zipCode: '00000', county: 'Pembroke County'},
   { name: 'Pinebluff Public Library', url: 'https://www.pineblufflibrary.org/', eventsUrl: 'https://www.pineblufflibrary.org/', city: 'Pinebluff', state: 'NC', zipCode: '00000', county: 'Pinebluff County'},
-  { name: 'Pettigrew Regional Library', url: 'https://plymouthlibrary.org/', eventsUrl: 'https://plymouthlibrary.org/', city: 'Plymouth', state: 'NC', zipCode: '27962', county: 'Plymouth County'},
+  // 2026-08-05: was https://plymouthlibrary.org/ — that domain is Plymouth District Library,
+  // MICHIGAN. Verified correct site is pettigrewlibraries.org (regional office at 201 E 3rd St,
+  // Plymouth NC 27962; serves Chowan, Perquimans, Tyrrell, Washington counties).
+  { name: 'Pettigrew Regional Library', url: 'https://pettigrewlibraries.org/', eventsUrl: 'https://pettigrewlibraries.org/', city: 'Plymouth', state: 'NC', zipCode: '27962', county: 'Washington County'},
   { name: 'Princeton Public Library', url: 'https://www.princetonlibrary.org', eventsUrl: 'https://www.princetonlibrary.org/events', city: 'Princeton', state: 'NC', zipCode: '00000', county: 'Princeton County'},
   { name: 'Roanoke Rapids Public Library', url: 'https://www.roanokerapidslibrary.org/', eventsUrl: 'https://www.roanokerapidslibrary.org/', city: 'Roanoke Rapids', state: 'NC', zipCode: '27870', county: 'Roanoke Rapids County'},
   { name: 'Robbins Area Branch', url: 'https://www.robbinslibrary.org', eventsUrl: 'https://www.robbinslibrary.org/events', city: 'Robbins', state: 'NC', zipCode: '00000', county: 'Robbins County'},

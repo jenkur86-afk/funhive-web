@@ -98,9 +98,14 @@ const LIBRARIES = [
   { name: 'Warrior Public Library', url: 'https://www.warriorlibrary.org', eventsUrl: 'https://www.warriorlibrary.org/events', city: 'Warrior', state: 'AL', zipCode: '35180', county: 'Warrior County'},
   { name: 'Wilsonville - Vernice Stoudenmire Library', url: 'https://www.wilsonvillelibrary.org', eventsUrl: 'https://www.wilsonvillelibrary.org/events', city: 'Wilsonville', state: 'AL', zipCode: '35186', county: 'Wilsonville County'},
   { name: 'Northwest Regional Library', url: 'https://www.winfieldlibrary.org/', eventsUrl: 'https://www.winfieldlibrary.org/', city: 'Winfield', state: 'AL', zipCode: '35594', county: 'Winfield County'},
-  { name: 'Woodville Public Library', url: 'https://www.woodvillelibrary.org', eventsUrl: 'https://www.woodvillelibrary.org/events', city: 'Woodville', state: 'AL', zipCode: '35776', county: 'Woodville County'},
-  { name: 'Hightower Memorial Library', url: 'https://yorklibrary.org/', eventsUrl: 'https://yorklibrary.org/', city: 'York', state: 'AL', zipCode: '36925', county: 'York County'}
+  { name: 'Woodville Public Library', url: 'https://www.woodvillelibrary.org', eventsUrl: 'https://www.woodvillelibrary.org/events', city: 'Woodville', state: 'AL', zipCode: '35776', county: 'Woodville County'}
 
+  // 2026-08-05: 'Hightower Memorial Library' (York, AL 36925) removed. Its configured URL
+  // https://yorklibrary.org/ serves Kilgore Memorial Library in York, NEBRASKA — verified live.
+  // No official website for the Alabama library could be found; its only web presence is a
+  // Facebook page, which this scraper cannot read. Left out rather than pointed at a wrong-state
+  // domain, because broadening extraction would otherwise ingest Nebraska events as Alabama.
+  // Documented as a coverage gap in reports/fix-notes.json.
 ];
 
 const SCRAPER_NAME = 'wordpress-AL';
