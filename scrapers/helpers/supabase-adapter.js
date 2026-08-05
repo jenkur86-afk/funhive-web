@@ -435,24 +435,25 @@ function detectAgeRange(name, description) {
   }
 
   // Specific group keywords (order matters — check specific before general)
-  if (/\b(baby|babies|infant|lap\s*sit)\b/.test(text)) return '0-2';
+  // Plurals matter: these were written with trailing \b anchors that silently
+  // missed the most common real-world phrasings — "Preschoolers", "Infants",
+  // "Teens: After-Hours Hide and Seek" all fell through to All Ages before
+  // 2026-08-04. "\bteen" keeps its leading boundary so "Juneteenth" can't match.
+  if (/\b(baby|babies|infants?|lap\s*sit)\b/.test(text)) return '0-2';
   if (/\btoddler/.test(text)) return '1-3';
-  if (/\b(preschool|pre-k|prek|pre\s*k)\b/.test(text)) return '3-5';
+  if (/\b(preschool(?:ers?)?|pre-k|prek|pre\s*k)\b/.test(text)) return '3-5';
   if (/\btween/.test(text)) return '9-12';
-  if (/\bteen\b/.test(text) && !/\bfamil(y|ies)\b/.test(text)) return '11-18';
-  // "elementary" alone is too broad — it's usually a venue name ("held at Lincoln
-  // Elementary", "Clinton Elementary Building A"), not an audience descriptor.
-  // Require it to actually describe who the event is for (found 2026-08-03 while
-  // testing the grade-pattern fix above — see SCRAPER-FIX-LOG.jsonl).
-  if (/\belementary\s*(?:school\s*)?(?:aged?|students?|kids?|children)\b/.test(text) || /\bfor\s+elementary\b/.test(text)) return '5-11';
-
-  // "kids" or "children" without "family" context → likely 4-12
-  if (/\b(kids?|children)\b/.test(text) && !/\bfamil(y|ies)\b/.test(text)) return '4-12';
-
-  // Family / all ages
-  if (/\ball\s*ages\b/.test(text)) return 'All Ages';
-  if (/\bfamil(y|ies)\b/.test(text)) return 'All Ages';
-
+  // 13-18, not 11-18: normalizeAgeRange() buckets by the range's lower bound, so
+  // "11-18" resolved to Tweens (9-12) and every bare-"teen" event was being filed
+  // as a tween event. 13-18 is also what the platform's own Teens bracket means.
+  // (Explicit "ages 11-18" text is still honored by the age-range check above —
+  // this only governs the bare keyword.) Verified 2026-08-04.
+  if (/\b(teens?|teenagers?)\b/.test(text) && !/\bfamil(y|ies)\b/.test(text)) return '13-18';
+  // Grade-level phrasing is checked BEFORE the generic "kids"/"children" and
+  // "elementary" keywords below, because it is strictly more specific. Until
+  // 2026-08-04 it ran last, so a description like "for kids from 3rd grade to
+  // 6th grade only" matched the generic kids rule first and the real grade
+  // range never got a chance — that exact event was landing in Preschool.
   // Grade-level phrasing: "Gr 4-8", "K-1st Grade", "6-8th Grade", "Grades 3-5".
   // Deliberately anchored to "grade"/"gr"/"k-...grade" context — NOT a bare
   // digit-range scan. A bare scan over arbitrary titles matches too much noise
@@ -481,7 +482,66 @@ function detectAgeRange(name, description) {
     return `${gradeToAge(lo)}-${gradeToAge(hi)}`;
   }
 
+  // "elementary" alone is too broad — it's usually a venue name ("held at Lincoln
+  // Elementary", "Clinton Elementary Building A"), not an audience descriptor.
+  // Require it to actually describe who the event is for (found 2026-08-03 while
+  // testing the grade-pattern fix above — see SCRAPER-FIX-LOG.jsonl).
+  // Lower bound 6 not 5: normalizeAgeRange() buckets on the lower bound, and
+  // "5-11" landed elementary-age events in Preschool (3-5) rather than Kids (6-8).
+  if (/\belementary\s*(?:school\s*)?(?:aged?|students?|kids?|children)\b/.test(text) || /\bfor\s+elementary\b/.test(text)) return '6-11';
+
+  // Generic "kids"/"children" with no family context. Lower bound 6 not 4 for the
+  // same lower-bound-bucketing reason: "4-12" resolved to Preschool (3-5), so
+  // plainly kid-labelled events like "Kid's Craft Slime" were filed as preschool
+  // events. The colloquial "kids" reads as school-age, which is Kids (6-8).
+  // Anything genuinely preschool-aged is caught by the earlier, more specific
+  // preschool/toddler/baby keywords before reaching here. Verified 2026-08-04.
+  if (/\b(kids?|children)\b/.test(text) && !/\bfamil(y|ies)\b/.test(text)) return '6-12';
+
+  // Family / all ages
+  if (/\ball\s*ages\b/.test(text)) return 'All Ages';
+  if (/\bfamil(y|ies)\b/.test(text)) return 'All Ages';
+
   return null;
+}
+
+/**
+ * Decide the final age bracket for an event.
+ *
+ * A scraper-supplied ageRange wins ONLY when it is actually specific. Many
+ * scrapers hand us a low-confidence generic label rather than a real audience:
+ * the WordPress-{state} library parser, for example, accepts any
+ * `[class*="category"]` chip as its age element, so a site's "All Ages" /
+ * "Library Programs" category tag would beat a completely unambiguous signal in
+ * the title. That is how "Toddler Time Downtown (Ages 18-36 Months)" and
+ * "Baby Bounce (Ages 0-18 Months)" ended up stored as All Ages — verified
+ * against live DB rows on 2026-08-04.
+ *
+ * So: if the supplied value normalizes to the catch-all, re-check the
+ * title/description and prefer a specific bracket when one is found. A supplied
+ * value that IS specific is never overridden.
+ *
+ * This routes through detectAgeRange() (anchored, context-aware) and
+ * deliberately NOT through normalizeAgeRange(raw title) — that shortcut was
+ * tried on 2026-08-03 and reverted the same day because its generic numeric
+ * scan misread times ("1:00 - 2:30p"), registration IDs ("2608-2026") and
+ * prices as age ranges. See SCRAPER-FIX-LOG.jsonl.
+ */
+function resolveAgeRange(data) {
+  const supplied = data.ageRange || data.age_range || null;
+  const suppliedNorm = supplied ? normalizeAgeRange(supplied) : null;
+
+  // A specific scraper-provided bracket is authoritative (includes 'Adults',
+  // which callers rely on to reject adult-only events).
+  if (suppliedNorm && suppliedNorm !== 'All Ages') return suppliedNorm;
+
+  const detected = detectAgeRange(data.name, data.description);
+  if (detected) {
+    const detectedNorm = normalizeAgeRange(detected);
+    if (detectedNorm && detectedNorm !== 'All Ages') return detectedNorm;
+  }
+
+  return suppliedNorm || 'All Ages';
 }
 
 // ============================================================================
@@ -1048,8 +1108,7 @@ async function saveEvent(id, data) {
   // after it started misreading unrelated numbers in titles — times like "1:00 - 2:30p", ID/year
   // pairs like "2608-2026" — as age ranges. detectAgeRange()'s explicit, anchored checks are the
   // only safe way to pull an age signal out of an arbitrary raw title.)
-  const rawAgeRange = data.ageRange || detectAgeRange(data.name, data.description) || null;
-  row.age_range = rawAgeRange ? normalizeAgeRange(rawAgeRange) : 'All Ages';
+  row.age_range = resolveAgeRange(data);
 
   // Reject adult-only events — not family content
   if (row.age_range === 'Adults') {
@@ -1782,6 +1841,25 @@ function flattenEvent(data) {
   // Additional scraper_name fallbacks (top-level fields some scrapers use)
   row.scraper_name = row.scraper_name || data.source || data.sourceName || data.source_url || null;
 
+  // ---- Provenance safety net -------------------------------------------------
+  // scraped_at and source_url are what every per-site audit keys off (see
+  // LIBRARY-SITE-AUDIT.md / AGE-RANGE-AUDIT.md and the daily diagnosis task).
+  // Measured across 2026-08-04's rows, scraped_at was NULL on 19.5% and
+  // source_url on 46.6% — which is why those audits had to fall back to
+  // created_at time-window archaeology and per-event URLs instead of a direct
+  // lookup. Both are cheap to populate correctly here.
+  //
+  // scraped_at is always knowable at save time. source_url only accepts real
+  // listing-page values — it is deliberately NOT defaulted to the event's own
+  // `url`, because the audits treat source_url as "the page the scraper visits"
+  // and conflating the two would make a per-event link masquerade as a stable
+  // calendar link.
+  row.scraped_at = row.scraped_at || new Date().toISOString();
+  if (!row.source_url) {
+    const src = data.sourceUrl || data.source_url || data.eventsUrl || data.calendarUrl;
+    if (src) row.source_url = trunc(src, 500);
+  }
+
   // SAFETY NET: if scraper_name is still empty, derive one from the URL so we never
   // silently bucket events into "unknown". Logs a warning so the offending scraper
   // can be fixed.
@@ -1804,8 +1882,7 @@ function flattenEvent(data) {
   // note above flattenEvent()'s equivalent block and SCRAPER-FIX-LOG.jsonl. Deliberately does
   // NOT fall back to normalizing the raw name directly — that misreads unrelated numbers in
   // titles (times, IDs, prices) as ages; detectAgeRange()'s anchored checks are the safe path.
-  const rawAge = data.ageRange || data.age_range || detectAgeRange(data.name, data.description) || null;
-  row.age_range = rawAge ? normalizeAgeRange(rawAge) : 'All Ages';
+  row.age_range = resolveAgeRange(data);
 
   // Reject adult-only events — not family content
   if (row.age_range === 'Adults') {
@@ -1942,4 +2019,9 @@ module.exports = {
   normalizeShoutedTitle,
   isJunkTitle,
   detectAgeRange,
+  // Exported for testability: flattenEvent and resolveAgeRange are pure and are
+  // the code path every scraper's save goes through, so regression suites should
+  // exercise them directly rather than re-implementing the precedence rules.
+  flattenEvent,
+  resolveAgeRange,
 };

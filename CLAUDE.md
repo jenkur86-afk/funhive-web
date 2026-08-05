@@ -101,7 +101,8 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 ### Testing Patterns
 - Syntax check: `node -c scrapers/filename.js`
 - Data quality: `node scripts/data-quality-check.js` (must run locally — sandbox can't reach Supabase)
-- Fix scripts use `--save` flag pattern: dry run by default, `--save` to write to DB.
+- Age detection: `node scripts/test-age-detection.js` — 24-case regression suite, read-only, no DB writes. **Run it after any change to `detectAgeRange()` / `resolveAgeRange()` in `supabase-adapter.js` or to `normalizeAgeRange()`.** Age detection has broken three separate times (2026-08-01, 08-03, 08-04), each time from a change that looked correct in isolation; the suite covers both directions — missed signals AND the false-positive controls (times, registration IDs, ordinals, venue names) that caught the 2026-08-03 regression live.
+- Fix scripts use `--save` flag pattern: dry run by default, `--save` to write to DB. **Always dry-run first and actually read the sample output** — the 2026-08-04 `backfill-age-range.js` dry run surfaced bad reclassifications ("Curiosity Club (3:30 PM)" → Preschool) that would otherwise have been written to 1000+ live rows.
 
 ### Viewing Click Analytics
 The `click_events` table (see Database Schema above) has no SELECT policy — the app can only write to it, never read it back — so there are two ways to view the data, both outside the Next.js app:
