@@ -1092,7 +1092,15 @@ async function saveEvent(id, data) {
   Object.assign(row, {
     geohash: data.geohash || null,
     activity_id: data.activityId || null,
-    source_url: truncate(data.metadata?.sourceUrl, 400) || null,
+    // Same top-level fallbacks as flattenEvent()'s provenance safety net — the
+    // per-site audits key off source_url, and reading it only from metadata left
+    // it NULL on ~47% of rows. Not defaulted to the event's own `url`: source_url
+    // means "the listing page the scraper visits", and conflating the two makes a
+    // per-event link look like a stable calendar link.
+    source_url: truncate(
+      data.metadata?.sourceUrl || data.sourceUrl || data.source_url || data.eventsUrl || data.calendarUrl,
+      400
+    ) || null,
     scraper_name: data.metadata?.scraperName || null,
     platform: data.metadata?.platform || null,
     scraped_at: data.metadata?.scrapedAt || new Date().toISOString(),
