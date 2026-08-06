@@ -5,7 +5,7 @@
     "Keys are scraper names exactly as they appear in scrapers/scraper-registry.js, plus two special keys.",
     "Each scraper value: { note: string, priority: 'high'|'normal'|'low', added: 'YYYY-MM-DD' }.",
     "_global: one note shown above the Fix queue and applied to every fix.",
-    "_pending: ARRAY of { what, expect, confirm, added } — changes already made whose effect has not been observed yet. Rendered as a banner at the top of the report. Delete an entry once confirmed; do not let it linger.",
+    "_pending: OBJECT keyed by scraper name -> { what, expect, confirm, added }. A change already made whose effect has not been observed yet. Shown as an AWAITING badge on that scraper's Coverage row and in its Fix queue detail. Delete the key once confirmed.",
     "A note on a scraper with no detected issues still shows up in the Fix queue, so this doubles as a to-do list."
   ],
   "_global": {
@@ -83,42 +83,234 @@
     "priority": "high",
     "added": "2026-08-05"
   },
-  "_pending": [
-    {
-      "what": "MacaroniKid listing URLs and per-site scraper names (44 files, 2026-08-05)",
-      "expect": "Next MacaroniKid run emits source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-FL-apollobeach. Verified statically through flattenEvent only — no live run yet. Group 2 ran 07:03 EDT 2026-08-06, before the fix.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>   # MacaroniKid should leave MISSING",
+  "_pending": {
+    "MacaroniKid-PA": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-PA-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
       "added": "2026-08-05"
     },
-    {
-      "what": "Venue scrapers renamed Activities-* -> VenueList-* (16 scrapers, 2026-08-05)",
-      "expect": "Rows written before the rename still carry the old names (ArtStudios-Eastern etc.), which now match no registry key. Expect a one-off bump in Step 3f drift and in activities.source values until those rows age out. This is fallout from the rename, NOT new breakage.",
-      "confirm": "node scripts/check-scraper-names.js   # VenueList-* should appear; old Activities-*/-Eastern names should shrink over time",
+    "MacaroniKid-NC": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-NC-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
       "added": "2026-08-05"
     },
-    {
-      "what": "Scraper-name conformance baseline (2026-08-05)",
-      "expect": "143 of 434 names conform; 291 drift (FORMAT_DRIFT 85 / FREE_TEXT 173 / CASE_MISMATCH 25 / UNRELATED 7 / BAD_SLUG 1). Step 3f reporting roughly this many is the KNOWN BASELINE, not a regression. Only a rise above it is news.",
+    "MacaroniKid-MA": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-MA-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-TN": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-TN-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-AL": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-AL-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-KY": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-KY-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-RI": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-RI-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-DC": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-DC-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-WV": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-WV-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-FL": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-FL-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-NY": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-NY-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-GA": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-GA-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-CT": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-CT-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-MD": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-MD-<siteslug>. Verified statically through flattenEvent only — no live run yet. ALSO: check-scraper-names.js flags this scraper COLLAPSED (declares 20 sites, 1 distinct name). That is pre-fix data — expect it to clear as old rows expire.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-NH": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-NH-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-ME": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-ME-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-NJ": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-NJ-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-VA": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-VA-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-SC": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-SC-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "MacaroniKid-DE": {
+      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-DE-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "added": "2026-08-05"
+    },
+    "VenueList-ArtStudios-DMV": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
       "confirm": "node scripts/check-scraper-names.js",
       "added": "2026-08-05"
     },
-    {
-      "what": "MacaroniKid-MD historical rows are collapsed",
-      "expect": "check-scraper-names.js flags MacaroniKid-MD as COLLAPSED (declares 20 sites, 1 distinct name). That is pre-rename data; the code now emits per-site names. Expect it to clear as old rows expire.",
-      "confirm": "node scripts/check-scraper-names.js   # look for the COLLAPSED line",
+    "VenueList-BowlingAlleys-DMV": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
+      "confirm": "node scripts/check-scraper-names.js",
       "added": "2026-08-05"
     },
-    {
-      "what": "WordPress-NC Phase 2 batches 1-2 — 28 entries repointed (2026-08-05/06)",
-      "expect": "Correct verified URLs for 10 parent systems: Sandhill(srls.info), PLJCS(pljcs.org), Gaston(gastonlibrary.org), BHM(bhmlib.org), Northwestern(nwrl.org), Sheppard(sheppardlibrary.org), Wilson(wilsoncountypubliclibrary.org), Alamance(library.alamancecountync.gov), CharlotteMecklenburg(cmlibrary.org), Catawba(catawbacountync.gov). EXTRACTION IS NOT CONFIRMED for any: WordPress-NC is DOM-specific, and Alamance hosts events on LibCal while Charlotte Mecklenburg hosts on BiblioCommons, so a correct URL may still yield zero from this scraper.",
+    "VenueList-ChildrensMuseums-DMV": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-05"
+    },
+    "VenueList-ClimbingGyms-DMV": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-05"
+    },
+    "VenueList-FamilyEntertainment-DMV": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-05"
+    },
+    "VenueList-GymnasticsCenters-DMV": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-05"
+    },
+    "VenueList-IceRinks-DMV": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-05"
+    },
+    "VenueList-IndoorPlaygrounds-DMV": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-05"
+    },
+    "VenueList-MinigolfBatting-DMV": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-05"
+    },
+    "VenueList-MovieTheaters-DMV": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-05"
+    },
+    "VenueList-NatureFarms-DMV": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-05"
+    },
+    "VenueList-RollerSkating-DMV": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-05"
+    },
+    "VenueList-ScienceDiscovery-DMV": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-05"
+    },
+    "VenueList-SwimmingPools-DMV": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-05"
+    },
+    "VenueList-TrampolineNinja-DMV": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-05"
+    },
+    "VenueList-Eastern-US": {
+      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
+      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-05"
+    },
+    "WordPress-NC": {
+      "what": "Phase 2 URL corrections — extraction unproven (2026-08-06)",
+      "expect": "30 of 89 entries now point at verified library system sites. Extraction is NOT confirmed for any: this scraper is WordPress-DOM-specific, and Alamance hosts events on LibCal while Charlotte Mecklenburg hosts on BiblioCommons, so a correct URL may still return zero here.",
       "confirm": "npm run scraper -- --scraper WordPress-NC   then check FOUND/INVALID in scrapers/logs/scraper-summary.log",
       "added": "2026-08-06"
     },
-    {
-      "what": "Gaston/other NC domains still flagged cross-state by the detector",
-      "expect": "gastonlibrary.org shows NC+SC, but the NC entries are CORRECT. The wrong one is SC's Lexington County Library - Gaston. Do not \"re-fix\" the NC side; it clears when WordPress-SC is done.",
+    "WordPress-SC": {
+      "what": "gastonlibrary.org collision — SC side still wrong (2026-08-06)",
+      "expect": "The detector shows gastonlibrary.org spanning NC+SC. The NC entries are CORRECT; the wrong one is SC's 'Lexington County Library - Gaston'. Do not re-fix the NC side — this clears when WordPress-SC is done.",
       "confirm": "node scripts/find-duplicate-library-urls.js",
       "added": "2026-08-06"
     }
-  ]
+  }
 }

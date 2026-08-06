@@ -480,6 +480,11 @@ td.statuscell{min-width:200px;max-width:330px}
 .rowstat.s-unmatched{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn)}
 .rowstat.s-unknown{background:var(--surface-2);color:var(--text-faint);border:1px solid var(--border)}
 .statdetail{font-size:11.5px;color:var(--text-dim);margin-top:4px;line-height:1.4}
+.rowstat.s-awaiting{background:var(--accent-soft);color:var(--accent-text);border:1px solid var(--accent)}
+.tag.await{background:var(--accent-soft);color:var(--accent-text);border:1px solid var(--accent)}
+.pendbox{margin-top:7px;padding:7px 10px;border-left:3px solid var(--accent);background:var(--surface-2);border-radius:6px}
+.pendbox .pd{font-size:11.5px;color:var(--text-dim);margin-top:4px;line-height:1.45}
+.pendbox .pd.mono{font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;font-size:11px;color:var(--accent-text)}
 .bucket{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.03em;padding:2px 7px;
   border-radius:5px;white-space:nowrap}
 .bucket.b-dead-domain{background:var(--crit-soft);color:var(--crit);border:1px solid var(--crit)}
@@ -627,6 +632,14 @@ const MISSING = ${jsonLiteral(MISSING)};
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function fmt(n){return (n===null||n===undefined)?MISSING:Number(n).toLocaleString();}
 
+function pendingBlock(scraper){
+  const p = PENDING[scraper];
+  if(!p) return '';
+  return '<div class="pendbox"><span class="rowstat s-awaiting">awaiting</span> <b>'+esc(p.what||'')+'</b>'
+    + (p.expect ? '<div class="pd">'+esc(p.expect)+'</div>' : '')
+    + (p.confirm ? '<div class="pd mono">'+esc(p.confirm)+'</div>' : '')
+    + '</div>';
+}
 function commentCell(scraper,site){
   const c = COMMENTS[scraper+'|||'+site];
   if(!c) return '<td class="comment-cell">'+MISSING+'</td>';
@@ -668,18 +681,11 @@ const FLAGGED = AGES
     ['accent', ROSTER.length, 'Active scrapers (registry)'],
     ['', covered, 'Scrapers with data this cycle'],
     [missingCount ? 'warn' : '', missingCount, 'Scrapers awaiting this cycle'],
+    [Object.keys(PENDING).length ? 'accent' : '', Object.keys(PENDING).length, 'Scrapers with unverified changes'],
   ].map(([cls,n,l]) => '<div class="stat '+cls+'"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>').join('');
 
   const b = [];
   if(NOTES.length) NOTES.forEach(n => b.push('<div class="banner warn">'+esc(n)+'</div>'));
-  if(PENDING && PENDING.length){
-    b.push('<div class="banner pending"><b>Pending verification — '+PENDING.length+' item(s).</b> '
-      + 'Each is a change already made whose effect has not been observed yet. Confirm it, then delete that entry from <code>reports/fix-notes.json</code>.'
-      + '<ul>' + PENDING.map(function(p){ return '<li><b>'+esc(p.what||'')+'</b>'
-          + (p.expect ? ' — expect: '+esc(p.expect) : '')
-          + (p.confirm ? '<br><span class="mono">'+esc(p.confirm)+'</span>' : '')
-          + (p.added ? ' <i>(added '+esc(p.added)+')</i>' : '') + '</li>'; }).join('') + '</ul></div>');
-  }
   if(missingCount) b.push('<div class="banner"><b>'+missingCount+' of '+ROSTER.length+
     ' active scrapers have no rows yet this cycle.</b> They are listed in the Coverage tab with status <i>none</i> — most are simply assigned to a rotation group that has not run yet.</div>');
   document.getElementById('banners').innerHTML = b.join('');
@@ -809,6 +815,7 @@ buildTable({
       if(r[10].length) detail += '<details class="ev"><summary>Evidence ('+r[10].length+')</summary>'+
         r[10].map(e=>'<div>'+esc(e)+'</div>').join('')+'</details>';
       if(r[6]) detail += '<div class="unv">'+r[6]+' site(s) UNVERIFIABLE — recheck before concluding anything.</div>';
+      detail += pendingBlock(r[0]);
       return '<tr><td class="scraper">'+esc(r[0])+'</td><td class="num">'+esc(r[1])+'</td>'+
         '<td class="num">'+(r[3]?'<b class="bug">'+r[3]+'</b>':'0')+'</td>'+
         '<td class="num">'+fmt(r[4])+'</td><td class="num">'+fmt(r[5])+'</td>'+
@@ -825,12 +832,12 @@ buildTable({
   keyMap: {scraper:0,group:1,state:2,siteRows:3,ageRows:4,events:5,status:6},
   searchInput: document.getElementById('cov-search'),
   countEl: document.getElementById('cov-count'),
-  searchFields: r => r[0]+' '+r[1]+' '+r[2]+' '+r[6],
+  searchFields: r => r[0]+' '+r[1]+' '+r[2]+' '+r[6]+(PENDING[r[0]]?' awaiting pending':''),
   rowRenderer: r =>
-    '<tr><td class="scraper">'+esc(r[0])+'</td><td class="num">'+esc(r[1])+'</td><td>'+esc(r[2])+'</td>'+
+    '<tr><td class="scraper">'+esc(r[0])+(PENDING[r[0]]?'<span class="tag await">awaiting</span>':'')+'</td><td class="num">'+esc(r[1])+'</td><td>'+esc(r[2])+'</td>'+
     '<td class="num">'+fmt(r[3])+'</td><td class="num">'+fmt(r[4])+'</td><td class="num">'+fmt(r[5])+'</td>'+
     '<td><span class="status '+esc(r[6])+'">'+esc(r[6])+'</span></td>'+
-    '<td class="comment-cell">'+esc(r[7])+'</td></tr>'
+    '<td class="comment-cell">'+esc(r[7])+pendingBlock(r[0])+'</td></tr>'
 });
 </script>
 </body>
@@ -853,7 +860,7 @@ function main() {
   const roster = loadRoster();
   const fixNotes = loadFixNotes();
   const globalNote = fixNotes._global || null;
-  const pending = Array.isArray(fixNotes._pending) ? fixNotes._pending : [];
+  const pending = (fixNotes._pending && typeof fixNotes._pending === 'object' && !Array.isArray(fixNotes._pending)) ? fixNotes._pending : {};
 
   console.log(`  library rows : ${sites.length}`);
   console.log(`  age rows     : ${ages.length}`);

@@ -286,21 +286,27 @@ Each was a live error, not a hypothetical.
 
 ## 7. Pending verification
 
-Changes already made whose effect has **not been observed yet**. The authoritative copy is the
-`_pending` array in `reports/fix-notes.json`, which renders as a banner at the top of
-`reports/site-report.html`, so this never depends on anyone remembering. Step 3e of the daily
-diagnosis works through it and deletes entries once confirmed.
+Changes already made whose effect has **not been observed yet** are tracked **per scraper**, not
+in this document and not as a page-level banner — a banner leaves the reader to work out which
+rows it applies to.
 
-Do not treat any of these as regressions when they show up in a report — they are expected
-consequences of changes already landed:
+- **`reports/fix-notes.json` → `_pending`**, an object keyed by scraper name with
+  `{what, expect, confirm, added}`. Currently **38 scrapers**.
+- Rendered as an **`awaiting` badge** on that scraper's row in the report's Coverage tab
+  (searchable: filter `awaiting`), and in its Fix queue detail if it is also listed there.
+- Step 3e of the daily diagnosis works through them and **deletes the key once confirmed**.
 
-| Item | Expect | Confirm with |
-|---|---|---|
-| MacaroniKid listing URLs + per-site names (44 files) | Per-site `source_url` and `MacaroniKid-XX-<slug>` names. Verified statically only; Group 2 ran before the fix | `check-source-url-coverage.js --since=<run>` |
-| `Activities-*` → `VenueList-*` rename (16) | Pre-rename rows carry names matching no registry key until they age out. One-off drift bump | `check-scraper-names.js` |
-| Scraper-name drift **baseline 291 of 434** | Step 3f reporting ~291 is the known baseline. Only a *rise* is news | `check-scraper-names.js` |
-| `MacaroniKid-MD` COLLAPSED flag | Historical rows only — 20 sites, 1 name. Code now emits per-site | `check-scraper-names.js` |
-| WordPress-NC batch 1 (15 entries) | Correct URLs, but extraction unconfirmed — these are WordPress-DOM-specific and some targets are LibGuides | `npm run scraper -- --scraper WordPress-NC` |
+Site-level staleness needs no entry at all: the library sites table carries a per-row **Status**
+column comparing the audit's recorded link against the current config — `current`, `refixed`
+(URL corrected since that scrape, names the new host), or `unmatched`.
+
+Two things deliberately do **not** live in `_pending`:
+
+- **The scraper-name drift baseline (291 of 434)** is a global measurement, not any scraper's
+  state. It belongs in `SKILL.md` Step 3f, which tells the reader that ~291 is expected and only
+  a *rise* is news.
+- **WordPress-NC's per-site URL changes** are shown by the `refixed` row status. Only the
+  scraper-level consequence no row can show — that extraction remains unproven — is pending.
 
 **Known limitation discovered 2026-08-05:** `scrapers/utils/county-centroids.js` holds only
 **13 of North Carolina's 100 counties**. Correcting fabricated county *names* therefore will not
