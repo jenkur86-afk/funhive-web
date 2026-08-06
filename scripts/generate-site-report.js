@@ -130,7 +130,13 @@ function loadConfigIndex() {
     if (!fs.existsSync(abs)) return;
     let entries = fileCache.get(abs);
     if (!entries) {
-      const src = fs.readFileSync(abs, 'utf8');
+      // Strip comments first. Several scrapers carry an AUTO-GENERATED header comment that
+      // documents the generator's input list, including libraries that are NOT in the real
+      // config — scraper-wordpress-libraries-md.js documents 11 while configuring 10. Parsing
+      // raw source counts those as live entries and corrupts the Status column.
+      const src = fs.readFileSync(abs, 'utf8')
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .replace(/^\s*\/\/.*$/gm, '');
       entries = [];
       const objRe = /\{[^{}]*\}/g;
       const nameRe = /["']?name["']?\s*:\s*(?:'([^']*)'|"([^"]*)")/;

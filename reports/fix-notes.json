@@ -59,9 +59,9 @@
     "added": "2026-08-05"
   },
   "WordPress-MD": {
-    "note": "Talbot County Free Library (tcfl.org, was 403) repointed 2026-08-05 to its real current platform talbot.librarycalendar.com/events/upcoming. URL fixed, but this scraper extraction is WordPress-DOM-specific and librarycalendar.com uses different markup, so extraction is NOT confirmed working yet, re-run and check Talbots count before assuming resolved. Dorchester County Public Library (dorchesterlibrary.org/events, 404) has a real path at /calendar-of-events but that also rendered no static events in a live check, likely a JS widget. Flagged as a lead, not fixed.",
+    "note": "MARYLAND PRIORITY PASS 2026-08-06. Good news first: this file is the healthiest in the family - 10 real entries, every county resolving via getCountyCentroid, no fabricated {city}library.org domains. A 2026-04-27 cleanup already removed ~130 fabricated branch URLs here, which is why. Two genuine coverage gaps were found and closed: Ruth Enlow Library of Garrett County (relib.net, verified live) had ZERO rows in the database, and Kent County Public Library (kentcountylibrary.org, verified live) had only festival-scraper rows. Both are now configured. The file had carried a comment claiming Garrett was covered by scraper-librarymarket-libraries-md.js - that file is NOT registered in scraper-registry.js and never runs, so the claim was false. dorchesterlibrary.org and worcesterlibrary.org both verified as MARYLAND's; the MA/WI/NY entries sharing them are the wrong ones.",
     "priority": "normal",
-    "added": "2026-08-05"
+    "added": "2026-08-06"
   },
   "LibCal-TN": {
     "note": "Memphis Public Libraries fixed 2026-08-05: configured URL memphislibrary.libcal.com was dead (404), repointed to the real site memphis.librarycalendar.com, which this shared scraper file already knows how to parse (same format as Albany/Long Beach/Levittown entries). Re-run to confirm a nonzero count.",
@@ -310,6 +310,12 @@
       "what": "gastonlibrary.org collision — SC side still wrong (2026-08-06)",
       "expect": "The detector shows gastonlibrary.org spanning NC+SC. The NC entries are CORRECT; the wrong one is SC's 'Lexington County Library - Gaston'. Do not re-fix the NC side — this clears when WordPress-SC is done.",
       "confirm": "node scripts/find-duplicate-library-urls.js",
+      "added": "2026-08-06"
+    },
+    "WordPress-MD": {
+      "what": "Ruth Enlow + Kent County added (2026-08-06)",
+      "expect": "Two previously-uncovered county library systems now configured. Extraction unproven - this scraper is WordPress-DOM-specific and Ruth Enlow hosts its calendar on librarymarket, so a correct URL may still return zero.",
+      "confirm": "npm run scraper -- --scraper WordPress-MD   then check FOUND for Ruth Enlow and Kent County",
       "added": "2026-08-06"
     }
   }

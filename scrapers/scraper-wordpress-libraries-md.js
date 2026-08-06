@@ -149,7 +149,32 @@ const LIBRARIES = [
     eventsUrl: "https://worcesterlibrary.libcal.com/calendar/Library_Events",
     city: "Snow Hill", state: "MD", zipCode: "21863", county: "Worcester"
   },
-  // Note: Garrett County (Ruth Enlow Library) is covered by scraper-librarymarket-libraries-md.js
+  // 2026-08-06: Ruth Enlow Library added. The note below claimed Garrett County was covered by
+  // scraper-librarymarket-libraries-md.js, but that file is NOT registered in scraper-registry.js
+  // and therefore never runs; the database held zero Ruth Enlow rows. Verified live: the county
+  // library is Ruth Enlow Library of Garrett County at relib.net, not "Garrett County Public
+  // Library" at garrettlibrary.org, which does not resolve at all.
+  {
+    name: "Ruth Enlow Library of Garrett County",
+    url: "https://www.relib.net",
+    platform: "wordpress",
+    eventsUrl: "https://www.relib.net",
+    city: "Oakland", state: "MD", zipCode: "21550", county: "Garrett"
+  },
+  // 2026-08-06: Kent County Public Library added. It was configured only in the unregistered
+  // scraper-libcal-libraries-md.js, so it never ran; the only Kent rows in the database came from
+  // festival scrapers, not library coverage. Verified live: Chestertown MD, branches in Galena
+  // and Rock Hall.
+  {
+    name: "Kent County Public Library",
+    url: "https://www.kentcountylibrary.org",
+    platform: "wordpress",
+    eventsUrl: "https://www.kentcountylibrary.org/programs-and-events/calendar/",
+    city: "Chestertown", state: "MD", zipCode: "21620", county: "Kent"
+  },
+  // Superseded 2026-08-06: the claim that Garrett County was covered by
+  // scraper-librarymarket-libraries-md.js was false — that file is not registered. Ruth Enlow
+  // Library is now configured directly above.
   // NOTE: ~130 auto-generated branch URLs were removed (2026-04-27) because none resolved
   // (ERR_NAME_NOT_RESOLVED). These were fabricated domain names like aberdeenlibrary.org,
   // abingdonlibrary.org, etc. that don't exist. Real MD library branches use their parent
