@@ -319,7 +319,18 @@ async function scrapeGenericEvents() {
             sourceName: library.name,
             sourceUrl: library.url,
             scrapedAt: new Date().toISOString(),
-            scraperName: `${SCRAPER_NAME}-${library.url.replace(/^https?:\/\//, '').replace(/^www\./, '').split('.')[0]}`,
+            // Bare SCRAPER_NAME, deliberately — NOT a per-site slug. Two reasons, both
+            // learned from the 2026-08-06 verification run:
+            //   1. saveEventsWithGeocoding passes a top-level scraperName option, and
+            //      supabase-adapter line ~1847 lets that win over metadata.scraperName, so a
+            //      per-site value here never reached the database anyway.
+            //   2. verifyAndCleanupEvents looks events up with
+            //      .where('metadata.scraperName','==',scraperName) using the bare name, so a
+            //      per-site value here silently breaks verification (it reported 0 verified).
+            // Per-site identity is not lost: for this scraper `venue` IS the library name and
+            // `source_url` IS that library's own URL. That differs from MacaroniKid, where venue
+            // is the event's venue, which is why MacaroniKid genuinely does need a per-site name.
+            scraperName: SCRAPER_NAME,
             category: 'library',
             platform: 'generic',
             state: 'MD',

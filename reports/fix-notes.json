@@ -59,7 +59,7 @@
     "added": "2026-08-06"
   },
   "WordPress-MD": {
-    "note": "MARYLAND PRIORITY PASS 2026-08-06. Good news first: this file is the healthiest in the family - 10 real entries, every county resolving via getCountyCentroid, no fabricated {city}library.org domains. A 2026-04-27 cleanup already removed ~130 fabricated branch URLs here, which is why. Two genuine coverage gaps were found and closed: Ruth Enlow Library of Garrett County (relib.net, verified live) had ZERO rows in the database, and Kent County Public Library (kentcountylibrary.org, verified live) had only festival-scraper rows. Both are now configured. The file had carried a comment claiming Garrett was covered by scraper-librarymarket-libraries-md.js - that file is NOT registered in scraper-registry.js and never runs, so the claim was false. dorchesterlibrary.org and worcesterlibrary.org both verified as MARYLAND's; the MA/WI/NY entries sharing them are the wrong ones.",
+    "note": "MARYLAND PRIORITY PASS 2026-08-06. Good news first: this file is the healthiest in the family - 10 real entries, every county resolving via getCountyCentroid, no fabricated {city}library.org domains. A 2026-04-27 cleanup already removed ~130 fabricated branch URLs here, which is why. Two genuine coverage gaps were found and closed: Ruth Enlow Library of Garrett County (relib.net, verified live) had ZERO rows in the database, and Kent County Public Library (kentcountylibrary.org, verified live) had only festival-scraper rows. Both are now configured. The file had carried a comment claiming Garrett was covered by scraper-librarymarket-libraries-md.js - that file is NOT registered in scraper-registry.js and never runs, so the claim was false. dorchesterlibrary.org and worcesterlibrary.org both verified as MARYLAND's; the MA/WI/NY entries sharing them are the wrong ones. VERIFIED 2026-08-06 by a live run: FOUND rose 89 to 163. Both new libraries work - Ruth Enlow returned 3 events and Kent County 22, and an activity row was created for Ruth Enlow. Talbot returned 48 on the repointed librarycalendar.com URL and Worcester 40. NEW ISSUES FOUND BY THAT RUN: (1) Queen Anne's County Library eventsUrl serves a Squarespace 404 - the scraper ingested the entire page including CSS as an event date. (2) Four libraries returned 0: Charles County, St. Mary's County, Dorchester County, Somerset County. (3) Washington County Free Library returned only 1. (4) INVALID rose 4 to 6, including three May-Sep 2026 range dates. Of 163 found only 82 saved: 43 no date, 17 past, 6 invalid date, 2 junk title, 1 duplicate.",
     "priority": "normal",
     "added": "2026-08-06"
   },
@@ -312,12 +312,6 @@
       "confirm": "node scripts/find-duplicate-library-urls.js",
       "added": "2026-08-06"
     },
-    "WordPress-MD": {
-      "what": "Ruth Enlow + Kent County added, and scraper_name corrected (2026-08-06)",
-      "expect": "Two previously-uncovered county systems now configured (extraction unproven). ALSO: scraper_name changes from generic-MD to per-site WordPress-MD-<slug>, e.g. WordPress-MD-ccplonline. Old rows keep generic-MD until they expire, so both will appear in the audits for a while.",
-      "confirm": "npm run scraper -- --scraper WordPress-MD   then check FOUND for Ruth Enlow and Kent County",
-      "added": "2026-08-06"
-    },
     "LibCal-VA2": {
       "what": "Newly registered 2026-08-06 — has never run in production",
       "expect": "11 VA library systems that had ZERO library rows: Fairfax County (the state largest), Arlington, Prince William, Richmond, Norfolk, Newport News, Hampton, Roanoke, Suffolk, Williamsburg Regional, Library of Virginia. Watch the FIRST run closely: this file has never executed. Check FOUND is nonzero, INVALID is low, scraper_name reads LibCal-VA2, and source_url carries the libcal host rather than the library homepage.",
@@ -394,6 +388,12 @@
       "what": "scraper_name corrected to the registry key (2026-08-06)",
       "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Montgomery-Parks'. Old rows keep the old name until they expire.",
       "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-06"
+    },
+    "WordPress-MD": {
+      "what": "Per-site scraper_name attempted and reverted (2026-08-06)",
+      "expect": "The per-site slug never reached the database - saveEventsWithGeocoding passes a top-level scraperName that overrides metadata.scraperName, and verifyAndCleanupEvents looks up by the bare name, so the change silently broke verification (0 verified). Reverted to the bare key. Next run should report a nonzero verified count again.",
+      "confirm": "npm run scraper -- --scraper WordPress-MD   then check the Verification complete line is not 0 verified",
       "added": "2026-08-06"
     }
   },
