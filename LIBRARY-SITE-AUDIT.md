@@ -838,16 +838,19 @@ Day 2 of the 3-day rotation. Group 2 ran today (2026-08-05 03:00 EST start), cov
 | Springfield City Library | MA | LibraryMarket-ME-NH-MA | 33 | [Link](https://springfield.librarycalendar.com/events/upcoming) |
 | West Hartford Library | CT | LibraryMarket-ME-NH-MA | 34 | [Link](https://westhartford.librarymarket.com/events/upcoming) |
 | Augusta-Richmond County Library | GA | LibraryMarket-GA | 22 | [Link](https://arcpls.librarycalendar.com/events/upcoming) |
-| Charles County Public Library | MD | WordPress-MD | 0 | [Link](https://www.ccplonline.org/events) |
-| St. Mary's County Library | MD | WordPress-MD | 0 | [Link](https://www.stmalib.org/events) |
-| Washington County Free Library | MD | WordPress-MD | 1 | [Link](https://www.washcolibrary.org/events) |
-| Wicomico Public Libraries | MD | WordPress-MD | 25 | [Link](https://www.wicomicolibrary.org/events) |
-| Cecil County Public Library | MD | WordPress-MD | 24 | [Link](https://cecilcountylibrary.org/events) |
-| Dorchester County Public Library | MD | WordPress-MD | 0 | [Link](https://www.dorchesterlibrary.org/events) |
-| Somerset County Library | MD | WordPress-MD | 0 | [Link](https://www.somelibrary.org/events) |
-| Queen Anne's County Library | MD | WordPress-MD | 1 | [Link](https://www.qaclibrary.org/events) |
-| Talbot County Free Library | MD | WordPress-MD | 0 | [Link](https://www.tcfl.org/events) |
-| Worcester County Library | MD | WordPress-MD | 38 | [Link](https://worcesterlibrary.libcal.com/calendar/Library_Events) |
+| Charles County Public Library | MD | WordPress-MD | 0 *(URL corrected 2026-08-06 to ccplonline.org/events/calendar/; still 0 saved after the fix, see SCRAPER-FIX-LOG.jsonl 2026-08-06)* | [Link](https://ccplonline.org/events/calendar/) |
+| St. Mary's County Library | MD | WordPress-MD | 0 saved / extraction bug *(147 found on the corrected stmalib.org/events/calendar/ URL, but its dates are time-only strings like "10 a.m." the parser can't resolve — see SCRAPER-FIX-LOG.jsonl 2026-08-06)* | [Link](https://www.stmalib.org/events/calendar/) |
+| Wicomico Public Libraries | MD | WordPress-MD | 8 | [Link](https://www.wicomicolibrary.org/events) |
+| Cecil County Public Library | MD | WordPress-MD | 5 | [Link](https://cecilcountylibrary.org/events) |
+| Dorchester County Public Library | MD | WordPress-MD | 0 *(URL corrected 2026-08-06 to /calendar-of-events; still 0 saved after the fix, see SCRAPER-FIX-LOG.jsonl 2026-08-06)* | [Link](https://www.dorchesterlibrary.org/calendar-of-events) |
+| Somerset County Library | MD | WordPress-MD | 0 *(URL corrected 2026-08-06 to somelibrary.org/events.php; still 0 saved after the fix, see SCRAPER-FIX-LOG.jsonl 2026-08-06)* | [Link](https://somelibrary.org/events.php) |
+| Talbot County Free Library | MD | WordPress-MD | 21 *(repointed 2026-08-06 to talbot.librarycalendar.com after the old tcfl.org URL was a platform mismatch)* | [Link](https://talbot.librarycalendar.com/events/upcoming) |
+| Worcester County Library | MD | WordPress-MD | 7 | [Link](https://worcesterlibrary.libcal.com/calendar/Library_Events) |
+| Ruth Enlow Library of Garrett County | MD | WordPress-MD | 1 *(new coverage added 2026-08-06 — previously 0 rows in the DB; a stale code comment had wrongly claimed Garrett was covered elsewhere, see SCRAPER-FIX-LOG.jsonl 2026-08-06)* | [Link](https://www.relib.net) |
+| Kent County Public Library | MD | WordPress-MD | 0 *(new coverage added 2026-08-06; the first verification pass logged 22 events found, but 0 rows currently persist in the DB post-fix — not re-diagnosed here, flagged for follow-up)* | [Link](https://www.kentcountylibrary.org/programs-and-events/calendar/) |
+
+*Note: Washington County Free Library and Queen Anne's County Library were removed from WordPress-MD's config on 2026-08-06 — both are verified covered elsewhere (Washington County via LibraryMarket at wcfl.librarymarket.com, 28 rows; Queen Anne's via calendar.qaclibrary.org, 33 rows) and their WordPress-MD `/events` paths were guessed URLs producing junk. See SCRAPER-FIX-LOG.jsonl 2026-08-06.*
+*Note: this WordPress-MD entry supersedes the FOUND-89 group-run numbers this scraper originally logged earlier in this same cycle (2026-08-05 07:00 UTC start) — two manual verification reruns on 2026-08-06 (16:21 UTC FOUND 163, then 16:31 UTC FOUND 310 after further URL fixes) corrected several guessed URLs, so the 16:31 UTC run's data is used here as the current state per the config now in `scrapers/scraper-wordpress-libraries-md.js`. Per-library Found counts above use current DB row counts (`scraper_name = 'WordPress-MD'`, grouped by venue) rather than a stdout Found breakdown, because both reruns were invoked directly and did not write to `scrapers/logs/scraper-stdout.log`.*
 | New York Public Library | NY | WordPress-NY | 0 | [Link](https://www.nypl.org/events/calendar) |
 | Brooklyn Public Library | NY | WordPress-NY | 0 | [Link](https://www.bklynlibrary.org/calendar) |
 | Queens Public Library | NY | WordPress-NY | 1 | [Link](https://www.queenslibrary.org/calendar) |

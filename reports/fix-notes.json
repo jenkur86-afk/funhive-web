@@ -198,12 +198,6 @@
       "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
       "added": "2026-08-05"
     },
-    "MacaroniKid-DE": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-DE-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
-      "added": "2026-08-05"
-    },
     "VenueList-ArtStudios-DMV": {
       "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
       "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
