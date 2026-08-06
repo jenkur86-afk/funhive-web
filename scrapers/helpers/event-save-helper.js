@@ -590,7 +590,16 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
 
       // Skip events with invalid/unparseable dates
       if (!dateStr && rawDateStr) {
-        console.log(`  ⚠️ Skipping event with invalid date: "${rawDateStr}" - ${(event.title || event.name || '').substring(0, 40)}`);
+        // A date string of more than ~120 chars is never a date — it means the scraper's
+        // selector matched a whole page. On 2026-08-06 a Squarespace 404 produced a ~20KB
+        // "date" containing the site's entire CSS, which was then logged in full. Truncate
+        // for the log and label it, so the real problem (a dead URL) is visible instead of
+        // being buried in stylesheet noise.
+        const looksLikePage = rawDateStr.length > 120;
+        const shown = looksLikePage
+          ? rawDateStr.replace(/\s+/g, ' ').slice(0, 80) + `… [${rawDateStr.length} chars — selector matched a whole page, check this site's URL]`
+          : rawDateStr;
+        console.log(`  ⚠️ Skipping event with invalid date: "${shown}" - ${(event.title || event.name || '').substring(0, 40)}`);
         skipped++;
         skippedInvalidDate++;
         continue;

@@ -39,9 +39,9 @@
     "added": "2026-08-05"
   },
   "WordPress-GA": {
-    "note": "Part of the known WordPress-{state} platform-heterogeneity problem: each library runs a different theme/plugin, so there is no generic patch — this needs per-site DOM work. Confirm the URL is the right institution before blaming extraction.",
-    "priority": "normal",
-    "added": "2026-08-05"
+    "note": "Banks County Public Library moved out to LibCal-GA on 2026-08-05 (was on homerlibrary.org = Homer Glen ILLINOIS; the real library uses LibCal via Piedmont Regional). STILL OPEN in this file: Greenville Area Public Library remains on greenvillelibrary.org, which is the South Carolina county system - one of 8 active states still claiming that domain and needing individual URL research. Also part of the known WordPress platform-heterogeneity problem: each library runs a different theme, so there is no generic selector patch. Confirm the URL is the right institution before blaming extraction.",
+    "priority": "high",
+    "added": "2026-08-06"
   },
   "WordPress-FL": {
     "note": "RESOLVED 2026-08-05: the five major systems (Miami-Dade, Orange, Tampa-Hillsborough, Broward, Palm Beach) that had no city/state and county 'Baltimore City' now carry correct main-branch city/state/zip and real county keys, verified against utils/county-centroids.js. SEPARATE STILL-OPEN ISSUE: 61 of this file's other 66 county values (92%) are fabricated by the same seed generator (it appended ' County' to the city name, e.g. 'Arcadia County', 'Brandon County', 'Archer County'), so they resolve to nothing and those libraries still fall through to the FL state centroid. See the _global note for the family-wide measurement. ALSO 2026-08-06: Miami-Dade Public Library System is configured here but produces ZERO library rows in the database, and the orphaned scraper-miami-dade-library-FL.js configures 8 of its branches without ever running. Worth checking whether the WordPress-FL entry extracts at all before adding branches.",
@@ -59,12 +59,12 @@
     "added": "2026-08-06"
   },
   "WordPress-MD": {
-    "note": "MARYLAND PRIORITY PASS 2026-08-06. Good news first: this file is the healthiest in the family - 10 real entries, every county resolving via getCountyCentroid, no fabricated {city}library.org domains. A 2026-04-27 cleanup already removed ~130 fabricated branch URLs here, which is why. Two genuine coverage gaps were found and closed: Ruth Enlow Library of Garrett County (relib.net, verified live) had ZERO rows in the database, and Kent County Public Library (kentcountylibrary.org, verified live) had only festival-scraper rows. Both are now configured. The file had carried a comment claiming Garrett was covered by scraper-librarymarket-libraries-md.js - that file is NOT registered in scraper-registry.js and never runs, so the claim was false. dorchesterlibrary.org and worcesterlibrary.org both verified as MARYLAND's; the MA/WI/NY entries sharing them are the wrong ones. VERIFIED 2026-08-06 by a live run: FOUND rose 89 to 163. Both new libraries work - Ruth Enlow returned 3 events and Kent County 22, and an activity row was created for Ruth Enlow. Talbot returned 48 on the repointed librarycalendar.com URL and Worcester 40. NEW ISSUES FOUND BY THAT RUN: (1) Queen Anne's County Library eventsUrl serves a Squarespace 404 - the scraper ingested the entire page including CSS as an event date. (2) Four libraries returned 0: Charles County, St. Mary's County, Dorchester County, Somerset County. (3) Washington County Free Library returned only 1. (4) INVALID rose 4 to 6, including three May-Sep 2026 range dates. Of 163 found only 82 saved: 43 no date, 17 past, 6 invalid date, 2 junk title, 1 duplicate.",
+    "note": "MARYLAND, state after the 2026-08-06 fixes and two live verification runs. Config is 10 entries, all counties resolving. Ruth Enlow (Garrett) and Kent County were added and both work: 3 and 22 events. Four guessed /events paths were replaced with real calendar URLs found on each library's own site. Two entries were REMOVED as verified-covered-elsewhere: Queen Anne's (33 DB rows from calendar.qaclibrary.org) whose /events served a Squarespace 404, and Washington County Free (28 rows from wcfl.librarymarket.com). OUTCOME: found rose 163 to 310, but NEW only 82 to 80 and INVALID rose 6 to 135. The URL fixes surfaced an extraction bug rather than adding saved events. ST MARY'S IS THE WHOLE STORY: its corrected URL now returns 147 events, but the generic WordPress selectors grab the time field as the date ('10 a.m.', '9:30 a.m.', '2:30 p.m.Registration'), so nearly all fail date parsing. St Mary's is also configured in Communico-MD at stmalib.libnet.info/events, which is the right parser for its LibNet platform - but Communico-MD produces ZERO St Mary's rows, so it cannot simply be removed here. Fixing Communico-MD for St Mary's is the correct path; until then WordPress-MD keeps the entry and the INVALID count is a true signal, not noise. STILL ZERO: Somerset County (somelibrary.org/events.php returns nothing). NEAR ZERO: Charles County 1, Dorchester 1 - both are real pages whose events are JS-rendered or on a separate platform (Charles is Communico at ccplonline.libnet.info).",
     "priority": "normal",
     "added": "2026-08-06"
   },
   "LibCal-TN": {
-    "note": "Memphis Public Libraries fixed 2026-08-05: configured URL memphislibrary.libcal.com was dead (404), repointed to the real site memphis.librarycalendar.com, which this shared scraper file already knows how to parse (same format as Albany/Long Beach/Levittown entries). Re-run to confirm a nonzero count.",
+    "note": "Memphis Public Libraries fixed 2026-08-05: memphislibrary.libcal.com was dead (404); repointed to memphis.librarycalendar.com, a format this shared LibCal file already parses for Albany, Long Beach and Levittown. AWAITING RE-RUN - confirm a nonzero Memphis count before closing.",
     "priority": "normal",
     "added": "2026-08-05"
   },
@@ -391,9 +391,9 @@
       "added": "2026-08-06"
     },
     "WordPress-MD": {
-      "what": "Per-site scraper_name attempted and reverted (2026-08-06)",
-      "expect": "The per-site slug never reached the database - saveEventsWithGeocoding passes a top-level scraperName that overrides metadata.scraperName, and verifyAndCleanupEvents looks up by the bare name, so the change silently broke verification (0 verified). Reverted to the bare key. Next run should report a nonzero verified count again.",
-      "confirm": "npm run scraper -- --scraper WordPress-MD   then check the Verification complete line is not 0 verified",
+      "what": "Verified twice on 2026-08-06; extraction bugs remain",
+      "expect": "Verification still reports 0 verified because historical rows carry metadata.scraperName generic-MD while the scraper now writes WordPress-MD; expect a nonzero count once rows accumulate under the new name. INVALID 135 is St Mary's time-only dates, a real extraction bug now visible rather than hidden behind a 404.",
+      "confirm": "npm run scraper -- --scraper WordPress-MD   then check INVALID and the Verification complete line",
       "added": "2026-08-06"
     }
   },
@@ -404,6 +404,31 @@
   },
   "LibCal-FL": {
     "note": "ORPHANED SIBLING FILE 2026-08-06: scrapers/scraper-libcal-libraries-fl.js exists, passes node -c, maintained through 2026-07-07, configures 7 FL library systems, and is not registered so has never run. Four have ZERO library-scraper rows: Volusia County, Osceola Library System, Leon County, Manatee County. Same treatment as LibCal-VA - needs a new key (LibCal-FL2) and a SCRAPER_NAME fix from 'libcal-FL'.",
+    "priority": "high",
+    "added": "2026-08-06"
+  },
+  "LibCal-NJ": {
+    "note": "Montclair Public Library added 2026-08-05, migrated in from Communico-NJ whose montclairlibrary.libnet.info host is dead. Uses a Montclair-specific cid rather than relying on the BCCLS cid=-1 system-wide entry, because that scrape files rows under the BCCLS system venue and Montclair's own programming could not be confirmed captured (only 2 rows in the whole DB mentioned Montclair). AWAITING RE-RUN.",
+    "priority": "normal",
+    "added": "2026-08-05"
+  },
+  "LibCal-GA": {
+    "note": "Banks County Public Library added 2026-08-05, migrated in from WordPress-GA which had it on homerlibrary.org - really the Homer Township Public Library District in Homer Glen ILLINOIS. Banks County is part of Piedmont Regional and runs LibCal at prlib.libcal.com, confirmed from prlib.org/banks-county's own events link. AWAITING RE-RUN.",
+    "priority": "normal",
+    "added": "2026-08-05"
+  },
+  "WordPress-ME": {
+    "note": "Shaw Public Library - Greenville fixed 2026-08-05: was on greenvillelibrary.org (Greenville County SC) and ingesting 25 of its events under a Maine label. Repointed to shawpubliclibrary.org, verified live at 9 Lily Bay Road, Greenville ME 04441 matching the entry ZIP. Mislabeled rows deleted. AWAITING RE-RUN. Note 114 of this file's 116 county values are fabricated - see the _global note.",
+    "priority": "normal",
+    "added": "2026-08-05"
+  },
+  "BarnesNoble-Eastern": {
+    "note": "RESOLVED 2026-08-05 by a shared fix, not a per-store one: 15 B&N stores were flagged at or above 70 percent All Ages because detectAgeRange() had no concept of 'storytime' - the most common children's program name at bookstores and libraries - so every bare 'Weekly Storytime' / 'Saturday Storytime' defaulted to All Ages. A storytime rule (Preschool 3-5) plus a tots/tykes rule (1-3) were added to supabase-adapter.js, placed AFTER every specific keyword so qualified titles like 'Toddler Storytime' still win on their own rule. Backfill reclassified 2677 rows platform-wide. Re-run to confirm these stores' All-Ages share drops.",
+    "priority": "low",
+    "added": "2026-08-05"
+  },
+  "Communico-MD": {
+    "note": "St. Mary's County Library is configured here at stmalib.libnet.info/events - the correct parser for its LibNet platform - but produces ZERO St Mary's rows in the database. WordPress-MD currently scrapes the same library through generic selectors and gets 147 events whose dates are unusable (time-only, e.g. '10 a.m.'), producing 135 INVALID. Fixing extraction here is the proper resolution; only then can the WordPress-MD entry be removed. Charles County Public Library is the same shape - it is Communico at ccplonline.libnet.info and WordPress-MD gets 1 event from its own site.",
     "priority": "high",
     "added": "2026-08-06"
   }

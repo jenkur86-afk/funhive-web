@@ -83,23 +83,17 @@ const LIBRARIES = [
     name: "Charles County Public Library",
     url: "https://www.ccplonline.org",
     platform: "wordpress",
-    eventsUrl: "https://www.ccplonline.org/events",
+    eventsUrl: "https://ccplonline.org/events/calendar/",
     city: "La Plata", state: "MD", zipCode: "20646", county: "Charles"
   },
   {
     name: "St. Mary's County Library",
     url: "https://www.stmalib.org",
     platform: "wordpress",
-    eventsUrl: "https://www.stmalib.org/events",
+    eventsUrl: "https://www.stmalib.org/events/calendar/",
     city: "Leonardtown", state: "MD", zipCode: "20650", county: "St. Mary's"
   },
-  {
-    name: "Washington County Free Library",
-    url: "https://www.washcolibrary.org",
-    platform: "wordpress",
-    eventsUrl: "https://www.washcolibrary.org/events",
-    city: "Hagerstown", state: "MD", zipCode: "21740", county: "Washington"
-  },
+  // 2026-08-06: Washington County Free Library removed. Verified covered by LibraryMarket: 28 rows sourced from wcfl.librarymarket.com, created 2026-08-05. This entry returned 1 event against a guessed /events path.
   {
     name: "Wicomico Public Libraries",
     url: "https://www.wicomicolibrary.org",
@@ -118,23 +112,17 @@ const LIBRARIES = [
     name: "Dorchester County Public Library",
     url: "https://www.dorchesterlibrary.org",
     platform: "wordpress",
-    eventsUrl: "https://www.dorchesterlibrary.org/events",
+    eventsUrl: "https://www.dorchesterlibrary.org/calendar-of-events",
     city: "Cambridge", state: "MD", zipCode: "21613", county: "Dorchester"
   },
   {
     name: "Somerset County Library",
     url: "https://www.somelibrary.org",
     platform: "wordpress",
-    eventsUrl: "https://www.somelibrary.org/events",
+    eventsUrl: "https://somelibrary.org/events.php",
     city: "Princess Anne", state: "MD", zipCode: "21853", county: "Somerset"
   },
-  {
-    name: "Queen Anne's County Library",
-    url: "https://www.qaclibrary.org",
-    platform: "wordpress",
-    eventsUrl: "https://www.qaclibrary.org/events",
-    city: "Centreville", state: "MD", zipCode: "21617", county: "Queen Anne's"
-  },
+  // 2026-08-06: Queen Anne's County Library removed. Verified covered elsewhere: 33 rows in the DB sourced from calendar.qaclibrary.org, created 2026-08-04. Its eventsUrl here served a Squarespace 404 whose entire page, CSS included, was ingested as an event date.
   {
     name: "Talbot County Free Library",
     url: "https://talbot.librarycalendar.com",

@@ -2131,12 +2131,12 @@
  },
  "WordPress-NY|||Phillips Free Library": {
   "verdict": "MISMATCH",
-  "comment": "homerlibrary.org (the URL the NY registry entry points to) is actually the Homer Township Public Library District in Homer Glen, ILLINOIS (708 area code, IL zip) — a real URL collision, not the Phillips Free Library in Homer, NY. The events page also renders no static event content (JS calendar).",
+  "comment": "FIX LANDED 2026-08-05, NOT YET RE-VERIFIED: this entry pointed at homerlibrary.org, which is the Homer Township Public Library District in Homer Glen ILLINOIS, a different Homer entirely. Repointed to the real Phillips Free Library at phillipsfreelibrary.org, verified live at 37 South Main St, Homer NY 13077 matching the entry's own ZIP, with real dated events including a Summer Reading Celebration on Aug 7 and a Creative Writing Club for rising 4th-7th graders. 80 orphaned Illinois-sourced rows were deleted, since their stable IDs derive from the old URL and a corrected re-scrape would never have overwritten them.",
   "population": "allages"
  },
  "WordPress-NY|||Greenville Public Library": {
   "verdict": "MISMATCH",
-  "comment": "Confirmed URL collision as flagged: greenvillelibrary.org is definitively the Greenville COUNTY Library SYSTEM in South Carolina (864 area code, branches in Greer/Mauldin/Simpsonville/Taylors), not the NY library. The cached page also only shows stale 2020 events with clear age-specific programming (Bouncing Babies ages 1-18mo, Teen Cuisine) — both a state collision and an age-bracket mismatch.",
+  "comment": "FIX LANDED 2026-08-05, NOT YET RE-VERIFIED: this entry pointed at greenvillelibrary.org, the Greenville COUNTY Library System in SOUTH CAROLINA, a domain claimed by 10 active states at once. It was not returning nothing, it was actively ingesting South Carolina events under a New York label, including one titled 'War in the South Carolina Backcountry' stored as Greenville, NY. Repointed to the real Greene County NY library at greenville.lib.ny.us, verified live at 11177 Rte 32, Greenville NY 12083 matching the entry's own ZIP. 189 mislabeled rows across NY and ME were deleted.",
   "population": "allages"
  },
  "ActiveNet-Parks-Eastern|||North Arundel Aquatic Ctr": {
@@ -2161,22 +2161,22 @@
  },
  "LibCal-TN|||Memphis Public Libraries": {
   "verdict": "MISMATCH",
-  "comment": "The configured memphislibrary.libcal.com URL 404s — dead/wrong domain. The real site (memphis.librarycalendar.com, reached via a redirect from memphislibrary.org/events/) shows abundant dated August 2026 events including age-specific programs (Sensory Storytime for children with autism, teen robotics, senior activities).",
+  "comment": "FIX LANDED 2026-08-05, NOT YET RE-VERIFIED: the dead memphislibrary.libcal.com (404) was repointed to the real memphis.librarycalendar.com, a format this same shared LibCal file already parses for Albany, Long Beach and Levittown. Re-run LibCal-TN and confirm a nonzero count before treating this as closed.",
   "population": "zero"
  },
  "Communico-NJ|||Montclair Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Confirmed dead domain: montclairlibrary.libnet.info (both the root and /events) 302-redirects to http://www.google.co.uk/, a generic unrelated page — the domain no longer belongs to the library, which explains why API+Puppeteer+link-fallback all failed per the audit note.",
+  "verdict": "MISMATCH",
+  "comment": "FIX LANDED 2026-08-05, NOT YET RE-VERIFIED: montclairlibrary.libnet.info is a dead domain, 302-redirecting to google.co.uk on both root and /events, which is why API, Puppeteer and link-fallback all returned 0. The library migrated to LibCal; the entry was removed from Communico-NJ and re-added to LibCal-NJ at bccls.libcal.com/calendar/montclair with a Montclair-specific cid. Re-run LibCal-NJ to confirm.",
   "population": "zero"
  },
  "Communico-SC|||Greenville County Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Same dead-domain pattern as Montclair: greenville.libnet.info 302-redirects to http://www.google.co.uk/ instead of any library content.",
+  "verdict": "MATCHES",
+  "comment": "SITE-SIDE PROBLEM, NOT A SCRAPER BUG: greenville.libnet.info is dead (redirects to google.co.uk) and was removed. The library's real events page, greenvillelibrary.org/events, serves ARCHIVED OCTOBER-NOVEMBER 2020 events to anonymous fetches under a header that renders a current AUG 6 2026 date. The scraper found 10 events and correctly skipped every one as past, so scrape and live page do agree. Adding date_start=2026-08-06 did not change the result. OPEN COVERAGE GAP: this library needs a different calendar source entirely.",
   "population": "zero"
  },
  "Communico-SC|||Richland Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Same dead-domain pattern again: richland.libnet.info 302-redirects to http://www.google.co.uk/ instead of any library content — three Communico libnet.info domains in a row now point at a generic/expired-domain redirect target.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-06: the dead richland.libnet.info Communico entry was removed, and the library is in fact already covered by CustomDrupal-Libraries at richlandlibrary.com/events, holding 7 rows stored under scraper_name 'Richland Library'. An earlier note claiming Richland had no coverage was a query artifact from searching the registry key instead of the display name.",
   "population": "zero"
  },
  "WordPress-MD|||Charles County Public Library": {
@@ -2191,12 +2191,12 @@
  },
  "WordPress-MD|||Dorchester County Public Library": {
   "verdict": "MISMATCH",
-  "comment": "The configured dorchesterlibrary.org/events URL 404s — real path is /calendar-of-events (also renders no static events, likely a JS widget). More importantly the homepage itself actively promotes dated program types (summer reading, teen hangout, storytime), so 'zero events' looks like a wrong-URL problem rather than a genuinely empty calendar.",
+  "comment": "STILL OPEN: dorchesterlibrary.org/events 404s. The real path is /calendar-of-events, but that rendered no server-side events either (likely a JS widget), so no URL change was made rather than swapping one non-working address for another. The homepage does actively promote dated programming, so the library is not genuinely empty.",
   "population": "zero"
  },
  "WordPress-MD|||Talbot County Free Library": {
   "verdict": "MISMATCH",
-  "comment": "Confirmed real bug: tcfl.org/events 403s (bot-blocked/broken), and the library's actual calendar lives on a completely different platform, talbot.librarycalendar.com/events/upcoming, which shows multiple real dated, age-specific August 2026 events (ages 6-12, ages 4-12, children 5 and under, Teen Night) — the scraper is pointed at the wrong URL entirely.",
+  "comment": "FIX PARTIAL 2026-08-05, NOT YET RE-VERIFIED: tcfl.org 403s and the real calendar is talbot.librarycalendar.com/events/upcoming, so the URL was repointed. The platform changed as well as the address, and this WordPress scraper's DOM selectors are not known to parse librarycalendar.com markup, so a nonzero count is NOT expected with confidence. Re-run and if it is still 0 the fix is a platform move, not more selector work.",
   "population": "zero"
  },
  "WordPress-NY|||New York Public Library": {
@@ -2207,6 +2207,21 @@
  "WordPress-NY|||Brooklyn Public Library": {
   "verdict": "UNVERIFIABLE",
   "comment": "bklynlibrary.org/calendar returns HTTP 403 Forbidden — bot-blocked, cannot verify.",
+  "population": "zero"
+ },
+ "WordPress-ME|||Shaw Public Library - Greenville": {
+  "verdict": "MISMATCH",
+  "comment": "FIX LANDED 2026-08-05, NOT YET RE-VERIFIED: this entry was on greenvillelibrary.org, which is the Greenville County Library System in SOUTH CAROLINA, and was ingesting 25 of its events under a Maine label. Repointed to the real Shaw Public Library at shawpubliclibrary.org, verified live at 9 Lily Bay Road, Greenville ME 04441 matching the entry's own ZIP, with dated events including Mr. Drew and His Animals on Aug 6. The 25 mislabeled rows were deleted.",
+  "population": "zero"
+ },
+ "WordPress-GA|||Banks County Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "FIX LANDED 2026-08-05, NOT YET RE-VERIFIED: this entry was on homerlibrary.org, which is the Homer Township Public Library District in Homer Glen ILLINOIS. The real Banks County library is part of the Piedmont Regional Library System and runs its calendar on LibCal, confirmed from prlib.org/banks-county's own events link, so the entry was moved out of WordPress-GA into LibCal-GA at prlib.libcal.com. Re-run LibCal-GA to confirm.",
+  "population": "zero"
+ },
+ "CustomDrupal-Libraries|||Cobb County Public Library System": {
+  "verdict": "MISMATCH",
+  "comment": "FIX LANDED 2026-08-06, NOT YET RE-VERIFIED: this config reused one selector, span.text-primary-1, for date, location AND description, so every event took the date string as its venue and was geocoded as an address like 'Wednesday, August 5, 2026, Marietta, Cobb County, GA'. The 2026-08-05 run logged 7 successful extractions and the database ended up with 0 rows. Cobb was the only config in the file with this collision; location and description now use the same distinct selectors its seven siblings already use.",
   "population": "zero"
  }
 }
