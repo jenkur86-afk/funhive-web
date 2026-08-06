@@ -44,9 +44,9 @@
     "added": "2026-08-05"
   },
   "WordPress-FL": {
-    "note": "RESOLVED 2026-08-05: the five major systems (Miami-Dade, Orange, Tampa-Hillsborough, Broward, Palm Beach) that had no city/state and county 'Baltimore City' now carry correct main-branch city/state/zip and real county keys, verified against utils/county-centroids.js. SEPARATE STILL-OPEN ISSUE: 61 of this file's other 66 county values (92%) are fabricated by the same seed generator (it appended ' County' to the city name, e.g. 'Arcadia County', 'Brandon County', 'Archer County'), so they resolve to nothing and those libraries still fall through to the FL state centroid. See the _global note for the family-wide measurement.",
-    "priority": "normal",
-    "added": "2026-08-05"
+    "note": "RESOLVED 2026-08-05: the five major systems (Miami-Dade, Orange, Tampa-Hillsborough, Broward, Palm Beach) that had no city/state and county 'Baltimore City' now carry correct main-branch city/state/zip and real county keys, verified against utils/county-centroids.js. SEPARATE STILL-OPEN ISSUE: 61 of this file's other 66 county values (92%) are fabricated by the same seed generator (it appended ' County' to the city name, e.g. 'Arcadia County', 'Brandon County', 'Archer County'), so they resolve to nothing and those libraries still fall through to the FL state centroid. See the _global note for the family-wide measurement. ALSO 2026-08-06: Miami-Dade Public Library System is configured here but produces ZERO library rows in the database, and the orphaned scraper-miami-dade-library-FL.js configures 8 of its branches without ever running. Worth checking whether the WordPress-FL entry extracts at all before adding branches.",
+    "priority": "high",
+    "added": "2026-08-06"
   },
   "Communico-NJ": {
     "note": "RESOLVED 2026-08-05: Montclair Public Library moved to LibCal-NJ with its real bccls.libcal.com/calendar/montclair URL; the dead libnet.info entry was removed. Verify on the next Group 2 run that Montclair returns a nonzero count under LibCal-NJ.",
@@ -318,5 +318,15 @@
       "confirm": "npm run scraper -- --scraper WordPress-MD   then check FOUND for Ruth Enlow and Kent County",
       "added": "2026-08-06"
     }
+  },
+  "LibCal-VA": {
+    "note": "ORPHANED SIBLING FILE 2026-08-06: scrapers/scraper-libcal-libraries-va.js exists, passes node -c, has been maintained since 2026-04-08 (last touched 2026-04-28) and configures 11 VA library systems - but NO registry entry points at it, so it has never run. Seven of its systems have ZERO library-scraper rows in the database: Prince William Public Library System, Newport News, Hampton, Roanoke, Suffolk, Williamsburg Regional, and the Library of Virginia. The registered shared LibCal file contains none of them, so there is no overlap. Prince William's LibCal was verified live with dated August 2026 events. Registering it needs a new key (LibCal-VA2, following the LibCal-NY1/NY2 precedent) and its SCRAPER_NAME changed from 'libcal-VA' to match.",
+    "priority": "high",
+    "added": "2026-08-06"
+  },
+  "LibCal-FL": {
+    "note": "ORPHANED SIBLING FILE 2026-08-06: scrapers/scraper-libcal-libraries-fl.js exists, passes node -c, maintained through 2026-07-07, configures 7 FL library systems, and is not registered so has never run. Four have ZERO library-scraper rows: Volusia County, Osceola Library System, Leon County, Manatee County. Same treatment as LibCal-VA - needs a new key (LibCal-FL2) and a SCRAPER_NAME fix from 'libcal-FL'.",
+    "priority": "high",
+    "added": "2026-08-06"
   }
 }

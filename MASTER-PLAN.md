@@ -27,6 +27,35 @@ Investigating them exposed four deeper defects. The 63 are partly a *symptom*.
 fabricated URLs: **280 rows on 138 colliding hosts**, 261 library-named. `madisonlibrary.org`
 exists as 10 venue records in 10 states. Venue rows persist where events expire.
 
+### Defect E — orphaned scrapers (found 2026-08-06)
+
+**30 scraper files on disk are referenced by no registry entry, so they never run.** They are
+not stubs: several pass `node -c`, carry full config arrays, and have been maintained by later
+commits. Nothing surfaces them — health reporting iterates the registry, so a file the registry
+does not mention is invisible.
+
+Swept in full. Most duplicate registered coverage, but **13 library systems in active states
+have zero library-scraper rows and exist only in an orphaned file**:
+
+| File (unregistered) | Uncovered systems |
+|---|---|
+| `scraper-libcal-libraries-va.js` | Prince William, Newport News, Hampton, Roanoke, Suffolk, Williamsburg Regional, **Library of Virginia** |
+| `scraper-libcal-libraries-fl.js` | Volusia County, Osceola, Leon County, Manatee County |
+| `scraper-libcal-libraries-md.js` | Kent County *(fixed 2026-08-06)* |
+| `scraper-librarymarket-libraries-md.js` | Ruth Enlow / Garrett County *(fixed 2026-08-06)* |
+
+Prince William's LibCal was verified live with dated August 2026 events. The registered shared
+LibCal file contains none of the VA systems, so registering the orphan adds coverage rather than
+duplicating it.
+
+**Registering them is not mechanical.** Each needs a new registry key (`LibCal-VA2` / `LibCal-FL2`,
+following the existing `LibCal-NY1`/`NY2` precedent), a `SCRAPER_NAME` corrected from `libcal-VA`
+to the registry key, and a first run watched — these have never executed in production.
+
+Also note `scraper-miami-dade-library-FL.js` configures 8 Miami-Dade branches and never runs,
+while the parent system *is* configured in `WordPress-FL` yet produces zero library rows. Fix the
+parent before adding branches.
+
 ## 2. The governing dependency
 
 > **URLs must be correct before any selector work.**
