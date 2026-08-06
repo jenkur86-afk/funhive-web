@@ -160,8 +160,20 @@ const LIBRARY_SYSTEMS = [
       eventContainer: '[class*="border-accent-1"][class*="border-t"]',
       title: 'h3',
       date: 'span.text-primary-1',
-      location: 'span.text-primary-1',
-      description: 'span.text-primary-1',
+      // location and description previously BOTH reused the date selector
+      // above, so every Cobb event took the date string as its venue. That fed
+      // saveEvent an address of the form "Wednesday, August 5, 2026, Marietta,
+      // Cobb County, GA", which geocoding could not resolve and which cost the
+      // events their save — the run logged 7 extractions on 2026-08-05 and the
+      // database ended up with 0 rows for this library. Cobb is the only config
+      // in this file that had this collision; every other one already uses
+      // distinct selectors, so these are aligned to the same shape they use.
+      // Neither element exists on cobbcounty.gov's list markup, which is the
+      // intended outcome: venue then falls back to the library name below
+      // rather than to a date, and an absent description is left empty per
+      // CLAUDE.md's "descriptions stay empty if the scraper didn't supply one".
+      location: '.event-location, [class*="location"]',
+      description: 'p, [class*="description"]',
       url: 'a[href*="/events/"]'
     }
   },

@@ -54,9 +54,9 @@
     "added": "2026-08-05"
   },
   "Communico-SC": {
-    "note": "PARTIALLY RESOLVED 2026-08-05: the two dead libnet.info entries (Greenville County, Richland) were removed - they 302-redirected to google.co.uk and could never return events. The COVERAGE GAP REMAINS OPEN and was not handed to a working replacement: CustomDrupal-Libraries already has both correct URLs (greenvillelibrary.org/events, richlandlibrary.com/events) and reported finding 10 and 30 events on 2026-08-05, yet the DB holds 0 upcoming rows for Greenville County and 1 for Richland. Both live sites verified to have real dated events, so this is a CustomDrupal-Libraries EXTRACTION bug, not a URL problem. That is the next thing to fix for SC.",
-    "priority": "high",
-    "added": "2026-08-05"
+    "note": "Dead libnet.info entries removed 2026-08-05. SC status re-measured 2026-08-06: Richland Library IS covered by CustomDrupal-Libraries (7 rows, stored under scraper_name 'Richland Library'), correcting the earlier claim that it had no coverage. Greenville County Library System remains at 0 for a site-side reason - greenvillelibrary.org/events serves archived 2020 events. Needs a different calendar source, not a scraper fix.",
+    "priority": "normal",
+    "added": "2026-08-06"
   },
   "WordPress-MD": {
     "note": "MARYLAND PRIORITY PASS 2026-08-06. Good news first: this file is the healthiest in the family - 10 real entries, every county resolving via getCountyCentroid, no fabricated {city}library.org domains. A 2026-04-27 cleanup already removed ~130 fabricated branch URLs here, which is why. Two genuine coverage gaps were found and closed: Ruth Enlow Library of Garrett County (relib.net, verified live) had ZERO rows in the database, and Kent County Public Library (kentcountylibrary.org, verified live) had only festival-scraper rows. Both are now configured. The file had carried a comment claiming Garrett was covered by scraper-librarymarket-libraries-md.js - that file is NOT registered in scraper-registry.js and never runs, so the claim was false. dorchesterlibrary.org and worcesterlibrary.org both verified as MARYLAND's; the MA/WI/NY entries sharing them are the wrong ones.",
@@ -69,9 +69,9 @@
     "added": "2026-08-05"
   },
   "CustomDrupal-Libraries": {
-    "note": "EXTRACTION GAP found 2026-08-05: reported 356 found / 65 new on the 2026-08-05 run, but the DB holds 0 upcoming rows attributed to it, and 0 for Richland Library and Greenville County Library System specifically. Both live sites were fetched and DO show real dated events (Richland: Hello Baby Aug 6, Family Storytime Aug 7). Found-not-saved, or saved under venue/scraper names that do not match. This scraper is now the sole configured owner of both SC systems after the dead Communico duplicates were removed, so its extraction is the blocker for South Carolina library coverage.",
-    "priority": "high",
-    "added": "2026-08-05"
+    "note": "Re-measured 2026-08-06 per library (this scraper stores each library's DISPLAY NAME in scraper_name, so querying the registry key returns nothing - the earlier 'entirely broken' read was a query artifact). Working: Anderson County 61 upcoming, Rowan 12, Kanawha 7, Florence 1, Richland 7 rows. FIXED: Cobb County had date/location/description all sharing one selector so venue became the date string and events failed to save - re-run and confirm Cobb now returns rows. STILL OPEN, site-side not scraper-side: greenvillelibrary.org/events serves archived Oct-Nov 2020 events to anonymous fetches under a current-looking header, so Greenville County SC yields 0 and a date_start param does not help. That library needs a different calendar source entirely.",
+    "priority": "normal",
+    "added": "2026-08-06"
   },
   "WordPress-NY": {
     "note": "Two collisions fixed 2026-08-05 and their bad data deleted: Greenville Public Library (was on greenvillelibrary.org = Greenville County SC) repointed to greenville.lib.ny.us, and Phillips Free Library (was on homerlibrary.org = Homer Glen IL) repointed to phillipsfreelibrary.org. Both verified live with ZIPs matching the config. 226 orphan rows removed. NOTE this file is the largest in the family at 422 entries and 416 of its county values are fabricated - see the _global note.",
