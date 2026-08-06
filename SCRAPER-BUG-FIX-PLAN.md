@@ -112,7 +112,18 @@ Scope: the 1,073 active-state entries whose domain collides across states. This 
 guessed — the Worcester incident and these two cases both show that a plausible-looking
 domain is routinely the wrong institution.
 
+**Evidence standard for "covered elsewhere" (added 2026-08-05 after three wrong answers).**
+Never establish that a library is already covered by matching names. Library names are mostly
+geography, so the distinctive token is a place name shared by every business in that town —
+this scored "Cary Branch Library" against "Cary Night Market VI" and "Alamance County Public
+Library" against "Barnes & Noble Alamance Crossing". Use `scripts/verify-coverage.js`, which
+enforces: identity by `source_url` host only; the audited scraper excluded from its own
+evidence; three-valued output defaulting to INCONCLUSIVE; `activities` reported separately
+because a venue row produces no events; and database rows only, never scrape-time FOUND counts.
+
 Suggested approach:
+0. `activities` is in scope too — 280 rows across 138 colliding hosts carry the same fabricated
+   URLs, and venue records persist where events expire.
 1. Rank collision groups by active-state entries affected (worst 12 listed in the run above).
 2. For each entry, resolve the real URL from an authoritative source (state library directory,
    the library's own listing), then **fetch it and confirm the institution name, city and state
@@ -236,3 +247,7 @@ move on — this has already happened twice (2026-08-04: `ccrec.recdesk.com`,
 | 2026-08-05 | Phase 0 | Branch `fix/scraper-bugs-2026-08`. Age-detection baseline 24/24 passing. |
 | 2026-08-05 | Phase 1 | **Done, 2/2.** WordPress-NC Pettigrew repointed to verified `pettigrewlibraries.org` (was a Michigan library) + county corrected. WordPress-AL Hightower removed (URL served a Nebraska library; no official site exists) and recorded as a coverage gap. |
 | 2026-08-05 | Phase 2 | **Halted before starting.** Collision analysis showed 68%/72% of CT/VT URLs are unverified, so broadening selectors would ingest other states' events. Superseded by Phase 1b. |
+| 2026-08-05 | Phase 1b (NC) | All 79 colliding NC entries mapped to their real parent system via the State Library of NC directory. Tyrrell County Library fixed. |
+| 2026-08-05 | Phase 1b (NC) | **Group A deletion recommendation REVERSED** — it rested on circular evidence and on mistaking scrape-time FOUND counts for database coverage. All 79 entries need a real URL; Group A/B dissolved. See `reports/nc-url-audit.md`. |
+| 2026-08-05 | Scope | **`activities` table found to carry the same bad seed URLs** — 280 rows on 138 colliding hosts, 261 library-named. Phase 1b must cover activities too. |
+| 2026-08-05 | Tooling | Added `scripts/verify-coverage.js` to make the redundancy question answerable to an evidence standard rather than by name similarity. |

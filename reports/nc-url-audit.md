@@ -181,3 +181,50 @@ branch granularity. Decision deferred to the owner.
 
 **Revised Group A/B split: 18 deletable (pending decision), 6 reclassified to Group B.**
 Group B therefore grows from 55 to 61 entries.
+
+---
+
+## REVERSAL — Group A must NOT be deleted (2026-08-05, later same day)
+
+The earlier recommendation to delete 18 Group A entries is **withdrawn**. It rested on two
+errors, both found by challenging the method rather than the conclusion.
+
+**Error 1 — circular evidence.** "Bragtown Branch Library" was reported as covered by another
+scraper. That venue string is produced by `wordpress-NC` itself, the scraper under audit.
+`Durham County Library` as a `scraper_name` holds exactly **1** event row, not the 15 counted;
+the rest matched on venue-name tokens. The audited scraper's own output was used to prove it
+was redundant.
+
+**Error 2 — scrape-time counts mistaken for coverage.** Group A was justified with figures like
+"LibCal-NC (48 events)". Those come from `LIBRARY-SITE-AUDIT.md`'s FOUND column, which measures
+what a page displayed at scrape time, not what survived dedup, filtering and expiry into the
+database. Live NC event rows per library scraper: Rowan 14, Cumberland 12, Gaston 10, Alamance 7,
+Union 6, Iredell 5, New Hanover 4, Brunswick 1, Durham 1. There are **no** rows under the name
+`LibCal-NC` at all — LibCal writes per-library scraper names.
+
+Meanwhile `wordpress-NC` holds **275** NC event rows, making it the second-largest library event
+producer in the state after `BiblioCommons-NC` (370). Deleting 18 of its entries because other
+scrapers hold 1–14 rows apiece is not supportable.
+
+**Correct status: all 79 colliding entries need a real verified URL.** Group A/B is dissolved.
+The only sound version of the redundancy question is host-based and is now implemented in
+`scripts/verify-coverage.js`. Run against the real question it returns INCONCLUSIVE, because
+`source_url` is only 62% populated on NC event rows — absence of a host cannot prove absence of
+coverage below ~90%.
+
+## NEW — the `activities` table carries the same bad seed URLs
+
+The collision defect is not confined to event scrapers. Measured across all 52,802 activities rows:
+
+- **280 rows** sit on a host that collides across states in the WordPress seed data
+- spread over **138 distinct hosts**; **261** of the rows are library-named
+
+Worked example: `madisonlibrary.org` has **10 activity rows in 10 different states**
+(WV, CT, NC, FL, NH, AL, ME, NJ, GA, MS). One real library, ten venue records. Others:
+`greenvillelibrary.org` 7 rows / 7 states, `berlinlibrary.org` 6 / 6, `marionlibrary.org` 6 / 6.
+
+Direct example found while testing the verifier: NC activity **"Belmont Branch Library"** carries
+`source=https://smcl.org/` — San Mateo County Library, California.
+
+This is arguably worse than the event-side defect: events expire, venue records persist. Phase 1b
+must therefore cover `activities` as well as the WordPress event configs.
