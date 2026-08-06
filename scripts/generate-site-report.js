@@ -104,11 +104,24 @@ function parseIntOrNull(s) {
   return Number.isFinite(n) ? n : null;
 }
 
+// Age of the data the report projects — NOT when the report was generated.
+// Prefer the `## YYYY-MM-DD` run headings Step 3c writes. Fall back to any date in the
+// file, but never past today: these files quote future event dates in prose, and a naive
+// max picked up 2026-11-05 as the "data date".
+function newestDate(md, today) {
+  const heads = (md.match(/^#{1,3}\s+.*?(20\d{2}-\d{2}-\d{2})/gm) || [])
+    .map(h => (h.match(/20\d{2}-\d{2}-\d{2}/) || [])[0]).filter(Boolean);
+  const pool = (heads.length ? heads : (md.match(/20\d{2}-\d{2}-\d{2}/g) || []))
+    .filter(d => !today || d <= today).sort();
+  return pool.length ? pool[pool.length - 1] : '';
+}
+
 // ---------------------------------------------------------------- load sources
 
 function loadSites() {
   if (!fs.existsSync(LIB_MD)) return { rows: [], error: 'LIBRARY-SITE-AUDIT.md not found' };
   const md = fs.readFileSync(LIB_MD, 'utf8');
+  const dataDate = newestDate(md, new Date().toISOString().slice(0,10));
   const raw = tableRows(md, /Library Website\s*\|\s*State/i, 5);
   const rows = raw.map(c => {
     const { n, note } = parseCount(c[3]);
@@ -120,12 +133,13 @@ function loadSites() {
     const gap = note || (/aggregate|not itemized|no per-library/i.test(site) ? 'aggregate row' : '');
     return [site, state, scraper, n, gap, url, kind];
   });
-  return { rows, error: raw.length ? '' : 'no parseable rows in LIBRARY-SITE-AUDIT.md' };
+  return { rows, dataDate, error: raw.length ? '' : 'no parseable rows in LIBRARY-SITE-AUDIT.md' };
 }
 
 function loadAges() {
   if (!fs.existsSync(AGE_MD)) return { rows: [], error: 'AGE-RANGE-AUDIT.md not found' };
   const md = fs.readFileSync(AGE_MD, 'utf8');
+  const dataDate = newestDate(md, new Date().toISOString().slice(0,10));
   const raw = tableRows(md, /Site\s*\|\s*Scraper\s*\|\s*All Ages/i, 10);
   const rows = raw.map(c => {
     const nums = [2, 3, 4, 5, 6, 7, 8].map(i => parseIntOrNull(c[i]));
@@ -140,7 +154,7 @@ function loadAges() {
     if (total === null) total = sum;
     return [c[0] || MISSING, c[1] || MISSING, ...brackets, total, url, kind, totalNote];
   });
-  return { rows, error: raw.length ? '' : 'no parseable rows in AGE-RANGE-AUDIT.md' };
+  return { rows, dataDate, error: raw.length ? '' : 'no parseable rows in AGE-RANGE-AUDIT.md' };
 }
 
 function loadComments() {
@@ -289,7 +303,7 @@ function jsonLiteral(v) {
 }
 
 function buildHtml(data) {
-  const { sites, ages, comments, roster, coverage, runDate, notes, fixQueue, globalNote, pending } = data;
+  const { sites, ages, comments, roster, coverage, runDate, notes, fixQueue, globalNote, pending, libDate, ageDate } = data;
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -341,7 +355,8 @@ header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:2
   padding-bottom:18px;margin-bottom:22px;border-bottom:1px solid var(--border)}
 header.top h1{font-size:30px;letter-spacing:-.01em;margin-top:4px}
 header.top .sub{color:var(--text-dim);margin-top:6px;font-size:13.5px;max-width:66ch}
-.run-date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--text-dim);
+.run-date .asof{font-size:11px;color:var(--text-faint);font-variant-numeric:tabular-nums}
+.run-date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--text-dim);text-align:right;line-height:1.5;
   background:var(--surface-2);border:1px solid var(--border);border-radius:999px;padding:5px 13px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:8px}
 .stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px 15px;box-shadow:var(--shadow)}
@@ -442,7 +457,7 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--border);color
     <h1>Sites, events, and age tagging</h1>
     <div class="sub">Every active scraper and every individual site from the current 3-day audit cycle. Rows with missing data are kept and marked, never dropped.</div>
   </div>
-  <div class="run-date">Generated ${esc(runDate)}</div>
+  <div class="run-date">Generated ${esc(runDate)}<br><span class="asof">library data ${esc(libDate || "?")} &middot; age data ${esc(ageDate || "?")}</span></div>
 </header>
 
 <div class="stats" id="stat-row"></div>
@@ -558,6 +573,9 @@ const FIXQUEUE = ${jsonLiteral(fixQueue)};
 const GLOBAL_NOTE = ${jsonLiteral(globalNote)};
 const PENDING = ${jsonLiteral(pending)};
 const NOTES = ${jsonLiteral(notes)};
+const LIB_DATE = ${jsonLiteral(libDate || '')};
+const AGE_DATE = ${jsonLiteral(ageDate || '')};
+const RUN_DATE = ${jsonLiteral(runDate)};
 const KNOWN_LEGIT = new Set(${jsonLiteral(KNOWN_LEGIT_ALL_AGES)});
 const MISSING = ${jsonLiteral(MISSING)};
 
@@ -609,6 +627,14 @@ const FLAGGED = AGES
 
   const b = [];
   if(NOTES.length) NOTES.forEach(n => b.push('<div class="banner warn">'+esc(n)+'</div>'));
+  const stale = [LIB_DATE, AGE_DATE].filter(d => d && d < RUN_DATE);
+  if(stale.length){
+    b.push('<div class="banner warn"><b>Counts and links below are last-scrape data, not current config.</b> '
+      + 'The library audit is dated ' + esc(LIB_DATE || '?') + ' and the age audit ' + esc(AGE_DATE || '?')
+      + ', while this page was generated ' + esc(RUN_DATE) + '. Scraper config edits made since the last run '
+      + '(corrected URLs, renamed scrapers) will NOT appear here until those scrapers run again and Steps 3b/3c rebuild the audit files. '
+      + 'A Link column showing an old domain means the audit is stale, not that the fix was lost.</div>');
+  }
   if(PENDING && PENDING.length){
     b.push('<div class="banner pending"><b>Pending verification — '+PENDING.length+' item(s).</b> '
       + 'Each is a change already made whose effect has not been observed yet. Confirm it, then delete that entry from <code>reports/fix-notes.json</code>.'
@@ -778,8 +804,8 @@ function main() {
   console.log('Generating site report…');
 
   const notes = [];
-  const { rows: sites, error: sitesErr } = loadSites();
-  const { rows: ages, error: agesErr } = loadAges();
+  const { rows: sites, dataDate: libDate, error: sitesErr } = loadSites();
+  const { rows: ages, dataDate: ageDate, error: agesErr } = loadAges();
   if (sitesErr) notes.push('Library audit: ' + sitesErr + ' — the Library sites tab will be empty.');
   if (agesErr) notes.push('Age audit: ' + agesErr + ' — the Age breakdown and Flagged tabs will be empty.');
 
@@ -857,7 +883,7 @@ function main() {
   console.log(`  fix queue    : ${fixQueue.length} scrapers (${bugs} confirmed bugs, ${pinned} pinned note(s))`);
 
   const runDate = new Date().toISOString().slice(0, 10);
-  const html = buildHtml({ sites, ages, comments, roster, coverage, runDate, notes, fixQueue, globalNote, pending });
+  const html = buildHtml({ sites, ages, comments, roster, coverage, runDate, notes, fixQueue, globalNote, pending, libDate, ageDate });
 
   fs.mkdirSync(path.dirname(OUT_HTML), { recursive: true });
   fs.writeFileSync(OUT_HTML, html);
