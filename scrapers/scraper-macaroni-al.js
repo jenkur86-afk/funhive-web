@@ -488,7 +488,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
         metadata: {
           source: 'Macaroni Kid Alabama Scraper',
           sourceUrl: site.url,
-          scraperName: 'MacaroniKid-AL',
+          scraperName: `MacaroniKid-AL-${site.url.replace(/^https?:\/\//, '').split('.')[0]}`,
           sourceName: `Macaroni Kid ${site.name}`,
           county: site.county,
           state: 'AL',
