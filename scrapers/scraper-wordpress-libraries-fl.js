@@ -44,31 +44,45 @@ const ngeohash = require('ngeohash');
  */
 
 const LIBRARIES = [
+  // These five entries had NO city/state at all and every one carried
+  // county: 'Baltimore City' — a Maryland county, copy-pasted from an MD seed
+  // file. With no city/state the geocoding chain had nothing to work with, and
+  // the bogus county made getCountyCentroid() return null (it normalizes away a
+  // " County" suffix but cannot rescue a county that is in the wrong state), so
+  // all five of Florida's largest library systems fell through to the FL state
+  // centroid. Corrected 2026-08-05 to each system's main-branch location; county
+  // values match the bare keys in utils/county-centroids.js exactly so they hit
+  // that lookup's exact-match pass.
   {
     "name": "Miami-Dade Public Library System",
     "url": "https://www.mdpls.org",
     "platform": "wordpress",
-    "eventsUrl": "https://www.mdpls.org/events", county: 'Baltimore City'},
+    "eventsUrl": "https://www.mdpls.org/events",
+    city: 'Miami', state: 'FL', zipCode: '33130', county: 'Miami-Dade'},
   {
     "name": "Orange County Library System",
     "url": "https://www.ocls.org",
     "platform": "wordpress",
-    "eventsUrl": "https://www.ocls.org/events", county: 'Baltimore City'},
+    "eventsUrl": "https://www.ocls.org/events",
+    city: 'Orlando', state: 'FL', zipCode: '32801', county: 'Orange'},
   {
     "name": "Tampa-Hillsborough County Public Library",
     "url": "https://www.hcplc.org",
     "platform": "wordpress",
-    "eventsUrl": "https://attend.hcplc.org", county: 'Baltimore City'},
+    "eventsUrl": "https://attend.hcplc.org",
+    city: 'Tampa', state: 'FL', zipCode: '33602', county: 'Hillsborough'},
   {
     "name": "Broward County Library",
     "url": "https://www.broward.org/library",
     "platform": "wordpress",
-    "eventsUrl": "https://www.broward.org/library/events", county: 'Baltimore City'},
+    "eventsUrl": "https://www.broward.org/library/events",
+    city: 'Fort Lauderdale', state: 'FL', zipCode: '33301', county: 'Broward'},
   {
     "name": "Palm Beach County Library System",
     "url": "https://www.pbclibrary.org",
     "platform": "wordpress",
-    "eventsUrl": "https://www.pbclibrary.org/events", county: 'Baltimore City'},
+    "eventsUrl": "https://www.pbclibrary.org/events",
+    city: 'West Palm Beach', state: 'FL', zipCode: '33406', county: 'Palm Beach'},
   // Additional libraries from spreadsheet coverage expansion
   { name: 'Alachua Branch Library', url: 'https://www.alachualibrary.org', eventsUrl: 'https://www.alachualibrary.org/events', city: 'Alachua', state: 'FL', zipCode: '00000', county: 'Alachua County'},
   { name: 'Desoto County Library', url: 'https://www.arcadialibrary.org', eventsUrl: 'https://www.arcadialibrary.org/events', city: 'Arcadia', state: 'FL', zipCode: '00000', county: 'Arcadia County'},

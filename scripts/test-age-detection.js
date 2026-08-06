@@ -61,7 +61,26 @@ const CASES = [
   ['Makerspace Robotics', '', 'Kids (6-8)', 'explicit grade range', 'Grades 3-5 welcome.'],
   ['Robotics Lab', '', 'Kids (6-8)', 'elementary must not land in Preschool', 'Open to elementary students.'],
 
+  // --- storytime / tots: the most common children's program names -----------
+  // Added 2026-08-05. Bare "Storytime" carried no age signal at all and every
+  // unqualified one defaulted to All Ages — confirmed live across 15 flagged
+  // Barnes & Noble store calendars and a dozen library sites.
+  ['Weekly Storytime', '', 'Preschool (3-5)', 'bare storytime must not be All Ages'],
+  ['Saturday Storytime', 'All Ages', 'Preschool (3-5)', 'supplied catch-all vs bare storytime'],
+  ['Story Hour', '', 'Preschool (3-5)', 'story hour variant'],
+  ['Bookworms Storytime', '', 'Preschool (3-5)', 'branded storytime still resolves'],
+  ['Tot Time', '', 'Babies & Toddlers (0-2)', 'tots keyword'],
+  ['Wild Tykes', '', 'Babies & Toddlers (0-2)', 'tykes keyword'],
+  // ordering: a more specific keyword must still win over the generic storytime rule
+  ['Toddler Storytime', '', 'Babies & Toddlers (0-2)', 'qualified storytime keeps its specific bracket'],
+  ['Preschool Storytime', '', 'Preschool (3-5)', 'qualified storytime keeps its specific bracket'],
+  ['Tiny Tots Storytime', '', 'Babies & Toddlers (0-2)', 'tots must beat the generic storytime rule'],
+
   // --- NEGATIVE CONTROLS: must stay All Ages. Do not delete. -----------------
+  // Guards on the storytime rule above — each is a real false-positive shape.
+  ['Family Storytime', '', 'All Ages', 'family storytime must stay All Ages'],
+  ['Storytime for Adults', '', 'All Ages', 'adult storytime must not become a kids event'],
+  ['Book Club in the Storytime Room', '', 'All Ages', 'venue mention is not an audience'],
   ['Adventures in Acrylics 1:00 - 2:30p', 'All Ages', 'All Ages', 'time must not read as ages'],
   ['2608-2026 Swim Lessons Level 3', 'All Ages', 'All Ages', 'registration ID must not read as ages'],
   ['Route 66 Heritage Festival', '', 'All Ages', 'route number must not read as ages'],

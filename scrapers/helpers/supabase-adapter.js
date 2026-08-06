@@ -498,6 +498,41 @@ function detectAgeRange(name, description) {
   // preschool/toddler/baby keywords before reaching here. Verified 2026-08-04.
   if (/\b(kids?|children)\b/.test(text) && !/\bfamil(y|ies)\b/.test(text)) return '6-12';
 
+  // "Tots" and "tykes" are unambiguous young-child words that the baby/toddler
+  // keywords above miss entirely ("Tot Time", "Tiny Tots Storytime", "Wild
+  // Tykes"). Checked before the storytime rule below so "Tiny Tots Storytime"
+  // resolves on the more specific signal rather than the generic one.
+  if (/\b(tots?|tykes?)\b/.test(text) && !/\bfamil(y|ies)\b/.test(text)) return '1-3';
+
+  // Storytime is the most common name for a children's program at both libraries
+  // and bookstores, and carried no age signal at all until 2026-08-05 — a bare
+  // "Weekly Storytime" / "Saturday Storytime" fell straight through to All Ages.
+  // Confirmed live against Barnes & Noble store calendars (15 stores were flagged
+  // >=70% All Ages that day) and a dozen library MISMATCHes recorded in
+  // reports/verification-comments.json.
+  //
+  // This deliberately sits AFTER every specific keyword above, so it only ever
+  // catches the UNQUALIFIED case: "Toddler Storytime", "Baby Storytime" and
+  // "Preschool Storytime" already returned at their own rules and never reach
+  // here. That ordering is what makes the rule safe to add at all.
+  //
+  // 3-5 (Preschool), not 0-5: an unqualified storytime's modal audience is
+  // preschoolers — libraries label the younger sessions explicitly ("Baby
+  // Storytime", "Lap Sit") and those are caught above. 3-5 also yields one clean
+  // bracket, whereas 0-5 spans two and getBrackets() collapses a multi-bracket
+  // range to its LOWEST, which would file every storytime under Babies &
+  // Toddlers and hide it from the preschool filter.
+  //
+  // Guards, each covering a known false-positive shape: "Family Storytime" must
+  // stay All Ages (same !family guard the kids/children rule uses); an
+  // adult-audience storytime must not become a children's event; and "...in the
+  // Storytime Room" is a venue mention rather than an audience — the same
+  // venue-name false positive that "elementary" hit on 2026-08-03.
+  const isStorytime = /\b(story\s*times?|story\s*hours?)\b/.test(text);
+  const storytimeIsVenueMention = /\bstory\s*time\s+room\b/.test(text);
+  if (isStorytime && !storytimeIsVenueMention
+      && !/\bfamil(y|ies)\b/.test(text) && !/\badults?\b/.test(text)) return '3-5';
+
   // Family / all ages
   if (/\ball\s*ages\b/.test(text)) return 'All Ages';
   if (/\bfamil(y|ies)\b/.test(text)) return 'All Ages';
