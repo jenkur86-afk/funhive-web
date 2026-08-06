@@ -75,5 +75,10 @@
     "note": "Two collisions fixed 2026-08-05 and their bad data deleted: Greenville Public Library (was on greenvillelibrary.org = Greenville County SC) repointed to greenville.lib.ny.us, and Phillips Free Library (was on homerlibrary.org = Homer Glen IL) repointed to phillipsfreelibrary.org. Both verified live with ZIPs matching the config. 226 orphan rows removed. NOTE this file is the largest in the family at 422 entries and 416 of its county values are fabricated - see the _global note.",
     "priority": "normal",
     "added": "2026-08-05"
+  },
+  "WordPress-SC": {
+    "note": "Found during the WordPress-NC Phase 2 pass 2026-08-05: 'Lexington County Library - Gaston' is configured with gastonlibrary.org, which is verified to be Gaston County Public Library in NORTH CAROLINA. The town of Gaston SC is served by Lexington County Library, and its county value 'Gaston County' is also wrong - Gaston SC is in Lexington County. Both need the real Lexington County Library URL researched and verified live. Not fixed during the NC pass to stay in scope.",
+    "priority": "high",
+    "added": "2026-08-05"
   }
 }
