@@ -317,10 +317,16 @@
       "expect": "Two previously-uncovered county library systems now configured. Extraction unproven - this scraper is WordPress-DOM-specific and Ruth Enlow hosts its calendar on librarymarket, so a correct URL may still return zero.",
       "confirm": "npm run scraper -- --scraper WordPress-MD   then check FOUND for Ruth Enlow and Kent County",
       "added": "2026-08-06"
+    },
+    "LibCal-VA2": {
+      "what": "Newly registered 2026-08-06 — has never run in production",
+      "expect": "11 VA library systems that had ZERO library rows: Fairfax County (the state largest), Arlington, Prince William, Richmond, Norfolk, Newport News, Hampton, Roanoke, Suffolk, Williamsburg Regional, Library of Virginia. Watch the FIRST run closely: this file has never executed. Check FOUND is nonzero, INVALID is low, scraper_name reads LibCal-VA2, and source_url carries the libcal host rather than the library homepage.",
+      "confirm": "npm run scraper -- --scraper LibCal-VA2   then check scrapers/logs/scraper-summary.log and node scripts/check-scraper-names.js",
+      "added": "2026-08-06"
     }
   },
   "LibCal-VA": {
-    "note": "ORPHANED SIBLING FILE 2026-08-06: scrapers/scraper-libcal-libraries-va.js exists, passes node -c, has been maintained since 2026-04-08 (last touched 2026-04-28) and configures 11 VA library systems - but NO registry entry points at it, so it has never run. Seven of its systems have ZERO library-scraper rows in the database: Prince William Public Library System, Newport News, Hampton, Roanoke, Suffolk, Williamsburg Regional, and the Library of Virginia. The registered shared LibCal file contains none of them, so there is no overlap. Prince William's LibCal was verified live with dated August 2026 events. Registering it needs a new key (LibCal-VA2, following the LibCal-NY1/NY2 precedent) and its SCRAPER_NAME changed from 'libcal-VA' to match.",
+    "note": "ORPHANED SIBLING FILE 2026-08-06: scrapers/scraper-libcal-libraries-va.js exists, passes node -c, has been maintained since 2026-04-08 (last touched 2026-04-28) and configures 11 VA library systems - but NO registry entry points at it, so it has never run. Seven of its systems have ZERO library-scraper rows in the database: Prince William Public Library System, Newport News, Hampton, Roanoke, Suffolk, Williamsburg Regional, and the Library of Virginia. The registered shared LibCal file contains none of them, so there is no overlap. Prince William's LibCal was verified live with dated August 2026 events. RESOLVED 2026-08-06: registered as LibCal-VA2 (group 3), SCRAPER_NAME corrected to LibCal-VA2, and sourceUrl repointed from the library homepage to library.eventsUrl, the page the scraper actually fetches. Never run in production - see _pending.",
     "priority": "high",
     "added": "2026-08-06"
   },

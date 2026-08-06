@@ -183,6 +183,13 @@ const SCRAPERS = {
   // WordPress-AL and Communico-AL for its other libraries.
   'LibCal-ME': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalME', type: 'puppeteer', group: 3, state: 'ME' },
   'LibCal-VT': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalVT', type: 'puppeteer', group: 2, state: 'VT' },
+  // 2026-08-06: scraper-libcal-libraries-va.js existed since 2026-04-08 and was maintained since,
+  // but no registry entry pointed at it, so it never ran. It configures 11 VA library systems —
+  // Fairfax County (the state's largest), Arlington, Prince William, Richmond, Norfolk, Newport
+  // News, Hampton, Roanoke, Suffolk, Williamsburg Regional and the Library of Virginia — none of
+  // which had a single library-scraper row in the database. The registered shared LibCal file
+  // does not cover the seven largest of them. Group 3 chosen as the smallest rotation group.
+  'LibCal-VA2': { file: './scraper-libcal-libraries-va.js', exportName: 'scrapeLibCalEvents', type: 'puppeteer', group: 3, state: 'VA' },
   'LibCal-KY': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalKY', type: 'puppeteer', group: 1, state: 'KY' },
 
   // ============================================================================

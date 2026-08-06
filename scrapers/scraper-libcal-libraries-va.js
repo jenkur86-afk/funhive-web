@@ -143,7 +143,7 @@ const LIBRARIES = [
   }
 ];
 
-const SCRAPER_NAME = 'libcal-VA';
+const SCRAPER_NAME = 'LibCal-VA2';
 
 async function scrapeLibCalEvents() {
   const browser = await launchBrowser();
@@ -219,7 +219,7 @@ async function scrapeLibCalEvents() {
           state: 'VA',
           metadata: {
             sourceName: library.name,
-            sourceUrl: library.url,
+            sourceUrl: library.eventsUrl,
             scrapedAt: new Date().toISOString(),
             scraperName: SCRAPER_NAME,
             category: 'library',
