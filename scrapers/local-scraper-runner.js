@@ -393,7 +393,7 @@ async function runMacaroniGroup(group, options = {}) {
 
   if (!fs.existsSync(scriptPath)) {
     log(`❌ MacaroniKid runner not found: ${scriptPath}`, 'error');
-    return { success: [], failed: [{ name: `MacaroniKid-Group${group}`, error: 'runner script not found' }], skipped: [] };
+    return { success: [], failed: [{ success: false, name: `MacaroniKid-Group${group}`, error: 'runner script not found' }], skipped: [] };
   }
 
   log(`\n${'='.repeat(60)}`);
@@ -407,15 +407,19 @@ async function runMacaroniGroup(group, options = {}) {
 
   if (result.error) {
     log(`❌ Failed to launch macaroni-runner-group${group}.js: ${result.error.message}`, 'error');
-    return { success: [], failed: [{ name: `MacaroniKid-Group${group}`, error: result.error.message }], skipped: [] };
+    return { success: [], failed: [{ success: false, name: `MacaroniKid-Group${group}`, error: result.error.message }], skipped: [] };
   }
 
   const ok = result.status === 0;
   log(`${ok ? '✅' : '❌'} macaroni-runner-group${group}.js finished with exit code ${result.status}`);
 
+  // formatSummaryRow() branches on r.success, so every entry pushed into either
+  // array must set it explicitly — this entry has no per-site stats (the child
+  // process logs its own rows into scraper-summary.log via the shared logger),
+  // so it renders as a zero-found success row rather than a stats line.
   return ok
-    ? { success: [{ name: `MacaroniKid-Group${group}` }], failed: [], skipped: [] }
-    : { success: [], failed: [{ name: `MacaroniKid-Group${group}`, error: `exit code ${result.status}` }], skipped: [] };
+    ? { success: [{ success: true, name: `MacaroniKid-Group${group}` }], failed: [], skipped: [] }
+    : { success: [], failed: [{ success: false, name: `MacaroniKid-Group${group}`, error: `exit code ${result.status}` }], skipped: [] };
 }
 
 async function runSingleScraper(scraperName, options = {}) {
