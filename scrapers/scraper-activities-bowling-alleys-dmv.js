@@ -23,7 +23,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'BowlingAlleys-Eastern';
+const SCRAPER_NAME = 'VenueList-BowlingAlleys-DMV';
 
 // ==========================================
 // VENUE DATA - DMV Bowling Alleys

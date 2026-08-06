@@ -28,7 +28,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'ChildrensMuseums-Eastern';
+const SCRAPER_NAME = 'VenueList-ChildrensMuseums-DMV';
 
 // ==========================================
 // VENUE DATA - DMV Children's Museums & Discovery Centers

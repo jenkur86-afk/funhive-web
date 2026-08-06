@@ -23,7 +23,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'MinigolfBatting-Eastern';
+const SCRAPER_NAME = 'VenueList-MinigolfBatting-DMV';
 
 // ==========================================
 // VENUE DATA - DMV Mini Golf & Batting Cages

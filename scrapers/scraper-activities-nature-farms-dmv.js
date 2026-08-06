@@ -25,7 +25,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'NatureFarms-Eastern';
+const SCRAPER_NAME = 'VenueList-NatureFarms-DMV';
 
 // ==========================================
 // VENUE DATA - DMV Nature Centers & Farms

@@ -27,7 +27,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'MovieTheaters-Eastern';
+const SCRAPER_NAME = 'VenueList-MovieTheaters-DMV';
 
 // ==========================================
 // VENUE DATA - DMV Movie Theaters

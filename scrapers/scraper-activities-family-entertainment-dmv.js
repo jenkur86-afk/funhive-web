@@ -27,7 +27,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'FamilyEntertainment-Eastern';
+const SCRAPER_NAME = 'VenueList-FamilyEntertainment-DMV';
 
 // ==========================================
 // VENUE DATA - DMV Family Entertainment Centers

@@ -27,7 +27,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'EasternUS-Activities';
+const SCRAPER_NAME = 'VenueList-Eastern-US';
 const DATA_FILE = path.join(__dirname, 'data', 'eastern-us-venues.json');
 const GEOCODE_CACHE_FILE = path.join(__dirname, '.geocode-cache.json');
 

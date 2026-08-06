@@ -26,7 +26,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'TrampolineNinja-Eastern';
+const SCRAPER_NAME = 'VenueList-TrampolineNinja-DMV';
 
 // ==========================================
 // VENUE DATA - DMV Trampoline & Ninja Parks

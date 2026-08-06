@@ -24,7 +24,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'SwimmingPools-Eastern';
+const SCRAPER_NAME = 'VenueList-SwimmingPools-DMV';
 
 // ==========================================
 // VENUE DATA - DMV Swimming Pools & Aquatic Centers

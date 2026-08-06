@@ -25,7 +25,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'ScienceDiscovery-Eastern';
+const SCRAPER_NAME = 'VenueList-ScienceDiscovery-DMV';
 
 // ==========================================
 // VENUE DATA - DMV Science & Discovery Centers

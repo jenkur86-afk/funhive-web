@@ -49,12 +49,12 @@ The 93 registered-but-inactive entries are out of scope by design.
 *Venue scrapers.* They write to `activities`, not `events`. Listed for completeness only; no
 further planning info applies.
 
-`Activities-ArtStudios-DMV`, `Activities-BowlingAlleys-DMV`, `Activities-ChildrensMuseums-DMV`,
-`Activities-ClimbingGyms-DMV`, `Activities-Eastern-US`, `Activities-FamilyEntertainment-DMV`,
-`Activities-GymnasticsCenters-DMV`, `Activities-IceRinks-DMV`, `Activities-IndoorPlaygrounds-DMV`,
-`Activities-MinigolfBatting-DMV`, `Activities-MovieTheaters-DMV`, `Activities-NatureFarms-DMV`,
-`Activities-RollerSkating-DMV`, `Activities-ScienceDiscovery-DMV`, `Activities-SwimmingPools-DMV`,
-`Activities-TrampolineNinja-DMV`
+`VenueList-ArtStudios-DMV`, `VenueList-BowlingAlleys-DMV`, `VenueList-ChildrensMuseums-DMV`,
+`VenueList-ClimbingGyms-DMV`, `VenueList-Eastern-US`, `VenueList-FamilyEntertainment-DMV`,
+`VenueList-GymnasticsCenters-DMV`, `VenueList-IceRinks-DMV`, `VenueList-IndoorPlaygrounds-DMV`,
+`VenueList-MinigolfBatting-DMV`, `VenueList-MovieTheaters-DMV`, `VenueList-NatureFarms-DMV`,
+`VenueList-RollerSkating-DMV`, `VenueList-ScienceDiscovery-DMV`, `VenueList-SwimmingPools-DMV`,
+`VenueList-TrampolineNinja-DMV`
 
 > One caveat: these are *hand-curated hardcoded venue lists*, not live discovery. A new venue
 > never appears until someone adds it. Automated OSM discovery was attempted twice and

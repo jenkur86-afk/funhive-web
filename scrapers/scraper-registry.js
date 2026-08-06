@@ -822,21 +822,21 @@ const SCRAPERS = {
   // ============================================================================
   // DMV ACTIVITY SCRAPERS + PARKS
   // ============================================================================
-  'Activities-ArtStudios-DMV': { file: './scraper-activities-art-studios-dmv.js', exportName: 'scrapeArtStudiosDMV', type: 'puppeteer', group: 1, state: 'Multi' },
-  'Activities-BowlingAlleys-DMV': { file: './scraper-activities-bowling-alleys-dmv.js', exportName: 'scrapeBowlingAlleysDMV', type: 'puppeteer', group: 2, state: 'Multi' },
-  'Activities-ChildrensMuseums-DMV': { file: './scraper-activities-childrens-museums-dmv.js', exportName: 'scrapeChildrensMuseumsDMV', type: 'puppeteer', group: 3, state: 'Multi' },
-  'Activities-ClimbingGyms-DMV': { file: './scraper-activities-climbing-gyms-dmv.js', exportName: 'scrapeClimbingGymsDMV', type: 'puppeteer', group: 1, state: 'Multi' },
-  'Activities-FamilyEntertainment-DMV': { file: './scraper-activities-family-entertainment-dmv.js', exportName: 'scrapeFamilyEntertainmentDMV', type: 'puppeteer', group: 2, state: 'Multi' },
-  'Activities-GymnasticsCenters-DMV': { file: './scraper-activities-gymnastics-centers-dmv.js', exportName: 'scrapeGymnasticsCentersDMV', type: 'puppeteer', group: 3, state: 'Multi' },
-  'Activities-IceRinks-DMV': { file: './scraper-activities-ice-rinks-dmv.js', exportName: 'scrapeIceRinksDMV', type: 'puppeteer', group: 1, state: 'Multi' },
-  'Activities-IndoorPlaygrounds-DMV': { file: './scraper-activities-indoor-playgrounds-dmv.js', exportName: 'scrapeIndoorPlaygroundsDMV', type: 'puppeteer', group: 2, state: 'Multi' },
-  'Activities-MinigolfBatting-DMV': { file: './scraper-activities-minigolf-batting-dmv.js', exportName: 'scrapeMinigolfBattingDMV', type: 'puppeteer', group: 3, state: 'Multi' },
-  'Activities-MovieTheaters-DMV': { file: './scraper-activities-movie-theaters-dmv.js', exportName: 'scrapeMovieTheatersDMV', type: 'puppeteer', group: 1, state: 'Multi' },
-  'Activities-NatureFarms-DMV': { file: './scraper-activities-nature-farms-dmv.js', exportName: 'scrapeNatureFarmsDMV', type: 'puppeteer', group: 2, state: 'Multi' },
-  'Activities-RollerSkating-DMV': { file: './scraper-activities-roller-skating-dmv.js', exportName: 'scrapeRollerSkatingDMV', type: 'puppeteer', group: 3, state: 'Multi' },
-  'Activities-ScienceDiscovery-DMV': { file: './scraper-activities-science-discovery-dmv.js', exportName: 'scrapeScienceDiscoveryDMV', type: 'puppeteer', group: 1, state: 'Multi' },
-  'Activities-SwimmingPools-DMV': { file: './scraper-activities-swimming-pools-dmv.js', exportName: 'scrapeSwimmingPoolsDMV', type: 'puppeteer', group: 2, state: 'Multi' },
-  'Activities-TrampolineNinja-DMV': { file: './scraper-activities-trampoline-ninja-dmv.js', exportName: 'scrapeTrampolineNinjaDMV', type: 'puppeteer', group: 3, state: 'Multi' },
+  'VenueList-ArtStudios-DMV': { file: './scraper-activities-art-studios-dmv.js', exportName: 'scrapeArtStudiosDMV', type: 'puppeteer', group: 1, state: 'Multi' },
+  'VenueList-BowlingAlleys-DMV': { file: './scraper-activities-bowling-alleys-dmv.js', exportName: 'scrapeBowlingAlleysDMV', type: 'puppeteer', group: 2, state: 'Multi' },
+  'VenueList-ChildrensMuseums-DMV': { file: './scraper-activities-childrens-museums-dmv.js', exportName: 'scrapeChildrensMuseumsDMV', type: 'puppeteer', group: 3, state: 'Multi' },
+  'VenueList-ClimbingGyms-DMV': { file: './scraper-activities-climbing-gyms-dmv.js', exportName: 'scrapeClimbingGymsDMV', type: 'puppeteer', group: 1, state: 'Multi' },
+  'VenueList-FamilyEntertainment-DMV': { file: './scraper-activities-family-entertainment-dmv.js', exportName: 'scrapeFamilyEntertainmentDMV', type: 'puppeteer', group: 2, state: 'Multi' },
+  'VenueList-GymnasticsCenters-DMV': { file: './scraper-activities-gymnastics-centers-dmv.js', exportName: 'scrapeGymnasticsCentersDMV', type: 'puppeteer', group: 3, state: 'Multi' },
+  'VenueList-IceRinks-DMV': { file: './scraper-activities-ice-rinks-dmv.js', exportName: 'scrapeIceRinksDMV', type: 'puppeteer', group: 1, state: 'Multi' },
+  'VenueList-IndoorPlaygrounds-DMV': { file: './scraper-activities-indoor-playgrounds-dmv.js', exportName: 'scrapeIndoorPlaygroundsDMV', type: 'puppeteer', group: 2, state: 'Multi' },
+  'VenueList-MinigolfBatting-DMV': { file: './scraper-activities-minigolf-batting-dmv.js', exportName: 'scrapeMinigolfBattingDMV', type: 'puppeteer', group: 3, state: 'Multi' },
+  'VenueList-MovieTheaters-DMV': { file: './scraper-activities-movie-theaters-dmv.js', exportName: 'scrapeMovieTheatersDMV', type: 'puppeteer', group: 1, state: 'Multi' },
+  'VenueList-NatureFarms-DMV': { file: './scraper-activities-nature-farms-dmv.js', exportName: 'scrapeNatureFarmsDMV', type: 'puppeteer', group: 2, state: 'Multi' },
+  'VenueList-RollerSkating-DMV': { file: './scraper-activities-roller-skating-dmv.js', exportName: 'scrapeRollerSkatingDMV', type: 'puppeteer', group: 3, state: 'Multi' },
+  'VenueList-ScienceDiscovery-DMV': { file: './scraper-activities-science-discovery-dmv.js', exportName: 'scrapeScienceDiscoveryDMV', type: 'puppeteer', group: 1, state: 'Multi' },
+  'VenueList-SwimmingPools-DMV': { file: './scraper-activities-swimming-pools-dmv.js', exportName: 'scrapeSwimmingPoolsDMV', type: 'puppeteer', group: 2, state: 'Multi' },
+  'VenueList-TrampolineNinja-DMV': { file: './scraper-activities-trampoline-ninja-dmv.js', exportName: 'scrapeTrampolineNinjaDMV', type: 'puppeteer', group: 3, state: 'Multi' },
   'KidsOutAndAbout-DMV': { file: './scraper-kidsoutandabout-dmv.js', exportName: 'scrapeKidsOutAndAboutDMV', type: 'puppeteer', group: 1, state: 'Multi' },
   'Montgomery-Parks': { file: './scraper-montgomery-parks-md.js', exportName: 'scrapeMontgomeryParks', type: 'puppeteer', group: 2, state: 'MD' },
   'AARecParks-MD': { file: './scraper-aarecparks-md.js', exportName: 'scrapeAARecParks', type: 'puppeteer', group: 3, state: 'MD' },
@@ -869,7 +869,7 @@ const SCRAPERS = {
   // ============================================================================
   // EASTERN US VENUE/ACTIVITY SCRAPER (data-driven)
   // ============================================================================
-  'Activities-Eastern-US': { file: './scraper-activities-eastern-us.js', exportName: 'scrapeEasternUSActivities', type: 'puppeteer', group: 2, state: 'Multi' },
+  'VenueList-Eastern-US': { file: './scraper-activities-eastern-us.js', exportName: 'scrapeEasternUSActivities', type: 'puppeteer', group: 2, state: 'Multi' },
 
   // ============================================================================
   // PHASE 4: MAJOR VENUE EVENT SCRAPERS (data-driven, multi-state)

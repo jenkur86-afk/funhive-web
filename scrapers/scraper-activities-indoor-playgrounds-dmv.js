@@ -22,7 +22,7 @@ const ngeohash = require('ngeohash');
 const { admin, db } = require('./helpers/supabase-adapter');
 const { getOrCreateActivity } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'IndoorPlaygrounds-Eastern';
+const SCRAPER_NAME = 'VenueList-IndoorPlaygrounds-DMV';
 
 // ==========================================
 // VENUE DATA - DMV Indoor Playgrounds
