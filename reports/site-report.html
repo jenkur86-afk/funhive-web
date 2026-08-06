@@ -343,8 +343,9 @@ const FLAGGED = AGES
 
   const b = [];
   if(NOTES.length) NOTES.forEach(n => b.push('<div class="banner warn">'+esc(n)+'</div>'));
-  if(missingCount) b.push('<div class="banner"><b>'+missingCount+' of '+ROSTER.length+
-    ' active scrapers have no rows yet this cycle.</b> They are listed in the Coverage tab with status <i>none</i> — most are simply assigned to a rotation group that has not run yet.</div>');
+  // No banner for the no-rows-yet count: the 'Scrapers awaiting this cycle' stat tile already
+  // states it, and every Coverage row carries status 'none' with its own reason. Banners are
+  // reserved for conditions no row or tile can express — currently only audit parse failures.
   document.getElementById('banners').innerHTML = b.join('');
 })();
 
