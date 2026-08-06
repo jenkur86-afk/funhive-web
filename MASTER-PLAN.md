@@ -135,9 +135,15 @@ fix all three.
 the remaining 17 states, then LibCal/Communico/BiblioCommons/LibraryMarket per-library names,
 then the `activities` table.
 
-**Progress:** NC's 79 colliding entries are all mapped to their 51 real parent systems via the
-State Library of NC directory (534 branches), zero ambiguous. 3 fixed. ~35 systems still need a
-verified URL. Detail in `reports/nc-url-audit.md`.
+**Scope note — "not colliding" does not mean "correct".** Each state file also has entries whose
+guessed `{city}library.org` happens to be unique in the fleet, so the collision detector never
+flags them. NC has 9 such entries. They carry the same generator signature and need the same live
+verification. Counting only colliding entries understates the work in every state.
+
+**Progress (NC):** all 79 colliding entries mapped to their 51 real parent systems via the State
+Library of NC directory (534 branches), zero ambiguous. **30 of 89 entries verified and fixed**
+across 10 systems; 59 remain — 50 still colliding plus the 9 non-colliding never checked. Detail
+and the full to-check list in `reports/nc-url-audit.md`.
 
 **Do not** delete an entry as "covered elsewhere" without host-based proof from
 `scripts/verify-coverage.js`. An earlier attempt to delete 18 NC entries was withdrawn: it used
@@ -179,7 +185,56 @@ work that no other phase covers.
 Step 3d verification on fixed sites — a real fix flips `MISMATCH → MATCHES`. Merge verdicts with
 `merge-verification-comments.js`. Regenerate the report; the Fix queue count is the scoreboard.
 
-### Phase 10 — Record 🔄 ONGOING
+### Phase 10 — County-level coverage completeness audit ⬜ FINAL MILESTONE
+
+**The question:** for every county in every active state, is each public library (a) covered and
+producing events, (b) configured but producing nothing, (c) not configured at all, or
+(d) checked and found genuinely unscrapeable? Today nobody can answer this — we know what is
+configured, not what exists.
+
+**Why this is last, and must stay last.** Coverage cannot be measured until URLs point at the
+right institutions (Phase 2) and `scraper_name` joins back to the registry (Defect C). Run it
+before those land and it produces a confident wrong answer — a library whose URL points at
+another state looks "covered", and one whose rows carry a display name looks "missing". That is
+exactly the failure that produced the withdrawn Group A recommendation. Blocked on Phases 2–8.
+
+**Denominator — what exists.** Needs an authoritative list of every public library per county:
+- Per-state library directories. North Carolina's is proven usable — 534 branches with a county
+  column, already used for the Phase 2 mapping (`reports/nc-url-audit.md`).
+- Where a state has no usable directory, fall back to the **IMLS Public Libraries Survey**, which
+  lists every US public library with its county and a stable FSCS ID.
+
+**Numerator — what we configure.** Every configured site across **all** library scraper families,
+not just `WordPress-{state}`: LibCal, Communico, BiblioCommons, LibraryMarket, CustomDrupal,
+LibraryCalendar and the single-system scrapers. Restricting to one family understates coverage
+badly, since most large systems are covered by a platform scraper rather than WordPress.
+
+**Method:**
+1. Build the denominator per county per active state.
+2. Build the numerator across all library families.
+3. Join through the directory's own branch → system mapping, as in Phase 2. **Do not join on
+   name similarity** — library names are geography, and that produced three wrong answers on
+   2026-08-05.
+4. Classify every library into exactly one of:
+   - `COVERED` — configured, and events exist in the DB attributable by `source_url` host
+   - `CONFIGURED-ZERO` — configured but producing nothing; needs a scrape-ability check
+   - `NOT-CONFIGURED` — a real library nobody has added
+   - `UNSCRAPEABLE` — checked, and no usable site exists (e.g. Facebook-only, like Hightower
+     Memorial Library, York AL)
+5. Emit `reports/coverage-by-county.md` plus a Coverage-by-county tab in the site report.
+
+**Rules:**
+- **Every library gets a row**, including unscrapeable ones — the same no-omission rule the rest
+  of the report follows. A missing row and a nonexistent library must never look alike.
+- `UNSCRAPEABLE` must record **why and the date checked**, so it is not re-researched every cycle.
+- `COVERED` requires host evidence from `scripts/verify-coverage.js`, never a name match.
+- Report per-county totals, so gaps concentrate visibly (a county with 8 libraries and 1 covered
+  is a different problem from 8 counties each missing one).
+
+**Output is a coverage number the project does not currently have:** libraries covered / libraries
+that exist, per county, per state — and a defensible list of the ones deliberately not covered.
+
+### Phase 11 — Record 🔄 ONGOING
 One `SCRAPER-FIX-LOG.jsonl` line per logical fix. Update `reports/fix-notes.json`. Commit
 scraper-side paths only.
 
@@ -269,3 +324,6 @@ expanded as well as the names fixed. This widens Phase 2's county work beyond wh
 | 2026-08-06 | Phase 2 (NC) | Batch 1: 15 entries across 4 verified systems repointed + counties fixed. NC collisions 78 -> 67, fleet-wide 559 -> 554 |
 | 2026-08-06 | Tracking | `_pending` added to fix-notes.json and rendered as a report banner, so post-change fallout is tracked in the tooling rather than by memory |
 | 2026-08-06 | Merge | Branch merged to main and pushed (f72749d) so the scheduled diagnosis runs on main with all scripts present |
+| 2026-08-06 | Phase 2 (NC) | Batch 2: 13 entries across 6 more verified systems. NC collisions 67 -> 54, fleet-wide 554 -> 550 |
+| 2026-08-06 | Phase 2 (NC) | Queue corrected: 9 non-colliding NC entries were never checked, so NC is 30 of 89 verified, not 30 of 79 |
+| 2026-08-06 | Phase 10 | County-level coverage completeness audit added as the final milestone, blocked on Phases 2-8 |

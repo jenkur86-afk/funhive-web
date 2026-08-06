@@ -228,3 +228,33 @@ Direct example found while testing the verifier: NC activity **"Belmont Branch L
 
 This is arguably worse than the event-side defect: events expire, venue records persist. Phase 1b
 must therefore cover `activities` as well as the WordPress event configs.
+
+---
+
+## Still to check — the 9 non-colliding NC entries (added 2026-08-06)
+
+Phase 2 only examined the 79 entries whose domain collides across states. The other 10 were
+skipped because their domain is unique in the fleet — which is weak evidence the URL is right,
+and **no evidence at all** that the library is real or that the domain belongs to it. Every one
+still carries the `{city}library.org` signature of the same generator.
+
+Pettigrew Regional Library was the 10th and is already fixed. These 9 remain unverified:
+
+| Library | City | Configured domain | Note |
+|---|---|---|---|
+| Bunn Branch Library | Bunn | `bunnlibrary.org` | generator-shaped |
+| Dobson Community Library | Dobson | `dobsonlibrary.org` | generator-shaped |
+| Farmville Public Library | Farmville | `farmvillelibrary.libguides.com` | LibGuides — not generator-shaped, likely real |
+| Hickory Public Library | Hickory | `hickorylibrary.org` | generator-shaped |
+| Union West Branch Library | Indian Trail | `indiantraillibrary.org` | generator-shaped |
+| King Public Library | King | `kinglibrary.org` | plausible — King is a real Northwestern Regional branch |
+| Franklin County Library | Louisburg | `louisburglibrary.org` | generator-shaped |
+| Roanoke Rapids Public Library | Roanoke Rapids | `roanokerapidslibrary.org` | generator-shaped |
+| Star Branch | Star | `starlibrary.org` | Star is a real Sandhill Regional branch |
+
+Treat these exactly like the colliding ones: confirm the institution, city and state live before
+saving, and match each to its parent system via the State Library of NC directory. A non-colliding
+guessed domain is still a guess — it just happens no other state has a town by that name.
+
+**NC is therefore 30 of 88 done, not 30 of 79.** (89 entries minus the removed Hightower-equivalent
+is not applicable here; NC still has 89 entries, of which 30 are verified and 59 are not.)
