@@ -1689,3 +1689,61 @@ Day 2 of the 3-day rotation. Group 2 ran today (2026-08-05 03:00 EST start), cov
 ### Cycle-completion check
 
 All three rotation groups have now run at least once as of today: Group 1 (2026-08-04, full per-library breakdown), Group 3 (2026-08-04, aggregate-only due to the `scraper-stdout.log` gap noted in the 2026-08-04 section), and Group 2 (2026-08-05, full per-library breakdown, this section). That closes out the first pass of the 3-day cycle, though Group 3's rows remain aggregate-only until it runs again with intact stdout logging — treat those as the one gap still worth re-verifying on the next Group 3 day rather than a completed inventory.
+
+
+## Post-fix addendum: dead domains and cross-state URL collisions
+
+Recorded 2026-08-06. An addendum to the dated inventory sections above, not a new cycle. Every row below was verified against the live site before any config change; nothing here was guessed.
+
+### Dead Communico domains
+
+All three of these hosts 302-redirect to `http://www.google.co.uk/` on both root and `/events`, so none could ever have returned an event. This is why the run log showed API, Puppeteer and link-fallback all failing in sequence.
+
+| Library | Dead host | Outcome |
+|---|---|---|
+| Montclair Public Library, NJ | montclairlibrary.libnet.info | Migrated to LibCal-NJ at `bccls.libcal.com/calendar/montclair` — the library's own site links there |
+| Greenville County Library System, SC | greenville.libnet.info | Entry removed. Site-side gap, see below |
+| Richland Library, SC | richland.libnet.info | Entry removed. Already covered by CustomDrupal-Libraries |
+
+Montclair uses a Montclair-specific calendar id rather than relying on the existing BCCLS `cid=-1` system-wide entry: that scrape files its rows under the BCCLS system venue, and only 2 rows in the entire database mentioned Montclair at all, so its own programming could not be confirmed captured or attributed.
+
+### Cross-state URL collisions
+
+These were **not** silent zeroes. Each was actively ingesting another state's events under the wrong label. The clearest single piece of evidence: an event titled "War in the South Carolina Backcountry" was stored as `Greenville, NY`.
+
+| Entry | Was pointing at | Repointed to | Verified |
+|---|---|---|---|
+| WordPress-NY / Greenville Public Library | Greenville County **SC** | greenville.lib.ny.us | 11177 Rte 32, Greenville NY 12083 — ZIP matches the config |
+| WordPress-NY / Phillips Free Library | Homer Glen **IL** | phillipsfreelibrary.org | 37 South Main St, Homer NY 13077 — ZIP matches the config |
+| WordPress-ME / Shaw Public Library | Greenville County **SC** | shawpubliclibrary.org | 9 Lily Bay Road, Greenville ME 04441 — ZIP matches the config |
+| WordPress-GA / Banks County Public Library | Homer Glen **IL** | Moved to LibCal-GA, prlib.libcal.com | Homer GA 30547, Piedmont Regional's own events link |
+
+`greenvillelibrary.org` is claimed by **10 active states** at once; `homerlibrary.org` by 2. Four are now corrected.
+
+**Orphan cleanup: 269 rows deleted** — 189 South Carolina events labelled NY/ME, and 80 Illinois events labelled NY/GA. These needed explicit deletion rather than being left to a re-scrape: their stable IDs derive from the OLD URLs, so a corrected scrape mints different IDs and would never have overwritten them. They would have persisted indefinitely as wrong-state results. Verified 0 remaining.
+
+Cross-state collision groups measured by `scripts/find-duplicate-library-urls.js`: **653 before, 558 after**.
+
+### CustomDrupal-Libraries — a correction and a fix
+
+An earlier note in this cycle claimed this scraper returns nothing at all. **That was wrong**, and the error is worth recording because it will recur: the conclusion came from querying `scraper_name = 'CustomDrupal-Libraries'`, but this scraper stores each library's DISPLAY NAME in that column (the drift documented in CLAUDE.md), so the query matched zero rows regardless of health. Measured per library it is largely working:
+
+| Library | Upcoming rows |
+|---|---|
+| Anderson County Library System | 61 |
+| Rowan County Public Library | 12 |
+| Kanawha County Public Library | 7 |
+| Florence County Library System | 1 |
+| Richland Library | 7 rows, today or past |
+| Cobb County Public Library System | 0 — fixed, see below |
+| Greenville County Library System | 0 — site-side, see below |
+
+**Cobb County: fixed.** Its selector block reused one selector, `span.text-primary-1`, for `date`, `location` AND `description`. Every event therefore took the date string as its venue and was geocoded as an address of the form "Wednesday, August 5, 2026, Marietta, Cobb County, GA". The 2026-08-05 run logged 7 successful extractions and the database ended up with 0 rows. Cobb was verified to be the ONLY config in the file with this collision; the other seven already use distinct selectors, and Cobb now matches their shape.
+
+**Greenville County SC: open coverage gap, and not a scraper bug.** `greenvillelibrary.org/events` serves ARCHIVED October–November 2020 events to anonymous fetches, beneath a header that renders a current "AUG 6" 2026 date. The scraper found 10 events and correctly skipped every one as past. Adding `date_start=2026-08-06` did not change the result. This library needs a different calendar source entirely; no URL change was made, because swapping one non-working address for another would hide the gap rather than close it.
+
+### Still open after this pass
+
+- **8 active states still claiming `greenvillelibrary.org`** — AL, FL, GA, NC, NH, PA, RI and SC. Each needs the same individual live verification the four fixed rows got. Not guessed at.
+- **Fabricated county names** — 2,065 of 2,137 county values (96.6%) across the 20 active WordPress library files fail `getCountyCentroid()`, because the seed generator appended " County" to the city name ("Arcadia County", "Brandon County"). The county-centroid tier of the geocoding chain is effectively dead for that whole family. Needs a real city-to-county dataset.
+- **Talbot County MD** — URL corrected to `talbot.librarycalendar.com`, but the platform changed as well as the address and this WordPress scraper is not known to parse librarycalendar.com markup. A nonzero count is not confidently expected; if it stays 0 the remaining fix is a platform move.

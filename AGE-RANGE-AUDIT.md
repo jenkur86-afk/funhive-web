@@ -4398,3 +4398,39 @@ Excludes the known-legitimate broad-content sources per standing convention (`Fe
 - **BarnesNoble-Eastern** — Barnes & Noble Nashua — 100.0% All Ages (21 events)
 - **BarnesNoble-Eastern** — Barnes & Noble Ellicott City — 100.0% All Ages (21 events)
 - **BarnesNoble-Eastern** — Barnes & Noble Monmouth Square — 100.0% All Ages (20 events)
+
+
+## Post-fix re-measurement: storytime age detection
+
+Recorded 2026-08-06, after the age-detection fix landed. This is an addendum to the dated cycle tables above, not a new cycle — those per-site tables are the 2026-08-05 snapshot taken BEFORE this fix, so their All-Ages figures are superseded for any storytime-heavy site.
+
+**What changed.** `detectAgeRange()` in `scrapers/helpers/supabase-adapter.js` had no concept of *storytime* — the most common name for a children's program at both libraries and bookstores. Every unqualified "Storytime", "Story Time" or "Story Hour" returned null and fell through to All Ages. This was the single largest driver of the flagged list above: 15 Barnes & Noble stores were flagged purely on it.
+
+A storytime rule (returning 3-5, Preschool) and a tots/tykes rule (returning 1-3) were added AFTER every existing specific keyword, so qualified titles such as "Toddler Storytime" and "Baby Storytime" still resolve on their own more-specific rule and were unaffected. Three guards were added, each matching a false-positive shape that has bitten this function before: a family guard so "Family Storytime" stays All Ages, an adult guard so an adult storytime does not become a children's event, and a "Storytime Room" venue-mention guard mirroring the `elementary` venue false positive of 2026-08-03. The regression suite went from 24 to 36 cases and passes.
+
+**Backfill.** `scripts/backfill-age-range.js` reclassified **2,677 existing rows** (2,385 Preschool, 283 Babies & Toddlers, 7 Kids). Platform-wide All-Ages share fell from **77.4% to 74.9%** of 107,275 events. Storytime-titled rows still tagged All Ages fell from 2,761 to 501.
+
+**Per-site effect on the flagged Barnes & Noble cluster.**
+
+| B&N store | All-Ages pct before | All-Ages pct after |
+|---|---|---|
+| Nashua | 100 | 4 |
+| Clarendon | 100 | 7 |
+| Carle Place | 100 | 10 |
+| Ellicott City | 100 | 13 |
+| Newport News | 96 | 15 |
+| Wareham | 100 | 27 |
+| Manhasset | 100 | 29 |
+| Fairfax | 97 | 47 |
+| Farmington | 100 | 52 |
+| Bethlehem/Easton | 91 | 55 |
+| Manassas | 100 | 83 |
+| Plymouth Meeting | 92 | 83 |
+
+Aggregate across those stores: **40.6% All Ages** (158 of 389 rows), down from the 91-100 percent band that got them flagged.
+
+**Measurement caveat, stated so the two columns are not over-read:** the *before* figures are each site's share of that day's NEW events on 2026-08-05, as the flagged list above computed them. The *after* figures are each venue's all-time share as of 2026-08-06. They are not a like-for-like pair; they show direction and rough magnitude, not a precise delta.
+
+**Residual, and why most of it is correct.** Sampling the two stores that stayed high shows the remainder is largely legitimate: author signings, "Weekly Yarn Night", "Read, Relax, Restore" and book release parties are genuinely all-ages. The one real remaining gap is narrow and quantified — 10 rows at Plymouth Meeting titled exactly "Storytime" whose description reads "Join us in the Children's Department ... We invite you and your family to share in the magic". The family guard fires on "your family" in the body copy and suppresses the storytime rule, even though "Children's Department" is a clear kids signal in the same sentence.
+
+A possible refinement is to apply the family guard to the TITLE only, treating "Family Storytime" as a deliberate audience label while ignoring "bring your family" marketing copy in a description. That was deliberately NOT done in this pass: it is exactly the kind of change that looks obviously correct in isolation, and this function has been broken three separate times that way (2026-08-01, 08-03, 08-04). It also touches the shared save path while another session was concurrently editing `event-save-helper.js`. Recorded here as a quantified, actionable follow-up rather than an untested edit.
