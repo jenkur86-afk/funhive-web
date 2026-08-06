@@ -4434,3 +4434,258 @@ Aggregate across those stores: **40.6% All Ages** (158 of 389 rows), down from t
 **Residual, and why most of it is correct.** Sampling the two stores that stayed high shows the remainder is largely legitimate: author signings, "Weekly Yarn Night", "Read, Relax, Restore" and book release parties are genuinely all-ages. The one real remaining gap is narrow and quantified — 10 rows at Plymouth Meeting titled exactly "Storytime" whose description reads "Join us in the Children's Department ... We invite you and your family to share in the magic". The family guard fires on "your family" in the body copy and suppresses the storytime rule, even though "Children's Department" is a clear kids signal in the same sentence.
 
 A possible refinement is to apply the family guard to the TITLE only, treating "Family Storytime" as a deliberate audience label while ignoring "bring your family" marketing copy in a description. That was deliberately NOT done in this pass: it is exactly the kind of change that looks obviously correct in isolation, and this function has been broken three separate times that way (2026-08-01, 08-03, 08-04). It also touches the shared save path while another session was concurrently editing `event-save-helper.js`. Recorded here as a quantified, actionable follow-up rather than an untested edit.
+
+
+## 2026-08-06
+
+Group 3's rotation day (Step 3c). `scraper-summary.log`'s big per-scraper table timestamped `2026-08-06T11:03:19` turned out to be a **stale cumulative reprint**, not a fresh run: every one of its 51 non-MacaroniKid rows carries FOUND/NEW/DUPES/TIME values byte-identical to that same scraper's entry already recorded under the `## 2026-08-05` heading above (their real completion timestamps, checked directly in the log, fall on 2026-08-05T07:01-14:47 or earlier) — CLAUDE.md's own description of this log as a "cumulative per-scraper table" is the explanation, not a bug. Confirmed by querying each: all 51, plus `WordPress-MD`, return zero rows with a `created_at` timestamp on 2026-08-06.
+
+**Methodology correction found today:** `scraped_at` is not a safe signal for "genuinely new row" — it gets bumped on every upsert touch, including UPDATE-only collisions against a pre-existing stable ID. Empirically, `scraped_at`-windowed queries returned 1,784 rows for `MacaroniKid-MD` in the window the log said held only 191 new events; the same window filtered on `created_at` (set once, at insert) returned exactly 191, matching the log's FOUND/NEW column precisely. This audit switches to `created_at` for all "today's new events" attribution going forward. Under that lens, `WordPress-MD`'s 16:31 rerun (log: FOUND 310, NEW 80) also produced zero genuinely-new rows — all 80 "new" were UPDATEs to rows with a pre-existing stable ID, the same collision pattern CLAUDE.md's dedup note describes.
+
+**Naming-drift found today (MacaroniKid, non-DE/MD states):** `MacaroniKid-FL`, `-NY`, `-GA`, `-CT`, `-NH`, `-ME` do not store the registry key in `scraper_name` at all — every row stores a display name like `Macaroni Kid Winter Park` or `Macaroni Kid Seacoast` (the per-city local edition), violating the `scraper_name` convention documented in CLAUDE.md. Rows for these 6 states were instead attributed by `state` + `created_at` window (per-state windows derived from each state's completion timestamp in the MacaroniKid-Group2 block of the log, sequential 2026-08-05T14:47 through 2026-08-06T11:04). The per-city display name is used as the **Site** column below since it is the actual granularity CLAUDE.md itself uses when counting "sites" for these scrapers (e.g. "MacaroniKid-FL alone covers 31 sites") — confirmed here: exactly 31 distinct city editions found for FL. `MacaroniKid-MD` and `MacaroniKid-DE` (stored as `MacaroniKid-DE-newcastle`) already use compliant/near-compliant scraper_name values, so those two are broken out by DB `venue` instead, matching every other multi-venue scraper in this file. `MacaroniKid-MD`'s `source_url` is also byte-identical to the per-event `url` on every sampled row (the exact bug CLAUDE.md documents for `scraper-macaroni-md.js`), so its Link column falls back to a representative event URL rather than a real listing page for every row.
+
+| Site | Scraper | All Ages | Babies 0-2 | Preschool 3-5 | Kids 6-8 | Tweens 9-12 | Teens 13-18 | Total | Link |
+|---|---|---|---|---|---|---|---|---|---|
+| Prince George's County Memorial Library System | MacaroniKid-MD | 5 | 7 | 8 | 4 | 0 | 4 | 28 | [link (event, DB fallback)](https://events.yodel.today/y/event/Prince-George-s-County-Memorial-Library-System/Game-On--Jigsaw-Puzzles/6a56c62d433b3e0c8e10b126) |
+| Parkville-Carney Public Library | MacaroniKid-MD | 14 | 5 | 0 | 1 | 0 | 7 | 27 | [link (event, DB fallback)](https://events.yodel.today/y/event/Parkville-Carney-Public-Library/LEGO-Fun/6a72755d480c79bb279cdb94) |
+| Oxon Hill Branch Library, PGCMLS | MacaroniKid-MD | 1 | 9 | 3 | 8 | 0 | 1 | 22 | [link (event, DB fallback)](https://events.yodel.today/y/event/Oxon-Hill-Branch-Library--PGCMLS/STEM-Fun--Weather-Hunters/6a43e7554e9429a07bb10a8b) |
+| Frederick County Public Libraries | MacaroniKid-MD | 2 | 1 | 0 | 0 | 2 | 8 | 13 | [link (event, DB fallback)](https://events.yodel.today/y/event/Frederick-County-Public-Libraries/Loremasters--Dice-Making--Ages-12-18-/6a7203c0cb5e4f5b94a17fce) |
+| Activity Center at Bohrer Park | MacaroniKid-MD | 5 | 0 | 0 | 1 | 0 | 0 | 6 | [link (event, DB fallback)](https://events.yodel.today/y/event/Activity-Center-at-Bohrer-Park/Ki-Aikido/6a1601ac59ea91d1152677e0) |
+| Pip Moyer Recreation Center | MacaroniKid-MD | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [link (event, DB fallback)](https://events.yodel.today/y/event/Pip-Moyer-Recreation-Center/Cycling/6a4c7d9f2faff4042660ca32) |
+| Harford County Public Library - Bel Air | MacaroniKid-MD | 3 | 2 | 0 | 0 | 0 | 0 | 5 | [link (event, DB fallback)](https://events.yodel.today/y/event/Harford-County-Public-Library---Bel-Air/Baby-Masterpieces/6a72742a9be7031a75d78375) |
+| Montgomery Parks | MacaroniKid-MD | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://events.yodel.today/y/event/Montgomery-Parks/Children-s-Day/6a724a8da26adbb7d42c7717) |
+| Takoma Park Library | MacaroniKid-MD | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://events.yodel.today/y/event/Takoma-Park-Library/Games-Club/6a29b73914fdf423e4714c03) |
+| Barnes & Noble - Ellicott City | MacaroniKid-MD | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://events.yodel.today/y/event/Barnes---Noble---Ellicott-City/Camp-Barnes---Noble-Ellicott-City/6a5e8a27f2843f5fbc8515f9) |
+| Annapolis | MacaroniKid-MD | 2 | 0 | 1 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://events.yodel.today/y/event/Annapolis/Back-to-School-Bash/6a7385f0ec8ccb2db091d486) |
+| Long Branch Library | MacaroniKid-MD | 0 | 2 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.yodel.today/y/event/Long-Branch-Library/Baby---Toddler-Storytime-at-Long-Branch/6a6e465b05b48d3e595db902) |
+| Montgomery County Public Libraries — Wheaton Library | MacaroniKid-MD | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.yodel.today/y/event/Montgomery-County-Public-Libraries---Wheaton/Family-Storytime-at-Wheaton-Library---In-person/6a24898cd793c6c4010f3667) |
+| My Gym Annapolis | MacaroniKid-MD | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.yodel.today/y/event/My-Gym-Annapolis/Kids-Night-Out-----Luau-Adventure------/6a7240fcf673d4087a1f9011) |
+| Howard County Library System - Central Branch | MacaroniKid-MD | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.yodel.today/y/event/Howard-County-Library-System---Central-Branch/Play-Partners--Infant-23-mos-w-Adult--TK/69e76ff814f126e6bf08b877) |
+| Pasadena-Severna Park-Glen Burnie | MacaroniKid-MD | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.yodel.today/y/event/Pasadena-Severna-Park-Glen-Burnie/2nd-Sunday-Farmers---Artisan-Market/6a743bc21e91458c228bc532) |
+| Jimmy's Famous Seafood | MacaroniKid-MD | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [link (event, DB fallback)](https://events.yodel.today/y/event/Jimmy-s-Famous-Seafood/The-TailGOAT--Battle-of-the-Birds-Edition---Ravens-vs--Eagles/6a41332a1d6d76c08b25f2a3) |
+| Perry Hall Public Library | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Perry-Hall-Public-Library/Hispanic-Heritage-Month-Story-Time/6a5da2505314ec2e44b42907) |
+| Capital Plaza Mall | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Capital-Plaza-Mall/Do-Portugal-Circus---Hyattsville--MD/6a7255cdbf5f5a8401c4319f) |
+| FSGW Dance | MacaroniKid-MD | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/FSGW-Dance/September-Barn-Dance/6a73b6acd0af70e8c422cc7c) |
+| Discover Long Branch | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Discover-Long-Branch/Cuts-4-Cuties/6a73a847446cb45fa79bb914) |
+| Chariots of Honor | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Chariots-of-Honor/Hawaiian-Luau---VFW-Post-5471--Gen--MacArthur---Gen--Lim/6a53a218c86a4c27efb678d1) |
+| Friends of Patterson Park | MacaroniKid-MD | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Friends-of-Patterson-Park/Mueveton---Babyfest-5k---Health-and-Fitness-Expo-2026/6a739655cc7e64e7d5581ae0) |
+| Visit Annapolis | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Visit-Annapolis/National-Park-Service-Chesapeake-Roving-Ranger-Program-and-Chesapeake-Children-s-Museum/6a737cadd584ed9497c64d3e) |
+| Faith United Methodist Church | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Faith-United-Methodist-Church/Summer-in-the-Psalms-Bible-Study/6a28cd112a9ef6431752e3b4) |
+| Dun-Pikin Farm | MacaroniKid-MD | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Dun-Pikin-Farm/Horse-Discovery-Fun-Days/6a1145c76d6923d6ea6d6405) |
+| Liberty Church | MacaroniKid-MD | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Liberty-Church/VBS/6a3f0218f1305d08c278c122) |
+| STRŌB Apothecary | MacaroniKid-MD | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/STR-B-Apothecary/Playful-Pandas-Music-Playgroup/6a482b44cfbce51865fe712e) |
+| Prince George — Surratts-Clinton | MacaroniKid-MD | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Prince-George-s-County-Memorial-Library-System/Teen-Zone/6a726fc81713050eb05f8a8f) |
+| Kaleidoscope Comedy | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Kaleidoscope-Comedy/Second-Friday-Night-Magic-Night/6a66d8e44553e617a85aed23) |
+| FFR Annapolis | MacaroniKid-MD | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/FFR-Annapolis/Food-Trucks-at-NSAA/6a4fd82c82be6bbda2a49e82) |
+| THIRD EYE COMICS | MacaroniKid-MD | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/THIRD-EYE-COMICS/WED-8-12-26--Teen-Titans-Together-Graphic-Novel-Signing-w--Kami-Garcia---Gabriel-Picolo/6a4ad074293b387c97c08da2) |
+| Mt. Zion United Methodist Church of Laurel Grove | MacaroniKid-MD | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Mt--Zion-United-Methodist-Church-of-Laurel-Grove/Two-day-Yard-Sale-Extravaganza/6a73be5419beeea3a6ada3fd) |
+| Vertigo Red | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Vertigo-Red/The-TailGOAT--Battle-of-the-Birds-Edition---Ravens-vs--Eagles/6a412d7a59dcca856df8fa8d) |
+| Harford County Public Library — Aberdeen | MacaroniKid-MD | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Harford-County-Public-Library---Bel-Air/Teen-Time/6a72742c01a766988b16839e) |
+| Christalis Inc | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Christalis-Inc/Christalis-Community-Pop-Up-Market/6a722564e2ca6932c41d839c) |
+| The Fillmore Silver Spring | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/The-Fillmore-Silver-Spring/SCHOOLBOY-Q---10-Years-of-Blank-Face-LP/6a70e7ff6b3d37899bea0ccf) |
+| Little Market Cafe | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Little-Market-Cafe/ILYAIMY/69e23af36f78fd768bf296bf) |
+| Harford County Public Library — Edgewood | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Harford-County-Public-Library---Bel-Air/Family-Movie-Night/6a72742ba2ad9f5e5504d67d) |
+| Third Eye Mechanicsville | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Third-Eye-Mechanicsville/SAT-8-8-26--Third-Eye-Throwdown-Tent-Sale/6a4ba93ba29f88dc9865802a) |
+| Bishop's Events | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Bishop-s-Events/2026-Red-Shoe-5k/6a71bcec3154217d0ffaf1bf) |
+| Montgomery County Public Libraries — Wheaton | MacaroniKid-MD | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Montgomery-County-Public-Libraries---Wheaton/Wheaton-Teen-Time/6a5ba7b32fc6ad3248ccf03d) |
+| Hereford Public Library | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Hereford-Public-Library/1-000-Books-Before-Kindergarten-Celebration/6a7218466c5b7eb1aca05c4e) |
+| Westminster Fire Department | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Westminster-Fire-Department/Back-to-School-at-the-Museum/6a72594f540bfa9145a35588) |
+| Harford County Public Library — Whiteford | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Harford-County-Public-Library---Bel-Air/PAWS-and-Read/6a72742901a766988b16839b) |
+| Potomac Lifestyle Magazine | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Potomac-Lifestyle-Magazine/Vendor---Sponsorship-Registration--18th-Park-Potomac-Back-to-School-Drive/6a4c356e07f0ae2f73e7291a) |
+| Watermark Tours Charters Cruises | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Watermark-Tours-Charters-Cruises/Weird--Wacky----Unusual-History-of-Annapolis-Tour/6a731dbea49d278257d3872b) |
+| Prince George — Upper Marlboro | MacaroniKid-MD | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Prince-George-s-County-Animal-Shelter/Volunteer-Orientation/6a4cce31e4411019e66c91fd) |
+| Maryland Hall | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Maryland-Hall/Jazz-and-Jams---Natalie-Brooke-Band-with-Ahmed-Warshanna-Trio/6a4b925e40243724ffcf1e81) |
+| Mid Atlantic Community Church (MACC) | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Mid-Atlantic-Community-Church--MACC-/AWAKEN-AACO-One-Heart-Fest/6a737b0911f43be2f74422b4) |
+| Festival at Bel Air | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Festival-at-Bel-Air/Festival-at-Bel-Air-5K/6a6c30670446b761ddfdc471) |
+| Towson, MD | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/The-Legwarmers/The-Legwarmers/6a72b350fbda9bd30779ed15) |
+| Charles County Public Library – P.D. Brown Memorial Branch | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Charles-County-Public-Library---P-D--Brown-Memorial-Branch/Adopt-a-Dino-Scavenger-Hunt/6a06fd199d3ee462e0b57b7e) |
+| Anne Arundel County, Maryland | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Anne-Arundel-County--Maryland/Concert-at-Downs-Park--Ain-t-Misbehavin/6a6fb5dc7db04a3a7dda56d8) |
+| Nevermore Hall | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Nevermore-Hall/The-Midnight--Time-Machines-at-Nevermore-Hall/6a0d30522824057999a3a332) |
+| Bowie Church of Christ | MacaroniKid-MD | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Bowie-Church-of-Christ/Sunday-School-for-Teens/6a50df9abae6eba1a94fe6e5) |
+| Bel Air | MacaroniKid-MD | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Bel-Air/Watermelon-Festival/6a721c05f673d4087a1f8faf) |
+| SalsaNow | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/SalsaNow/Salsa-Bachata-Day-Party/6a7388530e1f6ddb4bb5fd29) |
+| Hammond-Harwood House Museum | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Hammond-Harwood-House-Museum/Woodworking-Demonstration---Dovetails-with-Bob-Van-Dyke/6a2b28a00dff63b149257a0a) |
+| Baltimore County Public Library — Catonsville | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Baltimore-County-Public-Library-Catonsville/Recording-Studio-Certification/6a3614a684403082616825b1) |
+| Columbia Village Centers | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Columbia-Village-Centers/Summer-Sounds-Series-at-Dorsey-s-Search-Village-Center/6a0d48005f0caabdd34d5686) |
+| Ellsworth Place | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Ellsworth-Place/Back-to-School-Activities-/6a72991d24be614637af45ae) |
+| Bowie-Crofton-Odenton | MacaroniKid-MD | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Bowie-Crofton-Odenton/Anne-Arundel-County---Bowie-Homeschool---Extracurricular-Activity-Fair/6a73ba7c1e91458c228bc4a7) |
+| Annapolis Symphony Orchestra | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Annapolis-Symphony-Orchestra/Pops-in-the-Park-at-Down-Park/6a3dd92ea328842b694a270a) |
+| Foodees. | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Foodees-/FOODEES-FEST-NATIONAL-HARBOR--MARYLAND/69bebb660209aa43fb9b98d8) |
+| The 19th Street Band | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/The-19th-Street-Band/Days-End-Farm-Horse-Rescue-Benefit-Concert/6a73b58b8283cdb204e97e2f) |
+| Silver Spring Town Center | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Silver-Spring-Town-Center/Summer-Music-Series--Roots---Rhythms--Reggae-with-The-Pocket-Band/6a6b1eafd4b56b237acab4c5) |
+| The DC Blues Society | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/The-DC-Blues-Society/DCBS-Battles-at-Legion---Enter-by-9-1/69be081f7bd7590c378d0bf1) |
+| Naval Academy Athletic Association | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Naval-Academy-Athletic-Association/Women-s-Soccer-vs-Rice/6a32df011a95022019efb0a1) |
+| Harford County Public Library — Joppa | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Harford-County-Public-Library/Summer-Reading-Guest-Presenter-Wildlife-Adventures/6a4f1a1d499be2bf2fc6707b) |
+| Greater Severna Park & Arnold Chamber of Commerce | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Greater-Severna-Park---Arnold-Chamber-of-Commerce/Grand-Opening-of-Sweet-Escape-Bookshop/6a69371ddb83f3849c3614fd) |
+| Mix + Mingle Coffee Lounge | MacaroniKid-MD | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Mix---Mingle-Coffee-Lounge/Kids-Back-to-School-Jam/6a735f1737798ecad4913b6b) |
+| Artist Katie Detrich | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Artist-Katie-Detrich/Sunset-Floating-Sound-Bath-with-Artist-Katie-Detrich/6a710054de44c79ff548ed81) |
+| Capital SUP | MacaroniKid-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Capital-SUP/BOGO-Tuesday/6a4c28502deafd646136601a) |
+| Feline Felons Cat Cafe | MacaroniKid-MD | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Feline-Felons-Cat-Cafe/-Our-Last--Kitty-Cat-Club/6a73d21065afc2b48126164f) |
+| Barnes & Noble - Wilmington at Concord Square | MacaroniKid-DE | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [link](https://newcastle.macaronikid.com) |
+| Delaware Small Business Chamber | MacaroniKid-DE | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://newcastle.macaronikid.com) |
+| New Castle County Library System | MacaroniKid-DE | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://newcastle.macaronikid.com) |
+| One Village Alliance | MacaroniKid-DE | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://newcastle.macaronikid.com) |
+| Wilmington-New Castle | MacaroniKid-DE | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://newcastle.macaronikid.com) |
+| Macaroni Kid Winter Park | MacaroniKid-FL | 130 | 63 | 51 | 159 | 0 | 26 | 429 | [link (event, DB fallback)](https://events.yodel.today/y/event/Orange-Audubon-Society/Rescue--Care-and-Rehabilitation-of-Reptiles-by-Kim-TItteringen--Swamp-Girl-Adventures/6a5ac207b6bcd3c59e69ef3e) |
+| Macaroni Kid West Palm Beach-Lake Worth-Lantana | MacaroniKid-FL | 143 | 55 | 90 | 70 | 32 | 9 | 399 | [link (event, DB fallback)](https://events.yodel.today/y/event/Palm-Beach-County-Library-System---Main-Library/Sunday-Read/6a59c8dee3407d0ea130afdd) |
+| Macaroni Kid Bradenton | MacaroniKid-FL | 166 | 62 | 69 | 52 | 1 | 31 | 381 | [link (event, DB fallback)](https://events.yodel.today/y/event/The-Bishop-Museum-of-Science-and-Nature/Gentle-Yoga-With-Manatees/69659cb1375ff48db9567877) |
+| Macaroni Kid Seminole County | MacaroniKid-FL | 85 | 78 | 57 | 94 | 0 | 29 | 343 | [link (event, DB fallback)](https://events.yodel.today/y/event/Orange-County-Library-System---Alafaya-Branch/Learn-to-Use-a-Microscope/6a4fa3969b034e99c2197668) |
+| Macaroni Kid Port St Lucie | MacaroniKid-FL | 133 | 13 | 83 | 75 | 36 | 0 | 340 | [link (event, DB fallback)](https://events.yodel.today/y/event/Port-St--Lucie-Parks---Recreation/Tutoring-Jet-to-Success/6a63b78f3467f8cece546d1d) |
+| Macaroni Kid Sarasota-Venice | MacaroniKid-FL | 237 | 23 | 19 | 39 | 12 | 8 | 338 | [link (event, DB fallback)](https://events.yodel.today/y/event/Sarasota-Venice/Blast-off-Back-to-School-Parent-Survival-Night/6a6eb43f7a77446b64378c1d) |
+| Macaroni Kid Winter Garden-Ocoee | MacaroniKid-FL | 70 | 70 | 34 | 77 | 2 | 14 | 267 | [link (event, DB fallback)](https://events.yodel.today/y/event/Orange-County-Library-System---Winter-Garden-Branch/Art-101--Harlem-Renaissance/69f8d201ed6dc68db1f4d8eb) |
+| Macaroni Kid Vero Beach | MacaroniKid-FL | 225 | 3 | 3 | 25 | 0 | 4 | 260 | [link (event, DB fallback)](https://events.yodel.today/y/event/Environmental-Learning-Center/Campus-hours-8a-5p-M-F--8a-4p-Sat-Sun---Aquaria--trails--indoor-and-outdoor-play-areas--Art-exhibits--free-for-members--daily-admission-fee-for-non-members-/6a6b1adfa7b9cceec2b898f5) |
+| Macaroni Kid Apopka-Mount Dora | MacaroniKid-FL | 35 | 68 | 61 | 88 | 0 | 7 | 259 | [link (event, DB fallback)](https://events.yodel.today/y/event/West-Branch---Seminole-County-Public-Library/Teen-Zine-Study-Guides--for-Teens-13-----West/6a4bd12c00bf7770c40332fc) |
+| Macaroni Kid Palm Beach Gardens-Jupiter | MacaroniKid-FL | 135 | 27 | 29 | 43 | 12 | 10 | 256 | [link (event, DB fallback)](https://events.yodel.today/y/event/Palm-Beach-County-Library-System---Jupiter-Branch/Toddler-Stay---Play-Storytime/6a4eda2d8aa47b3ff669b21e) |
+| Macaroni Kid Stuart | MacaroniKid-FL | 120 | 79 | 4 | 23 | 10 | 15 | 251 | [link (event, DB fallback)](https://events.yodel.today/y/event/Stuart-Ceramics-Walk-In-Stress-Free-Art-Studio/Kid-s-Discount-Days-/69544d081bd1b6f37e8cadd2) |
+| Macaroni Kid Boynton Beach-Delray Beach | MacaroniKid-FL | 63 | 51 | 37 | 48 | 17 | 23 | 239 | [link (event, DB fallback)](https://events.yodel.today/y/event/Palm-Beach-County-Library-System---Hagen-Ranch-Road-Branch/Music-of-the-Movement--Decades-of-Sound---Social-Change/6a5576d91a14575e1acd6e13) |
+| Macaroni Kid South Lake-Celebration-Clermont | MacaroniKid-FL | 120 | 24 | 17 | 34 | 0 | 0 | 195 | [link (event, DB fallback)](https://events.yodel.today/y/event/Promenade-at-Sunset-Walk/Talk-Like-a-Pirate-Day-at-Promenade-Sunset-Walk---September-19th/6a64a5d7715f0c19a12a8a44) |
+| Macaroni Kid Fort Lauderdale | MacaroniKid-FL | 134 | 36 | 3 | 17 | 1 | 1 | 192 | [link (event, DB fallback)](https://events.yodel.today/y/event/Museum-of-Discovery-and-Science/Leighton-Family-Hangar/6a552161f557c686c19c3c2c) |
+| Macaroni Kid Wellington-Royal Palm Beach-Greenacres | MacaroniKid-FL | 52 | 22 | 47 | 34 | 14 | 5 | 174 | [link (event, DB fallback)](https://events.yodel.today/y/event/Palm-Beach-County-Library-System---Royal-Palm-Beach-Branch/Scrapbooking-Summer-Memories/6a55450782c940acde4ac6c5) |
+| Macaroni Kid Okeechobee-Loxahatchee | MacaroniKid-FL | 98 | 5 | 23 | 15 | 12 | 3 | 156 | [link (event, DB fallback)](https://events.yodel.today/y/event/Palm-Beach-County-Library-System---Clarence-E--Anthony-Branch/Wood-Leaf-Shapes/6a59a323578548ea2ede07c7) |
+| Macaroni Kid Fort Myers-Fort Myers Beach | MacaroniKid-FL | 45 | 22 | 14 | 21 | 5 | 17 | 124 | [link (event, DB fallback)](https://events.yodel.today/y/event/Alliance-for-the-Arts/New-Exhibitions-Opening-Reception/6a6c8a159096198f80584372) |
+| Macaroni Kid West Volusia | MacaroniKid-FL | 57 | 24 | 9 | 29 | 1 | 4 | 124 | [link (event, DB fallback)](https://events.yodel.today/y/event/Gator-s-Dockside-of-DeLand/Karaoke-With-Greg---Friday-Nights-/69967d1864924cc7d8228dd1) |
+| Macaroni Kid Lakeland-Bartow-Mulberry | MacaroniKid-FL | 36 | 19 | 8 | 44 | 3 | 6 | 116 | [link (event, DB fallback)](https://events.yodel.today/y/event/Florida-Children-s-Museum/Story-Sprouts/6a6b932b22d97b1e8b2e4a66) |
+| Macaroni Kid Clearwater | MacaroniKid-FL | 43 | 29 | 5 | 4 | 0 | 18 | 99 | [link (event, DB fallback)](https://events.yodel.today/y/event/Nature-s-Food-Patch-Market---Caf-/Hydration-Sundays/6a5ea3bd790884c3ddc5326e) |
+| Macaroni Kid Cape Coral | MacaroniKid-FL | 48 | 16 | 9 | 15 | 4 | 5 | 97 | [link (event, DB fallback)](https://events.yodel.today/y/event/Cape-Coral-Library/Family-Fun-Saturday/6a44a7f46b0d3aec76124d46) |
+| Macaroni Kid New Tampa | MacaroniKid-FL | 48 | 12 | 7 | 2 | 0 | 9 | 78 | [link (event, DB fallback)](https://events.yodel.today/y/event/Land-O-Lakes-Library/Toddler-Storytime-at-Land-O-Lakes-Library/6a44bed93ecf5892e668fe88) |
+| Macaroni Kid Miami East-Watson Island to Coral Gables | MacaroniKid-FL | 37 | 11 | 4 | 14 | 4 | 1 | 71 | [link (event, DB fallback)](https://events.yodel.today/y/event/Miami-Dade-Public-Library-System---Virrick-Park-Branch-Library/READy--Set--Go--Storytelling---Brought-to-you-by-The-Children-s-Trust-The-Children-s-Trust-Parent-Club/6a4fe85b52bc781eb6069533) |
+| Macaroni Kid North Brevard | MacaroniKid-FL | 22 | 12 | 1 | 22 | 3 | 0 | 60 | [link (event, DB fallback)](https://events.yodel.today/y/event/Friends-of-the-Titusville-Public-Library-Inc-/Tween-Book-Club-at-Titusville-Public-Library/6a6b79f79db83d50fcc96a28) |
+| Macaroni Kid Winter Haven-Davenport | MacaroniKid-FL | 13 | 34 | 0 | 7 | 0 | 0 | 54 | [link (event, DB fallback)](https://events.yodel.today/y/event/Poinciana-Branch-Library/Mega-Bingo-for-Seniors/6a303ced45d96f372419c011) |
+| Macaroni Kid Daytona Beach | MacaroniKid-FL | 46 | 3 | 2 | 2 | 0 | 0 | 53 | [link (event, DB fallback)](https://events.yodel.today/y/event/Canaveral-National-Seashore/SEASHORE-101--Playalinda-District-/6a695a91e469764d2d15f0a9) |
+| Macaroni Kid Port Charlotte-Punta Gorda | MacaroniKid-FL | 28 | 0 | 0 | 4 | 1 | 2 | 35 | [link (event, DB fallback)](https://events.yodel.today/y/event/Fishermen-s-Village-Events/Bag-Pipes-on-the-Beach-/69a471cb3d6b00e840d96f0e) |
+| Macaroni Kid Sebring-Lake Placid-Avon Park | MacaroniKid-FL | 28 | 4 | 0 | 1 | 0 | 1 | 34 | [link (event, DB fallback)](https://events.yodel.today/y/event/Mulberry-Phosphate-Museum/STEAM-Saturdays/6a736d36759fba108b776226) |
+| Macaroni Kid Brandon | MacaroniKid-FL | 17 | 4 | 0 | 1 | 1 | 0 | 23 | [link (event, DB fallback)](https://events.yodel.today/y/event/Holy-Innocents--Episcopal-Church/8-00-AM-Rite-I-Holy-Eucharist/69d078a9e0e78aacb2317dd8) |
+| Macaroni Kid South Brevard | MacaroniKid-FL | 17 | 0 | 0 | 1 | 0 | 0 | 18 | [link (event, DB fallback)](https://events.yodel.today/y/event/Downtown-Melbourne/Farmer-s-Market-at-Riverview-Park/6a5ed1bbb677a47b438c1470) |
+| Macaroni Kid Apollo Beach-Ruskin-Wimauma | MacaroniKid-FL | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link (event, DB fallback)](https://events.yodel.today/y/event/Crunch-Fitness--Riverview-/80s-Themed-Mid-Month-Party/6a72e2ea0078ad183d90d201) |
+| Macaroni Kid Long Beach-Oceanside-Rockville Centre | MacaroniKid-NY | 253 | 58 | 64 | 37 | 6 | 6 | 424 | [link (event, DB fallback)](https://events.yodel.today/y/event/Freeport-Memorial-Library/Ceramic-Dinosaur-Painting/6a4bd58ffd5567f2f9ece629) |
+| Macaroni Kid Five Towns-Valley Stream-The Rockaways | MacaroniKid-NY | 138 | 33 | 31 | 46 | 6 | 6 | 260 | [link (event, DB fallback)](https://events.yodel.today/y/event/Hewlett-Woodmere-Public-LIbrary/Plaster-Painting/6a4bd53e39249dfdf478ddbb) |
+| Macaroni Kid Holbrook-The Ronkonkomas-Centereach-Coram | MacaroniKid-NY | 69 | 26 | 24 | 39 | 7 | 58 | 223 | [link (event, DB fallback)](https://events.yodel.today/y/event/Sachem-Library/Build-your-Own-Nation-Game--Entering-Gr--3-5-/6a73973fe41a5a6f2448ed2e) |
+| Macaroni Kid Hopewell-Wappingers-Fishkill | MacaroniKid-NY | 43 | 32 | 26 | 48 | 9 | 4 | 162 | [link (event, DB fallback)](https://events.yodel.today/y/event/East-Fishkill-Community-Library/Shred-Event/6a48c771ba53c70aec84842f) |
+| Macaroni Kid Greece-NW Rochester | MacaroniKid-NY | 65 | 25 | 23 | 24 | 5 | 1 | 143 | [link (event, DB fallback)](https://events.yodel.today/y/event/Gates-Public-Library/Story-Time-Tuesday-/6984c37e98ff0e44b9eb1159) |
+| Macaroni Kid Central Westchester | MacaroniKid-NY | 54 | 20 | 14 | 31 | 9 | 7 | 135 | [link (event, DB fallback)](https://events.yodel.today/y/event/White-Plains-Public-Library/Toy-Time-/6a28463c194b63db28a3a59d) |
+| Macaroni Kid Westchester Rivertowns | MacaroniKid-NY | 55 | 9 | 12 | 32 | 0 | 3 | 111 | [link (event, DB fallback)](https://events.yodel.today/y/event/John-C--Hart-Library/Stories-and-Rhymes-with-Ms--Terry/69dfac738508ac314cb88bfa) |
+| Macaroni Kid Brooklyn NW | MacaroniKid-NY | 54 | 16 | 15 | 14 | 2 | 5 | 106 | [link (event, DB fallback)](https://events.yodel.today/y/event/Brooklyn-Public-Library---Park-Slope-Library/Zumba-at-Park-Slope-Library--adults-/6a44107ffc39a43daf66ef11) |
+| Macaroni Kid Pittsford-SE Rochester | MacaroniKid-NY | 52 | 3 | 4 | 35 | 4 | 0 | 98 | [link (event, DB fallback)](https://events.yodel.today/y/event/Barnes---Noble---Pittsford/Storytime/6a5e8f7dc57a6cc34007a7db) |
+| Macaroni Kid Poughkeepsie-Pleasant Valley-Dover Plains | MacaroniKid-NY | 27 | 14 | 6 | 30 | 6 | 3 | 86 | [link (event, DB fallback)](https://events.yodel.today/y/event/LaGrange-Association-Library/Teen-Summer-Hangout/6a2865536aac24d3607ec8de) |
+| Macaroni Kid Binghamton | MacaroniKid-NY | 55 | 7 | 3 | 12 | 0 | 1 | 78 | [link (event, DB fallback)](https://events.yodel.today/y/event/Binghamton/BLAST-s-Summer-Teen-Musical-Theater-Intensive-presents-Mean-Girls--The-Musical/6a72105ee2ca6932c41d835a) |
+| Macaroni Kid Plattsburgh | MacaroniKid-NY | 23 | 15 | 8 | 23 | 0 | 9 | 78 | [link (event, DB fallback)](https://events.yodel.today/y/event/Clinton-Essex-Franklin-Library-System/Babies---Toddlers-Music-/6a28b73268ea800df101d6c6) |
+| Macaroni Kid Southern Westchester | MacaroniKid-NY | 24 | 10 | 18 | 19 | 5 | 1 | 77 | [link (event, DB fallback)](https://events.yodel.today/y/event/New-Rochelle-Public-Library/Baby-Fingers--Signs--Stories---Songs-/6a72b01d5bb6a5b9817d4851) |
+| Macaroni Kid Lower Manhattan-Downtown | MacaroniKid-NY | 31 | 5 | 0 | 3 | 1 | 2 | 42 | [link (event, DB fallback)](https://events.yodel.today/y/event/Buoy-the-Brooklyn-Mermaid-LLC-Green-Oasis-Community-Garden/Mermaid-Storytime/6a315073c43da6fe564b47d5) |
+| Macaroni Kid Upper West Side | MacaroniKid-NY | 31 | 0 | 0 | 0 | 0 | 1 | 32 | [link (event, DB fallback)](https://events.yodel.today/y/event/Hard-Rock-Cafe-New-York/Rock-Never-Dies/6a361ac0c7fae62bcf9d3b50) |
+| Macaroni Kid Riverhead | MacaroniKid-NY | 24 | 2 | 0 | 0 | 0 | 0 | 26 | [link (event, DB fallback)](https://events.yodel.today/y/event/Mattituck-Library/Drop-in-Retro-Video-Games/6a002608d2abeb272bf2a860) |
+| Macaroni Kid Harlem-Washington Heights | MacaroniKid-NY | 9 | 3 | 8 | 3 | 0 | 0 | 23 | [link (event, DB fallback)](https://events.yodel.today/y/event/HARLEM-WEEK/Black-Health-Matters-HARLEM-WEEK/6a68e00f576dec2acc0f1ffa) |
+| Macaroni Kid NYC Upper East Side | MacaroniKid-NY | 17 | 0 | 0 | 0 | 1 | 1 | 19 | [link (event, DB fallback)](https://events.yodel.today/y/event/New-York-Adventure-Club/Exploring-the-Hidden-Gems-of-Central-Park/6a0e00e441799e591ada24f0) |
+| Macaroni Kid Forest Hills-Corona-Rego Park | MacaroniKid-NY | 18 | 0 | 0 | 0 | 0 | 0 | 18 | [link (event, DB fallback)](https://events.yodel.today/y/event/Forest-Hills-Stadium/All-Things-Go/6a115302606bb1dae0cefcb7) |
+| Macaroni Kid Riverdale-Kingsbridge-Inwood | MacaroniKid-NY | 14 | 0 | 0 | 2 | 1 | 0 | 17 | [link (event, DB fallback)](https://events.yodel.today/y/event/Van-Cortlandt-Park-Alliance/Trail-Work-Thursdays/6a69cc7ee80bf9380827f7e2) |
+| Macaroni Kid Hamptons | MacaroniKid-NY | 12 | 0 | 2 | 0 | 0 | 0 | 14 | [link (event, DB fallback)](https://events.yodel.today/y/event/CCE-Marine-Program-s-Back-to-the-Bays-Initiative/Bay-Buddies-at-Tiana-Bayside-Facility/6a44494ce006c2cb0ee3f1dd) |
+| Macaroni Kid Bayside-Northeast Queens | MacaroniKid-NY | 3 | 0 | 2 | 0 | 0 | 0 | 5 | [link (event, DB fallback)](https://events.yodel.today/y/event/Queens-County-Farm-Museum/Grow---Gather--Family-Gardening-Program/6a6711e7fa927f15f67ca082) |
+| Macaroni Kid South-Central Bronx | MacaroniKid-NY | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [link (event, DB fallback)](https://events.yodel.today/y/event/The-Bronx-Museum-of-the-Arts/Meet-Me-At-The-Park--Performances-by-AIM-Artists-Jodie-Lyn-Kee--Chow---Asia-Stewart/6a3353dfa2d8a5d623c16583) |
+| Macaroni Kid Bellmore-Merrick-Wantagh | MacaroniKid-NY | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [link (event, DB fallback)](https://events.yodel.today/y/event/Town-of-Hempstead-Special-Events/Concert-at-Seamans-Neck-Park/6a6bc0d2c2cce626678928af) |
+| Macaroni Kid Athens | MacaroniKid-GA | 161 | 17 | 23 | 59 | 0 | 17 | 277 | [link (event, DB fallback)](https://events.yodel.today/y/event/Athens-Clarke-County-Library/Teen-Creative-Writing-Club/6a640a9398a3d00d4fb3deb9) |
+| Macaroni Kid East Atlanta-Downtown Atlanta-Little 5 Points | MacaroniKid-GA | 143 | 23 | 27 | 40 | 2 | 17 | 252 | [link (event, DB fallback)](https://events.yodel.today/y/event/Oakland-Cemetery/Oakland-Tour/6a0bcdbaeb3fddfdcdefd104) |
+| Macaroni Kid Alpharetta-Roswell-Milton | MacaroniKid-GA | 84 | 53 | 6 | 48 | 9 | 12 | 212 | [link (event, DB fallback)](https://events.yodel.today/y/event/Cumming-City-Center/Singles-Social-Tuesdays/6a687a529f425062242ed7e2) |
+| Macaroni Kid Buckhead-Midtown-Brookhaven | MacaroniKid-GA | 165 | 9 | 4 | 23 | 1 | 0 | 202 | [link (event, DB fallback)](https://events.yodel.today/y/event/Vinyl/Henry-Moodie/6a4ef0e9513c87b7dac5f21e) |
+| Macaroni Kid Duluth-Norcross-Suwanee-Johns Creek-Ptree Corners | MacaroniKid-GA | 69 | 50 | 25 | 19 | 8 | 9 | 180 | [link (event, DB fallback)](https://events.yodel.today/y/event/Peachtree-Corners-Library/Literacy---Reading-Buddies/6a6d202fa75dcb9d7c8c3ca2) |
+| Macaroni Kid Snellville-Grayson-Stone Mtn | MacaroniKid-GA | 47 | 76 | 32 | 17 | 1 | 0 | 173 | [link (event, DB fallback)](https://events.yodel.today/y/event/Gwinnett-County-Public-Library---Five-Forks-Branch/Early-Learning---Toddler-Time/6a6b6e8ded202b82a82cebae) |
+| Macaroni Kid Sandy Springs-Dunwoody | MacaroniKid-GA | 89 | 16 | 1 | 24 | 0 | 6 | 136 | [link (event, DB fallback)](https://events.yodel.today/y/event/Discover-Dunwoody/Mini-Makers/6a624c771234bd5241419844) |
+| Macaroni Kid Peachtree City-Fayetteville-Newnan | MacaroniKid-GA | 86 | 14 | 0 | 21 | 7 | 0 | 128 | [link (event, DB fallback)](https://events.yodel.today/y/event/Peachtree-City-Library/Preschool-Storytime--Ages-2-4-/6a7151246c1e2a720fe60267) |
+| Macaroni Kid Lawrenceville | MacaroniKid-GA | 36 | 50 | 26 | 6 | 0 | 3 | 121 | [link (event, DB fallback)](https://events.yodel.today/y/event/Planned-PEThood-of-GA/Pet-Adoptions-at-PetSmart-Lawrenceville/6a6131428df3d2a0965e9179) |
+| Macaroni Kid Stonecrest-Conyers-Covington | MacaroniKid-GA | 97 | 1 | 0 | 3 | 0 | 5 | 106 | [link (event, DB fallback)](https://events.yodel.today/y/event/Rockdale-County-Parks---Recreation/Rockdale-Farmers-Market/6a503ad69be057b0d2de618b) |
+| Macaroni Kid Smyrna Vinings | MacaroniKid-GA | 32 | 19 | 6 | 3 | 0 | 2 | 62 | [link (event, DB fallback)](https://events.yodel.today/y/event/Smyrna-Public-Library/To-Go-Craft-Kits/6a5921d954cf8f966913e0f6) |
+| Macaroni Kid Winder-Buford | MacaroniKid-GA | 18 | 24 | 8 | 2 | 0 | 0 | 52 | [link (event, DB fallback)](https://events.yodel.today/y/event/Gwinnett-County-Public-Library---Buford-Sugar-Hill-Branch/Early-Learning---Preschool-Storytime/6a45747eeb9c368118e91db6) |
+| Macaroni Kid Decatur-Toco Hills-Avondale Estates | MacaroniKid-GA | 27 | 9 | 0 | 11 | 3 | 1 | 51 | [link (event, DB fallback)](https://events.yodel.today/y/event/The-Amphibian-Foundation/Critter-Caf----6-9/6a486d25c92aab6ff61f66e8) |
+| Macaroni Kid Gainesville-Flowery Branch | MacaroniKid-GA | 22 | 10 | 0 | 11 | 4 | 1 | 48 | [link (event, DB fallback)](https://events.yodel.today/y/event/Hall-County-Library-System---Blackshear-Place-Branch/Let-s-Play-Storytime/6a5a6dadb775157fa89da6fb) |
+| Macaroni Kid College Park-East Point-Jonesboro | MacaroniKid-GA | 14 | 6 | 1 | 3 | 0 | 0 | 24 | [link (event, DB fallback)](https://events.yodel.today/y/event/Fulton-County-Library-System/Beyblades-/6a6588aae523bbb187f76957) |
+| Macaroni Kid Franklin-Hart | MacaroniKid-GA | 19 | 1 | 0 | 0 | 0 | 0 | 20 | [link (event, DB fallback)](https://events.yodel.today/y/event/Madison-County-Library/Needlecrafters/6a70cb89d4b1c6cee6003636) |
+| Macaroni Kid Hartford | MacaroniKid-CT | 150 | 9 | 13 | 31 | 4 | 13 | 220 | [link (event, DB fallback)](https://events.yodel.today/y/event/Parkville-Market/Monday-Movie-Nights---Parkville-Market/6a4b611c16fda016a10fd855) |
+| Macaroni Kid Greater Danbury | MacaroniKid-CT | 82 | 28 | 21 | 32 | 1 | 13 | 177 | [link (event, DB fallback)](https://events.yodel.today/y/event/CH-Booth-Library/Newtown-Chess-Club/6a30403c99e7f9f3857e4139) |
+| Macaroni Kid Southbury | MacaroniKid-CT | 39 | 4 | 4 | 46 | 1 | 2 | 96 | [link (event, DB fallback)](https://events.yodel.today/y/event/White-Memorial-Conservation-Center/Children-s--Free-Week-in-the-Museum/6a70bcdf173d1ee6216277c6) |
+| Macaroni Kid Fairfield-Trumbull-Shelton | MacaroniKid-CT | 41 | 5 | 9 | 16 | 0 | 3 | 74 | [link (event, DB fallback)](https://events.yodel.today/y/event/Ansonia-Nature-and-Recreation-Center/Creature-Feature/6a28c63d081cd96f7e59ebef) |
+| Macaroni Kid Southington-Bristol-Cheshire | MacaroniKid-CT | 29 | 6 | 13 | 15 | 0 | 5 | 68 | [link (event, DB fallback)](https://events.yodel.today/y/event/GIRL-Boxing-Club/IYC--CT--x-GIRL-Boxing-Club-8-23-26/6a6c08652a12d39420daa16c) |
+| Macaroni Kid Enfield | MacaroniKid-CT | 19 | 2 | 1 | 15 | 1 | 0 | 38 | [link (event, DB fallback)](https://events.yodel.today/y/event/Fred-Astaire-Dance-Studios---Suffield/Ballroom-and-Latin-Kids-Group-Class/6a26edf558147e7c02111909) |
+| Macaroni Kid Greenwich to Westport | MacaroniKid-CT | 7 | 6 | 7 | 12 | 2 | 2 | 36 | [link (event, DB fallback)](https://events.yodel.today/y/event/Wilton-Library/Cartoon-Drawing-With-Emma/6a5956f8fb48299154f0b338) |
+| Macaroni Kid Wallingford-North Haven | MacaroniKid-CT | 27 | 0 | 0 | 2 | 2 | 1 | 32 | [link (event, DB fallback)](https://events.yodel.today/y/event/Insignia-Lash/TEEN-BEAUTY-WEEK/6a39fe8d9397c70edef5e97f) |
+| Macaroni Kid Old Lyme-Madison-Shoreline Towns | MacaroniKid-CT | 17 | 2 | 3 | 2 | 2 | 0 | 26 | [link (event, DB fallback)](https://events.yodel.today/y/event/Niantic-Children-s-Museum/Instrument-Petting-Zoo-with-the-ECSO/6a731b0ada34c28e17c3d1c6) |
+| Macaroni Kid Seacoast | MacaroniKid-NH | 254 | 50 | 11 | 61 | 2 | 6 | 384 | [link (event, DB fallback)](https://events.yodel.today/y/event/Rye-Public-Library/Knitting-Club/6a28658154bc58869def22a5) |
+| Macaroni Kid Derry-Hampstead-Salem-Pelham | MacaroniKid-NH | 104 | 41 | 24 | 43 | 7 | 8 | 227 | [link (event, DB fallback)](https://events.yodel.today/y/event/Heart-Studio/Design-Explorers--Mosaic--Paint---Bead--Ages-9-14-/6a50f342dbfe1c5462b8447f) |
+| Macaroni Kid Nashua-Merrimack | MacaroniKid-NH | 31 | 27 | 8 | 18 | 2 | 9 | 95 | [link (event, DB fallback)](https://events.yodel.today/y/event/Nashua-Public-Library/Postpartum-Support-Group-In-Person/6a708b9d581306fc772c880f) |
+| Macaroni Kid Manchester-Bedford | MacaroniKid-NH | 38 | 13 | 4 | 23 | 0 | 1 | 79 | [link (event, DB fallback)](https://events.yodel.today/y/event/Cowabunga-s-Indoor-Kids-Play---Party-Center---Manchester/Friday-Night-Fun-/6a63841ac22e92df59ea7df3) |
+| Macaroni Kid Concord | MacaroniKid-NH | 32 | 5 | 8 | 14 | 0 | 1 | 60 | [link (event, DB fallback)](https://events.yodel.today/y/event/Intown-Concord/Free-Outdoor-Movie-Night---Pirates-of-the-Caribbean--The-Curse-of-the-Black-Pearl/6a620f7902ed2d000ae603fa) |
+| Macaroni Kid Midcoast | MacaroniKid-ME | 75 | 11 | 20 | 17 | 4 | 3 | 130 | [link (event, DB fallback)](https://events.yodel.today/y/event/Rockland-Public-Library/Rockin--Storytime/69f36fbe561fe02cacb75be2) |
+| Macaroni Kid Lakes Region~Outer Portland | MacaroniKid-ME | 19 | 9 | 0 | 3 | 0 | 0 | 31 | [link (event, DB fallback)](https://events.yodel.today/y/event/Denmark-Arts-Center/DAM-JAM-REVIVAL-SATURDAY--AUGUST-15-2026-2-7PM/69ed49988b14d4a5b0eebbbc) |
+
+### Scrapers with zero attributable new events today
+
+These appeared in today's log window but had zero rows with a `created_at` timestamp on 2026-08-06 — per the stale-reprint finding above, all 51 non-MacaroniKid entries below already ran (and were logged) on 2026-08-05; `WordPress-MD`'s 16:31 rerun found only pre-existing-ID updates:
+
+- ActiveNet-Parks-Eastern
+- Activities-BowlingAlleys-DMV
+- Activities-Eastern-US
+- Activities-FamilyEntertainment-DMV
+- Activities-IndoorPlaygrounds-DMV
+- Activities-NatureFarms-DMV
+- Activities-SwimmingPools-DMV
+- BarnesNoble-Eastern
+- Berks-County
+- BiblioCommons-GA
+- BiblioCommons-NC
+- Brooklyn-Library
+- Cecil-County
+- Communico-AL
+- Communico-GA
+- Communico-KY
+- Communico-NJ
+- Communico-SC
+- CustomDrupal-Libraries
+- EventActions-Libraries
+- FestivalGuides-Eastern
+- Festivals-Eastern-US
+- Graniculator-Morris
+- Howard-County
+- LibCal-CT
+- LibCal-GA
+- LibCal-MA
+- LibCal-NY1
+- LibCal-PA
+- LibCal-TN
+- LibCal-VT
+- LibCal-WV
+- LibraryMarket
+- LibraryMarket-GA
+- LibraryMarket-ME-NH-MA
+- Localist-Parks
+- Louisville-Library
+- Montgomery-Parks
+- NPS-Parks
+- PG-Parks
+- Rockbridge-Regional
+- Simpleview-Tourism-Eastern
+- Somerset-County
+- Tockify-Horry
+- Venue-Events-ChildrensMuseums
+- WordPress-FL
+- WordPress-MD
+- WordPress-ME
+- WordPress-MS
+- WordPress-NJ
+- WordPress-NY
+- YMCA-Community-Eastern
+
+### Flagged: All Ages >= 70% (total >= 20 events)
+
+Excludes the known-legitimate broad-content sources per standing convention (`FestivalGuides-Eastern`, `FairsFestivals-Eastern`, `KidsOutAndAbout-Eastern`, `KidsOutAndAbout-DMV`, `Eventbrite-Family-Eastern`) — none of today's rows belong to those scrapers, so no exclusions applied. All 14 flagged rows are MacaroniKid city editions:
+
+- **MacaroniKid-FL** — Macaroni Kid Sarasota-Venice — 70.1% All Ages (338 events)
+- **MacaroniKid-FL** — Macaroni Kid Vero Beach — 86.5% All Ages (260 events)
+- **MacaroniKid-GA** — Macaroni Kid Buckhead-Midtown-Brookhaven — 81.7% All Ages (202 events)
+- **MacaroniKid-GA** — Macaroni Kid Stonecrest-Conyers-Covington — 91.5% All Ages (106 events)
+- **MacaroniKid-NY** — Macaroni Kid Binghamton — 70.5% All Ages (78 events)
+- **MacaroniKid-FL** — Macaroni Kid Daytona Beach — 86.8% All Ages (53 events)
+- **MacaroniKid-NY** — Macaroni Kid Lower Manhattan-Downtown — 73.8% All Ages (42 events)
+- **MacaroniKid-FL** — Macaroni Kid Port Charlotte-Punta Gorda — 80.0% All Ages (35 events)
+- **MacaroniKid-FL** — Macaroni Kid Sebring-Lake Placid-Avon Park — 82.4% All Ages (34 events)
+- **MacaroniKid-NY** — Macaroni Kid Upper West Side — 96.9% All Ages (32 events)
+- **MacaroniKid-CT** — Macaroni Kid Wallingford-North Haven — 84.4% All Ages (32 events)
+- **MacaroniKid-NY** — Macaroni Kid Riverhead — 92.3% All Ages (26 events)
+- **MacaroniKid-FL** — Macaroni Kid Brandon — 73.9% All Ages (23 events)
+- **MacaroniKid-GA** — Macaroni Kid Franklin-Hart — 95.0% All Ages (20 events)
