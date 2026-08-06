@@ -98,6 +98,57 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 - When modifying MacaroniKid scrapers, remember all 43 files share the same structure — changes often need to be applied to all of them via a script.
 - Geocoding fallback chain: full address → city-level → venue cache → county centroid (each step guarded by `if (!coords)`).
 
+### Scraper Naming — `scraper_name` and `source_url`
+
+`scraper_name` is the **only** join between a database row and the registry entry that produced it. `source_url` is the only field that records **where** an event came from rather than what someone called it. Both are load-bearing: the daily audits group by `scraper_name`, `scraper-summary.log` reports registry keys, and `scripts/verify-coverage.js` establishes identity from the `source_url` host. When either drifts, those break silently.
+
+**Measured 2026-08-05: only 143 of 434 distinct `scraper_name` values (33%) conform.** Run `node scripts/check-scraper-names.js` for the current state.
+
+#### The two legal forms of `scraper_name`
+
+| Scraper covers | Required `scraper_name` | Example |
+|---|---|---|
+| One site | exactly the registry key | `Pratt-Library` |
+| Many sites | `<registryKey>-<siteSlug>` | `RecDesk-Parks-ccrec` |
+
+**Rules, no exceptions:**
+
+1. **The prefix must be the registry key byte-for-byte**, including case and hyphens. `wordpress-NY` is wrong — the key is `WordPress-NY`. `RecDeskParks-ccrec` is wrong — the key is `RecDesk-Parks`, so it must be `RecDesk-Parks-ccrec`.
+2. **`siteSlug` is lowercase `[a-z0-9-]` only.** Derive it from the site's own hostname subdomain or an explicit `slug` in the config array — never from a display name.
+3. **A multi-site scraper MUST emit one distinct `scraper_name` per site.** Never collapse them onto the bare registry key. `AGE-RANGE-AUDIT.md` groups by `scraper_name` and its "No aggregation, ever" rule requires one row per individual site; collapsing re-creates the aggregation the project owner rejected on 2026-08-04. `MacaroniKid-FL` alone covers 31 sites, `CivicRec-Parks-Eastern` ~250.
+4. **Never write a library's or venue's display name.** `Durham County Library`, `Macaroni Kid Winter Park`, and `BCCLS - Bergen County Cooperative Library System` are all wrong — they cannot be joined to the registry, which is what forced the age audit into `created_at` time-window archaeology.
+5. **Set it via `metadata.scraperName`.** That is what `flattenEvent()` reads first (`supabase-adapter.js`, `row.scraper_name = row.scraper_name || data.metadata.scraperName || data.metadata.sourceName || ...`). If you omit it, the adapter silently falls back to `metadata.sourceName` — which is how the display-name drift happened.
+
+#### `source_url` must be the listing page, never the event
+
+Set `metadata.sourceUrl` to **the site's own calendar/listing URL** — the page the scraper visits — not the individual event's URL.
+
+```js
+// CORRECT — per-site, distinctive host
+metadata: { sourceUrl: site.url,  // https://apollobeach.macaronikid.com
+            scraperName: `MacaroniKid-FL-${site.url.replace(/^https?:\/\//, '').split('.')[0]}` }
+
+// WRONG — this is the event's own page
+metadata: { sourceUrl: url }
+```
+
+`scraper-macaroni-md.js` did the wrong version and its stored `source_url` was byte-identical to `url` on every row. Beyond violating the field's meaning, it would have given every MacaroniKid site in every state the host `events.yodel.today`, which is useless for identity and breaks `verify-coverage.js`.
+
+#### Checklist for a NEW scraper
+
+Before committing a new scraper file, confirm every line:
+
+- [ ] Registered in `scrapers/scraper-registry.js` with `file`, `exportName`, `group` (1/2/3), `state` (2-letter, or `Multi`), and `sites: N` if it covers more than one site.
+- [ ] Registry key follows an existing family pattern: `Family-ST` (`LibCal-NC`), `Family-REGION` (`Activities-BowlingAlleys-DMV`), or `Family-Words` (`Pratt-Library`).
+- [ ] `metadata.scraperName` set on every event, matching one of the two legal forms above.
+- [ ] Multi-site: `scraperName` includes the per-site slug — verify with `node scripts/check-scraper-names.js` that distinct-name count equals the declared `sites`.
+- [ ] `metadata.sourceUrl` set to the **site's listing URL**, not the event URL, and not a domain shared with another site.
+- [ ] Site URLs verified live — confirm the institution, city and state match before saving. Never a guessed `{city}library.org`; that generator produced 355 cross-state collisions.
+- [ ] `county` values are real counties that resolve via `getCountyCentroid()`. Do not append `" County"` to a city name.
+- [ ] `node -c scrapers/<file>.js` passes.
+- [ ] Dry run first, and read the sample output.
+- [ ] One `SCRAPER-FIX-LOG.jsonl` line with `category: "new-coverage"`.
+
 ### Testing Patterns
 - Syntax check: `node -c scrapers/filename.js`
 - Data quality: `node scripts/data-quality-check.js` (must run locally — sandbox can't reach Supabase)
