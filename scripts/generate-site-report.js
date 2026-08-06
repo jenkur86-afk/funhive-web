@@ -116,6 +116,43 @@ function newestDate(md, today) {
   return pool.length ? pool[pool.length - 1] : '';
 }
 
+// Current configured URL per (scraper, site name), read straight from the scraper files.
+// The audit tables are a snapshot of the last scrape; this is what the config says NOW, so a
+// row can report "URL corrected, awaiting re-scrape" instead of silently showing a stale link.
+function loadConfigIndex() {
+  const reg = require(path.join(ROOT, 'scrapers', 'scraper-registry.js'));
+  const all = { ...reg.SCRAPERS, ...reg.MACARONI_SCRAPERS };
+  const idx = new Map();           // "scraper|||normalisedName" -> url
+  const fileCache = new Map();
+  Object.entries(all).forEach(([key, sc]) => {
+    if (!sc.file) return;
+    const abs = path.join(ROOT, 'scrapers', String(sc.file).replace(/^\.\//, ''));
+    if (!fs.existsSync(abs)) return;
+    let entries = fileCache.get(abs);
+    if (!entries) {
+      const src = fs.readFileSync(abs, 'utf8');
+      entries = [];
+      const objRe = /\{[^{}]*\}/g;
+      const nameRe = /["']?name["']?\s*:\s*(?:'([^']*)'|"([^"]*)")/;
+      const urlRe  = /["']?url["']?\s*:\s*(?:'([^']*)'|"([^"]*)")/;
+      let o;
+      while ((o = objRe.exec(src))) {
+        const nm = nameRe.exec(o[0]); if (!nm) continue;
+        const uu = urlRe.exec(o[0]);  if (!uu) continue;
+        entries.push([nm[1] !== undefined ? nm[1] : nm[2], uu[1] !== undefined ? uu[1] : uu[2]]);
+      }
+      fileCache.set(abs, entries);
+    }
+    entries.forEach(([n, u]) => idx.set(key + '|||' + cfgKey(n), u));
+  });
+  return idx;
+}
+// Audit rows name sites "Belmont Branch Library (Belmont, NC)"; config says "Belmont Branch Library".
+function cfgKey(name) {
+  return String(name).replace(/\s*\([^)]*\)\s*$/, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+function hostOf(u) { try { return new URL(u).host.replace(/^www\./, ''); } catch (e) { return ''; } }
+
 // ---------------------------------------------------------------- load sources
 
 function loadSites() {
@@ -131,7 +168,7 @@ function loadSites() {
     const scraper = c[2] || MISSING;
     // gap = this row could not be broken down to a real per-site count.
     const gap = note || (/aggregate|not itemized|no per-library/i.test(site) ? 'aggregate row' : '');
-    return [site, state, scraper, n, gap, url, kind];
+    return [site, state, scraper, n, gap, url, kind];   // status appended later in main()
   });
   return { rows, dataDate, error: raw.length ? '' : 'no parseable rows in LIBRARY-SITE-AUDIT.md' };
 }
@@ -435,6 +472,14 @@ td.detail .unv{color:var(--warn);margin-top:5px;font-size:12px}
 td.detail details.ev{margin-top:4px}
 td.detail details.ev summary{cursor:pointer;color:var(--accent-text);font-weight:600;font-size:12px}
 td.detail details.ev div{color:var(--text-dim);margin:5px 0 0 10px;padding-left:8px;border-left:2px solid var(--border)}
+td.statuscell{min-width:200px;max-width:330px}
+.rowstat{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  padding:1px 6px;border-radius:5px;white-space:nowrap}
+.rowstat.s-current{background:var(--ok-soft);color:var(--ok);border:1px solid var(--ok)}
+.rowstat.s-refixed{background:var(--accent-soft);color:var(--accent-text);border:1px solid var(--accent)}
+.rowstat.s-unmatched{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn)}
+.rowstat.s-unknown{background:var(--surface-2);color:var(--text-faint);border:1px solid var(--border)}
+.statdetail{font-size:11.5px;color:var(--text-dim);margin-top:4px;line-height:1.4}
 .bucket{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.03em;padding:2px 7px;
   border-radius:5px;white-space:nowrap}
 .bucket.b-dead-domain{background:var(--crit-soft);color:var(--crit);border:1px solid var(--crit)}
@@ -503,7 +548,7 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--border);color
       <th data-key="state">State<span class="arrow">↕</span></th>
       <th data-key="scraper">Scraper<span class="arrow">↕</span></th>
       <th data-key="found">Events<span class="arrow">↕</span></th>
-      <th>Link</th><th>Comments — is 0 really 0?</th>
+      <th>Link</th><th data-key="status">Status<span class="arrow">↕</span></th><th>Comments — is 0 really 0?</th>
     </tr></thead><tbody></tbody>
   </table></div>
 </section>
@@ -627,14 +672,6 @@ const FLAGGED = AGES
 
   const b = [];
   if(NOTES.length) NOTES.forEach(n => b.push('<div class="banner warn">'+esc(n)+'</div>'));
-  const stale = [LIB_DATE, AGE_DATE].filter(d => d && d < RUN_DATE);
-  if(stale.length){
-    b.push('<div class="banner warn"><b>Counts and links below are last-scrape data, not current config.</b> '
-      + 'The library audit is dated ' + esc(LIB_DATE || '?') + ' and the age audit ' + esc(AGE_DATE || '?')
-      + ', while this page was generated ' + esc(RUN_DATE) + '. Scraper config edits made since the last run '
-      + '(corrected URLs, renamed scrapers) will NOT appear here until those scrapers run again and Steps 3b/3c rebuild the audit files. '
-      + 'A Link column showing an old domain means the audit is stale, not that the fix was lost.</div>');
-  }
   if(PENDING && PENDING.length){
     b.push('<div class="banner pending"><b>Pending verification — '+PENDING.length+' item(s).</b> '
       + 'Each is a change already made whose effect has not been observed yet. Confirm it, then delete that entry from <code>reports/fix-notes.json</code>.'
@@ -697,15 +734,18 @@ buildTable({
   rows: SITES.slice().sort((a,b)=>(b[3]||0)-(a[3]||0)),
   tbody: document.querySelector('#sites-table tbody'),
   ths: Array.from(document.querySelectorAll('#sites-table thead th')),
-  keyMap: {site:0,state:1,scraper:2,found:3},
+  keyMap: {site:0,state:1,scraper:2,found:3,status:7},
   searchInput: document.getElementById('sites-search'),
   countEl: document.getElementById('sites-count'),
-  searchFields: r => r[0]+' '+r[1]+' '+r[2],
+  searchFields: r => r[0]+' '+r[1]+' '+r[2]+' '+(r[7]||''),
   rowRenderer: r =>
     '<tr><td class="site">'+esc(r[0])+(r[4]?'<span class="tag gap" title="'+esc(r[4])+'">gap</span>':'')+'</td>'+
     '<td>'+esc(r[1])+'</td><td class="scraper">'+esc(r[2])+'</td>'+
     '<td class="num">'+(r[3]===null?'<span class="tag missing">no count</span>':fmt(r[3]))+'</td>'+
-    linkCell(r[5],r[6]) + commentCell(r[2],r[0]) + '</tr>'
+    linkCell(r[5],r[6]) +
+    '<td class="statuscell"><span class="rowstat s-'+esc(r[7]||'unknown')+'">'+esc(r[7]||'unknown')+'</span>'+
+      (r[8] ? '<div class="statdetail">'+esc(r[8])+'</div>' : '')+'</td>' +
+    commentCell(r[2],r[0]) + '</tr>'
 });
 
 // Ages: [site,scraper,all,babies,pre,kids,tween,teen,total,url,kind,note]
@@ -876,6 +916,33 @@ function main() {
 
   const missing = coverage.filter(r => r[6] === 'none').length;
   console.log(`  coverage     : ${coverage.length} rows (${missing} awaiting this cycle, ${orphans.length} not in active registry)`);
+
+  // Per-row status: compare the audit's link against what the config says today.
+  const cfgIdx = loadConfigIndex();
+  let nStale = 0, nGone = 0;
+  sites.forEach(r => {
+    const cur = cfgIdx.get(r[2] + '|||' + cfgKey(r[0]));
+    const auditHost = hostOf(r[5]);
+    let status = 'unknown', detail = '';
+    if (cur === undefined) {
+      // Could not tie this audit row to a config entry. That is NOT proof of removal — the
+      // name may be spelled differently in the config, or the file may use a shape we do not
+      // parse. Say what is true: we could not match it.
+      status = 'unmatched';
+      detail = 'could not be matched to an entry in ' + r[2] + "'s config — the name may differ there, or the entry may have been removed. Not confirmed either way.";
+      nGone++;
+    } else if (!auditHost) {
+      status = 'current'; detail = 'no link recorded in the audit';
+    } else if (hostOf(cur) === auditHost) {
+      status = 'current'; detail = 'config still points at this domain';
+    } else {
+      status = 'refixed';
+      detail = 'URL corrected since this scrape: config now points at ' + hostOf(cur) + '. Counts and link below are from the older run.';
+      nStale++;
+    }
+    r.push(status, detail, cur || '');
+  });
+  console.log(`  row status   : ${nStale} URL-corrected-since-scrape, ${nGone} unmatched-to-config`);
 
   const fixQueue = buildFixQueue({ sites, ages, comments, roster, fixNotes });
   const pinned = fixQueue.filter(r => r[11]).length;
