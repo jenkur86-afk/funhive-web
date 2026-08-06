@@ -55,6 +55,14 @@ node "$SCRIPT_DIR/fix-missing-fields.js" --save --addresses $ARGS
 
 echo ""
 echo "═══════════════════════════════════════════════════"
+echo ""
+echo "==================================================="
+echo "  STEP 5: generate-site-report.js"
+echo "  (refresh reports/site-report.html from the run that"
+echo "   just finished - local files only, no egress)"
+echo "==================================================="
+node "$SCRIPT_DIR/generate-site-report.js" || true   # never fail the chain on a report error
+
 echo "  ✅ ALL FIXES COMPLETE"
 echo "  Run: node scripts/data-quality-quick.js  (cheap audit)"
 echo "  or:  node scripts/data-quality-check.js  (monthly full audit)"

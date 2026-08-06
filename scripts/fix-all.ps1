@@ -50,6 +50,15 @@ if (-not $?) { exit 1 }
 
 Write-Host ""
 Write-Host "==================================================="
+Write-Host "  STEP 5: generate-site-report.js"
+Write-Host "  (refresh reports/site-report.html from the run"
+Write-Host "   that just finished - local files only, no egress)"
+Write-Host "==================================================="
+node "$scriptDir\generate-site-report.js"
+# Deliberately not gated on $? : a report failure must never fail the data-quality chain.
+
+Write-Host ""
+Write-Host "==================================================="
 Write-Host "  ALL FIXES COMPLETE"
 Write-Host "  Run: node scripts\data-quality-quick.js  (cheap audit)"
 Write-Host "  or:  node scripts\data-quality-check.js  (monthly full audit)"

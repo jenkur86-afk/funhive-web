@@ -23,6 +23,7 @@ const AGE_MD = path.join(ROOT, 'AGE-RANGE-AUDIT.md');
 const COMMENTS_JSON = path.join(ROOT, 'reports', 'verification-comments.json');
 const FIX_NOTES_JSON = path.join(ROOT, 'reports', 'fix-notes.json');
 const OUT_HTML = path.join(ROOT, 'reports', 'site-report.html');
+const RUN_LOG = path.join(ROOT, 'scrapers', 'logs', 'scraper-summary.log');
 
 const MISSING = '—';
 
@@ -114,6 +115,29 @@ function newestDate(md, today) {
   const pool = (heads.length ? heads : (md.match(/20\d{2}-\d{2}-\d{2}/g) || []))
     .filter(d => !today || d <= today).sort();
   return pool.length ? pool[pool.length - 1] : '';
+}
+
+// Last run per scraper, parsed from scrapers/logs/scraper-summary.log. That file is appended
+// by every scraper run, so this makes the report reflect the 3am run without waiting for the
+// 2:12pm diagnosis to rebuild the audit files. Local read, no database, no egress.
+// Column layout changed over time: older runs omit INVALID, so parse by count.
+function loadRunLog() {
+  const out = new Map();
+  if (!fs.existsSync(RUN_LOG)) return out;
+  const lines = fs.readFileSync(RUN_LOG, 'utf8').split(/\r?\n/);
+  const re = /^\[(\d{4}-\d{2}-\d{2})T[^\]]*\]\s+(?:⚠️\s*)?([A-Za-z][\w.\- ]*?)\s{2,}([\d,]+)\s+([\d,]+)\s+([\d,]+)(?:\s+([\d,]+))?\s+([\d.]+)\s*$/;
+  for (const line of lines) {
+    const m = re.exec(line);
+    if (!m) continue;
+    const name = m[2].trim();
+    if (!name || /^-+$/.test(name) || name === 'SCRAPER') continue;
+    const nums = [m[3], m[4], m[5], m[6]].filter(v => v !== undefined).map(v => parseInt(String(v).replace(/,/g, ''), 10));
+    // 4 numeric cols => FOUND NEW DUPES INVALID ; 3 => FOUND NEW DUPES (older format)
+    const rec = { date: m[1], found: nums[0], nu: nums[1], dupes: nums[2], invalid: nums.length > 3 ? nums[3] : null };
+    const prev = out.get(name);
+    if (!prev || rec.date >= prev.date) out.set(name, rec);   // keep the most recent
+  }
+  return out;
 }
 
 // Current configured URL per (scraper, site name), read straight from the scraper files.
@@ -488,6 +512,13 @@ td.statuscell{min-width:200px;max-width:330px}
 .statdetail{font-size:11.5px;color:var(--text-dim);margin-top:4px;line-height:1.4}
 .rowstat.s-awaiting{background:var(--accent-soft);color:var(--accent-text);border:1px solid var(--accent)}
 .tag.await{background:var(--accent-soft);color:var(--accent-text);border:1px solid var(--accent)}
+td.runcell{white-space:nowrap;min-width:132px}
+.runbadge{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:5px;
+  font-variant-numeric:tabular-nums}
+.runbadge.ran-today{background:var(--ok-soft);color:var(--ok);border:1px solid var(--ok)}
+.runbadge.ran-older{background:var(--surface-2);color:var(--text-dim);border:1px solid var(--border)}
+.rundetail{font-size:11px;color:var(--text-dim);margin-top:3px;font-variant-numeric:tabular-nums}
+.rundetail .bad{color:var(--crit)}
 .pendbox{margin-top:7px;padding:7px 10px;border-left:3px solid var(--accent);background:var(--surface-2);border-radius:6px}
 .pendbox .pd{font-size:11.5px;color:var(--text-dim);margin-top:4px;line-height:1.45}
 .pendbox .pd.mono{font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;font-size:11px;color:var(--accent-text)}
@@ -607,6 +638,7 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--border);color
       <th data-key="ageRows">Age rows<span class="arrow">↕</span></th>
       <th data-key="events">Events<span class="arrow">↕</span></th>
       <th data-key="status">Status<span class="arrow">↕</span></th>
+      <th data-key="lastrun">Last run<span class="arrow">↕</span></th>
       <th>Why</th>
     </tr></thead><tbody></tbody>
   </table></div>
@@ -624,7 +656,7 @@ const SITES = ${jsonLiteral(sites)};
 const AGES = ${jsonLiteral(ages)};
 const COMMENTS = ${jsonLiteral(comments)};
 const ROSTER = ${jsonLiteral(roster)};
-const COVERAGE = ${jsonLiteral(coverage)};
+const COVERAGE = ${jsonLiteral(coverage.map(r => [...r, r[8] ? r[8].date : '']))};
 const FIXQUEUE = ${jsonLiteral(fixQueue)};
 const GLOBAL_NOTE = ${jsonLiteral(globalNote)};
 const PENDING = ${jsonLiteral(pending)};
@@ -638,6 +670,17 @@ const MISSING = ${jsonLiteral(MISSING)};
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function fmt(n){return (n===null||n===undefined)?MISSING:Number(n).toLocaleString();}
 
+// Last-run cell. TODAY is highlighted: that scraper has run since the audit files were built,
+// so its numbers here are fresher than the counts in the other tabs.
+function runCell(run){
+  if(!run) return '<td class="runcell"><span class="rowstat s-unknown">never</span></td>';
+  const today = RUN_DATE;
+  const cls = run.date === today ? 'ran-today' : 'ran-older';
+  const inv = (run.invalid === null || run.invalid === undefined) ? '' :
+    ' · <b'+(run.invalid>0?' class="bad"':'')+'>'+run.invalid+' invalid</b>';
+  return '<td class="runcell"><span class="runbadge '+cls+'">'+esc(run.date)+'</span>'
+    + '<div class="rundetail">'+run.found+' found · '+run.nu+' new'+inv+'</div></td>';
+}
 function pendingBlock(scraper){
   const p = PENDING[scraper];
   if(!p) return '';
@@ -688,6 +731,7 @@ const FLAGGED = AGES
     ['', covered, 'Scrapers with data this cycle'],
     [missingCount ? 'warn' : '', missingCount, 'Scrapers awaiting this cycle'],
     [Object.keys(PENDING).length ? 'accent' : '', Object.keys(PENDING).length, 'Scrapers with unverified changes'],
+    ['accent', COVERAGE.filter(r => r[8] && r[8].date === RUN_DATE).length, 'Scrapers run today'],
   ].map(([cls,n,l]) => '<div class="stat '+cls+'"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>').join('');
 
   const b = [];
@@ -836,14 +880,15 @@ buildTable({
   rows: COVERAGE,
   tbody: document.querySelector('#cov-table tbody'),
   ths: Array.from(document.querySelectorAll('#cov-table thead th')),
-  keyMap: {scraper:0,group:1,state:2,siteRows:3,ageRows:4,events:5,status:6},
+  keyMap: {scraper:0,group:1,state:2,siteRows:3,ageRows:4,events:5,status:6,lastrun:9},
   searchInput: document.getElementById('cov-search'),
   countEl: document.getElementById('cov-count'),
-  searchFields: r => r[0]+' '+r[1]+' '+r[2]+' '+r[6]+(PENDING[r[0]]?' awaiting pending':''),
+  searchFields: r => r[0]+' '+r[1]+' '+r[2]+' '+r[6]+' '+(r[8]?r[8].date:'never')+(PENDING[r[0]]?' awaiting pending':''),
   rowRenderer: r =>
     '<tr><td class="scraper">'+esc(r[0])+(PENDING[r[0]]?'<span class="tag await">awaiting</span>':'')+'</td><td class="num">'+esc(r[1])+'</td><td>'+esc(r[2])+'</td>'+
     '<td class="num">'+fmt(r[3])+'</td><td class="num">'+fmt(r[4])+'</td><td class="num">'+fmt(r[5])+'</td>'+
     '<td><span class="status '+esc(r[6])+'">'+esc(r[6])+'</span></td>'+
+    runCell(r[8]) +
     '<td class="comment-cell">'+esc(r[7])+pendingBlock(r[0])+'</td></tr>'
 });
 </script>
@@ -866,6 +911,7 @@ function main() {
   const comments = loadComments();
   const roster = loadRoster();
   const fixNotes = loadFixNotes();
+  const runLog = loadRunLog();
   const globalNote = fixNotes._global || null;
   const pending = (fixNotes._pending && typeof fixNotes._pending === 'object' && !Array.isArray(fixNotes._pending)) ? fixNotes._pending : {};
 
@@ -906,7 +952,8 @@ function main() {
       status = 'none';
       why = `No rows yet this cycle. Group ${r.group} — expected on that group's next run day.`;
     }
-    return [r.name, r.group, r.state, s, a, ev, status, why];
+    const run = runLog.get(r.name) || null;
+    return [r.name, r.group, r.state, s, a, ev, status, why, run];
   });
 
   // Scrapers seen in the audits that the registry no longer marks active.
@@ -922,12 +969,15 @@ function main() {
       (siteEvents.get(name) || 0) + (ageEvents.get(name) || 0),
       'partial',
       'Appears in the audit files but is not an active scraper in scraper-registry.js — stale row, renamed scraper, or an inactive-region entry. Kept so nothing is dropped.',
+      runLog.get(name) || null,
     ]);
   });
   if (orphans.length) {
     notes.push(`${orphans.length} scraper name(s) in the audit files are not active in scraper-registry.js: ${orphans.slice(0, 8).join(', ')}${orphans.length > 8 ? ', …' : ''}. Listed in Coverage.`);
   }
 
+  const ranToday = coverage.filter(r => r[8] && r[8].date === new Date().toISOString().slice(0,10)).length;
+  console.log(`  last-run data : ${runLog.size} scrapers in scraper-summary.log, ${ranToday} ran today`);
   const missing = coverage.filter(r => r[6] === 'none').length;
   console.log(`  coverage     : ${coverage.length} rows (${missing} awaiting this cycle, ${orphans.length} not in active registry)`);
 
