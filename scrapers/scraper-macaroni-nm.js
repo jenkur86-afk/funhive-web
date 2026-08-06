@@ -492,6 +492,8 @@ async function scrapeSite(browser, site, maxEvents = 50) {
         contact: { website: url, phone: details.phone || '' }, url: url,
         metadata: {
           source: 'Macaroni Kid New Mexico Scraper',
+          sourceUrl: site.url,
+          scraperName: 'MacaroniKid-NM',
           sourceName: `Macaroni Kid ${site.name}`,
           county: site.county,
           state: 'NM',

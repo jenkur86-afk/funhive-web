@@ -474,6 +474,7 @@ async function scrapeSite(site, maxEvents = 50) {
         url: url,
         metadata: {
           source: 'macaroni-kid',
+          sourceUrl: site.url,
           sourceName: `Macaroni Kid ${site.name}`,
           county: site.county,
           state: 'NC',

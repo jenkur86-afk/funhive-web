@@ -607,7 +607,7 @@ async function scrapeSite(browser, site, logger, maxEvents = 50) {
           state: 'MD'
         },
         metadata: {
-          sourceUrl: url,
+          sourceUrl: site.url,
           scraperName: 'MacaroniKid-MD',
           scrapedAt: new Date().toISOString(),
           category: parentCategory,

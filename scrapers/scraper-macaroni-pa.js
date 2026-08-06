@@ -528,6 +528,8 @@ async function scrapeSite(browser, site, maxEvents = 50) {
         contact: { website: url, phone: details.phone || '' }, url: url,
         metadata: {
           source: 'Macaroni Kid Pennsylvania Scraper',
+          sourceUrl: site.url,
+          scraperName: 'MacaroniKid-PA',
           sourceName: `Macaroni Kid ${site.name}`,
           county: site.county,
           state: 'PA',
