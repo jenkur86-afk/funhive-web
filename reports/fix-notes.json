@@ -109,10 +109,16 @@
       "added": "2026-08-05"
     },
     {
-      "what": "WordPress-NC Phase 2 batch 1 — 15 entries repointed (2026-08-05)",
-      "expect": "Next NC run should show nonzero counts for Sandhill (srls.info), PLJCS (pljcs.org), Gaston (gastonlibrary.org) and BHM (bhmlib.org). Extraction is NOT confirmed for any of them — these scrapers are WordPress-DOM-specific and some targets are LibGuides/other platforms, so a correct URL may still yield zero.",
+      "what": "WordPress-NC Phase 2 batches 1-2 — 28 entries repointed (2026-08-05/06)",
+      "expect": "Correct verified URLs for 10 parent systems: Sandhill(srls.info), PLJCS(pljcs.org), Gaston(gastonlibrary.org), BHM(bhmlib.org), Northwestern(nwrl.org), Sheppard(sheppardlibrary.org), Wilson(wilsoncountypubliclibrary.org), Alamance(library.alamancecountync.gov), CharlotteMecklenburg(cmlibrary.org), Catawba(catawbacountync.gov). EXTRACTION IS NOT CONFIRMED for any: WordPress-NC is DOM-specific, and Alamance hosts events on LibCal while Charlotte Mecklenburg hosts on BiblioCommons, so a correct URL may still yield zero from this scraper.",
       "confirm": "npm run scraper -- --scraper WordPress-NC   then check FOUND/INVALID in scrapers/logs/scraper-summary.log",
-      "added": "2026-08-05"
+      "added": "2026-08-06"
+    },
+    {
+      "what": "Gaston/other NC domains still flagged cross-state by the detector",
+      "expect": "gastonlibrary.org shows NC+SC, but the NC entries are CORRECT. The wrong one is SC's Lexington County Library - Gaston. Do not \"re-fix\" the NC side; it clears when WordPress-SC is done.",
+      "confirm": "node scripts/find-duplicate-library-urls.js",
+      "added": "2026-08-06"
     }
   ]
 }
