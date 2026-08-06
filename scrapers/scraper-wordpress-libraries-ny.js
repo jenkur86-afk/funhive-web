@@ -168,7 +168,15 @@ const LIBRARIES = [
   { name: 'Grafton Community Library', url: 'https://www.graftonlibrary.org', eventsUrl: 'https://www.graftonlibrary.org/events', city: 'Grafton', state: 'NY', zipCode: '12082', county: 'Grafton County'},
   { name: 'Pember Library Museum', url: 'https://www.granvillelibrary.org/', eventsUrl: 'https://www.granvillelibrary.org/', city: 'Granville', state: 'NY', zipCode: '12832', county: 'Granville County'},
   { name: 'Moore Memorial Library', url: 'https://www.greenelibrary.org', eventsUrl: 'https://www.greenelibrary.org/events', city: 'Greene', state: 'NY', zipCode: '13778', county: 'Greene County'},
-  { name: 'Greenville Public Library', url: 'https://www.greenvillelibrary.org', eventsUrl: 'https://www.greenvillelibrary.org/events', city: 'Greenville', state: 'NY', zipCode: '12083', county: 'Greenville County'},
+  // URL collision fixed 2026-08-05. This entry pointed at greenvillelibrary.org,
+  // which is the Greenville COUNTY Library System in SOUTH CAROLINA — a domain
+  // claimed by 10 active states at once. It was not merely returning nothing: it
+  // was actively ingesting South Carolina events under a New York label (146
+  // upcoming rows, including one literally titled "War in the South Carolina
+  // Backcountry" stored as Greenville, NY). Repointed to the real Greenville
+  // Public Library of Greene County NY, verified live: 11177 Rte 32, Greenville
+  // NY 12083, matching this entry's own ZIP.
+  { name: 'Greenville Public Library', url: 'https://greenville.lib.ny.us', eventsUrl: 'https://greenville.lib.ny.us/calendar/', city: 'Greenville', state: 'NY', zipCode: '12083', county: 'Greene'},
   { name: 'Easton Library', url: 'https://www.greenwichlibrary.org/', eventsUrl: 'https://www.greenwichlibrary.org/', city: 'Greenwich', state: 'NY', zipCode: '12834', county: 'Greenwich County'},
   { name: 'Guilderland Public Library', url: 'https://www.guilderlandlibrary.org', eventsUrl: 'https://www.guilderlandlibrary.org/events', city: 'Guilderland', state: 'NY', zipCode: '12084', county: 'Guilderland County'},
   { name: 'Hamburg Library', url: 'https://www.hamburglibrary.org/', eventsUrl: 'https://www.hamburglibrary.org/', city: 'Hamburg', state: 'NY', zipCode: '14075', county: 'Hamburg County'},
@@ -189,7 +197,12 @@ const LIBRARIES = [
   { name: 'Holland Patent Free Library', url: 'https://hollandpatentlibrary.org/', eventsUrl: 'https://hollandpatentlibrary.org/', city: 'Holland Patent', state: 'NY', zipCode: '13354', county: 'Holland Patent County'},
   { name: 'Community Free Library', url: 'https://www.holleylibrary.org', eventsUrl: 'https://www.holleylibrary.org/events', city: 'Holley', state: 'NY', zipCode: '14470', county: 'Holley County'},
   { name: 'Queens Borough Public Library - Hollis', url: 'https://www.hollislibrary.org', eventsUrl: 'https://www.hollislibrary.org/events', city: 'Hollis', state: 'NY', zipCode: '11423', county: 'Hollis County'},
-  { name: 'Phillips Free Library', url: 'https://www.homerlibrary.org', eventsUrl: 'https://www.homerlibrary.org/events', city: 'Homer', state: 'NY', zipCode: '13077', county: 'Homer County'},
+  // URL collision fixed 2026-08-05. This entry pointed at homerlibrary.org,
+  // which is the Homer Township Public Library District in Homer Glen,
+  // ILLINOIS — a different Homer entirely. Repointed to the real Phillips Free
+  // Library, verified live: 37 South Main St, Homer NY 13077, matching this
+  // entry's own ZIP, with real dated events on /events/.
+  { name: 'Phillips Free Library', url: 'https://phillipsfreelibrary.org', eventsUrl: 'https://phillipsfreelibrary.org/events/', city: 'Homer', state: 'NY', zipCode: '13077', county: 'Cortland'},
   { name: 'Hudson Area Association Library', url: 'https://www.hudsonlibrary.org', eventsUrl: 'https://www.hudsonlibrary.org/events', city: 'Hudson', state: 'NY', zipCode: '12534', county: 'Hudson County'},
   { name: 'Huntington Public Library', url: 'https://www.huntingtonlibrary.org', eventsUrl: 'https://www.huntingtonlibrary.org/events', city: 'Huntington', state: 'NY', zipCode: '11743', county: 'Huntington County'},
   { name: 'Hurley Library District', url: 'https://hurleylibrary.org/', eventsUrl: 'https://hurleylibrary.org/', city: 'Hurley', state: 'NY', zipCode: '12443', county: 'Hurley County'},

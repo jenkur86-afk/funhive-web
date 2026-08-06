@@ -769,6 +769,23 @@ const LIBRARY_SYSTEMS = [
     zipCode: '07652'
   },
   {
+    // Migrated here from Communico on 2026-08-05. Its old Communico host
+    // montclairlibrary.libnet.info is dead — it 302-redirects to google.co.uk,
+    // which is why every API/Puppeteer/link-fallback attempt returned 0.
+    // montclairlibrary.org's own site now links its calendar to this LibCal URL.
+    // A Montclair-specific cid is used rather than relying on the BCCLS cid=-1
+    // entry above: that system-wide scrape stores its rows under the BCCLS
+    // system venue, so Montclair's own programming could not be confirmed to be
+    // captured or attributed to Montclair. This guarantees both.
+    name: 'Montclair Public Library',
+    url: 'https://bccls.libcal.com/calendar/montclair?cid=10306&t=d&d=0000-00-00&cal=10306&inc=0',
+    county: 'Essex',
+    state: 'NJ',
+    website: 'https://www.montclairlibrary.org',
+    city: 'Montclair',
+    zipCode: '07042'
+  },
+  {
     name: 'Jersey City Free Public Library',
     url: 'https://jclibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Hudson',
@@ -954,6 +971,21 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.athenslibrary.org',
     city: 'Athens',
     zipCode: '30601'
+  },
+  {
+    // Migrated here from WordPress-GA on 2026-08-05. That entry had it on
+    // homerlibrary.org, which is really the Homer Township Public Library
+    // District in Homer Glen, ILLINOIS — a city-name collision, not this
+    // library. Banks County is part of the Piedmont Regional Library System and
+    // its calendar is LibCal, confirmed from prlib.org/banks-county's own
+    // events link, so it belongs in this file rather than the WordPress one.
+    name: 'Banks County Public Library',
+    url: 'https://prlib.libcal.com/calendar/BanksCounty?cid=20690&t=d&d=0000-00-00&cal=20690&inc=0',
+    county: 'Banks',
+    state: 'GA',
+    website: 'https://www.prlib.org/banks-county',
+    city: 'Homer',
+    zipCode: '30547'
   },
   {
     name: 'Hall County Library System',

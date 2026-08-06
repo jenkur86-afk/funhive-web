@@ -47,13 +47,13 @@
     "added": "2026-08-05"
   },
   "Communico-NJ": {
-    "note": "Montclair Public Library (montclairlibrary.libnet.info) is a dead domain, confirmed 2026-08-05: both root and /events 302-redirect to http://www.google.co.uk/. Not an extraction bug; the library moved off this platform/domain entirely. Needs the real current URL researched. Documented coverage gap, not a scraper failure.",
-    "priority": "normal",
+    "note": "RESOLVED 2026-08-05: Montclair Public Library moved to LibCal-NJ with its real bccls.libcal.com/calendar/montclair URL; the dead libnet.info entry was removed. Verify on the next Group 2 run that Montclair returns a nonzero count under LibCal-NJ.",
+    "priority": "low",
     "added": "2026-08-05"
   },
   "Communico-SC": {
-    "note": "Greenville County Library (greenville.libnet.info) and Richland Library (richland.libnet.info) are both dead domains, confirmed 2026-08-05, same google.co.uk redirect pattern as the Communico-NJ Montclair entry. Same fix needed: research each library real current calendar URL. Documented coverage gaps.",
-    "priority": "normal",
+    "note": "PARTIALLY RESOLVED 2026-08-05: the two dead libnet.info entries (Greenville County, Richland) were removed - they 302-redirected to google.co.uk and could never return events. The COVERAGE GAP REMAINS OPEN and was not handed to a working replacement: CustomDrupal-Libraries already has both correct URLs (greenvillelibrary.org/events, richlandlibrary.com/events) and reported finding 10 and 30 events on 2026-08-05, yet the DB holds 0 upcoming rows for Greenville County and 1 for Richland. Both live sites verified to have real dated events, so this is a CustomDrupal-Libraries EXTRACTION bug, not a URL problem. That is the next thing to fix for SC.",
+    "priority": "high",
     "added": "2026-08-05"
   },
   "WordPress-MD": {
@@ -63,6 +63,16 @@
   },
   "LibCal-TN": {
     "note": "Memphis Public Libraries fixed 2026-08-05: configured URL memphislibrary.libcal.com was dead (404), repointed to the real site memphis.librarycalendar.com, which this shared scraper file already knows how to parse (same format as Albany/Long Beach/Levittown entries). Re-run to confirm a nonzero count.",
+    "priority": "normal",
+    "added": "2026-08-05"
+  },
+  "CustomDrupal-Libraries": {
+    "note": "EXTRACTION GAP found 2026-08-05: reported 356 found / 65 new on the 2026-08-05 run, but the DB holds 0 upcoming rows attributed to it, and 0 for Richland Library and Greenville County Library System specifically. Both live sites were fetched and DO show real dated events (Richland: Hello Baby Aug 6, Family Storytime Aug 7). Found-not-saved, or saved under venue/scraper names that do not match. This scraper is now the sole configured owner of both SC systems after the dead Communico duplicates were removed, so its extraction is the blocker for South Carolina library coverage.",
+    "priority": "high",
+    "added": "2026-08-05"
+  },
+  "WordPress-NY": {
+    "note": "Two collisions fixed 2026-08-05 and their bad data deleted: Greenville Public Library (was on greenvillelibrary.org = Greenville County SC) repointed to greenville.lib.ny.us, and Phillips Free Library (was on homerlibrary.org = Homer Glen IL) repointed to phillipsfreelibrary.org. Both verified live with ZIPs matching the config. 226 orphan rows removed. NOTE this file is the largest in the family at 422 entries and 416 of its county values are fabricated - see the _global note.",
     "priority": "normal",
     "added": "2026-08-05"
   }

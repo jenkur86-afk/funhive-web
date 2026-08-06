@@ -422,15 +422,11 @@ const LIBRARY_SYSTEMS = [
     city: 'Voorhees',
     zipCode: '08043'
   },
-  {
-    name: 'Montclair Public Library',
-    url: 'https://montclairlibrary.libnet.info/events',
-    county: 'Essex',
-    state: 'NJ',
-    website: 'https://www.montclairlibrary.org',
-    city: 'Montclair',
-    zipCode: '07042'
-  },
+  // Montclair Public Library removed 2026-08-05: montclairlibrary.libnet.info is
+  // dead (302-redirects to google.co.uk), and the library has since moved to
+  // LibCal. It is NOT dropped — it was re-added to the LibCal scraper's NJ
+  // section with its real bccls.libcal.com/calendar/montclair URL, verified
+  // against montclairlibrary.org's own calendar link.
   {
     name: 'Warren County Library',
     url: 'https://warrenlib.libnet.info/events',
@@ -953,25 +949,25 @@ const LIBRARY_SYSTEMS = [
     zipCode: '19602'
   },
 
-  // SOUTH CAROLINA (3 libraries)
-  {
-    name: 'Greenville County Library System',
-    url: 'https://greenville.libnet.info/events',
-    county: 'Greenville',
-    state: 'SC',
-    website: 'https://www.greenvillelibrary.org',
-    city: 'Greenville',
-    zipCode: '29601'
-  },
-  {
-    name: 'Richland Library',
-    url: 'https://richland.libnet.info/events',
-    county: 'Richland',
-    state: 'SC',
-    website: 'https://www.richlandlibrary.com',
-    city: 'Columbia',
-    zipCode: '29201'
-  },
+  // SOUTH CAROLINA (1 library)
+  //
+  // Greenville County Library System and Richland Library were removed
+  // 2026-08-05. Both Communico hosts (greenville.libnet.info,
+  // richland.libnet.info) are dead — each 302-redirects to google.co.uk, the
+  // same pattern as Montclair above — so neither could ever return an event.
+  // They are not repointed here because both libraries now run their calendars
+  // on their own Drupal sites, which this Communico scraper cannot parse:
+  //   Greenville County -> https://www.greenvillelibrary.org/events
+  //   Richland          -> https://www.richlandlibrary.com/events
+  // Both URLs are already configured in
+  // scraper-custom-drupal-libraries-GA-NC-SC-WV.js, which is the right home for
+  // them. COVERAGE GAP, stated plainly rather than assumed resolved: that
+  // scraper reported finding events for both on 2026-08-05 but the database
+  // holds 0 upcoming rows for either (Greenville County 0, Richland 1 event at
+  // a single branch via a different scraper), so removing these entries does
+  // NOT hand coverage to a verified working replacement — it removes two
+  // permanently-dead endpoints. The real fix is CustomDrupal-Libraries'
+  // extraction; see reports/fix-notes.json.
   {
     name: 'Pickens County Library',
     url: 'https://pickenscountylibrarysystem.libnet.info/events',

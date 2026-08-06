@@ -53,7 +53,14 @@ const LIBRARIES = [
   { name: 'Greene County Library', url: 'https://www.greensborolibrary.org', eventsUrl: 'https://www.greensborolibrary.org/events', city: 'Greensboro', state: 'GA', zipCode: '00000', county: 'Greensboro County'},
   { name: 'Greenville Area Public Library', url: 'https://www.greenvillelibrary.org', eventsUrl: 'https://www.greenvillelibrary.org/events', city: 'Greenville', state: 'GA', zipCode: '00000', county: 'Greenville County'},
   { name: 'Harris County Public Library', url: 'https://hamiltonlibrary.org/', eventsUrl: 'https://hamiltonlibrary.org/', city: 'Hamilton', state: 'GA', zipCode: '00000', county: 'Hamilton County'},
-  { name: 'Banks County Public Library', url: 'https://www.homerlibrary.org', eventsUrl: 'https://www.homerlibrary.org/events', city: 'Homer', state: 'GA', zipCode: '00000', county: 'Homer County'},
+  // Banks County Public Library removed 2026-08-05 — moved to the LibCal
+  // scraper's GA section, not dropped. It was on homerlibrary.org, which is the
+  // Homer Township Public Library District in Homer Glen, ILLINOIS (the same
+  // collision that hit WordPress-NY's Phillips Free Library entry). The real
+  // Banks County library is part of the Piedmont Regional Library System and
+  // runs its calendar on LibCal at prlib.libcal.com, confirmed from
+  // prlib.org/banks-county's own events link — a platform this WordPress
+  // scraper cannot parse, hence the move rather than a URL swap here.
   { name: 'Wayne County Library', url: 'https://www.jesuplibrary.org', eventsUrl: 'https://www.jesuplibrary.org/events', city: 'Jesup', state: 'GA', zipCode: '00000', county: 'Jesup County'},
   { name: 'Cherokee Regional Library System', url: 'https://lafayettelibrary.org/', eventsUrl: 'https://lafayettelibrary.org/', city: 'Lafayette', state: 'GA', zipCode: '30728', county: 'Lafayette County'},
   { name: 'Lagrange Memorial Library', url: 'https://lagrangelibrary.org/', eventsUrl: 'https://lagrangelibrary.org/', city: 'Lagrange', state: 'GA', zipCode: '00000', county: 'Lagrange County'},

@@ -60,7 +60,13 @@ const LIBRARIES = [
   { name: 'Freeport Community Library', url: 'https://www.freeportlibrary.org', eventsUrl: 'https://www.freeportlibrary.org/events', city: 'Freeport', state: 'ME', zipCode: '04032', county: 'Freeport County'},
   { name: 'Gardiner Public Library', url: 'https://www.gardinerlibrary.org/', eventsUrl: 'https://www.gardinerlibrary.org/', city: 'Gardiner', state: 'ME', zipCode: '04345', county: 'Gardiner County'},
   { name: 'Julia Adams Morse Memorial Library', url: 'https://www.greenelibrary.org', eventsUrl: 'https://www.greenelibrary.org/events', city: 'Greene', state: 'ME', zipCode: '04236', county: 'Greene County'},
-  { name: 'Shaw Public Library - Greenville', url: 'https://www.greenvillelibrary.org', eventsUrl: 'https://www.greenvillelibrary.org/events', city: 'Greenville', state: 'ME', zipCode: '04441', county: 'Greenville County'},
+  // URL collision fixed 2026-08-05. Same greenvillelibrary.org collision that
+  // hit WordPress-NY: that domain is the Greenville County Library System in
+  // SOUTH CAROLINA, and this entry was ingesting 25 of its events under a Maine
+  // label. Repointed to the real Shaw Public Library, verified live: 9 Lily Bay
+  // Road, Greenville ME 04441, matching this entry's own ZIP, with real dated
+  // events on /events/.
+  { name: 'Shaw Public Library - Greenville', url: 'https://shawpubliclibrary.org', eventsUrl: 'https://shawpubliclibrary.org/events/', city: 'Greenville', state: 'ME', zipCode: '04441', county: 'Piscataquis'},
   { name: 'Bolsters Mills Village Library', url: 'https://www.harrisonpl.org/', eventsUrl: 'https://www.harrisonpl.org/', city: 'Harrison', state: 'ME', zipCode: '04040', county: 'Harrison County'},
   { name: 'Hartland Public Library', url: 'https://www.hartlandlibrary.org', eventsUrl: 'https://www.hartlandlibrary.org/events', city: 'Hartland', state: 'ME', zipCode: '04943', county: 'Hartland County'},
   { name: 'Hollis Center Public Library', url: 'https://www.hollislibrary.org', eventsUrl: 'https://www.hollislibrary.org/events', city: 'Hollis', state: 'ME', zipCode: '04042', county: 'Hollis County'},
