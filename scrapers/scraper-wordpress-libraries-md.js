@@ -181,7 +181,7 @@ const LIBRARIES = [
   // system's domain (e.g., Harford County branches are on hcplonline.org, not belairlibrary.org).
 ];
 
-const SCRAPER_NAME = 'generic-MD';
+const SCRAPER_NAME = 'WordPress-MD';
 
 async function scrapeGenericEvents() {
   const browser = await launchBrowser();
@@ -319,7 +319,7 @@ async function scrapeGenericEvents() {
             sourceName: library.name,
             sourceUrl: library.url,
             scrapedAt: new Date().toISOString(),
-            scraperName: SCRAPER_NAME,
+            scraperName: `${SCRAPER_NAME}-${library.url.replace(/^https?:\/\//, '').replace(/^www\./, '').split('.')[0]}`,
             category: 'library',
             platform: 'generic',
             state: 'MD',

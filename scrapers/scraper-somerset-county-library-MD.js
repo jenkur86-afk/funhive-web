@@ -429,6 +429,7 @@ async function scrapeSomersetEvents() {
           // homepage as a bonus).
           url: event.url || LIBRARY.website,
           metadata: {
+            scraperName: 'Somerset-County',
             source: 'Somerset Scraper',
             sourceName: LIBRARY.name,
             county: LIBRARY.county,

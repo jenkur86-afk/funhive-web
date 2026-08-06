@@ -30,7 +30,7 @@ const { linkEventToVenue } = require('./venue-matcher');
 const { launchBrowser } = require('./puppeteer-config');
 const { geocodeWithFallback } = require('./helpers/geocoding-helper');
 
-const SCRAPER_NAME = 'MontgomeryParks-MD';
+const SCRAPER_NAME = 'Montgomery-Parks';
 const BASE_URL = 'https://montgomeryparks.org';
 const RSS_FEED_URL = `${BASE_URL}/events/feed/`;
 

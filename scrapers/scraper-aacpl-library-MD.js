@@ -396,6 +396,7 @@ async function scrapeAACPLEvents() {
           url: event.url || branch.website,
           source: 'aacpl-library',
           metadata: {
+            scraperName: 'AACPL',
             source: 'AACPL Library Scraper',
             sourceName: 'Anne Arundel County Public Library',
             county: 'Anne Arundel',

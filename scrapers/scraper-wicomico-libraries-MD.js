@@ -276,6 +276,7 @@ async function scrapeWicomicoEvents() {
           },
           url: event.url || LIBRARY.website,
           metadata: {
+            scraperName: 'Wicomico-Public',
             source: 'Wicomico Scraper',
             sourceName: LIBRARY.name,
             county: LIBRARY.county,

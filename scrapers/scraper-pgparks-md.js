@@ -26,7 +26,7 @@ const { categorizeEvent } = require('./event-categorization-helper');
 const { logScraperResult } = require('./scraper-logger');
 const { linkEventToVenue } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'PGParks-MD';
+const SCRAPER_NAME = 'PG-Parks';
 const BASE_URL = 'https://pgparks.com';
 const CALENDAR_URL = `${BASE_URL}/activities-events-events`;
 const MAX_DAYS_AHEAD = 60;
@@ -318,6 +318,7 @@ async function scrapePGParks(options = {}) {
         },
         url: raw.link || CALENDAR_URL,
         metadata: {
+          scraperName: 'PG-Parks',
           source: 'PG Parks Scraper',
           sourceName: 'PG Parks & Recreation',
           county: "Prince George's",

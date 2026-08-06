@@ -295,6 +295,7 @@ async function scrapeCecilEvents() {
           },
           url: event.url || LIBRARY.website,
           metadata: {
+            scraperName: 'Cecil-County',
             source: 'Cecil County Scraper',
             sourceName: LIBRARY.name,
             county: LIBRARY.county,

@@ -438,6 +438,7 @@ async function scrapeRollyPollies(options = {}) {
           url: event.type === 'open_play' ? VENUE.openPlayUrl : VENUE.eventsUrl,
           geohash: ngeohash.encode(VENUE.coordinates.latitude, VENUE.coordinates.longitude, 7),
           metadata: {
+            scraperName: 'RollyPollies-MD',
             source: 'Rolly Pollies Scraper',
             sourceName: VENUE.fullName,
             county: VENUE.county,

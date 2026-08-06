@@ -313,8 +313,8 @@
       "added": "2026-08-06"
     },
     "WordPress-MD": {
-      "what": "Ruth Enlow + Kent County added (2026-08-06)",
-      "expect": "Two previously-uncovered county library systems now configured. Extraction unproven - this scraper is WordPress-DOM-specific and Ruth Enlow hosts its calendar on librarymarket, so a correct URL may still return zero.",
+      "what": "Ruth Enlow + Kent County added, and scraper_name corrected (2026-08-06)",
+      "expect": "Two previously-uncovered county systems now configured (extraction unproven). ALSO: scraper_name changes from generic-MD to per-site WordPress-MD-<slug>, e.g. WordPress-MD-ccplonline. Old rows keep generic-MD until they expire, so both will appear in the audits for a while.",
       "confirm": "npm run scraper -- --scraper WordPress-MD   then check FOUND for Ruth Enlow and Kent County",
       "added": "2026-08-06"
     },
@@ -322,6 +322,78 @@
       "what": "Newly registered 2026-08-06 — has never run in production",
       "expect": "11 VA library systems that had ZERO library rows: Fairfax County (the state largest), Arlington, Prince William, Richmond, Norfolk, Newport News, Hampton, Roanoke, Suffolk, Williamsburg Regional, Library of Virginia. Watch the FIRST run closely: this file has never executed. Check FOUND is nonzero, INVALID is low, scraper_name reads LibCal-VA2, and source_url carries the libcal host rather than the library homepage.",
       "confirm": "npm run scraper -- --scraper LibCal-VA2   then check scrapers/logs/scraper-summary.log and node scripts/check-scraper-names.js",
+      "added": "2026-08-06"
+    },
+    "Pratt-Library": {
+      "what": "scraper_name corrected to the registry key (2026-08-06)",
+      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Pratt-Library'. Old rows keep the old name until they expire.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-06"
+    },
+    "Howard-County": {
+      "what": "scraper_name corrected to the registry key (2026-08-06)",
+      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Howard-County'. Old rows keep the old name until they expire.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-06"
+    },
+    "AACPL": {
+      "what": "scraper_name corrected to the registry key (2026-08-06)",
+      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'AACPL'. Old rows keep the old name until they expire.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-06"
+    },
+    "Cecil-County": {
+      "what": "scraper_name corrected to the registry key (2026-08-06)",
+      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Cecil-County'. Old rows keep the old name until they expire.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-06"
+    },
+    "Dorchester-County": {
+      "what": "scraper_name corrected to the registry key (2026-08-06)",
+      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Dorchester-County'. Old rows keep the old name until they expire.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-06"
+    },
+    "Prince-Georges-County": {
+      "what": "scraper_name corrected to the registry key (2026-08-06)",
+      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Prince-Georges-County'. Old rows keep the old name until they expire.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-06"
+    },
+    "Somerset-County": {
+      "what": "scraper_name corrected to the registry key (2026-08-06)",
+      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Somerset-County'. Old rows keep the old name until they expire.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-06"
+    },
+    "Wicomico-Public": {
+      "what": "scraper_name corrected to the registry key (2026-08-06)",
+      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Wicomico-Public'. Old rows keep the old name until they expire.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-06"
+    },
+    "Squarespace-Libraries": {
+      "what": "scraper_name corrected to the registry key (2026-08-06)",
+      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Squarespace-Libraries'. Old rows keep the old name until they expire.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-06"
+    },
+    "PG-Parks": {
+      "what": "scraper_name corrected to the registry key (2026-08-06)",
+      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'PG-Parks'. Old rows keep the old name until they expire.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-06"
+    },
+    "RollyPollies-MD": {
+      "what": "scraper_name corrected to the registry key (2026-08-06)",
+      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'RollyPollies-MD'. Old rows keep the old name until they expire.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-06"
+    },
+    "Montgomery-Parks": {
+      "what": "scraper_name corrected to the registry key (2026-08-06)",
+      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Montgomery-Parks'. Old rows keep the old name until they expire.",
+      "confirm": "node scripts/check-scraper-names.js",
       "added": "2026-08-06"
     }
   },

@@ -375,6 +375,7 @@ async function scrapeLibraryEvents(library, browser) {
           },
           url: event.url || library.website,
           metadata: {
+            scraperName: 'Squarespace-Libraries',
             source: 'Squarespace Library Scraper',
             sourceName: library.name,
             county: library.county,

@@ -240,6 +240,7 @@ async function scrapePrattLibrary() {
           },
           url: url,
           metadata: {
+            scraperName: 'Pratt-Library',
             source: 'Pratt Library Scraper',
             sourceName: 'Enoch Pratt Free Library',
             county: 'Baltimore City',

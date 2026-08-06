@@ -282,6 +282,7 @@ async function scrapeHowardCountyLibrary() {
           },
           url: event.url || 'https://howardcounty.librarycalendar.com',
           metadata: {
+            scraperName: 'Howard-County',
             source: 'Howard County Library Scraper',
             sourceName: 'Howard County Library System',
             county: 'Howard',

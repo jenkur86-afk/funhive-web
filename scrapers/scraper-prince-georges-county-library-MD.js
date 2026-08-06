@@ -266,6 +266,7 @@ async function scrapePGCMLSEvents() {
           },
           url: event.url || LIBRARY.website,
           metadata: {
+            scraperName: 'Prince-Georges-County',
             source: 'PGCMLS Scraper',
             sourceName: LIBRARY.name,
             county: LIBRARY.county,

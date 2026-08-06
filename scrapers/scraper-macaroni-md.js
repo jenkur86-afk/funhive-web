@@ -608,7 +608,7 @@ async function scrapeSite(browser, site, logger, maxEvents = 50) {
         },
         metadata: {
           sourceUrl: site.url,
-          scraperName: `MacaroniKid-MD-${site.url.replace(/^https?:\/\//, '').split('.')[0]}`,
+          scraperName: `MacaroniKid-MD-${site.url.replace(/^https?:\/\//, '').replace(/^www\./, '').split('.')[0]}`,
           scrapedAt: new Date().toISOString(),
           category: parentCategory,
           platform: 'macaroni-kid',

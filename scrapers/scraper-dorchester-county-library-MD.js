@@ -331,6 +331,7 @@ async function scrapeDorchesterEvents() {
           },
           url: event.url || LIBRARY.website,
           metadata: {
+            scraperName: 'Dorchester-County',
             source: 'Dorchester Scraper',
             sourceName: LIBRARY.name,
             county: LIBRARY.county,
