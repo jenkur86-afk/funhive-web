@@ -2,8 +2,10 @@
   "_README": [
     "Durable notes surfaced in the Fix queue tab of reports/site-report.html.",
     "The report is regenerated in full every run, so notes MUST live here — anything typed into the HTML is lost on the next run.",
-    "Keys are scraper names exactly as they appear in scrapers/scraper-registry.js, plus the special key _global.",
-    "Each value: { note: string, priority: 'high'|'normal'|'low', added: 'YYYY-MM-DD' }.",
+    "Keys are scraper names exactly as they appear in scrapers/scraper-registry.js, plus two special keys.",
+    "Each scraper value: { note: string, priority: 'high'|'normal'|'low', added: 'YYYY-MM-DD' }.",
+    "_global: one note shown above the Fix queue and applied to every fix.",
+    "_pending: ARRAY of { what, expect, confirm, added } — changes already made whose effect has not been observed yet. Rendered as a banner at the top of the report. Delete an entry once confirmed; do not let it linger.",
     "A note on a scraper with no detected issues still shows up in the Fix queue, so this doubles as a to-do list."
   ],
   "_global": {
@@ -80,5 +82,37 @@
     "note": "Found during the WordPress-NC Phase 2 pass 2026-08-05: 'Lexington County Library - Gaston' is configured with gastonlibrary.org, which is verified to be Gaston County Public Library in NORTH CAROLINA. The town of Gaston SC is served by Lexington County Library, and its county value 'Gaston County' is also wrong - Gaston SC is in Lexington County. Both need the real Lexington County Library URL researched and verified live. Not fixed during the NC pass to stay in scope.",
     "priority": "high",
     "added": "2026-08-05"
-  }
+  },
+  "_pending": [
+    {
+      "what": "MacaroniKid listing URLs and per-site scraper names (44 files, 2026-08-05)",
+      "expect": "Next MacaroniKid run emits source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-FL-apollobeach. Verified statically through flattenEvent only — no live run yet. Group 2 ran 07:03 EDT 2026-08-06, before the fix.",
+      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>   # MacaroniKid should leave MISSING",
+      "added": "2026-08-05"
+    },
+    {
+      "what": "Venue scrapers renamed Activities-* -> VenueList-* (16 scrapers, 2026-08-05)",
+      "expect": "Rows written before the rename still carry the old names (ArtStudios-Eastern etc.), which now match no registry key. Expect a one-off bump in Step 3f drift and in activities.source values until those rows age out. This is fallout from the rename, NOT new breakage.",
+      "confirm": "node scripts/check-scraper-names.js   # VenueList-* should appear; old Activities-*/-Eastern names should shrink over time",
+      "added": "2026-08-05"
+    },
+    {
+      "what": "Scraper-name conformance baseline (2026-08-05)",
+      "expect": "143 of 434 names conform; 291 drift (FORMAT_DRIFT 85 / FREE_TEXT 173 / CASE_MISMATCH 25 / UNRELATED 7 / BAD_SLUG 1). Step 3f reporting roughly this many is the KNOWN BASELINE, not a regression. Only a rise above it is news.",
+      "confirm": "node scripts/check-scraper-names.js",
+      "added": "2026-08-05"
+    },
+    {
+      "what": "MacaroniKid-MD historical rows are collapsed",
+      "expect": "check-scraper-names.js flags MacaroniKid-MD as COLLAPSED (declares 20 sites, 1 distinct name). That is pre-rename data; the code now emits per-site names. Expect it to clear as old rows expire.",
+      "confirm": "node scripts/check-scraper-names.js   # look for the COLLAPSED line",
+      "added": "2026-08-05"
+    },
+    {
+      "what": "WordPress-NC Phase 2 batch 1 — 15 entries repointed (2026-08-05)",
+      "expect": "Next NC run should show nonzero counts for Sandhill (srls.info), PLJCS (pljcs.org), Gaston (gastonlibrary.org) and BHM (bhmlib.org). Extraction is NOT confirmed for any of them — these scrapers are WordPress-DOM-specific and some targets are LibGuides/other platforms, so a correct URL may still yield zero.",
+      "confirm": "npm run scraper -- --scraper WordPress-NC   then check FOUND/INVALID in scrapers/logs/scraper-summary.log",
+      "added": "2026-08-05"
+    }
+  ]
 }

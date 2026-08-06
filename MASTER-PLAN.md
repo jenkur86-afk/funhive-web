@@ -229,7 +229,30 @@ Each was a live error, not a hypothetical.
 
 ---
 
-## 7. Progress log
+## 7. Pending verification
+
+Changes already made whose effect has **not been observed yet**. The authoritative copy is the
+`_pending` array in `reports/fix-notes.json`, which renders as a banner at the top of
+`reports/site-report.html`, so this never depends on anyone remembering. Step 3e of the daily
+diagnosis works through it and deletes entries once confirmed.
+
+Do not treat any of these as regressions when they show up in a report — they are expected
+consequences of changes already landed:
+
+| Item | Expect | Confirm with |
+|---|---|---|
+| MacaroniKid listing URLs + per-site names (44 files) | Per-site `source_url` and `MacaroniKid-XX-<slug>` names. Verified statically only; Group 2 ran before the fix | `check-source-url-coverage.js --since=<run>` |
+| `Activities-*` → `VenueList-*` rename (16) | Pre-rename rows carry names matching no registry key until they age out. One-off drift bump | `check-scraper-names.js` |
+| Scraper-name drift **baseline 291 of 434** | Step 3f reporting ~291 is the known baseline. Only a *rise* is news | `check-scraper-names.js` |
+| `MacaroniKid-MD` COLLAPSED flag | Historical rows only — 20 sites, 1 name. Code now emits per-site | `check-scraper-names.js` |
+| WordPress-NC batch 1 (15 entries) | Correct URLs, but extraction unconfirmed — these are WordPress-DOM-specific and some targets are LibGuides | `npm run scraper -- --scraper WordPress-NC` |
+
+**Known limitation discovered 2026-08-05:** `scrapers/utils/county-centroids.js` holds only
+**13 of North Carolina's 100 counties**. Correcting fabricated county *names* therefore will not
+restore the county-centroid geocoding tier on its own — Defect **B** needs the centroid dataset
+expanded as well as the names fixed. This widens Phase 2's county work beyond what §1 implies.
+
+## 8. Progress log
 
 | Date | Item | Result |
 |---|---|---|
@@ -242,3 +265,7 @@ Each was a live error, not a hypothetical.
 | 2026-08-05 | Phase 6 | MacaroniKid listing URLs added across 44 files; per-site naming corrected |
 | 2026-08-05 | Defect C | Naming rules documented in `CLAUDE.md`; conformance check added as Step 3f |
 | 2026-08-05 | Inventory | All 169 active scrapers classified: 153 event, 16 venue |
+| 2026-08-06 | Naming | Venue scrapers renamed `Activities-*` -> `VenueList-*`; all 16 internal SCRAPER_NAME constants aligned to their keys |
+| 2026-08-06 | Phase 2 (NC) | Batch 1: 15 entries across 4 verified systems repointed + counties fixed. NC collisions 78 -> 67, fleet-wide 559 -> 554 |
+| 2026-08-06 | Tracking | `_pending` added to fix-notes.json and rendered as a report banner, so post-change fallout is tracked in the tooling rather than by memory |
+| 2026-08-06 | Merge | Branch merged to main and pushed (f72749d) so the scheduled diagnosis runs on main with all scripts present |

@@ -242,7 +242,7 @@ function buildFixQueue({ sites, ages, comments, roster, fixNotes }) {
     if (r[8] >= 20 && !legit.has(r[1]) && (r[2] / r[8]) >= 0.7) get(r[1]).flagged.push(r[0]);
   });
 
-  Object.keys(fixNotes).forEach(name => { if (name !== '_global') get(name); });
+  Object.keys(fixNotes).forEach(name => { if (name !== '_global' && name !== '_pending') get(name); });
 
   const rosterByName = new Map(roster.map(r => [r.name, r]));
 
@@ -289,7 +289,7 @@ function jsonLiteral(v) {
 }
 
 function buildHtml(data) {
-  const { sites, ages, comments, roster, coverage, runDate, notes, fixQueue, globalNote } = data;
+  const { sites, ages, comments, roster, coverage, runDate, notes, fixQueue, globalNote, pending } = data;
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -351,6 +351,10 @@ header.top .sub{color:var(--text-dim);margin-top:6px;font-size:13.5px;max-width:
 .banner{margin:18px 0 4px;padding:11px 15px;border-radius:10px;border:1px solid var(--border);
   background:var(--surface-2);color:var(--text-dim);font-size:13px}
 .banner.warn{border-color:var(--warn);background:var(--warn-soft);color:var(--text)}
+.banner.pending{border-color:var(--accent);background:var(--accent-soft);color:var(--text)}
+.banner.pending ul{margin:8px 0 0;padding-left:20px}
+.banner.pending li{margin:5px 0;line-height:1.45}
+.banner.pending .mono{font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;font-size:11.5px;color:var(--accent-text)}
 .banner b{color:var(--text)}
 nav.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:24px 0 0;border-bottom:1px solid var(--border)}
 nav.tabs button{appearance:none;background:transparent;border:0;border-bottom:2px solid transparent;
@@ -552,6 +556,7 @@ const ROSTER = ${jsonLiteral(roster)};
 const COVERAGE = ${jsonLiteral(coverage)};
 const FIXQUEUE = ${jsonLiteral(fixQueue)};
 const GLOBAL_NOTE = ${jsonLiteral(globalNote)};
+const PENDING = ${jsonLiteral(pending)};
 const NOTES = ${jsonLiteral(notes)};
 const KNOWN_LEGIT = new Set(${jsonLiteral(KNOWN_LEGIT_ALL_AGES)});
 const MISSING = ${jsonLiteral(MISSING)};
@@ -604,6 +609,14 @@ const FLAGGED = AGES
 
   const b = [];
   if(NOTES.length) NOTES.forEach(n => b.push('<div class="banner warn">'+esc(n)+'</div>'));
+  if(PENDING && PENDING.length){
+    b.push('<div class="banner pending"><b>Pending verification — '+PENDING.length+' item(s).</b> '
+      + 'Each is a change already made whose effect has not been observed yet. Confirm it, then delete that entry from <code>reports/fix-notes.json</code>.'
+      + '<ul>' + PENDING.map(function(p){ return '<li><b>'+esc(p.what||'')+'</b>'
+          + (p.expect ? ' — expect: '+esc(p.expect) : '')
+          + (p.confirm ? '<br><span class="mono">'+esc(p.confirm)+'</span>' : '')
+          + (p.added ? ' <i>(added '+esc(p.added)+')</i>' : '') + '</li>'; }).join('') + '</ul></div>');
+  }
   if(missingCount) b.push('<div class="banner"><b>'+missingCount+' of '+ROSTER.length+
     ' active scrapers have no rows yet this cycle.</b> They are listed in the Coverage tab with status <i>none</i> — most are simply assigned to a rotation group that has not run yet.</div>');
   document.getElementById('banners').innerHTML = b.join('');
@@ -774,6 +787,7 @@ function main() {
   const roster = loadRoster();
   const fixNotes = loadFixNotes();
   const globalNote = fixNotes._global || null;
+  const pending = Array.isArray(fixNotes._pending) ? fixNotes._pending : [];
 
   console.log(`  library rows : ${sites.length}`);
   console.log(`  age rows     : ${ages.length}`);
@@ -843,7 +857,7 @@ function main() {
   console.log(`  fix queue    : ${fixQueue.length} scrapers (${bugs} confirmed bugs, ${pinned} pinned note(s))`);
 
   const runDate = new Date().toISOString().slice(0, 10);
-  const html = buildHtml({ sites, ages, comments, roster, coverage, runDate, notes, fixQueue, globalNote });
+  const html = buildHtml({ sites, ages, comments, roster, coverage, runDate, notes, fixQueue, globalNote, pending });
 
   fs.mkdirSync(path.dirname(OUT_HTML), { recursive: true });
   fs.writeFileSync(OUT_HTML, html);
