@@ -18,7 +18,6 @@ const LIBRARIES = [
   { name: 'Watauga County Public Library', url: 'https://www.boonelibrary.org', eventsUrl: 'https://www.boonelibrary.org/events', city: 'Boone', state: 'NC', zipCode: '00000', county: 'Boone County'},
   { name: 'Boonville Community Public Library', url: 'https://www.nwrl.org/', eventsUrl: 'https://nwrl.org/regional-library-events/', city: 'Boonville', state: 'NC', zipCode: '00000', county: 'Yadkin County'},
   { name: 'Bunn Branch Library', url: 'https://www.bunnlibrary.org', eventsUrl: 'https://www.bunnlibrary.org/events', city: 'Bunn', state: 'NC', zipCode: '00000', county: 'Bunn County'},
-  { name: 'Alamance County Public Library', url: 'https://library.alamancecountync.gov/', eventsUrl: 'https://library.alamancecountync.gov/calendar/', city: 'Burlington', state: 'NC', zipCode: '27215', county: 'Alamance County'},
   { name: 'Canton Branch Library', url: 'https://www.cantonlibrary.org', eventsUrl: 'https://www.cantonlibrary.org/events', city: 'Canton', state: 'NC', zipCode: '00000', county: 'Canton County'},
   { name: 'Moore County Library', url: 'https://www.srls.info/', eventsUrl: 'https://www.srls.info/', city: 'Carthage', state: 'NC', zipCode: '00000', county: 'Moore County'},
   { name: 'Cary Branch Library', url: 'https://www.carylibrary.org', eventsUrl: 'https://www.carylibrary.org/events', city: 'Cary', state: 'NC', zipCode: '00000', county: 'Cary County'},

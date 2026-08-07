@@ -481,6 +481,19 @@ function detectAgeRange(name, description) {
     const hi = parseInt(gradeWordRange[3], 10);
     return `${gradeToAge(lo)}-${gradeToAge(hi)}`;
   }
+  // Open-ended grade phrasing: "grades 6 and up", "6th grade and up", "entering
+  // 5th grade and above", "grade 6+". None of the closed-range regexes above
+  // match these (they all require a second number), so they fell through to the
+  // generic keyword checks or All Ages. Found 2026-08-07 verifying a WordPress-VT
+  // MISMATCH (Brownell Library, VT) where "Retro Game Night" (open to youth in
+  // grades 6 and up), "DIY Photo Triptychs" (6 grade and up) and "Blinged-out
+  // Back to School!" (entering 5th grade and above) all landed in All Ages.
+  // Upper bound capped at 18 (the platform's Teens ceiling), matching how the
+  // closed-range regexes above never produce a range past 18 either.
+  const gradeAndUpWordFirst = text.match(/\bgrades?\s*(\d{1,2})(?:st|nd|rd|th)?\s*(?:and\s+(?:up|older|above)|or\s+(?:up|older|above)|\+)\b/);
+  if (gradeAndUpWordFirst) return `${gradeToAge(parseInt(gradeAndUpWordFirst[1], 10))}-18`;
+  const gradeAndUpDigitFirst = text.match(/\b(\d{1,2})(?:st|nd|rd|th)?\s*grade\s*(?:and\s+(?:up|older|above)|or\s+(?:up|older|above)|\+)\b/);
+  if (gradeAndUpDigitFirst) return `${gradeToAge(parseInt(gradeAndUpDigitFirst[1], 10))}-18`;
 
   // "elementary" alone is too broad — it's usually a venue name ("held at Lincoln
   // Elementary", "Clinton Elementary Building A"), not an audience descriptor.
