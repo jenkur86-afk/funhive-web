@@ -490,6 +490,7 @@ a{color:var(--accent-text)} a:hover{text-decoration:none}
 .status.full{background:var(--ok-soft);color:var(--ok);border:1px solid var(--ok)}
 .status.partial{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn)}
 .status.none{background:var(--crit-soft);color:var(--crit);border:1px solid var(--crit)}
+.status.unaudited{background:var(--accent-soft);color:var(--accent-text);border:1px solid var(--accent)}
 .notice{background:var(--accent-soft);border:1px solid var(--accent);color:var(--text);
   border-radius:10px;padding:12px 15px;font-size:13px;margin-bottom:12px}
 .notice code{background:var(--surface);padding:1px 5px;border-radius:4px;font-size:12px}
@@ -948,17 +949,24 @@ function main() {
     const s = siteCounts.get(r.name) || 0;
     const a = ageCounts.get(r.name) || 0;
     const ev = (siteEvents.get(r.name) || 0) + (ageEvents.get(r.name) || 0);
+    const run = runLog.get(r.name) || null;
     let status, why;
     if (s && a) { status = 'full'; why = 'Present in both audits.'; }
     else if (s || a) {
       status = 'partial';
       why = s ? 'Library audit only — no attributable new events in the age audit this cycle.'
               : 'Age audit only — not a library-family scraper, or its library rows have not landed yet.';
+    } else if (run && run.found > 0 && (!libDate || run.date >= libDate)) {
+      // It HAS produced events — the audit files just have not been rebuilt since. Steps 3b/3c
+      // only run during the daily diagnosis, so a scraper built or run after the last audit
+      // reads as "no data" unless we say otherwise. GoogleCalendar-MD hit this the day it was
+      // built: 169 found, 116 saved, and a Coverage status of `none`.
+      status = 'unaudited';
+      why = `Ran ${run.date} and found ${run.found} event(s) (${run.nu} new), but the audit files were last rebuilt ${libDate || 'earlier'} so it has no rows there yet. Not a coverage gap — Steps 3b/3c will pick it up on the next diagnosis.`;
     } else {
       status = 'none';
-      why = `No rows yet this cycle. Group ${r.group} — expected on that group's next run day.`;
+      why = `No rows in either audit, and no run since ${libDate || 'the audit was built'} that found anything. Group ${r.group} — expected on that group's next run day.`;
     }
-    const run = runLog.get(r.name) || null;
     return [r.name, r.group, r.state, s, a, ev, status, why, run];
   });
 
