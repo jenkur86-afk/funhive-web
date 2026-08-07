@@ -134,6 +134,19 @@ metadata: { sourceUrl: url }
 
 `scraper-macaroni-md.js` did the wrong version and its stored `source_url` was byte-identical to `url` on every row. Beyond violating the field's meaning, it would have given every MacaroniKid site in every state the host `events.yodel.today`, which is useless for identity and breaks `verify-coverage.js`.
 
+#### Default posture: build or fix it, don't just diagnose it
+
+**When a scraper is missing, broken, or a library has no working extraction path, the default is to build or fix it — not to write it up and stop.** Diagnosis that ends in a note is only half the job, and a well-written note describing work you could have done is still undone work.
+
+Build/fix by default when all of these hold, which is the usual case:
+- The target is **verified live** (right institution, right state, real events present).
+- The extraction path is **known to be reachable** — an ICS feed that returns data, a platform the codebase already parses, a DOM you have actually inspected.
+- It sits in an **active region** and does not require a judgement only the owner can make.
+
+Stop and ask **only** for genuinely owner-level calls: deleting coverage on a "covered elsewhere" claim you cannot prove, anything touching `src/**` or another Vercel-deploying path, or a change whose blast radius you cannot bound. "This is a new capability rather than a config change" is **not** a reason to stop — new scrapers are ordinary work here.
+
+When you do build one, follow the checklist below, watch the first run, and record what it produced. An unrun scraper is not finished.
+
 #### Checklist for a NEW scraper
 
 Before committing a new scraper file, confirm every line:

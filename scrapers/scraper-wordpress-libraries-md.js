@@ -103,13 +103,10 @@ const LIBRARIES = [
     eventsUrl: "https://www.dorchesterlibrary.org/calendar-of-events",
     city: "Cambridge", state: "MD", zipCode: "21613", county: "Dorchester"
   },
-  {
-    name: "Somerset County Library",
-    url: "https://www.somelibrary.org",
-    platform: "wordpress",
-    eventsUrl: "https://somelibrary.org/events.php",
-    city: "Princess Anne", state: "MD", zipCode: "21853", county: "Somerset"
-  },
+  // 2026-08-07: Somerset County Library removed. Its events are published only through
+  // embedded Google Calendar iframes, so this DOM scraper returned 0 by construction. Now
+  // covered by GoogleCalendar-MD, which reads the five public ICS feeds behind those iframes
+  // — verified by a live run producing 126 saved events with 0 invalid dates.
   // 2026-08-06: Queen Anne's County Library removed. Verified covered elsewhere: 33 rows in the DB sourced from calendar.qaclibrary.org, created 2026-08-04. Its eventsUrl here served a Squarespace 404 whose entire page, CSS included, was ingested as an event date.
   {
     name: "Talbot County Free Library",

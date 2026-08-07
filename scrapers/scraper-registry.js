@@ -190,6 +190,11 @@ const SCRAPERS = {
   // which had a single library-scraper row in the database. The registered shared LibCal file
   // does not cover the seven largest of them. Group 3 chosen as the smallest rotation group.
   'LibCal-VA2': { file: './scraper-libcal-libraries-va.js', exportName: 'scrapeLibCalEvents', type: 'puppeteer', group: 3, state: 'VA' },
+  // 2026-08-07: some libraries publish their entire programme through an embedded Google
+  // Calendar iframe, leaving the host page with no event markup at all — Somerset County
+  // Library's events.php has a 493-character body and no dates, so every DOM scraper
+  // returned 0 by construction. This reads the public ICS feed behind the iframe instead.
+  'GoogleCalendar-MD': { file: './scraper-gcal-libraries-md.js', exportName: 'scrapeGCalLibrariesMDCloudFunction', type: 'api', group: 3, state: 'MD' },
   'LibCal-KY': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalKY', type: 'puppeteer', group: 1, state: 'KY' },
 
   // ============================================================================
