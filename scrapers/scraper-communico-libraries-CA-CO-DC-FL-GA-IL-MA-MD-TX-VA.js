@@ -1390,6 +1390,9 @@ async function scrapeLibraryEvents(library, browser) {
           url: event.url || library.website,
           metadata: {
             source: 'Communico Scraper',
+            // The listing page this scraper fetches — NOT the event's own url. Without it,
+            // verify-coverage.js cannot confirm which libraries this scraper actually covers.
+            sourceUrl: library.url,
             sourceName: library.name,
             county: library.county,
             state: library.state,
@@ -1875,6 +1878,9 @@ async function scrapeLibraryEvents(library, browser) {
           url: event.url || library.website,
           metadata: {
             source: 'Communico Scraper',
+            // The listing page this scraper fetches — NOT the event's own url. Without it,
+            // verify-coverage.js cannot confirm which libraries this scraper actually covers.
+            sourceUrl: library.url,
             sourceName: library.name,
             county: library.county,
             state: library.state,

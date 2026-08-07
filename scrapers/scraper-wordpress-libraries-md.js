@@ -79,20 +79,8 @@ const ngeohash = require('ngeohash');
  */
 
 const LIBRARIES = [
-  {
-    name: "Charles County Public Library",
-    url: "https://www.ccplonline.org",
-    platform: "wordpress",
-    eventsUrl: "https://ccplonline.org/events/calendar/",
-    city: "La Plata", state: "MD", zipCode: "20646", county: "Charles"
-  },
-  {
-    name: "St. Mary's County Library",
-    url: "https://www.stmalib.org",
-    platform: "wordpress",
-    eventsUrl: "https://www.stmalib.org/events/calendar/",
-    city: "Leonardtown", state: "MD", zipCode: "20650", county: "St. Mary's"
-  },
+  // 2026-08-07: Charles County Public Library removed. Covered by Communico-MD at ccplonline.libnet.info/events — verified by watching that run produce 5 Charles County rows on 2026-08-07. This entry returned 1 event. Note Jen verified on 2026-08-06 that the WordPress calendar page itself shows nothing; the events live on the LibNet platform, which is why Communico is the right owner.
+  // 2026-08-07: St. Mary's County Library removed. Covered by Communico-MD at stmalib.libnet.info/events, the correct parser for its LibNet platform — verified by watching that run produce 5 St. Mary's rows on 2026-08-07. This entry scraped the same library with generic WordPress selectors and returned 147 events whose dates were time-only strings ("10 a.m."), producing 135 of the scraper's INVALID count.
   // 2026-08-06: Washington County Free Library removed. Verified covered by LibraryMarket: 28 rows sourced from wcfl.librarymarket.com, created 2026-08-05. This entry returned 1 event against a guessed /events path.
   {
     name: "Wicomico Public Libraries",
