@@ -2227,5 +2227,75 @@
   "verdict": "MISMATCH",
   "comment": "FIX LANDED 2026-08-06, NOT YET RE-VERIFIED: this config reused one selector, span.text-primary-1, for date, location AND description, so every event took the date string as its venue and was geocoded as an address like 'Wednesday, August 5, 2026, Marietta, Cobb County, GA'. The 2026-08-05 run logged 7 successful extractions and the database ended up with 0 rows. Cobb was the only config in the file with this collision; location and description now use the same distinct selectors its seven siblings already use.",
   "population": "zero"
+ },
+ "MacaroniKid-FL|||Macaroni Kid Sarasota-Venice": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "sarasota.macaronikid.com returns HTTP 403 to WebFetch, confirmed by direct fetch and by two independent verification passes.",
+  "population": "allages"
+ },
+ "MacaroniKid-FL|||Macaroni Kid Vero Beach": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "verobeach.macaronikid.com bot-blocked, 403 on root and /events, both attempts.",
+  "population": "allages"
+ },
+ "MacaroniKid-FL|||Macaroni Kid Daytona Beach": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "daytonabeach.macaronikid.com bot-blocked, 403 on root and /events, both attempts.",
+  "population": "allages"
+ },
+ "MacaroniKid-FL|||Macaroni Kid Port Charlotte-Punta Gorda": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "portcharlotte.macaronikid.com bot-blocked, 403 on root and /events, both attempts.",
+  "population": "allages"
+ },
+ "MacaroniKid-FL|||Macaroni Kid Sebring-Lake Placid-Avon Park": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "sebring.macaronikid.com bot-blocked, 403 on root and /events, both attempts.",
+  "population": "allages"
+ },
+ "MacaroniKid-FL|||Macaroni Kid Brandon": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "brandon.macaronikid.com bot-blocked, 403 on root and /events, both attempts.",
+  "population": "allages"
+ },
+ "MacaroniKid-GA|||Macaroni Kid Buckhead-Midtown-Brookhaven": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "buckheadbrookhaven.macaronikid.com bot-blocked, 403 on root and /events, both attempts.",
+  "population": "allages"
+ },
+ "MacaroniKid-GA|||Macaroni Kid Stonecrest-Conyers-Covington": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "conyers.macaronikid.com bot-blocked, 403 on root and /events, both attempts.",
+  "population": "allages"
+ },
+ "MacaroniKid-GA|||Macaroni Kid Franklin-Hart": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "franklinga.macaronikid.com bot-blocked, 403 on root and /events, both attempts.",
+  "population": "allages"
+ },
+ "MacaroniKid-NY|||Macaroni Kid Binghamton": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "binghamton.macaronikid.com bot-blocked, 403 on root and /events, both attempts.",
+  "population": "allages"
+ },
+ "MacaroniKid-NY|||Macaroni Kid Lower Manhattan-Downtown": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "lowermanhattan.macaronikid.com bot-blocked, 403 on root and /events, both attempts.",
+  "population": "allages"
+ },
+ "MacaroniKid-NY|||Macaroni Kid Upper West Side": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "upperwestside.macaronikid.com bot-blocked, 403 on root and /events, both attempts.",
+  "population": "allages"
+ },
+ "MacaroniKid-NY|||Macaroni Kid Riverhead": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "riverhead.macaronikid.com bot-blocked, 403 on root and /events, both attempts.",
+  "population": "allages"
+ },
+ "MacaroniKid-CT|||Macaroni Kid Wallingford-North Haven": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "wallingford.macaronikid.com bot-blocked, 403 on root and /events, both attempts.",
+  "population": "allages"
  }
 }
