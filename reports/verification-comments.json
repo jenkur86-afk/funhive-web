@@ -1640,13 +1640,13 @@
   "population": "allages"
  },
  "RecDesk-Parks|||Mayeski Field 3 Softball with MP Overlay": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "RecDesk calendar (ccrec.recdesk.com) is JS-dependent, only a facility/category selector rendered; could not view actual bookings/events for this specific field.",
+  "verdict": "MATCHES",
+  "comment": "Re-checked (was UNVERIFIABLE from a prior cycle, ccrec.recdesk.com/Community/Calendar now confirmed live): the site is a facility-reservation calendar mixing programs with field/court/pavilion bookings; field bookings carry no age metadata by design, consistent All Ages is correct here.",
   "population": "allages"
  },
  "RecDesk-Parks|||Mayeski Field 4 Baseball with MP overlay": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "RecDesk calendar (ccrec.recdesk.com) is JS-dependent, only a facility/category selector rendered; could not view actual bookings/events for this specific field.",
+  "verdict": "MATCHES",
+  "comment": "Re-checked, same ccrec facility-reservation finding as Field 3 Softball.",
   "population": "allages"
  },
  "FairsFestivals-Eastern|||Pip Moyer Recreation Center": {
@@ -1675,8 +1675,8 @@
   "population": "allages"
  },
  "RecDesk-Parks|||Mayeski Legore Memorial Softball Field": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "RecDesk calendar (ccrec.recdesk.com) is JS-dependent, only a facility/category selector rendered; could not view actual bookings/events for this specific field.",
+  "verdict": "MATCHES",
+  "comment": "Re-checked, same ccrec facility-reservation finding.",
   "population": "allages"
  },
  "RecDesk-Parks|||Mayeski Field 2 Softball with MP overlay": {
@@ -1705,8 +1705,8 @@
   "population": "allages"
  },
  "RecDesk-Parks|||Sheppard Chase Gym (RMC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "RecDesk calendar (ccrec.recdesk.com) is JS-dependent, only a facility/category selector rendered; could not view actual bookings/events for this specific gym.",
+  "verdict": "MATCHES",
+  "comment": "Re-checked, same ccrec facility-reservation finding — gym bookings carry no age metadata.",
   "population": "allages"
  },
  "WordPress-MA|||Pelham Library": {
@@ -2296,6 +2296,136 @@
  "MacaroniKid-CT|||Macaroni Kid Wallingford-North Haven": {
   "verdict": "UNVERIFIABLE",
   "comment": "wallingford.macaronikid.com bot-blocked, 403 on root and /events, both attempts.",
+  "population": "allages"
+ },
+ "WordPress-GA|||Hickory Flat Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Live /events page renders correctly with a working calendar widget but explicitly shows no upcoming events for August 2026; genuine zero, not a scraper bug.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Bath Community Library": {
+  "verdict": "MISMATCH",
+  "comment": "eventsUrl is configured to the homepage (bhmlib.org/), which shows no events, but the site's own nav has a separate /events link the scraper config isn't using.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Cary Branch Library": {
+  "verdict": "MATCHES",
+  "comment": "Live /events page explicitly states \"We are still adding upcoming events. Please check again at a later time.\"; genuine zero, not a scraper bug.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Alamance County Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "eventsUrl is a dead-end nav page (library.alamancecountync.gov/calendar/) that only links out to the real calendar; the real calendar is alamancelibraries.libcal.com, which is already scraped live and working today under LibCal-NC (48 events found). Removed this redundant/broken WordPress-NC entry — Alamance is fully covered by LibCal-NC.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Pinebluff Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "eventsUrl (www.srls.info) redirects to a Sandhill Regional Library System LibGuides page which does show real Upcoming Events sections split by Children/Teens/Adults; the WordPress-family DOM extractor can't read this platform (LibGuides, not WordPress TEC). Needs a dedicated LibGuides extraction path, not built this session.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Leath Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "Same as Pinebluff — shares the srls.info URL redirecting to the SRLS LibGuides events page. Real events exist but aren't reachable by the current extraction; needs a LibGuides-specific scraper.",
+  "population": "zero"
+ },
+ "WordPress-NC|||Selma Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Page states a full program calendar exists (\"Check out the calendar below for a full listing\") but the actual calendar widget is JS-rendered; no event data visible in a static fetch.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Shelton Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live /events page shows a full month of real events (End of Summer Reading Party, Summer Stories, Teen Chefs, Baby and Me, etc.) with titles, dates and age info — the scraper reported 0. Not a TEC/REST site (wp-json/tribe/events/v1 404s), so this is a DOM-selector mismatch on this specific theme; needs live-DOM selector inspection to fix, not done this session.",
+  "population": "zero"
+ },
+ "Communico-NC|||Wake County Public Libraries": {
+  "verdict": "MISMATCH",
+  "comment": "wake.libnet.info 302-redirects to google.co.uk, the same dead-Communico-domain signature already fixed for Montclair/Greenville/Richland. The library has moved off Communico entirely to a custom Drupal events system under wake.gov/library-events-0 (confirmed live, real Programs/Events navigation). Needs a dedicated rebuild for the new platform — not a quick URL swap. Left the registry entry in place rather than silently dropping coverage; flagged as an open gap.",
+  "population": "zero"
+ },
+ "GoogleCalendar-MD|||Somerset County Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "events.php is a nav hub linking out to separate Adult/Children/Teen program pages with no titles visible in a static fetch; the actual scrape source is the site's Google Calendar ICS feed (not events.php), which wasn't independently checked this pass. Brand-new scraper as of today, worth a follow-up look at raw ICS event titles specifically.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Valley Pool": {
+  "verdict": "MATCHES",
+  "comment": "Confirmed via marysvilleoh.recdesk.com and ccrec.recdesk.com samples: RecDesk calendars mix facility reservations (pools, fields, gyms, courts) with programs, and reservations carry no age metadata by design. Pool/field/gym/golf bookings correctly have no age signal to detect.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Southwest Pool": {
+  "verdict": "MATCHES",
+  "comment": "Same RecDesk facility-reservation pattern as Valley Pool.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Mill Valley South- Soccer Fields": {
+  "verdict": "MATCHES",
+  "comment": "Confirmed live: marysvilleoh.recdesk.com lists soccer/baseball field bookings with no age targeting, consistent with a facility-reservation system.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||City Field 1": {
+  "verdict": "MATCHES",
+  "comment": "Same marysvilleoh facility-reservation pattern.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Mill Valley Central Soccer Field": {
+  "verdict": "MATCHES",
+  "comment": "Same marysvilleoh facility-reservation pattern.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||City Field 2": {
+  "verdict": "MATCHES",
+  "comment": "Same marysvilleoh facility-reservation pattern.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Baseball City Field A": {
+  "verdict": "MATCHES",
+  "comment": "Same marysvilleoh facility-reservation pattern.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Indoor Pool": {
+  "verdict": "MATCHES",
+  "comment": "watertownwi.recdesk.com; same facility-reservation pattern as the other RecDesk pools.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||Oakmont Green Golf Course": {
+  "verdict": "MATCHES",
+  "comment": "Same ccrec facility-reservation finding — golf course bookings carry no age metadata.",
+  "population": "allages"
+ },
+ "RecDesk-Parks|||-None Specified-": {
+  "verdict": "MATCHES",
+  "comment": "Mixed group spanning six RecDesk sites (lcncpr, hoboken, mprd, habershamga, crpr, ccrec) with no venue set; consistent with the same facility-reservation pattern confirmed at ccrec and marysvilleoh — bookings with no assigned venue carry no age metadata either.",
+  "population": "allages"
+ },
+ "WordPress-GA|||New Georgia Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url/eventsUrl (dallaslibrary.org, for Dallas GA) 301-redirects to dallaslibrary.librarymarket.com — which is the unrelated Dallas, TEXAS public library's LibraryMarket calendar (already covered elsewhere in this DB as the LibraryMarket-state family's TX row). This looks like a domain reassignment/collision, not an age-detection issue: the scraper is very likely ingesting Texas library events mislabeled as a Georgia library. Needs live verification of what dallaslibrary.org actually resolves to for Dallas, GA and a corrected URL; not fixed this session.",
+  "population": "allages"
+ },
+ "Drupal-Parks|||Wisconsin State Parks": {
+  "verdict": "MATCHES",
+  "comment": "Confirmed live at dnr.wisconsin.gov/events: general outdoor/nature programs (Run with a Ranger, Intro to Orienteering, Geo Hike) with inclusive, non-age-targeted language. Correctly All Ages.",
+  "population": "allages"
+ },
+ "WordPress-VT|||Brownell Library": {
+  "verdict": "MISMATCH",
+  "comment": "Confirmed live: several events carry real age signals the detector missed — \"grades 1-5\", \"grades 6 and up\", \"6 grade and up\", \"entering 5th grade and above\". detectAgeRange() only handled closed grade ranges (\"Grades 3-5\"), not open-ended \"grade N and up/above\" phrasing. Fixed 2026-08-07 in scrapers/helpers/supabase-adapter.js — added two new anchored regexes for open-ended grade phrasing, capped at age 18. Verified against all four live examples plus the existing false-positive guards (registration IDs, times) after the fix; full 36-case regression suite still passes.",
+  "population": "allages"
+ },
+ "BiblioCommons-VA|||Salem Church Branch": {
+  "verdict": "MISMATCH",
+  "comment": "BiblioCommons' own UI exposes structured audience filters (Babies/Toddlers/Pre-K, Children Grades K-5, Teens, Adults, Older Adults, Family) that the scraper does not appear to be reading from the API response — it's falling back to text-only detection. Not fixed this session; needs the BiblioCommons API payload inspected for an audience/age field to pass through directly, the same pattern CLAUDE.md documents for ActiveNet/CivicRec's structured ageText field.",
+  "population": "allages"
+ },
+ "BiblioCommons-VA|||Fredericksburg Branch": {
+  "verdict": "MISMATCH",
+  "comment": "Same BiblioCommons structured-audience-field gap as Salem Church Branch.",
+  "population": "allages"
+ },
+ "LibraryCalendar-Libraries|||York County Library": {
+  "verdict": "MISMATCH",
+  "comment": "Confirmed live at yorkcounty.librarycalendar.com: individual events do carry explicit age/category tags (\"Babies & Toddlers (0-2 years)\", \"Youth Visual Art Contest — ages 7-18\", \"Adults (18 years & up)\") that the text-only detector is evidently missing for a majority of events. Not fixed this session; needs the LibraryCalendar page's category-tag markup inspected for a structured field to read directly.",
   "population": "allages"
  }
 }
