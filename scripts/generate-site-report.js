@@ -153,6 +153,8 @@ function loadConfigIndex() {
   const reg = require(path.join(ROOT, 'scrapers', 'scraper-registry.js'));
   const all = { ...reg.SCRAPERS, ...reg.MACARONI_SCRAPERS };
   const idx = new Map();           // "scraper|||normalisedName" -> url
+  const counts = new Map();        // scraper -> how many per-site entries it configures
+  const byName = new Map();        // normalisedName -> Set(scrapers that configure it)
   const fileCache = new Map();
   Object.entries(all).forEach(([key, sc]) => {
     if (!sc.file) return;
@@ -179,9 +181,15 @@ function loadConfigIndex() {
       }
       fileCache.set(abs, entries);
     }
-    entries.forEach(([n, u]) => idx.set(key + '|||' + cfgKey(n), u));
+    entries.forEach(([n, u]) => {
+      idx.set(key + '|||' + cfgKey(n), u);
+      const k = cfgKey(n);
+      if (!byName.has(k)) byName.set(k, new Set());
+      byName.get(k).add(key);
+    });
+    counts.set(key, (counts.get(key) || 0) + entries.length);
   });
-  return idx;
+  return { idx, counts, byName };
 }
 // Audit rows name sites "Belmont Branch Library (Belmont, NC)"; config says "Belmont Branch Library".
 function cfgKey(name) {
@@ -515,6 +523,7 @@ td.statuscell{min-width:200px;max-width:330px}
 .rowstat.s-current{background:var(--ok-soft);color:var(--ok);border:1px solid var(--ok)}
 .rowstat.s-refixed{background:var(--accent-soft);color:var(--accent-text);border:1px solid var(--accent)}
 .rowstat.s-unmatched{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn)}
+.rowstat.s-moved{background:var(--surface-2);color:var(--text-dim);border:1px solid var(--text-faint)}
 .rowstat.s-unknown{background:var(--surface-2);color:var(--text-faint);border:1px solid var(--border)}
 .statdetail{font-size:11.5px;color:var(--text-dim);margin-top:4px;line-height:1.4}
 .rowstat.s-awaiting{background:var(--accent-soft);color:var(--accent-text);border:1px solid var(--accent)}
@@ -996,19 +1005,49 @@ function main() {
   console.log(`  coverage     : ${coverage.length} rows (${missing} awaiting this cycle, ${orphans.length} not in active registry)`);
 
   // Per-row status: compare the audit's link against what the config says today.
-  const cfgIdx = loadConfigIndex();
-  let nStale = 0, nGone = 0;
+  const { idx: cfgIdx, counts: cfgCounts, byName: cfgByName } = loadConfigIndex();
+  const rosterByName = new Map(roster.map(x => [x.name, x]));   // for state-aware "moved to" naming
+  let nStale = 0, nGone = 0, nMoved = 0;
   sites.forEach(r => {
     const cur = cfgIdx.get(r[2] + '|||' + cfgKey(r[0]));
     const auditHost = hostOf(r[5]);
     let status = 'unknown', detail = '';
     if (cur === undefined) {
-      // Could not tie this audit row to a config entry. That is NOT proof of removal — the
-      // name may be spelled differently in the config, or the file may use a shape we do not
-      // parse. Say what is true: we could not match it.
-      status = 'unmatched';
-      detail = 'could not be matched to an entry in ' + r[2] + "'s config — the name may differ there, or the entry may have been removed. Not confirmed either way.";
-      nGone++;
+      const owners = [...(cfgByName.get(cfgKey(r[0])) || [])].filter(k => k !== r[2]);
+      if ((cfgCounts.get(r[2]) || 0) === 0) {
+        // Single-system scraper: it has no per-site config array because it IS one site.
+        // Reporting "unmatched" here was a false alarm — Pratt-Library, AACPL and
+        // Howard-County all read as unmatched purely for lacking a list to match against.
+        status = 'current';
+        detail = 'single-system scraper — it covers one site and has no per-site config list to match against';
+      } else if (owners.length) {
+        // Deliberately handed to another scraper, which is different from "we lost it".
+        // Several registry keys can share one file (the Communico and LibCal families do), so
+        // prefer the key whose state matches this row — naming "Communico-CA" as the new owner
+        // of a Maryland library would read as exactly the cross-state mix-up we keep fixing.
+        // The new owner MUST serve the same state. Library names repeat across states, so a
+        // name match alone is not a move: "Hightower Memorial Library" was removed from
+        // WordPress-AL as having no website, and a same-named but entirely different library
+        // exists in WordPress-GA. Claiming that as the new owner would repeat the exact
+        // cross-state mix-up this project has spent days undoing.
+        const sameState = owners.filter(k => (rosterByName.get(k) || {}).state === r[1]);
+        if (sameState.length) {
+          status = 'moved';
+          detail = 'no longer configured in ' + r[2] + '; now configured by ' + sameState.slice(0, 3).join(', ')
+            + '. Counts and link below are from the older run, before the move.';
+          nMoved++;
+        } else {
+          status = 'unmatched';
+          detail = 'no longer configured in ' + r[2] + '. A scraper elsewhere configures this NAME ('
+            + owners.slice(0, 2).join(', ') + ') but for a different state, so it is not the same library. '
+            + 'Treat as removed-with-no-replacement until someone confirms otherwise.';
+          nGone++;
+        }
+      } else {
+        status = 'unmatched';
+        detail = 'could not be matched to an entry in ' + r[2] + "'s config, and no other scraper configures this name — the name may differ there, or the entry may have been removed. Not confirmed either way.";
+        nGone++;
+      }
     } else if (!auditHost) {
       status = 'current'; detail = 'no link recorded in the audit';
     } else if (hostOf(cur) === auditHost) {
@@ -1020,7 +1059,7 @@ function main() {
     }
     r.push(status, detail, cur || '');
   });
-  console.log(`  row status   : ${nStale} URL-corrected-since-scrape, ${nGone} unmatched-to-config`);
+  console.log(`  row status   : ${nStale} URL-corrected-since-scrape, ${nMoved} moved-to-another-scraper, ${nGone} unmatched-to-config`);
 
   const fixQueue = buildFixQueue({ sites, ages, comments, roster, fixNotes });
   const pinned = fixQueue.filter(r => r[11]).length;
