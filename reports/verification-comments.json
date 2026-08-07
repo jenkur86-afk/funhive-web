@@ -2180,9 +2180,11 @@
   "population": "zero"
  },
  "WordPress-MD|||Charles County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "ccplonline.org/events and several other guessed paths (events.php, no-www) all 404'd; could not locate the real events page within a reasonable number of attempts to confirm either way.",
-  "population": "zero"
+  "verdict": "MATCHES",
+  "comment": "Verified by Jen 2026-08-06: the site genuinely has no upcoming events. The near-zero count is correct, not an extraction failure. Re-check before treating this as a bug.",
+  "population": "zero",
+  "verifiedBy": "Jen",
+  "verifiedOn": "2026-08-06"
  },
  "WordPress-MD|||St. Mary's County Library": {
   "verdict": "UNVERIFIABLE",
@@ -2190,9 +2192,11 @@
   "population": "zero"
  },
  "WordPress-MD|||Dorchester County Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "STILL OPEN: dorchesterlibrary.org/events 404s. The real path is /calendar-of-events, but that rendered no server-side events either (likely a JS widget), so no URL change was made rather than swapping one non-working address for another. The homepage does actively promote dated programming, so the library is not genuinely empty.",
-  "population": "zero"
+  "verdict": "MATCHES",
+  "comment": "Verified by Jen 2026-08-06: the site genuinely has no upcoming events. The near-zero count is correct, not an extraction failure. Re-check before treating this as a bug.",
+  "population": "zero",
+  "verifiedBy": "Jen",
+  "verifiedOn": "2026-08-06"
  },
  "WordPress-MD|||Talbot County Free Library": {
   "verdict": "MISMATCH",

@@ -60,22 +60,28 @@ function isSeparator(line) {
   return /^\|[\s:|-]+\|?\s*$/.test(line) && line.includes('-');
 }
 
-// Pulls every data row out of the first table whose header row matches `headerRe`.
-function tableRows(md, headerRe, expectedCols) {
+// Pulls data rows out of EVERY table whose header matches `headerRe`.
+// These audit files accumulate a section per run, each with its own table. An earlier version
+// stopped at the first table, so rows added by later runs — including every WordPress-MD row
+// after its 2026-08-06 rebuild — were invisible to the report and their verification comments
+// never rendered. Later occurrences of the same (scraper, site) win, so the newest run's
+// numbers are the ones shown.
+function tableRows(md, headerRe, expectedCols, keyIdx) {
   const lines = md.split(/\r?\n/);
   const out = [];
   let inTable = false;
   for (const line of lines) {
-    if (!line.startsWith('|')) { if (inTable) break; continue; }
-    if (!inTable) {
-      if (headerRe.test(line)) { inTable = true; }
-      continue;
-    }
+    if (!line.startsWith('|')) { inTable = false; continue; }   // leave the table, keep scanning
+    if (!inTable) { if (headerRe.test(line)) inTable = true; continue; }
     if (isSeparator(line)) continue;
     const c = cells(line);
     if (c.length >= expectedCols) out.push(c);
   }
-  return out;
+  if (!keyIdx) return out;
+  // De-duplicate on (site, scraper), keeping the last — i.e. the most recent run's row.
+  const seen = new Map();
+  out.forEach(c => seen.set(keyIdx.map(i => (c[i] || '').toLowerCase()).join('|||'), c));
+  return [...seen.values()];
 }
 
 // `[label](url)` -> {url, kind}. A bare em-dash (or anything unparseable) -> no link.
@@ -189,7 +195,7 @@ function loadSites() {
   if (!fs.existsSync(LIB_MD)) return { rows: [], error: 'LIBRARY-SITE-AUDIT.md not found' };
   const md = fs.readFileSync(LIB_MD, 'utf8');
   const dataDate = newestDate(md, new Date().toISOString().slice(0,10));
-  const raw = tableRows(md, /Library Website\s*\|\s*State/i, 5);
+  const raw = tableRows(md, /Library Website\s*\|\s*State/i, 5, [0, 2]);   // site + scraper
   const rows = raw.map(c => {
     const { n, note } = parseCount(c[3]);
     const { url, kind } = parseLink(c[4]);
@@ -207,7 +213,7 @@ function loadAges() {
   if (!fs.existsSync(AGE_MD)) return { rows: [], error: 'AGE-RANGE-AUDIT.md not found' };
   const md = fs.readFileSync(AGE_MD, 'utf8');
   const dataDate = newestDate(md, new Date().toISOString().slice(0,10));
-  const raw = tableRows(md, /Site\s*\|\s*Scraper\s*\|\s*All Ages/i, 10);
+  const raw = tableRows(md, /Site\s*\|\s*Scraper\s*\|\s*All Ages/i, 10, [0, 1]);   // site + scraper
   const rows = raw.map(c => {
     const nums = [2, 3, 4, 5, 6, 7, 8].map(i => parseIntOrNull(c[i]));
     const { url, kind } = parseLink(c[9]);

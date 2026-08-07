@@ -397,7 +397,11 @@ const LIBRARY_SYSTEMS = [
   },
   {
     name: 'Somerset County Library System',
-    url: 'https://sclsnj.libnet.info/events',
+    // 2026-08-06: bare /events returned nothing and the DB held 0 rows for this system.
+    // Branch-filtered URL supplied and verified by Jen. NOTE: this is Somerset County Library
+    // System of NEW JERSEY (Bridgewater/Hillsborough/Somerville branches) — not Maryland's
+    // Somerset County Library at somelibrary.org, which is a different library in WordPress-MD.
+    url: 'https://sclsnj.libnet.info/events?l=Bridgewater+branch%2CExplore+From+Home%2CHillsborough+branch%2CManville+branch%2CMontgomery+branch%2CNorth+Plainfield+branch%2CPeapack+and+Gladstone+branch%2CSomerville+branch%2CVirtual+Book+Discussion+Salon%2CWarren+Township+branch%2CWatchung+branch',
     county: 'Somerset',
     state: 'NJ',
     website: 'https://sclsnj.org',
