@@ -13,6 +13,11 @@
     "priority": "high",
     "added": "2026-08-05"
   },
+  "local-scraper-runner.js": {
+    "note": "Not a registry scraper — a shared-infra note so this stays visible in the Fix queue. Fixed 2026-08-06: MacaroniKid group runs (MacaroniKid-Group1/2/3, spawned by runMacaroniGroup() since the 2026-08-04 dead-stub fix) were rendering as 'FAILED — unknown error' in scraper-summary.log even when the child process exited 0 and saved real events. formatSummaryRow() branches on r.success, but the success-path return value had no success flag, so !r.success was always true. Fixed by adding success: true/false to all three return branches in runMacaroniGroup(). CONFIRM on the next MacaroniKid group run (any of Group 1/2/3): the per-scraper table in scrapers/logs/scraper-summary.log should show a normal zero-stats success row for e.g. MacaroniKid-Group2, not a FAILED line, whenever the child process actually exits 0. Delete this note once a post-fix group run has been observed.",
+    "priority": "normal",
+    "added": "2026-08-06"
+  },
   "WordPress-NC": {
     "note": "90% of entries (80 of 89) share a domain with another state — the worst in the family. Do NOT treat its 7 zero-event MISMATCHes as extraction bugs until each URL is verified. Pettigrew Regional Library and Tyrrell County Library were fixed 2026-08-05 (the first had pointed at a Michigan library). All 79 colliding entries were mapped to their real parent system via the State Library of NC directory; see reports/nc-url-audit.md. NOTE: an earlier recommendation in that file to delete 18 entries as 'already covered elsewhere' was REVERSED the same day — it used circular evidence and mistook scrape-time FOUND counts for database coverage. wordpress-NC is in fact the second-largest library event producer in NC with 275 rows. Establish 'covered elsewhere' only with scripts/verify-coverage.js, never by matching venue names. QUEUE UPDATE 2026-08-06: 30 of 89 entries are now verified. The remaining 59 are 50 still-colliding plus 9 that were never checked because their domain does not collide (bunnlibrary.org, dobsonlibrary.org, farmvillelibrary.libguides.com, hickorylibrary.org, indiantraillibrary.org, kinglibrary.org, louisburglibrary.org, roanokerapidslibrary.org, starlibrary.org). A non-colliding domain is still a guessed domain - verify those 9 the same way. See reports/nc-url-audit.md.",
     "priority": "high",
@@ -395,6 +400,18 @@
       "expect": "Next run should populate source_url with each library listing URL (e.g. stmalib.libnet.info/events), which makes verify-coverage.js able to confirm this scraper's coverage instead of returning INCONCLUSIVE.",
       "confirm": "node scripts/verify-coverage.js --state=MD --exclude-scraper=WordPress-MD --host=stmalib.libnet.info",
       "added": "2026-08-07"
+    },
+    "CustomDrupal-Libraries": {
+      "what": "Cobb County selector collision fixed (2026-08-06)",
+      "expect": "Cobb County shared one selector across date, location and description, so venue became a date string and every event failed to save (7 extracted, 0 in DB). Location/description were repointed to match the other 7 configs in this file. Next run should show Cobb County with nonzero saved rows instead of 0. This scraper stores each library's DISPLAY NAME in scraper_name, not the registry key, so check by venue/county, not by scraper_name = 'CustomDrupal-Libraries'.",
+      "confirm": "npm run scraper -- --scraper CustomDrupal-Libraries   then check the DB for Cobb County rows created after the run",
+      "added": "2026-08-06"
+    },
+    "Communico-NJ": {
+      "what": "Two URL fixes awaiting confirmation: Montclair to LibCal-NJ (2026-08-05) and Somerset County NJ branch-filtered URL (2026-08-06)",
+      "expect": "Montclair Public Library was moved out of this scraper to LibCal-NJ with its real bccls.libcal.com URL — confirm it now returns a nonzero count under LibCal-NJ, not Communico-NJ. Separately, Somerset County Library System (NJ) had a bare sclsnj.libnet.info/events URL producing 0 rows in the DB; owner-supplied branch-filtered URL now in place. Confirm Somerset NJ returns events on the next run, and do not confuse it with Maryland's separate Somerset County Library at somelibrary.org, which is a WordPress-MD entry.",
+      "confirm": "npm run scraper -- --scraper Communico-NJ   and separately   npm run scraper -- --scraper LibCal-NJ   then check both for nonzero rows",
+      "added": "2026-08-06"
     }
   },
   "LibCal-VA": {
