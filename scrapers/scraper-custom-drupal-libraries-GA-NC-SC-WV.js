@@ -5,7 +5,7 @@
  *
  * Scrapes events from libraries using custom Drupal-based platforms
  *
- * COVERAGE (8 library systems across 4 states):
+ * COVERAGE (9 library systems across 4 states):
  *
  * SC (4 libraries - 1.243M people):
  * - Richland Library (Columbia) (400K)
@@ -13,9 +13,10 @@
  * - Anderson County Library System (205K) (NEW)
  * - Florence County Library System (138K) (NEW)
  *
- * NC (2 libraries - 453K people):
- * - Greensboro Public Library (300K)
- * - Rowan County Public Library (153K) (NEW)
+ * NC (3 libraries - 1.564M people):
+ * - Greensboro Public Library (300K) (REMOVED - 403 Forbidden)
+ * - Rowan County Public Library (153K)
+ * - Wake County Public Libraries (1.111M) (added 2026-08-07, migrated from Communico-NC)
  *
  * GA (1 library - 750K people):
  * - Cobb County Public Library System (750K)
@@ -23,7 +24,7 @@
  * WV (1 library - 200K people):
  * - Kanawha County Public Library (200K)
  *
- * Total: 8 libraries serving ~2.646 million people
+ * Total: 8 active library systems (Greensboro disabled) serving ~3.757 million people
  *
  * Usage:
  *   node functions/scrapers/scraper-custom-drupal-libraries-GA-NC-SC-WV.js
@@ -110,7 +111,40 @@ const LIBRARY_SYSTEMS = [
     }
   },
 
-  // NORTH CAROLINA (2 libraries)
+  // NORTH CAROLINA (3 libraries)
+  {
+    // Migrated in 2026-08-07 from Communico-NC (scraper-communico-libraries-...js),
+    // whose wake.libnet.info/events entry now dead-redirects (302 to google.co.uk) —
+    // Wake County migrated off Communico/LibNet to this custom Drupal calendar on
+    // wake.gov. Verified live: 1,177 real dated events across ~20 branches, real
+    // Drupal Views pager (?page=0,1,2...). Card markup is `.event--card` with a
+    // `h2 a` title, `.date-time` date/time block, and `.eventbrite-card-location a`
+    // branch link — distinct from this file's other configs but the same
+    // querySelector-cascade extraction pattern already handles it.
+    name: 'Wake County Public Libraries',
+    url: 'https://www.wake.gov/events?title=&field_department_target_id=25&field_audience_target_id=All&field_category_id_target_id=All&location=All&field_end_date_value=&field_start_date_value=',
+    county: 'Wake',
+    state: 'NC',
+    website: 'https://www.wake.gov/libraries',
+    city: 'Raleigh',
+    zipCode: '27601',
+    // 18 events/page, 1177 total (mostly recurring storytimes booked out for
+    // months). 8 pages (~144 events) covers roughly the next 1-2 weeks across all
+    // branches without an unbounded daily crawl; the daily rotation plus upsert
+    // dedup naturally cycles through the rest over time.
+    maxPages: 8,
+    getPageUrl: (pageIndex) =>
+      `https://www.wake.gov/events?title=&field_department_target_id=25&field_audience_target_id=All&field_category_id_target_id=All&location=All&field_end_date_value=&field_start_date_value=&page=${pageIndex}`,
+    scraperName: 'CustomDrupal-Libraries-wake',
+    selectors: {
+      eventContainer: '.event--card',
+      title: 'h2 a span, h2 a',
+      date: '.date-time',
+      location: '.eventbrite-card-location a, .eventbrite-card-location',
+      description: '.description, p',
+      url: 'h2 a'
+    }
+  },
   // REMOVED: Greensboro Public Library - 403 Forbidden error
   // {
   //   name: 'Greensboro Public Library',
@@ -275,25 +309,39 @@ async function scrapeLibraryEvents(library, browser) {
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
 
-    // OPTIMIZED: Faster page load strategy
-    const response = await page.goto(library.url, {
-      waitUntil: 'domcontentloaded',
-      timeout: 15000
-    });
+    // Sites with a getPageUrl() + maxPages configured are paginated (Drupal Views
+    // pager). Everything else keeps the original single-page behavior.
+    const pageCount = library.maxPages || 1;
+    const events = [];
 
-    // Check for HTTP errors
-    if (response && (response.status() === 404 || response.status() >= 500)) {
-      console.log(`  ⚠️ HTTP ${response.status()} for ${library.url}, skipping`);
-      await page.close();
-      return { imported: 0, failed: 1, skipped: 0, total: 0 };
-    }
+    for (let pageIndex = 0; pageIndex < pageCount; pageIndex++) {
+      const pageUrl = pageIndex === 0
+        ? library.url
+        : (library.getPageUrl ? library.getPageUrl(pageIndex) : null);
+      if (!pageUrl) break;
 
-    // Wait for page to load - OPTIMIZED: Reduced from 3000ms
-    await page.waitForSelector('body', { timeout: 3000 });
-    await new Promise(resolve => setTimeout(resolve, 1000));
+      // OPTIMIZED: Faster page load strategy
+      const response = await page.goto(pageUrl, {
+        waitUntil: 'domcontentloaded',
+        timeout: 15000
+      });
 
-    // Extract events using library-specific selectors
-    const events = await page.evaluate((selectors) => {
+      // Check for HTTP errors
+      if (response && (response.status() === 404 || response.status() >= 500)) {
+        console.log(`  ⚠️ HTTP ${response.status()} for ${pageUrl}, skipping`);
+        if (pageIndex === 0) {
+          await page.close();
+          return { imported: 0, failed: 1, skipped: 0, total: 0 };
+        }
+        break; // later page failed — keep what we already collected
+      }
+
+      // Wait for page to load - OPTIMIZED: Reduced from 3000ms
+      await page.waitForSelector('body', { timeout: 3000 });
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Extract events using library-specific selectors
+      const pageEvents = await page.evaluate((selectors) => {
       const results = [];
 
       // Try each selector variant for event containers
@@ -462,9 +510,18 @@ async function scrapeLibraryEvents(library, browser) {
       });
 
       return results;
-    }, library.selectors);
+      }, library.selectors);
 
-    console.log(`   Found ${events.length} events`);
+      console.log(`   Page ${pageIndex + 1}/${pageCount}: found ${pageEvents.length} events`);
+      if (pageEvents.length === 0) break; // ran out of results, stop paginating
+      events.push(...pageEvents);
+
+      if (pageIndex < pageCount - 1) {
+        await new Promise(resolve => setTimeout(resolve, 500)); // be polite between pages
+      }
+    }
+
+    console.log(`   Found ${events.length} events total`);
 
     // Visit detail pages to extract audience info when not found on listing card
     for (let i = 0; i < events.length; i++) {
@@ -605,6 +662,16 @@ async function scrapeLibraryEvents(library, browser) {
           metadata: {
             source: 'Custom Drupal Scraper',
             sourceName: library.name,
+            // The site's own listing page (not the per-event URL) — lets
+            // verify-coverage.js establish identity by host. Safe to set for every
+            // config in this file since library.url is already each site's calendar.
+            sourceUrl: library.url,
+            // Per-CLAUDE.md scraper-naming rules, only set when the config declares
+            // one explicitly (new coverage). The other 7 configs in this file still
+            // fall back to sourceName (their library display name) — a known,
+            // documented gap (see fix-notes.json / CustomDrupal-Libraries) that is a
+            // deliberate, scoped rename migration, not something to fix piecemeal here.
+            ...(library.scraperName ? { scraperName: library.scraperName } : {}),
             county: library.county,
             addedDate: admin.firestore.FieldValue.serverTimestamp()
           },

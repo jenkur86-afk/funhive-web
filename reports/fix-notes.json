@@ -449,8 +449,8 @@
     "added": "2026-08-07"
   },
   "Communico-NC": {
-    "note": "FIX-QUEUE 2026-08-07: Wake County Public Libraries (NC's largest county library system) is configured here but its domain now returns a dead redirect (302 to google.co.uk) — the system migrated to a custom Drupal calendar on wake.gov at some point after this entry was set up. This is a real coverage gap, not a false alarm: Wake County has not been verified as covered by any other active scraper. Needs a new extraction path built against the wake.gov Drupal calendar (check whether CustomDrupal-Libraries' existing Drupal parser can be pointed at it, or whether it needs its own scraper) before this entry can be removed or repointed.",
-    "priority": "high",
+    "note": "RESOLVED 2026-08-07: Wake County Public Libraries confirmed dead in Communico (wake.libnet.info/events 302-redirects to google.co.uk) and removed from scraper-communico-libraries-...js. Real site is a Drupal calendar at wake.gov (1,177 live events, confirmed via WebFetch), same DOM-extraction shape as CustomDrupal-Libraries' other configs (.event--card / h2 a / .date-time / .eventbrite-card-location a). Added as a new entry there with 8-page pagination (Drupal Views pager) and scraperName 'CustomDrupal-Libraries-wake'. Live run: 129 real Wake County events saved with correct per-branch venues (e.g. Wake Forest Community Library), 0 invalid. See SCRAPER-FIX-LOG.jsonl.",
+    "priority": "normal",
     "added": "2026-08-07"
   },
   "BiblioCommons-VA": {

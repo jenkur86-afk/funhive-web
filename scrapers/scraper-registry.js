@@ -673,7 +673,8 @@ const SCRAPERS = {
     exportName: 'scrapeCustomDrupalLibraries',
     type: 'puppeteer',
     group: 2,
-    state: 'Multi'
+    state: 'Multi',
+    sites: 8
   },
   'Drupal-Virginia': {
     file: './scraper-drupal-libraries-VA.js',

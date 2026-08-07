@@ -85,9 +85,11 @@
  * - Howard County Library System (830K)
  * - Frederick County Public Libraries (240K)
  *
- * NC (2 libraries - 1.2M people) (NEW):
- * - Wake County Public Libraries (1M)
+ * NC (1 library - 200K people):
  * - Forsyth County Public Library (200K)
+ * - Wake County Public Libraries REMOVED 2026-08-07 — migrated to a custom Drupal
+ *   calendar on wake.gov; now covered by CustomDrupal-Libraries (scraper-custom-
+ *   drupal-libraries-GA-NC-SC-WV.js)
  *
  * NJ (8 libraries):
  * - Ocean County Library (600K)
@@ -786,7 +788,7 @@ const LIBRARY_SYSTEMS = [
   // Howard County Library System and Frederick County Public Libraries removed —
   // they use LibraryCalendar.com, not Communico. Covered by scraper-librarycalendar-libraries-MD-VA.js
 
-  // NORTH CAROLINA (2 libraries)
+  // NORTH CAROLINA (1 library)
   {
     name: 'Forsyth County Public Library',
     url: 'https://forsyth.libnet.info/events',
@@ -796,15 +798,11 @@ const LIBRARY_SYSTEMS = [
     city: 'Winston-Salem',
     zipCode: '27101'
   },
-  {
-    name: 'Wake County Public Libraries',
-    url: 'https://wake.libnet.info/events',
-    county: 'Wake',
-    state: 'NC',
-    website: 'https://www.wake.gov/libraries',
-    city: 'Raleigh',
-    zipCode: '27601'
-  },
+  // Wake County Public Libraries REMOVED 2026-08-07: wake.libnet.info/events
+  // dead-redirects (302 to google.co.uk) — migrated off Communico/LibNet to a
+  // custom Drupal calendar on wake.gov. Real coverage rebuilt in
+  // scraper-custom-drupal-libraries-GA-NC-SC-WV.js (CustomDrupal-Libraries),
+  // verified live with real August 2026 dated events. See SCRAPER-FIX-LOG.jsonl.
 
   // NEVADA (1 library)
   {
