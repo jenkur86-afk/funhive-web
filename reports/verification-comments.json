@@ -2399,8 +2399,8 @@
   "population": "allages"
  },
  "WordPress-GA|||New Georgia Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "url/eventsUrl (dallaslibrary.org, for Dallas GA) 301-redirects to dallaslibrary.librarymarket.com — which is the unrelated Dallas, TEXAS public library's LibraryMarket calendar (already covered elsewhere in this DB as the LibraryMarket-state family's TX row). This looks like a domain reassignment/collision, not an age-detection issue: the scraper is very likely ingesting Texas library events mislabeled as a Georgia library. Needs live verification of what dallaslibrary.org actually resolves to for Dallas, GA and a corrected URL; not fixed this session.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-08: repointed to wgrls.org (verified real institution) and a TEC-DOM extraction path added (tryDomScrapeTecEvents in tec-rest-helper.js) since the REST API is 403-blocked. Confirmed live: 10 real events extracted, 5 saved with correct venue/source_url/distinct URLs on the first re-run. No longer a coverage gap.",
   "population": "allages"
  },
  "Drupal-Parks|||Wisconsin State Parks": {

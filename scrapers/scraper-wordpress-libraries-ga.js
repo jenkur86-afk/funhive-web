@@ -3,7 +3,7 @@ const { admin, db } = require('./helpers/supabase-adapter');
 
 const { logScraperResult } = require('./scraper-logger');
 const { saveEventsWithGeocoding } = require('./event-save-helper');
-const { tryFetchTecEvents } = require('./helpers/tec-rest-helper');
+const { tryFetchTecEvents, tryDomScrapeTecEvents } = require('./helpers/tec-rest-helper');
 const ngeohash = require('ngeohash');
 /**
  * Georgia Public Libraries Scraper - Coverage: All Georgia public libraries
@@ -126,6 +126,37 @@ async function scrapeGenericEvents() {
       const page = await browser.newPage();
       await page.goto(library.eventsUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
       await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // REST API can be reachable-but-403 (blocked at the server/CDN level)
+      // even on a genuinely TEC-powered site — tryFetchTecEvents() already
+      // returned null above in that case. Before falling back to fully
+      // generic selectors (which can't tell a real event card from the
+      // calendar's own day-heading badge on TEC's list-view markup), try
+      // TEC's own DOM structure directly. Confirmed live 2026-08-08 against
+      // wgrls.org: this is exactly what was happening to New Georgia Public
+      // Library — every saved "event" was a bare date-heading string.
+      const domTecEvents = await tryDomScrapeTecEvents(page, library.name);
+      if (domTecEvents && domTecEvents.length > 0) {
+        domTecEvents.forEach(event => events.push({
+          ...event,
+          metadata: {
+            sourceName: library.name,
+            sourceUrl: library.url,
+            scrapedAt: new Date().toISOString(),
+            scraperName: SCRAPER_NAME,
+            category: 'library',
+            platform: 'wordpress-tec-dom',
+            state: 'GA',
+            city: library.city,
+            zipCode: library.zipCode,
+            needsReview: true
+          }
+        }));
+        await page.close();
+        await new Promise(resolve => setTimeout(resolve, 500));
+        continue;
+      }
+
       const libraryEvents = await page.evaluate((libName) => {
         const events = [];
         const eventSelectors = [

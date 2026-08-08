@@ -134,4 +134,80 @@ async function tryFetchTecEvents(baseUrl, libName) {
   return allEvents;
 }
 
-module.exports = { tryFetchTecEvents };
+/**
+ * Fall back to DOM extraction of TEC's own list-view markup when the REST API
+ * is unreachable (some sites 403 /wp-json/ entirely while still serving the
+ * normal HTML page — found 2026-08-08 on wgrls.org/New Georgia Public Library:
+ * tryFetchTecEvents() returned null, so the generic per-scraper DOM fallback
+ * ran instead and picked up the calendar's day-heading badge elements as fake
+ * event titles, since a plain `[class*="event"]` selector matches both the
+ * real event card AND the unrelated day-group wrapper around it).
+ *
+ * TEC's list view (v2, "tribe-events-view--list") uses stable, documented
+ * class names rather than a theme-specific layout, so this targets those
+ * directly instead of guessing generic selectors:
+ *   .tribe-events-calendar-list__event              - the real event card
+ *   .tribe-events-calendar-list__event-title-link    - title text + event URL
+ *   .tribe-events-calendar-list__event-datetime      - <time datetime="YYYY-MM-DD">
+ *     with a nested .tribe-event-date-start ("August 12 @ 11:00 am") and
+ *     .tribe-event-time ("11:30 am") for start/end time
+ *   .tribe-events-calendar-list__event-venue-title   - venue name
+ *   .tribe-events-calendar-list__event-venue-address - venue address
+ *   .tribe-events-calendar-list__event-description   - description
+ * Deliberately does NOT touch .tribe-events-calendar-list__event-date-tag*
+ * (the day-heading badge) — that's the exact element the generic fallback
+ * was mistaking for a title.
+ *
+ * @param {import('puppeteer').Page} page - already navigated to the TEC list-view URL
+ * @param {string} libName - library/venue display name, used as a fallback venue
+ * @returns {Promise<Array|null>} normalized event objects, or null if this page
+ *   isn't TEC v2 list-view markup (caller should fall back to generic DOM scraping)
+ */
+async function tryDomScrapeTecEvents(page, libName) {
+  const raw = await page.evaluate(() => {
+    const cards = document.querySelectorAll('.tribe-events-calendar-list__event');
+    if (cards.length === 0) return null;
+    return Array.from(cards).map(card => {
+      const titleLink = card.querySelector('.tribe-events-calendar-list__event-title-link');
+      const timeEl = card.querySelector('.tribe-events-calendar-list__event-datetime');
+      const startEl = card.querySelector('.tribe-event-date-start');
+      const endEl = card.querySelector('.tribe-event-time');
+      const venueTitleEl = card.querySelector('.tribe-events-calendar-list__event-venue-title');
+      const venueAddrEl = card.querySelector('.tribe-events-calendar-list__event-venue-address');
+      const descEl = card.querySelector('.tribe-events-calendar-list__event-description');
+      return {
+        title: titleLink ? titleLink.textContent.trim() : '',
+        url: titleLink ? titleLink.href : '',
+        isoDate: timeEl ? timeEl.getAttribute('datetime') : null,
+        startText: startEl ? startEl.textContent.trim() : '',
+        endText: endEl ? endEl.textContent.trim() : '',
+        description: descEl ? descEl.textContent.trim() : '',
+        venueTitle: venueTitleEl ? venueTitleEl.textContent.trim() : '',
+        venueAddress: venueAddrEl ? venueAddrEl.textContent.trim() : ''
+      };
+    });
+  });
+
+  if (!raw) return null;
+
+  return raw
+    .filter(ev => ev.title && ev.isoDate)
+    .map(ev => {
+      // startText looks like "August 12 @ 11:00 am" — the time is whatever
+      // follows the "@ "; absent for all-day/date-range entries.
+      const startMatch = ev.startText.match(/@\s*(.+)$/);
+      return {
+        title: ev.title,
+        date: ev.isoDate,
+        startTime: startMatch ? startMatch[1].trim() : null,
+        endTime: ev.endText || null,
+        description: _stripHtml(ev.description),
+        url: ev.url,
+        venueName: ev.venueTitle || libName,
+        location: ev.venueTitle || libName,
+        address: ev.venueAddress || ''
+      };
+    });
+}
+
+module.exports = { tryFetchTecEvents, tryDomScrapeTecEvents };
