@@ -5945,3 +5945,166 @@ Day 1 of a new 3-day rotation (Group 1). Attribution method follows the 2026-08-
 | York County Library | LibraryCalendar-Libraries | 16 | 20 | 80% |
 | Fredericksburg Branch | BiblioCommons-VA | 19 | 24 | 79% |
 
+## 2026-08-08
+
+Tail end of Group 1's rotation started 2026-08-07 03:00 AM. `scraper-summary.log`'s final "PER-SCRAPER RESULTS" block (timestamped 2026-08-08T14:50:03Z, 51 scrapers, "51 succeeded") is **not new data** — every one of those 51 non-MacaroniKid rows carries FOUND/NEW/DUPES/TIME values byte-identical to that scraper's entry already logged under `## 2026-08-07` above (confirmed by cross-checking scraper names against the union of names already logged this cycle: all but `CivicEngage-Libraries`, `MacaroniKid-Group1` (a runner-harness placeholder, not a real scraper), `ChildrensTheater-Eastern`, `EventON-Lexington`, `SportsEngine-Youth-Eastern`, and the five `VenueList-*-DMV` scrapers were already present). This is the same "stale cumulative reprint" pattern documented under 2026-08-06.
+
+Today's genuinely new attribution comes from three sources:
+
+1. **`ChildrensTheater-Eastern`** — log reported FOUND 162 / NEW 34, but `created_at`-windowed query (window `2026-08-07T18:39:45Z`–`2026-08-07T18:51:00Z`, padded from the log's own `🚀 Starting ChildrensTheater-Eastern...` timestamp) returns only 10 rows with `created_at` in that window — the same UPDATE-collision pattern documented on 2026-08-05/06 (24 of the "new" finds matched a pre-existing stable ID and only touched `scraped_at`). Grouped by `venue` (this scraper's `scraper_name` covers many theaters under one value, so venue is the site-level granularity here, same pattern as `AACPL`/`BiblioCommons-*`). Links use each venue's own `eventsUrl` from the scraper's static config array (`scrapers/scraper-childrens-theater-eastern.js`).
+2. **Nine `MacaroniKid-{PA,NC,MA,TN,AL,KY,RI,DC,WV}` state scrapers**, run via the separate `macaroni-runner-group1.js` process (`logs/macaroni-group1-2026-08-08.log`), first appearance in this cycle. Log reported 100% FOUND=NEW for every state (0 duplicates), so no UPDATE-collision correction was needed here; `created_at`-windowed queries per state (using each state's own `🚀 Starting`/`✅ completed` timestamps from the runner log) returned counts matching the log almost exactly (small deltas — e.g. PA 4649 log vs 4273 attributed after query timeout retries — reflect ordinary run-to-run variance in what had a `created_at` timestamp precisely inside the window boundary, not a methodology gap). Per CLAUDE.md's `scraper_name` convention, each MacaroniKid state scraper already emits one distinct `scraper_name` per local city/metro edition (e.g. `MacaroniKid-PA-lancaster`), so **that** is the site-level grouping used below — 96 distinct site editions across the 9 states. Site names are the slug title-cased; links use each site's own `source_url` (the local edition's own `*.macaronikid.com` homepage).
+3. **`SandhillRegional-NC`** (brand new scraper, first run 2026-08-08) — counts supplied directly, already verified fresh: 10 branches across Moore/Montgomery/Richmond/Anson counties, all sharing one shared listing page (`scrapers/scraper-sandhill-regional-library-nc.js` has no per-branch calendar, only a single `LISTING_URL` constant used for every branch).
+
+`CivicEngage-Libraries`, `EventON-Lexington`, `SportsEngine-Youth-Eastern`, and the five `VenueList-{ArtStudios,ClimbingGyms,IceRinks,MovieTheaters,ScienceDiscovery}-DMV` scrapers ran today but produced zero new events (see below) — moved to the zero-events list.
+
+13,612 genuinely-new rows today across 12 scrapers (`ChildrensTheater-Eastern`, 9 MacaroniKid state scrapers, `SandhillRegional-NC`), grouping into 110 distinct site rows.
+
+| Site | Scraper | All Ages | Babies 0-2 | Preschool 3-5 | Kids 6-8 | Tweens 9-12 | Teens 13-18 | Adults | Total | Link |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Weymouth | MacaroniKid-MA | 141 | 90 | 49 | 97 | 15 | 23 | 0 | 415 | [link](https://weymouth.macaronikid.com) |
+| Leominster | MacaroniKid-MA | 125 | 79 | 73 | 75 | 19 | 32 | 0 | 403 | [link](https://leominster.macaronikid.com) |
+| Burlington Hillsborough | MacaroniKid-NC | 161 | 75 | 75 | 62 | 12 | 3 | 0 | 388 | [link](https://burlington-hillsborough.macaronikid.com) |
+| Swboston | MacaroniKid-MA | 216 | 36 | 42 | 70 | 13 | 7 | 0 | 384 | [link](https://swboston.macaronikid.com) |
+| Westchesterpa | MacaroniKid-PA | 99 | 93 | 54 | 113 | 22 | 1 | 0 | 382 | [link](https://westchesterpa.macaronikid.com) |
+| Franklin | MacaroniKid-MA | 133 | 84 | 61 | 78 | 13 | 11 | 0 | 380 | [link](https://franklin.macaronikid.com) |
+| Harrisburg | MacaroniKid-PA | 98 | 177 | 12 | 64 | 16 | 6 | 0 | 373 | [link](https://harrisburg.macaronikid.com) |
+| Lowell | MacaroniKid-MA | 124 | 96 | 58 | 51 | 17 | 13 | 0 | 359 | [link](https://lowell.macaronikid.com) |
+| Northworcester | MacaroniKid-MA | 95 | 67 | 52 | 48 | 54 | 34 | 0 | 350 | [link](https://northworcester.macaronikid.com) |
+| York | MacaroniKid-PA | 123 | 28 | 25 | 35 | 12 | 111 | 0 | 334 | [link](https://york.macaronikid.com) |
+| Clayton | MacaroniKid-NC | 187 | 14 | 54 | 31 | 23 | 24 | 0 | 333 | [link](https://clayton.macaronikid.com) |
+| Lexington | MacaroniKid-MA | 110 | 74 | 60 | 48 | 18 | 23 | 0 | 333 | [link](https://lexington.macaronikid.com) |
+| Louisvillesw | MacaroniKid-KY | 106 | 75 | 15 | 74 | 14 | 38 | 0 | 322 | [link](https://louisvillesw.macaronikid.com) |
+| Attleboro | MacaroniKid-MA | 153 | 59 | 29 | 56 | 7 | 4 | 0 | 308 | [link](https://attleboro.macaronikid.com) |
+| Asheville | MacaroniKid-NC | 231 | 20 | 11 | 38 | 4 | 1 | 0 | 305 | [link](https://asheville.macaronikid.com) |
+| Berkshires | MacaroniKid-MA | 165 | 38 | 8 | 62 | 5 | 8 | 0 | 286 | [link](https://berkshires.macaronikid.com) |
+| Newton | MacaroniKid-MA | 173 | 29 | 32 | 31 | 4 | 0 | 0 | 269 | [link](https://newton.macaronikid.com) |
+| Kennettsquare | MacaroniKid-PA | 187 | 12 | 25 | 38 | 1 | 1 | 0 | 264 | [link](https://kennettsquare.macaronikid.com) |
+| Havertown | MacaroniKid-PA | 64 | 70 | 43 | 38 | 11 | 7 | 0 | 233 | [link](https://havertown.macaronikid.com) |
+| Southcharlotte | MacaroniKid-NC | 45 | 93 | 59 | 13 | 16 | 4 | 0 | 230 | [link](https://southcharlotte.macaronikid.com) |
+| Southdurham | MacaroniKid-NC | 84 | 33 | 30 | 65 | 9 | 9 | 0 | 230 | [link](https://southdurham.macaronikid.com) |
+| Durham | MacaroniKid-NC | 105 | 38 | 19 | 30 | 30 | 2 | 0 | 224 | [link](https://durham.macaronikid.com) |
+| Plymouthma | MacaroniKid-MA | 97 | 32 | 48 | 28 | 7 | 6 | 0 | 218 | [link](https://plymouthma.macaronikid.com) |
+| Salempeabody | MacaroniKid-MA | 103 | 21 | 14 | 51 | 1 | 11 | 0 | 201 | [link](https://salempeabody.macaronikid.com) |
+| Wakefield | MacaroniKid-MA | 189 | 4 | 0 | 5 | 0 | 1 | 0 | 199 | [link](https://wakefield.macaronikid.com) |
+| Cary | MacaroniKid-NC | 139 | 15 | 10 | 28 | 0 | 3 | 0 | 195 | [link](https://cary.macaronikid.com) |
+| Swmontgomery | MacaroniKid-PA | 53 | 27 | 57 | 34 | 3 | 10 | 0 | 184 | [link](https://swmontgomery.macaronikid.com) |
+| Knoxville | MacaroniKid-TN | 54 | 43 | 48 | 32 | 3 | 2 | 0 | 182 | [link](https://knoxville.macaronikid.com) |
+| Centrallouisville | MacaroniKid-KY | 60 | 49 | 10 | 20 | 9 | 31 | 0 | 179 | [link](https://centrallouisville.macaronikid.com) |
+| Lancaster | MacaroniKid-PA | 56 | 30 | 6 | 72 | 5 | 4 | 0 | 173 | [link](https://lancaster.macaronikid.com) |
+| Morgantown | MacaroniKid-PA | 31 | 47 | 37 | 31 | 12 | 14 | 0 | 172 | [link](https://morgantown.macaronikid.com) |
+| Carlisle | MacaroniKid-PA | 45 | 34 | 41 | 11 | 12 | 24 | 0 | 167 | [link](https://carlisle.macaronikid.com) |
+| Burlingtonma | MacaroniKid-MA | 46 | 30 | 27 | 21 | 4 | 32 | 0 | 160 | [link](https://burlingtonma.macaronikid.com) |
+| Ssboston | MacaroniKid-MA | 81 | 38 | 10 | 22 | 5 | 3 | 0 | 159 | [link](https://ssboston.macaronikid.com) |
+| Kutztown To Allentown | MacaroniKid-PA | 65 | 37 | 30 | 12 | 0 | 13 | 0 | 157 | [link](https://kutztown-to-allentown.macaronikid.com) |
+| Hershey | MacaroniKid-PA | 81 | 29 | 10 | 15 | 15 | 0 | 0 | 150 | [link](https://hershey.macaronikid.com) |
+| Washingtonri | MacaroniKid-RI | 83 | 3 | 19 | 40 | 2 | 3 | 0 | 150 | [link](https://washingtonri.macaronikid.com) |
+| Gettysburgpa | MacaroniKid-PA | 45 | 9 | 15 | 49 | 3 | 14 | 0 | 135 | [link](https://gettysburgpa.macaronikid.com) |
+| Hendersonville | MacaroniKid-NC | 72 | 1 | 13 | 47 | 0 | 2 | 0 | 135 | [link](https://hendersonville.macaronikid.com) |
+| Springfieldpa | MacaroniKid-PA | 73 | 21 | 9 | 22 | 1 | 4 | 0 | 130 | [link](https://springfieldpa.macaronikid.com) |
+| Parkersburg | MacaroniKid-WV | 72 | 17 | 4 | 16 | 2 | 18 | 0 | 129 | [link](https://parkersburg.macaronikid.com) |
+| Reading | MacaroniKid-PA | 61 | 10 | 21 | 19 | 1 | 15 | 0 | 127 | [link](https://reading.macaronikid.com) |
+| Quakertown | MacaroniKid-PA | 81 | 12 | 1 | 15 | 1 | 11 | 0 | 121 | [link](https://quakertown.macaronikid.com) |
+| Southyork | MacaroniKid-PA | 73 | 9 | 9 | 22 | 1 | 1 | 0 | 115 | [link](https://southyork.macaronikid.com) |
+| Baldwin | MacaroniKid-AL | 36 | 13 | 17 | 28 | 7 | 13 | 0 | 114 | [link](https://baldwin.macaronikid.com) |
+| Scranton | MacaroniKid-PA | 46 | 15 | 16 | 19 | 10 | 1 | 0 | 107 | [link](https://scranton.macaronikid.com) |
+| Robinson | MacaroniKid-PA | 55 | 22 | 18 | 5 | 0 | 2 | 0 | 102 | [link](https://robinson.macaronikid.com) |
+| Erie | MacaroniKid-PA | 71 | 3 | 7 | 19 | 0 | 1 | 0 | 101 | [link](https://erie.macaronikid.com) |
+| Lexingtonky | MacaroniKid-KY | 33 | 8 | 26 | 34 | 0 | 0 | 0 | 101 | [link](https://lexingtonky.macaronikid.com) |
+| Sbirmingham | MacaroniKid-AL | 15 | 47 | 3 | 7 | 15 | 13 | 0 | 100 | [link](https://sbirmingham.macaronikid.com) |
+| Amherst | MacaroniKid-MA | 41 | 18 | 20 | 13 | 6 | 1 | 0 | 99 | [link](https://amherst.macaronikid.com) |
+| Union | MacaroniKid-NC | 29 | 14 | 53 | 1 | 0 | 1 | 0 | 98 | [link](https://union.macaronikid.com) |
+| Chicopee | MacaroniKid-MA | 42 | 6 | 5 | 38 | 1 | 3 | 0 | 95 | [link](https://chicopee.macaronikid.com) |
+| Hendersonvilletn | MacaroniKid-TN | 26 | 7 | 22 | 16 | 20 | 1 | 0 | 92 | [link](https://hendersonvilletn.macaronikid.com) |
+| Springfield | MacaroniKid-MA | 63 | 0 | 5 | 6 | 8 | 9 | 0 | 91 | [link](https://springfield.macaronikid.com) |
+| Pittsburghnorth | MacaroniKid-PA | 50 | 13 | 17 | 5 | 2 | 2 | 0 | 89 | [link](https://pittsburghnorth.macaronikid.com) |
+| Auburnma | MacaroniKid-MA | 33 | 11 | 16 | 15 | 2 | 9 | 0 | 86 | [link](https://auburnma.macaronikid.com) |
+| Scottsboro | MacaroniKid-AL | 38 | 10 | 20 | 10 | 1 | 1 | 0 | 80 | [link](https://scottsboro.macaronikid.com) |
+| Uniontown | MacaroniKid-PA | 50 | 6 | 4 | 12 | 2 | 0 | 0 | 74 | [link](https://uniontown.macaronikid.com) |
+| Hickory | MacaroniKid-NC | 26 | 16 | 2 | 19 | 8 | 0 | 0 | 71 | [link](https://hickory.macaronikid.com) |
+| Nephilly | MacaroniKid-PA | 22 | 22 | 4 | 11 | 0 | 12 | 0 | 71 | [link](https://nephilly.macaronikid.com) |
+| Pittsburgheast | MacaroniKid-PA | 61 | 4 | 1 | 5 | 0 | 0 | 0 | 71 | [link](https://pittsburgheast.macaronikid.com) |
+| Eastonmetro | MacaroniKid-PA | 42 | 15 | 1 | 4 | 8 | 0 | 0 | 70 | [link](https://eastonmetro.macaronikid.com) |
+| Nhuntingdon | MacaroniKid-PA | 41 | 10 | 10 | 6 | 0 | 2 | 0 | 69 | [link](https://nhuntingdon.macaronikid.com) |
+| Dceast | MacaroniKid-DC | 49 | 0 | 0 | 11 | 0 | 2 | 0 | 62 | [link](https://dceast.macaronikid.com) |
+| Media | MacaroniKid-PA | 32 | 1 | 3 | 16 | 0 | 5 | 0 | 57 | [link](https://media.macaronikid.com) |
+| Lebanon | MacaroniKid-PA | 29 | 11 | 3 | 13 | 0 | 0 | 0 | 56 | [link](https://lebanon.macaronikid.com) |
+| Ozark | MacaroniKid-AL | 53 | 0 | 0 | 1 | 0 | 0 | 0 | 54 | [link](https://ozark.macaronikid.com) |
+| Fayettevillenc | MacaroniKid-NC | 36 | 0 | 3 | 14 | 0 | 0 | 0 | 53 | [link](https://fayettevillenc.macaronikid.com) |
+| Framingham | MacaroniKid-MA | 10 | 6 | 23 | 8 | 0 | 4 | 0 | 51 | [link](https://framingham.macaronikid.com) |
+| Southhills | MacaroniKid-PA | 37 | 2 | 4 | 5 | 0 | 3 | 0 | 51 | [link](https://southhills.macaronikid.com) |
+| Louisvilleeast | MacaroniKid-KY | 26 | 8 | 6 | 4 | 1 | 5 | 0 | 50 | [link](https://louisvilleeast.macaronikid.com) |
+| Waltham | MacaroniKid-MA | 45 | 1 | 1 | 1 | 1 | 0 | 0 | 49 | [link](https://waltham.macaronikid.com) |
+| Waynesville | MacaroniKid-NC | 46 | 0 | 0 | 0 | 0 | 0 | 0 | 46 | [link](https://waynesville.macaronikid.com) |
+| Capecod | MacaroniKid-MA | 35 | 3 | 1 | 5 | 1 | 0 | 0 | 45 | [link](https://capecod.macaronikid.com) |
+| Lowermakefield | MacaroniKid-PA | 36 | 1 | 0 | 1 | 6 | 0 | 0 | 44 | [link](https://lowermakefield.macaronikid.com) |
+| Montgomeryal | MacaroniKid-AL | 27 | 0 | 0 | 14 | 0 | 1 | 0 | 42 | [link](https://montgomeryal.macaronikid.com) |
+| Calhounal | MacaroniKid-AL | 18 | 7 | 5 | 8 | 0 | 3 | 0 | 41 | [link](https://calhounal.macaronikid.com) |
+| Swnashville | MacaroniKid-TN | 26 | 0 | 0 | 9 | 1 | 1 | 0 | 37 | [link](https://swnashville.macaronikid.com) |
+| Tuscaloosa | MacaroniKid-AL | 11 | 0 | 9 | 15 | 0 | 0 | 0 | 35 | [link](https://tuscaloosa.macaronikid.com) |
+| Wakeforest | MacaroniKid-NC | 25 | 0 | 0 | 6 | 1 | 0 | 0 | 32 | [link](https://wakeforest.macaronikid.com) |
+| Cityofpittsburgh | MacaroniKid-PA | 17 | 2 | 6 | 6 | 0 | 0 | 0 | 31 | [link](https://cityofpittsburgh.macaronikid.com) |
+| Palmermonson | MacaroniKid-MA | 11 | 8 | 0 | 4 | 4 | 2 | 0 | 29 | [link](https://palmermonson.macaronikid.com) |
+| Shoals | MacaroniKid-AL | 12 | 0 | 1 | 7 | 1 | 5 | 0 | 26 | [link](https://shoals.macaronikid.com) |
+| Mobile | MacaroniKid-AL | 19 | 0 | 0 | 6 | 0 | 0 | 0 | 25 | [link](https://mobile.macaronikid.com) |
+| Leland | MacaroniKid-NC | 12 | 3 | 1 | 7 | 0 | 0 | 0 | 23 | [link](https://leland.macaronikid.com) |
+| Boyertown | MacaroniKid-PA | 11 | 0 | 3 | 4 | 0 | 2 | 0 | 20 | [link](https://boyertown.macaronikid.com) |
+| Willowgrove | MacaroniKid-PA | 15 | 0 | 1 | 3 | 0 | 0 | 0 | 19 | [link](https://willowgrove.macaronikid.com) |
+| Merrimackvalleyma | MacaroniKid-MA | 12 | 1 | 3 | 0 | 0 | 2 | 0 | 18 | [link](https://merrimackvalleyma.macaronikid.com) |
+| Northshorema | MacaroniKid-MA | 11 | 0 | 4 | 3 | 0 | 0 | 0 | 18 | [link](https://northshorema.macaronikid.com) |
+| Needham | MacaroniKid-MA | 6 | 3 | 3 | 2 | 0 | 1 | 0 | 15 | [link](https://needham.macaronikid.com) |
+| Bethlehem | MacaroniKid-PA | 12 | 0 | 1 | 0 | 1 | 0 | 0 | 14 | [link](https://bethlehem.macaronikid.com) |
+| Kent | MacaroniKid-RI | 7 | 2 | 2 | 3 | 0 | 0 | 0 | 14 | [link](https://kent.macaronikid.com) |
+| Bridgewater | MacaroniKid-MA | 9 | 0 | 2 | 1 | 1 | 0 | 0 | 13 | [link](https://bridgewater.macaronikid.com) |
+| Wilkesbarre | MacaroniKid-PA | 6 | 0 | 0 | 4 | 0 | 0 | 0 | 10 | [link](https://wilkesbarre.macaronikid.com) |
+| Northbirmingham | MacaroniKid-AL | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://northbirmingham.macaronikid.com) |
+| Orlando Repertory Theatre | ChildrensTheater-Eastern | 3 | 0 | 0 | 1 | 0 | 0 | 0 | 4 | [link](https://www.orlandorep.com/shows/) |
+| Palace Theatre | ChildrensTheater-Eastern | 2 | 0 | 0 | 1 | 0 | 0 | 0 | 3 | [link](https://www.palacetheatre.org/events/) |
+| People's Light Theatre | ChildrensTheater-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://www.peopleslight.org/tickets/) |
+| Center for Puppetry Arts | ChildrensTheater-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://puppet.org/programs/) |
+| Star | SandhillRegional-NC | 0 | 0 | 4 | 0 | 0 | 0 | 0 | 4 | [link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Troy | SandhillRegional-NC | 1 | 0 | 4 | 4 | 0 | 0 | 0 | 9 | [link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Robbins | SandhillRegional-NC | 15 | 0 | 4 | 3 | 0 | 0 | 0 | 22 | [link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Carthage | SandhillRegional-NC | 14 | 4 | 4 | 1 | 0 | 1 | 0 | 24 | [link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Pinebluff | SandhillRegional-NC | 4 | 0 | 4 | 0 | 0 | 0 | 0 | 8 | [link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Aberdeen | SandhillRegional-NC | 4 | 4 | 4 | 0 | 0 | 1 | 0 | 13 | [link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Biscoe | SandhillRegional-NC | 8 | 0 | 0 | 0 | 0 | 0 | 0 | 8 | [link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Rockingham | SandhillRegional-NC | 3 | 0 | 1 | 0 | 0 | 0 | 0 | 4 | [link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Hamlet | SandhillRegional-NC | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Vass | SandhillRegional-NC | 0 | 0 | 4 | 0 | 0 | 0 | 0 | 4 | [link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+
+### Scrapers with zero attributable new events today
+
+Ran today per `scraper-summary.log` but zero new-event rows (all zero-`NEW` in the log itself, so no `created_at` correction needed):
+
+- CivicEngage-Libraries (0 FOUND / 0 NEW — same broken state as prior audits)
+- EventON-Lexington (33 FOUND / 0 NEW — all duplicates)
+- SportsEngine-Youth-Eastern (6 FOUND / 0 NEW — all duplicates)
+- VenueList-ArtStudios-DMV (41 FOUND / 0 NEW)
+- VenueList-ClimbingGyms-DMV (35 FOUND / 0 NEW)
+- VenueList-IceRinks-DMV (39 FOUND / 0 NEW)
+- VenueList-MovieTheaters-DMV (44 FOUND / 0 NEW)
+- VenueList-ScienceDiscovery-DMV (39 FOUND / 0 NEW)
+
+### Flagged: All Ages >= 70% (total >= 20 events)
+
+None of today's rows belong to the excluded known-legitimate broad-content scrapers (`FestivalGuides-Eastern`, `FairsFestivals-Eastern`, `KidsOutAndAbout-Eastern`, `KidsOutAndAbout-DMV`, `Eventbrite-Family-Eastern`), so no exclusions applied. All 16 flagged rows are MacaroniKid city/metro editions:
+
+- **MacaroniKid-NC** — Asheville — 75.7% All Ages (305 events)
+- **MacaroniKid-PA** — Kennettsquare — 70.8% All Ages (264 events)
+- **MacaroniKid-MA** — Wakefield — 95.0% All Ages (199 events)
+- **MacaroniKid-NC** — Cary — 71.3% All Ages (195 events)
+- **MacaroniKid-PA** — Erie — 70.3% All Ages (101 events)
+- **MacaroniKid-PA** — Pittsburgheast — 85.9% All Ages (71 events)
+- **MacaroniKid-DC** — Dceast — 79.0% All Ages (62 events)
+- **MacaroniKid-AL** — Ozark — 98.1% All Ages (54 events)
+- **MacaroniKid-PA** — Southhills — 72.5% All Ages (51 events)
+- **MacaroniKid-MA** — Waltham — 91.8% All Ages (49 events)
+- **MacaroniKid-NC** — Waynesville — 100% All Ages (46 events)
+- **MacaroniKid-MA** — Capecod — 77.8% All Ages (45 events)
+- **MacaroniKid-PA** — Lowermakefield — 81.8% All Ages (44 events)
+- **MacaroniKid-TN** — Swnashville — 70.3% All Ages (37 events)
+- **MacaroniKid-NC** — Wakeforest — 78.1% All Ages (32 events)
+- **MacaroniKid-AL** — Mobile — 76.0% All Ages (25 events)
+
+**Cycle-completeness check (not declared complete):** cross-referencing today's additions plus the full `## 2026-08-04` through `## 2026-08-07` union (143 distinct scraper identities) against `Object.keys(SCRAPERS).filter(isScraperActive)` (151 active registry keys as committed in this worktree) still leaves 20 active scrapers with no entry anywhere in the open cycle: `Allentown-Public`, `Communico-SC`, `Dorchester-County`, `EventActions-Libraries`, `Howard-County`, `Rockbridge-Regional`, `Somerset-County`, `Tockify-Horry`, `WordPressTec-Parks`, and 11 `VenueList-*-DMV` scrapers (`BowlingAlleys`, `ChildrensMuseums`, `Eastern-US`, `FamilyEntertainment`, `GymnasticsCenters`, `IndoorPlaygrounds`, `MinigolfBatting`, `NatureFarms`, `RollerSkating`, `SwimmingPools`, `TrampolineNinja`). No `## Cycle complete` heading added.
+

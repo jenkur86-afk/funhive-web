@@ -954,6 +954,14 @@ function isJunkTitle(name) {
     // badge via newlines/whitespace (e.g. "3 events,\n\t\t\t\t30"), so a $-anchored
     // match never fired and this junk kept falling through to the invalid-date path.
     /^\d+\s+events?\b/i,
+    // TEC list-view day-group headings (e.g. "Saturday, September 5, 2026") and
+    // their "Ongoing events for X to Y" summary rows — found 2026-08-08 on
+    // wgrls.org (WordPress-GA/New Georgia Public Library): the site's REST API
+    // is 403-blocked so the scraper falls back to generic DOM selectors, which
+    // pick up the day-heading wrapper instead of the real event card beneath it.
+    // The heading text itself is a bare full date, never a real event title.
+    /^(sunday|monday|tuesday|wednesday|thursday|friday|saturday),?\s+\w+\s+\d{1,2},?\s+\d{4}$/i,
+    /^ongoing\s+events?\s+for\b/i,
   ];
   for (const pattern of NAV_JUNK) {
     if (pattern.test(trimmed)) return true;

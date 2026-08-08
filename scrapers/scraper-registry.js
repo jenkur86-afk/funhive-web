@@ -195,6 +195,11 @@ const SCRAPERS = {
   // Library's events.php has a 493-character body and no dates, so every DOM scraper
   // returned 0 by construction. This reads the public ICS feed behind the iframe instead.
   'GoogleCalendar-MD': { file: './scraper-gcal-libraries-md.js', exportName: 'scrapeGCalLibrariesMDCloudFunction', type: 'api', group: 3, state: 'MD' },
+  // 2026-08-07: srls.info (WordPress-NC's 5 Sandhill-system entries) now 301-redirects to
+  // LibGuides, a platform WordPress-NC's DOM scraper cannot read. Real events live behind
+  // an embedded LibCal calendar (api3.libcal.com/embed_calendar.php) shared by all 15
+  // branches. See scraper-sandhill-regional-library-nc.js header for details.
+  'SandhillRegional-NC': { file: './scraper-sandhill-regional-library-nc.js', exportName: 'scrapeSandhillRegionalLibraryCloudFunction', type: 'puppeteer', group: 3, state: 'NC' },
   'LibCal-KY': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalKY', type: 'puppeteer', group: 1, state: 'KY' },
 
   // ============================================================================

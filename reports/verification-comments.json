@@ -2427,5 +2427,20 @@
   "verdict": "MISMATCH",
   "comment": "Confirmed live at yorkcounty.librarycalendar.com: individual events do carry explicit age/category tags (\"Babies & Toddlers (0-2 years)\", \"Youth Visual Art Contest — ages 7-18\", \"Adults (18 years & up)\") that the text-only detector is evidently missing for a majority of events. Not fixed this session; needs the LibraryCalendar page's category-tag markup inspected for a structured field to read directly.",
   "population": "allages"
+ },
+ "CivicEngage-Libraries|||Colonial Heights Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Confirmed live 2026-07-16 and again in SCRAPER-FIX-LOG.jsonl: the corrected Library-category calendar (CID=8) genuinely shows zero events for the current month view; not a selector bug.",
+  "population": "zero"
+ },
+ "MacaroniKid-NC|||Asheville": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch returned HTTP 403 from asheville.macaronikid.com — macaronikid.com domain appears to bot-block simple fetches, consistent with the 74 pre-existing UNVERIFIABLE MacaroniKid rows already in this file.",
+  "population": "allages"
+ },
+ "MacaroniKid-AL|||Ozark": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WebFetch returned HTTP 403 from ozark.macaronikid.com — same domain-wide bot-block as Asheville; not investigated further this run.",
+  "population": "allages"
  }
 }

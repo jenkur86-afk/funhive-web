@@ -19,7 +19,10 @@ const LIBRARIES = [
   { name: 'Boonville Community Public Library', url: 'https://www.nwrl.org/', eventsUrl: 'https://nwrl.org/regional-library-events/', city: 'Boonville', state: 'NC', zipCode: '00000', county: 'Yadkin County'},
   { name: 'Bunn Branch Library', url: 'https://www.bunnlibrary.org', eventsUrl: 'https://www.bunnlibrary.org/events', city: 'Bunn', state: 'NC', zipCode: '00000', county: 'Bunn County'},
   { name: 'Canton Branch Library', url: 'https://www.cantonlibrary.org', eventsUrl: 'https://www.cantonlibrary.org/events', city: 'Canton', state: 'NC', zipCode: '00000', county: 'Canton County'},
-  { name: 'Moore County Library', url: 'https://www.srls.info/', eventsUrl: 'https://www.srls.info/', city: 'Carthage', state: 'NC', zipCode: '00000', county: 'Moore County'},
+  // Moore County Library REMOVED 2026-08-07: srls.info 301-redirects to LibGuides
+  // (Sandhill Regional Library System), a platform this WordPress DOM scraper
+  // cannot read. Real coverage rebuilt in scraper-sandhill-regional-library-nc.js
+  // (SandhillRegional-NC), which reads the system's embedded LibCal calendar.
   { name: 'Cary Branch Library', url: 'https://www.carylibrary.org', eventsUrl: 'https://www.carylibrary.org/events', city: 'Cary', state: 'NC', zipCode: '00000', county: 'Cary County'},
   { name: 'Beatties Ford Road Branch Library', url: 'https://www.cmlibrary.org/', eventsUrl: 'https://www.cmlibrary.org/programs-and-events', city: 'Charlotte', state: 'NC', zipCode: '00000', county: 'Mecklenburg County'},
   { name: 'Claremont Branch Library', url: 'https://www.catawbacountync.gov/county-services/library/', eventsUrl: 'https://www.catawbacountync.gov/county-services/library/calendar-of-events/', city: 'Claremont', state: 'NC', zipCode: '00000', county: 'Catawba County'},
@@ -78,15 +81,16 @@ const LIBRARIES = [
   { name: 'Norwood Branch Library', url: 'https://norwoodlibrary.org/', eventsUrl: 'https://norwoodlibrary.org/', city: 'Norwood', state: 'NC', zipCode: '00000', county: 'Norwood County'},
   { name: 'Berea Branch Library', url: 'https://oxfordlibrary.org/', eventsUrl: 'https://oxfordlibrary.org/', city: 'Oxford', state: 'NC', zipCode: '00000', county: 'Oxford County'},
   { name: 'Pembroke Public Library', url: 'https://www.pembrokelibrary.org/', eventsUrl: 'https://www.pembrokelibrary.org/upcoming-events', city: 'Pembroke', state: 'NC', zipCode: '00000', county: 'Pembroke County'},
-  { name: 'Pinebluff Public Library', url: 'https://www.srls.info/', eventsUrl: 'https://www.srls.info/', city: 'Pinebluff', state: 'NC', zipCode: '00000', county: 'Moore County'},
+  // Pinebluff Public Library REMOVED 2026-08-07: see SandhillRegional-NC (same
+  // srls.info -> LibGuides migration as Moore County Library above).
   // 2026-08-05: was https://plymouthlibrary.org/ — that domain is Plymouth District Library,
   // MICHIGAN. Verified correct site is pettigrewlibraries.org (regional office at 201 E 3rd St,
   // Plymouth NC 27962; serves Chowan, Perquimans, Tyrrell, Washington counties).
   { name: 'Pettigrew Regional Library', url: 'https://pettigrewlibraries.org/', eventsUrl: 'https://pettigrewlibraries.org/', city: 'Plymouth', state: 'NC', zipCode: '27962', county: 'Washington County'},
   { name: 'Princeton Public Library', url: 'https://www.pljcs.org/', eventsUrl: 'https://www.pljcs.org/monthly-calendar', city: 'Princeton', state: 'NC', zipCode: '00000', county: 'Johnston County'},
   { name: 'Roanoke Rapids Public Library', url: 'https://www.roanokerapidslibrary.org/', eventsUrl: 'https://www.roanokerapidslibrary.org/', city: 'Roanoke Rapids', state: 'NC', zipCode: '27870', county: 'Roanoke Rapids County'},
-  { name: 'Robbins Area Branch', url: 'https://www.srls.info/', eventsUrl: 'https://www.srls.info/', city: 'Robbins', state: 'NC', zipCode: '00000', county: 'Moore County'},
-  { name: 'Leath Memorial Library', url: 'https://www.srls.info/', eventsUrl: 'https://www.srls.info/', city: 'Rockingham', state: 'NC', zipCode: '00000', county: 'Richmond County'},
+  // Robbins Area Branch and Leath Memorial Library REMOVED 2026-08-07: see
+  // SandhillRegional-NC (same srls.info -> LibGuides migration).
   { name: 'Rowan Public Library', url: 'https://www.salisburylibrary.org/', eventsUrl: 'https://www.salisburylibrary.org/', city: 'Salisbury', state: 'NC', zipCode: '28145', county: 'Salisbury County'},
   { name: 'Saluda Branch Library', url: 'https://www.saludalibrary.org', eventsUrl: 'https://www.saludalibrary.org/events', city: 'Saluda', state: 'NC', zipCode: '00000', county: 'Saluda County'},
   { name: 'Selma Public Library', url: 'https://www.pljcs.org/', eventsUrl: 'https://www.pljcs.org/monthly-calendar', city: 'Selma', state: 'NC', zipCode: '00000', county: 'Johnston County'},
@@ -97,7 +101,8 @@ const LIBRARIES = [
   { name: 'Spring Lake Branch', url: 'https://www.springlakelibrary.org', eventsUrl: 'https://www.springlakelibrary.org/events', city: 'Spring Lake', state: 'NC', zipCode: '00000', county: 'Spring Lake County'},
   { name: 'Stanley Branch Library', url: 'https://gastonlibrary.org/', eventsUrl: 'https://gastonlibrary.org/calendar.aspx', city: 'Stanley', state: 'NC', zipCode: '00000', county: 'Gaston County'},
   { name: 'Star Branch', url: 'https://www.starlibrary.org', eventsUrl: 'https://www.starlibrary.org/events', city: 'Star', state: 'NC', zipCode: '00000', county: 'Star County'},
-  { name: 'Montgomery County Library', url: 'https://www.srls.info/', eventsUrl: 'https://www.srls.info/', city: 'Troy', state: 'NC', zipCode: '00000', county: 'Montgomery County'},
+  // Montgomery County Library REMOVED 2026-08-07: see SandhillRegional-NC (same
+  // srls.info -> LibGuides migration).
   { name: 'Warren County Memorial Library', url: 'https://www.warrentonlibrary.org', eventsUrl: 'https://www.warrentonlibrary.org/events', city: 'Warrenton', state: 'NC', zipCode: '27589', county: 'Warrenton County'},
   { name: 'Warsaw-Kornegay Public Library', url: 'https://www.warsawlibrary.org/', eventsUrl: 'https://www.warsawlibrary.org/', city: 'Warsaw', state: 'NC', zipCode: '00000', county: 'Warsaw County'},
   { name: 'Myrtle Grove Branch', url: 'https://www.wilmingtonlibrary.org', eventsUrl: 'https://www.wilmingtonlibrary.org/events', city: 'Wilmington', state: 'NC', zipCode: '00000', county: 'Wilmington County'},

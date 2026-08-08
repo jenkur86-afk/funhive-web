@@ -5307,6 +5307,49 @@ const LIBRARY_ADDRESSES = {
       'Main Library': '1043 Main St, West Warwick, RI 02893',
       'West Warwick': '1043 Main St, West Warwick, RI 02893'
     }
+  },
+
+  // Sandhill Regional Library System (NC) — 5-county system (Anson, Hoke,
+  // Montgomery, Moore, Richmond) whose events all come from one system-wide
+  // LibCal instance (srls.libcal.com) with no per-branch filtering. Branch
+  // names are embedded in event titles (e.g. "Carthage Preschool Storytime",
+  // "Biscoe: Movie at the Library"), so detectLibraryBranch() resolves the
+  // real venue from the title text. Addresses verified 2026-08-07 via web
+  // search against each county/library's own listing.
+  'Sandhill Regional Library System': {
+    mainAddress: '101 Saunders St, Carthage, NC 28327',
+    branches: {
+      'Hampton B. Allen Library': '120 S Greene St, Wadesboro, NC 28170',
+      'Wadesboro': '120 S Greene St, Wadesboro, NC 28170',
+      'Hoke County Public Library': '334 N Main St, Raeford, NC 28376',
+      'Raeford': '334 N Main St, Raeford, NC 28376',
+      'Montgomery County Library': '215 W Main St, Troy, NC 27371',
+      'Troy': '215 W Main St, Troy, NC 27371',
+      'Allen Library': '307 Page St, Biscoe, NC 27209',
+      'Biscoe': '307 Page St, Biscoe, NC 27209',
+      'Currie Memorial Library': '138 S School Rd, Candor, NC 27229',
+      'Candor': '138 S School Rd, Candor, NC 27229',
+      'Mount Gilead Library': '110 W Allenton St, Mount Gilead, NC 27306',
+      'Mount Gilead': '110 W Allenton St, Mount Gilead, NC 27306',
+      'Star Library': '222 S Main St, Star, NC 27356',
+      'Moore County Library': '101 Saunders St, Carthage, NC 28327',
+      'Carthage': '101 Saunders St, Carthage, NC 28327',
+      'Page Memorial Library': '100 Poplar St, Aberdeen, NC 28315',
+      'Aberdeen': '100 Poplar St, Aberdeen, NC 28315',
+      'Pinebluff Library': '305 E Baltimore Ave, Pinebluff, NC 28373',
+      'Pinebluff': '305 E Baltimore Ave, Pinebluff, NC 28373',
+      'Robbins Area Library': '161 E Magnolia Dr, Robbins, NC 27325',
+      'Robbins': '161 E Magnolia Dr, Robbins, NC 27325',
+      'Vass Area Library': '128 Seaboard St, Vass, NC 28394',
+      'Vass': '128 Seaboard St, Vass, NC 28394',
+      'Thomas H. Leath Memorial Library': '412 E Franklin St, Rockingham, NC 28379',
+      "Leath's": '412 E Franklin St, Rockingham, NC 28379',
+      'Rockingham': '412 E Franklin St, Rockingham, NC 28379',
+      'Hamlet Public Library': '302 Main St, Hamlet, NC 28345',
+      'Hamlet': '302 Main St, Hamlet, NC 28345',
+      'Kemp-Sugg Memorial Library': '279 2nd St, Ellerbe, NC 28338',
+      'Ellerbe': '279 2nd St, Ellerbe, NC 28338'
+    }
   }
 };
 

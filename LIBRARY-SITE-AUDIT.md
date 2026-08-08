@@ -2412,3 +2412,36 @@ Day 1 of a new 3-day rotation (the prior cycle closed out 2026-08-05 per the com
 
 This begins a new 3-day pass (Group 1 today). Group 2 and Group 3 have not yet run in this new cycle, so the cycle is **not complete** — Day 1 of 3 only.
 
+## 2026-08-08
+
+Today's target run is `scrapers/logs/scraper-run-2026-08-07.log` (started 2026-08-07 03:00 local, completed into 2026-08-08 — the log's own "Today is day 7 → Group 1" line confirms this is a Group 1 run). Cross-checking every library scraper named in that run against the currently-open cycle's `## 2026-08-05` and `## 2026-08-07` sections: **all of them already have at least one row logged this cycle.** The `## 2026-08-07` section captured this same Group 1 run's library-scraper output directly (per its own header note, bounded from `scraper-stdout.log`), and `CustomDrupal-Libraries` / `WordPress-MD` were logged back in `## 2026-08-05`. Per the skip rule, none are re-added here:
+
+LibCal-DE, LibCal-NC, LibCal-NY2, LibCal-RI, LibCal-KY, LibCal-NH, Communico-DC, Communico-MA, Communico-VA, Communico-NC, Communico-MD, BiblioCommons-NJ, BiblioCommons-VA, Pratt-Library, FreeLibrary-Philadelphia, AACPL, Prince-Georges-County, Westmoreland-Library, CivicEngage-Libraries, FullCalendar-Libraries, LibraryCalendar-Libraries, WordPress-CT, WordPress-VT, WordPress-AL, WordPress-TN, WordPress-GA, WordPress-NC, WordPress-VA, WordPress-Abbe-Regional, WordPress-MD, LibraryMarket-CT, LibraryMarket-SC, CustomDrupal-Libraries, GoogleCalendar-MD.
+
+The one genuinely new entry is **SandhillRegional-NC** — a brand-new scraper committed today, with no prior row anywhere in this cycle (or in the file at all). Its per-branch breakdown comes from a fresh 2026-08-08 DB query rather than stdout, since it doesn't log per-branch counts to stdout; supplied directly rather than re-derived. All 10 branches share the same listing page.
+
+**Notes on this entry:**
+- **SandhillRegional-NC**: 10 branches of the Sandhills Regional Library System (NC), one shared LibGuides listing page (`https://srls.libguides.com/c.php?g=824539&p=5958576`). 98 total rows currently in the DB vs. 106 found in the live run — the found/saved gap is first-run new-coverage noise (likely dedup or a rejected row or two), not investigated further here.
+
+| Library Website | State | Scraper | Events Found | Link |
+|---|---|---|---|---|
+| Sandhills Regional Library — Star Branch | NC | SandhillRegional-NC | 4 | [Link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Sandhills Regional Library — Troy Branch | NC | SandhillRegional-NC | 9 | [Link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Sandhills Regional Library — Robbins Branch | NC | SandhillRegional-NC | 22 | [Link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Sandhills Regional Library — Carthage Branch | NC | SandhillRegional-NC | 24 | [Link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Sandhills Regional Library — Pinebluff Branch | NC | SandhillRegional-NC | 8 | [Link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Sandhills Regional Library — Aberdeen Branch | NC | SandhillRegional-NC | 13 | [Link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Sandhills Regional Library — Biscoe Branch | NC | SandhillRegional-NC | 8 | [Link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Sandhills Regional Library — Rockingham Branch | NC | SandhillRegional-NC | 4 | [Link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Sandhills Regional Library — Hamlet Branch | NC | SandhillRegional-NC | 1 | [Link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Sandhills Regional Library — Vass Branch | NC | SandhillRegional-NC | 4 | [Link](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+
+### Cycle-completion check (2026-08-08)
+
+**Not complete.** Checked every active library-family scraper in `scrapers/scraper-registry.js` (filtered through `isScraperActive()`) against the union of `## 2026-08-05` + `## 2026-08-07` + `## 2026-08-08`. Two active library scrapers still have zero rows anywhere in this open cycle:
+
+- **LibCal-VA2** (`scraper-libcal-libraries-va.js`, VA, Group 3)
+- **Intercept-Camden** (`scraper-intercept-camden-nj.js`, NJ, Group 3)
+
+Both are Group 3, and Group 3 has not run yet in this cycle — only Group 2 (2026-08-05) and Group 1 (2026-08-07 / 2026-08-08, same run) have. The cycle can close out once Group 3 runs and both scrapers pick up at least one logged row.
+

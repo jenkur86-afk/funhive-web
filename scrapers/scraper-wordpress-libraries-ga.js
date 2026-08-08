@@ -37,7 +37,13 @@ const LIBRARIES = [
   { name: 'Commerce Public Library', url: 'https://www.commercelibrary.org/', eventsUrl: 'https://www.commercelibrary.org/', city: 'Commerce', state: 'GA', zipCode: '00000', county: 'Commerce County'},
   { name: 'Coolidge Public Library', url: 'https://www.coolidgelibrary.org', eventsUrl: 'https://www.coolidgelibrary.org/events', city: 'Coolidge', state: 'GA', zipCode: '00000', county: 'Coolidge County'},
   { name: 'Cornelia-Habersham Co. Lib.', url: 'https://www.cornelialibrary.org', eventsUrl: 'https://www.cornelialibrary.org/events', city: 'Cornelia', state: 'GA', zipCode: '00000', county: 'Cornelia County'},
-  { name: 'New Georgia Public Library', url: 'https://www.dallaslibrary.org', eventsUrl: 'https://www.dallaslibrary.org/events', city: 'Dallas', state: 'GA', zipCode: '00000', county: 'Dallas County'},
+  // dallaslibrary.org now redirects to the Dallas, TEXAS public library (wrong-state
+  // domain collision). Real institution verified 2026-08-07: New Georgia Public
+  // Library, 94 Ridge Road, Dallas GA 30157, Paulding County — a branch of the West
+  // Georgia Regional Library System (wgrls.org, WordPress + The Events Calendar).
+  // eventsUrl points at the branch-filtered list view (tribe_venues[]=87, confirmed
+  // live) so extraction isn't mixed with the other 4 WGRLS counties.
+  { name: 'New Georgia Public Library', url: 'https://wgrls.org', eventsUrl: 'https://wgrls.org/events/list/?tribe_venues%5B%5D=87', city: 'Dallas', state: 'GA', zipCode: '30157', county: 'Paulding'},
   { name: 'Dalton-Whitfield County Public Library', url: 'https://www.daltonlibrary.org', eventsUrl: 'https://www.daltonlibrary.org/events', city: 'Dalton', state: 'GA', zipCode: '00000', county: 'Dalton County'},
   { name: 'Ida Hilton Public Library', url: 'https://www.darienlibrary.org', eventsUrl: 'https://www.darienlibrary.org/events', city: 'Darien', state: 'GA', zipCode: '00000', county: 'Darien County'},
   { name: 'Covington Branch', url: 'https://www.decaturlibrary.org', eventsUrl: 'https://www.decaturlibrary.org/events', city: 'Decatur', state: 'GA', zipCode: '00000', county: 'Decatur County'},
