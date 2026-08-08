@@ -3,7 +3,7 @@ const { admin, db } = require('./helpers/supabase-adapter');
 
 const { logScraperResult } = require('./scraper-logger');
 const { saveEventsWithGeocoding } = require('./event-save-helper');
-const { tryFetchTecEvents } = require('./helpers/tec-rest-helper');
+const { tryFetchTecEvents, tryDomScrapeTecEvents } = require('./helpers/tec-rest-helper');
 const ngeohash = require('ngeohash');
 /**
  * Vermont Public Libraries Scraper - Coverage: All Vermont public libraries
@@ -128,6 +128,35 @@ async function scrapeGenericEvents() {
       const page = await browser.newPage();
       await page.goto(library.eventsUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
       await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // REST API can be reachable-but-403 even on a genuinely TEC-powered
+      // site — tryFetchTecEvents() already returned null above in that case.
+      // Try TEC's own DOM structure before falling back to fully generic
+      // selectors, which can't tell a real event card from the calendar's
+      // own day-heading badge on TEC's list-view markup (found 2026-08-08 on
+      // WordPress-GA/New Georgia Public Library — see tec-rest-helper.js).
+      const domTecEvents = await tryDomScrapeTecEvents(page, library.name);
+      if (domTecEvents && domTecEvents.length > 0) {
+        domTecEvents.forEach(event => events.push({
+          ...event,
+          metadata: {
+            sourceName: library.name,
+            sourceUrl: library.url,
+            scrapedAt: new Date().toISOString(),
+            scraperName: SCRAPER_NAME,
+            category: 'library',
+            platform: 'wordpress-tec-dom',
+            state: 'VT',
+            city: library.city,
+            zipCode: library.zipCode,
+            needsReview: true
+          }
+        }));
+        await page.close();
+        await new Promise(resolve => setTimeout(resolve, 500));
+        continue;
+      }
+
       const libraryEvents = await page.evaluate((libName) => {
         const events = [];
         document.querySelectorAll('[class*="event"], article, .post').forEach(card => {
