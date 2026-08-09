@@ -18,7 +18,7 @@ Investigating them exposed four deeper defects. The 63 are partly a *symptom*.
 
 | # | Defect | Measured | Status |
 |---|---|---|---|
-| **A** | **URL collisions** — seed data guessed `{city}library.org` from the city name | 355 hosts span 2+ active states, covering **1,073 entries**. `madisonlibrary.org` claims 11 states, `greenvillelibrary.org` 10 | Mapping done for NC only |
+| **A** | **URL collisions** — seed data guessed `{city}library.org` from the city name | Was 347 hosts / **1,072 entries**. Now 249 hosts / **787 entries**: 234 removed on live evidence, 924 contaminated DB rows deleted | 🔨 **Largely fixed 2026-08-09** — 210 identified-not-acted remain |
 | **B** | **Fabricated counties** — generator appended `" County"` to the city | Was **2,948 entries** failing `getCountyCentroid()` fleet-wide (WordPress-* only 4.3% resolving). Now **57**, i.e. 98.4% resolve | ✅ **FIXED 2026-08-09** |
 | **C** | **Naming drift** — `scraper_name` cannot join to the registry | **291 of 434** names drift | Documented + detector built |
 | **D** | **Missing `source_url`** — no provenance to verify against | MacaroniKid fixed (11,467 rows); 42 families unmeasured until all groups rotate | Partly fixed |

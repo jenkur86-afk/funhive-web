@@ -1,3 +1,8 @@
+// 14 entries removed 2026-08-09 (MASTER-PLAN Defect A): their {city}library.org
+// domains resolve to a DIFFERENT state's library, or are dead. They were writing that
+// other library's events under the wrong name and state. Every removed library is listed
+// with its city, state and old URL in reports/defect-a-removals.md so it can be restored
+// once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -32,7 +37,6 @@ const LIBRARIES = [
   { name: 'Albion Public Library', url: 'https://www.albionlibrary.org/', eventsUrl: 'https://www.albionlibrary.org/', city: 'Albion', state: 'ME', zipCode: '04910', county: 'Kennebec'},
   { name: 'Parsons Memorial Library', url: 'https://www.alfredlibrary.org', eventsUrl: 'https://www.alfredlibrary.org/events', city: 'Alfred', state: 'ME', zipCode: '04002', county: 'York'},
   { name: 'Andover Public Library', url: 'https://www.andoverlibrary.org', eventsUrl: 'https://www.andoverlibrary.org/events', city: 'Andover', state: 'ME', zipCode: '04216', county: 'Oxford'},
-  { name: 'Ashland Community Library', url: 'https://www.ashlandlibrary.org', eventsUrl: 'https://www.ashlandlibrary.org/events', city: 'Ashland', state: 'ME', zipCode: '04732', county: 'Aroostook'},
   { name: 'Patten Free Library', url: 'https://www.bathlibrary.org', eventsUrl: 'https://www.bathlibrary.org/events', city: 'Bath', state: 'ME', zipCode: '04530', county: 'Sagadahoc'},
   { name: 'Belgrade Public Library', url: 'https://www.belgrademt.gov/', eventsUrl: 'https://www.belgrademt.gov/544/Library', city: 'Belgrade', state: 'ME', zipCode: '04917', county: 'Kennebec'},
   { name: 'Bethel Library Assn', url: 'https://www.bethellibrary.org', eventsUrl: 'https://www.bethellibrary.org/events', city: 'Bethel', state: 'ME', zipCode: '04217', county: 'Oxford'},
@@ -44,9 +48,7 @@ const LIBRARIES = [
   { name: 'Bridgton Public Library', url: 'https://www.bridgtonlibrary.org', eventsUrl: 'https://www.bridgtonlibrary.org/events', city: 'Bridgton', state: 'ME', zipCode: '04009', county: 'Cumberland'},
   { name: 'Brooksville Free Public Library', url: 'https://www.brooksvillelibrary.org', eventsUrl: 'https://www.brooksvillelibrary.org/events', city: 'Brooksville', state: 'ME', zipCode: '04617', county: 'Hancock'},
   { name: 'Brownville Public Library', url: 'https://www.brownvillelibrary.org', eventsUrl: 'https://www.brownvillelibrary.org/events', city: 'Brownville', state: 'ME', zipCode: '04414', county: 'Piscataquis'},
-  { name: 'Canaan Public Library', url: 'https://www.canaanlibrary.org', eventsUrl: 'https://www.canaanlibrary.org/events', city: 'Canaan', state: 'ME', zipCode: '04924', county: 'Somerset'},
   { name: 'Simpson Memorial Library', url: 'https://carmellibrary.org/', eventsUrl: 'https://carmellibrary.org/calendar/', city: 'Carmel', state: 'ME', zipCode: '04419', county: 'Penobscot'},
-  { name: 'Charleston Public Library', url: 'https://charlestonlibrary.org/', eventsUrl: 'https://charlestonlibrary.org/library-events', city: 'Charleston', state: 'ME', zipCode: '04422', county: 'Penobscot'},
   { name: 'Cumberland - Chebeague Island Library', url: 'https://www.chebeaguelibrary.org', eventsUrl: 'https://www.chebeaguelibrary.org/events', city: 'Chebeague', state: 'ME', zipCode: '00000', county: 'Chebeague County'},
   { name: 'Brown Memorial Library - Clinton', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'ME', zipCode: '04927', county: 'Kennebec'},
   { name: 'Prince Memorial Library', url: 'https://www.cumberlandlibrary.org', eventsUrl: 'https://www.cumberlandlibrary.org/events', city: 'Cumberland', state: 'ME', zipCode: '04021', county: 'Cumberland County'},
@@ -54,9 +56,7 @@ const LIBRARIES = [
   { name: 'Chase Emerson Memorial Library', url: 'https://www.deerislelibrary.org/', eventsUrl: 'https://www.deerislelibrary.org/', city: 'Deer Isle', state: 'ME', zipCode: '04627', county: 'Hancock'},
   { name: 'Lawrence Public Library', url: 'https://fairfieldlibrary.org/', eventsUrl: 'https://fairfieldlibrary.org/', city: 'Fairfield', state: 'ME', zipCode: '04937', county: 'Somerset'},
   { name: 'Farmington Public Library', url: 'https://www.farmingtonpublic.org/', eventsUrl: 'https://www.farmingtonpublic.org/', city: 'Farmington', state: 'ME', zipCode: '04938', county: 'Franklin'},
-  { name: 'Underwood Memorial Library', url: 'https://www.fayettelibrary.org', eventsUrl: 'https://www.fayettelibrary.org/events', city: 'Fayette', state: 'ME', zipCode: '04349', county: 'Kennebec'},
   { name: 'Fort Fairfield Public Library', url: 'https://www.fortfairfieldlibrary.org/', eventsUrl: 'https://www.fortfairfieldlibrary.org/', city: 'Fort Fairfield', state: 'ME', zipCode: '04742', county: 'Aroostook'},
-  { name: 'Frankfort - Pierce Reading Room Library', url: 'https://www.frankfortlibrary.org/', eventsUrl: 'https://www.frankfortlibrary.org/', city: 'Frankfort', state: 'ME', zipCode: '00000', county: 'Waldo'},
   { name: 'Freeport Community Library', url: 'https://www.freeportlibrary.org', eventsUrl: 'https://www.freeportlibrary.org/events', city: 'Freeport', state: 'ME', zipCode: '04032', county: 'Cumberland'},
   { name: 'Gardiner Public Library', url: 'https://www.gardinerlibrary.org/', eventsUrl: 'https://www.gardinerlibrary.org/', city: 'Gardiner', state: 'ME', zipCode: '04345', county: 'Kennebec'},
   { name: 'Julia Adams Morse Memorial Library', url: 'https://www.greenelibrary.org', eventsUrl: 'https://www.greenelibrary.org/events', city: 'Greene', state: 'ME', zipCode: '04236', county: 'Greene County'},
@@ -67,10 +67,8 @@ const LIBRARIES = [
   // Road, Greenville ME 04441, matching this entry's own ZIP, with real dated
   // events on /events/.
   { name: 'Shaw Public Library - Greenville', url: 'https://shawpubliclibrary.org', eventsUrl: 'https://shawpubliclibrary.org/events/', city: 'Greenville', state: 'ME', zipCode: '04441', county: 'Piscataquis'},
-  { name: 'Bolsters Mills Village Library', url: 'https://www.harrisonpl.org/', eventsUrl: 'https://www.harrisonpl.org/', city: 'Harrison', state: 'ME', zipCode: '04040', county: 'Cumberland'},
   { name: 'Hartland Public Library', url: 'https://www.hartlandlibrary.org', eventsUrl: 'https://www.hartlandlibrary.org/events', city: 'Hartland', state: 'ME', zipCode: '04943', county: 'Somerset'},
   { name: 'Hollis Center Public Library', url: 'https://www.hollislibrary.org', eventsUrl: 'https://www.hollislibrary.org/events', city: 'Hollis', state: 'ME', zipCode: '04042', county: 'Hollis County'},
-  { name: 'Hope Library', url: 'https://www.hopelibrary.org', eventsUrl: 'https://www.hopelibrary.org/events', city: 'Hope', state: 'ME', zipCode: '04847', county: 'Knox'},
   { name: 'Thomas Free Library', url: 'https://www.howlandlibrary.org', eventsUrl: 'https://www.howlandlibrary.org/events', city: 'Howland', state: 'ME', zipCode: '04448', county: 'Penobscot'},
   { name: 'Katahdin Public Library', url: 'https://www.islandfallslibrary.org/', eventsUrl: 'https://www.islandfallslibrary.org/', city: 'Island Falls', state: 'ME', zipCode: '04747', county: 'Aroostook'},
   { name: 'Parsonsfield Public Library', url: 'https://www.kezarfallslibrary.org/', eventsUrl: 'https://www.kezarfallslibrary.org/upcoming-events', city: 'Kezar Falls', state: 'ME', zipCode: '00000', county: 'Oxford'},
@@ -78,7 +76,6 @@ const LIBRARIES = [
   { name: 'Ivan O. Davis-Liberty Library', url: 'https://libertylibrary.org/', eventsUrl: 'https://libertylibrary.org/', city: 'Liberty', state: 'ME', zipCode: '04949', county: 'Waldo'},
   { name: 'Limerick Public Library', url: 'https://www.limericklibrary.org', eventsUrl: 'https://www.limericklibrary.org/events', city: 'Limerick', state: 'ME', zipCode: '04048', county: 'York'},
   { name: 'Frost Memorial Library', url: 'https://www.limestonelibrary.org/', eventsUrl: 'https://www.limestonelibrary.org/', city: 'Limestone', state: 'ME', zipCode: '00000', county: 'Aroostook'},
-  { name: 'Lincoln Memorial Library', url: 'https://www.lincolnlibrary.org', eventsUrl: 'https://www.lincolnlibrary.org/events', city: 'Lincoln', state: 'ME', zipCode: '04457', county: 'Lincoln County'},
   { name: 'Lyman Community Library', url: 'https://www.lymanlibrary.org/', eventsUrl: 'https://www.lymanlibrary.org/', city: 'Lyman', state: 'ME', zipCode: '04002', county: 'Lyman County'},
   { name: 'Machias - Porter Memorial Library', url: 'https://www.machiaslibrary.org', eventsUrl: 'https://www.machiaslibrary.org/events', city: 'Machias', state: 'ME', zipCode: '00000', county: 'Washington'},
   { name: 'Madawaska Public Library', url: 'https://www.madawaskalibrary.org', eventsUrl: 'https://www.madawaskalibrary.org/events', city: 'Madawaska', state: 'ME', zipCode: '04756', county: 'Aroostook'},
@@ -86,10 +83,8 @@ const LIBRARIES = [
   { name: 'Mercer - Shaw Library', url: 'https://www.mercerlibrary.org', eventsUrl: 'https://www.mercerlibrary.org/events', city: 'Mercer', state: 'ME', zipCode: '00000', county: 'Somerset'},
   { name: 'Milbridge Public Library', url: 'https://www.milbridgelibrary.org', eventsUrl: 'https://www.milbridgelibrary.org/events', city: 'Milbridge', state: 'ME', zipCode: '04658', county: 'Washington'},
   { name: 'Monroe Community Library', url: 'https://www.monroelibrary.org', eventsUrl: 'https://www.monroelibrary.org/events', city: 'Monroe', state: 'ME', zipCode: '04951', county: 'Waldo'},
-  { name: 'Naples Public Library', url: 'https://www.napleslibrary.org', eventsUrl: 'https://www.napleslibrary.org/events', city: 'Naples', state: 'ME', zipCode: '04055', county: 'Cumberland'},
   { name: 'New Gloucester Public Library', url: 'https://www.newgloucesterlibrary.org/', eventsUrl: 'https://www.newgloucesterlibrary.org/', city: 'New Gloucester', state: 'ME', zipCode: '04260', county: 'Cumberland'},
   { name: 'New Vineyard Public Library', url: 'https://www.newvineyardlibrary.org', eventsUrl: 'https://www.newvineyardlibrary.org/events', city: 'New Vineyard', state: 'ME', zipCode: '04956', county: 'Franklin'},
-  { name: 'Newport Public Library', url: 'https://www.newportlibrary.org', eventsUrl: 'https://www.newportlibrary.org/events', city: 'Newport', state: 'ME', zipCode: '04953', county: 'Penobscot'},
   { name: 'North Haven Public Library', url: 'https://www.northhavenlibrary.org', eventsUrl: 'https://www.northhavenlibrary.org/events', city: 'North Haven', state: 'ME', zipCode: '04853', county: 'Knox'},
   { name: 'Oakland Public Library', url: 'https://www.oaklandlibrary.org', eventsUrl: 'https://www.oaklandlibrary.org/events', city: 'Oakland', state: 'ME', zipCode: '04963', county: 'Kennebec'},
   { name: 'Ogunquit Memorial Library', url: 'https://www.ogunquitlibrary.org', eventsUrl: 'https://www.ogunquitlibrary.org/events', city: 'Ogunquit', state: 'ME', zipCode: '03907', county: 'York'},
@@ -99,9 +94,7 @@ const LIBRARIES = [
   { name: 'Pembroke Library', url: 'https://www.pembrokelibrary.org/', eventsUrl: 'https://www.pembrokelibrary.org/upcoming-events', city: 'Pembroke', state: 'ME', zipCode: '04666', county: 'Washington'},
   { name: 'Pittsfield Public Library', url: 'https://www.pittsfieldlibrary.org/', eventsUrl: 'https://www.pittsfieldlibrary.org/', city: 'Pittsfield', state: 'ME', zipCode: '04967', county: 'Somerset'},
   { name: 'Mark And Emily Turner Memorial Library', url: 'https://www.presqueislelibrary.org', eventsUrl: 'https://www.presqueislelibrary.org/events', city: 'Presque Isle', state: 'ME', zipCode: '04769', county: 'Aroostook'},
-  { name: 'Princeton Public Library', url: 'https://www.princetonlibrary.org', eventsUrl: 'https://www.princetonlibrary.org/events', city: 'Princeton', state: 'ME', zipCode: '04668', county: 'Washington'},
   { name: 'Rangeley Public Library', url: 'https://www.rangeleylibrary.org', eventsUrl: 'https://www.rangeleylibrary.org/events', city: 'Rangeley', state: 'ME', zipCode: '04970', county: 'Franklin'},
-  { name: 'Isaac F Umberhine Public Library', url: 'https://www.richmondlibrary.org', eventsUrl: 'https://www.richmondlibrary.org/events', city: 'Richmond', state: 'ME', zipCode: '04357', county: 'Sagadahoc'},
   { name: 'Rockport Public Library', url: 'https://www.rockportlibrary.org', eventsUrl: 'https://www.rockportlibrary.org/events', city: 'Rockport', state: 'ME', zipCode: '04856', county: 'Knox'},
   { name: 'Sargentville Library Assn', url: 'https://www.sargentvillelibrary.org/', eventsUrl: 'https://www.sargentvillelibrary.org/', city: 'Sargentville', state: 'ME', zipCode: '04673', county: 'Hancock'},
   { name: 'Sherman Public Library', url: 'https://www.shermanlibrary.org/', eventsUrl: 'https://www.shermanlibrary.org/', city: 'Sherman', state: 'ME', zipCode: '04776', county: 'Aroostook'},
@@ -119,7 +112,6 @@ const LIBRARIES = [
   { name: 'Thomaston Public Library', url: 'https://thomastonlibrary.org/', eventsUrl: 'https://thomastonlibrary.org/', city: 'Thomaston', state: 'ME', zipCode: '04861', county: 'Knox'},
   { name: 'Topsham Public Library', url: 'https://www.topshamlibrary.org', eventsUrl: 'https://www.topshamlibrary.org/events', city: 'Topsham', state: 'ME', zipCode: '04086', county: 'Sagadahoc'},
   { name: 'Vose Library', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'ME', zipCode: '04862', county: 'Knox'},
-  { name: 'Dorothy W Quimby Library', url: 'https://www.unitylibrary.org/', eventsUrl: 'https://www.unitylibrary.org/', city: 'Unity', state: 'ME', zipCode: '04988', county: 'Waldo'},
   { name: 'Abel J.Morneault Memorial Library', url: 'https://www.vbdl.org/', eventsUrl: 'https://www.vbdl.org/events/', city: 'Van Buren', state: 'ME', zipCode: '04785', county: 'Aroostook'},
   { name: 'Waldoboro Public Library', url: 'https://www.waldoborolibrary.org', eventsUrl: 'https://www.waldoborolibrary.org/events', city: 'Waldoboro', state: 'ME', zipCode: '04572', county: 'Lincoln'},
   { name: 'Warren Free Public Library', url: 'https://www.warrenlibrary.org', eventsUrl: 'https://www.warrenlibrary.org/events', city: 'Warren', state: 'ME', zipCode: '04864', county: 'Knox'},
@@ -129,7 +121,6 @@ const LIBRARIES = [
   { name: 'West Paris Public Library', url: 'https://www.westparislibrary.org/', eventsUrl: 'https://www.westparislibrary.org/', city: 'West Paris', state: 'ME', zipCode: '04289', county: 'Oxford'},
   { name: 'Wilton Free Public Library', url: 'https://www.wiltonlibrary.org', eventsUrl: 'https://www.wiltonlibrary.org/events', city: 'Wilton', state: 'ME', zipCode: '04294', county: 'Franklin'},
   { name: 'Winterport Memorial Library', url: 'https://www.winterportlibrary.org', eventsUrl: 'https://www.winterportlibrary.org/events', city: 'Winterport', state: 'ME', zipCode: '04496', county: 'Waldo'},
-  { name: 'Bailey Public Library', url: 'https://www.winthroplibrary.org/', eventsUrl: 'https://www.winthroplibrary.org/', city: 'Winthrop', state: 'ME', zipCode: '04364', county: 'Kennebec'},
   { name: 'Merrill Memorial Library', url: 'https://www.yarmouthlibrary.org', eventsUrl: 'https://www.yarmouthlibrary.org/events', city: 'Yarmouth', state: 'ME', zipCode: '04096', county: 'Cumberland'},
   { name: 'York Public Library', url: 'https://yorklibrary.org/', eventsUrl: 'https://yorklibrary.org/', city: 'York', state: 'ME', zipCode: '03909', county: 'York County'}
 

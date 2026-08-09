@@ -1,3 +1,8 @@
+// 6 entries removed 2026-08-09 (MASTER-PLAN Defect A): their {city}library.org
+// domains resolve to a DIFFERENT state's library, or are dead. They were writing that
+// other library's events under the wrong name and state. Every removed library is listed
+// with its city, state and old URL in reports/defect-a-removals.md so it can be restored
+// once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -66,7 +71,6 @@ const LIBRARIES = [
   // widget this DOM extractor cannot read. Now covered by SouthwestGeorgia-GA, which reads
   // the Revize JSON feed behind that widget and picks up all three of the system's
   // branches (Decatur, Miller, Seminole) instead of only this one.
-  { name: 'Berlin Community Library', url: 'https://www.berlinlibrary.org', eventsUrl: 'https://www.berlinlibrary.org/events', city: 'Berlin', state: 'GA', zipCode: '00000', county: 'Colquitt'},
   // Boston Carnegie Library: bostonlibrary.org resolved (200) but was a
   // parked/for-sale placeholder page — dead domain, confirmed live 2026-08-09.
   // Real institution: Thomas County Public Library System (tcpls.org), which
@@ -146,13 +150,11 @@ const LIBRARIES = [
   { name: 'Nelle Brown Memorial Public Library', url: 'https://lyonslibrary.org/', eventsUrl: 'https://lyonslibrary.org/', city: 'Lyons', state: 'GA', zipCode: '00000', county: 'Toombs'},
   { name: 'Middle Georgia Regional Library System', url: 'https://www.maconlibrary.org', eventsUrl: 'https://www.maconlibrary.org/events', city: 'Macon', state: 'GA', zipCode: '31201', county: 'Macon County'},
   { name: 'Morgan County Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'GA', zipCode: '00000', county: 'Madison County'},
-  { name: 'Manchester Public Library', url: 'https://www.manchesterlibrary.org', eventsUrl: 'https://www.manchesterlibrary.org/events', city: 'Manchester', state: 'GA', zipCode: '00000', county: 'Meriwether'},
   { name: 'Maysville Public Library', url: 'https://www.maysvillelibrary.org', eventsUrl: 'https://www.maysvillelibrary.org/events', city: 'Maysville', state: 'GA', zipCode: '00000', county: 'Banks'},
   { name: 'Meigs Public Library', url: 'https://www.meigslibrary.org/', eventsUrl: 'https://www.meigslibrary.org/', city: 'Meigs', state: 'GA', zipCode: '00000', county: 'Thomas'},
   { name: 'Lake Sinclair Library', url: 'https://milledgevillelibrary.org/', eventsUrl: 'https://milledgevillelibrary.org/calendar', city: 'Milledgeville', state: 'GA', zipCode: '00000', county: 'Baldwin'},
   { name: 'Monroe-Walton County Library', url: 'https://www.monroelibrary.org', eventsUrl: 'https://www.monroelibrary.org/events', city: 'Monroe', state: 'GA', zipCode: '00000', county: 'Monroe County'},
   { name: 'Baker County', url: 'https://www.newtonlibrary.org', eventsUrl: 'https://www.newtonlibrary.org/events', city: 'Newton', state: 'GA', zipCode: '00000', county: 'Newton County'},
-  { name: 'Pelham-Carnegie Library', url: 'https://www.pelhamlibrary.org/', eventsUrl: 'https://www.pelhamlibrary.org/calendar/', city: 'Pelham', state: 'GA', zipCode: '00000', county: 'Mitchell'},
   { name: 'Pembroke Public Library', url: 'https://www.pembrokelibrary.org/', eventsUrl: 'https://www.pembrokelibrary.org/upcoming-events', city: 'Pembroke', state: 'GA', zipCode: '00000', county: 'Bryan'},
   { name: 'Houston County Public Libraries System', url: 'https://www.perrylibrary.org/', eventsUrl: 'https://www.perrylibrary.org/calendar', city: 'Perry', state: 'GA', zipCode: '31069', county: 'Houston'},
   { name: 'Webster County Library', url: 'https://prestonpubliclibrary.org/', eventsUrl: 'https://prestonpubliclibrary.org/events/', city: 'Preston', state: 'GA', zipCode: '00000', county: 'Webster'},
@@ -166,14 +168,11 @@ const LIBRARIES = [
   { name: 'Lewis A. Ray Library', url: 'https://www.smyrnalibrary.org', eventsUrl: 'https://www.smyrnalibrary.org/events', city: 'Smyrna', state: 'GA', zipCode: '00000', county: 'Cobb'},
   { name: 'Hancock County Library', url: 'https://www.spartalibrary.org', eventsUrl: 'https://www.spartalibrary.org/events', city: 'Sparta', state: 'GA', zipCode: '00000', county: 'Hancock'},
   { name: 'Effingham', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'GA', zipCode: '00000', county: 'Effingham'},
-  { name: 'Cochran Public Library', url: 'https://www.stockbridgelibrary.org', eventsUrl: 'https://www.stockbridgelibrary.org/events', city: 'Stockbridge', state: 'GA', zipCode: '00000', county: 'Henry'},
   { name: 'Chattooga County Library System', url: 'https://www.summervillelibrary.org', eventsUrl: 'https://www.summervillelibrary.org/events', city: 'Summerville', state: 'GA', zipCode: '30747', county: 'Chattooga'},
   { name: 'Hightower Memorial Library', url: 'https://thomastonlibrary.org/', eventsUrl: 'https://thomastonlibrary.org/', city: 'Thomaston', state: 'GA', zipCode: '00000', county: 'Upson'},
   { name: 'Thomson-Mcduffie County Library', url: 'https://www.thomsonlibrary.org/', eventsUrl: 'https://www.thomsonlibrary.org/', city: 'Thomson', state: 'GA', zipCode: '00000', county: 'McDuffie'},
   { name: 'Tyrone Public Library', url: 'https://www.tyronelibrary.org', eventsUrl: 'https://www.tyronelibrary.org/events', city: 'Tyrone', state: 'GA', zipCode: '00000', county: 'Fayette'},
   { name: 'Elizabeth Harris Library', url: 'https://www.unadillalibrary.org', eventsUrl: 'https://www.unadillalibrary.org/events', city: 'Unadilla', state: 'GA', zipCode: '00000', county: 'Dooly'},
-  { name: 'Warren County Public Library', url: 'https://www.warrentonlibrary.org', eventsUrl: 'https://www.warrentonlibrary.org/events', city: 'Warrenton', state: 'GA', zipCode: '00000', county: 'Warren'},
-  { name: 'Warwick City Library', url: 'https://warwicklibrary.org/', eventsUrl: 'https://warwicklibrary.org/', city: 'Warwick', state: 'GA', zipCode: '00000', county: 'Worth'},
   { name: 'Harlie Fulford Memorial Library', url: 'https://www.wrightsvillelibrary.org', eventsUrl: 'https://www.wrightsvillelibrary.org/events', city: 'Wrightsville', state: 'GA', zipCode: '00000', county: 'Johnson'},
 ];
 

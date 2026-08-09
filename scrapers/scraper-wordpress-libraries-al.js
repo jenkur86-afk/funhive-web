@@ -1,3 +1,8 @@
+// 7 entries removed 2026-08-09 (MASTER-PLAN Defect A): their {city}library.org
+// domains resolve to a DIFFERENT state's library, or are dead. They were writing that
+// other library's events under the wrong name and state. Every removed library is listed
+// with its city, state and old URL in reports/defect-a-removals.md so it can be restored
+// once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -36,15 +41,12 @@ const LIBRARIES = [
   { name: 'Fairhope Public Library', url: 'https://fairhopelibrary.org/', eventsUrl: 'https://fairhopelibrary.org/index.php/calendar/', city: 'Fairhope', state: 'AL', zipCode: '36532', county: 'Baldwin'},
   { name: 'Daphne Public Library', url: 'http://www.daphneal.com/', eventsUrl: 'http://www.daphneal.com/178/Public-Library', city: 'Daphne', state: 'AL', zipCode: '36526', county: 'Baldwin'},
   { name: 'Scottsboro Public Library', url: 'https://scottsborolibrary.org/', eventsUrl: 'https://scottsborolibrary.org/', city: 'Scottsboro', state: 'AL', zipCode: '35768', county: 'Jackson'},
-  { name: 'Troy Public Library', url: 'https://www.troylibrary.org', eventsUrl: 'https://www.troylibrary.org/events', city: 'Troy', state: 'AL', zipCode: '36081', county: 'Pike'},
-  { name: 'Pelham Public Library', url: 'https://www.pelhamlibrary.org/', eventsUrl: 'https://www.pelhamlibrary.org/calendar/', city: 'Pelham', state: 'AL', zipCode: '35124', county: 'Shelby'},
   { name: 'Trussville Public Library', url: 'https://www.trussvillelibrary.com', eventsUrl: 'https://www.trussvillelibrary.com/events', city: 'Trussville', state: 'AL', zipCode: '35173', county: 'Jefferson'},
   { name: 'Gardendale Public Library', url: 'https://www.gardendalelibrary.org', eventsUrl: 'https://www.gardendalelibrary.org/events', city: 'Gardendale', state: 'AL', zipCode: '35071', county: 'Jefferson'},
   // Additional libraries from spreadsheet coverage expansion
   { name: 'Abbeville Memorial Library', url: 'https://www.abbevillelibrary.org/', eventsUrl: 'https://www.abbevillelibrary.org/', city: 'Abbeville', state: 'AL', zipCode: '36310', county: 'Henry'},
   { name: 'Akron Public Library', url: 'https://www.akronlibrary.org', eventsUrl: 'https://www.akronlibrary.org/events', city: 'Akron', state: 'AL', zipCode: '35441', county: 'Hale'},
   { name: 'Andalusia Public Library', url: 'https://www.andalusialibrary.org/', eventsUrl: 'https://www.andalusialibrary.org/', city: 'Andalusia', state: 'AL', zipCode: '36420', county: 'Covington'},
-  { name: 'Ashland City Public Library', url: 'https://www.ashlandlibrary.org', eventsUrl: 'https://www.ashlandlibrary.org/events', city: 'Ashland', state: 'AL', zipCode: '36251', county: 'Clay'},
   { name: 'Bridgeport - Lena Cagle Public Library', url: 'https://www.bridgeportlibrary.org/', eventsUrl: 'https://www.bridgeportlibrary.org/calendar', city: 'Bridgeport', state: 'AL', zipCode: '35740', county: 'Jackson'},
   { name: 'Choctaw County Public Library', url: 'https://www.butlerlibrary.org', eventsUrl: 'https://www.butlerlibrary.org/events', city: 'Butler', state: 'AL', zipCode: '36904', county: 'Butler County'},
   { name: 'Wilcox County Library', url: 'https://www.camdenlibrary.org/', eventsUrl: 'https://www.camdenlibrary.org/', city: 'Camden', state: 'AL', zipCode: '36726', county: 'Wilcox'},
@@ -55,7 +57,6 @@ const LIBRARIES = [
   { name: 'Cordova Public Library', url: 'https://cordovalibrary.org/', eventsUrl: 'https://cordovalibrary.org/', city: 'Cordova', state: 'AL', zipCode: '35550', county: 'Walker'},
   { name: 'Daleville Public Library', url: 'https://www.dalevillelibrary.org', eventsUrl: 'https://www.dalevillelibrary.org/events', city: 'Daleville', state: 'AL', zipCode: '36322', county: 'Dale'},
   { name: 'Walter J. Hanna Memorial Library', url: 'https://fairfieldlibrary.org/', eventsUrl: 'https://fairfieldlibrary.org/', city: 'Fairfield', state: 'AL', zipCode: '35064', county: 'Jefferson'},
-  { name: 'Fayette County Memorial Library', url: 'https://www.fayettelibrary.org', eventsUrl: 'https://www.fayettelibrary.org/events', city: 'Fayette', state: 'AL', zipCode: '35555', county: 'Fayette County'},
   { name: 'Foley Public Library', url: 'https://www.foleylibrary.org/', eventsUrl: 'https://www.foleylibrary.org/', city: 'Foley', state: 'AL', zipCode: '36535', county: 'Baldwin'},
   { name: 'Grant Public Library', url: 'https://www.grantlibrary.org', eventsUrl: 'https://www.grantlibrary.org/events', city: 'Grant', state: 'AL', zipCode: '35747', county: 'Marshall'},
   { name: 'Hale County Library', url: 'https://www.greensborolibrary.org', eventsUrl: 'https://www.greensborolibrary.org/events', city: 'Greensboro', state: 'AL', zipCode: '36744', county: 'Hale'},
@@ -73,7 +74,6 @@ const LIBRARIES = [
   { name: 'Jane Culbreth Library', url: 'https://www.leedslibrary.org', eventsUrl: 'https://www.leedslibrary.org/events', city: 'Leeds', state: 'AL', zipCode: '35094', county: 'Jefferson'},
   { name: 'Leighton Public Library', url: 'https://www.leightonlibrary.org/', eventsUrl: 'https://www.leightonlibrary.org/news-events/library-events', city: 'Leighton', state: 'AL', zipCode: '35646', county: 'Colbert'},
   { name: 'Burchell Campbell Memorial Library', url: 'https://www.lexingtonlibrary.org', eventsUrl: 'https://www.lexingtonlibrary.org/events', city: 'Lexington', state: 'AL', zipCode: '35648', county: 'Lauderdale'},
-  { name: 'Lincoln Public Library', url: 'https://www.lincolnlibrary.org', eventsUrl: 'https://www.lincolnlibrary.org/events', city: 'Lincoln', state: 'AL', zipCode: '35096', county: 'Talladega'},
   { name: 'Ruby Pickens Tartt Public Library', url: 'https://www.livingstonlibrary.org', eventsUrl: 'https://www.livingstonlibrary.org/events', city: 'Livingston', state: 'AL', zipCode: '35470', county: 'Sumter'},
   { name: 'Louisville Public Library', url: 'https://www.louisvillelibrary.org', eventsUrl: 'https://www.louisvillelibrary.org/events', city: 'Louisville', state: 'AL', zipCode: '36048', county: 'Barbour'},
   { name: 'Madison Public Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'AL', zipCode: '35758', county: 'Madison County'},
@@ -86,12 +86,10 @@ const LIBRARIES = [
   { name: 'Orange Beach Public Library', url: 'https://www.orangebeachlibrary.org', eventsUrl: 'https://www.orangebeachlibrary.org/events', city: 'Orange Beach', state: 'AL', zipCode: '36561', county: 'Baldwin'},
   { name: 'Oxford Public Library', url: 'https://oxfordlibrary.org/', eventsUrl: 'https://oxfordlibrary.org/', city: 'Oxford', state: 'AL', zipCode: '36203', county: 'Calhoun'},
   { name: 'Piedmont Public Library', url: 'https://www.piedmontlibrary.org', eventsUrl: 'https://www.piedmontlibrary.org/events', city: 'Piedmont', state: 'AL', zipCode: '36272', county: 'Calhoun'},
-  { name: 'Pine Hill Branch Public Library', url: 'https://pinehilllibrary.org/', eventsUrl: 'https://pinehilllibrary.org/calendar/', city: 'Pine Hill', state: 'AL', zipCode: '36769', county: 'Wilcox'},
   { name: 'Clay Public Library', url: 'https://www.pinsonlibrary.org', eventsUrl: 'https://www.pinsonlibrary.org/events', city: 'Pinson', state: 'AL', zipCode: '35126', county: 'Jefferson'},
   { name: 'Satsuma Public Library', url: 'https://www.satsumalibrary.com/', eventsUrl: 'https://www.satsumalibrary.com/upcoming-events', city: 'Satsuma', state: 'AL', zipCode: '36572', county: 'Mobile'},
   { name: 'Evergreen Public Library', url: 'https://www.evergreenlibrary.org', eventsUrl: 'https://www.evergreenlibrary.org/events', city: 'Evergreen', state: 'AL', zipCode: '36401', county: 'Conecuh'},
   { name: 'Sheffield Public Library', url: 'https://www.sheffieldlibrary.org/', eventsUrl: 'https://www.sheffieldlibrary.org/', city: 'Sheffield', state: 'AL', zipCode: '35660', county: 'Colbert'},
-  { name: 'Somerville Public Library', url: 'https://www.somervillelibrary.org/', eventsUrl: 'https://www.somervillelibrary.org/', city: 'Somerville', state: 'AL', zipCode: '35670', county: 'Morgan'},
   { name: 'Stevenson Public Library', url: 'https://www.stevensonlibrary.org', eventsUrl: 'https://www.stevensonlibrary.org/events', city: 'Stevenson', state: 'AL', zipCode: '35772', county: 'Jackson'},
   { name: 'H. Grady Bradshaw - Chambers County Library', url: 'https://www.valleylibrary.org/', eventsUrl: 'https://www.valleylibrary.org/', city: 'Valley', state: 'AL', zipCode: '36854', county: 'Chambers'},
   { name: 'Vernon - Mary Wallace Cobb Memorial Library', url: 'https://www.vernonlibrary.org/', eventsUrl: 'https://www.vernonlibrary.org/', city: 'Vernon', state: 'AL', zipCode: '35592', county: 'Lamar'},

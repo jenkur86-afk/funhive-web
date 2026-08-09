@@ -1,3 +1,8 @@
+// 12 entries removed 2026-08-09 (MASTER-PLAN Defect A): their {city}library.org
+// domains resolve to a DIFFERENT state's library, or are dead. They were writing that
+// other library's events under the wrong name and state. Every removed library is listed
+// with its city, state and old URL in reports/defect-a-removals.md so it can be restored
+// once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -32,7 +37,6 @@ const LIBRARIES = [
   { name: 'Christian County Public Library', url: 'https://www.christiancountylibrary.org', eventsUrl: 'https://www.christiancountylibrary.org/events', city: 'Hopkinsville', state: 'KY', zipCode: '42240' },
   { name: 'Pike County Public Library', url: 'https://www.pikelibrary.org', eventsUrl: 'https://www.pikelibrary.org/events', city: 'Pikeville', state: 'KY', zipCode: '41501', county: 'Pike'},
   { name: 'Greenup County Public Library', url: 'https://www.greenuplibrary.org', eventsUrl: 'https://www.greenuplibrary.org/events', city: 'Greenup', state: 'KY', zipCode: '41144', county: 'Greenup County'},
-  { name: 'Franklin County Public Library', url: 'https://www.frankfortlibrary.org/', eventsUrl: 'https://www.frankfortlibrary.org/', city: 'Frankfort', state: 'KY', zipCode: '40601', county: 'Franklin'},
   { name: 'Henderson County Public Library', url: 'https://www.hcpl.org', eventsUrl: 'https://www.hcpl.org/events', city: 'Henderson', state: 'KY', zipCode: '42420', county: 'Henderson County'},
   { name: 'Graves County Public Library', url: 'https://www.graveslibrary.org', eventsUrl: 'https://www.graveslibrary.org/events', city: 'Mayfield', state: 'KY', zipCode: '42066', county: 'Graves'},
   { name: 'Calloway County Public Library', url: 'https://www.callowaycountylibrary.org', eventsUrl: 'https://www.callowaycountylibrary.org/events', city: 'Murray', state: 'KY', zipCode: '42071' },
@@ -40,14 +44,11 @@ const LIBRARIES = [
   { name: 'Rowan County Public Library', url: 'https://www.rowancountylibrary.org', eventsUrl: 'https://www.rowancountylibrary.org/events', city: 'Morehead', state: 'KY', zipCode: '40351' },
   { name: 'Montgomery County Public Library', url: 'https://www.mcplib.org', eventsUrl: 'https://www.mcplib.org/events', city: 'Mount Sterling', state: 'KY', zipCode: '40353', county: 'Montgomery'},
   { name: 'Grant County Public Library', url: 'https://www.grantlibrary.net/', eventsUrl: 'https://www.grantlibrary.net/', city: 'Williamstown', state: 'KY', zipCode: '41097', county: 'Grant'},
-  { name: 'Marshall County Public Library', url: 'https://www.marshallcountylibrary.org', eventsUrl: 'https://www.marshallcountylibrary.org/events', city: 'Benton', state: 'KY', zipCode: '42025' },
   { name: 'Whitley County Public Library', url: 'https://www.whitleylibrary.org', eventsUrl: 'https://www.whitleylibrary.org/events', city: 'Williamsburg', state: 'KY', zipCode: '40769', county: 'Whitley'},
   { name: 'Floyd County Public Library', url: 'https://floydlibrary.org/', eventsUrl: 'https://floydlibrary.org/indiana-history-room/events/', city: 'Prestonsburg', state: 'KY', zipCode: '41653', county: 'Floyd'},
-  { name: 'Knox County Public Library', url: 'https://www.knoxlibrary.org', eventsUrl: 'https://www.knoxlibrary.org/events', city: 'Barbourville', state: 'KY', zipCode: '40906', county: 'Knox'},
   // Additional libraries from spreadsheet coverage expansion
   { name: 'Auburn Branch', url: 'https://auburnlibrary.org/', eventsUrl: 'https://auburnlibrary.org/', city: 'Auburn', state: 'KY', zipCode: '00000', county: 'Logan'},
   { name: 'Trimble County Public Library', url: 'https://www.bedfordlibrary.org', eventsUrl: 'https://www.bedfordlibrary.org/events', city: 'Bedford', state: 'KY', zipCode: '40006', county: 'Trimble'},
-  { name: 'Bracken County Public Library', url: 'https://www.brooksvillelibrary.org', eventsUrl: 'https://www.brooksvillelibrary.org/events', city: 'Brooksville', state: 'KY', zipCode: '41004', county: 'Bracken'},
   { name: 'Nicholas County Public Library', url: 'https://www.carlislelibrary.org', eventsUrl: 'https://www.carlislelibrary.org/events', city: 'Carlisle', state: 'KY', zipCode: '40311', county: 'Carlisle County'},
   { name: 'Hickman County Memorial Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'KY', zipCode: '42031', county: 'Clinton County'},
   { name: 'Adair County Public Library', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'KY', zipCode: '42728', county: 'Adair'},
@@ -55,7 +56,6 @@ const LIBRARIES = [
   { name: 'Oldham County Public Library', url: 'https://www.crestwoodlibrary.org/', eventsUrl: 'https://www.crestwoodlibrary.org/news-events/lib-cal/calendar', city: 'Crestwood', state: 'KY', zipCode: '40014', county: 'Oldham'},
   { name: 'Rebecca Caudill Public Library', url: 'https://www.cumberlandlibrary.org', eventsUrl: 'https://www.cumberlandlibrary.org/events', city: 'Cumberland', state: 'KY', zipCode: '00000', county: 'Cumberland County'},
   { name: 'Cynthiana-Harrison County Public Library', url: 'https://www.cynthianalibrary.org/', eventsUrl: 'https://www.cynthianalibrary.org/calendar', city: 'Cynthiana', state: 'KY', zipCode: '41031', county: 'Harrison'},
-  { name: 'Boyle County Public Library', url: 'http://www.danvilleva.gov/', eventsUrl: 'http://www.danvilleva.gov/2467/Public-Library', city: 'Danville', state: 'KY', zipCode: '40422', county: 'Boyle'},
   { name: 'Florence Branch', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'KY', zipCode: '00000', county: 'Boone'},
   { name: 'Goodnight Memorial Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'KY', zipCode: '42134', county: 'Franklin County'},
   { name: 'Fulton Public Library', url: 'https://www.facebook.com/', eventsUrl: 'https://www.facebook.com/fultonlibrary', city: 'Fulton', state: 'KY', zipCode: '42041', county: 'Fulton County'},
@@ -68,20 +68,13 @@ const LIBRARIES = [
   { name: 'Lents Branch', url: 'https://www.hebronlibrary.org', eventsUrl: 'https://www.hebronlibrary.org/events', city: 'Hebron', state: 'KY', zipCode: '00000', county: 'Boone'},
   { name: 'Estill County Public Library', url: 'https://www.irvinelibrary.org', eventsUrl: 'https://www.irvinelibrary.org/events', city: 'Irvine', state: 'KY', zipCode: '40336', county: 'Estill'},
   { name: 'Irvington Branch', url: 'https://irvingtonlibrary.org/', eventsUrl: 'https://irvingtonlibrary.org/', city: 'Irvington', state: 'KY', zipCode: '00000', county: 'Breckinridge'},
-  { name: 'Russell County Public Library District', url: 'https://www.jamestownlibrary.org', eventsUrl: 'https://www.jamestownlibrary.org/events', city: 'Jamestown', state: 'KY', zipCode: '42629', county: 'Russell'},
-  { name: 'Garrard County Public Library', url: 'https://www.lancasterlibrary.org/', eventsUrl: 'https://www.lancasterlibrary.org/component/tags/tag/events', city: 'Lancaster', state: 'KY', zipCode: '40444', county: 'Garrard'},
   { name: 'Marion County Public Library', url: 'https://lebanonlibrary.org/', eventsUrl: 'https://lebanonlibrary.org/', city: 'Lebanon', state: 'KY', zipCode: '40033', county: 'Marion'},
   { name: 'Casey County Public Library', url: 'https://libertylibrary.org/', eventsUrl: 'https://libertylibrary.org/', city: 'Liberty', state: 'KY', zipCode: '42539', county: 'Casey'},
-  { name: 'Clay County Public Library', url: 'https://www.manchesterlibrary.org', eventsUrl: 'https://www.manchesterlibrary.org/events', city: 'Manchester', state: 'KY', zipCode: '40962', county: 'Clay'},
   { name: 'Crittenden County Public Library', url: 'https://www.marionlibrary.org/', eventsUrl: 'https://www.marionlibrary.org/', city: 'Marion', state: 'KY', zipCode: '42064', county: 'Marion County'},
   { name: 'Mason County Public Library', url: 'https://www.maysvillelibrary.org', eventsUrl: 'https://www.maysvillelibrary.org/events', city: 'Maysville', state: 'KY', zipCode: '41056', county: 'Mason'},
   { name: 'Wayne County Public Library', url: 'https://www.allertonpubliclibrary.org/', eventsUrl: 'https://www.allertonpubliclibrary.org/calendar', city: 'Monticello', state: 'KY', zipCode: '42633', county: 'Wayne'},
-  { name: 'Newport Branch', url: 'https://www.newportlibrary.org', eventsUrl: 'https://www.newportlibrary.org/events', city: 'Newport', state: 'KY', zipCode: '00000', county: 'Campbell'},
-  { name: 'Phelps Branch', url: 'https://www.phelpslibrary.org', eventsUrl: 'https://www.phelpslibrary.org/events', city: 'Phelps', state: 'KY', zipCode: '00000', county: 'Pike'},
-  { name: 'George Coon Public Library', url: 'https://www.princetonlibrary.org', eventsUrl: 'https://www.princetonlibrary.org/events', city: 'Princeton', state: 'KY', zipCode: '42445', county: 'Caldwell'},
   { name: 'Allen County Public Library', url: 'https://www.scottsvillelibrary.org', eventsUrl: 'https://www.scottsvillelibrary.org/events', city: 'Scottsville', state: 'KY', zipCode: '42164', county: 'Allen'},
   { name: 'Washington County Public Library', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'KY', zipCode: '40069', county: 'Washington'},
-  { name: 'Sturgis Branch', url: 'https://www.sturgislibrary.org', eventsUrl: 'https://www.sturgislibrary.org/events', city: 'Sturgis', state: 'KY', zipCode: '00000', county: 'Union'},
   { name: 'Gallatin County Public Library', url: 'https://www.warsawlibrary.org/', eventsUrl: 'https://www.warsawlibrary.org/', city: 'Warsaw', state: 'KY', zipCode: '41095', county: 'Gallatin'},
 
 ];

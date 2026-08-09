@@ -54,18 +54,21 @@ const LIBRARIES = [
     calendarName: 'Decatur County-Gilbert H. Gragg Library',
     address: '301 S Monroe St', city: 'Bainbridge', state: 'GA', zipCode: '39819', county: 'Decatur',
     url: 'https://swgrl.org/calendar.php',
+    siteSlug: 'decatur',
   },
   {
     name: 'Miller County - James W. Merritt, Jr. Memorial Library',
     calendarName: 'Miller County-James W. Merritt, Jr. Memorial Library',
     address: '259 E Main St', city: 'Colquitt', state: 'GA', zipCode: '39837', county: 'Miller',
     url: 'https://swgrl.org/calendar.php',
+    siteSlug: 'miller',
   },
   {
     name: 'Seminole County Public Library',
     calendarName: 'Seminole County Public Library',
     address: '103 W 4th St', city: 'Donalsonville', state: 'GA', zipCode: '39845', county: 'Seminole',
     url: 'https://swgrl.org/calendar.php',
+    siteSlug: 'seminole',
   },
 ];
 
@@ -166,7 +169,12 @@ async function scrapeSouthwestGeorgiaLibraries() {
         sourceName: library.name,
         sourceUrl: LISTING_URL,
         scrapedAt: new Date().toISOString(),
-        scraperName: SCRAPER_NAME,
+        // Per-branch, not the bare SCRAPER_NAME — saveToDatabase() below calls
+        // saveEventsWithGeocoding() once per branch with this same value as its
+        // scraperName option, which is the field that actually reaches the DB
+        // (event-save-helper.js's own metadata block ignores this one). Kept in
+        // sync here anyway so the event object is self-consistent.
+        scraperName: `${SCRAPER_NAME}-${library.siteSlug}`,
         category: 'library',
         platform: 'revize-calendar',
         state: 'GA',
@@ -183,13 +191,32 @@ async function scrapeSouthwestGeorgiaLibraries() {
   return events;
 }
 
+// event-save-helper.js's saveEventsWithGeocoding() always writes its OWN
+// scraperName option into metadata.scraperName, ignoring whatever an
+// individual event object sets — so one call covering all three branches
+// would collapse them onto a single scraper_name (caught by
+// scripts/check-scraper-names.js as COLLAPSED, 2026-08-09). Call it once per
+// branch instead, each with its own '<SCRAPER_NAME>-<siteSlug>', matching
+// CLAUDE.md's "one distinct scraper_name per site" rule. verifyAndCleanupEvents
+// (which looks up existing events by this same scraperName) then correctly
+// scopes cleanup to that branch's own events rather than the whole system.
 async function saveToDatabase(events) {
-  return await saveEventsWithGeocoding(events, LIBRARIES, {
-    scraperName: SCRAPER_NAME,
-    state: 'GA',
-    category: 'library',
-    platform: 'revize-calendar',
-  });
+  const totals = { saved: 0, duplicates: 0, skipped: 0, errors: 0, invalidDate: 0 };
+  for (const library of LIBRARIES) {
+    const branchEvents = events.filter(e => e.venueName === library.name);
+    if (!branchEvents.length) continue;
+    const result = await saveEventsWithGeocoding(branchEvents, [library], {
+      scraperName: `${SCRAPER_NAME}-${library.siteSlug}`,
+      state: 'GA',
+      category: 'library',
+      platform: 'revize-calendar',
+    });
+    totals.saved += result?.saved || 0;
+    totals.duplicates += result?.duplicates ?? result?.skipped ?? 0;
+    totals.errors += result?.errors || 0;
+    totals.invalidDate += result?.invalidDate || 0;
+  }
+  return totals;
 }
 
 async function scrapeSouthwestGeorgiaLibrariesCloudFunction() {

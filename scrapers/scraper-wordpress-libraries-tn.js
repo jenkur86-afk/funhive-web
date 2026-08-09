@@ -1,3 +1,8 @@
+// 13 entries removed 2026-08-09 (MASTER-PLAN Defect A): their {city}library.org
+// domains resolve to a DIFFERENT state's library, or are dead. They were writing that
+// other library's events under the wrong name and state. Every removed library is listed
+// with its city, state and old URL in reports/defect-a-removals.md so it can be restored
+// once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -34,9 +39,7 @@ const LIBRARIES = [
   { name: 'Sevier County Public Library System', url: 'https://www.sevierlibrary.org/', eventsUrl: 'https://www.sevierlibrary.org/', city: 'Sevierville', state: 'TN', zipCode: '37862', county: 'Sevier'},
   { name: 'Tullahoma Public Library', url: 'https://www.tullahoma-tn.com/library', eventsUrl: 'https://www.tullahoma-tn.com/library/events', city: 'Tullahoma', state: 'TN', zipCode: '37388', county: 'Coffee'},
   { name: 'Athens Public Library', url: 'https://www.athenslibrary.org', eventsUrl: 'https://www.athenslibrary.org/events', city: 'Athens', state: 'TN', zipCode: '37303', county: 'McMinn'},
-  { name: 'Lawrenceburg Public Library', url: 'https://lawrencelibrary.org/', eventsUrl: 'https://lawrencelibrary.org/', city: 'Lawrenceburg', state: 'TN', zipCode: '38464', county: 'Lawrence'},
   { name: 'Crossville-Cumberland County Public Library', url: 'https://www.cumberlandcountylibrary.org', eventsUrl: 'https://www.cumberlandcountylibrary.org/events', city: 'Crossville', state: 'TN', zipCode: '38555' },
-  { name: 'Manchester Public Library', url: 'https://www.manchesterlibrary.org', eventsUrl: 'https://www.manchesterlibrary.org/events', city: 'Manchester', state: 'TN', zipCode: '37355', county: 'Coffee'},
   { name: 'Rogersville Public Library', url: 'https://www.rogersvillelibrary.org', eventsUrl: 'https://www.rogersvillelibrary.org/events', city: 'Rogersville', state: 'TN', zipCode: '37857', county: 'Hawkins'},
   { name: 'Tipton County Public Library', url: 'https://www.tiptoncountylibrary.org/', eventsUrl: 'https://www.tiptoncountylibrary.org/', city: 'Covington', state: 'TN', zipCode: '38019' },
   { name: 'Savannah-Hardin County Library', url: 'https://www.hardincountylibrary.org', eventsUrl: 'https://www.hardincountylibrary.org/events', city: 'Savannah', state: 'TN', zipCode: '38372' },
@@ -44,27 +47,20 @@ const LIBRARIES = [
   { name: 'Crockett County Library', url: 'https://www.alamolibrary.org', eventsUrl: 'https://www.alamolibrary.org/events', city: 'Alamo', state: 'TN', zipCode: '38001', county: 'Crockett'},
   { name: 'Alexandria Branch Library', url: 'https://www.alexandrialibrary.org', eventsUrl: 'https://www.alexandrialibrary.org/events', city: 'Alexandria', state: 'TN', zipCode: '00000', county: 'DeKalb'},
   { name: 'Southeast Branch Library', url: 'https://www.antiochlibrary.org', eventsUrl: 'https://www.antiochlibrary.org/events', city: 'Antioch', state: 'TN', zipCode: '00000', county: 'Bedford'},
-  { name: 'Ardmore Public Library', url: 'https://ardmore.okpls.org/', eventsUrl: 'https://ardmore.okpls.org/calendar', city: 'Ardmore', state: 'TN', zipCode: '38449', county: 'Giles'},
   { name: 'Sam T. Wilson Public Library', url: 'https://www.arlingtonlibrary.org/', eventsUrl: 'https://www.arlingtonlibrary.org/home', city: 'Arlington', state: 'TN', zipCode: '38002', county: 'Shelby'},
   { name: 'Auburntown Public Library', url: 'https://adamsmemoriallibrary.org/', eventsUrl: 'https://adamsmemoriallibrary.org/', city: 'Auburntown', state: 'TN', zipCode: '00000', county: 'Cannon'},
   { name: 'Baxter Branch Library', url: 'https://www.baxterlibrary.org', eventsUrl: 'https://www.baxterlibrary.org/events', city: 'Baxter', state: 'TN', zipCode: '00000', county: 'Putnam'},
   { name: 'The Brentwood Library', url: 'https://www.brentwoodlibrary.org', eventsUrl: 'https://www.brentwoodlibrary.org/events', city: 'Brentwood', state: 'TN', zipCode: '37027', county: 'Williamson'},
   { name: 'Benton County Library', url: 'https://www.camdenlibrary.org/', eventsUrl: 'https://www.camdenlibrary.org/', city: 'Camden', state: 'TN', zipCode: '38320', county: 'Benton'},
-  { name: 'Smith County Public Library', url: 'https://www.carthagelibrary.org', eventsUrl: 'https://www.carthagelibrary.org/events', city: 'Carthage', state: 'TN', zipCode: '37030', county: 'Smith'},
   { name: 'Hickman County Public Library', url: 'https://www.centervillelibrary.org', eventsUrl: 'https://www.centervillelibrary.org/events', city: 'Centerville', state: 'TN', zipCode: '37033', county: 'Hickman'},
   { name: 'Clinton Public Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'TN', zipCode: '37716', county: 'Anderson'},
   { name: 'Cordova Branch Library', url: 'https://cordovalibrary.org/', eventsUrl: 'https://cordovalibrary.org/', city: 'Cordova', state: 'TN', zipCode: '00000', county: 'Shelby'},
   { name: 'Meigs-Decatur Public Library', url: 'https://www.decaturlibrary.org', eventsUrl: 'https://www.decaturlibrary.org/events', city: 'Decatur', state: 'TN', zipCode: '37322', county: 'Decatur County'},
   { name: 'Stewart County Public Library', url: 'https://www.doverlibrary.org', eventsUrl: 'https://www.doverlibrary.org/events', city: 'Dover', state: 'TN', zipCode: '37058', county: 'Stewart'},
   { name: 'Sequatchie County Public Library', url: 'https://www.dunlaplibrary.org', eventsUrl: 'https://www.dunlaplibrary.org/events', city: 'Dunlap', state: 'TN', zipCode: '37327', county: 'Sequatchie'},
-  { name: 'Englewood Public Library', url: 'https://www.englewoodlibrary.org', eventsUrl: 'https://www.englewoodlibrary.org/events', city: 'Englewood', state: 'TN', zipCode: '37329', county: 'Obion'},
-  { name: 'Unicoi County Public Library', url: 'https://erwinlibrary.org/', eventsUrl: 'https://erwinlibrary.org/', city: 'Erwin', state: 'TN', zipCode: '37650', county: 'Unicoi'},
-  { name: 'Fairview Public Library', url: 'https://www.fairviewlibrary.org', eventsUrl: 'https://www.fairviewlibrary.org/events', city: 'Fairview', state: 'TN', zipCode: '00000', county: 'Williamson'},
   { name: 'Gleason Memorial Library', url: 'https://www.gleasonlibrary.org', eventsUrl: 'https://www.gleasonlibrary.org/events', city: 'Gleason', state: 'TN', zipCode: '38229', county: 'Weakley'},
-  { name: 'Dr. Nathan Porter Library', url: 'https://www.greenfieldlibrary.org', eventsUrl: 'https://www.greenfieldlibrary.org/events', city: 'Greenfield', state: 'TN', zipCode: '38230', county: 'Weakley'},
   { name: 'Harriman Public Library', url: 'https://www.harrimanlibrary.org/', eventsUrl: 'https://www.harrimanlibrary.org/', city: 'Harriman', state: 'TN', zipCode: '37748', county: 'Roane'},
   { name: 'Carroll County Library', url: 'https://www.huntingdonlibrary.org', eventsUrl: 'https://www.huntingdonlibrary.org/events', city: 'Huntingdon', state: 'TN', zipCode: '38344', county: 'Carroll'},
-  { name: 'Fentress County Library', url: 'https://www.jamestownlibrary.org', eventsUrl: 'https://www.jamestownlibrary.org/events', city: 'Jamestown', state: 'TN', zipCode: '38556', county: 'Fentress'},
   { name: 'Kingston Public Library', url: 'https://www.kingstonlibrary.org', eventsUrl: 'https://www.kingstonlibrary.org/events', city: 'Kingston', state: 'TN', zipCode: '37763', county: 'Roane'},
   { name: 'Macon County Public Library', url: 'https://lafayettelibrary.org/', eventsUrl: 'https://lafayettelibrary.org/', city: 'Lafayette', state: 'TN', zipCode: '37083', county: 'Macon'},
   { name: 'Millard Oakley Public Library', url: 'https://www.livingstonlibrary.org', eventsUrl: 'https://www.livingstonlibrary.org/events', city: 'Livingston', state: 'TN', zipCode: '38570', county: 'Overton'},
@@ -77,10 +73,7 @@ const LIBRARIES = [
   { name: 'Newbern City Library', url: 'https://www.newbernlibrary.org', eventsUrl: 'https://www.newbernlibrary.org/events', city: 'Newbern', state: 'TN', zipCode: '38059', county: 'Dyer'},
   { name: 'Palmer Public Library', url: 'https://www.palmerlibrary.org', eventsUrl: 'https://www.palmerlibrary.org/events', city: 'Palmer', state: 'TN', zipCode: '37365', county: 'Grundy'},
   { name: 'Parsons Public Library', url: 'https://www.parsonslibrary.org/', eventsUrl: 'https://www.parsonslibrary.org/', city: 'Parsons', state: 'TN', zipCode: '38363', county: 'Decatur'},
-  { name: 'Portland Public Library', url: 'https://www.portlandlibrary.org', eventsUrl: 'https://www.portlandlibrary.org/events', city: 'Portland', state: 'TN', zipCode: '37148', county: 'Sumner'},
   { name: 'Lauderdale County Library', url: 'https://ripleylibrary.org/', eventsUrl: 'https://ripleylibrary.org/', city: 'Ripley', state: 'TN', zipCode: '38063', county: 'Lauderdale'},
-  { name: 'Seymour Branch Library', url: 'https://www.seymourlibrary.org', eventsUrl: 'https://www.seymourlibrary.org/events', city: 'Seymour', state: 'TN', zipCode: '00000', county: 'Sevier'},
-  { name: 'Somerville-Fayette County Library', url: 'https://www.somervillelibrary.org/', eventsUrl: 'https://www.somervillelibrary.org/', city: 'Somerville', state: 'TN', zipCode: '38068', county: 'Fayette'},
   { name: 'White County Public Library', url: 'https://www.spartalibrary.org', eventsUrl: 'https://www.spartalibrary.org/events', city: 'Sparta', state: 'TN', zipCode: '38583', county: 'White'},
   { name: 'Audrey Pack Memorial Library', url: 'https://springcitylibrary.org/', eventsUrl: 'https://springcitylibrary.org/', city: 'Spring City', state: 'TN', zipCode: '37381', county: 'Rhea'},
   { name: 'Spring Hill Public Library', url: 'https://www.springhilllibrary.org', eventsUrl: 'https://www.springhilllibrary.org/events', city: 'Spring Hill', state: 'TN', zipCode: '37174', county: 'Maury'},
@@ -88,7 +81,6 @@ const LIBRARIES = [
   { name: 'Mary E. Tippitt Memorial Library', url: 'https://www.townsendlibrary.org', eventsUrl: 'https://www.townsendlibrary.org/events', city: 'Townsend', state: 'TN', zipCode: '37882', county: 'Blount'},
   { name: 'Hamilton Parks Public Library', url: 'https://www.trimblelibrary.org', eventsUrl: 'https://www.trimblelibrary.org/events', city: 'Trimble', state: 'TN', zipCode: '38259', county: 'Dyer'},
   { name: 'Washburn Public Library', url: 'https://www.washburnlibrary.org', eventsUrl: 'https://www.washburnlibrary.org/events', city: 'Washburn', state: 'TN', zipCode: '37888', county: 'Grainger'},
-  { name: 'Watertown-Wilson County Library', url: 'https://www.watertownlibrary.org/', eventsUrl: 'https://www.watertownlibrary.org/', city: 'Watertown', state: 'TN', zipCode: '00000', county: 'Wilson'},
   { name: 'Humphreys County Public Library', url: 'https://www.waverlylibrary.com/', eventsUrl: 'https://www.waverlylibrary.com/', city: 'Waverly', state: 'TN', zipCode: '37185', county: 'Humphreys'},
   { name: 'Westmoreland Public Library', url: 'https://www.westmorelandpubliclibrary.com/', eventsUrl: 'https://www.westmorelandpubliclibrary.com/', city: 'Westmoreland', state: 'TN', zipCode: '37186', county: 'Sumner'},
   { name: 'White Pine Public Library', url: 'https://whitepinelibrary.org/', eventsUrl: 'https://whitepinelibrary.org/', city: 'White Pine', state: 'TN', zipCode: '37890', county: 'Jefferson'},

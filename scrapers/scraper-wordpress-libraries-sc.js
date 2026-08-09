@@ -1,3 +1,8 @@
+// 5 entries removed 2026-08-09 (MASTER-PLAN Defect A): their {city}library.org
+// domains resolve to a DIFFERENT state's library, or are dead. They were writing that
+// other library's events under the wrong name and state. Every removed library is listed
+// with its city, state and old URL in reports/defect-a-removals.md so it can be restored
+// once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -9,12 +14,10 @@ const ngeohash = require('ngeohash');
  */
 const LIBRARIES = [
   { name: 'Abbeville County Library System', url: 'https://www.abbevillelibrary.org/', eventsUrl: 'https://www.abbevillelibrary.org/', city: 'Abbeville', state: 'SC', zipCode: '29620', county: 'Abbeville County'},
-  { name: 'Allendale County Library', url: 'https://www.allendalelibrary.org', eventsUrl: 'https://www.allendalelibrary.org/events', city: 'Allendale', state: 'SC', zipCode: '29810', county: 'Allendale County'},
   { name: 'Anderson County Library', url: 'https://www.andersonlibrary.org', eventsUrl: 'https://www.andersonlibrary.org/events', city: 'Anderson', state: 'SC', zipCode: '29621', county: 'Anderson County'},
   { name: 'Kershaw County Library - Camden Branch Library', url: 'https://www.camdenlibrary.org/', eventsUrl: 'https://www.camdenlibrary.org/', city: 'Camden', state: 'SC', zipCode: '29020', county: 'Kershaw'},
   { name: 'Pickens County Library - Central-Clemson Branch Library', url: 'https://www.centrallibrary.org', eventsUrl: 'https://www.centrallibrary.org/events', city: 'Central', state: 'SC', zipCode: '29630', county: 'Pickens'},
   { name: 'Lexington County Library - Chapin', url: 'https://www.chapinlibrary.org', eventsUrl: 'https://www.chapinlibrary.org/events', city: 'Chapin', state: 'SC', zipCode: '29036', county: 'Lexington'},
-  { name: 'Berkeley County Library - Daniel Island', url: 'https://charlestonlibrary.org/', eventsUrl: 'https://charlestonlibrary.org/library-events', city: 'Charleston', state: 'SC', zipCode: '29492', county: 'Charleston County'},
   { name: 'Chester County Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'SC', zipCode: '29706', county: 'Chester County'},
   { name: 'Chesterfield County Library System', url: 'https://www.chesterfieldlibrary.org', eventsUrl: 'https://www.chesterfieldlibrary.org/events', city: 'Chesterfield', state: 'SC', zipCode: '29709', county: 'Chesterfield County'},
   { name: 'Clinton Public Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'SC', zipCode: '29325', county: 'Laurens'},
@@ -27,16 +30,13 @@ const LIBRARIES = [
   { name: 'Lexington County Library - Gilbert-Summit', url: 'https://www.gilbertlibrary.org/', eventsUrl: 'https://www.gilbertlibrary.org/', city: 'Gilbert', state: 'SC', zipCode: '29054', county: 'Lexington'},
   { name: 'Great Falls Library', url: 'https://www.greatfallslibrary.org', eventsUrl: 'https://www.greatfallslibrary.org/events', city: 'Great Falls', state: 'SC', zipCode: '29055', county: 'Chester'},
   { name: 'Greenville County Library - Anderson Road (West) Branch', url: 'https://www.greenvillelibrary.org', eventsUrl: 'https://www.greenvillelibrary.org/events', city: 'Greenville', state: 'SC', zipCode: '29611', county: 'Greenville County'},
-  { name: 'Greenwood County Library System', url: 'https://www.greenwoodlibrary.org', eventsUrl: 'https://www.greenwoodlibrary.org/events', city: 'Greenwood', state: 'SC', zipCode: '29646', county: 'Greenwood County'},
   { name: 'Edgefield County Public Library - Johnston Branch (Mobley Library)', url: 'https://www.johnstonlibrary.org', eventsUrl: 'https://www.johnstonlibrary.org/events', city: 'Johnston', state: 'SC', zipCode: '29832', county: 'Edgefield'},
   { name: 'Lake View Library', url: 'https://lakeviewlibrary.org/', eventsUrl: 'https://lakeviewlibrary.org/', city: 'Lake View', state: 'SC', zipCode: '29563', county: 'Dillon'},
   { name: 'Lamar District Library', url: 'https://www.lamarlibrary.org', eventsUrl: 'https://www.lamarlibrary.org/events', city: 'Lamar', state: 'SC', zipCode: '29069', county: 'Darlington'},
-  { name: 'Lancaster County Library System', url: 'https://www.lancasterlibrary.org/', eventsUrl: 'https://www.lancasterlibrary.org/component/tags/tag/events', city: 'Lancaster', state: 'SC', zipCode: '29720', county: 'Lancaster County'},
   { name: 'Aiken County Library - Midland Valley Branch Library', url: 'https://www.langleylibrary.org', eventsUrl: 'https://www.langleylibrary.org/events', city: 'Langley', state: 'SC', zipCode: '29834', county: 'Aiken'},
   { name: 'Lexington County Public Library System - Main', url: 'https://www.lexingtonlibrary.org', eventsUrl: 'https://www.lexingtonlibrary.org/events', city: 'Lexington', state: 'SC', zipCode: '29072', county: 'Lexington County'},
   { name: 'Pickens County Library - Sarlin Branch Library', url: 'https://libertylibrary.org/', eventsUrl: 'https://libertylibrary.org/', city: 'Liberty', state: 'SC', zipCode: '29657', county: 'Pickens'},
   { name: 'Horry County Memorial Library - Loris Library', url: 'https://www.lorislibrary.org/', eventsUrl: 'https://www.lorislibrary.org/', city: 'Loris', state: 'SC', zipCode: '29569', county: 'Horry'},
-  { name: 'Spartanburg County Public Library - Middle Tyger Branch Library', url: 'https://www.lymanlibrary.org/', eventsUrl: 'https://www.lymanlibrary.org/', city: 'Lyman', state: 'SC', zipCode: '29365', county: 'Spartanburg'},
   { name: 'Marion County Library System', url: 'https://www.marionlibrary.org/', eventsUrl: 'https://www.marionlibrary.org/', city: 'Marion', state: 'SC', zipCode: '29571', county: 'Marion County'},
   { name: 'Mccormick County Library System', url: 'https://mccormicklibrary.org/', eventsUrl: 'https://mccormicklibrary.org/', city: 'Mccormick', state: 'SC', zipCode: '29835', county: 'Mccormick County'},
   { name: 'Hal Kohn Memorial Library', url: 'https://www.newberrylibrary.org', eventsUrl: 'https://www.newberrylibrary.org/events', city: 'Newberry', state: 'SC', zipCode: '29108', county: 'Newberry County'},

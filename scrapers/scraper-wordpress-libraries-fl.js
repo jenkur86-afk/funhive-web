@@ -1,3 +1,8 @@
+// 9 entries removed 2026-08-09 (MASTER-PLAN Defect A): their {city}library.org
+// domains resolve to a DIFFERENT state's library, or are dead. They were writing that
+// other library's events under the wrong name and state. Every removed library is listed
+// with its city, state and old URL in reports/defect-a-removals.md so it can be restored
+// once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -91,19 +96,15 @@ const LIBRARIES = [
   { name: 'Bartow Public Library', url: 'https://www.bartowlibrary.org', eventsUrl: 'https://www.bartowlibrary.org/events', city: 'Bartow', state: 'FL', zipCode: '00000', county: 'Polk'},
   { name: 'Brandon Branch', url: 'https://www.brandonlibrary.org/', eventsUrl: 'https://www.brandonlibrary.org/events-calendar', city: 'Brandon', state: 'FL', zipCode: '00000', county: 'Hillsborough'},
   { name: 'Levy County Public Library System', url: 'https://www.bronsonlibrary.org/', eventsUrl: 'https://www.bronsonlibrary.org/calendar', city: 'Bronson', state: 'FL', zipCode: '32621', county: 'Levy'},
-  { name: 'East Hernando Branch Library', url: 'https://www.brooksvillelibrary.org', eventsUrl: 'https://www.brooksvillelibrary.org/events', city: 'Brooksville', state: 'FL', zipCode: '00000', county: 'Hernando'},
   { name: 'Celebration Library', url: 'https://www.celebrationlibrary.org', eventsUrl: 'https://www.celebrationlibrary.org/events', city: 'Celebration', state: 'FL', zipCode: '00000', county: 'Osceola'},
   { name: 'Cooper Memorial Library', url: 'https://www.clermontlibrary.org/', eventsUrl: 'https://www.clermontlibrary.org/', city: 'Clermont', state: 'FL', zipCode: '00000', county: 'Lake'},
   { name: 'Coleman Library', url: 'https://www.colemanlibrary.org/', eventsUrl: 'https://www.colemanlibrary.org/calendar', city: 'Coleman', state: 'FL', zipCode: '00000', county: 'Sumter'},
   { name: 'Edgewater Public Library', url: 'https://www.edgewaterlibrary.org', eventsUrl: 'https://www.edgewaterlibrary.org/events', city: 'Edgewater', state: 'FL', zipCode: '00000', county: 'Volusia'},
-  { name: 'Elsie Quirk Library', url: 'https://www.englewoodlibrary.org', eventsUrl: 'https://www.englewoodlibrary.org/events', city: 'Englewood', state: 'FL', zipCode: '00000', county: 'Sarasota'},
   { name: 'Eustis Memorial Library', url: 'https://eustislibrary.org/', eventsUrl: 'https://eustislibrary.org/', city: 'Eustis', state: 'FL', zipCode: '32726', county: 'Lake'},
   { name: 'Freeport Branch Library', url: 'https://www.freeportlibrary.org', eventsUrl: 'https://www.freeportlibrary.org/events', city: 'Freeport', state: 'FL', zipCode: '00000', county: 'Walton'},
   { name: 'Fruitland Park Library', url: 'https://www.fruitlandparklibrary.org', eventsUrl: 'https://www.fruitlandparklibrary.org/events', city: 'Fruitland Park', state: 'FL', zipCode: '00000', county: 'Lake'},
   { name: 'Greenville Public Library', url: 'https://www.greenvillelibrary.org', eventsUrl: 'https://www.greenvillelibrary.org/events', city: 'Greenville', state: 'FL', zipCode: '00000', county: 'Madison'},
-  { name: 'Hastings Branch Library', url: 'https://hastingslibrary.org/', eventsUrl: 'https://hastingslibrary.org/calendar/', city: 'Hastings', state: 'FL', zipCode: '00000', county: 'St. Johns'},
   { name: 'Havana Public Library', url: 'https://www.havanalibrary.org/', eventsUrl: 'https://www.havanalibrary.org/calendar', city: 'Havana', state: 'FL', zipCode: '00000', county: 'Gadsden'},
-  { name: 'Hawthorne Branch Library', url: 'https://www.hawthornelibrary.org', eventsUrl: 'https://www.hawthornelibrary.org/events', city: 'Hawthorne', state: 'FL', zipCode: '00000', county: 'Alachua'},
   { name: 'Homestead Branch Library', url: 'https://www.homesteadlibrary.org', eventsUrl: 'https://www.homesteadlibrary.org/events', city: 'Homestead', state: 'FL', zipCode: '00000', county: 'Miami-Dade'},
   { name: 'Hudson Regional Library', url: 'https://www.hudsonlibrary.org', eventsUrl: 'https://www.hudsonlibrary.org/events', city: 'Hudson', state: 'FL', zipCode: '00000', county: 'Pasco'},
   { name: 'Lake Placid Memorial Library', url: 'https://www.lakeplacidlibrary.org', eventsUrl: 'https://www.lakeplacidlibrary.org/events', city: 'Lake Placid', state: 'FL', zipCode: '00000', county: 'Highlands'},
@@ -114,9 +115,7 @@ const LIBRARIES = [
   { name: 'West Branch Library', url: 'https://www.longwoodlibrary.org', eventsUrl: 'https://www.longwoodlibrary.org/events', city: 'Longwood', state: 'FL', zipCode: '00000', county: 'Seminole'},
   { name: 'Madison County Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'FL', zipCode: '00000', county: 'Madison County'},
   { name: 'Margate Catharine Young Branch', url: 'https://www.margatelibrary.org', eventsUrl: 'https://www.margatelibrary.org/events', city: 'Margate', state: 'FL', zipCode: '00000', county: 'Broward'},
-  { name: 'Milton Library', url: 'https://www.miltonlibrary.org', eventsUrl: 'https://www.miltonlibrary.org/events', city: 'Milton', state: 'FL', zipCode: '00000', county: 'Santa Rosa'},
   { name: 'Jefferson County R. J. Bailar Public Library', url: 'https://www.monticellolibrary.org', eventsUrl: 'https://www.monticellolibrary.org/events', city: 'Monticello', state: 'FL', zipCode: '00000', county: 'Jefferson'},
-  { name: 'Collier County Public Library', url: 'https://www.napleslibrary.org', eventsUrl: 'https://www.napleslibrary.org/events', city: 'Naples', state: 'FL', zipCode: '34109', county: 'Collier'},
   { name: 'Newberry Branch Library', url: 'https://www.newberrylibrary.org', eventsUrl: 'https://www.newberrylibrary.org/events', city: 'Newberry', state: 'FL', zipCode: '00000', county: 'Alachua'},
   { name: 'Oldsmar Public Library', url: 'https://myoldsmar.com/', eventsUrl: 'https://myoldsmar.com/1379/Oldsmar-Public-Library', city: 'Oldsmar', state: 'FL', zipCode: '00000', county: 'Pinellas'},
   { name: 'Orange City Dickinson Memorial Library', url: 'https://www.orangecitylibrary.org', eventsUrl: 'https://www.orangecitylibrary.org/events', city: 'Orange City', state: 'FL', zipCode: '00000', county: 'Volusia'},
@@ -127,10 +126,8 @@ const LIBRARIES = [
   { name: 'Taylor County Public Library', url: 'https://www.perrylibrary.org/', eventsUrl: 'https://www.perrylibrary.org/calendar', city: 'Perry', state: 'FL', zipCode: '32347', county: 'Taylor'},
   { name: 'Pierson Public Library', url: 'https://www.piersonlibrary.org', eventsUrl: 'https://www.piersonlibrary.org/events', city: 'Pierson', state: 'FL', zipCode: '00000', county: 'Volusia'},
   { name: 'Polk City Library', url: 'https://www.polkcitylibrary.org', eventsUrl: 'https://www.polkcitylibrary.org/events', city: 'Polk City', state: 'FL', zipCode: '00000', county: 'Polk'},
-  { name: 'Gadsden County Public Library', url: 'https://www.quincylibrary.org', eventsUrl: 'https://www.quincylibrary.org/events', city: 'Quincy', state: 'FL', zipCode: '32351', county: 'Gadsden'},
   { name: 'Reddick Public Library', url: 'https://www.reddicklibrary.org/', eventsUrl: 'https://www.reddicklibrary.org/', city: 'Reddick', state: 'FL', zipCode: '00000', county: 'Marion'},
   { name: 'Safety Harbor Public Library', url: 'https://www.safetyharborlibrary.org', eventsUrl: 'https://www.safetyharborlibrary.org/events', city: 'Safety Harbor', state: 'FL', zipCode: '00000', county: 'Pinellas'},
-  { name: 'Little Red Schoolhouse Branch', url: 'https://www.springhilllibrary.org', eventsUrl: 'https://www.springhilllibrary.org/events', city: 'Spring Hill', state: 'FL', zipCode: '00000', county: 'Hernando'},
   { name: 'Springfield Branch', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'FL', zipCode: '00000', county: 'Bay'},
   { name: 'Blake Library', url: 'https://stuartlibrary.org/', eventsUrl: 'https://stuartlibrary.org/calendar/', city: 'Stuart', state: 'FL', zipCode: '00000', county: 'Martin'},
   { name: 'Sunrise Dan Pearl Branch', url: 'https://www.sunriselibrary.org', eventsUrl: 'https://www.sunriselibrary.org/events', city: 'Sunrise', state: 'FL', zipCode: '00000', county: 'Broward'},
@@ -140,7 +137,6 @@ const LIBRARIES = [
   { name: 'Vernon Branch Library', url: 'https://www.vernonlibrary.org/', eventsUrl: 'https://www.vernonlibrary.org/', city: 'Vernon', state: 'FL', zipCode: '00000', county: 'Washington'},
   { name: 'E.C. Rowell Public Library', url: 'https://www.websterlibrary.org', eventsUrl: 'https://www.websterlibrary.org/events', city: 'Webster', state: 'FL', zipCode: '00000', county: 'Sumter'},
   { name: 'Mandel Public Library Of West Palm Beach', url: 'https://www.westpalmbeachlibrary.org', eventsUrl: 'https://www.westpalmbeachlibrary.org/events', city: 'West Palm Beach', state: 'FL', zipCode: '33401', county: 'Palm Beach'},
-  { name: 'Weston Reading Center', url: 'https://www.westonlibrary.org', eventsUrl: 'https://www.westonlibrary.org/events', city: 'Weston', state: 'FL', zipCode: '00000', county: 'Broward'},
   { name: 'Wildwood Public Library', url: 'https://www.wildwoodlibrary.org', eventsUrl: 'https://www.wildwoodlibrary.org/events', city: 'Wildwood', state: 'FL', zipCode: '00000', county: 'Sumter'},
   { name: 'Winter Park Public Library', url: 'https://www.winterparklibrary.org', eventsUrl: 'https://www.winterparklibrary.org/events', city: 'Winter Park', state: 'FL', zipCode: '32789', county: 'Orange'},
   { name: 'Zephyrhills Library', url: 'https://www.zephyrhillslibrary.org', eventsUrl: 'https://www.zephyrhillslibrary.org/events', city: 'Zephyrhills', state: 'FL', zipCode: '00000', county: 'Pasco'}

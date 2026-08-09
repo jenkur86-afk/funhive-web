@@ -1,3 +1,8 @@
+// 13 entries removed 2026-08-09 (MASTER-PLAN Defect A): their {city}library.org
+// domains resolve to a DIFFERENT state's library, or are dead. They were writing that
+// other library's events under the wrong name and state. Every removed library is listed
+// with its city, state and old URL in reports/defect-a-removals.md so it can be restored
+// once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -9,24 +14,18 @@ const ngeohash = require('ngeohash');
  * New Jersey Public Libraries Scraper - Coverage: All New Jersey public libraries
  */
 const LIBRARIES = [
-  { name: 'Lee Memorial Library', url: 'https://www.allendalelibrary.org', eventsUrl: 'https://www.allendalelibrary.org/events', city: 'Allendale', state: 'NJ', zipCode: '07401', county: 'Bergen'},
   { name: 'Asbury Park Free Public Library', url: 'https://www.asburyparklibrary.org/', eventsUrl: 'https://www.asburyparklibrary.org/', city: 'Asbury Park', state: 'NJ', zipCode: '07712', county: 'Monmouth'},
   { name: 'Atlantic City Free Public Library', url: 'https://www.atlanticcitylibrary.org', eventsUrl: 'https://www.atlanticcitylibrary.org/events', city: 'Atlantic City', state: 'NJ', zipCode: '08401', county: 'Atlantic'},
   { name: 'Audubon Free Public Library', url: 'https://www.audubonlibrary.org', eventsUrl: 'https://www.audubonlibrary.org/events', city: 'Audubon', state: 'NJ', zipCode: '08106', county: 'Camden'},
-  { name: 'Avalon Free Public Library', url: 'https://avalonlibrary.org/', eventsUrl: 'https://avalonlibrary.org/', city: 'Avalon', state: 'NJ', zipCode: '08202', county: 'Cape May'},
   { name: 'Bayonne Free Public Library', url: 'https://www.bayonnelibrary.org', eventsUrl: 'https://www.bayonnelibrary.org/events', city: 'Bayonne', state: 'NJ', zipCode: '07002', county: 'Hudson'},
   { name: 'Beach Haven Free Public Library', url: 'https://www.beachhavenlibrary.org', eventsUrl: 'https://www.beachhavenlibrary.org/events', city: 'Beach Haven', state: 'NJ', zipCode: '08008', county: 'Ocean'},
-  { name: 'Belleville Public Library', url: 'https://bellevillelibrary.org/', eventsUrl: 'https://bellevillelibrary.org/', city: 'Belleville', state: 'NJ', zipCode: '07109', county: 'Essex'},
   { name: 'Belmar Public Library', url: 'https://www.belmarlibrary.org', eventsUrl: 'https://www.belmarlibrary.org/events', city: 'Belmar', state: 'NJ', zipCode: '07719', county: 'Monmouth'},
   { name: 'Bergenfield Free Public Library', url: 'https://www.bergenfieldlibrary.org/', eventsUrl: 'https://www.bergenfieldlibrary.org/calendar/', city: 'Bergenfield', state: 'NJ', zipCode: '07621', county: 'Bergen'},
-  { name: 'Marie Fleche Memorial Library', url: 'https://www.berlinlibrary.org', eventsUrl: 'https://www.berlinlibrary.org/events', city: 'Berlin', state: 'NJ', zipCode: '08009', county: 'Camden'},
   { name: 'Bernardsville Public Library', url: 'https://www.bernardsvillelibrary.org', eventsUrl: 'https://www.bernardsvillelibrary.org/events', city: 'Bernardsville', state: 'NJ', zipCode: '07924', county: 'Somerset'},
-  { name: 'Beverly Free Library', url: 'https://www.beverlylibrary.org', eventsUrl: 'https://www.beverlylibrary.org/events', city: 'Beverly', state: 'NJ', zipCode: '08010', county: 'Burlington'},
   { name: 'Bloomingdale Free Public Library', url: 'https://www.bloomingdalelibrary.org/', eventsUrl: 'https://www.bloomingdalelibrary.org/', city: 'Bloomingdale', state: 'NJ', zipCode: '07403', county: 'Passaic'},
   { name: 'Boonton Holmes Public Library', url: 'https://www.boontonlibrary.org', eventsUrl: 'https://www.boontonlibrary.org/events', city: 'Boonton', state: 'NJ', zipCode: '07005', county: 'Morris'},
   { name: 'Bradley Beach Public Library', url: 'https://bradleybeachlibrary.org/', eventsUrl: 'https://bradleybeachlibrary.org/', city: 'Bradley Beach', state: 'NJ', zipCode: '07720', county: 'Monmouth'},
   { name: 'Bridgeton Free Public Library', url: 'https://bridgetonlibrary.org/', eventsUrl: 'https://bridgetonlibrary.org/', city: 'Bridgeton', state: 'NJ', zipCode: '08302', county: 'Cumberland'},
-  { name: 'Library Company Of Burlington', url: 'https://www.burlingtonlibrary.org', eventsUrl: 'https://www.burlingtonlibrary.org/events', city: 'Burlington', state: 'NJ', zipCode: '08016', county: 'Burlington County'},
   { name: 'Butler Public Library', url: 'https://www.butlerlibrary.org', eventsUrl: 'https://www.butlerlibrary.org/events', city: 'Butler', state: 'NJ', zipCode: '07405', county: 'Morris'},
   { name: 'Camden Free Public Library', url: 'https://www.camdenlibrary.org/', eventsUrl: 'https://www.camdenlibrary.org/', city: 'Camden', state: 'NJ', zipCode: '08103', county: 'Camden County'},
   { name: 'William E. Dermody Free Public Library', url: 'https://carlstadtlibrary.org/', eventsUrl: 'https://carlstadtlibrary.org/', city: 'Carlstadt', state: 'NJ', zipCode: '07072', county: 'Bergen'},
@@ -52,7 +51,6 @@ const LIBRARIES = [
   { name: 'Fair Haven Public Library', url: 'https://fairhavenlibrary.org/', eventsUrl: 'https://fairhavenlibrary.org/', city: 'Fair Haven', state: 'NJ', zipCode: '07704', county: 'Monmouth'},
   { name: 'Maurice M. Pine Free Public Library', url: 'https://www.fairlawnlibrary.org/', eventsUrl: 'https://www.fairlawnlibrary.org/calendar', city: 'Fair Lawn', state: 'NJ', zipCode: '07410', county: 'Bergen'},
   { name: 'Anthony Pio Costa Memorial Library', url: 'https://fairfieldlibrary.org/', eventsUrl: 'https://fairfieldlibrary.org/', city: 'Fairfield', state: 'NJ', zipCode: '07004', county: 'Essex'},
-  { name: 'Fairview Free Public Library', url: 'https://www.fairviewlibrary.org', eventsUrl: 'https://www.fairviewlibrary.org/events', city: 'Fairview', state: 'NJ', zipCode: '07022', county: 'Bergen'},
   { name: 'Fanwood Memorial Library', url: 'https://fanwoodlibrary.org/', eventsUrl: 'https://fanwoodlibrary.org/', city: 'Fanwood', state: 'NJ', zipCode: '07023', county: 'Union'},
   { name: 'Flemington Free Public Library', url: 'https://www.flemingtonlibrary.org', eventsUrl: 'https://www.flemingtonlibrary.org/events', city: 'Flemington', state: 'NJ', zipCode: '08822', county: 'Hunterdon'},
   { name: 'Fort Lee Free Public Library', url: 'https://www.fortleelibrary.org', eventsUrl: 'https://www.fortleelibrary.org/events', city: 'Fort Lee', state: 'NJ', zipCode: '07024', county: 'Bergen'},
@@ -64,11 +62,8 @@ const LIBRARIES = [
   { name: 'Hackettstown Free Public Library', url: 'https://www.hackettstownlibrary.org', eventsUrl: 'https://www.hackettstownlibrary.org/events', city: 'Hackettstown', state: 'NJ', zipCode: '07840', county: 'Warren'},
   { name: 'Haddonfield Public Library', url: 'https://www.haddonfieldlibrary.org/', eventsUrl: 'https://www.haddonfieldlibrary.org/', city: 'Haddonfield', state: 'NJ', zipCode: '08033', county: 'Camden'},
   { name: 'Hamilton Township Free Public Library', url: 'https://hamiltonlibrary.org/', eventsUrl: 'https://hamiltonlibrary.org/', city: 'Hamilton', state: 'NJ', zipCode: '08619', county: 'Monmouth'},
-  { name: 'Harrison Public Library', url: 'https://www.harrisonpl.org/', eventsUrl: 'https://www.harrisonpl.org/', city: 'Harrison', state: 'NJ', zipCode: '07029', county: 'Hudson'},
   { name: 'Hasbrouck Heights Free Public Library', url: 'https://www.hasbrouckheightslibrary.org', eventsUrl: 'https://www.hasbrouckheightslibrary.org/events', city: 'Hasbrouck Heights', state: 'NJ', zipCode: '07604', county: 'Bergen'},
   { name: 'Haworth Municipal Library', url: 'https://www.haworthlibrary.org/', eventsUrl: 'https://www.haworthlibrary.org/', city: 'Haworth', state: 'NJ', zipCode: '07641', county: 'Bergen'},
-  { name: 'Louis Bay 2nd Library', url: 'https://www.hawthornelibrary.org', eventsUrl: 'https://www.hawthornelibrary.org/events', city: 'Hawthorne', state: 'NJ', zipCode: '07506', county: 'Passaic'},
-  { name: 'Hillsdale Free Public Library', url: 'https://www.cityofsanmateo.org/', eventsUrl: 'https://www.cityofsanmateo.org/507/Library', city: 'Hillsdale', state: 'NJ', zipCode: '07642', county: 'Bergen'},
   { name: 'Hillside Free Public Library', url: 'https://www.hillsidelibrary.org', eventsUrl: 'https://www.hillsidelibrary.org/events', city: 'Hillside', state: 'NJ', zipCode: '07205', county: 'Union'},
   { name: 'Worth Pinkham Memorial Library', url: 'https://www.hohokuslibrary.org', eventsUrl: 'https://www.hohokuslibrary.org/events', city: 'Ho-Ho-Kus', state: 'NJ', zipCode: '07423', county: 'Bergen'},
   { name: 'Hoboken Public Library', url: 'https://www.hobokenlibrary.org', eventsUrl: 'https://www.hobokenlibrary.org/events', city: 'Hoboken', state: 'NJ', zipCode: '07030', county: 'Hudson'},
@@ -93,7 +88,6 @@ const LIBRARIES = [
   { name: 'Metuchen Public Library', url: 'https://www.metuchenlibrary.org/', eventsUrl: 'https://www.metuchenlibrary.org/calendar/', city: 'Metuchen', state: 'NJ', zipCode: '08840', county: 'Middlesex'},
   { name: 'Middletown Township Public Library', url: 'https://www.middletownlibrary.org', eventsUrl: 'https://www.middletownlibrary.org/events', city: 'Middletown', state: 'NJ', zipCode: '07748', county: 'Monmouth'},
   { name: 'Midland Park Memorial Library', url: 'https://www.midlandparklibrary.org/', eventsUrl: 'https://www.midlandparklibrary.org/', city: 'Midland Park', state: 'NJ', zipCode: '07432', county: 'Bergen'},
-  { name: 'Holland Township Free Public Library', url: 'https://www.milfordlibrary.org', eventsUrl: 'https://www.milfordlibrary.org/events', city: 'Milford', state: 'NJ', zipCode: '08848', county: 'Hunterdon'},
   { name: 'Millburn Free Public Library', url: 'https://www.millburnlibrary.org', eventsUrl: 'https://www.millburnlibrary.org/events', city: 'Millburn', state: 'NJ', zipCode: '07041', county: 'Essex'},
   { name: 'Milltown Public Library', url: 'https://www.milltownlibrary.org/', eventsUrl: 'https://www.milltownlibrary.org/', city: 'Milltown', state: 'NJ', zipCode: '08850', county: 'Middlesex'},
   { name: 'Millville Public Library', url: 'https://www.millvillelibrary.org', eventsUrl: 'https://www.millvillelibrary.org/events', city: 'Millville', state: 'NJ', zipCode: '08332', county: 'Cumberland'},
@@ -110,7 +104,6 @@ const LIBRARIES = [
   { name: 'Mountainside Free Public Library', url: 'https://www.mountainsidelibrary.org/', eventsUrl: 'https://www.mountainsidelibrary.org/', city: 'Mountainside', state: 'NJ', zipCode: '07092', county: 'Union'},
   { name: 'New Milford Public Library', url: 'https://newmilfordlibrary.org/', eventsUrl: 'https://newmilfordlibrary.org/', city: 'New Milford', state: 'NJ', zipCode: '07646', county: 'Bergen'},
   { name: 'New Providence Memorial Library', url: 'https://www.newprovidencelibrary.org/', eventsUrl: 'https://www.newprovidencelibrary.org/', city: 'New Providence', state: 'NJ', zipCode: '07974', county: 'Union'},
-  { name: 'Newark Public Library', url: 'https://newarklibrary.org/', eventsUrl: 'https://newarklibrary.org/', city: 'Newark', state: 'NJ', zipCode: '07102', county: 'Essex'},
   { name: 'Sussex County Library', url: 'https://www.newtonlibrary.org', eventsUrl: 'https://www.newtonlibrary.org/events', city: 'Newton', state: 'NJ', zipCode: '07860', county: 'Sussex'},
   { name: 'North Arlington Public Library', url: 'https://www.northarlingtonlibrary.org', eventsUrl: 'https://www.northarlingtonlibrary.org/events', city: 'North Arlington', state: 'NJ', zipCode: '07031', county: 'Bergen'},
   { name: 'North Brunswick Free Public Library', url: 'https://northbrunswicklibrary.org/', eventsUrl: 'https://northbrunswicklibrary.org/', city: 'North Brunswick', state: 'NJ', zipCode: '08902', county: 'Middlesex'},
@@ -136,7 +129,6 @@ const LIBRARIES = [
   { name: 'Princeton Public Library', url: 'https://www.princetonlibrary.org', eventsUrl: 'https://www.princetonlibrary.org/events', city: 'Princeton', state: 'NJ', zipCode: '08542', county: 'Mercer'},
   { name: 'Rahway Public Library', url: 'https://www.rahwaylibrary.org/', eventsUrl: 'https://www.rahwaylibrary.org/', city: 'Rahway', state: 'NJ', zipCode: '07065', county: 'Union'},
   { name: 'Ramsey Free Public Library', url: 'https://www.ramseylibrary.org', eventsUrl: 'https://www.ramseylibrary.org/events', city: 'Ramsey', state: 'NJ', zipCode: '07446', county: 'Bergen'},
-  { name: 'Randolph Township Free Public Library', url: 'https://www.randolphlibrary.org', eventsUrl: 'https://www.randolphlibrary.org/events', city: 'Randolph', state: 'NJ', zipCode: '07869', county: 'Morris'},
   { name: 'Red Bank Public Library', url: 'https://www.redbanklibrary.org/', eventsUrl: 'https://www.redbanklibrary.org/calendar', city: 'Red Bank', state: 'NJ', zipCode: '07701', county: 'Monmouth'},
   { name: 'Ridgefield Free Public Library', url: 'https://ridgefieldlibrary.org/', eventsUrl: 'https://ridgefieldlibrary.org/', city: 'Ridgefield', state: 'NJ', zipCode: '07657', county: 'Bergen'},
   { name: 'Ridgewood Public Library', url: 'https://ridgewoodlibrary.org/', eventsUrl: 'https://ridgewoodlibrary.org/', city: 'Ridgewood', state: 'NJ', zipCode: '07450', county: 'Bergen'},

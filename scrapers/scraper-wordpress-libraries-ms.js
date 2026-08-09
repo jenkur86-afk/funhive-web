@@ -1,3 +1,8 @@
+// 8 entries removed 2026-08-09 (MASTER-PLAN Defect A): their {city}library.org
+// domains resolve to a DIFFERENT state's library, or are dead. They were writing that
+// other library's events under the wrong name and state. Every removed library is listed
+// with its city, state and old URL in reports/defect-a-removals.md so it can be restored
+// once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -32,13 +37,8 @@ const LIBRARIES = [
   { name: 'Central Mississippi Regional Library System', url: 'https://www.cmrls.lib.ms.us', eventsUrl: 'https://www.cmrls.lib.ms.us/events', city: 'Kosciusko', state: 'MS', zipCode: '39090', county: 'Attala'},
   { name: 'Tombigbee Regional Library System', url: 'https://www.tombigbee.lib.ms.us/', eventsUrl: 'https://www.tombigbee.lib.ms.us/', city: 'West Point', state: 'MS', zipCode: '39773', county: 'Clay'},
   // Additional libraries from spreadsheet coverage expansion
-  { name: 'Benton County Library', url: 'https://www.ashlandlibrary.org', eventsUrl: 'https://www.ashlandlibrary.org/events', city: 'Ashland', state: 'MS', zipCode: '38603', county: 'Benton'},
-  { name: 'Avon Public Library', url: 'https://www.avonlibrary.org', eventsUrl: 'https://www.avonlibrary.org/events', city: 'Avon', state: 'MS', zipCode: '00000', county: 'Washington'},
   { name: 'William Estes Powell Memorial Library', url: 'https://www.beaumontlibrary.org', eventsUrl: 'https://www.beaumontlibrary.org/events', city: 'Beaumont', state: 'MS', zipCode: '00000', county: 'Perry'},
   { name: 'Belmont Public Library', url: 'https://smcl.org/', eventsUrl: 'https://smcl.org/', city: 'Belmont', state: 'MS', zipCode: '00000', county: 'Tishomingo'},
-  { name: 'Brooksville Public Library', url: 'https://www.brooksvillelibrary.org', eventsUrl: 'https://www.brooksvillelibrary.org/events', city: 'Brooksville', state: 'MS', zipCode: '00000', county: 'Noxubee'},
-  { name: 'Caledonia Public Library', url: 'https://www.caledonialibrary.org', eventsUrl: 'https://www.caledonialibrary.org/events', city: 'Caledonia', state: 'MS', zipCode: '00000', county: 'Lowndes'},
-  { name: 'Charleston Public Library', url: 'https://charlestonlibrary.org/', eventsUrl: 'https://charlestonlibrary.org/library-events', city: 'Charleston', state: 'MS', zipCode: '00000', county: 'Tallahatchie'},
   { name: 'A. E. Wood Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'MS', zipCode: '00000', county: 'Hinds'},
   { name: 'Columbia-Marion County Library', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'MS', zipCode: '00000', county: 'Marion'},
   { name: 'Crawford Public Library', url: 'https://crawfordlibrary.org/', eventsUrl: 'https://crawfordlibrary.org/', city: 'Crawford', state: 'MS', zipCode: '00000', county: 'Lowndes'},
@@ -46,11 +46,9 @@ const LIBRARIES = [
   { name: 'Decatur Public Library', url: 'https://www.decaturlibrary.org', eventsUrl: 'https://www.decaturlibrary.org/events', city: 'Decatur', state: 'MS', zipCode: '00000', county: 'Newton'},
   { name: 'Dekalb Public Library', url: 'https://www.dekalblibrary.org', eventsUrl: 'https://www.dekalblibrary.org/events', city: 'Dekalb', state: 'MS', zipCode: '00000', county: 'Dekalb County'},
   { name: 'Enterprise Public Library', url: 'https://www.enterpriselibrary.org', eventsUrl: 'https://www.enterpriselibrary.org/events', city: 'Enterprise', state: 'MS', zipCode: '00000', county: 'Clarke'},
-  { name: 'Jefferson County Public Library', url: 'https://www.fayettelibrary.org', eventsUrl: 'https://www.fayettelibrary.org/events', city: 'Fayette', state: 'MS', zipCode: '00000', county: 'Jefferson'},
   { name: 'Florence Public Library', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'MS', zipCode: '00000', county: 'Rankin'},
   { name: 'Forest Public Library', url: 'https://www.forestlibrary.org/', eventsUrl: 'https://www.forestlibrary.org/', city: 'Forest', state: 'MS', zipCode: '00000', county: 'Scott'},
   { name: 'Itawamba County-Pratt Memorial Library', url: 'https://www.facebook.com/', eventsUrl: 'https://www.facebook.com/fultonlibrary', city: 'Fulton', state: 'MS', zipCode: '00000', county: 'Itawamba'},
-  { name: 'Greenwood-Leflore Public Library', url: 'https://www.greenwoodlibrary.org', eventsUrl: 'https://www.greenwoodlibrary.org/events', city: 'Greenwood', state: 'MS', zipCode: '38930', county: 'Leflore'},
   { name: 'Hamilton Public Library', url: 'https://hamiltonlibrary.org/', eventsUrl: 'https://hamiltonlibrary.org/', city: 'Hamilton', state: 'MS', zipCode: '00000', county: 'Monroe'},
   { name: 'Houston Carnegie Library', url: 'https://www.houstonlibrary.org', eventsUrl: 'https://www.houstonlibrary.org/events', city: 'Houston', state: 'MS', zipCode: '00000', county: 'Chickasaw'},
   { name: 'Leland Public Library', url: 'https://www.lelandlibrary.org', eventsUrl: 'https://www.lelandlibrary.org/events', city: 'Leland', state: 'MS', zipCode: '00000', county: 'Washington'},
@@ -74,7 +72,6 @@ const LIBRARIES = [
   { name: 'Field Memorial Library', url: 'https://www.shawlibrary.org/', eventsUrl: 'https://www.shawlibrary.org/', city: 'Shaw', state: 'MS', zipCode: '00000', county: 'Bolivar'},
   { name: 'Dr. Robert T. Hollingsworth Library', url: 'https://www.shelbylibrary.org', eventsUrl: 'https://www.shelbylibrary.org/events', city: 'Shelby', state: 'MS', zipCode: '00000', county: 'Bolivar'},
   { name: 'Sherman Library', url: 'https://www.shermanlibrary.org/', eventsUrl: 'https://www.shermanlibrary.org/', city: 'Sherman', state: 'MS', zipCode: '00000', county: 'Pontotoc'},
-  { name: 'Sturgis Public Library', url: 'https://www.sturgislibrary.org', eventsUrl: 'https://www.sturgislibrary.org/events', city: 'Sturgis', state: 'MS', zipCode: '00000', county: 'Oktibbeha'},
   { name: 'Kemper-Newton Regional Library', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'MS', zipCode: '39365', county: 'Union County'},
   { name: 'Evelyn Taylor Majure Library', url: 'https://www.uticalibrary.org', eventsUrl: 'https://www.uticalibrary.org/events', city: 'Utica', state: 'MS', zipCode: '00000', county: 'Hinds'},
   { name: 'Woodville Public Library', url: 'https://www.woodvillelibrary.org', eventsUrl: 'https://www.woodvillelibrary.org/events', city: 'Woodville', state: 'MS', zipCode: '00000', county: 'Wilkinson'},

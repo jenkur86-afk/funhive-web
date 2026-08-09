@@ -1,3 +1,8 @@
+// 11 entries removed 2026-08-09 (MASTER-PLAN Defect A): their {city}library.org
+// domains resolve to a DIFFERENT state's library, or are dead. They were writing that
+// other library's events under the wrong name and state. Every removed library is listed
+// with its city, state and old URL in reports/defect-a-removals.md so it can be restored
+// once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -38,14 +43,11 @@ const LIBRARIES = [
   // Additional libraries from spreadsheet coverage expansion
   { name: 'Andover Public Library', url: 'https://www.andoverlibrary.org', eventsUrl: 'https://www.andoverlibrary.org/events', city: 'Andover', state: 'CT', zipCode: '06232', county: 'Capitol Planning Region'},
   { name: 'Ansonia Public Library', url: 'https://ansonialibrary.org/', eventsUrl: 'https://ansonialibrary.org/', city: 'Ansonia', state: 'CT', zipCode: '06401', county: 'Naugatuck Valley Planning Region'},
-  { name: 'Avon Free Public Library', url: 'https://www.avonlibrary.org', eventsUrl: 'https://www.avonlibrary.org/events', city: 'Avon', state: 'CT', zipCode: '06001', county: 'Capitol Planning Region'},
   { name: 'Beacon Falls Public Library', url: 'https://www.beaconfallslibrary.org', eventsUrl: 'https://www.beaconfallslibrary.org/events', city: 'Beacon Falls', state: 'CT', zipCode: '06403', county: 'Naugatuck Valley Planning Region'},
-  { name: 'Berlin Free Library Association', url: 'https://www.berlinlibrary.org', eventsUrl: 'https://www.berlinlibrary.org/events', city: 'Berlin', state: 'CT', zipCode: '06037', county: 'Capitol Planning Region'},
   { name: 'Clark Memorial Library', url: 'https://bethanylibrary.org/', eventsUrl: 'https://bethanylibrary.org/', city: 'Bethany', state: 'CT', zipCode: '06524', county: 'South Central Connecticut Planning Region'},
   { name: 'Bethel Public Library', url: 'https://www.bethellibrary.org', eventsUrl: 'https://www.bethellibrary.org/events', city: 'Bethel', state: 'CT', zipCode: '06801', county: 'Western Connecticut Planning Region'},
   { name: 'Bethlehem Public Library', url: 'https://www.bethlehemlibrary.org', eventsUrl: 'https://www.bethlehemlibrary.org/events', city: 'Bethlehem', state: 'CT', zipCode: '06751', county: 'Naugatuck Valley Planning Region'},
   { name: 'Brookfield Library', url: 'https://www.brookfieldlibrary.org', eventsUrl: 'https://www.brookfieldlibrary.org/events', city: 'Brookfield', state: 'CT', zipCode: '06804', county: 'Western Connecticut Planning Region'},
-  { name: 'Burlington Public Library', url: 'https://www.burlingtonlibrary.org', eventsUrl: 'https://www.burlingtonlibrary.org/events', city: 'Burlington', state: 'CT', zipCode: '06013', county: 'Northwest Hills Planning Region'},
   { name: 'Canterbury Public Library', url: 'https://www.canterburylibrary.org', eventsUrl: 'https://www.canterburylibrary.org/events', city: 'Canterbury', state: 'CT', zipCode: '06331', county: 'Northeastern Connecticut Planning Region'},
   { name: 'Canton Public Library', url: 'https://www.cantonlibrary.org', eventsUrl: 'https://www.cantonlibrary.org/events', city: 'Canton', state: 'CT', zipCode: '06019', county: 'Capitol Planning Region'},
   { name: 'Cheshire Public Library', url: 'https://www.cheshirelibrary.org', eventsUrl: 'https://www.cheshirelibrary.org/events', city: 'Cheshire', state: 'CT', zipCode: '06410', county: 'Naugatuck Valley Planning Region'},
@@ -53,7 +55,6 @@ const LIBRARIES = [
   { name: 'Henry Carter Hull Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'CT', zipCode: '06413', county: 'Lower Connecticut River Valley Planning Region'},
   { name: 'Saxton B. Little Free Library', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'CT', zipCode: '06237', county: 'Capitol Planning Region'},
   { name: 'Cornwall Library Association', url: 'https://www.cornwalllibrary.org', eventsUrl: 'https://www.cornwalllibrary.org/events', city: 'Cornwall', state: 'CT', zipCode: '06753', county: 'Northwest Hills Planning Region'},
-  { name: 'Booth Dimock Memorial Library', url: 'https://www.coventrylibrary.org/', eventsUrl: 'https://www.coventrylibrary.org/', city: 'Coventry', state: 'CT', zipCode: '06238', county: 'Capitol Planning Region'},
   { name: 'Darien Library', url: 'https://www.darienlibrary.org', eventsUrl: 'https://www.darienlibrary.org/events', city: 'Darien', state: 'CT', zipCode: '06820', county: 'Western Connecticut Planning Region'},
   { name: 'Durham Public Library', url: 'https://www.durhamlibrary.org', eventsUrl: 'https://www.durhamlibrary.org/events', city: 'Durham', state: 'CT', zipCode: '06422', county: 'Lower Connecticut River Valley Planning Region'},
   { name: 'East Hampton Public Library', url: 'https://www.easthamptonlibrary.org', eventsUrl: 'https://www.easthamptonlibrary.org/events', city: 'East Hampton', state: 'CT', zipCode: '06424', county: 'Lower Connecticut River Valley Planning Region'},
@@ -74,7 +75,6 @@ const LIBRARIES = [
   { name: 'Jonathan Trumbull Library', url: 'https://lebanonlibrary.org/', eventsUrl: 'https://lebanonlibrary.org/', city: 'Lebanon', state: 'CT', zipCode: '06249', county: 'Southeastern Connecticut Planning Region'},
   { name: 'Bill Library', url: 'https://www.ledyardlibrary.org', eventsUrl: 'https://www.ledyardlibrary.org/events', city: 'Ledyard', state: 'CT', zipCode: '00000', county: 'Southeastern Connecticut Planning Region'},
   { name: 'E.C. Scranton Memorial Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'CT', zipCode: '06443', county: 'South Central Connecticut Planning Region'},
-  { name: 'Mansfield Public Library', url: 'https://www.mansfieldlibrary.org', eventsUrl: 'https://www.mansfieldlibrary.org/events', city: 'Mansfield', state: 'CT', zipCode: '06250', county: 'Mansfield County'},
   { name: 'Middlebury Public Library', url: 'https://www.middleburylibrary.org', eventsUrl: 'https://www.middleburylibrary.org/events', city: 'Middlebury', state: 'CT', zipCode: '06762', county: 'Naugatuck Valley Planning Region'},
   { name: 'Levi E.Coe Library', url: 'https://middlefieldlibrary.org/', eventsUrl: 'https://middlefieldlibrary.org/', city: 'Middlefield', state: 'CT', zipCode: '06455', county: 'Lower Connecticut River Valley Planning Region'},
   { name: 'Edith Wheeler Memorial Library', url: 'https://www.monroelibrary.org', eventsUrl: 'https://www.monroelibrary.org/events', city: 'Monroe', state: 'CT', zipCode: '06468', county: 'Greater Bridgeport Planning Region'},
@@ -91,18 +91,14 @@ const LIBRARIES = [
   { name: 'Oxford Public Library', url: 'https://oxfordlibrary.org/', eventsUrl: 'https://oxfordlibrary.org/', city: 'Oxford', state: 'CT', zipCode: '06478', county: 'Naugatuck Valley Planning Region'},
   { name: 'Central Village Public Library', url: 'https://www.plainfieldlibrary.org', eventsUrl: 'https://www.plainfieldlibrary.org/events', city: 'Plainfield', state: 'CT', zipCode: '06332', county: 'Northeastern Connecticut Planning Region'},
   { name: 'Plainville Public Library', url: 'https://www.plainvillelibrary.org', eventsUrl: 'https://www.plainvillelibrary.org/events', city: 'Plainville', state: 'CT', zipCode: '06062', county: 'Capitol Planning Region'},
-  { name: 'Plymouth Library Association', url: 'https://plymouthlibrary.org/', eventsUrl: 'https://plymouthlibrary.org/', city: 'Plymouth', state: 'CT', zipCode: '06782', county: 'Naugatuck Valley Planning Region'},
   { name: 'Pomfret Public Library', url: 'https://www.pomfretlibrary.org', eventsUrl: 'https://www.pomfretlibrary.org/events', city: 'Pomfret', state: 'CT', zipCode: '06258', county: 'Northeastern Connecticut Planning Region'},
-  { name: 'Portland Public Library', url: 'https://www.portlandlibrary.org', eventsUrl: 'https://www.portlandlibrary.org/events', city: 'Portland', state: 'CT', zipCode: '06480', county: 'Lower Connecticut River Valley Planning Region'},
   { name: 'Preston Public Library', url: 'https://prestonpubliclibrary.org/', eventsUrl: 'https://prestonpubliclibrary.org/events/', city: 'Preston', state: 'CT', zipCode: '06365', county: 'Preston County'},
   { name: 'Prospect Public Library', url: 'https://www.prospectlibrary.org/', eventsUrl: 'https://www.prospectlibrary.org/calendar', city: 'Prospect', state: 'CT', zipCode: '06712', county: 'Naugatuck Valley Planning Region'},
   { name: 'Ridgefield Library', url: 'https://ridgefieldlibrary.org/', eventsUrl: 'https://ridgefieldlibrary.org/', city: 'Ridgefield', state: 'CT', zipCode: '06877', county: 'Western Connecticut Planning Region'},
   { name: 'Minor Memorial Library', url: 'https://www.roxburylibrary.org', eventsUrl: 'https://www.roxburylibrary.org/events', city: 'Roxbury', state: 'CT', zipCode: '06783', county: 'Western Connecticut Planning Region'},
   { name: 'Salem Free Public Library', url: 'https://www.salemlibrary.org', eventsUrl: 'https://www.salemlibrary.org/events', city: 'Salem', state: 'CT', zipCode: '06420', county: 'Southeastern Connecticut Planning Region'},
   { name: 'Scoville Memorial Library', url: 'https://www.salisburylibrary.org/', eventsUrl: 'https://www.salisburylibrary.org/', city: 'Salisbury', state: 'CT', zipCode: '06068', county: 'Northwest Hills Planning Region'},
-  { name: 'Seymour Public Library', url: 'https://www.seymourlibrary.org', eventsUrl: 'https://www.seymourlibrary.org/events', city: 'Seymour', state: 'CT', zipCode: '06483', county: 'Naugatuck Valley Planning Region'},
   { name: 'Sherman Library Assn.', url: 'https://www.shermanlibrary.org/', eventsUrl: 'https://www.shermanlibrary.org/', city: 'Sherman', state: 'CT', zipCode: '06784', county: 'Western Connecticut Planning Region'},
-  { name: 'Somers Public Library', url: 'https://www.somerslibrary.org', eventsUrl: 'https://www.somerslibrary.org/events', city: 'Somers', state: 'CT', zipCode: '06071', county: 'Capitol Planning Region'},
   { name: 'South Windsor Public Library', url: 'https://www.southwindsorlibrary.org', eventsUrl: 'https://www.southwindsorlibrary.org/events', city: 'South Windsor', state: 'CT', zipCode: '06074', county: 'Capitol Planning Region'},
   { name: 'Southbury Public Library', url: 'https://www.southburylibrary.org', eventsUrl: 'https://www.southburylibrary.org/events', city: 'Southbury', state: 'CT', zipCode: '06488', county: 'Naugatuck Valley Planning Region'},
   { name: 'Pequot Library Association', url: 'https://www.southportlibrary.org', eventsUrl: 'https://www.southportlibrary.org/events', city: 'Southport', state: 'CT', zipCode: '06890', county: 'Greater Bridgeport Planning Region'},
@@ -116,7 +112,6 @@ const LIBRARIES = [
   { name: 'Oakville Branch Library', url: 'https://www.watertownlibrary.org/', eventsUrl: 'https://www.watertownlibrary.org/', city: 'Watertown', state: 'CT', zipCode: '00000', county: 'Naugatuck Valley Planning Region'},
   { name: 'Louis Piantino Branch Library', url: 'https://www.westhavenlibrary.org', eventsUrl: 'https://www.westhavenlibrary.org/events', city: 'West Haven', state: 'CT', zipCode: '00000', county: 'South Central Connecticut Planning Region'},
   { name: 'Westbrook Public Library', url: 'https://www.westbrooklibrary.org', eventsUrl: 'https://www.westbrooklibrary.org/events', city: 'Westbrook', state: 'CT', zipCode: '06498', county: 'Lower Connecticut River Valley Planning Region'},
-  { name: 'Weston Public Library', url: 'https://www.westonlibrary.org', eventsUrl: 'https://www.westonlibrary.org/events', city: 'Weston', state: 'CT', zipCode: '06883', county: 'Western Connecticut Planning Region'},
   { name: 'Westport Library', url: 'https://www.westportlibrary.org', eventsUrl: 'https://www.westportlibrary.org/events', city: 'Westport', state: 'CT', zipCode: '06880', county: 'Western Connecticut Planning Region'},
   { name: 'Wethersfield Public Library', url: 'https://www.wethersfieldlibrary.org/', eventsUrl: 'https://www.wethersfieldlibrary.org/', city: 'Wethersfield', state: 'CT', zipCode: '06109', county: 'Capitol Planning Region'},
   { name: 'Willimantic Public Library', url: 'https://www.willimanticlibrary.org', eventsUrl: 'https://www.willimanticlibrary.org/events', city: 'Willimantic', state: 'CT', zipCode: '06226', county: 'Southeastern Connecticut Planning Region'},
@@ -126,7 +121,6 @@ const LIBRARIES = [
   { name: 'Wilson Branch Library', url: 'https://www.windsorlibrary.org', eventsUrl: 'https://www.windsorlibrary.org/events', city: 'Windsor', state: 'CT', zipCode: '00000', county: 'Capitol Planning Region'},
   { name: 'Windsor Locks Public Library', url: 'https://www.windsorlockslibrary.org', eventsUrl: 'https://www.windsorlockslibrary.org/events', city: 'Windsor Locks', state: 'CT', zipCode: '06096', county: 'Capitol Planning Region'},
   { name: 'Wolcott Public Library', url: 'https://www.wolcottlibrary.org', eventsUrl: 'https://www.wolcottlibrary.org/events', city: 'Wolcott', state: 'CT', zipCode: '06716', county: 'Naugatuck Valley Planning Region'},
-  { name: 'Woodbridge Town Library', url: 'https://www.woodbridgelibrary.org/', eventsUrl: 'https://www.woodbridgelibrary.org/calendar.aspx', city: 'Woodbridge', state: 'CT', zipCode: '06525', county: 'South Central Connecticut Planning Region'},
   { name: 'Woodbury Public Library', url: 'https://www.woodburylibrary.org', eventsUrl: 'https://www.woodburylibrary.org/events', city: 'Woodbury', state: 'CT', zipCode: '06798', county: 'Naugatuck Valley Planning Region'},
 
 ];

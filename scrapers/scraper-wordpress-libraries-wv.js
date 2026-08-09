@@ -1,3 +1,8 @@
+// 8 entries removed 2026-08-09 (MASTER-PLAN Defect A): their {city}library.org
+// domains resolve to a DIFFERENT state's library, or are dead. They were writing that
+// other library's events under the wrong name and state. Every removed library is listed
+// with its city, state and old URL in reports/defect-a-removals.md so it can be restored
+// once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -15,29 +20,23 @@ const LIBRARIES = [
   { name: 'Marion County Public Library', url: 'https://www.marioncountylibrary.org/', eventsUrl: 'https://www.marioncountylibrary.org/calendar', city: 'Fairmont', state: 'WV', zipCode: '26554' },
   { name: 'Mercer County Public Library', url: 'https://www.mercercountylibrary.org/', eventsUrl: 'https://www.mercercountylibrary.org/', city: 'Princeton', state: 'WV', zipCode: '24740' },
   { name: 'Putnam County Public Library', url: 'https://putnamcountylibrary.org/', eventsUrl: 'https://putnamcountylibrary.org/', city: 'Hurricane', state: 'WV', zipCode: '25526' },
-  { name: 'Marshall County Public Library', url: 'https://www.marshallcountylibrary.org', eventsUrl: 'https://www.marshallcountylibrary.org/events', city: 'Moundsville', state: 'WV', zipCode: '26041' },
   // Additional libraries from spreadsheet coverage expansion
   { name: 'East Hardy Branch Public Library', url: 'https://www.bakerlibrary.org/', eventsUrl: 'https://www.bakerlibrary.org/', city: 'Baker', state: 'WV', zipCode: '26801', county: 'Hardy'},
   { name: 'Barrett-Wharton Public Library', url: 'https://www.barrettlibrary.org', eventsUrl: 'https://www.barrettlibrary.org/events', city: 'Barrett', state: 'WV', zipCode: '25208', county: 'Boone'},
   { name: 'Bridgeport Public Library', url: 'https://www.bridgeportlibrary.org/', eventsUrl: 'https://www.bridgeportlibrary.org/calendar', city: 'Bridgeport', state: 'WV', zipCode: '26330', county: 'Harrison'},
-  { name: 'Burlington Public Library', url: 'https://www.burlingtonlibrary.org', eventsUrl: 'https://www.burlingtonlibrary.org/events', city: 'Burlington', state: 'WV', zipCode: '26710', county: 'Mineral'},
   { name: 'Cameron Public Library', url: 'https://www.cameronlibrary.org/', eventsUrl: 'https://www.cameronlibrary.org/calendar', city: 'Cameron', state: 'WV', zipCode: '26033', county: 'Marshall'},
   { name: 'Center Point Public Library', url: 'https://www.centerpointlibrary.org', eventsUrl: 'https://www.centerpointlibrary.org/events', city: 'Center Point', state: 'WV', zipCode: '26339', county: 'Doddridge'},
   { name: 'Lynn Murray Memorial Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'WV', zipCode: '26034', county: 'Hancock'},
   { name: 'Clay County Public Library', url: 'https://www.claylibrary.org/', eventsUrl: 'https://www.claylibrary.org/', city: 'Clay', state: 'WV', zipCode: '25043', county: 'Clay County'},
   { name: 'Sand Hill Public Library', url: 'https://www.dallaslibrary.org', eventsUrl: 'https://www.dallaslibrary.org/events', city: 'Dallas', state: 'WV', zipCode: '26036', county: 'Marshall'},
   { name: 'Dunbar Branch Library', url: 'https://www.dunbarlibrary.org', eventsUrl: 'https://www.dunbarlibrary.org/events', city: 'Dunbar', state: 'WV', zipCode: '25064', county: 'Kanawha'},
-  { name: 'Fairview Public Library', url: 'https://www.fairviewlibrary.org', eventsUrl: 'https://www.fairviewlibrary.org/events', city: 'Fairview', state: 'WV', zipCode: '26570', county: 'Marion'},
   { name: 'Pendleton County Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'WV', zipCode: '26807', county: 'Pendleton'},
   { name: 'Gilbert Public Library', url: 'https://www.gilbertlibrary.org/', eventsUrl: 'https://www.gilbertlibrary.org/', city: 'Gilbert', state: 'WV', zipCode: '25621', county: 'Mingo'},
   { name: 'Glasgow Branch Library', url: 'https://www.glasgowlibrary.org/', eventsUrl: 'https://www.glasgowlibrary.org/upcoming-events', city: 'Glasgow', state: 'WV', zipCode: '25086', county: 'Kanawha'},
-  { name: 'Taylor County Public Library', url: 'https://www.graftonlibrary.org', eventsUrl: 'https://www.graftonlibrary.org/events', city: 'Grafton', state: 'WV', zipCode: '26354', county: 'Taylor'},
   { name: 'Hamlin-Lincoln County Public Library', url: 'https://www.hamlinlibrary.org/', eventsUrl: 'https://www.hamlinlibrary.org/', city: 'Hamlin', state: 'WV', zipCode: '25523', county: 'Lincoln'},
-  { name: 'Hanover Public Library', url: 'https://www.hanoverlibrary.org', eventsUrl: 'https://www.hanoverlibrary.org/events', city: 'Hanover', state: 'WV', zipCode: '24839', county: 'Wyoming'},
   { name: 'Hillsboro Public Library', url: 'https://www.hillsborolibrary.org', eventsUrl: 'https://www.hillsborolibrary.org/events', city: 'Hillsboro', state: 'WV', zipCode: '24946', county: 'Pocahontas'},
   { name: 'Summers County Public Library', url: 'https://www.hintonlibrary.org', eventsUrl: 'https://www.hintonlibrary.org/events', city: 'Hinton', state: 'WV', zipCode: '25951', county: 'Summers'},
   { name: 'Boone-Madison Public Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'WV', zipCode: '25130', county: 'Boone'},
-  { name: 'Milton Branch Library', url: 'https://www.miltonlibrary.org', eventsUrl: 'https://www.miltonlibrary.org/events', city: 'Milton', state: 'WV', zipCode: '25541', county: 'Cabell'},
   { name: 'Montgomery Public Library', url: 'https://www.montgomerylibrary.org', eventsUrl: 'https://www.montgomerylibrary.org/events', city: 'Montgomery', state: 'WV', zipCode: '25136', county: 'Kanawha'},
   { name: 'Swaney Memorial Library', url: 'https://www.newcumberlandlibrary.org', eventsUrl: 'https://www.newcumberlandlibrary.org/events', city: 'New Cumberland', state: 'WV', zipCode: '26047', county: 'Hancock'},
   { name: 'Paden City Public Library', url: 'https://www.padencitylibrary.org/', eventsUrl: 'https://www.padencitylibrary.org/calendar', city: 'Paden City', state: 'WV', zipCode: '26159', county: 'Tyler'},
@@ -50,9 +49,7 @@ const LIBRARIES = [
   { name: 'Pleasants County Public Library', url: 'https://www.stmaryslibrary.org', eventsUrl: 'https://www.stmaryslibrary.org/events', city: 'St. Marys', state: 'WV', zipCode: '26170', county: 'Pleasants'},
   { name: 'Monroe County Public Library', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'WV', zipCode: '24983', county: 'Monroe'},
   { name: 'Waverly Library', url: 'https://www.waverlylibrary.com/', eventsUrl: 'https://www.waverlylibrary.com/', city: 'Waverly', state: 'WV', zipCode: '26184', county: 'Wood'},
-  { name: 'Louis Bennett Public Library', url: 'https://www.westonlibrary.org', eventsUrl: 'https://www.westonlibrary.org/events', city: 'Weston', state: 'WV', zipCode: '26452', county: 'Lewis'},
   { name: 'Whitesville Public Library', url: 'https://www.whitesvillelibrary.org', eventsUrl: 'https://www.whitesvillelibrary.org/events', city: 'Whitesville', state: 'WV', zipCode: '25209', county: 'Boone'},
-  { name: 'Williamson Public Library', url: 'https://www.williamsonlibrary.org/', eventsUrl: 'https://www.williamsonlibrary.org/', city: 'Williamson', state: 'WV', zipCode: '25661', county: 'Mingo'},
   { name: 'Williamstown Library', url: 'https://www.williamstownlibrary.org', eventsUrl: 'https://www.williamstownlibrary.org/events', city: 'Williamstown', state: 'WV', zipCode: '26187', county: 'Wood'}
 
 ];

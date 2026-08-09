@@ -301,7 +301,7 @@
     },
     "WordPress-NC": {
       "what": "Phase 2 URL corrections — extraction unproven (2026-08-06)",
-      "expect": "30 of 89 entries now point at verified library system sites. Extraction is NOT confirmed for any: this scraper is WordPress-DOM-specific, and Alamance hosts events on LibCal while Charlotte Mecklenburg hosts on BiblioCommons, so a correct URL may still return zero here.",
+      "expect": "CONFIRMED 2026-08-09: re-run today (21:50 UTC) shows Found 468, New 138, Duplicates 330, Invalid 142 — extraction genuinely works post-URL-fix (real new events are saving, not just re-finding the same 0). INVALID is still ~30%, a separate open issue (mixed-platform date formats, not a URL problem) — see the WordPress-NC top-level note.",
       "confirm": "npm run scraper -- --scraper WordPress-NC   then check FOUND/INVALID in scrapers/logs/scraper-summary.log",
       "added": "2026-08-06"
     },
@@ -309,84 +309,6 @@
       "what": "gastonlibrary.org collision — SC side still wrong (2026-08-06)",
       "expect": "The detector shows gastonlibrary.org spanning NC+SC. The NC entries are CORRECT; the wrong one is SC's 'Lexington County Library - Gaston'. Do not re-fix the NC side — this clears when WordPress-SC is done.",
       "confirm": "node scripts/find-duplicate-library-urls.js",
-      "added": "2026-08-06"
-    },
-    "LibCal-VA2": {
-      "what": "Newly registered 2026-08-06 — has never run in production",
-      "expect": "11 VA library systems that had ZERO library rows: Fairfax County (the state largest), Arlington, Prince William, Richmond, Norfolk, Newport News, Hampton, Roanoke, Suffolk, Williamsburg Regional, Library of Virginia. Watch the FIRST run closely: this file has never executed. Check FOUND is nonzero, INVALID is low, scraper_name reads LibCal-VA2, and source_url carries the libcal host rather than the library homepage.",
-      "confirm": "npm run scraper -- --scraper LibCal-VA2   then check scrapers/logs/scraper-summary.log and node scripts/check-scraper-names.js",
-      "added": "2026-08-06"
-    },
-    "Pratt-Library": {
-      "what": "scraper_name corrected to the registry key (2026-08-06)",
-      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Pratt-Library'. Old rows keep the old name until they expire.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-06"
-    },
-    "Howard-County": {
-      "what": "scraper_name corrected to the registry key (2026-08-06)",
-      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Howard-County'. Old rows keep the old name until they expire.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-06"
-    },
-    "AACPL": {
-      "what": "scraper_name corrected to the registry key (2026-08-06)",
-      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'AACPL'. Old rows keep the old name until they expire.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-06"
-    },
-    "Cecil-County": {
-      "what": "scraper_name corrected to the registry key (2026-08-06)",
-      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Cecil-County'. Old rows keep the old name until they expire.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-06"
-    },
-    "Dorchester-County": {
-      "what": "scraper_name corrected to the registry key (2026-08-06)",
-      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Dorchester-County'. Old rows keep the old name until they expire.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-06"
-    },
-    "Prince-Georges-County": {
-      "what": "scraper_name corrected to the registry key (2026-08-06)",
-      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Prince-Georges-County'. Old rows keep the old name until they expire.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-06"
-    },
-    "Somerset-County": {
-      "what": "scraper_name corrected to the registry key (2026-08-06)",
-      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Somerset-County'. Old rows keep the old name until they expire.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-06"
-    },
-    "Wicomico-Public": {
-      "what": "scraper_name corrected to the registry key (2026-08-06)",
-      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Wicomico-Public'. Old rows keep the old name until they expire.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-06"
-    },
-    "Squarespace-Libraries": {
-      "what": "scraper_name corrected to the registry key (2026-08-06)",
-      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Squarespace-Libraries'. Old rows keep the old name until they expire.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-06"
-    },
-    "PG-Parks": {
-      "what": "scraper_name corrected to the registry key (2026-08-06)",
-      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'PG-Parks'. Old rows keep the old name until they expire.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-06"
-    },
-    "RollyPollies-MD": {
-      "what": "scraper_name corrected to the registry key (2026-08-06)",
-      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'RollyPollies-MD'. Old rows keep the old name until they expire.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-06"
-    },
-    "Montgomery-Parks": {
-      "what": "scraper_name corrected to the registry key (2026-08-06)",
-      "expect": "This scraper wrote its library display name (or a drifting literal) instead of its registry key, so its rows could not be joined back to the registry. Next run should write 'Montgomery-Parks'. Old rows keep the old name until they expire.",
-      "confirm": "node scripts/check-scraper-names.js",
       "added": "2026-08-06"
     },
     "Communico-MD": {
@@ -467,5 +389,10 @@
     "note": "FIX-QUEUE 2026-08-07: today's run found exactly 1000 events (164 new, 836 dupes), which is suspicious because scrapers/scraper-free-library-philadelphia-PA.js line ~369 hardcodes const maxPages = 50 at roughly 20 events/page — 50 x 20 = 1000 exactly. Open question, not yet confirmed as a bug: check whether page 50 of the live site still shows real upcoming events (meaning real coverage is being truncated and maxPages should rise) or the listing genuinely runs out before page 50 in practice on a normal day (meaning the cap is harmless and today's exact-1000 was a coincidence of a particularly full listing). Do not raise the cap blindly without checking which case applies — a much higher cap could balloon scrape time for no benefit if it's the harmless case.",
     "priority": "normal",
     "added": "2026-08-07"
+  },
+  "LibCal-VA2": {
+    "note": "FIXED 2026-08-09: two stacked bugs (stale DOM selectors + registry exportName never wired to a save-and-report function) both confirmed live — see SCRAPER-FIX-LOG.jsonl. Now saves real events for 8 of 11 configured systems: Fairfax, Arlington, Richmond, Norfolk, Roanoke, Suffolk, Williamsburg, Library of Virginia (164 new on first fixed run). OPEN GAP, not fixed: Newport News and Hampton were removed from this file — both eventsUrl domains DNS-failed and neither library is actually on LibCal (Newport News runs its own /264/Events-Calendar page; Hampton's old domain now redirects to an unrelated church site, and hampton.gov has no LibCal calendar). Each needs its own extraction path researched, not a URL swap. Prince William Public Library System resolved fine but returned 0 events this run — not yet investigated, could be a real empty calendar or a genuine miss.",
+    "priority": "normal",
+    "added": "2026-08-09"
   }
 }

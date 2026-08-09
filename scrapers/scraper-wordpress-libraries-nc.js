@@ -1,3 +1,8 @@
+// 9 entries removed 2026-08-09 (MASTER-PLAN Defect A): their {city}library.org
+// domains resolve to a DIFFERENT state's library, or are dead. They were writing that
+// other library's events under the wrong name and state. Every removed library is listed
+// with its city, state and old URL in reports/defect-a-removals.md so it can be restored
+// once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -33,14 +38,10 @@ const LIBRARIES = [
   // Regional Library — same verified system site as the Plymouth entry below.
   { name: 'Tyrrell County Library', url: 'https://pettigrewlibraries.org/', eventsUrl: 'https://pettigrewlibraries.org/', city: 'Columbia', state: 'NC', zipCode: '27925', county: 'Tyrrell County'},
   { name: 'Polk County Public Library', url: 'https://www.columbuslibrary.org', eventsUrl: 'https://www.columbuslibrary.org/events', city: 'Columbus', state: 'NC', zipCode: '28722', county: 'Columbus County'},
-  { name: 'Cabarrus County Public Library', url: 'https://www.concordlibrary.org', eventsUrl: 'https://www.concordlibrary.org/events', city: 'Concord', state: 'NC', zipCode: '28025', county: 'Cabarrus'},
   { name: 'Dallas Branch Library', url: 'https://gastonlibrary.org/', eventsUrl: 'https://gastonlibrary.org/calendar.aspx', city: 'Dallas', state: 'NC', zipCode: '00000', county: 'Gaston County'},
   { name: 'Danbury Public Library', url: 'https://www.nwrl.org/', eventsUrl: 'https://nwrl.org/regional-library-events/', city: 'Danbury', state: 'NC', zipCode: '00000', county: 'Stokes County'},
   { name: 'Florence S. Shanklin Branch Library', url: 'https://www.denverlibrary.org', eventsUrl: 'https://www.denverlibrary.org/events', city: 'Denver', state: 'NC', zipCode: '00000', county: 'Lincoln'},
   { name: 'Dobson Community Library', url: 'https://www.dobsonlibrary.org', eventsUrl: 'https://www.dobsonlibrary.org/events', city: 'Dobson', state: 'NC', zipCode: '00000', county: 'Surry'},
-  { name: 'Bragtown Branch Library', url: 'https://www.durhamlibrary.org', eventsUrl: 'https://www.durhamlibrary.org/events', city: 'Durham', state: 'NC', zipCode: '00000', county: 'Durham County'},
-  { name: 'Erwin Public Library', url: 'https://erwinlibrary.org/', eventsUrl: 'https://erwinlibrary.org/', city: 'Erwin', state: 'NC', zipCode: '00000', county: 'Harnett'},
-  { name: 'Fairview Branch Library', url: 'https://www.fairviewlibrary.org', eventsUrl: 'https://www.fairviewlibrary.org/events', city: 'Fairview', state: 'NC', zipCode: '00000', county: 'Union'},
   { name: 'Farmville Public Library', url: 'https://farmvillelibrary.libguides.com/', eventsUrl: 'https://farmvillelibrary.libguides.com/home', city: 'Farmville', state: 'NC', zipCode: '27828', county: 'Pitt'},
   { name: 'Bordeaux Branch Library', url: 'https://www.fayettevillelibrary.org', eventsUrl: 'https://www.fayettevillelibrary.org/events', city: 'Fayetteville', state: 'NC', zipCode: '00000', county: 'Cumberland'},
   { name: 'Macon County Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'NC', zipCode: '00000', county: 'Franklin County'},
@@ -49,7 +50,6 @@ const LIBRARIES = [
   { name: 'Graham Public Library', url: 'https://library.alamancecountync.gov/', eventsUrl: 'https://library.alamancecountync.gov/calendar/', city: 'Graham', state: 'NC', zipCode: '00000', county: 'Alamance County'},
   { name: 'Blanche Benjamin Branch Library', url: 'https://www.greensborolibrary.org', eventsUrl: 'https://www.greensborolibrary.org/events', city: 'Greensboro', state: 'NC', zipCode: '00000', county: 'Guilford'},
   { name: 'Carver Branch Library', url: 'https://www.sheppardlibrary.org/', eventsUrl: 'https://www.sheppardlibrary.org/calendar.aspx', city: 'Greenville', state: 'NC', zipCode: '00000', county: 'Pitt County'},
-  { name: 'Halifax County Library System', url: 'https://www.halifaxlibrary.org', eventsUrl: 'https://www.halifaxlibrary.org/events', city: 'Halifax', state: 'NC', zipCode: '27839', county: 'Halifax County'},
   { name: 'Hampstead Branch Library', url: 'https://www.hampsteadlibrary.org/', eventsUrl: 'https://www.hampsteadlibrary.org/', city: 'Hampstead', state: 'NC', zipCode: '00000', county: 'Pender'},
   { name: 'Harmony Branch Library', url: 'https://www.harmonylibrary.org', eventsUrl: 'https://www.harmonylibrary.org/events', city: 'Harmony', state: 'NC', zipCode: '00000', county: 'Iredell'},
   { name: 'Harrisburg Library', url: 'https://www.harrisburglibrary.org/', eventsUrl: 'https://www.harrisburglibrary.org/calendar', city: 'Harrisburg', state: 'NC', zipCode: '00000', county: 'Cabarrus'},
@@ -60,7 +60,6 @@ const LIBRARIES = [
   { name: 'Union West Branch Library', url: 'https://www.indiantraillibrary.org', eventsUrl: 'https://www.indiantraillibrary.org/events', city: 'Indian Trail', state: 'NC', zipCode: '00000', county: 'Union'},
   { name: 'King Public Library', url: 'https://www.kinglibrary.org', eventsUrl: 'https://www.kinglibrary.org/events', city: 'King', state: 'NC', zipCode: '00000', county: 'Stokes'},
   { name: 'La Grange Branch Library', url: 'https://lagrangelibrary.org/', eventsUrl: 'https://lagrangelibrary.org/', city: 'La Grange', state: 'NC', zipCode: '00000', county: 'Lenoir'},
-  { name: 'Leicester Branch Library', url: 'https://www.leicesterlibrary.org', eventsUrl: 'https://www.leicesterlibrary.org/events', city: 'Leicester', state: 'NC', zipCode: '00000', county: 'Buncombe'},
   { name: 'Leland Branch Library', url: 'https://www.lelandlibrary.org', eventsUrl: 'https://www.lelandlibrary.org/events', city: 'Leland', state: 'NC', zipCode: '00000', county: 'Brunswick'},
   { name: 'Davidson County Public Library System', url: 'https://www.lexingtonlibrary.org', eventsUrl: 'https://www.lexingtonlibrary.org/events', city: 'Lexington', state: 'NC', zipCode: '27292', county: 'Davidson'},
   { name: 'Liberty Public Library', url: 'https://libertylibrary.org/', eventsUrl: 'https://libertylibrary.org/', city: 'Liberty', state: 'NC', zipCode: '00000', county: 'Randolph'},
@@ -76,7 +75,6 @@ const LIBRARIES = [
   { name: 'Union County Public Library', url: 'https://www.monroelibrary.org', eventsUrl: 'https://www.monroelibrary.org/events', city: 'Monroe', state: 'NC', zipCode: '28112', county: 'Union'},
   { name: 'Mooresville Public Library', url: 'https://www.mooresvillelibrary.org/', eventsUrl: 'https://www.mooresvillelibrary.org/', city: 'Mooresville', state: 'NC', zipCode: '28115', county: 'Iredell'},
   { name: 'Craven-Pamlico-Carteret Regional Library', url: 'https://www.newbernlibrary.org', eventsUrl: 'https://www.newbernlibrary.org/events', city: 'New Bern', state: 'NC', zipCode: '28560', county: 'Craven'},
-  { name: 'Newport Public Library', url: 'https://www.newportlibrary.org', eventsUrl: 'https://www.newportlibrary.org/events', city: 'Newport', state: 'NC', zipCode: '00000', county: 'Carteret'},
   { name: 'Catawba County Library', url: 'https://www.catawbacountync.gov/county-services/library/', eventsUrl: 'https://www.catawbacountync.gov/county-services/library/calendar-of-events/', city: 'Newton', state: 'NC', zipCode: '28658', county: 'Catawba County'},
   { name: 'Norwood Branch Library', url: 'https://norwoodlibrary.org/', eventsUrl: 'https://norwoodlibrary.org/', city: 'Norwood', state: 'NC', zipCode: '00000', county: 'Stanly'},
   { name: 'Berea Branch Library', url: 'https://oxfordlibrary.org/', eventsUrl: 'https://oxfordlibrary.org/', city: 'Oxford', state: 'NC', zipCode: '00000', county: 'Granville'},
@@ -92,7 +90,6 @@ const LIBRARIES = [
   // Robbins Area Branch and Leath Memorial Library REMOVED 2026-08-07: see
   // SandhillRegional-NC (same srls.info -> LibGuides migration).
   { name: 'Rowan Public Library', url: 'https://www.salisburylibrary.org/', eventsUrl: 'https://www.salisburylibrary.org/', city: 'Salisbury', state: 'NC', zipCode: '28145', county: 'Rowan'},
-  { name: 'Saluda Branch Library', url: 'https://www.saludalibrary.org', eventsUrl: 'https://www.saludalibrary.org/events', city: 'Saluda', state: 'NC', zipCode: '00000', county: 'Polk'},
   { name: 'Selma Public Library', url: 'https://www.pljcs.org/', eventsUrl: 'https://www.pljcs.org/monthly-calendar', city: 'Selma', state: 'NC', zipCode: '00000', county: 'Johnston County'},
   { name: 'Cleveland County Memorial Library', url: 'https://www.shelbylibrary.org', eventsUrl: 'https://www.shelbylibrary.org/events', city: 'Shelby', state: 'NC', zipCode: '28150', county: 'Cleveland'},
   { name: 'Public Library Of Johnston County Smithfield', url: 'https://www.pljcs.org/', eventsUrl: 'https://www.pljcs.org/monthly-calendar', city: 'Smithfield', state: 'NC', zipCode: '27577', county: 'Johnston County'},
@@ -103,7 +100,6 @@ const LIBRARIES = [
   { name: 'Star Branch', url: 'https://www.starlibrary.org', eventsUrl: 'https://www.starlibrary.org/events', city: 'Star', state: 'NC', zipCode: '00000', county: 'Montgomery'},
   // Montgomery County Library REMOVED 2026-08-07: see SandhillRegional-NC (same
   // srls.info -> LibGuides migration).
-  { name: 'Warren County Memorial Library', url: 'https://www.warrentonlibrary.org', eventsUrl: 'https://www.warrentonlibrary.org/events', city: 'Warrenton', state: 'NC', zipCode: '27589', county: 'Warren'},
   { name: 'Warsaw-Kornegay Public Library', url: 'https://www.warsawlibrary.org/', eventsUrl: 'https://www.warsawlibrary.org/', city: 'Warsaw', state: 'NC', zipCode: '00000', county: 'Duplin'},
   { name: 'Myrtle Grove Branch', url: 'https://www.wilmingtonlibrary.org', eventsUrl: 'https://www.wilmingtonlibrary.org/events', city: 'Wilmington', state: 'NC', zipCode: '00000', county: 'New Hanover'},
   { name: 'East Branch Library', url: 'https://www.wilsoncountypubliclibrary.org/', eventsUrl: 'https://www.wilsoncountypubliclibrary.org/events/library-calendar', city: 'Wilson', state: 'NC', zipCode: '00000', county: 'Wilson County'},

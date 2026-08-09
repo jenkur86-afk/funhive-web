@@ -1,3 +1,8 @@
+// 4 entries removed 2026-08-09 (MASTER-PLAN Defect A): their {city}library.org
+// domains resolve to a DIFFERENT state's library, or are dead. They were writing that
+// other library's events under the wrong name and state. Every removed library is listed
+// with its city, state and old URL in reports/defect-a-removals.md so it can be restored
+// once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -17,9 +22,7 @@ const LIBRARIES = [
   { name: 'Greene Public Library', url: 'https://www.greenelibrary.org', platform: 'wordpress', eventsUrl: 'https://www.greenelibrary.org/events', city: 'Greene', state: 'RI', zipCode: '02827', county: '' },
   { name: 'Ashaway Free Library', url: 'https://www.ashawaylibrary.org', platform: 'wordpress', eventsUrl: 'https://www.ashawaylibrary.org/events', city: 'Hopkinton', state: 'RI', zipCode: '02804', county: '' },
   { name: 'Langworthy Public Library', url: 'https://www.langworthylibrary.org', platform: 'wordpress', eventsUrl: 'https://www.langworthylibrary.org/events', city: 'Hopkinton', state: 'RI', zipCode: '02832', county: '' },
-  { name: 'Jamestown Philomenian Library', url: 'https://www.jamestownlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.jamestownlibrary.org/events', city: 'Jamestown', state: 'RI', zipCode: '02835', county: '' },
   { name: 'Marian J. Mohr Memorial Library', url: 'https://www.mohrlibrary.org/', platform: 'wordpress', eventsUrl: 'https://www.mohrlibrary.org/', city: 'Johnston', state: 'RI', zipCode: '02919', county: '' },
-  { name: 'Lincoln Public Library', url: 'https://www.lincolnlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.lincolnlibrary.org/events', city: 'Lincoln', state: 'RI', zipCode: '02865', county: '' },
   { name: 'Brownell Library, Home Of Little Compton', url: 'https://www.brownelllibrary.org', platform: 'wordpress', eventsUrl: 'https://www.brownelllibrary.org/events', city: 'Little Compton', state: 'RI', zipCode: '02837', county: '' },
   { name: 'Middletown Public Library', url: 'https://www.middletownlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.middletownlibrary.org/events', city: 'Middletown', state: 'RI', zipCode: '02842', county: '' },
   { name: 'Island Free Library', url: 'https://www.islandfreelibrary.org', platform: 'wordpress', eventsUrl: 'https://www.islandfreelibrary.org/events', city: 'New Shoreham', state: 'RI', zipCode: '02807', county: '' },
@@ -35,9 +38,7 @@ const LIBRARIES = [
   { name: 'South Providence Library', url: 'https://provlib.org/', platform: 'wordpress', eventsUrl: 'https://provlib.org/', city: 'Providence', state: 'RI', zipCode: '02905', county: '' },
   { name: 'Wanskuck Library', url: 'https://provlib.org/', platform: 'wordpress', eventsUrl: 'https://provlib.org/', city: 'Providence', state: 'RI', zipCode: '02904', county: '' },
   { name: 'Washington Park Library', url: 'https://provlib.org/', platform: 'wordpress', eventsUrl: 'https://provlib.org/', city: 'Providence', state: 'RI', zipCode: '02905', county: '' },
-  { name: 'Clark Memorial Library', url: 'https://www.richmondlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.richmondlibrary.org/events', city: 'Richmond', state: 'RI', zipCode: '02812', county: '' },
   { name: 'Rumford Branch', url: 'https://eastprovidencelibrary.org/', platform: 'wordpress', eventsUrl: 'https://eastprovidencelibrary.org/', city: 'Rumford', state: 'RI', zipCode: '02916', county: '' },
-  { name: 'Hope Library', url: 'https://www.hopelibrary.org', platform: 'wordpress', eventsUrl: 'https://www.hopelibrary.org/events', city: 'Scituate', state: 'RI', zipCode: '02831', county: '' },
   { name: 'North Smithfield Public Library', url: 'https://www.northsmithfieldlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.northsmithfieldlibrary.org/events', city: 'Slatersville', state: 'RI', zipCode: '02876', county: '' },
   { name: 'Greenville Public Library', url: 'https://www.greenvillelibrary.org', platform: 'wordpress', eventsUrl: 'https://www.greenvillelibrary.org/events', city: 'Smithfield', state: 'RI', zipCode: '02828', county: '' },
   { name: 'Essex Public Library', url: 'https://www.tivertonlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.tivertonlibrary.org/events', city: 'Tiverton', state: 'RI', zipCode: '02878', county: '' },

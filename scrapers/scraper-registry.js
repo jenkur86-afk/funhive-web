@@ -189,7 +189,7 @@ const SCRAPERS = {
   // News, Hampton, Roanoke, Suffolk, Williamsburg Regional and the Library of Virginia — none of
   // which had a single library-scraper row in the database. The registered shared LibCal file
   // does not cover the seven largest of them. Group 3 chosen as the smallest rotation group.
-  'LibCal-VA2': { file: './scraper-libcal-libraries-va.js', exportName: 'scrapeLibCalEvents', type: 'puppeteer', group: 3, state: 'VA' },
+  'LibCal-VA2': { file: './scraper-libcal-libraries-va.js', exportName: 'scrapeLibCalEventsCloudFunction', type: 'puppeteer', group: 3, state: 'VA' },
   // 2026-08-07: some libraries publish their entire programme through an embedded Google
   // Calendar iframe, leaving the host page with no event markup at all — Somerset County
   // Library's events.php has a 493-character body and no dates, so every DOM scraper
