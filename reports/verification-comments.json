@@ -55,28 +55,28 @@
   "population": "zero"
  },
  "WordPress-GA|||Wheeler County Library (Alamo, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "WebFetch returned no content across repeated attempts.",
+  "verdict": "MISMATCH",
+  "comment": "CONFIRMED 2026-08-09: alamolibrary.org resolves (200) but its entire body is a parked-domain redirect stub with no real content, confirmed live. Entry removed from WordPress-GA. Real institution for Alamo/Wheeler County, GA not identified this session - genuine open coverage gap, not resolved.",
   "population": "zero"
  },
  "WordPress-GA|||Auburn Library (Auburn, GA)": {
   "verdict": "MISMATCH",
-  "comment": "Homepage lists multiple real August 2026 events with dates/times (e.g. Butterflies and Moths Aug 7, Teen Crafting Aug 4), server-rendered HTML — scraper is missing real content.",
+  "comment": "FIX LANDED 2026-08-09, CONFIRMED LIVE: auburnlibrary.org is Auburn, MASSACHUSETTS Public Library (369 Southbridge Street, Auburn, MA 01501 - confirmed via its own Assabet Interactive calendar's JSON-LD address), not this library. Real Auburn, GA library is Auburn Public Library, part of the Piedmont Regional Library System - moved to LibCal-GA at prlib.libcal.com/calendar/Auburn?cid=20687, confirmed live with 20 real events (Crochet/Knit Club, Ready to Read Pre-K Storytime, Teen Thursday, etc). Entry removed from WordPress-GA.",
   "population": "zero"
  },
  "WordPress-GA|||Decatur County - Gilbert H. Gragg Library (Bainbridge, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "WebFetch returned no content across repeated attempts.",
+  "verdict": "MISMATCH",
+  "comment": "INVESTIGATED 2026-08-09, NOT YET FIXED: bainbridgelibrary.org times out (confirmed twice). Real institution found live: Southwest Georgia Regional Library System (swgrl.org/calendar.php), a FullCalendar.js widget (fc-day-grid-event markup) filterable to this branch, real address 301 S. Monroe Street, Bainbridge, GA 39819 confirmed. Needs dedicated extraction work like FullCalendar-Libraries' existing Blue Ridge Regional entry (that file is bespoke per-library, not a shared helper) - not built this session. Entry left in place in WordPress-GA pending that work; genuine open coverage gap.",
   "population": "zero"
  },
  "WordPress-GA|||Boston Carnegie Library (Boston, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Domain is a parked/for-sale placeholder page, not an active library site.",
+  "verdict": "MISMATCH",
+  "comment": "CONFIRMED 2026-08-09: bostonlibrary.org resolves (200, 1084 bytes) but is a parked/for-sale placeholder page, title literally \"bostonlibrary.org\", confirmed live - not a real library site. Entry removed from WordPress-GA. Real institution for Boston, GA (Thomas County) not identified this session - genuine open coverage gap, not resolved.",
   "population": "zero"
  },
  "WordPress-GA|||Warren P. Sewell Memorial Library-Bremen (Bremen, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "TLS certificate mismatch - hostname's cert belongs to a Maine library (bremenmainelibrary.org), suggesting a wrong/stale domain in the registry.",
+  "verdict": "MISMATCH",
+  "comment": "CONFIRMED 2026-08-09: bremenlibrary.org's TLS certificate names only bremenlibrary.org and bremenmainelibrary.org as alt-names, confirmed live - this is Bremen, MAINE's library, not Georgia. Entry removed from WordPress-GA. Real institution for Bremen, GA (Haralson County) not identified this session - genuine open coverage gap, not resolved.",
   "population": "zero"
  },
  "WordPress-GA|||Butler Public Library (Butler, GA)": {

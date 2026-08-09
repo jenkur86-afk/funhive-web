@@ -10,16 +10,46 @@ const ngeohash = require('ngeohash');
  */
 const LIBRARIES = [
   { name: 'Wilcox County Public Library', url: 'https://www.abbevillelibrary.org/', eventsUrl: 'https://www.abbevillelibrary.org/', city: 'Abbeville', state: 'GA', zipCode: '00000', county: 'Abbeville County'},
-  { name: 'Wheeler County Library', url: 'https://www.alamolibrary.org', eventsUrl: 'https://www.alamolibrary.org/events', city: 'Alamo', state: 'GA', zipCode: '00000', county: 'Alamo County'},
+  // Wheeler County Library REMOVED 2026-08-09: alamolibrary.org resolves (200)
+  // but its entire body is a parked-domain redirect stub
+  // (`<script>window.onload=function(){window.location.href="/lander"}</script>`,
+  // no other content, confirmed live) — same class of dead domain as Boston
+  // Carnegie Library below. Real institution for Alamo/Wheeler County, GA not
+  // identified this session; genuine open coverage gap, not a replacement.
   { name: 'Alma-Bacon County Public Library', url: 'https://www.almalibrary.org', eventsUrl: 'https://www.almalibrary.org/events', city: 'Alma', state: 'GA', zipCode: '00000', county: 'Alma County'},
   { name: 'Athens Regional Library System', url: 'https://www.athenslibrary.org', eventsUrl: 'https://www.athenslibrary.org/events', city: 'Athens', state: 'GA', zipCode: '30606', county: 'Athens County'},
-  { name: 'Auburn Library', url: 'https://auburnlibrary.org/', eventsUrl: 'https://auburnlibrary.org/', city: 'Auburn', state: 'GA', zipCode: '00000', county: 'Auburn County'},
+  // Auburn Library REMOVED 2026-08-09: auburnlibrary.org is Auburn, MASSACHUSETTS
+  // Public Library (369 Southbridge Street, Auburn, MA 01501 — confirmed live via
+  // its own embedded Assabet Interactive calendar's JSON-LD address), not Auburn,
+  // Georgia — the same {city}library.org generator collision documented throughout
+  // this file. The real Auburn, GA library is Auburn Public Library, part of the
+  // Piedmont Regional Library System (same system as Banks County above), moved to
+  // LibCal-GA with its own branch-filtered URL, confirmed live 2026-08-09.
   { name: 'Appleby Branch', url: 'https://www.augustalibrary.org', eventsUrl: 'https://www.augustalibrary.org/events', city: 'Augusta', state: 'GA', zipCode: '00000', county: 'Augusta County'},
+  // Decatur County - Gilbert H. Gragg Library: bainbridgelibrary.org times out
+  // (12s, confirmed twice). NOT removed — real institution found live 2026-08-09:
+  // Southwest Georgia Regional Library System (swgrl.org/calendar.php), a
+  // FullCalendar.js widget (fc-day-grid-event markup), branch-filterable to
+  // "Decatur County-Gilbert H. Gragg Library". Real address confirmed: 301 S.
+  // Monroe Street, Bainbridge, GA 39819. This platform needs the same kind of
+  // dedicated extraction FullCalendar-Libraries already has for Blue Ridge
+  // Regional (VA) — that file is bespoke per-library, not a shared helper, so
+  // adding this one is real new-scraper work, not a URL swap. Not built this
+  // session; genuine open coverage gap, left in place pending that work.
   { name: 'Decatur County - Gilbert H. Gragg Library', url: 'https://www.bainbridgelibrary.org', eventsUrl: 'https://www.bainbridgelibrary.org/events', city: 'Bainbridge', state: 'GA', zipCode: '00000', county: 'Bainbridge County'},
   { name: 'Berlin Community Library', url: 'https://www.berlinlibrary.org', eventsUrl: 'https://www.berlinlibrary.org/events', city: 'Berlin', state: 'GA', zipCode: '00000', county: 'Berlin County'},
-  { name: 'Boston Carnegie Library', url: 'https://www.bostonlibrary.org', eventsUrl: 'https://www.bostonlibrary.org/events', city: 'Boston', state: 'GA', zipCode: '00000', county: 'Boston County'},
+  // Boston Carnegie Library REMOVED 2026-08-09: bostonlibrary.org resolves (200)
+  // but is a parked/for-sale placeholder page (1084 bytes, <title>bostonlibrary.org</title>,
+  // confirmed live) — not a real library site. Real institution for Boston, GA
+  // (Thomas County) not identified this session; genuine open coverage gap, not
+  // a replacement.
   { name: 'Bowman Branch', url: 'https://www.bowmanlibrary.org', eventsUrl: 'https://www.bowmanlibrary.org/events', city: 'Bowman', state: 'GA', zipCode: '00000', county: 'Bowman County'},
-  { name: 'Warren P. Sewell Memorial Library-Bremen', url: 'https://www.bremenlibrary.org', eventsUrl: 'https://www.bremenlibrary.org/events', city: 'Bremen', state: 'GA', zipCode: '00000', county: 'Bremen County'},
+  // Warren P. Sewell Memorial Library-Bremen REMOVED 2026-08-09: bremenlibrary.org's
+  // TLS certificate names only bremenlibrary.org and bremenmainelibrary.org as
+  // alt-names (confirmed live) — this is Bremen, MAINE's library, the same
+  // {city}library.org generator collision documented throughout this file. Real
+  // institution for Bremen, GA (Haralson County) not identified this session;
+  // genuine open coverage gap, not a replacement.
   { name: 'Brunswick Glynn County Regional Library', url: 'https://www.brunswicklibrary.org', eventsUrl: 'https://www.brunswicklibrary.org/events', city: 'Brunswick', state: 'GA', zipCode: '00000', county: 'Brunswick County'},
   { name: 'Marion County Library', url: 'https://www.buenavistalibrary.org', eventsUrl: 'https://www.buenavistalibrary.org/events', city: 'Buena Vista', state: 'GA', zipCode: '00000', county: 'Buena Vista County'},
   { name: 'Butler Public Library', url: 'https://www.butlerlibrary.org', eventsUrl: 'https://www.butlerlibrary.org/events', city: 'Butler', state: 'GA', zipCode: '00000', county: 'Butler County'},

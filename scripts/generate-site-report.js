@@ -523,6 +523,8 @@ td.statuscell{min-width:200px;max-width:330px}
 .rowstat.s-current{background:var(--ok-soft);color:var(--ok);border:1px solid var(--ok)}
 .rowstat.s-refixed{background:var(--accent-soft);color:var(--accent-text);border:1px solid var(--accent)}
 .rowstat.s-unmatched{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn)}
+.rowstat.s-no-link{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn)}
+.rowstat.s-mismatch{background:var(--crit-soft);color:var(--crit);border:1px solid var(--crit)}
 .rowstat.s-moved{background:var(--surface-2);color:var(--text-dim);border:1px solid var(--text-faint)}
 .rowstat.s-unknown{background:var(--surface-2);color:var(--text-faint);border:1px solid var(--border)}
 .statdetail{font-size:11.5px;color:var(--text-dim);margin-top:4px;line-height:1.4}
@@ -1007,7 +1009,7 @@ function main() {
   // Per-row status: compare the audit's link against what the config says today.
   const { idx: cfgIdx, counts: cfgCounts, byName: cfgByName } = loadConfigIndex();
   const rosterByName = new Map(roster.map(x => [x.name, x]));   // for state-aware "moved to" naming
-  let nStale = 0, nGone = 0, nMoved = 0;
+  let nStale = 0, nGone = 0, nMoved = 0, nMismatch = 0;
   sites.forEach(r => {
     const cur = cfgIdx.get(r[2] + '|||' + cfgKey(r[0]));
     const auditHost = hostOf(r[5]);
@@ -1049,7 +1051,10 @@ function main() {
         nGone++;
       }
     } else if (!auditHost) {
-      status = 'current'; detail = 'no link recorded in the audit';
+      // Config has this site, but the audit row itself never recorded a link to
+      // verify against — there is no evidence this domain is still right, so it
+      // must not render with the same green badge as a confirmed host match.
+      status = 'no-link'; detail = 'no link recorded in the audit — nothing to verify the config domain against';
     } else if (hostOf(cur) === auditHost) {
       status = 'current'; detail = 'config still points at this domain';
     } else {
@@ -1057,9 +1062,29 @@ function main() {
       detail = 'URL corrected since this scrape: config now points at ' + hostOf(cur) + '. Counts and link below are from the older run.';
       nStale++;
     }
+    // A confirmed MISMATCH verdict is real, verified evidence that this specific
+    // site is broken. 'current' only proves the config's URL hasn't changed — it
+    // says nothing about whether the scraper actually extracts real events, so a
+    // green "current" badge sitting next to a red MISMATCH verdict pill is a
+    // direct visual contradiction (found 2026-08-09 on WordPress-GA — Auburn
+    // Library read 'current' with 0 found while its own verification comment
+    // said the live site has real, dated August events the scraper is missing).
+    // Scoped to ONLY the 'current' case: 'refixed'/'moved'/'unmatched' already
+    // carry their own more specific problem detail, and a MISMATCH verdict
+    // recorded against an OLD URL may no longer even apply once refixed/moved —
+    // overriding those too would need reasoning this fix doesn't attempt.
+    // UNVERIFIABLE is deliberately NOT overridden either: it means unconfirmed
+    // either way, not a proven bug, so downgrading 'current' to a false "broken"
+    // reading would overclaim what is actually known.
+    const verdict = comments[r[2] + '|||' + r[0]];
+    if (verdict && verdict.verdict === 'MISMATCH' && status === 'current') {
+      status = 'mismatch';
+      detail = 'confirmed bug: ' + verdict.comment;
+      nMismatch++;
+    }
     r.push(status, detail, cur || '');
   });
-  console.log(`  row status   : ${nStale} URL-corrected-since-scrape, ${nMoved} moved-to-another-scraper, ${nGone} unmatched-to-config`);
+  console.log(`  row status   : ${nStale} URL-corrected-since-scrape, ${nMoved} moved-to-another-scraper, ${nGone} unmatched-to-config, ${nMismatch} confirmed-mismatch`);
 
   const fixQueue = buildFixQueue({ sites, ages, comments, roster, fixNotes });
   const pinned = fixQueue.filter(r => r[11]).length;

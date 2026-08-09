@@ -988,6 +988,23 @@ const LIBRARY_SYSTEMS = [
     zipCode: '30547'
   },
   {
+    // Migrated here from WordPress-GA on 2026-08-09. That entry had it on
+    // auburnlibrary.org, which is really Auburn, MASSACHUSETTS Public Library
+    // (369 Southbridge Street, Auburn, MA 01501 — confirmed live via its own
+    // embedded Assabet Interactive calendar's JSON-LD address), not this
+    // library — the same {city}library.org generator collision as Banks
+    // County above. Auburn, GA is also part of the Piedmont Regional Library
+    // System; its branch-filtered LibCal URL (cid=20687) confirmed live from
+    // prlib.org/auburn's own "QUICK LINKS" events link, real events showing.
+    name: 'Auburn Public Library',
+    url: 'https://prlib.libcal.com/calendar/Auburn?cid=20687&t=d&d=0000-00-00&cal=20687&inc=0',
+    county: 'Barrow',
+    state: 'GA',
+    website: 'https://www.prlib.org/auburn',
+    city: 'Auburn',
+    zipCode: '30011'
+  },
+  {
     name: 'Hall County Library System',
     url: 'https://hallcountylibrary.libcal.com/',
     county: 'Hall',
