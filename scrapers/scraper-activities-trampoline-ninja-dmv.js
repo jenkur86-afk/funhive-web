@@ -146,7 +146,7 @@ const TRAMPOLINE_NINJA_VENUES = [
     phone: '(703) 567-0100',
     website: 'https://ultimateninjas.com/alexandria',
     hours: 'Mon-Fri 3pm-8pm, Sat-Sun 9am-6pm',
-    county: 'City of Alexandria',
+    county: 'Alexandria city',
     description: 'Ninja warrior training gym with American Ninja Warrior-style obstacles. Classes for kids ages 5-14, open gym sessions, and camps.',
     cost: '$20-30/class, $25/open gym',
     ageRange: 'Ages 5-14',

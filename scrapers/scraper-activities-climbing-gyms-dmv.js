@@ -134,7 +134,7 @@ const CLIMBING_GYMS = [
     phone: '(703) 212-7625',
     website: 'https://sportrock.com/alexandria',
     hours: 'Mon-Fri 10am-10pm, Sat-Sun 10am-8pm',
-    county: 'City of Alexandria',
+    county: 'Alexandria city',
     description: 'Full-service climbing gym with bouldering and rope climbing. Family-friendly with youth programs and climbing lessons.',
     cost: '$20-26/day pass',
     ageRange: 'Ages 5+',

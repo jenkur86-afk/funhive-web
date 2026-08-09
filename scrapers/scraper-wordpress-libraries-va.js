@@ -20,11 +20,11 @@ const ngeohash = require('ngeohash');
  *   → LibraryCalendar:   Lynchburg, Portsmouth
  */
 const LIBRARIES = [
-  { name: 'Alexandria Library', url: 'https://alexlibraryva.org', eventsUrl: 'https://alexlibraryva.org/events', city: 'Alexandria', state: 'VA', zipCode: '22314', county: 'Alexandria' },
-  { name: 'Chesapeake Public Library', url: 'https://www.chesapeakepubliclibrary.org', eventsUrl: 'https://events.chesapeakelibrary.org/events', city: 'Chesapeake', state: 'VA', zipCode: '23320', county: 'Chesapeake' },
+  { name: 'Alexandria Library', url: 'https://alexlibraryva.org', eventsUrl: 'https://alexlibraryva.org/events', city: 'Alexandria', state: 'VA', zipCode: '22314', county: 'Alexandria city' },
+  { name: 'Chesapeake Public Library', url: 'https://www.chesapeakepubliclibrary.org', eventsUrl: 'https://events.chesapeakelibrary.org/events', city: 'Chesapeake', state: 'VA', zipCode: '23320', county: 'Chesapeake city' },
   { name: 'Henrico County Public Library', url: 'https://www.henricolibrary.org', eventsUrl: 'https://www.henricolibrary.org/events', city: 'Henrico', state: 'VA', zipCode: '23228', county: 'Henrico' },
-  { name: 'Jefferson-Madison Regional Library', url: 'https://jmrl.org/', eventsUrl: 'https://jmrl.org/calendar', city: 'Charlottesville', state: 'VA', zipCode: '22902', county: 'Charlottesville' },
-  { name: 'Manassas Park City Library', url: 'https://www.manassasparkcitylibrary.org', eventsUrl: 'https://www.manassasparkcitylibrary.org/events', city: 'Manassas Park', state: 'VA', zipCode: '20111', county: 'Manassas Park' },
+  { name: 'Jefferson-Madison Regional Library', url: 'https://jmrl.org/', eventsUrl: 'https://jmrl.org/calendar', city: 'Charlottesville', state: 'VA', zipCode: '22902', county: 'Charlottesville city' },
+  { name: 'Manassas Park City Library', url: 'https://www.manassasparkcitylibrary.org', eventsUrl: 'https://www.manassasparkcitylibrary.org/events', city: 'Manassas Park', state: 'VA', zipCode: '20111', county: 'Manassas Park city' },
   // Newport News: removed — CivicEngage site, already covered by libcal-VA scraper
   { name: 'Culpeper County Library', url: 'https://www.cclva.org', eventsUrl: 'https://www.cclva.org/events/upcoming', city: 'Culpeper', state: 'VA', zipCode: '22701', county: 'Culpeper' },
   // Falls Church: no family events (adult programming only)

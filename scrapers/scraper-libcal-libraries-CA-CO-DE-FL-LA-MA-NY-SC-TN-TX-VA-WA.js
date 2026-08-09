@@ -383,7 +383,7 @@ const LIBRARY_SYSTEMS = [
   {
     name: 'Delaware Libraries',
     url: 'https://delawarelibraries.libcal.com/calendar/?cid=-1&t=d&d=0000-00-00&cal=-1&inc=0',
-    county: 'Delaware',
+    county: 'Kent',
     state: 'DE',
     website: 'https://lib.de.us',
     city: 'Dover',

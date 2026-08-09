@@ -208,7 +208,7 @@ const LIBRARY_SYSTEMS = [
   {
     name: 'Lynchburg Public Library',
     url: 'https://lynchburg.librarycalendar.com/events/upcoming',
-    county: 'Lynchburg',
+    county: 'Lynchburg city',
     state: 'VA',
     website: 'https://www.lynchburgva.gov/library',
     city: 'Lynchburg',
@@ -217,7 +217,7 @@ const LIBRARY_SYSTEMS = [
   {
     name: 'Petersburg Public Library',
     url: 'https://petersburg.librarycalendar.com/events/upcoming',
-    county: 'Petersburg',
+    county: 'Petersburg city',
     state: 'VA',
     website: 'https://www.petersburgva.gov/481/Library',
     city: 'Petersburg',
@@ -226,7 +226,7 @@ const LIBRARY_SYSTEMS = [
   {
     name: 'Poquoson Public Library',
     url: 'https://poquoson.librarycalendar.com/events/upcoming',
-    county: 'Poquoson',
+    county: 'Poquoson city',
     state: 'VA',
     website: 'https://www.poquoson-va.gov/government/departments-services/library',
     city: 'Poquoson',
@@ -244,7 +244,7 @@ const LIBRARY_SYSTEMS = [
   {
     name: 'Waynesboro Public Library',
     url: 'https://waynesboro.librarycalendar.com/events/upcoming',
-    county: 'Waynesboro',
+    county: 'Waynesboro city',
     state: 'VA',
     website: 'https://www.waynesboro.va.us/government/library',
     city: 'Waynesboro',
@@ -262,7 +262,7 @@ const LIBRARY_SYSTEMS = [
   {
     name: 'Portsmouth Public Library',
     url: 'https://portsmouthpl.librarycalendar.com/events/upcoming',
-    county: 'Portsmouth',
+    county: 'Portsmouth city',
     state: 'VA',
     website: 'https://www.portsmouthpubliclibrary.org',
     city: 'Portsmouth',

@@ -476,7 +476,7 @@ const FAMILY_ENTERTAINMENT_CENTERS = [
     phone: '(800) 616-4880',
     website: 'https://escaperoomlive.com/alexandria',
     hours: 'Mon-Thu 3pm-9pm, Fri 3pm-11pm, Sat 10am-11pm, Sun 10am-9pm',
-    county: 'City of Alexandria',
+    county: 'Alexandria city',
     description: 'Family-friendly escape rooms with puzzles and adventures for all ages. Includes kid-appropriate themes.',
     cost: '$30-40/person',
     ageRange: 'Ages 8+ (varies by room)',
@@ -526,7 +526,7 @@ const FAMILY_ENTERTAINMENT_CENTERS = [
 
   // MASSACHUSETTS
   { name: 'Dave and Busters Boston', address: '210 Old Orchard Shopping Ctr', city: 'Skokie', state: 'MA', zipCode: '02169', latitude: 42.2557, longitude: -71.0003, phone: '(781) 848-9600', website: 'https://www.daveandbusters.com', hours: 'Mon-Thu 10am-12am, Fri-Sat 10am-2am, Sun 10am-12am', county: 'Norfolk County', description: 'Dave and Busters south of Boston in Quincy/Braintree area with arcade, billiards, and dining.', cost: '$20-40 game play', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'billiards', 'dining', 'birthday-parties'] },
-  { name: 'Canobie Lake Park Salem', address: '85 N Policy St', city: 'Salem', state: 'MA', zipCode: '03079', latitude: 42.8023, longitude: -71.2237, phone: '(603) 893-3506', website: 'https://www.canobie.com', hours: 'Seasonal May-Oct: daily 10am-9pm', county: 'Rockingham County', description: 'Classic New England amusement park in Salem NH (near MA border) with 85+ rides, water park, and live entertainment.', cost: '$25-40/person', ageRange: 'All Ages', isFree: false, venueType: 'amusement-park', features: ['rides', 'water-park', 'live-shows', 'birthday-parties', 'seasonal'] },
+  { name: 'Canobie Lake Park Salem', address: '85 N Policy St', city: 'Salem', state: 'MA', zipCode: '03079', latitude: 42.8023, longitude: -71.2237, phone: '(603) 893-3506', website: 'https://www.canobie.com', hours: 'Seasonal May-Oct: daily 10am-9pm', county: 'Essex', description: 'Classic New England amusement park in Salem NH (near MA border) with 85+ rides, water park, and live entertainment.', cost: '$25-40/person', ageRange: 'All Ages', isFree: false, venueType: 'amusement-park', features: ['rides', 'water-park', 'live-shows', 'birthday-parties', 'seasonal'] },
 
   // RHODE ISLAND
   { name: 'Dave and Busters Providence', address: '1 Providence Place', city: 'Providence', state: 'RI', zipCode: '02903', latitude: 41.8265, longitude: -71.4195, phone: '(401) 270-4555', website: 'https://www.daveandbusters.com', hours: 'Mon-Thu 10am-12am, Fri-Sat 10am-2am, Sun 10am-12am', county: 'Providence County', description: 'Dave and Busters in Providence Place Mall with arcade games, billiards, and dining.', cost: '$20-40 game play', ageRange: 'All Ages', isFree: false, venueType: 'arcade', features: ['arcade', 'billiards', 'dining', 'birthday-parties'] },

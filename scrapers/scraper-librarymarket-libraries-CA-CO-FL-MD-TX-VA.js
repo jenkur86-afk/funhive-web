@@ -137,7 +137,7 @@ const LIBRARY_SYSTEMS = [
   {
     name: 'Virginia Beach Public Library',
     url: 'https://vbpl.librarymarket.com/events/upcoming',
-    county: 'Virginia Beach',
+    county: 'Virginia Beach city',
     state: 'VA',
     website: 'https://www.vbgov.com/government/departments/libraries',
     city: 'Virginia Beach',

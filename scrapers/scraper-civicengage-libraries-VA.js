@@ -61,7 +61,7 @@ const LIBRARY_SYSTEMS = [
     // CID=8 as the "Library" category. Verified live 2026-07-16.
     name: 'Colonial Heights Public Library',
     url: 'https://colonialheightsva.gov/calendar.aspx?CID=8',
-    county: 'Colonial Heights',
+    county: 'Colonial Heights city',
     state: 'VA',
     website: 'https://colonialheightsva.gov/185/Library',
     city: 'Colonial Heights',

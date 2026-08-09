@@ -137,7 +137,7 @@ const LIBRARY_SYSTEMS = [
   {
     name: 'Bristol Public Library',
     url: 'https://bristolpubliclibrary.org/events/',
-    county: 'Bristol',
+    county: 'Bristol city',
     state: 'VA',
     website: 'https://bristolpubliclibrary.org',
     city: 'Bristol',

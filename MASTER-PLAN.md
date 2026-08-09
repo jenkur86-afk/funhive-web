@@ -19,7 +19,7 @@ Investigating them exposed four deeper defects. The 63 are partly a *symptom*.
 | # | Defect | Measured | Status |
 |---|---|---|---|
 | **A** | **URL collisions** — seed data guessed `{city}library.org` from the city name | 355 hosts span 2+ active states, covering **1,073 entries**. `madisonlibrary.org` claims 11 states, `greenvillelibrary.org` 10 | Mapping done for NC only |
-| **B** | **Fabricated counties** — generator appended `" County"` to the city | **2,065 of 2,137** (96.6%) fail `getCountyCentroid()`. VT/TN/KY/MS/WV are 100% bad | Not started |
+| **B** | **Fabricated counties** — generator appended `" County"` to the city | Was **2,948 entries** failing `getCountyCentroid()` fleet-wide (WordPress-* only 4.3% resolving). Now **57**, i.e. 98.4% resolve | ✅ **FIXED 2026-08-09** |
 | **C** | **Naming drift** — `scraper_name` cannot join to the registry | **291 of 434** names drift | Documented + detector built |
 | **D** | **Missing `source_url`** — no provenance to verify against | MacaroniKid fixed (11,467 rows); 42 families unmeasured until all groups rotate | Partly fixed |
 
@@ -145,6 +145,20 @@ Memorial Library removed — its URL served a Nebraska library and no real site 
 as a coverage gap rather than replaced with a guess.
 
 ### Phase 2 — Seed-data remediation 🔨 IN PROGRESS — *the main body of work*
+
+> **Defect B (counties) is DONE as of 2026-08-09 and is no longer part of the per-file pass.**
+> It was fixed data-first rather than file-by-file, because "do not guess counties one at a
+> time" was always the constraint. Two stages:
+> 1. `scrapers/utils/county-centroids.js` completed from the **US Census 2023 National
+>    Counties Gazetteer** — 436 hand-entered values kept, 2,801 added, now all 3,222 US
+>    counties. This alone resolved 939 entries whose county name was already correct but
+>    missing from the dataset.
+> 2. `scripts/fix-fabricated-counties.js` rewrote 1,931 fabricated `"<City> County"` values
+>    across 34 files using a **Census + GeoNames** city→county join
+>    (`scripts/data/city-county-map.json`, provenance in `scripts/data/README.md`).
+>
+> Result: **2,948 → 57** unresolved. Step 2 of the per-file pass below is therefore already
+> satisfied; only URLs (Defect A) and naming (Defect C) remain per-file.
 
 Covers defects **A, B and C together, one file at a time.** This ordering is deliberate: fixing
 naming as a separate migration would mean opening every scraper file twice. When a file is open,

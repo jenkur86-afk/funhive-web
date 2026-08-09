@@ -79,7 +79,7 @@ const LIBRARIES = [
     city: "Norfolk",
     state: "VA",
     zipCode: "23510",
-    county: "Norfolk"
+    county: 'Norfolk city'
   },
   {
     name: "Newport News Public Library System",
@@ -89,7 +89,7 @@ const LIBRARIES = [
     city: "Newport News",
     state: "VA",
     zipCode: "23606",
-    county: "Newport News"
+    county: 'Newport News city'
   },
   {
     name: "Hampton Public Library",
@@ -99,7 +99,7 @@ const LIBRARIES = [
     city: "Hampton",
     state: "VA",
     zipCode: "23669",
-    county: "Hampton"
+    county: 'Hampton city'
   },
   {
     name: "Roanoke Public Libraries",
@@ -119,7 +119,7 @@ const LIBRARIES = [
     city: "Suffolk",
     state: "VA",
     zipCode: "23434",
-    county: "Suffolk"
+    county: 'Suffolk city'
   },
   {
     name: "Williamsburg Regional Library",
@@ -129,7 +129,7 @@ const LIBRARIES = [
     city: "Williamsburg",
     state: "VA",
     zipCode: "23185",
-    county: "Williamsburg"
+    county: 'Williamsburg city'
   },
   {
     name: "Library of Virginia",

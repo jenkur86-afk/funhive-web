@@ -39,7 +39,7 @@ const LIBRARY = {
   // (found via page.frames() debug instrumentation, 2026-07-05).
   widgetUrl: 'https://main.withapps.io/event-grid?organizationId=30&communityId=114&isPrivate=0&isApprovedOnly=0&view=calendar',
   libraryPage: 'https://www.hampton.gov/100/Libraries',
-  county: 'Hampton',
+  county: 'Hampton city',
   state: 'VA',
   website: 'https://www.hampton.gov/100/Libraries',
   city: 'Hampton',

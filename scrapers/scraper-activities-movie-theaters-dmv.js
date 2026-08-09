@@ -103,7 +103,7 @@ const MOVIE_THEATERS = [
     phone: '(888) 262-4386',
     website: 'https://www.amctheatres.com/movie-theatres/washington-dc/amc-hoffman-center-22',
     hours: 'Daily 10am-12am (varies by showtime)',
-    county: 'City of Alexandria',
+    county: 'Alexandria city',
     description: 'Large 22-screen complex near Old Town Alexandria. IMAX, Dolby, and Sensory Friendly screenings available.',
     cost: '$14-22/ticket, Discount Tuesdays',
     ageRange: 'All Ages',

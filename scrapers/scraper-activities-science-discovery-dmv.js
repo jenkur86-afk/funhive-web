@@ -278,7 +278,7 @@ const SCIENCE_DISCOVERY_CENTERS = [
     phone: '(540) 722-2020',
     website: 'https://discoverymuseum.net',
     hours: 'Tue-Sat 9am-5pm, Sun 1pm-5pm',
-    county: 'City of Winchester',
+    county: 'Winchester city',
     description: 'Children\'s discovery museum with hands-on exhibits on science, art, and culture. Outdoor science garden.',
     cost: '$9-11/person',
     ageRange: 'Ages 1-10',

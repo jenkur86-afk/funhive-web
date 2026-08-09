@@ -137,7 +137,7 @@ const MINIGOLF_BATTING_VENUES = [
     phone: '(703) 960-0767',
     website: 'https://www.novaparks.com/parks/cameron-run-regional-park',
     hours: 'Seasonal: 10am-8pm',
-    county: 'City of Alexandria',
+    county: 'Alexandria city',
     description: 'Regional park with mini golf, batting cages, and Great Waves Waterpark. Perfect family outing destination.',
     cost: 'Mini golf: $7-10, Batting: $2/token',
     ageRange: 'All Ages',

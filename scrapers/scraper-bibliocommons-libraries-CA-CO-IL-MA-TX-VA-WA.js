@@ -459,7 +459,7 @@ const LIBRARY_SYSTEMS = [
   {
     name: 'Central Rappahannock Regional Library',
     url: 'https://librarypoint.bibliocommons.com/v2/events',
-    county: 'Fredericksburg',
+    county: 'Fredericksburg city',
     state: 'VA',
     website: 'https://www.librarypoint.org',
     city: 'Fredericksburg',
