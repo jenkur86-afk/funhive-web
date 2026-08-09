@@ -707,7 +707,18 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
           scrapedAt: new Date().toISOString(),
           scraperName: scraperName,
           category: category,
-          platform: platform,
+          // A per-event platform wins over the scraper-level default. This block builds
+          // its own metadata and previously discarded whatever the scraper set, so a
+          // scraper that tagged rows by WHICH extraction path produced them (e.g.
+          // 'wordpress-tec-dom' vs the generic DOM scrape) silently lost that tag —
+          // every WordPress-GA row read 'wordpress' regardless of origin, and the
+          // question "which libraries did the TEC-DOM fallback actually rescue?" was
+          // unanswerable from the database despite looking instrumented. Found
+          // 2026-08-09; same class of bug as this helper overriding metadata.sourceUrl
+          // with library.url, found the same day. Safe to change: nothing queries by
+          // platform (unlike scraperName, whose per-site variant had to be reverted on
+          // 2026-08-06 because verifyAndCleanupEvents looks events up by it).
+          platform: event.metadata?.platform || platform,
           state: library.state || state
         }
       };

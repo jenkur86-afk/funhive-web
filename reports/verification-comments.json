@@ -65,8 +65,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Decatur County - Gilbert H. Gragg Library (Bainbridge, GA)": {
-  "verdict": "MISMATCH",
-  "comment": "INVESTIGATED 2026-08-09, NOT YET FIXED: bainbridgelibrary.org times out (confirmed twice). Real institution found live: Southwest Georgia Regional Library System (swgrl.org/calendar.php), a FullCalendar.js widget (fc-day-grid-event markup) filterable to this branch, real address 301 S. Monroe Street, Bainbridge, GA 39819 confirmed. Needs dedicated extraction work like FullCalendar-Libraries' existing Blue Ridge Regional entry (that file is bespoke per-library, not a shared helper) - not built this session. Entry left in place in WordPress-GA pending that work; genuine open coverage gap.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09: moved out of WordPress-GA into a new SouthwestGeorgia-GA scraper. bainbridgelibrary.org times out; the real institution is Southwest Georgia Regional Library System, whose swgrl.org/calendar.php is a FullCalendar.js widget with no server-rendered markup. Found its Revize CMS JSON feed by capturing network traffic during a Puppeteer render, and read that directly with axios (no browser needed). Covers all THREE branches rather than only this one. Live first run: 217 found across Decatur 141 / Seminole 47 / Miller 29, 11 saved, 0 errors, 0 invalid dates - the other 206 are correctly skipped as past, since the feed carries years of history. Decatur itself currently has 0 UPCOMING events, which is a real-world fact not an extraction failure: it is the system's most active branch at 103 events with the newest dated 2026-07-30, simply between programming cycles. Deliberately excludes the feed's 'Main' calendar, whose two rows are Revize vendor test events located at 150 Kirts Blvd Troy MI - ingesting those would have planted Michigan coordinates under a Georgia library.",
   "population": "zero"
  },
  "WordPress-GA|||Boston Carnegie Library (Boston, GA)": {

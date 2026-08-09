@@ -195,6 +195,13 @@ const SCRAPERS = {
   // Library's events.php has a 493-character body and no dates, so every DOM scraper
   // returned 0 by construction. This reads the public ICS feed behind the iframe instead.
   'GoogleCalendar-MD': { file: './scraper-gcal-libraries-md.js', exportName: 'scrapeGCalLibrariesMDCloudFunction', type: 'api', group: 3, state: 'MD' },
+  // 2026-08-09: WordPress-GA's Decatur County - Gilbert H. Gragg Library entry pointed at
+  // bainbridgelibrary.org, which times out. The real institution is the Southwest Georgia
+  // Regional Library System, whose calendar is a FullCalendar.js widget with no server-
+  // rendered markup — unreadable by the WordPress DOM extractor. This reads the Revize CMS
+  // JSON feed behind that widget instead, and covers all three branches rather than only
+  // the one WordPress-GA had. See the scraper file's header for the full trace.
+  'SouthwestGeorgia-GA': { file: './scraper-southwest-georgia-regional-library-ga.js', exportName: 'scrapeSouthwestGeorgiaLibrariesCloudFunction', type: 'api', group: 2, state: 'GA', sites: 3 },
   // 2026-08-07: srls.info (WordPress-NC's 5 Sandhill-system entries) now 301-redirects to
   // LibGuides, a platform WordPress-NC's DOM scraper cannot read. Real events live behind
   // an embedded LibCal calendar (api3.libcal.com/embed_calendar.php) shared by all 15

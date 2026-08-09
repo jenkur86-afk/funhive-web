@@ -60,17 +60,12 @@ const LIBRARIES = [
   // Piedmont Regional Library System (same system as Banks County above), moved to
   // LibCal-GA with its own branch-filtered URL, confirmed live 2026-08-09.
   { name: 'Appleby Branch', url: 'https://www.augustalibrary.org', eventsUrl: 'https://www.augustalibrary.org/events', city: 'Augusta', state: 'GA', zipCode: '00000', county: 'Augusta County'},
-  // Decatur County - Gilbert H. Gragg Library: bainbridgelibrary.org times out
-  // (12s, confirmed twice). NOT removed — real institution found live 2026-08-09:
-  // Southwest Georgia Regional Library System (swgrl.org/calendar.php), a
-  // FullCalendar.js widget (fc-day-grid-event markup), branch-filterable to
-  // "Decatur County-Gilbert H. Gragg Library". Real address confirmed: 301 S.
-  // Monroe Street, Bainbridge, GA 39819. This platform needs the same kind of
-  // dedicated extraction FullCalendar-Libraries already has for Blue Ridge
-  // Regional (VA) — that file is bespoke per-library, not a shared helper, so
-  // adding this one is real new-scraper work, not a URL swap. Not built this
-  // session; genuine open coverage gap, left in place pending that work.
-  { name: 'Decatur County - Gilbert H. Gragg Library', url: 'https://www.bainbridgelibrary.org', eventsUrl: 'https://www.bainbridgelibrary.org/events', city: 'Bainbridge', state: 'GA', zipCode: '00000', county: 'Bainbridge County'},
+  // Decatur County - Gilbert H. Gragg Library MOVED OUT 2026-08-09, not dropped:
+  // bainbridgelibrary.org times out (confirmed twice) and the real institution — the
+  // Southwest Georgia Regional Library System — serves its calendar as a FullCalendar.js
+  // widget this DOM extractor cannot read. Now covered by SouthwestGeorgia-GA, which reads
+  // the Revize JSON feed behind that widget and picks up all three of the system's
+  // branches (Decatur, Miller, Seminole) instead of only this one.
   { name: 'Berlin Community Library', url: 'https://www.berlinlibrary.org', eventsUrl: 'https://www.berlinlibrary.org/events', city: 'Berlin', state: 'GA', zipCode: '00000', county: 'Berlin County'},
   // Boston Carnegie Library: bostonlibrary.org resolved (200) but was a
   // parked/for-sale placeholder page — dead domain, confirmed live 2026-08-09.

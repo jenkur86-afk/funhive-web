@@ -113,6 +113,21 @@ const COUNTY_DATA = {
     'Indian River': { lat: 27.6386, lng: -80.3973 },  // Vero Beach
   },
   'GA': {
+    // Added 2026-08-09 alongside the NC batch below, same method: real counties that
+    // active scrapers already reference but that were absent here, so their events fell
+    // through to the GA state centroid. Every one is a county this session actually
+    // configured — Decatur/Miller/Seminole for SouthwestGeorgia-GA, Thomas for Boston
+    // Carnegie, Wheeler, Haralson for Bremen, Barrow for Auburn, Paulding for New Georgia.
+    // Coordinates from Nominatim via geocodeAddress(), each rejected unless inside GA's
+    // bounding box (30.30–35.05 N, -85.65–-80.80 W); 8 of 8 passed.
+    'Decatur': { lat: 30.8737, lng: -84.5741 },
+    'Miller': { lat: 31.1591, lng: -84.7378 },
+    'Seminole': { lat: 30.9518, lng: -84.8789 },
+    'Thomas': { lat: 30.8669, lng: -83.9461 },
+    'Wheeler': { lat: 32.1130, lng: -82.7567 },
+    'Haralson': { lat: 33.7813, lng: -85.2001 },
+    'Barrow': { lat: 33.9849, lng: -83.6996 },
+    'Paulding': { lat: 33.8909, lng: -84.8569 },
     'Fulton': { lat: 33.8034, lng: -84.3963 },
     'Gwinnett': { lat: 33.9519, lng: -84.0233 },
     'Cobb': { lat: 33.9068, lng: -84.5769 },
@@ -280,6 +295,35 @@ const COUNTY_DATA = {
     'Cabarrus': { lat: 35.3710, lng: -80.5804 },
     'Johnston': { lat: 35.5182, lng: -78.3617 },
     'Orange': { lat: 36.0622, lng: -79.1295 },
+    // Added 2026-08-09. These 20 are REAL North Carolina counties that active scrapers
+    // already reference but which were simply absent from this dataset, so the county tier
+    // of the geocoding chain was dead for them and their events fell through to the STATE
+    // centroid. Distinct from the fabricated "<City> County" seed-data values (Defect B in
+    // MASTER-PLAN.md) — 70 of those remain in NC and need URL/seed remediation, not more
+    // coordinates. Coordinates came from Nominatim via the project's own geocodeAddress()
+    // and every one was rejected unless it fell inside NC's bounding box (33.75–36.65 N,
+    // -84.40–-75.40 W); 20 of 20 passed. Unblocks SandhillRegional-NC, whose 16 branches
+    // sit in Moore/Montgomery/Richmond/Anson/Hoke and all resolved to nothing before this.
+    'Alamance': { lat: 36.0703, lng: -79.3993 },
+    'Brunswick': { lat: 34.0624, lng: -78.2443 },
+    'Iredell': { lat: 35.8102, lng: -80.8806 },
+    'Henderson': { lat: 35.3389, lng: -82.4664 },
+    'Craven': { lat: 35.0809, lng: -77.0440 },
+    'Moore': { lat: 35.3055, lng: -79.4761 },
+    'Montgomery': { lat: 35.3300, lng: -79.8979 },
+    'Richmond': { lat: 35.0288, lng: -79.7333 },
+    'Anson': { lat: 34.9706, lng: -80.0958 },
+    'Hoke': { lat: 35.0272, lng: -79.2433 },
+    'Halifax': { lat: 36.2494, lng: -77.6683 },
+    'Cleveland': { lat: 35.3307, lng: -81.5508 },
+    'Carteret': { lat: 34.8497, lng: -76.5931 },
+    'Lee': { lat: 35.4692, lng: -79.1548 },
+    'Lenoir': { lat: 35.2590, lng: -77.6485 },
+    'Lincoln': { lat: 35.4866, lng: -81.2063 },
+    'Burke': { lat: 35.7270, lng: -81.6632 },
+    'Warren': { lat: 36.3902, lng: -78.1052 },
+    'Catawba': { lat: 35.6741, lng: -81.2107 },
+    'Haywood': { lat: 35.5456, lng: -82.9908 },
   },
   'NE': {
     'Douglas': { lat: 41.2853, lng: -96.1522 },
