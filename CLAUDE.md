@@ -208,6 +208,18 @@ The `click_events` table (see Database Schema above) has no SELECT policy — th
 - **Shell scripts**: `bash scripts/fix-all.sh` works in Git Bash (installed with Git for Windows); PowerShell users: `.\scripts\fix-all.ps1`
 - **Scheduled tasks**: `scrapers/task-scheduler/setup-tasks.ps1` (run once as admin) replaces the Mac launchd plists
 
+## Session Close-Out — required at the end of every task
+
+**Every task ends with the same three-block outline, not just the scheduled diagnosis.** Run `node scripts/project-status.js --save` (zero Supabase egress — local files only) and report:
+
+- **Block A — What I fixed this session.** One row per fix with evidence and a **Proven?** column. `✅ live` ONLY when a real run or live fetch confirmed it; anything reasoned-but-unrun is `⚠️ unverified`. A code change that has never executed must never read like one that has — "WordPress-GA is fixed" was once true of 1 of its ~90 libraries.
+- **Block B — What is still broken.** The script's severity-tiered table verbatim (🔴 losing data now / 🟠 real but contained / 🟡 hygiene). Do not compress it into prose; do not drop the 🟡 rows.
+- **Block C — Distance to 100%.** The 8-gate table with its Δ column, then the single next action. Gates marked `⚠stale` are DB-derived and dated in the script's `STALE_METRICS` — report them as stale, never as current.
+
+`STATUS.md` is the trend ledger (newest first; re-running the same day replaces that day's entry). Each entry carries a machine-readable `<!-- STATUS-DATA {...} -->` snapshot — trend is read from those, never by re-parsing the human tables.
+
+**Gate 1 reports the worst scraper family, not the fleet average, and must stay that way.** The fleet mean read 54.7% while WordPress-* alone was 4.3% — averaging hid the defect, which is the same failure `AGE-RANGE-AUDIT.md`'s "No aggregation, ever" rule exists to prevent.
+
 ## Automated Maintenance
 
 Three things run on a schedule — two via Windows Task Scheduler, one via Claude Code:
