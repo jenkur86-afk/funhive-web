@@ -46,24 +46,29 @@ const LISTING_URL = 'https://srls.libguides.com/c.php?g=824539&p=5958576';
 // saveEventsWithGeocoding() in event-save-helper.js sets metadata.sourceUrl (the
 // events.source_url column) from library.url, NOT from this scraper's own
 // event.metadata.sourceUrl — omitting it left source_url NULL on every saved row
-// (found live 2026-08-08, 97/97 rows).
+// (found live 2026-08-08, 97/97 rows). Written as the literal string on every
+// entry rather than a `url: LISTING_URL` reference: scripts/generate-site-report.js
+// statically parses this file with a regex that only recognizes a quoted string
+// literal per config entry, so a variable reference silently undercounts this
+// scraper's real site total — found 2026-08-09 live, it collapsed all 16 branches
+// down to 1 row in the report before this was reverted to literals.
 const LIBRARIES = [
-  { name: 'Carthage', address: '101 Saunders St', city: 'Carthage', state: 'NC', zipCode: '28327', county: 'Moore', url: LISTING_URL },
-  { name: 'Mount Gilead', address: '110 W Allenton St', city: 'Mount Gilead', state: 'NC', zipCode: '27306', county: 'Montgomery', url: LISTING_URL },
-  { name: 'Wadesboro', address: '120 S Greene St', city: 'Wadesboro', state: 'NC', zipCode: '28170', county: 'Anson', url: LISTING_URL },
-  { name: 'Raeford', address: '334 N Main St', city: 'Raeford', state: 'NC', zipCode: '28376', county: 'Hoke', url: LISTING_URL },
-  { name: 'Biscoe', address: '307 Page St', city: 'Biscoe', state: 'NC', zipCode: '27209', county: 'Montgomery', url: LISTING_URL },
-  { name: 'Candor', address: '138 S School Rd', city: 'Candor', state: 'NC', zipCode: '27229', county: 'Montgomery', url: LISTING_URL },
-  { name: 'Star', address: '222 S Main St', city: 'Star', state: 'NC', zipCode: '27356', county: 'Montgomery', url: LISTING_URL },
-  { name: 'Troy', address: '215 W Main St', city: 'Troy', state: 'NC', zipCode: '27371', county: 'Montgomery', url: LISTING_URL },
-  { name: 'Aberdeen', address: '100 Poplar St', city: 'Aberdeen', state: 'NC', zipCode: '28315', county: 'Moore', url: LISTING_URL },
-  { name: 'Pinebluff', address: '305 E Baltimore Ave', city: 'Pinebluff', state: 'NC', zipCode: '28373', county: 'Moore', url: LISTING_URL },
-  { name: 'Robbins', address: '161 E Magnolia Dr', city: 'Robbins', state: 'NC', zipCode: '27325', county: 'Moore', url: LISTING_URL },
-  { name: 'Vass', address: '128 Seaboard St', city: 'Vass', state: 'NC', zipCode: '28394', county: 'Moore', url: LISTING_URL },
-  { name: 'Leath', address: '412 E Franklin St', city: 'Rockingham', state: 'NC', zipCode: '28379', county: 'Richmond', url: LISTING_URL },
-  { name: 'Rockingham', address: '412 E Franklin St', city: 'Rockingham', state: 'NC', zipCode: '28379', county: 'Richmond', url: LISTING_URL },
-  { name: 'Hamlet', address: '302 Main St', city: 'Hamlet', state: 'NC', zipCode: '28345', county: 'Richmond', url: LISTING_URL },
-  { name: 'Ellerbe', address: '279 2nd St', city: 'Ellerbe', state: 'NC', zipCode: '28338', county: 'Richmond', url: LISTING_URL }
+  { name: 'Carthage', address: '101 Saunders St', city: 'Carthage', state: 'NC', zipCode: '28327', county: 'Moore', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' },
+  { name: 'Mount Gilead', address: '110 W Allenton St', city: 'Mount Gilead', state: 'NC', zipCode: '27306', county: 'Montgomery', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' },
+  { name: 'Wadesboro', address: '120 S Greene St', city: 'Wadesboro', state: 'NC', zipCode: '28170', county: 'Anson', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' },
+  { name: 'Raeford', address: '334 N Main St', city: 'Raeford', state: 'NC', zipCode: '28376', county: 'Hoke', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' },
+  { name: 'Biscoe', address: '307 Page St', city: 'Biscoe', state: 'NC', zipCode: '27209', county: 'Montgomery', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' },
+  { name: 'Candor', address: '138 S School Rd', city: 'Candor', state: 'NC', zipCode: '27229', county: 'Montgomery', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' },
+  { name: 'Star', address: '222 S Main St', city: 'Star', state: 'NC', zipCode: '27356', county: 'Montgomery', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' },
+  { name: 'Troy', address: '215 W Main St', city: 'Troy', state: 'NC', zipCode: '27371', county: 'Montgomery', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' },
+  { name: 'Aberdeen', address: '100 Poplar St', city: 'Aberdeen', state: 'NC', zipCode: '28315', county: 'Moore', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' },
+  { name: 'Pinebluff', address: '305 E Baltimore Ave', city: 'Pinebluff', state: 'NC', zipCode: '28373', county: 'Moore', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' },
+  { name: 'Robbins', address: '161 E Magnolia Dr', city: 'Robbins', state: 'NC', zipCode: '27325', county: 'Moore', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' },
+  { name: 'Vass', address: '128 Seaboard St', city: 'Vass', state: 'NC', zipCode: '28394', county: 'Moore', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' },
+  { name: 'Leath', address: '412 E Franklin St', city: 'Rockingham', state: 'NC', zipCode: '28379', county: 'Richmond', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' },
+  { name: 'Rockingham', address: '412 E Franklin St', city: 'Rockingham', state: 'NC', zipCode: '28379', county: 'Richmond', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' },
+  { name: 'Hamlet', address: '302 Main St', city: 'Hamlet', state: 'NC', zipCode: '28345', county: 'Richmond', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' },
+  { name: 'Ellerbe', address: '279 2nd St', city: 'Ellerbe', state: 'NC', zipCode: '28338', county: 'Richmond', url: 'https://srls.libguides.com/c.php?g=824539&p=5958576' }
 ];
 
 // The LibGuides "Calendar of Events" page embeds three audience-segmented

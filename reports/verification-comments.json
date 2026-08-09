@@ -55,8 +55,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Wheeler County Library (Alamo, GA)": {
-  "verdict": "MISMATCH",
-  "comment": "CONFIRMED 2026-08-09: alamolibrary.org resolves (200) but its entire body is a parked-domain redirect stub with no real content, confirmed live. Entry removed from WordPress-GA. Real institution for Alamo/Wheeler County, GA not identified this session - genuine open coverage gap, not resolved.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09: real institution found, Ocmulgee Regional Library System (orls.org), which groups branches by TEC category not venue. tryFetchTecEvents extended with an optional categorySlug param (&categories=wheeler-county-library). Confirmed live: 6 real events saved (Afterschool Parents Meeting, Storytime & Gardening, etc).",
   "population": "zero"
  },
  "WordPress-GA|||Auburn Library (Auburn, GA)": {
@@ -70,13 +70,13 @@
   "population": "zero"
  },
  "WordPress-GA|||Boston Carnegie Library (Boston, GA)": {
-  "verdict": "MISMATCH",
-  "comment": "CONFIRMED 2026-08-09: bostonlibrary.org resolves (200, 1084 bytes) but is a parked/for-sale placeholder page, title literally \"bostonlibrary.org\", confirmed live - not a real library site. Entry removed from WordPress-GA. Real institution for Boston, GA (Thomas County) not identified this session - genuine open coverage gap, not resolved.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09: real institution found, Thomas County Public Library System (tcpls.org), which embeds LibCal as a widget rather than a standalone calendar page. New tryFetchLibCalAjaxList() hits tcpls.libcal.com's own AJAX JSON endpoint directly (camps=9124 branch filter). Confirmed live: 20 real events saved (Quiddler Club, Nature Journaling Workshop, etc). Also fixed a real geocoding bug this surfaced: library-addresses.js had a bare 'Carnegie' branch alias for Savannah's Live Oak Public Libraries that substring-matched ANY library with 'Carnegie' in its name, sending Boston Carnegie Library's coordinates to Savannah (200+ miles away). Removed the alias, deleted 12 bad-coordinate rows, added a real street address to the config, re-ran clean.",
   "population": "zero"
  },
  "WordPress-GA|||Warren P. Sewell Memorial Library-Bremen (Bremen, GA)": {
-  "verdict": "MISMATCH",
-  "comment": "CONFIRMED 2026-08-09: bremenlibrary.org's TLS certificate names only bremenlibrary.org and bremenmainelibrary.org as alt-names, confirmed live - this is Bremen, MAINE's library, not Georgia. Entry removed from WordPress-GA. Real institution for Bremen, GA (Haralson County) not identified this session - genuine open coverage gap, not resolved.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09: real institution found, West Georgia Regional Library System (wgrls.org, same system as New Georgia Public Library), Bremen branch confirmed via wgrls.org/locations, tribe_venues id=75. REST blocked same as New Georgia so falls through to tryDomScrapeTecEvents. Confirmed live: correct institution, genuinely 0 events scheduled this window (real empty state, not a bug) on first check; 1 event found on a later run.",
   "population": "zero"
  },
  "WordPress-GA|||Butler Public Library (Butler, GA)": {

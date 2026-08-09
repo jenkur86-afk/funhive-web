@@ -5114,7 +5114,19 @@ const LIBRARY_ADDRESSES = {
     branches: {
       'Bull Street Library': '2002 Bull St, Savannah, GA 31401',
       'Main Library': '2002 Bull St, Savannah, GA 31401',
-      'Carnegie': '537 E Henry St, Savannah, GA 31401',
+      // 'Carnegie' REMOVED 2026-08-09: bare single-word alias, too generic to be a
+      // safe substring key — getLibraryAddress()'s cross-system fallback matches
+      // ANY venue name containing the word "Carnegie" against every system's
+      // branches, not just this one. Confirmed live: WordPress-GA's Boston
+      // Carnegie Library (Boston, GA, Thomas County — 200+ miles from Savannah)
+      // was geocoded to this Savannah branch's address purely because its name
+      // contains "Carnegie" — Andrew Carnegie funded hundreds of libraries
+      // nationwide with this exact naming convention, so a bare "Carnegie" key
+      // will keep colliding. 'Bull Street Library' and 'Main Library' above
+      // already cover Live Oak's actual addresses; if Savannah's own Carnegie
+      // branch needs a distinct address again, key it as something that can't
+      // match another city's library, e.g. 'Live Oak Carnegie' or 'Carnegie
+      // Branch (Savannah)'.
       'Chatham County': '2002 Bull St, Savannah, GA 31401',
       'Forest City': '7116 Hodgson Memorial Dr, Savannah, GA 31406',
       'Garden City': '115 Gov Thomas P Hinman Dr, Garden City, GA 31408',

@@ -5,17 +5,51 @@ const { logScraperResult } = require('./scraper-logger');
 const { saveEventsWithGeocoding } = require('./event-save-helper');
 const { tryFetchTecEvents, tryDomScrapeTecEvents } = require('./helpers/tec-rest-helper');
 const ngeohash = require('ngeohash');
+const axios = require('axios');
 /**
  * Georgia Public Libraries Scraper - Coverage: All Georgia public libraries
  */
+
+// Thomas County Public Library System (tcpls.org) embeds LibCal as a widget on its
+// own site rather than serving a standalone tcpls.libcal.com/calendar/{slug} page
+// (that path 404s — confirmed live 2026-08-09), so neither tryFetchTecEvents (this
+// isn't TEC) nor the generic DOM scraper below can reach it. Its own front end
+// calls this exact AJAX endpoint to render the widget, and it returns clean
+// structured JSON keyed by branch ("camps" = LibCal's campus/branch filter),
+// confirmed live: real titles, startdt/enddt, description, url, per Boston Library.
+async function tryFetchLibCalAjaxList(origin, campsId, libName) {
+  try {
+    const res = await axios.get(`${origin}/ajax/calendar/list?c=-1&audience=&cats=&camps=${campsId}&inc=0`, {
+      timeout: 8000,
+      headers: { Accept: 'application/json' },
+      validateStatus: null
+    });
+    if (!res || res.status !== 200 || typeof res.data !== 'object' || !Array.isArray(res.data.results)) return null;
+    return res.data.results.map(ev => ({
+      title: ev.title || '',
+      date: ev.startdt || ev.date || '',
+      startTime: ev.start || null,
+      endTime: ev.end || null,
+      description: (ev.shortdesc || ev.description || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(),
+      url: ev.url || '',
+      venueName: libName,
+      location: libName
+    })).filter(e => e.title && e.date);
+  } catch {
+    return null;
+  }
+}
 const LIBRARIES = [
   { name: 'Wilcox County Public Library', url: 'https://www.abbevillelibrary.org/', eventsUrl: 'https://www.abbevillelibrary.org/', city: 'Abbeville', state: 'GA', zipCode: '00000', county: 'Abbeville County'},
-  // Wheeler County Library REMOVED 2026-08-09: alamolibrary.org resolves (200)
-  // but its entire body is a parked-domain redirect stub
-  // (`<script>window.onload=function(){window.location.href="/lander"}</script>`,
-  // no other content, confirmed live) — same class of dead domain as Boston
-  // Carnegie Library below. Real institution for Alamo/Wheeler County, GA not
-  // identified this session; genuine open coverage gap, not a replacement.
+  // Wheeler County Library: alamolibrary.org resolved (200) but its entire body
+  // was a parked-domain redirect stub — dead domain, confirmed live 2026-08-09.
+  // Real institution: part of the Ocmulgee Regional Library System (orls.org),
+  // which runs TEC but groups branches by CATEGORY rather than venue — its REST
+  // API accepts &categories=wheeler-county-library and returns only this branch's
+  // events (confirmed live: "(WHE) Afterschool Parents Meeting", "(WHE) Plant a
+  // Seed & Watch It Grow Storytime", etc, real Aug 2026 dates). tecCategory wires
+  // through to tryFetchTecEvents's new optional 3rd param.
+  { name: 'Wheeler County Library', url: 'https://orls.org', eventsUrl: 'https://orls.org/calendar/', tecCategory: 'wheeler-county-library', city: 'Alamo', state: 'GA', zipCode: '30411', county: 'Wheeler'},
   { name: 'Alma-Bacon County Public Library', url: 'https://www.almalibrary.org', eventsUrl: 'https://www.almalibrary.org/events', city: 'Alma', state: 'GA', zipCode: '00000', county: 'Alma County'},
   { name: 'Athens Regional Library System', url: 'https://www.athenslibrary.org', eventsUrl: 'https://www.athenslibrary.org/events', city: 'Athens', state: 'GA', zipCode: '30606', county: 'Athens County'},
   // Auburn Library REMOVED 2026-08-09: auburnlibrary.org is Auburn, MASSACHUSETTS
@@ -38,18 +72,29 @@ const LIBRARIES = [
   // session; genuine open coverage gap, left in place pending that work.
   { name: 'Decatur County - Gilbert H. Gragg Library', url: 'https://www.bainbridgelibrary.org', eventsUrl: 'https://www.bainbridgelibrary.org/events', city: 'Bainbridge', state: 'GA', zipCode: '00000', county: 'Bainbridge County'},
   { name: 'Berlin Community Library', url: 'https://www.berlinlibrary.org', eventsUrl: 'https://www.berlinlibrary.org/events', city: 'Berlin', state: 'GA', zipCode: '00000', county: 'Berlin County'},
-  // Boston Carnegie Library REMOVED 2026-08-09: bostonlibrary.org resolves (200)
-  // but is a parked/for-sale placeholder page (1084 bytes, <title>bostonlibrary.org</title>,
-  // confirmed live) — not a real library site. Real institution for Boston, GA
-  // (Thomas County) not identified this session; genuine open coverage gap, not
-  // a replacement.
+  // Boston Carnegie Library: bostonlibrary.org resolved (200) but was a
+  // parked/for-sale placeholder page — dead domain, confirmed live 2026-08-09.
+  // Real institution: Thomas County Public Library System (tcpls.org), which
+  // embeds LibCal (tcpls.libcal.com) as a widget rather than serving a standalone
+  // calendar page. libcalCamps: 9124 found live from tcpls.libcal.com's own
+  // branch-filter dropdown (`<option value="9124" data-cal_id="9124">Boston
+  // Library</option>`); tryFetchLibCalAjaxList() confirmed 32 real events
+  // ("Quiddler Club", "Nature Journaling Workshop", real Aug 2026 dates).
+  { name: 'Boston Carnegie Library', url: 'https://tcpls.libcal.com', libcalCamps: 9124, eventsUrl: 'https://tcpls.org/connect_with_community/activities___event_calendar.php', address: '250 South Main Street', city: 'Boston', state: 'GA', zipCode: '31626', county: 'Thomas'},
   { name: 'Bowman Branch', url: 'https://www.bowmanlibrary.org', eventsUrl: 'https://www.bowmanlibrary.org/events', city: 'Bowman', state: 'GA', zipCode: '00000', county: 'Bowman County'},
-  // Warren P. Sewell Memorial Library-Bremen REMOVED 2026-08-09: bremenlibrary.org's
-  // TLS certificate names only bremenlibrary.org and bremenmainelibrary.org as
-  // alt-names (confirmed live) — this is Bremen, MAINE's library, the same
-  // {city}library.org generator collision documented throughout this file. Real
-  // institution for Bremen, GA (Haralson County) not identified this session;
-  // genuine open coverage gap, not a replacement.
+  // Warren P. Sewell Memorial Library-Bremen: bremenlibrary.org's TLS certificate
+  // named only bremenlibrary.org and bremenmainelibrary.org as alt-names — this
+  // was Bremen, MAINE's library, confirmed live 2026-08-09. Real institution: the
+  // SAME West Georgia Regional Library System as New Georgia Public Library above
+  // (wgrls.org/locations confirms a Bremen branch at 315 Hamilton Ave, Bremen GA
+  // 30110, slug /warren-p-sewell-memorial-library-in-bremen, tribe_venues id=75 —
+  // note WGRLS also has a DIFFERENT same-named branch in Bowdon, GA at a
+  // different address; venue 75 is specifically the Bremen one). REST is
+  // 403-blocked site-wide same as New Georgia, so this falls through to
+  // tryDomScrapeTecEvents. Confirmed live: venue 75 genuinely has 0 events
+  // scheduled right now (real "No results found", not a filter bug) — correct
+  // institution, just nothing programmed this window.
+  { name: 'Warren P. Sewell Memorial Library-Bremen', url: 'https://wgrls.org', eventsUrl: 'https://wgrls.org/events/list/?tribe_venues%5B%5D=75', city: 'Bremen', state: 'GA', zipCode: '30110', county: 'Haralson'},
   { name: 'Brunswick Glynn County Regional Library', url: 'https://www.brunswicklibrary.org', eventsUrl: 'https://www.brunswicklibrary.org/events', city: 'Brunswick', state: 'GA', zipCode: '00000', county: 'Brunswick County'},
   { name: 'Marion County Library', url: 'https://www.buenavistalibrary.org', eventsUrl: 'https://www.buenavistalibrary.org/events', city: 'Buena Vista', state: 'GA', zipCode: '00000', county: 'Buena Vista County'},
   { name: 'Butler Public Library', url: 'https://www.butlerlibrary.org', eventsUrl: 'https://www.butlerlibrary.org/events', city: 'Butler', state: 'GA', zipCode: '00000', county: 'Butler County'},
@@ -148,11 +193,39 @@ async function scrapeGenericEvents() {
     try {
       // Try the site's TEC REST API before falling back to DOM scraping —
       // see helpers/tec-rest-helper.js for why (2026-07-31 diagnosis).
-      const tecEvents = await tryFetchTecEvents(library.url, library.name);
+      const tecEvents = await tryFetchTecEvents(library.url, library.name, library.tecCategory);
       if (tecEvents) {
         tecEvents.forEach(event => events.push({ ...event, metadata: { sourceName: library.name, sourceUrl: library.url, scrapedAt: new Date().toISOString(), scraperName: SCRAPER_NAME, category: 'library', platform: 'generic', state: 'GA', city: library.city, zipCode: library.zipCode, needsReview: true }}));
         continue;
       }
+
+      // Not TEC — some libraries embed LibCal as a widget on their own site
+      // rather than serving a standalone LibCal calendar page (see
+      // tryFetchLibCalAjaxList's header comment). Try that before ever
+      // attempting to render eventsUrl, since the widget's data never appears
+      // in that page's own DOM.
+      if (library.libcalCamps) {
+        const libcalEvents = await tryFetchLibCalAjaxList(library.url, library.libcalCamps, library.name);
+        if (libcalEvents && libcalEvents.length > 0) {
+          libcalEvents.forEach(event => events.push({
+            ...event,
+            metadata: {
+              sourceName: library.name,
+              sourceUrl: library.eventsUrl || library.url,
+              scrapedAt: new Date().toISOString(),
+              scraperName: SCRAPER_NAME,
+              category: 'library',
+              platform: 'libcal-ajax',
+              state: 'GA',
+              city: library.city,
+              zipCode: library.zipCode,
+              needsReview: true
+            }
+          }));
+          continue;
+        }
+      }
+
       const page = await browser.newPage();
       await page.goto(library.eventsUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
       await new Promise(resolve => setTimeout(resolve, 1000));

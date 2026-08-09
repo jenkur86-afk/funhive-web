@@ -921,10 +921,42 @@ function main() {
   console.log('Generating site report…');
 
   const notes = [];
-  const { rows: sites, dataDate: libDate, error: sitesErr } = loadSites();
+  const { idx: cfgIdx, counts: cfgCounts, byName: cfgByName } = loadConfigIndex();
+  const { rows: sitesRaw, dataDate: libDate, error: sitesErr } = loadSites();
   const { rows: ages, dataDate: ageDate, error: agesErr } = loadAges();
   if (sitesErr) notes.push('Library audit: ' + sitesErr + ' — the Library sites tab will be empty.');
   if (agesErr) notes.push('Age audit: ' + agesErr + ' — the Age breakdown and Flagged tabs will be empty.');
+
+  // A site's own NAME TEXT can drift between audit cycles for the same real site
+  // (e.g. "Anne Arundel County Public Library (AACPL)" vs "Anne Arundel County
+  // Public Library" — tableRows()'s own dedup keys on the raw site string, so text
+  // drift defeats it and both rows survive as if they were different sites). Collapse
+  // on cfgKey(site) WITHIN THE SAME SCRAPER — the same normalization config-matching
+  // already uses (strips a trailing "(...)" and punctuation) — keeping whichever row
+  // appears LAST in file order (tableRows scans top-to-bottom across all `## date`
+  // sections, so later position = more recent run).
+  //
+  // Deliberately NOT gated on cfgCounts(scraper)===0 ("single-system"): that count
+  // comes from loadConfigIndex()'s regex parser, which only recognizes a LITERAL
+  // quoted url string per config entry. A scraper whose LIBRARIES array sets
+  // `url: SOME_CONSTANT` instead of a string literal silently undercounts to 0 even
+  // when it configures many real sites — found 2026-08-09 live: this exact pattern
+  // in scraper-sandhill-regional-library-nc.js (url: LISTING_URL, all 16 branches)
+  // made SandhillRegional-NC register as cfgCounts===0, and an earlier version of
+  // this collapse that trusted that count wiped 10 real branches down to 1 row —
+  // exactly the "No aggregation, ever" rule this file's own header warns against.
+  // cfgKey-per-site is safe regardless of whether cfgCounts is right, because two
+  // real distinct branches (different names) never share a cfgKey.
+  const sites = (() => {
+    const byKey = new Map();   // "scraper|||cfgKey(site)" -> row (last one wins)
+    const order = [];
+    sitesRaw.forEach(r => {
+      const k = r[2] + '|||' + cfgKey(r[0]);
+      if (!byKey.has(k)) order.push(k);
+      byKey.set(k, r);
+    });
+    return order.map(k => byKey.get(k));
+  })();
 
   const comments = loadComments();
   const roster = loadRoster();
@@ -1007,7 +1039,7 @@ function main() {
   console.log(`  coverage     : ${coverage.length} rows (${missing} awaiting this cycle, ${orphans.length} not in active registry)`);
 
   // Per-row status: compare the audit's link against what the config says today.
-  const { idx: cfgIdx, counts: cfgCounts, byName: cfgByName } = loadConfigIndex();
+  // (cfgIdx/cfgCounts/cfgByName loaded earlier, before the single-system collapse above.)
   const rosterByName = new Map(roster.map(x => [x.name, x]));   // for state-aware "moved to" naming
   let nStale = 0, nGone = 0, nMoved = 0, nMismatch = 0;
   sites.forEach(r => {

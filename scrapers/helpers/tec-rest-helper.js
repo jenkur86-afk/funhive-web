@@ -73,12 +73,18 @@ function _stripHtml(str) {
  *
  * @param {string} baseUrl - any page on the site (library.url); origin is derived from it
  * @param {string} libName - library/venue display name, used for location/venueName fields
+ * @param {string} [categorySlug] - optional TEC category slug to filter to one branch/venue
+ *   on a shared multi-branch REST endpoint (e.g. Ocmulgee Regional Library System's orls.org
+ *   groups branches by category, not venue — confirmed live 2026-08-09:
+ *   /wp-json/tribe/events/v1/events/?categories=wheeler-county-library returns only that
+ *   branch's events). Appended as &categories=... ; omit for sites with one shared calendar
+ *   or where the caller filters some other way.
  * @returns {Promise<Array|null>} normalized event objects if the site runs TEC and the
  *   API responded, or null if the site isn't TEC / the API is unreachable — callers
  *   should fall back to DOM scraping only when this returns null (an empty array [] is
  *   a confirmed-TEC site with genuinely zero upcoming events, not a signal to fall back).
  */
-async function tryFetchTecEvents(baseUrl, libName) {
+async function tryFetchTecEvents(baseUrl, libName, categorySlug) {
   let origin;
   try {
     origin = new URL(baseUrl).origin;
@@ -86,12 +92,13 @@ async function tryFetchTecEvents(baseUrl, libName) {
     return null;
   }
 
+  const categoryParam = categorySlug ? `&categories=${encodeURIComponent(categorySlug)}` : '';
   const allEvents = [];
   let page = 1;
   let totalPages = 1;
 
   while (page <= Math.min(totalPages, TEC_MAX_PAGES)) {
-    const url = `${origin}/wp-json/tribe/events/v1/events/?per_page=${TEC_PER_PAGE}&start_date=now&page=${page}`;
+    const url = `${origin}/wp-json/tribe/events/v1/events/?per_page=${TEC_PER_PAGE}&start_date=now&page=${page}${categoryParam}`;
     let res;
     try {
       res = await axios.get(url, {
