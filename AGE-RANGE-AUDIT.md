@@ -4964,7 +4964,7 @@ Day 1 of a new 3-day rotation (Group 1). Attribution method follows the 2026-08-
 | The Granby Theater | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/school-of-wizardry-kids-camp-at-the-granby-theater-august-camp-registration-1982848565436) |
 | Martin Luther King Jr Memorial Park at Manhattan Square | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/carifest-2026-tickets-1988882123972) |
 | 3951 MS-589 | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/haifas-magnolia-grill-sumrall-live-trivia-tickets-1996497688330) |
-| Rev'd Indoor Cycling | Dedham | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/ride-with-family-movement-tickets-1996746687092) |
+| Rev'd Indoor Cycling \| Dedham | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/ride-with-family-movement-tickets-1996746687092) |
 | 1365 Stanley St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/lighthouse-church-gospel-concert-tickets-1995955126513) |
 | Generale Amelgio Society Inc | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/the-uncle-louie-variety-show-new-britain-ct-tickets-1982738536336) |
 | Grace Covenant an Evangelical Presbyterian Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/super-saturday-family-day-tickets-1996640399182) |
@@ -5029,7 +5029,7 @@ Day 1 of a new 3-day rotation (Group 1). Attribution method follows the 2026-08-
 | Rayo Mexican Bar & Grill | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/halloween-cookie-class-south-street-cookies-at-rayo-mexican-grill-tickets-1994882075990) |
 | Forsyth Tech Mazie S. Woodruff Aviation Technology Lab | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/skybound-flight-fest-2026-tickets-1975248384089) |
 | Lula Lake Land Trust | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/open-gate-day-saturday-august-29th-tickets-1990720907824) |
-| Pats Select Pizza | Grill | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/family-game-night-dungeons-dragons-classic-games-tickets-1989352270192) |
+| Pats Select Pizza \| Grill | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/family-game-night-dungeons-dragons-classic-games-tickets-1989352270192) |
 | Tobacco Road | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/ridge-forest-annual-fish-fry-tickets-1996765788224) |
 | Martin's West | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/holy-family-gala-at-martins-west-tickets-1993631259765) |
 | Olive Tree Early Learning Academy | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/discover-olive-tree-early-learning-academy-guided-tour-tickets-1992432119103) |
@@ -5076,7 +5076,7 @@ Day 1 of a new 3-day rotation (Group 1). Attribution method follows the 2026-08-
 | 57 Tweed River Dr | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/pittsfield-sunrise-wish-run-free-community-run-tickets-1993680864133) |
 | Skyport Marina | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/edmboatcom-1-edm-house-golden-hour-boat-party-2026-tickets-1994762727014) |
 | Women & Infants Hospital | Eventbrite-Family-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/women-and-infants-hospital-meet-the-doulas-event-tickets-1996385353333) |
-| ALOE Event Center | Wedding Venue Montgomery, AL | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/the-harris-family-revue-tickets-1996352686626) |
+| ALOE Event Center \| Wedding Venue Montgomery, AL | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/the-harris-family-revue-tickets-1996352686626) |
 | King Farm Road | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/green-drinks-explore-king-farm-tickets-1993356991421) |
 | Hunt Almont Playground | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/boston-parks-summer-fitness-series-family-zumba-tickets-1987088939509) |
 | 4661 Haygood Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://www.eventbrite.com/e/back-2-school-family-fun-day-stuff-the-shop-school-supply-giveaway-tickets-1996758049076) |
