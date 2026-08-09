@@ -6108,3 +6108,102 @@ None of today's rows belong to the excluded known-legitimate broad-content scrap
 
 **Cycle-completeness check (not declared complete):** cross-referencing today's additions plus the full `## 2026-08-04` through `## 2026-08-07` union (143 distinct scraper identities) against `Object.keys(SCRAPERS).filter(isScraperActive)` (151 active registry keys as committed in this worktree) still leaves 20 active scrapers with no entry anywhere in the open cycle: `Allentown-Public`, `Communico-SC`, `Dorchester-County`, `EventActions-Libraries`, `Howard-County`, `Rockbridge-Regional`, `Somerset-County`, `Tockify-Horry`, `WordPressTec-Parks`, and 11 `VenueList-*-DMV` scrapers (`BowlingAlleys`, `ChildrensMuseums`, `Eastern-US`, `FamilyEntertainment`, `GymnasticsCenters`, `IndoorPlaygrounds`, `MinigolfBatting`, `NatureFarms`, `RollerSkating`, `SwimmingPools`, `TrampolineNinja`). No `## Cycle complete` heading added.
 
+
+## 2026-08-09
+
+Group 3's rotation (day 9 → Group 3, 50 scrapers, run started `2026-08-09T07:00:01Z`), plus `macaroni-runner-group3.js` (spawned from `local-scraper-runner.js`'s `runMacaroniGroup()`, per the 2026-08-04 fix). 56 distinct scraper identities have a dated row in today's `scraper-summary.log`; per this cycle's skip-duplicates rule, all but 13 already have an entry somewhere in the open cycle (`## 2026-08-04` through `## 2026-08-08`) and are skipped here without re-querying: `WordPress-NY`, `LibCal-{FL,NJ,SC,VA,ME,GA}`, `GoogleCalendar-MD`, `SandhillRegional-NC`, `Communico-{FL,MD,NY,PA,NH,TN,WV}`, `BiblioCommons-MA`, `Wicomico-Public`, `WithApps-Libraries`, `WordPress-Events-Calendar`, `Squarespace-Libraries`, `Drupal-Virginia`, `RollyPollies-MD`, `Intercept-Camden`, `WordPress-{PA,MA,KY,SC,WV,DE,RI,NH,GA,NC}`, `AARecParks-MD`, `Orange-County-Library-FL`, `Venue-Events-ZoosAquariums`, `Farms-Eastern-US`, `Nashville-Library-TN`, `LibraryMarket-{PA,NC}`, `Assabet-NH-MA`, `Patch-Community-Eastern`, `CivicRec-Parks-Eastern`, `Gardens-Nature-Eastern`, `MacaroniKid-DE` (verified against the `## 2026-08-04`–`## 2026-08-08` table/zero-events text, not assumed).
+
+The 13 new-to-this-cycle scrapers:
+
+1. **`LibCal-VA2`** — a second Virginia LibCal instance (distinct registry key from `LibCal-VA`, same pattern as the already-logged `LibCal-NY1`/`LibCal-NY2` pair). Log showed three runs today (07:25, 22:13, 22:15) — the first two found 0/0/0 (VA2 appears flaky/rate-limited early in the day), the last matched the log's reported 182 FOUND / 164 NEW / 1 InvalidDate. `scraped_at`-windowed query (`>= 2026-08-09T00:00:00Z`, scraper only ran today so a full-day floor is unambiguous) returned 140 rows grouped into 7 library-system venues — the usual small under-count vs. the log's 164 (ordinary run-to-run variance, not a methodology gap). Links are each library system's own homepage.
+2. **`Dorchester-County`** (MD, `scraper-dorchester-county-library-MD.js`, sets `metadata.scraperName: 'Dorchester-County'` correctly in source) — **gap, not measured.** Log reported Found 12 / New 12 (run 08:10:44–08:11:07Z), but a query for `scraper_name = 'Dorchester-County'` returns zero rows all-time, and a broad scan of every `events` row with `state = 'MD'` created in an 8:05–8:20Z window around the run shows only `Wicomico-Public` and `RollyPollies-MD` activity — no Dorchester-County rows at any timestamp. (A red herring: `scraper_name = 'Dorchester County Library'` does exist in the DB with 2 rows, but those are dated 07:24Z — the `LibCal-SC` run window — and are state `SC`, i.e. a display-name leak from a *different*, already-logged scraper, not this one.) Whatever the 12 "new" events the scraper's own dedup counter found, none landed in the DB under any name variant checked. Flagging as an attribution gap for a future session to chase (possible silent `saveEvent()` rejection or a stable-ID collision with pre-existing rows) rather than guessing at numbers.
+3. **`Allentown-Public`** — 10 FOUND / 0 NEW (all duplicates) → zero-events list, no query needed.
+4–8. **Five `VenueList-*-DMV` scrapers** — `ChildrensMuseums` (36/0), `GymnasticsCenters` (40/0), `MinigolfBatting` (44/0), `RollerSkating` (40/0), `TrampolineNinja` (56/0) — all 0 NEW → zero-events list, no query needed.
+9. **`WordPressTec-Parks`** — log reported Found 33 / New 24, but DB `scraper_name` is actually `WordPressTecParks-WV` (drifted: missing the registry key's hyphen, plus a `-WV` state suffix the registry key itself doesn't carry — `WordPressTec-Parks` is declared `state: 'Multi'`). `scraped_at`-windowed query returns exactly 1 row today (Pipestem Resort State Park, All Ages) — the same UPDATE-collision pattern seen repeatedly this cycle (23 of the 24 "new" finds matched pre-existing stable IDs and only touched an internal counter, not a DB row). Below the flagging threshold regardless.
+10–12. **`MacaroniKid-NJ`, `MacaroniKid-VA`, `MacaroniKid-SC`** — three more state scrapers via `macaroni-runner-group3.js`, first appearance in this cycle (same MacaroniKid pattern documented on 2026-08-08: each local edition already emits its own `scraper_name`, e.g. `MacaroniKid-NJ-cherryhill`, so that's the site-level grouping below). `scraped_at`-windowed queries (`ilike 'MacaroniKid-{ST}-%'`, full-day floor, ordered-`id`/`range()`-paginated, no timeouts on any of the three) returned NJ 1912 / VA 2449 / SC 1219 rows against log totals of 1989/2519/1256 — the usual small under-count. 15 NJ + 14 VA + 9 SC = 38 site rows.
+13. **`SouthwestGeorgia-GA`** — the scraper_name-collapse bug flagged going into today's run is confirmed fixed mid-run: `scraper_name = 'SouthwestGeorgia-GA'` (bare) has exactly 2 rows, both dated 17:37:55Z (the first, pre-fix run) — pre-rename leftovers, not touched since. The three per-branch names introduced by the fix (`SouthwestGeorgia-GA-{decatur,miller,seminole}`) show `decatur`: 0 rows (its events were past-dated and rejected), `miller`: 1 row, `seminole`: 8 rows — all verified directly against the DB, not assumed from the task brief. Reported below as four distinct rows per instructions.
+
+13,612 → this session: **5,732 genuinely-new rows across the 7 queried scraper identities** (`LibCal-VA2`, `WordPressTecParks-WV`/`WordPressTec-Parks`, `MacaroniKid-{NJ,VA,SC}`, `SouthwestGeorgia-GA` family), grouping into 50 distinct site rows (49 with events + the 1 zero-total `decatur` row, included per instructions rather than omitted).
+
+| Site | Scraper | All Ages | Babies 0-2 | Preschool 3-5 | Kids 6-8 | Tweens 9-12 | Teens 13-18 | Adults | Total | Link |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Roanoke | MacaroniKid-VA | 123 | 114 | 79 | 32 | 5 | 28 | 0 | 381 | [link](https://roanoke.macaronikid.com) |
+| Virginiabeach | MacaroniKid-VA | 168 | 33 | 39 | 20 | 51 | 2 | 0 | 313 | [link](https://virginiabeach.macaronikid.com) |
+| Arlington | MacaroniKid-VA | 143 | 47 | 31 | 68 | 4 | 12 | 0 | 305 | [link](https://arlington.macaronikid.com) |
+| Eastmorris | MacaroniKid-NJ | 95 | 39 | 55 | 72 | 11 | 28 | 0 | 300 | [link](https://eastmorris.macaronikid.com) |
+| Tomsriver | MacaroniKid-NJ | 97 | 46 | 46 | 43 | 29 | 26 | 0 | 287 | [link](https://tomsriver.macaronikid.com) |
+| Tintonfalls | MacaroniKid-NJ | 168 | 61 | 25 | 18 | 7 | 6 | 0 | 285 | [link](https://tintonfalls.macaronikid.com) |
+| Gainesville | MacaroniKid-VA | 139 | 38 | 28 | 61 | 5 | 1 | 0 | 272 | [link](https://gainesville.macaronikid.com) |
+| Greenville | MacaroniKid-SC | 107 | 67 | 46 | 37 | 4 | 5 | 0 | 266 | [link](https://greenville.macaronikid.com) |
+| Northcharleston | MacaroniKid-SC | 148 | 27 | 27 | 37 | 16 | 3 | 0 | 258 | [link](https://northcharleston.macaronikid.com) |
+| Clark | MacaroniKid-NJ | 54 | 102 | 26 | 28 | 7 | 6 | 0 | 223 | [link](https://clark.macaronikid.com) |
+| Williamsburg | MacaroniKid-VA | 71 | 59 | 21 | 34 | 10 | 18 | 0 | 213 | [link](https://williamsburg.macaronikid.com) |
+| Nrv | MacaroniKid-VA | 103 | 23 | 2 | 44 | 0 | 30 | 0 | 202 | [link](https://nrv.macaronikid.com) |
+| Fairfax | MacaroniKid-VA | 69 | 34 | 34 | 42 | 5 | 4 | 0 | 188 | [link](https://fairfax.macaronikid.com) |
+| Columbia | MacaroniKid-SC | 82 | 29 | 16 | 40 | 3 | 8 | 0 | 178 | [link](https://columbia.macaronikid.com) |
+| Reston | MacaroniKid-VA | 52 | 45 | 34 | 18 | 0 | 11 | 0 | 160 | [link](https://reston.macaronikid.com) |
+| Marlboro Manalapan | MacaroniKid-NJ | 42 | 39 | 18 | 32 | 13 | 1 | 0 | 145 | [link](https://marlboro-manalapan.macaronikid.com) |
+| Richmond | MacaroniKid-VA | 77 | 16 | 24 | 14 | 4 | 8 | 0 | 143 | [link](https://richmond.macaronikid.com) |
+| Anderson Williamston | MacaroniKid-SC | 65 | 33 | 9 | 16 | 14 | 1 | 0 | 138 | [link](https://anderson-williamston.macaronikid.com) |
+| Westmorris | MacaroniKid-NJ | 39 | 37 | 20 | 16 | 12 | 5 | 0 | 129 | [link](https://westmorris.macaronikid.com) |
+| Clifton | MacaroniKid-NJ | 39 | 28 | 10 | 34 | 3 | 4 | 0 | 118 | [link](https://clifton.macaronikid.com) |
+| Charleston | MacaroniKid-SC | 65 | 8 | 3 | 40 | 1 | 0 | 0 | 117 | [link](https://charleston.macaronikid.com) |
+| Pointpleasantnj | MacaroniKid-NJ | 77 | 16 | 3 | 11 | 1 | 0 | 0 | 108 | [link](https://pointpleasantnj.macaronikid.com) |
+| Newington | MacaroniKid-VA | 44 | 19 | 15 | 11 | 4 | 12 | 0 | 105 | [link](https://newington.macaronikid.com) |
+| Myrtlebeach | MacaroniKid-SC | 79 | 0 | 0 | 23 | 0 | 0 | 0 | 102 | [link](https://myrtlebeach.macaronikid.com) |
+| Spartanburg | MacaroniKid-SC | 41 | 2 | 13 | 37 | 5 | 0 | 0 | 98 | [link](https://spartanburg.macaronikid.com) |
+| Littleeggharbor | MacaroniKid-NJ | 27 | 17 | 15 | 17 | 3 | 11 | 0 | 90 | [link](https://littleeggharbor.macaronikid.com) |
+| Sussexnj | MacaroniKid-NJ | 14 | 9 | 18 | 36 | 0 | 2 | 0 | 79 | [link](https://sussexnj.macaronikid.com) |
+| Norfolk | MacaroniKid-VA | 42 | 5 | 3 | 10 | 0 | 2 | 0 | 62 | [link](https://norfolk.macaronikid.com) |
+| Mclean | MacaroniKid-VA | 15 | 12 | 7 | 17 | 4 | 4 | 0 | 59 | [link](https://mclean.macaronikid.com) |
+| Norfolk Public Library | LibCal-VA2 | 7 | 6 | 11 | 12 | 0 | 4 | 0 | 40 | [link](https://www.norfolkpubliclibrary.org) |
+| Edison | MacaroniKid-NJ | 8 | 23 | 0 | 7 | 0 | 1 | 0 | 39 | [link](https://edison.macaronikid.com) |
+| Fredericksburg | MacaroniKid-VA | 11 | 3 | 7 | 16 | 0 | 0 | 0 | 37 | [link](https://fredericksburg.macaronikid.com) |
+| Monckscorner | MacaroniKid-SC | 8 | 2 | 8 | 12 | 6 | 0 | 0 | 36 | [link](https://monckscorner.macaronikid.com) |
+| Newbrunswick | MacaroniKid-NJ | 19 | 4 | 4 | 2 | 2 | 3 | 0 | 34 | [link](https://newbrunswick.macaronikid.com) |
+| Cherryhill | MacaroniKid-NJ | 15 | 1 | 1 | 3 | 3 | 5 | 0 | 28 | [link](https://cherryhill.macaronikid.com) |
+| Roanoke Public Libraries | LibCal-VA2 | 13 | 0 | 1 | 7 | 0 | 7 | 0 | 28 | [link](https://www.roanokeva.gov/library) |
+| Fortmill | MacaroniKid-SC | 13 | 11 | 0 | 2 | 0 | 0 | 0 | 26 | [link](https://fortmill.macaronikid.com) |
+| Ramsey | MacaroniKid-NJ | 19 | 5 | 0 | 1 | 0 | 0 | 0 | 25 | [link](https://ramsey.macaronikid.com) |
+| Warren | MacaroniKid-NJ | 8 | 7 | 3 | 2 | 0 | 2 | 0 | 22 | [link](https://warren.macaronikid.com) |
+| Library of Virginia | LibCal-VA2 | 20 | 0 | 0 | 0 | 0 | 0 | 0 | 20 | [link](https://www.lva.virginia.gov) |
+| Suffolk Public Library | LibCal-VA2 | 5 | 1 | 3 | 7 | 0 | 3 | 0 | 19 | [link](https://www.suffolkpubliclibrary.com) |
+| Arlington Public Library | LibCal-VA2 | 11 | 1 | 1 | 0 | 0 | 0 | 0 | 13 | [link](https://library.arlingtonva.us) |
+| Richmond Public Library | LibCal-VA2 | 3 | 4 | 0 | 1 | 0 | 3 | 0 | 11 | [link](https://rvalibrary.org) |
+| Lynchburg | MacaroniKid-VA | 9 | 0 | 0 | 0 | 0 | 0 | 0 | 9 | [link](https://lynchburg.macaronikid.com) |
+| Fairfax County Public Library | LibCal-VA2 | 5 | 2 | 2 | 0 | 0 | 0 | 0 | 9 | [link](https://www.fairfaxcounty.gov/library) |
+| Seminole County Public Library | SouthwestGeorgia-GA-seminole | 7 | 0 | 1 | 0 | 0 | 0 | 0 | 8 | [link](https://swgrl.org/calendar.php) |
+| Seminole County Public Library | SouthwestGeorgia-GA (pre-rename leftover) | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | [link](https://swgrl.org/calendar.php) |
+| Miller County - James W. Merritt, Jr. Memorial Library | SouthwestGeorgia-GA-miller | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://swgrl.org/calendar.php) |
+| Pipestem Resort State Park | WordPressTecParks-WV (registry key: WordPressTec-Parks) | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | [link](https://wvstateparks.com) |
+| Decatur County - Gilbert H. Gragg Library | SouthwestGeorgia-GA-decatur | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | [link](https://swgrl.org/calendar.php) |
+
+### Scrapers with zero attributable new events today
+
+Ran today per `scraper-summary.log` but zero new-event rows (all zero-`NEW` in the log itself, so no `created_at`/`scraped_at` correction needed):
+
+- Allentown-Public (10 FOUND / 0 NEW — all duplicates)
+- VenueList-ChildrensMuseums-DMV (36 FOUND / 0 NEW)
+- VenueList-GymnasticsCenters-DMV (40 FOUND / 0 NEW)
+- VenueList-MinigolfBatting-DMV (44 FOUND / 0 NEW)
+- VenueList-RollerSkating-DMV (40 FOUND / 0 NEW)
+- VenueList-TrampolineNinja-DMV (56 FOUND / 0 NEW)
+
+### Gaps
+
+- **Dorchester-County (MD)** — log reported Found 12 / New 12, but no DB rows attributable under `scraper_name = 'Dorchester-County'` (0 rows all-time) or any other name checked in the run's time window. See note 2 above. Not included in the table — treated as unmeasured, not zero.
+
+### Flagged: All Ages >= 70% (total >= 20 events)
+
+None of today's rows belong to the excluded known-legitimate broad-content scrapers (`FestivalGuides-Eastern`, `FairsFestivals-Eastern`, `KidsOutAndAbout-Eastern`, `KidsOutAndAbout-DMV`, `Eventbrite-Family-Eastern`), so no exclusions applied. 4 rows flagged:
+
+- **LibCal-VA2** — Library of Virginia — 100.0% All Ages (20 events)
+- **MacaroniKid-SC** — Myrtlebeach — 77.5% All Ages (102 events)
+- **MacaroniKid-NJ** — Ramsey — 76.0% All Ages (25 events)
+- **MacaroniKid-NJ** — Pointpleasantnj — 71.3% All Ages (108 events)
+
+**Cycle-completeness check:** re-ran the verification programmatically (not by trusting the 2026-08-08 note) — `Object.keys(SCRAPERS).filter(isScraperActive)` now returns **153** active keys (drifted up from the 151 recorded 2026-08-08, consistent with `SouthwestGeorgia-GA` and `SandhillRegional-NC` having been added recently) plus `Object.keys(MACARONI_SCRAPERS).filter(isScraperActive)` returns **20** active MacaroniKid state keys — a combined active universe of **173** identities (the two registries don't share key names). Cross-referencing that universe against every `| Site | Scraper | ... |` and zero-events-list entry from `## 2026-08-04` through today: **148** were already logged before today, **13** more logged today (listed above), leaving **161** covered and **12 still missing, cycle not complete**:
+
+`Communico-SC`, `EventActions-Libraries`, `Howard-County`, `Rockbridge-Regional`, `Somerset-County`, `Tockify-Horry`, and 6 `VenueList-*-DMV` scrapers (`BowlingAlleys`, `Eastern-US`, `FamilyEntertainment`, `IndoorPlaygrounds`, `NatureFarms`, `SwimmingPools`).
+
+No `## Cycle complete` heading added.

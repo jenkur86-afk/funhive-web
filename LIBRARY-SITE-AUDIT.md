@@ -5,6 +5,17 @@ Standing inventory of every individual library website FunHive scrapes, with the
 **Link column:** each row's Link points to that library's actual calendar/events page as configured in its scraper's source file (the same URL the scraper visits) — every row below resolved to a config URL, so no row needed the database-event-URL fallback this pass, but that fallback (noted inline) remains the intended path if a future update can't find a config match; the ~33 aggregate "no per-library breakdown available" rows link to one representative library from that scraper's config rather than the specific row name, since those rows don't name a single site.
 
 
+## Cycle complete — 2026-08-09
+
+This closes out the cycle that opened 2026-08-05. Across `## 2026-08-05`, `## 2026-08-07`, `## 2026-08-08`, and `## 2026-08-09`:
+
+- **104 of 104 active library-family scrapers** (per `isScraperActive()` over `scrapers/scraper-registry.js`) have at least one logged row this cycle.
+- **~2,462 individual library-website rows** recorded across the four dated sections (1,594 from 08-05/08-07/08-08 plus 868 added 2026-08-09).
+- Scrapers recorded as a **single aggregate row rather than a true per-site breakdown** (either because the scraper is a genuine single system, or because it's multi-site but doesn't log per-library output to stdout) include, from today's pass alone: Dorchester-County, Wicomico-Public, Allentown-Public, Orange-County-Library-FL, Nashville-Library-TN, Assabet-NH-MA (flagged as actually 18 sites), and LibCal-VA2 (flagged as actually 9 sites). Prior sections in this cycle carry their own such rows too (e.g. GoogleCalendar-MD, WithApps-Libraries's prior-day counterparts) — see each dated section's own notes.
+- ~13% of link-column entries across the WordPress-state families added 2026-08-09 (102 of 793 rows) resolved to `[Link]()` — see that section's notes for why.
+
+The next scraper run that reaches a library-family scraper starts a fresh cycle beneath this marker.
+
 ## Deep-dive: zero-event verification (2026-08-04)
 
 All 315 rows showing 0 events found were live-checked against their real calendar page (11 parallel research passes, one per batch). Result: **23 confirmed genuinely empty (MATCHES)**, **36 confirmed real scraper bugs (MISMATCH — site has real events, scraper found none)**, **255 unverifiable** (mostly 403/bot-blocks, dead/expired domains, JS-only calendar widgets with no server-rendered event list, and TLS/connection failures — infrastructure noise, not necessarily scraper bugs).
@@ -2444,4 +2455,901 @@ The one genuinely new entry is **SandhillRegional-NC** — a brand-new scraper c
 - **Intercept-Camden** (`scraper-intercept-camden-nj.js`, NJ, Group 3)
 
 Both are Group 3, and Group 3 has not run yet in this cycle — only Group 2 (2026-08-05) and Group 1 (2026-08-07 / 2026-08-08, same run) have. The cycle can close out once Group 3 runs and both scrapers pick up at least one logged row.
+
+## 2026-08-09
+
+Day 5 of the open cycle (day 1 of a fresh 3-day rotation counter doesn't apply here — this is Group 3's first run of the current cycle, per `scrapers/logs/scraper-run-2026-08-09.log`'s own "Today is day 9 → Group 3" line). This run closes out the open cycle: every active library-family scraper now has at least one entry (see Cycle-completion check below).
+
+Per-library counts below are paired from `scrapers/logs/scraper-stdout.log`, bounded by each scraper's start/end timestamp taken from `scrapers/logs/scraper-run-2026-08-09.log`. Rows already logged earlier this cycle are skipped per the standing skip-duplicates rule: **WordPress-NY** (2026-08-05), **LibCal-GA** (2026-08-05), **GoogleCalendar-MD** and **Communico-MD** (2026-08-07), **WordPress-GA**, **WordPress-NC**, and **SandhillRegional-NC** (2026-08-07/08-08). Non-library scrapers in today's run (RollyPollies-MD — a kids' activity venue chain, not a library; the VenueList-\*-DMV family; AARecParks-MD; WordPressTec-Parks; Venue-Events-ZoosAquariums; Farms-Eastern-US; Patch-Community-Eastern; CivicRec-Parks-Eastern; Gardens-Nature-Eastern; MacaroniKid-NJ/VA/SC/DE) are excluded per the task's standing skip list.
+
+**Notes on individual entries:**
+- **LibCal-FL**: 2 of 5 sites (St. Johns County Public Library, Seminole County Library) errored before printing a per-library `Found` count — consistent with the run's own "Failed: 2" summary line. Recorded as 0 with an inline error flag rather than guessed at.
+- **Communico-FL**: 4 of 9 sites (Miami-Dade, Broward, Martin County, Alachua County) fell back to raw API-page counts (`📡 API returned N events`) rather than the post-filter `Found N events` line the other 5 sites printed; used as the per-library count since no later line supersedes it in the raw log.
+- **BiblioCommons-MA**: only 2 sites tracked this run (Boston Public Library, Lawrence Public Library) — matches the run's own "📍 2 sites tracked" summary line.
+- **Squarespace-Libraries**: config now covers only 1 active site (Queen Anne's County Library, MD) — the file's own comment notes Dorchester County was removed to avoid duplicating `scraper-dorchester-county-library-MD.js`'s coverage.
+- **Drupal-Virginia** and **WithApps-Libraries**: both confirmed single-site scrapers (Handley Regional Library, VA and Hampton Public Library, VA respectively) via their own "📍 1 sites tracked" summary lines — not itemized-but-incomplete, genuinely one site each.
+- **WordPress-Events-Calendar**: 13 sites itemized this run (an improvement over the 2026-08-04 deep-dive pass, which could not itemize it at all).
+- **WordPress-PA / WordPress-MA / WordPress-KY / WordPress-SC / WordPress-WV / WordPress-DE / WordPress-RI / WordPress-NH**: fully itemized per-library from stdout. Link column resolved via each scraper's own `LIBRARIES` config array matched by name; **~13% of rows across these eight families (102 of 793) could not be matched** — mostly punctuation/apostrophe differences between the console's display name and the config's `name` field (e.g. "Guthrie Memorial Library - Hanovers Public Library" in the log vs. an apostrophe'd form in config) — left as `[Link]()` rather than guessed at, consistent with this file's existing convention for unresolved links.
+- **LibraryMarket-PA / LibraryMarket-NC**: these use a different log pattern (`📚 Scraping {name}...` / `✅ Found {N} events`) than the LibCal/Communico `📍` pattern; both fully itemized (3 and 2 sites respectively) with links from their own `LIBRARIES` config arrays.
+- **Orange-County-Library-FL** and **Nashville-Library-TN**: confirmed single-system scrapers (one shared calendar URL each) via their own file headers — the "17"/"22" `name:` matches in those files are internal branch-address lookups for venue matching, not separate scrape targets.
+- **Assabet-NH-MA**: genuinely multi-site (18 libraries across NH/MA, each with its own `eventsUrl` in the `LIBRARIES` config array) but this scraper does not print a per-library breakdown to stdout — recorded as one aggregate row per the standing single-system-standalone convention, with a note flagging the real site count rather than silently treating it as one library.
+- **LibCal-VA2**: ran twice today (07:25 EST, pre-fix, Found: 0; 22:15 EST, post-fix, Found: 182) — per the task's standing instruction, the second run's totals are used. Neither run's stdout was captured with a per-library breakdown (both were ad-hoc reruns outside the main rotation's logged pipeline, same gap as the SouthwestGeorgia-GA and LibCal-GA/WordPress-GA ad-hoc reruns below). Its `LIBRARIES` config now holds 9 systems (2 removed since the 2026-08-08 note): Fairfax County, Arlington, Prince William, Richmond, Norfolk, Roanoke, Suffolk, Williamsburg Regional, and the Library of Virginia. Recorded as one aggregate row with a note, not guessed at per-library.
+- **SouthwestGeorgia-GA**: brand-new scraper (built today, per the task brief), 3 branches, all sharing one listing page (`https://swgrl.org/calendar.php`). Per-branch counts (141/29/47) were supplied directly rather than re-derived from stdout, since — like LibCal-VA2's second run — this ad-hoc invocation wasn't captured in `scraper-stdout.log` (it ran as a separate `🐝 FunHive Local Scraper Runner` process, visible only in `scraper-run-2026-08-09.log`'s aggregate line). Branch order confirmed against the scraper file's own `LIBRARIES` array.
+
+| Library Website | State | Scraper | Events Found | Link |
+|---|---|---|---|---|
+| Lakeland Public Library | FL | LibCal-FL | 20 | [Link](https://lakelandpl.libcal.com/calendar?cid=2787&t=d&d=0000-00-00&cal=2787&inc=0) |
+| Palm Beach County Library System | FL | LibCal-FL | 0 | [Link](https://pbclibrary.libcal.com/calendar?cid=-1&t=d) |
+| St. Johns County Public Library | FL | LibCal-FL | 0 *(error/no count captured)* | [Link](https://sjcpls.libcal.com/calendar?cid=-1&t=d) |
+| Seminole County Library | FL | LibCal-FL | 0 *(error/no count captured)* | [Link](https://seminolecountylibrary.libcal.com/calendar?cid=-1&t=d) |
+| Marion County Public Library System | FL | LibCal-FL | 10 | [Link](https://mcpls.libcal.com/) |
+| BCCLS - Bergen County Cooperative Library System | NJ | LibCal-NJ | 3005 | [Link](https://bccls.libcal.com/calendar/bccls/?cid=-1&t=m&d=0000-00-00&cal=-1&inc=0) |
+| Montclair Public Library | NJ | LibCal-NJ | 20 | [Link](https://bccls.libcal.com/calendar/montclair?cid=10306&t=d&d=0000-00-00&cal=10306&inc=0) |
+| Jersey City Free Public Library | NJ | LibCal-NJ | 20 | [Link](https://jclibrary.libcal.com/calendar?cid=-1&t=d) |
+| Newark Public Library | NJ | LibCal-NJ | 20 | [Link](https://npl.libcal.com/calendar?cid=-1&t=d) |
+| Monmouth County Library System | NJ | LibCal-NJ | 20 | [Link](https://monmouthcountylib.libcal.com/calendar?cid=-1&t=d) |
+| Mercer County Library System | NJ | LibCal-NJ | 20 | [Link](https://events.mcl.org/) |
+| Hunterdon County Library | NJ | LibCal-NJ | 48 | [Link](https://hclibrary.libcal.com/calendars) |
+| Sussex County Library | NJ | LibCal-NJ | 10 | [Link](https://sussexcountylibrary.libcal.com/) |
+| Union County Libraries | NJ | LibCal-NJ | 20 | [Link](https://unioncountylibraries.libcal.com/calendar/UCLSPrograms) |
+| Charleston County Public Library | SC | LibCal-SC | 20 | [Link](https://ccplsc.libcal.com/calendar?cid=-1&t=d) |
+| Berkeley County Library System | SC | LibCal-SC | 20 | [Link](https://berkeleylibrarysc.libcal.com/calendar?cid=-1&t=d) |
+| South Carolina State Library | SC | LibCal-SC | 20 | [Link](https://statelibrary.sc.libcal.com/calendar/events?cid=-1&t=d) |
+| Lexington County Public Library | SC | LibCal-SC | 10 | [Link](https://lexcolibrary.libcal.com/) |
+| Dorchester County Library | SC | LibCal-SC | 10 | [Link](https://dorchesterlibrarysc.libcal.com/) |
+| Arlington County Public Library | VA | LibCal-VA | 20 | [Link](https://arlingtonva.libcal.com/calendar?cid=-1&t=d&d=0000-00-00&cal=-1&inc=0) |
+| Massanutten Regional Library | VA | LibCal-VA | 20 | [Link](https://mrlib.libcal.com/calendar?cid=22185&t=d&d=0000-00-00&cal=22185&inc=0) |
+| Fairfax County Public Library | VA | LibCal-VA | 20 | [Link](https://librarycalendar.fairfaxcounty.gov/calendar?cid=6524&t=d&d=0000-00-00&cal=6524&inc=0) |
+| Bangor Public Library | ME | LibCal-ME | 12 | [Link](https://bangorpubliclibrary.libcal.com/) |
+| LibCal-VA2 (9 libraries — see note) | VA | LibCal-VA2 | 182 | [Link](https://www.fairfaxcounty.gov/library) |
+| Miami-Dade Public Library | FL | Communico-FL | 1 | [Link](https://mdpls.org/events) |
+| Broward County Library | FL | Communico-FL | 25 | [Link](https://broward.libnet.info/events) |
+| Hillsborough County Public Library Cooperative | FL | Communico-FL | 646 | [Link](https://attend.hcplc.org/events) |
+| Jacksonville Public Library | FL | Communico-FL | 492 | [Link](https://jaxpubliclibrary.libnet.info/events) |
+| Pasco County Libraries | FL | Communico-FL | 275 | [Link](https://pascolibraries.libnet.info/events) |
+| Martin County Library System | FL | Communico-FL | 5 | [Link](https://mcls.libnet.info/events) |
+| Largo Public Library | FL | Communico-FL | 100 | [Link](https://largopubliclibrary.libnet.info/events) |
+| Alachua County Library District | FL | Communico-FL | 7 | [Link](https://attend.aclib.us/events) |
+| Hernando County Public Library | FL | Communico-FL | 105 | [Link](https://hernandocounty.librarycalendar.com/) |
+| Huntington Public Library | NY | Communico-NY | 200 | [Link](https://myhpl.libnet.info/events) |
+| Massapequa Public Library | NY | Communico-NY | 193 | [Link](https://massapequa.librarycalendar.com/events) |
+| Patchogue-Medford Library | NY | Communico-NY | 139 | [Link](https://pmlib.libnet.info/events) |
+| Poughkeepsie Public Library District | NY | Communico-NY | 24 | [Link](https://poughkeepsie.librarycalendar.com/events/list) |
+| Reading Public Library | PA | Communico-PA | 33 | [Link](https://readingpl.libnet.info/events) |
+| Boston Public Library | MA | BiblioCommons-MA | 490 | [Link](https://bpl.bibliocommons.com/v2/events) |
+| Lawrence Public Library | MA | BiblioCommons-MA | 498 | [Link](https://lawrence.bibliocommons.com/v2/events) |
+| Dorchester County Public Library | MD | Dorchester-County | 12 | [Link](https://www.dorchesterlibrary.org/calendar-of-events) |
+| Wicomico Public Libraries | MD | Wicomico-Public | 17 | [Link](https://www.wicomicolibrary.org/events/upcoming) |
+| Allentown Public Library | PA | Allentown-Public | 10 | [Link](https://www.allentownpl.org) |
+| Hampton Public Library | VA | WithApps-Libraries | 42 | [Link](https://calendar.hampton.gov/hamptonva/calendar) |
+| Washington County Public Library | VA | WordPress-Events-Calendar | 0 | [Link](https://www.wcpl.net/events/) |
+| Wythe-Grayson Regional Library | VA | WordPress-Events-Calendar | 50 | [Link](https://wythegrayson.lib.va.us/calendar/) |
+| Alleghany Highlands Regional Library | VA | WordPress-Events-Calendar | 2 | [Link](https://ahrlib.org/events/) |
+| Galax-Carroll Regional Library | VA | WordPress-Events-Calendar | 50 | [Link](https://galaxcarroll.lib.va.us/events/) |
+| Charlotte County Library | VA | WordPress-Events-Calendar | 50 | [Link](https://cclibrary.net/events/) |
+| Halifax County-South Boston Library | VA | WordPress-Events-Calendar | 3 | [Link](https://halifaxlibrary.org/events/) |
+| Blackwater Regional Library | VA | WordPress-Events-Calendar | 50 | [Link](https://blackwaterlib.org/events/) |
+| Rappahannock County Library | VA | WordPress-Events-Calendar | 50 | [Link](https://rappahannocklibrary.org/events/) |
+| Heritage Public Library | VA | WordPress-Events-Calendar | 0 | [Link](https://heritagepubliclibrary.org/events-programs/) |
+| Bristol Public Library | VA | WordPress-Events-Calendar | 0 | [Link](https://bristolpubliclibrary.org/events/) |
+| Pittsylvania County Public Library | VA | WordPress-Events-Calendar | 46 | [Link](https://pcplib.org/events/) |
+| Carnegie Library of Pittsburgh | PA | WordPress-Events-Calendar | 0 | [Link](https://www.carnegielibrary.org/events/) |
+| Osterhout Free Library | PA | WordPress-Events-Calendar | 24 | [Link](https://osterhout.info/events/) |
+| Queen Anne's County Library | MD | Squarespace-Libraries | 74 | [Link](https://api3.libcal.com/embed_calendar.php?iid=3092&cal_id=13052&w=800&h=600&dv=month) |
+| Handley Regional Library | VA | Drupal-Virginia | 23 | [Link](https://www.handleyregional.org/events/upcoming) |
+| Camden County Library System | NJ | Intercept-Camden | 10 | [Link](https://events.camdencountylibrary.org/) |
+| Free Library of Philadelphia | PA | WordPress-PA | 0 | [Link]() |
+| Carnegie Library of Pittsburgh | PA | WordPress-PA | 12 | [Link]() |
+| Albion Area Public Library | PA | WordPress-PA | 0 | [Link](https://www.albionlibrary.org/) |
+| Allentown Public Library | PA | WordPress-PA | 0 | [Link](https://sites.google.com/) |
+| Altoona Area Public Library | PA | WordPress-PA | 107 | [Link](https://www.altoonalibrary.org) |
+| Ardmore Library | PA | WordPress-PA | 0 | [Link]() |
+| Ashland Public Library | PA | WordPress-PA | 0 | [Link]() |
+| Aston Public Library | PA | WordPress-PA | 0 | [Link](https://www.astonlibrary.org) |
+| Spalding Memorial Library | PA | WordPress-PA | 33 | [Link](https://www.athenslibrary.org) |
+| Avalon Public Library | PA | WordPress-PA | 0 | [Link](https://avalonlibrary.org/) |
+| Avella Area Library Center | PA | WordPress-PA | 0 | [Link](https://www.avellalibrary.org) |
+| Avonmore Public Library | PA | WordPress-PA | 0 | [Link](https://www.avonmorelibrary.org) |
+| Bangor Public Library | PA | WordPress-PA | 0 | [Link](https://www.bangorlibrary.org) |
+| Beaver County Bookmobile Schedule | PA | WordPress-PA | 4 | [Link](https://www.beaverfallslibrary.org) |
+| Bedford County Library | PA | WordPress-PA | 0 | [Link](https://www.bedfordlibrary.org) |
+| Belle Vernon Public Library | PA | WordPress-PA | 0 | [Link](https://www.bellevernonlibrary.org/) |
+| Andrew Bayne Memorial Library | PA | WordPress-PA | 0 | [Link](https://www.bellevue.net/) |
+| Bellwood Antis Public Library | PA | WordPress-PA | 10 | [Link](https://www.bellwoodlibrary.org) |
+| Bernville Area Community Library | PA | WordPress-PA | 0 | [Link](https://www.bernvillelibrary.org) |
+| Bethany Public Library | PA | WordPress-PA | 0 | [Link](https://bethanylibrary.org/) |
+| Bethel-Tulpehocken Public Library | PA | WordPress-PA | 0 | [Link](https://www.bethellibrary.org) |
+| Bethel Park Public Library | PA | WordPress-PA | 0 | [Link](https://www.bethelparklibrary.org/) |
+| Bethlehem Area Public Library | PA | WordPress-PA | 0 | [Link](https://www.bethlehemlibrary.org) |
+| Boyertown Community Library | PA | WordPress-PA | 0 | [Link](https://www.boyertownlibrary.org) |
+| Bradford Area Public Library | PA | WordPress-PA | 0 | [Link](https://bradfordlibrary.org/) |
+| Bridgeville Public Library | PA | WordPress-PA | 0 | [Link](https://bridgevillelibrary.org/) |
+| Mengle Memorial Library | PA | WordPress-PA | 0 | [Link](https://www.brockwaylibrary.org) |
+| Butler Area Public Library | PA | WordPress-PA | 1 | [Link](https://www.butlerlibrary.org) |
+| Green Free Library | PA | WordPress-PA | 0 | [Link](https://www.cantonlibrary.org) |
+| Carbondale Public Library | PA | WordPress-PA | 0 | [Link](https://carbondalelibrary.org/) |
+| Bosler Free Library | PA | WordPress-PA | 0 | [Link](https://www.carlislelibrary.org) |
+| Andrew Carnegie Free Library | PA | WordPress-PA | 12 | [Link](https://www.carnegielibrary.org) |
+| Community Library Of Castle Shannon | PA | WordPress-PA | 0 | [Link](https://castleshannonlibrary.org/) |
+| John K Tener Library | PA | WordPress-PA | 0 | [Link](https://www.charleroilibrary.org) |
+| J. Lewis Crozer Library | PA | WordPress-PA | 0 | [Link](https://www.chesterlibrary.org/) |
+| Chester Springs Library | PA | WordPress-PA | 0 | [Link](https://www.chesterspringslibrary.org/) |
+| Moores Memorial Library | PA | WordPress-PA | 0 | [Link](https://www.christianalibrary.org) |
+| Clairton Public Library | PA | WordPress-PA | 0 | [Link](https://clairtonlibrary.org/) |
+| Claysburg Area Public Library Inc | PA | WordPress-PA | 0 | [Link](https://www.claysburglibrary.org) |
+| Coatesville Area Public Library | PA | WordPress-PA | 0 | [Link](https://www.coatesvillelibrary.org) |
+| Columbia Public Library | PA | WordPress-PA | 0 | [Link](https://www.columbialibrary.org) |
+| Cooperstown Public Library | PA | WordPress-PA | 0 | [Link](https://www.cooperstownlibrary.org) |
+| Coraopolis Memorial Library | PA | WordPress-PA | 0 | [Link](https://coraopolislibrary.org/) |
+| Corry Public Library | PA | WordPress-PA | 5 | [Link](https://www.corrylibrary.org) |
+| Coudersport Public Library | PA | WordPress-PA | 4 | [Link](https://www.coudersportlibrary.org) |
+| Back Mountain Memorial Library | PA | WordPress-PA | 7 | [Link](https://www.dallaslibrary.org) |
+| Dalton Community Library | PA | WordPress-PA | 25 | [Link](https://www.daltonlibrary.org) |
+| Thomas Beaver Free Library | PA | WordPress-PA | 0 | [Link]() |
+| Darby Library | PA | WordPress-PA | 4 | [Link](https://www.darbylibrary.org) |
+| Delmont Public Library | PA | WordPress-PA | 0 | [Link](https://www.delmontlibrary.org) |
+| Dover Area Community Library | PA | WordPress-PA | 0 | [Link](https://www.doverlibrary.org) |
+| Downingtown Library Company | PA | WordPress-PA | 0 | [Link](https://downingtownlibrary.org/) |
+| Dunbar Community Library | PA | WordPress-PA | 0 | [Link](https://www.dunbarlibrary.org) |
+| East Berlin Community Library | PA | WordPress-PA | 1 | [Link](https://www.adamslibrary.org/) |
+| Easton Area Public Library | PA | WordPress-PA | 0 | [Link](https://www.eastonlibrary.org/) |
+| Ellwood City Area Pub Library | PA | WordPress-PA | 0 | [Link](https://www.ellwoodcitylibrary.org) |
+| Emmaus Public Library | PA | WordPress-PA | 0 | [Link](https://www.emmauslibrary.org/) |
+| Barbara Moscato Brown Memorial Library | PA | WordPress-PA | 0 | [Link](https://www.emporiumlibrary.org) |
+| Erie County Public Library | PA | WordPress-PA | 0 | [Link](https://erielibrary.org/) |
+| Evans City Public Library | PA | WordPress-PA | 0 | [Link](https://www.evanscitylibrary.org) |
+| Everett Free Library | PA | WordPress-PA | 0 | [Link](https://www.everettlibrary.org) |
+| Bucks County Free Library - Fallsington Library | PA | WordPress-PA | 0 | [Link](https://www.fallsingtonlibrary.org) |
+| Fleetwood Area Public Library | PA | WordPress-PA | 0 | [Link](https://www.fleetwoodlibrary.org) |
+| Borough Of Folcroft Public Library | PA | WordPress-PA | 0 | [Link](https://www.folcroftlibrary.org) |
+| Foxburg Free Library Association | PA | WordPress-PA | 0 | [Link](https://www.foxburglibrary.org) |
+| Franklin Public Library | PA | WordPress-PA | 0 | [Link](https://www.franklinlibrary.org) |
+| Pequea Valley Public Library - Gap Branch | PA | WordPress-PA | 0 | [Link](https://www.gaplibrary.org) |
+| Genesee Area Library | PA | WordPress-PA | 0 | [Link](https://www.geneseelibrary.org) |
+| Arthur Hufnagel Public Library Of Glen Rock | PA | WordPress-PA | 0 | [Link]() |
+| Glenolden Library | PA | WordPress-PA | 0 | [Link](https://www.glenoldenlibrary.org) |
+| Greensburg Hempfield Area Library | PA | WordPress-PA | 0 | [Link](https://www.greensburglibrary.org) |
+| Greenville Area Public Library | PA | WordPress-PA | 0 | [Link](https://www.greenvillelibrary.org) |
+| Hamburg Public Library | PA | WordPress-PA | 0 | [Link](https://www.hamburglibrary.org/) |
+| Salem Public Library | PA | WordPress-PA | 0 | [Link](https://www.hamlinlibrary.org/) |
+| Guthrie Memorial Library - Hanovers Public Library | PA | WordPress-PA | 0 | [Link]() |
+| Dauphin County Library System | PA | WordPress-PA | 0 | [Link](https://www.harrisburglibrary.org/) |
+| Hastings Public Library | PA | WordPress-PA | 15 | [Link]() |
+| Union Library Company Of Hatborough | PA | WordPress-PA | 0 | [Link](https://www.hatborolibrary.org) |
+| Hawley Library | PA | WordPress-PA | 0 | [Link](https://www.hawleylibrary.org/) |
+| Hazleton Area Public Library | PA | WordPress-PA | 0 | [Link](https://www.hazletonlibrary.org/) |
+| Hellertown Area Library | PA | WordPress-PA | 0 | [Link](https://www.hellertownlibrary.org) |
+| Hershey Public Library | PA | WordPress-PA | 0 | [Link](https://www.hersheylibrary.org/) |
+| Hollidaysburg Area Public Library | PA | WordPress-PA | 0 | [Link](https://hollidaysburglibrary.org/) |
+| Honey Brook Community Library | PA | WordPress-PA | 0 | [Link](https://www.honeybrooklibrary.org) |
+| Horsham Township Library | PA | WordPress-PA | 0 | [Link](https://www.horshamlibrary.org/) |
+| Chartiers-Houston Com Library | PA | WordPress-PA | 0 | [Link](https://www.houstonlibrary.org) |
+| Hughesville Area Public Library | PA | WordPress-PA | 52 | [Link](https://www.hughesvillelibrary.org) |
+| Huntingdon County Library | PA | WordPress-PA | 3 | [Link](https://www.huntingdonlibrary.org) |
+| Hyde Park Public Library | PA | WordPress-PA | 41 | [Link](https://www.hydeparklibrary.org) |
+| Hyndman-Londonderry Public Library | PA | WordPress-PA | 0 | [Link](https://www.hyndmanlibrary.org/) |
+| Pequea Valley Public Library | PA | WordPress-PA | 3 | [Link](https://www.intercourselibrary.org) |
+| Jefferson Hills Public Library | PA | WordPress-PA | 1 | [Link](https://www.jeffersonhillslibrary.org) |
+| Jenkintown Library | PA | WordPress-PA | 2 | [Link](https://www.jenkintownlibrary.org) |
+| Johnsonburg Public Library | PA | WordPress-PA | 0 | [Link](https://www.johnsonburglibrary.org/) |
+| Hoyt Library | PA | WordPress-PA | 4 | [Link](https://www.kingstonlibrary.org) |
+| Knox Public Library | PA | WordPress-PA | 0 | [Link]() |
+| Louisa Gonser Community Library Inc | PA | WordPress-PA | 2 | [Link](https://www.berkslibraries.org/) |
+| Northern Wayne Community Library | PA | WordPress-PA | 0 | [Link](https://lakewoodlibrary.org/) |
+| Lancaster Public Library | PA | WordPress-PA | 0 | [Link]() |
+| Lansdale Public Library | PA | WordPress-PA | 108 | [Link](https://www.lansdalelibrary.org) |
+| Lansdowne Public Library | PA | WordPress-PA | 1 | [Link](https://lansdownelibrary.org/) |
+| Adams Memorial Library | PA | WordPress-PA | 80 | [Link](https://www.latrobelibrary.org) |
+| Lebanon Community Library | PA | WordPress-PA | 0 | [Link](https://lebanonlibrary.org/) |
+| Mifflin County Library | PA | WordPress-PA | 0 | [Link](https://www.lewistownlibrary.org) |
+| Ligonier Valley Library | PA | WordPress-PA | 10 | [Link](https://www.ligonierlibrary.org) |
+| Lilly Washington Pub Library | PA | WordPress-PA | 0 | [Link](https://www.lillylibrary.org/) |
+| Lititz Public Library | PA | WordPress-PA | 0 | [Link](https://www.lititzlibrary.org) |
+| Malvern Public Library | PA | WordPress-PA | 0 | [Link](https://www.malvernlibrary.org) |
+| Manheim Community Library | PA | WordPress-PA | 0 | [Link](https://www.manheimlibrary.org) |
+| Mansfield Free Public Library | PA | WordPress-PA | 1 | [Link]() |
+| Marienville Area Library | PA | WordPress-PA | 0 | [Link](https://www.marienvillelibrary.org) |
+| Mars Area Public Library | PA | WordPress-PA | 0 | [Link](https://www.marslibrary.org) |
+| Martinsburg Community Library | PA | WordPress-PA | 1 | [Link](https://www.martinsburglibrary.org) |
+| Carnegie Library Of Mckeesport | PA | WordPress-PA | 0 | [Link](https://mckeesportlibrary.org/) |
+| Meadville Public Library | PA | WordPress-PA | 0 | [Link](https://www.meadvillelibrary.org) |
+| Joseph T. Simpson Public Library | PA | WordPress-PA | 0 | [Link](https://www.mechanicsburglibrary.org) |
+| Francis J. Catania Law Library | PA | WordPress-PA | 0 | [Link](https://www.medialibrary.org) |
+| Mercer Area Library | PA | WordPress-PA | 0 | [Link](https://www.mercerlibrary.org) |
+| Meyersdale Public Library | PA | WordPress-PA | 0 | [Link](https://www.meyersdalelibrary.org/) |
+| Middletown Public Library | PA | WordPress-PA | 0 | [Link](https://www.middletownlibrary.org) |
+| Carnegie Library, Midland | PA | WordPress-PA | 0 | [Link](https://www.midlandlibrary.org) |
+| Pike County Public Library - Dingman Township Branch | PA | WordPress-PA | 0 | [Link]() |
+| Milton Public Library | PA | WordPress-PA | 0 | [Link]() |
+| Minersville Public Library | PA | WordPress-PA | 0 | [Link](https://www.minersvillelibrary.org/) |
+| Community College Of Beaver County | PA | WordPress-PA | 0 | [Link](https://www.monacalibrary.org/) |
+| Monessen Public Library District Center | PA | WordPress-PA | 0 | [Link](https://www.monessenlibrary.org) |
+| Monroeton Public Library | PA | WordPress-PA | 4 | [Link](https://www.monroetonlibrary.org) |
+| Monroeville Public Library | PA | WordPress-PA | 0 | [Link](https://www.monroevillelibrary.org) |
+| Montgomery Area Public Library | PA | WordPress-PA | 0 | [Link](https://www.montgomerylibrary.org) |
+| Susquehanna County Historical Society Free Library Association | PA | WordPress-PA | 0 | [Link]() |
+| South Fayette Township Library | PA | WordPress-PA | 0 | [Link](https://www.morganlibrary.org) |
+| Mount Pleasant Free Public Library Association | PA | WordPress-PA | 0 | [Link](https://www.mountpleasantlibrary.org/) |
+| Marian Sutherland Kirby Library | PA | WordPress-PA | 47 | [Link](https://mountaintoplibrary.org/) |
+| Murrysville Community Library | PA | WordPress-PA | 0 | [Link](https://www.murrysvillelibrary.org) |
+| Narberth Community Library | PA | WordPress-PA | 10 | [Link](https://www.narberthlibrary.org) |
+| Memorial Library Of Nazareth Vicinity | PA | WordPress-PA | 5 | [Link](https://www.nazarethlibrary.org) |
+| New Cumberland Public Library | PA | WordPress-PA | 0 | [Link](https://www.newcumberlandlibrary.org) |
+| New Florence Community Library | PA | WordPress-PA | 45 | [Link](https://www.newflorencelibrary.org) |
+| Pratt Memorial Library | PA | WordPress-PA | 1 | [Link](https://newmilfordlibrary.org/) |
+| Newport Public Library | PA | WordPress-PA | 4 | [Link]() |
+| North Versailles Public Library | PA | WordPress-PA | 0 | [Link](https://northversailleslibrary.org/) |
+| North Wales Library | PA | WordPress-PA | 0 | [Link](https://www.northwaleslibrary.org) |
+| Priestley Forsyth Memorial Library | PA | WordPress-PA | 0 | [Link](https://www.northumberlandlibrary.org/) |
+| Norwood Public Library | PA | WordPress-PA | 0 | [Link](https://norwoodlibrary.org/) |
+| Oakmont Carnegie Library | PA | WordPress-PA | 5 | [Link](https://oakmontlibrary.org/) |
+| Oil City Library | PA | WordPress-PA | 0 | [Link](https://www.oilcitylibrary.org) |
+| Orwigsburg Area Fr Pub Library | PA | WordPress-PA | 0 | [Link](https://www.orwigsburglibrary.org/) |
+| Oxford Public Library | PA | WordPress-PA | 0 | [Link](https://oxfordlibrary.org/) |
+| Parkesburg Free Library | PA | WordPress-PA | 1 | [Link](https://www.parkesburglibrary.org/) |
+| Phoenixville Public Library | PA | WordPress-PA | 1 | [Link](https://phoenixvillelibrary.org/) |
+| Bucks County Free Library - Pipersville Free Library | PA | WordPress-PA | 0 | [Link](https://pipersvillelibrary.org/) |
+| Plymouth Public Library | PA | WordPress-PA | 0 | [Link]() |
+| Portage Public Library | PA | WordPress-PA | 2 | [Link](https://www.portagelibrary.org) |
+| Pottsville Free Public Library | PA | WordPress-PA | 12 | [Link](https://www.pottsvillelibrary.org) |
+| Prospect Community Library | PA | WordPress-PA | 0 | [Link](https://www.prospectlibrary.org/) |
+| Prospect Park Free Library | PA | WordPress-PA | 0 | [Link](https://prospectparklibrary.org/) |
+| Punxsutawney Memorial Library | PA | WordPress-PA | 0 | [Link](https://www.punxsutawneylibrary.org) |
+| Quarryville Library Center | PA | WordPress-PA | 0 | [Link](https://quarryvillelibrary.org/) |
+| Ralston Link | PA | WordPress-PA | 0 | [Link](https://www.ralstonlibrary.org/) |
+| Berks County Public Libraries | PA | WordPress-PA | 0 | [Link](https://www.readinglibrary.org) |
+| Reynoldsville Public Library | PA | WordPress-PA | 0 | [Link](https://www.reynoldsvillelibrary.org) |
+| Richland Community Library | PA | WordPress-PA | 0 | [Link](https://www.richlandlibrary.org/) |
+| Ridgway Public Library | PA | WordPress-PA | 0 | [Link](https://www.ridgwaylibrary.org) |
+| Ridley Park Public Library | PA | WordPress-PA | 0 | [Link](https://www.ridleyparklibrary.org) |
+| Ringtown Area Library | PA | WordPress-PA | 0 | [Link](https://www.ringtownlibrary.org/) |
+| Roaring Spring Comm Library | PA | WordPress-PA | 0 | [Link](https://www.roaringspringlibrary.org/) |
+| Robesonia Community Library | PA | WordPress-PA | 0 | [Link](https://www.robesonialibrary.org) |
+| Rochester Public Library | PA | WordPress-PA | 0 | [Link](https://www.rochesterlibrary.org/) |
+| Saxonburg Area Library | PA | WordPress-PA | 0 | [Link](https://www.saxonburglibrary.org) |
+| Saxton Community Library | PA | WordPress-PA | 0 | [Link](https://www.saxtonlibrary.org/) |
+| Scottdale Public Library | PA | WordPress-PA | 0 | [Link](https://www.scottdalelibrary.org/) |
+| Albright Memorial Library | PA | WordPress-PA | 0 | [Link](https://www.scrantonlibrary.org) |
+| Sewickley Public Library | PA | WordPress-PA | 4 | [Link](https://www.sewickleylibrary.org) |
+| Sheffield Township Library | PA | WordPress-PA | 0 | [Link](https://www.sheffieldlibrary.org/) |
+| Shippensburg Public Library | PA | WordPress-PA | 0 | [Link](https://www.shippensburglibrary.org) |
+| Paul Smith Library Of Southern York County | PA | WordPress-PA | 0 | [Link](https://www.shrewsburylibrary.org) |
+| Sinking Spring Public Library | PA | WordPress-PA | 0 | [Link](https://www.sinkingspringlibrary.org) |
+| Slatington Library Inc | PA | WordPress-PA | 0 | [Link](https://sites.google.com/) |
+| Smithfield Library | PA | WordPress-PA | 0 | [Link](https://www.smithfieldlibrary.org/) |
+| Mary S Biesecker Public Library | PA | WordPress-PA | 0 | [Link](https://www.somersetlibrary.org) |
+| South Park Township Library | PA | WordPress-PA | 0 | [Link](https://southparklibrary.org/) |
+| Bucks County Free Library - Southampton Free Library | PA | WordPress-PA | 4 | [Link]() |
+| Spring City Free Public Library | PA | WordPress-PA | 0 | [Link](https://springcitylibrary.org/) |
+| Springdale Free Public Library | PA | WordPress-PA | 0 | [Link](https://springdalelibrary.org/) |
+| Springfield Township Library | PA | WordPress-PA | 1 | [Link](https://www.springfieldlibrary.org/) |
+| Strasburg-Heisler Library | PA | WordPress-PA | 0 | [Link](https://www.strasburglibrary.org) |
+| Summerville Public Library | PA | WordPress-PA | 0 | [Link](https://www.summervillelibrary.org) |
+| Degenstein Community Library | PA | WordPress-PA | 4 | [Link](https://www.sunburylibrary.org) |
+| Carnegie Free Library Of Swissvale | PA | WordPress-PA | 0 | [Link](https://swissvalelibrary.org/) |
+| Sykesville Public Library | PA | WordPress-PA | 0 | [Link](https://www.sykesvillelibrary.org) |
+| Taylor Community Library | PA | WordPress-PA | 13 | [Link](https://www.taylorlibrary.org) |
+| Sarah S Bovard Memorial Library | PA | WordPress-PA | 0 | [Link](https://www.tionestalibrary.org/) |
+| Towanda Public Library | PA | WordPress-PA | 5 | [Link](https://towandalibrary.org/) |
+| Trafford Community Public Library | PA | WordPress-PA | 3 | [Link](https://www.traffordlibrary.org) |
+| Allen F. Pierce Free Library | PA | WordPress-PA | 0 | [Link]() |
+| Tunkhannock Public Library | PA | WordPress-PA | 0 | [Link](https://www.tunkhannocklibrary.org/) |
+| Tyrone-Snyder Township Public Library | PA | WordPress-PA | 0 | [Link](https://www.tyronelibrary.org) |
+| Helen Kate Furness Fr Library | PA | WordPress-PA | 0 | [Link]() |
+| Warren Library Association | PA | WordPress-PA | 0 | [Link](https://www.warrenlibrary.org) |
+| Waterford Public Library | PA | WordPress-PA | 0 | [Link](https://www.waterfordlibrary.org) |
+| West Chester Public Library | PA | WordPress-PA | 0 | [Link](https://www.westchesterlibrary.org) |
+| West Newton Public Library | PA | WordPress-PA | 4 | [Link](https://www.westnewtonlibrary.org) |
+| West Pittston Library | PA | WordPress-PA | 0 | [Link](https://www.westpittstonlibrary.org) |
+| Westfield Public Library | PA | WordPress-PA | 0 | [Link](https://www.westfieldlibrary.org) |
+| Carnegie Library Of Mckeesport - White Oak | PA | WordPress-PA | 0 | [Link](https://www.whiteoaklibrary.org) |
+| Wilcox Public Library | PA | WordPress-PA | 0 | [Link](https://www.wilcoxlibrary.org/) |
+| Wilkinsburg Public Library | PA | WordPress-PA | 0 | [Link](https://wilkinsburglibrary.org/) |
+| Windber Public Library Association | PA | WordPress-PA | 0 | [Link](https://www.windberlibrary.org) |
+| Bucks County Free Library - Village Library Of Wrightstown | PA | WordPress-PA | 0 | [Link](https://wrightstownlibrary.org/) |
+| Wyalusing Public Library | PA | WordPress-PA | 37 | [Link](https://www.wyalusinglibrary.org) |
+| Yeadon Public Library | PA | WordPress-PA | 0 | [Link](https://www.yeadonlibrary.org) |
+| Jefferson Resource Center And Computer Lab | PA | WordPress-PA | 0 | [Link](https://yorklibrary.org/) |
+| Zelienople Public Library | PA | WordPress-PA | 33 | [Link](https://www.zelienoplelibrary.org) |
+| Acton Memorial Library | MA | WordPress-MA | 1 | [Link](https://www.actonlibrary.org) |
+| Adams Free Library | MA | WordPress-MA | 49 | [Link]() |
+| Agawam Public Library | MA | WordPress-MA | 5 | [Link](https://www.agawamlibrary.org/) |
+| Amesbury Public Library | MA | WordPress-MA | 0 | [Link](https://www.amesburylibrary.org) |
+| Jones Library, Inc. | MA | WordPress-MA | 1 | [Link](https://www.amherstlibrary.org) |
+| Memorial Hall Library | MA | WordPress-MA | 0 | [Link](https://www.andoverlibrary.org) |
+| Aquinnah Public Library | MA | WordPress-MA | 3 | [Link](https://www.aquinnahlibrary.org) |
+| Edith M. Fox Library | MA | WordPress-MA | 4 | [Link](https://www.arlingtonlibrary.org/) |
+| Stevens Memorial Library | MA | WordPress-MA | 0 | [Link](https://www.ashburnhamlibrary.org) |
+| Ashby Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.ashbylibrary.org/) |
+| Ashland Public Library | MA | WordPress-MA | 0 | [Link]() |
+| Athol Public Library | MA | WordPress-MA | 0 | [Link](https://www.athollibrary.org/) |
+| Attleboro Public Library | MA | WordPress-MA | 1 | [Link](https://www.attleborolibrary.org) |
+| Auburn Free Public Library | MA | WordPress-MA | 0 | [Link](https://auburnlibrary.org/) |
+| Auburndale Branch Library | MA | WordPress-MA | 23 | [Link](https://auburndalelibrary.org/) |
+| Avon Public Library | MA | WordPress-MA | 0 | [Link]() |
+| Ayer Public Library | MA | WordPress-MA | 1 | [Link](https://www.ayerlibrary.org) |
+| Woods Memorial Library | MA | WordPress-MA | 1 | [Link](https://www.barrelibrary.org/) |
+| Bedford Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.bedfordlibrary.org) |
+| Bellingham Public Library | MA | WordPress-MA | 0 | [Link](https://www.bellinghamlibrary.org) |
+| Belmont Public Library | MA | WordPress-MA | 6 | [Link](https://smcl.org/) |
+| Berkley Public Library | MA | WordPress-MA | 0 | [Link](https://sails.ent.sirsi.net/) |
+| Berlin Public Library | MA | WordPress-MA | 11 | [Link]() |
+| Beverly Farms Branch Library | MA | WordPress-MA | 0 | [Link]() |
+| Billerica Public Library | MA | WordPress-MA | 0 | [Link](https://www.billericalibrary.org) |
+| Blackstone Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.blackstonelibrary.org) |
+| Boston Public Library | MA | WordPress-MA | 0 | [Link]() |
+| Jonathan Bourne Public Library | MA | WordPress-MA | 0 | [Link](https://www.bournelibrary.org) |
+| Boxford Town Library | MA | WordPress-MA | 0 | [Link](https://www.boxfordlibrary.org/) |
+| Boylston Public Library | MA | WordPress-MA | 0 | [Link](https://www.boylstonlibrary.org) |
+| Brewster Ladies Library Assoc. | MA | WordPress-MA | 33 | [Link](https://brewsterlibrary.libcal.com/) |
+| Brighton Branch Library | MA | WordPress-MA | 0 | [Link](https://www.brightonlibrary.org) |
+| Brimfield Public Library | MA | WordPress-MA | 1 | [Link](https://www.brimfieldlibrary.org) |
+| Merrick Public Library | MA | WordPress-MA | 134 | [Link]() |
+| Brookline Public Library | MA | WordPress-MA | 0 | [Link](https://www.brooklinelibrary.org) |
+| Burlington Public Library | MA | WordPress-MA | 40 | [Link]() |
+| Cambridge Public Library | MA | WordPress-MA | 13 | [Link](https://www.cambridgelibrary.org) |
+| Canton Public Library | MA | WordPress-MA | 1 | [Link](https://www.cantonlibrary.org) |
+| Gleason Public Library | MA | WordPress-MA | 0 | [Link](https://www.carlislelibrary.org) |
+| Carver Public Library | MA | WordPress-MA | 0 | [Link](https://www.carverlibrary.org/) |
+| Centerville Public Library | MA | WordPress-MA | 139 | [Link](https://www.centervillelibrary.org) |
+| Tyler Memorial Library | MA | WordPress-MA | 0 | [Link](https://www.charlemontlibrary.org) |
+| Eldredge Public Library | MA | WordPress-MA | 188 | [Link](https://chathamlibrary.librarycalendar.com/) |
+| Chelmsford Public Library | MA | WordPress-MA | 0 | [Link](https://www.chelmsfordlibrary.org/) |
+| Chelsea Public Library | MA | WordPress-MA | 0 | [Link](https://www.chelsealibrary.org) |
+| Cheshire Public Library | MA | WordPress-MA | 1 | [Link]() |
+| Hamilton Memorial Library | MA | WordPress-MA | 0 | [Link](https://www.chesterlibrary.org/) |
+| Chesterfield Public Library | MA | WordPress-MA | 1 | [Link](https://www.chesterfieldlibrary.org) |
+| Aldenville Branch Library | MA | WordPress-MA | 3 | [Link](https://www.chicopeelibrary.org) |
+| Chilmark Free Public Library | MA | WordPress-MA | 2 | [Link](https://www.chilmarklibrary.org) |
+| Clarksburg Town Library | MA | WordPress-MA | 13 | [Link](https://www.clarksburglibrary.org) |
+| Bigelow Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.clintonlibrary.org) |
+| Paul Pratt Memorial Library | MA | WordPress-MA | 0 | [Link](https://www.cohassetlibrary.org/) |
+| Concord Free Public Library | MA | WordPress-MA | 1 | [Link](https://www.concordlibrary.org) |
+| Cotuit Library | MA | WordPress-MA | 1 | [Link](https://www.cotuitlibrary.org/) |
+| Dalton Free Public Library | MA | WordPress-MA | 28 | [Link](https://www.daltonlibrary.org) |
+| Peabody Institute Library | MA | WordPress-MA | 1 | [Link](https://peabodylibrary.org/) |
+| Dighton Public Library | MA | WordPress-MA | 0 | [Link](https://dightonlibrary.org/) |
+| Adams Street Branch Library | MA | WordPress-MA | 1 | [Link]() |
+| Simon Fairfield Public Library | MA | WordPress-MA | 1 | [Link](https://douglaslibrary.org/) |
+| Dover Town Library | MA | WordPress-MA | 0 | [Link](https://www.doverlibrary.org) |
+| Moses Greeley Parker Memorial Lib. | MA | WordPress-MA | 0 | [Link](https://www.dracutlibrary.org) |
+| East Bridgewater Public Library | MA | WordPress-MA | 2 | [Link](https://www.eastbridgewaterlibrary.org) |
+| Eastham Public Library | MA | WordPress-MA | 3 | [Link](https://easthamlibrary.org/) |
+| Emily Williston Memorial Library | MA | WordPress-MA | 29 | [Link](https://www.easthamptonlibrary.org) |
+| Five Corners Library | MA | WordPress-MA | 0 | [Link](https://www.eastonlibrary.org/) |
+| Edgartown Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.edgartownlibrary.org) |
+| T.O.H.P. Burnham Free Library | MA | WordPress-MA | 2 | [Link](https://www.essexlibrary.org) |
+| Parlin Memorial Library | MA | WordPress-MA | 0 | [Link]() |
+| Millicent Library | MA | WordPress-MA | 1 | [Link](https://fairhavenlibrary.org/) |
+| East End Branch Library | MA | WordPress-MA | 0 | [Link](https://www.fallriverlibrary.org) |
+| Fitchburg Public Library | MA | WordPress-MA | 1 | [Link](http://fitchburgwi.gov/) |
+| Lilly Library | MA | WordPress-MA | 76 | [Link](https://www.florencelibrary.org) |
+| Framingham Public Library | MA | WordPress-MA | 89 | [Link](https://framinghamlibrary.org/) |
+| Franklin Public Library | MA | WordPress-MA | 0 | [Link](https://www.franklinlibrary.org) |
+| Levi Heywood Memorial Library | MA | WordPress-MA | 7 | [Link](https://www.gardnerlibrary.org/) |
+| Gloucester Lyceum Sawyer Free Lib | MA | WordPress-MA | 0 | [Link](https://www.gloucesterlibrary.org) |
+| Goshen Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.goshenlibrary.org/) |
+| Grafton Public Library | MA | WordPress-MA | 0 | [Link](https://www.graftonlibrary.org) |
+| Granby Free Public Library | MA | WordPress-MA | 1 | [Link](https://granbylibrary.org/) |
+| Granville Public Library | MA | WordPress-MA | 3 | [Link](https://www.granvillelibrary.org/) |
+| Greenfield Public Library | MA | WordPress-MA | 3 | [Link]() |
+| Holmes Public Library | MA | WordPress-MA | 2 | [Link]() |
+| Taylor Memorial Library | MA | WordPress-MA | 4 | [Link](https://hancocklibrary.org/) |
+| John Curtis Free Library | MA | WordPress-MA | 0 | [Link]() |
+| Hanson Public Library | MA | WordPress-MA | 0 | [Link](https://hansonlibrary.org/) |
+| Harvard Public Library | MA | WordPress-MA | 8 | [Link](https://www.harvardlibrary.org) |
+| Harwich Port Library Assoc. | MA | WordPress-MA | 0 | [Link](https://www.harwichportlibrary.org) |
+| Haverhill Public Library | MA | WordPress-MA | 0 | [Link](https://www.haverhilllibrary.org) |
+| Heath Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.heathlibrary.org) |
+| Hingham Public Library | MA | WordPress-MA | 1 | [Link](https://www.hinghamlibrary.org/) |
+| Holbrook Public Library | MA | WordPress-MA | 0 | [Link](https://holbrooklibrary.org/) |
+| Holland Public Library | MA | WordPress-MA | 0 | [Link](https://www.hollandlibrary.org/) |
+| Holliston Public Library | MA | WordPress-MA | 0 | [Link](https://hollistonlibrary.org/) |
+| Holyoke Public Library | MA | WordPress-MA | 149 | [Link](https://holyokelibrary.org/) |
+| Hopkinton Public Library | MA | WordPress-MA | 0 | [Link](https://hopkintonlibrary.org/) |
+| Hubbardston Public Library | MA | WordPress-MA | 7 | [Link](http://hubbardston.blogspot.com/) |
+| Hudson Public Library | MA | WordPress-MA | 1 | [Link](https://www.hudsonlibrary.org) |
+| Huntington Public Library | MA | WordPress-MA | 0 | [Link](https://www.huntingtonlibrary.org) |
+| Hyannis Public Library Assoc. | MA | WordPress-MA | 119 | [Link](https://www.hyannislibrary.org) |
+| Hyde Park Branch Library | MA | WordPress-MA | 41 | [Link](https://www.hydeparklibrary.org) |
+| Ipswich Public Library | MA | WordPress-MA | 0 | [Link](https://www.ipswichlibrary.org) |
+| Kingston Public Library | MA | WordPress-MA | 10 | [Link](https://www.kingstonlibrary.org) |
+| Lakeville Free Public Library | MA | WordPress-MA | 0 | [Link](https://lakevillelibrary.org/) |
+| Thayer Memorial Library | MA | WordPress-MA | 0 | [Link]() |
+| Lawrence Public Library | MA | WordPress-MA | 4 | [Link](https://lawrencelibrary.org/) |
+| Leicester Public Library | MA | WordPress-MA | 0 | [Link](https://www.leicesterlibrary.org) |
+| Lenox Library Association | MA | WordPress-MA | 0 | [Link](https://www.lenoxlibrary.org) |
+| Leominster Public Library | MA | WordPress-MA | 0 | [Link](https://www.leominsterlibrary.org/) |
+| Leverett Library | MA | WordPress-MA | 0 | [Link](https://www.leverettlibrary.org) |
+| Cary Memorial Library | MA | WordPress-MA | 0 | [Link](https://www.lexingtonlibrary.org) |
+| Lincoln Public Library | MA | WordPress-MA | 1 | [Link]() |
+| Reuben Hoar Library | MA | WordPress-MA | 0 | [Link](https://www.littletonlibrary.org) |
+| Richard Salter Storrs Library | MA | WordPress-MA | 0 | [Link](https://longmeadowlibrary.org/) |
+| Pollard Memorial Library | MA | WordPress-MA | 0 | [Link](https://www.lowelllibrary.org) |
+| Lunenburg Public Library | MA | WordPress-MA | 0 | [Link](https://lunenburglibrary.org/) |
+| Lynnfield Public Library | MA | WordPress-MA | 0 | [Link](https://lynnfieldlibrary.org/) |
+| Mansfield Public Library | MA | WordPress-MA | 1 | [Link]() |
+| Elizabeth Taber Memorial Library | MA | WordPress-MA | 3 | [Link](https://www.marionlibrary.org/) |
+| Ventress Memorial Library | MA | WordPress-MA | 0 | [Link](https://marshfieldlibrary.org/) |
+| Mashpee Public Library | MA | WordPress-MA | 0 | [Link](https://mashpeepubliclibrary.org/) |
+| Mattapoisett Public Library | MA | WordPress-MA | 0 | [Link](https://mattapoisettlibrary.org/) |
+| Medfield Memorial Library | MA | WordPress-MA | 0 | [Link](https://www.medfieldlibrary.org) |
+| Medford Public Library | MA | WordPress-MA | 0 | [Link](https://www.medfordlibrary.org) |
+| Taft Public Library | MA | WordPress-MA | 15 | [Link](https://mendonlibrary.org/) |
+| Merrimac Public Library | MA | WordPress-MA | 0 | [Link](https://merrimaclibrary.org/) |
+| Middlefield Public Library | MA | WordPress-MA | 0 | [Link](https://middlefieldlibrary.org/) |
+| Flint Public Library | MA | WordPress-MA | 0 | [Link](https://www.middletonlibrary.org/) |
+| Milford Town Library | MA | WordPress-MA | 0 | [Link]() |
+| Millbury Public Library | MA | WordPress-MA | 0 | [Link](https://www.millburylibrary.org/) |
+| Millis Public Library | MA | WordPress-MA | 1 | [Link](https://www.millislibrary.org/) |
+| Millville Free Public Library | MA | WordPress-MA | 11 | [Link](https://www.millvillelibrary.org) |
+| East Milton Branch Library | MA | WordPress-MA | 0 | [Link](https://www.miltonlibrary.org) |
+| Monterey Public Library | MA | WordPress-MA | 0 | [Link](https://www.montereylibrary.org) |
+| Grace Hall Memorial Library | MA | WordPress-MA | 0 | [Link](https://www.montgomerylibrary.org) |
+| Nahant Public Library | MA | WordPress-MA | 60 | [Link](https://www.nahantlibrary.org) |
+| Nantucket Atheneum | MA | WordPress-MA | 0 | [Link](https://www.nantucketlibrary.org) |
+| Needham Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.needhamlibrary.org) |
+| Casa Da Saudade | MA | WordPress-MA | 0 | [Link](https://www.newbedfordlibrary.org) |
+| Andrews Branch Library | MA | WordPress-MA | 0 | [Link](https://www.newburyportlibrary.org) |
+| Newton Free Library | MA | WordPress-MA | 0 | [Link](https://www.newtonlibrary.org) |
+| Norfolk Public Library | MA | WordPress-MA | 9 | [Link]() |
+| North Adams Public Library | MA | WordPress-MA | 1 | [Link](https://www.northadamslibrary.org) |
+| Haston Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.northbrookfieldlibrary.org) |
+| Northborough Free Library | MA | WordPress-MA | 0 | [Link](https://www.northboroughlibrary.org) |
+| Norton Public Library | MA | WordPress-MA | 44 | [Link](https://nortonlibrary.org/) |
+| Morrill Memorial Library | MA | WordPress-MA | 1 | [Link](https://norwoodlibrary.org/) |
+| Oak Bluffs Public Library | MA | WordPress-MA | 0 | [Link](https://www.oakbluffslibrary.org) |
+| Oxford Free Public Library | MA | WordPress-MA | 0 | [Link](https://oxfordlibrary.org/) |
+| Palmer Public Library | MA | WordPress-MA | 0 | [Link](https://www.palmerlibrary.org) |
+| Richards Memorial Library | MA | WordPress-MA | 1 | [Link](https://paxtonflorida.com/) |
+| Peabody Institute Library | MA | WordPress-MA | 1 | [Link](https://peabodylibrary.org/) |
+| Pelham Library | MA | WordPress-MA | 81 | [Link]() |
+| Pembroke Public Library | MA | WordPress-MA | 0 | [Link](https://www.pembrokelibrary.org/) |
+| Peru Library | MA | WordPress-MA | 26 | [Link](https://www.perulibrary.org) |
+| Petersham Memorial Library | MA | WordPress-MA | 0 | [Link](https://www.petershamlibrary.org) |
+| Berkshire Athenaeum | MA | WordPress-MA | 5 | [Link](https://www.pittsfieldlibrary.org/) |
+| Shaw Memorial Library | MA | WordPress-MA | 7 | [Link](https://www.plainfieldlibrary.org) |
+| Plainville Public Library | MA | WordPress-MA | 0 | [Link](https://www.plainvillelibrary.org) |
+| Plymouth Public Library | MA | WordPress-MA | 0 | [Link]() |
+| Plympton Public Library | MA | WordPress-MA | 30 | [Link](https://plymptonpubliclibrary.org/) |
+| Princeton Public Library | MA | WordPress-MA | 0 | [Link]() |
+| Provincetown Public Library | MA | WordPress-MA | 34 | [Link](https://www.provincetownlibrary.org) |
+| Adams Shore Branch Library | MA | WordPress-MA | 127 | [Link]() |
+| Turner Free Library | MA | WordPress-MA | 0 | [Link]() |
+| Reading Public Library | MA | WordPress-MA | 1 | [Link](https://www.readinglibrary.org) |
+| Blanding Public Library | MA | WordPress-MA | 0 | [Link](https://www.rehobothlibrary.org) |
+| Revere Public Library | MA | WordPress-MA | 1 | [Link](https://www.reverelibrary.org) |
+| Richmond Free Public Library | MA | WordPress-MA | 0 | [Link]() |
+| Joseph H. Plumb Memorial Library | MA | WordPress-MA | 0 | [Link](https://www.rochesterlibrary.org/) |
+| Rockland Memorial Library | MA | WordPress-MA | 1 | [Link]() |
+| Rockport Public Library | MA | WordPress-MA | 1 | [Link](https://www.rockportlibrary.org) |
+| Rowley Public Library | MA | WordPress-MA | 0 | [Link](https://www.rowleylibrary.org/) |
+| Dudley Branch Library | MA | WordPress-MA | 38 | [Link](https://www.roxburylibrary.org) |
+| Phinehas S. Newton Library | MA | WordPress-MA | 0 | [Link](https://www.royalstonlibrary.org/) |
+| Russell Public Library | MA | WordPress-MA | 1 | [Link](https://russelllibrary.org/) |
+| Rutland Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.rutlandlibrary.org) |
+| Salem Public Library | MA | WordPress-MA | 0 | [Link](https://www.salemlibrary.org) |
+| Salisbury Public Library | MA | WordPress-MA | 0 | [Link](https://www.salisburylibrary.org/) |
+| Sandisfield Public Library | MA | WordPress-MA | 2 | [Link](https://www.sandisfieldlibrary.org) |
+| Scituate Town Library | MA | WordPress-MA | 35 | [Link](https://www.scituatelibrary.org) |
+| Seekonk Public Library | MA | WordPress-MA | 0 | [Link](https://www.seekonklibrary.org) |
+| Bushnell-Sage Library | MA | WordPress-MA | 0 | [Link](https://www.sheffieldlibrary.org/) |
+| Sherborn Library | MA | WordPress-MA | 0 | [Link](https://sherbornlibrary.org/) |
+| Hazen Memorial Library | MA | WordPress-MA | 1 | [Link](https://www.shirleylibrary.org/) |
+| Shrewsbury Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.shrewsburylibrary.org) |
+| Somerset Public Library | MA | WordPress-MA | 1 | [Link](https://www.somersetlibrary.org) |
+| South Dennis Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.southdennislibrary.org/) |
+| Edwards Public Library | MA | WordPress-MA | 5 | [Link](https://www.southamptonlibrary.org) |
+| Brightwood Branch Library | MA | WordPress-MA | 1 | [Link](https://www.springfieldlibrary.org/) |
+| Conant Free Public Library | MA | WordPress-MA | 0 | [Link](https://sterlinglibrary.org/) |
+| Stockbridge Library Association | MA | WordPress-MA | 14 | [Link](https://www.stockbridgelibrary.org) |
+| Stoneham Public Library | MA | WordPress-MA | 4 | [Link](https://www.stonehamlibrary.org) |
+| Stoughton Public Library | MA | WordPress-MA | 1 | [Link](https://www.stoughtonlibrary.org) |
+| Joshua Hyde Public Library | MA | WordPress-MA | 78 | [Link](https://www.sturbridgelibrary.org) |
+| Swampscott Public Library | MA | WordPress-MA | 1 | [Link](https://www.swampscottlibrary.org) |
+| Swansea Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.swansealibrary.org) |
+| Taunton Public Library | MA | WordPress-MA | 0 | [Link](https://www.tauntonlibrary.org) |
+| Boynton Public Library | MA | WordPress-MA | 0 | [Link](https://www.templetonlibrary.org) |
+| Tewksbury Public Library | MA | WordPress-MA | 1 | [Link](https://www.tewksburylibrary.org) |
+| Topsfield Town Library | MA | WordPress-MA | 0 | [Link](https://www.topsfieldlibrary.org) |
+| Townsend Public Library | MA | WordPress-MA | 0 | [Link](https://www.townsendlibrary.org) |
+| Upton Town Library | MA | WordPress-MA | 0 | [Link]() |
+| Uxbridge Free Public Library | MA | WordPress-MA | 0 | [Link](https://uxbridgelibrary.org/) |
+| Waban Branch Library | MA | WordPress-MA | 5 | [Link](https://www.wabanlibrary.org/) |
+| Lucius Beebe Memorial Library | MA | WordPress-MA | 3 | [Link](https://wakefieldlibrary.org/) |
+| Walpole Public Library | MA | WordPress-MA | 96 | [Link](https://www.walpolelibrary.org) |
+| Young Mens Library Association | MA | WordPress-MA | 0 | [Link](https://warelibrary.org/) |
+| Warren Public Library | MA | WordPress-MA | 0 | [Link](https://www.warrenlibrary.org) |
+| Warwick Free Public Library | MA | WordPress-MA | 7 | [Link]() |
+| East Branch Library | MA | WordPress-MA | 0 | [Link]() |
+| Wayland Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.waylandlibrary.org) |
+| Chester C. Corbin Public Library | MA | WordPress-MA | 0 | [Link](https://www.websterlibrary.org) |
+| Wellfleet Public Library | MA | WordPress-MA | 31 | [Link](https://www.wellfleetlibrary.org) |
+| Merriam-Gilbert Public Library | MA | WordPress-MA | 0 | [Link](https://www.westbrookfieldlibrary.org/) |
+| West Dennis Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.westdennislibrary.org/) |
+| West Falmouth Library, Inc. | MA | WordPress-MA | 13 | [Link](https://www.westfalmouthlibrary.org) |
+| G. A. R. Memorial Library | MA | WordPress-MA | 0 | [Link](https://westnewburylibrary.org/) |
+| Westborough Public Library | MA | WordPress-MA | 8 | [Link](https://www.westboroughlibrary.org/) |
+| Westfield Athenaeum | MA | WordPress-MA | 1 | [Link](https://www.westfieldlibrary.org) |
+| J. V. Fletcher Library | MA | WordPress-MA | 1 | [Link](https://www.westfordlibrary.org) |
+| Westhampton Memorial Library | MA | WordPress-MA | 0 | [Link](https://www.westhamptonlibrary.org) |
+| Forbush Memorial Library | MA | WordPress-MA | 0 | [Link](https://www.westminsterlibrary.org) |
+| Weston Public Library | MA | WordPress-MA | 5 | [Link](https://www.westonlibrary.org) |
+| Westport Free Public Library | MA | WordPress-MA | 23 | [Link](https://www.westportlibrary.org) |
+| Islington Branch Library | MA | WordPress-MA | 0 | [Link](https://www.westwoodlibrary.org) |
+| Whitinsville Social Library | MA | WordPress-MA | 0 | [Link](https://www.whitinsvillelibrary.org) |
+| Wilbraham Public Library | MA | WordPress-MA | 0 | [Link](https://www.wilbrahamlibrary.org) |
+| David Joyce Milne Public Library | MA | WordPress-MA | 0 | [Link](https://www.williamstownlibrary.org) |
+| Wilmington Memorial Library | MA | WordPress-MA | 3 | [Link](https://www.wilmingtonlibrary.org) |
+| Beals Memorial Library | MA | WordPress-MA | 0 | [Link](https://winchendonlibrary.org/) |
+| Winchester Public Library | MA | WordPress-MA | 0 | [Link](https://www.winchesterlibrary.org) |
+| Windsor Free Public Library | MA | WordPress-MA | 0 | [Link](https://www.windsorlibrary.org) |
+| Winthrop Public Library | MA | WordPress-MA | 0 | [Link]() |
+| Frances Perkins Branch Library At Greendale | MA | WordPress-MA | 1 | [Link](https://www.worcesterlibrary.org) |
+| Louisville Free Public Library | KY | WordPress-KY | 22 | [Link](https://www.lfpl.org) |
+| Lexington Public Library | KY | WordPress-KY | 4 | [Link](https://www.lexpublib.org) |
+| Kenton County Public Library | KY | WordPress-KY | 30 | [Link](https://www.kentonlibrary.org) |
+| Campbell County Public Library | KY | WordPress-KY | 3 | [Link](https://www.cc-pl.org) |
+| Boone County Public Library | KY | WordPress-KY | 3 | [Link](https://www.bcpl.org) |
+| Warren County Public Library | KY | WordPress-KY | 10 | [Link](https://www.warrenpl.org) |
+| Daviess County Public Library | KY | WordPress-KY | 15 | [Link](https://www.dcplibrary.org) |
+| McCracken County Public Library | KY | WordPress-KY | 68 | [Link](https://www.mclib.net) |
+| Hardin County Public Library | KY | WordPress-KY | 0 | [Link](https://www.hcpl.info) |
+| Madison County Public Library | KY | WordPress-KY | 0 | [Link](https://www.madisoncountylibrary.org) |
+| Oldham County Public Library | KY | WordPress-KY | 18 | [Link](https://www.crestwoodlibrary.org/) |
+| Bullitt County Public Library | KY | WordPress-KY | 0 | [Link](https://bcplibrary.org/) |
+| Jessamine County Public Library | KY | WordPress-KY | 0 | [Link](https://www.jesspublib.org) |
+| Scott County Public Library | KY | WordPress-KY | 1 | [Link](https://scottpublib.org/) |
+| Clark County Public Library | KY | WordPress-KY | 0 | [Link](https://www.clarkbooks.org) |
+| Laurel County Public Library | KY | WordPress-KY | 21 | [Link](https://www.laurellibrary.org) |
+| Christian County Public Library | KY | WordPress-KY | 1 | [Link](https://www.christiancountylibrary.org) |
+| Pike County Public Library | KY | WordPress-KY | 0 | [Link](https://www.pikelibrary.org) |
+| Greenup County Public Library | KY | WordPress-KY | 0 | [Link](https://www.greenuplibrary.org) |
+| Franklin County Public Library | KY | WordPress-KY | 0 | [Link]() |
+| Henderson County Public Library | KY | WordPress-KY | 99 | [Link](https://www.hcpl.org) |
+| Graves County Public Library | KY | WordPress-KY | 106 | [Link](https://www.graveslibrary.org) |
+| Calloway County Public Library | KY | WordPress-KY | 0 | [Link](https://www.callowaycountylibrary.org) |
+| Woodford County Library | KY | WordPress-KY | 0 | [Link](https://www.woodfordlibrary.org) |
+| Rowan County Public Library | KY | WordPress-KY | 85 | [Link](https://www.rowancountylibrary.org) |
+| Montgomery County Public Library | KY | WordPress-KY | 0 | [Link](https://www.mcplib.org) |
+| Grant County Public Library | KY | WordPress-KY | 0 | [Link](https://www.grantlibrary.net/) |
+| Marshall County Public Library | KY | WordPress-KY | 1 | [Link]() |
+| Whitley County Public Library | KY | WordPress-KY | 0 | [Link](https://www.whitleylibrary.org) |
+| Floyd County Public Library | KY | WordPress-KY | 1 | [Link](https://floydlibrary.org/) |
+| Knox County Public Library | KY | WordPress-KY | 0 | [Link]() |
+| Auburn Branch | KY | WordPress-KY | 0 | [Link](https://auburnlibrary.org/) |
+| Trimble County Public Library | KY | WordPress-KY | 0 | [Link](https://www.bedfordlibrary.org) |
+| Bracken County Public Library | KY | WordPress-KY | 29 | [Link]() |
+| Nicholas County Public Library | KY | WordPress-KY | 0 | [Link](https://www.carlislelibrary.org) |
+| Hickman County Memorial Library | KY | WordPress-KY | 0 | [Link](https://www.clintonlibrary.org) |
+| Adair County Public Library | KY | WordPress-KY | 0 | [Link](https://www.columbialibrary.org) |
+| South Branch | KY | WordPress-KY | 10 | [Link](https://corbinlibrary.org/) |
+| Oldham County Public Library | KY | WordPress-KY | 1 | [Link](https://www.crestwoodlibrary.org/) |
+| Rebecca Caudill Public Library | KY | WordPress-KY | 2 | [Link](https://www.cumberlandlibrary.org) |
+| Cynthiana-Harrison County Public Library | KY | WordPress-KY | 0 | [Link](https://www.cynthianalibrary.org/) |
+| Boyle County Public Library | KY | WordPress-KY | 0 | [Link]() |
+| Florence Branch | KY | WordPress-KY | 57 | [Link](https://www.florencelibrary.org) |
+| Goodnight Memorial Library | KY | WordPress-KY | 0 | [Link](https://www.franklinlibrary.org) |
+| Fulton Public Library | KY | WordPress-KY | 0 | [Link](https://www.facebook.com/) |
+| Mary Wood Weldon Memorial Public Library | KY | WordPress-KY | 0 | [Link](https://www.glasgowlibrary.org/) |
+| Mahan-Oldham County Library | KY | WordPress-KY | 0 | [Link](https://www.goshenlibrary.org/) |
+| Green County Public Library | KY | WordPress-KY | 0 | [Link](https://www.greensburglibrary.org) |
+| Harlan County Public Library | KY | WordPress-KY | 0 | [Link](https://www.harlanlibrary.org) |
+| Ohio County Public Library | KY | WordPress-KY | 0 | [Link](https://www.hartfordlibrary.org) |
+| Perry County Public Library | KY | WordPress-KY | 8 | [Link](https://www.hazardlibrary.org/) |
+| Lents Branch | KY | WordPress-KY | 0 | [Link](https://www.hebronlibrary.org) |
+| Estill County Public Library | KY | WordPress-KY | 0 | [Link](https://www.irvinelibrary.org) |
+| Irvington Branch | KY | WordPress-KY | 0 | [Link](https://irvingtonlibrary.org/) |
+| Russell County Public Library District | KY | WordPress-KY | 1 | [Link]() |
+| Garrard County Public Library | KY | WordPress-KY | 0 | [Link]() |
+| Marion County Public Library | KY | WordPress-KY | 0 | [Link](https://lebanonlibrary.org/) |
+| Casey County Public Library | KY | WordPress-KY | 0 | [Link](https://libertylibrary.org/) |
+| Clay County Public Library | KY | WordPress-KY | 0 | [Link]() |
+| Crittenden County Public Library | KY | WordPress-KY | 2 | [Link](https://www.marionlibrary.org/) |
+| Mason County Public Library | KY | WordPress-KY | 0 | [Link](https://www.maysvillelibrary.org) |
+| Wayne County Public Library | KY | WordPress-KY | 1 | [Link](https://www.allertonpubliclibrary.org/) |
+| Newport Branch | KY | WordPress-KY | 5 | [Link]() |
+| Phelps Branch | KY | WordPress-KY | 0 | [Link]() |
+| George Coon Public Library | KY | WordPress-KY | 0 | [Link]() |
+| Allen County Public Library | KY | WordPress-KY | 0 | [Link](https://www.scottsvillelibrary.org) |
+| Washington County Public Library | KY | WordPress-KY | 1 | [Link](https://www.springfieldlibrary.org/) |
+| Sturgis Branch | KY | WordPress-KY | 94 | [Link]() |
+| Gallatin County Public Library | KY | WordPress-KY | 11 | [Link](https://www.warsawlibrary.org/) |
+| Abbeville County Library System | SC | WordPress-SC | 7 | [Link](https://www.abbevillelibrary.org/) |
+| Allendale County Library | SC | WordPress-SC | 76 | [Link]() |
+| Anderson County Library | SC | WordPress-SC | 109 | [Link](https://www.andersonlibrary.org) |
+| Kershaw County Library - Camden Branch Library | SC | WordPress-SC | 0 | [Link](https://www.camdenlibrary.org/) |
+| Pickens County Library - Central-Clemson Branch Library | SC | WordPress-SC | 0 | [Link](https://www.centrallibrary.org) |
+| Lexington County Library - Chapin | SC | WordPress-SC | 3 | [Link](https://www.chapinlibrary.org) |
+| Berkeley County Library - Daniel Island | SC | WordPress-SC | 1 | [Link]() |
+| Chester County Library | SC | WordPress-SC | 0 | [Link](https://www.chesterlibrary.org/) |
+| Chesterfield County Library System | SC | WordPress-SC | 1 | [Link](https://www.chesterfieldlibrary.org) |
+| Clinton Public Library | SC | WordPress-SC | 0 | [Link](https://www.clintonlibrary.org) |
+| Lexington County Library - Irmo | SC | WordPress-SC | 0 | [Link](https://www.columbialibrary.org) |
+| Dillon County Library System | SC | WordPress-SC | 1 | [Link](https://www.dillonlibrary.org/) |
+| Kershaw County Library - Elgin Branch Library | SC | WordPress-SC | 0 | [Link](https://www.elginlibrary.org/) |
+| Hampton County Library - Estill Branch Library | SC | WordPress-SC | 0 | [Link](https://www.estilllibrary.org) |
+| Florence County Library System | SC | WordPress-SC | 76 | [Link](https://www.florencelibrary.org) |
+| Lexington County Library - Gaston | SC | WordPress-SC | 0 | [Link](https://www.gastonlibrary.org/) |
+| Lexington County Library - Gilbert-Summit | SC | WordPress-SC | 0 | [Link](https://www.gilbertlibrary.org/) |
+| Great Falls Library | SC | WordPress-SC | 138 | [Link](https://www.greatfallslibrary.org) |
+| Greenville County Library - Anderson Road (West) Branch | SC | WordPress-SC | 13 | [Link](https://www.greenvillelibrary.org) |
+| Greenwood County Library System | SC | WordPress-SC | 0 | [Link]() |
+| Edgefield County Public Library - Johnston Branch (Mobley Library) | SC | WordPress-SC | 0 | [Link](https://www.johnstonlibrary.org) |
+| Lake View Library | SC | WordPress-SC | 1 | [Link](https://lakeviewlibrary.org/) |
+| Lamar District Library | SC | WordPress-SC | 0 | [Link](https://www.lamarlibrary.org) |
+| Lancaster County Library System | SC | WordPress-SC | 0 | [Link]() |
+| Aiken County Library - Midland Valley Branch Library | SC | WordPress-SC | 1 | [Link](https://www.langleylibrary.org) |
+| Lexington County Public Library System - Main | SC | WordPress-SC | 0 | [Link](https://www.lexingtonlibrary.org) |
+| Pickens County Library - Sarlin Branch Library | SC | WordPress-SC | 0 | [Link](https://libertylibrary.org/) |
+| Horry County Memorial Library - Loris Library | SC | WordPress-SC | 0 | [Link](https://www.lorislibrary.org/) |
+| Spartanburg County Public Library - Middle Tyger Branch Library | SC | WordPress-SC | 1 | [Link]() |
+| Marion County Library System | SC | WordPress-SC | 3 | [Link](https://www.marionlibrary.org/) |
+| Mccormick County Library System | SC | WordPress-SC | 3 | [Link](https://mccormicklibrary.org/) |
+| Hal Kohn Memorial Library | SC | WordPress-SC | 0 | [Link](https://www.newberrylibrary.org) |
+| Orangeburg County Library Commission | SC | WordPress-SC | 9 | [Link](https://orangeburglibrary.org/) |
+| Anderson County Library - Piedmont Branch Library | SC | WordPress-SC | 0 | [Link](https://www.piedmontlibrary.org) |
+| Oconee County Public Library - Salem Branch Library | SC | WordPress-SC | 0 | [Link](https://www.salemlibrary.org) |
+| Saluda County Library System | SC | WordPress-SC | 73 | [Link](https://www.saludalibrary.org) |
+| Oconee County Public Library - Seneca Branch Library | SC | WordPress-SC | 0 | [Link](https://www.senecalibrary.org) |
+| Spartanburg County Public Library - H. Carlisle Bean Law Library | SC | WordPress-SC | 0 | [Link](https://www.spartanburglibrary.org) |
+| Orangeburg County Library - Springfield Branch Library | SC | WordPress-SC | 1 | [Link](https://www.springfieldlibrary.org/) |
+| Berkeley County Library - Sangaree Library | SC | WordPress-SC | 0 | [Link](https://www.summervillelibrary.org) |
+| Lexington County Library - Swansea | SC | WordPress-SC | 0 | [Link](https://www.swansealibrary.org) |
+| Union County Library System | SC | WordPress-SC | 4 | [Link](https://www.unionlibrary.org) |
+| Oconee County Public Library - Westminster Branch Library | SC | WordPress-SC | 0 | [Link](https://www.westminsterlibrary.org) |
+| York Public Library | SC | WordPress-SC | 0 | [Link](https://yorklibrary.org/) |
+| Kanawha County Public Library | WV | WordPress-WV | 24 | [Link](https://www.kcpls.org/) |
+| Ohio County Public Library | WV | WordPress-WV | 0 | [Link](https://www.ohiocountylibrary.org/) |
+| Berkeley County Public Library | WV | WordPress-WV | 0 | [Link](https://bcpls.org/) |
+| Harrison County Public Library | WV | WordPress-WV | 15 | [Link](https://www.clarksburglibrary.org) |
+| Marion County Public Library | WV | WordPress-WV | 0 | [Link](https://www.marioncountylibrary.org/) |
+| Mercer County Public Library | WV | WordPress-WV | 1 | [Link](https://www.mercercountylibrary.org/) |
+| Putnam County Public Library | WV | WordPress-WV | 0 | [Link](https://putnamcountylibrary.org/) |
+| Marshall County Public Library | WV | WordPress-WV | 3 | [Link]() |
+| East Hardy Branch Public Library | WV | WordPress-WV | 0 | [Link](https://www.bakerlibrary.org/) |
+| Barrett-Wharton Public Library | WV | WordPress-WV | 105 | [Link](https://www.barrettlibrary.org) |
+| Bridgeport Public Library | WV | WordPress-WV | 21 | [Link](https://www.bridgeportlibrary.org/) |
+| Burlington Public Library | WV | WordPress-WV | 45 | [Link]() |
+| Cameron Public Library | WV | WordPress-WV | 0 | [Link](https://www.cameronlibrary.org/) |
+| Center Point Public Library | WV | WordPress-WV | 9 | [Link](https://www.centerpointlibrary.org) |
+| Lynn Murray Memorial Library | WV | WordPress-WV | 0 | [Link](https://www.chesterlibrary.org/) |
+| Clay County Public Library | WV | WordPress-WV | 2 | [Link](https://www.claylibrary.org/) |
+| Sand Hill Public Library | WV | WordPress-WV | 448 | [Link](https://www.dallaslibrary.org) |
+| Dunbar Branch Library | WV | WordPress-WV | 1 | [Link](https://www.dunbarlibrary.org) |
+| Fairview Public Library | WV | WordPress-WV | 0 | [Link]() |
+| Pendleton County Public Library | WV | WordPress-WV | 3 | [Link](https://www.franklinlibrary.org) |
+| Gilbert Public Library | WV | WordPress-WV | 0 | [Link](https://www.gilbertlibrary.org/) |
+| Glasgow Branch Library | WV | WordPress-WV | 0 | [Link](https://www.glasgowlibrary.org/) |
+| Taylor County Public Library | WV | WordPress-WV | 0 | [Link]() |
+| Hamlin-Lincoln County Public Library | WV | WordPress-WV | 0 | [Link](https://www.hamlinlibrary.org/) |
+| Hanover Public Library | WV | WordPress-WV | 0 | [Link]() |
+| Hillsboro Public Library | WV | WordPress-WV | 1 | [Link](https://www.hillsborolibrary.org) |
+| Summers County Public Library | WV | WordPress-WV | 44 | [Link](https://www.hintonlibrary.org) |
+| Boone-Madison Public Library | WV | WordPress-WV | 9 | [Link](https://www.madisonlibrary.org) |
+| Milton Branch Library | WV | WordPress-WV | 0 | [Link]() |
+| Montgomery Public Library | WV | WordPress-WV | 0 | [Link](https://www.montgomerylibrary.org) |
+| Swaney Memorial Library | WV | WordPress-WV | 0 | [Link](https://www.newcumberlandlibrary.org) |
+| Paden City Public Library | WV | WordPress-WV | 2 | [Link](https://www.padencitylibrary.org/) |
+| Paw Paw Public Library | WV | WordPress-WV | 1 | [Link](https://www.pawpawlibrary.org) |
+| Piedmont Public Library | WV | WordPress-WV | 0 | [Link](https://www.piedmontlibrary.org) |
+| Richwood Public Library | WV | WordPress-WV | 0 | [Link](https://www.richwoodlibrary.org) |
+| Jackson County Public Library | WV | WordPress-WV | 9 | [Link](https://ripleylibrary.org/) |
+| Ronceverte Public Library | WV | WordPress-WV | 0 | [Link](https://www.roncevertelibrary.org/) |
+| South Charleston Public Library | WV | WordPress-WV | 9 | [Link](https://www.scplwv.org/) |
+| Pleasants County Public Library | WV | WordPress-WV | 0 | [Link](https://www.stmaryslibrary.org) |
+| Monroe County Public Library | WV | WordPress-WV | 20 | [Link](https://www.unionlibrary.org) |
+| Waverly Library | WV | WordPress-WV | 2 | [Link](https://www.waverlylibrary.com/) |
+| Louis Bennett Public Library | WV | WordPress-WV | 0 | [Link]() |
+| Whitesville Public Library | WV | WordPress-WV | 12 | [Link](https://www.whitesvillelibrary.org) |
+| Williamson Public Library | WV | WordPress-WV | 0 | [Link]() |
+| Williamstown Library | WV | WordPress-WV | 84 | [Link](https://www.williamstownlibrary.org) |
+| Wilmington Public Library | DE | WordPress-DE | 0 | [Link](https://www.wilmingtonde.gov/library) |
+| Newark Free Library | DE | WordPress-DE | 0 | [Link](https://www.nccde.org/newark) |
+| Bear Library | DE | WordPress-DE | 0 | [Link](https://www.nccde.org/bear) |
+| Kirkwood Library | DE | WordPress-DE | 0 | [Link](https://www.nccde.org/kirkwood) |
+| Claymont Library | DE | WordPress-DE | 0 | [Link](https://www.nccde.org/claymont) |
+| Elsmere Library | DE | WordPress-DE | 0 | [Link](https://www.nccde.org/elsmere) |
+| Hockessin Library | DE | WordPress-DE | 0 | [Link](https://www.nccde.org/hockessin) |
+| Garfield Park Library | DE | WordPress-DE | 0 | [Link](https://www.nccde.org/garfield) |
+| Brandywine Hundred Library | DE | WordPress-DE | 0 | [Link](https://www.nccde.org/brandywine) |
+| Woodlawn Library | DE | WordPress-DE | 0 | [Link](https://www.nccde.org/woodlawn) |
+| Dover Public Library | DE | WordPress-DE | 0 | [Link](https://www.doverpubliclibrary.org) |
+| Kent County Library | DE | WordPress-DE | 0 | [Link](https://www.kentcountyde.gov/library) |
+| Georgetown Public Library | DE | WordPress-DE | 0 | [Link](https://www.georgetownpubliclibrary.org) |
+| Lewes Public Library | DE | WordPress-DE | 0 | [Link](https://www.leweslibrary.org) |
+| Rehoboth Beach Public Library | DE | WordPress-DE | 192 | [Link](https://www.rehobothbeachde.gov/library) |
+| Seaford District Library | DE | WordPress-DE | 0 | [Link]() |
+| Bridgeville Public Library | DE | WordPress-DE | 0 | [Link](https://bridgevillelibrary.org/) |
+| Laurel Public Library | DE | WordPress-DE | 37 | [Link](https://www.laurellibrary.org) |
+| Milton Public Library | DE | WordPress-DE | 0 | [Link]() |
+| Frankford Public Library | DE | WordPress-DE | 0 | [Link](https://www.frankfordlibrary.org) |
+| Greenwood Public Library | DE | WordPress-DE | 4 | [Link]() |
+| Appoquinimink Public Library | DE | WordPress-DE | 0 | [Link](https://www.nccde.org/appoquinimink) |
+| Rogers Free Library | RI | WordPress-RI | 0 | [Link](https://rogersfreelibrary.org/) |
+| Central Falls Free Public Library | RI | WordPress-RI | 0 | [Link](https://www.centralfallslibrary.org) |
+| Coventry Public Library | RI | WordPress-RI | 2 | [Link](https://www.coventrylibrary.org/) |
+| East Greenwich Free Library | RI | WordPress-RI | 1 | [Link](https://www.eastgreenwichlibrary.org) |
+| Exeter Public Library | RI | WordPress-RI | 0 | [Link](https://www.exeterlibrary.org) |
+| Harmony Library | RI | WordPress-RI | 0 | [Link](https://www.harmonylibrary.org) |
+| Greene Public Library | RI | WordPress-RI | 0 | [Link](https://www.greenelibrary.org) |
+| Ashaway Free Library | RI | WordPress-RI | 0 | [Link](https://www.ashawaylibrary.org) |
+| Langworthy Public Library | RI | WordPress-RI | 0 | [Link](https://www.langworthylibrary.org) |
+| Jamestown Philomenian Library | RI | WordPress-RI | 1 | [Link]() |
+| Marian J. Mohr Memorial Library | RI | WordPress-RI | 0 | [Link](https://www.mohrlibrary.org/) |
+| Lincoln Public Library | RI | WordPress-RI | 1 | [Link]() |
+| Brownell Library, Home Of Little Compton | RI | WordPress-RI | 173 | [Link](https://www.brownelllibrary.org) |
+| Middletown Public Library | RI | WordPress-RI | 0 | [Link](https://www.middletownlibrary.org) |
+| Island Free Library | RI | WordPress-RI | 0 | [Link](https://www.islandfreelibrary.org) |
+| Pascoag Free Public Library | RI | WordPress-RI | 10 | [Link](https://www.pascoaglibrary.org/) |
+| Portsmouth Free Public Library | RI | WordPress-RI | 0 | [Link](https://www.portsmouthlibrary.org/) |
+| Fox Point Library | RI | WordPress-RI | 1 | [Link](https://provlib.org/) |
+| Knight Memorial Library | RI | WordPress-RI | 1 | [Link](https://provlib.org/) |
+| Mount Pleasant Library | RI | WordPress-RI | 1 | [Link](https://provlib.org/) |
+| Olneyville Library | RI | WordPress-RI | 1 | [Link](https://provlib.org/) |
+| Providence Public Library | RI | WordPress-RI | 1 | [Link](https://provlib.org/) |
+| Rochambeau Library | RI | WordPress-RI | 1 | [Link](https://provlib.org/) |
+| Smith Hill Library | RI | WordPress-RI | 1 | [Link](https://provlib.org/) |
+| South Providence Library | RI | WordPress-RI | 1 | [Link](https://provlib.org/) |
+| Wanskuck Library | RI | WordPress-RI | 1 | [Link](https://provlib.org/) |
+| Washington Park Library | RI | WordPress-RI | 1 | [Link](https://provlib.org/) |
+| Clark Memorial Library | RI | WordPress-RI | 0 | [Link]() |
+| Rumford Branch | RI | WordPress-RI | 0 | [Link](https://eastprovidencelibrary.org/) |
+| Hope Library | RI | WordPress-RI | 0 | [Link]() |
+| North Smithfield Public Library | RI | WordPress-RI | 0 | [Link](https://www.northsmithfieldlibrary.org) |
+| Greenville Public Library | RI | WordPress-RI | 269 | [Link](https://www.greenvillelibrary.org) |
+| Essex Public Library | RI | WordPress-RI | 1 | [Link](https://www.tivertonlibrary.org) |
+| George Hail Free Library | RI | WordPress-RI | 0 | [Link](https://www.georgehail.org/) |
+| Louttit Memorial Library | RI | WordPress-RI | 37 | [Link](https://www.louttitlibrary.org) |
+| Westerly Public Library | RI | WordPress-RI | 4 | [Link](https://www.westerlylibrary.org/) |
+| Fairmount Branch | RI | WordPress-RI | 17 | [Link](https://www.woonsocketlibrary.org) |
+| Woonsocket Harris Public Library | RI | WordPress-RI | 17 | [Link](https://www.woonsocketlibrary.org) |
+| Orange County Library System | FL | Orange-County-Library-FL | 1974 | [Link](https://ocls.org/calendar/) |
+| Peterborough Town Library | NH | Communico-NH | 15 | [Link](https://peterboroughtownlibrary.libnet.info/events) |
+| Collierville Burch Library | TN | Communico-TN | 3 | [Link](https://collierville.libnet.info/events) |
+| Nashville Public Library | TN | Nashville-Library-TN | 1 | [Link](https://events.library.nashville.org/) |
+| Bridgeport Public Library | WV | Communico-WV | 1 | [Link](https://bplwv.libnet.info/events) |
+| Huntington Public Library | WV | Communico-WV | 200 | [Link](https://myhpl.libnet.info/events) |
+| York County Libraries | PA | LibraryMarket-PA | 24 | [Link](https://events.yorklibraries.org/events/upcoming) |
+| Lancaster Public Library | PA | LibraryMarket-PA | 24 | [Link](https://calendar.lancasterlibraries.org/events/upcoming) |
+| Bethlehem Area Public Library | PA | LibraryMarket-PA | 24 | [Link](https://bethlehemarea.librarycalendar.com/events/upcoming) |
+| Buncombe County Libraries | NC | LibraryMarket-NC | 5 | [Link](https://buncombe.librarycalendar.com/events/month) |
+| Hickory Public Library | NC | LibraryMarket-NC | 8 | [Link](https://hickory.librarycalendar.com/) |
+| Manchester City Library | NH | WordPress-NH | 3 | [Link](https://www.manchester.lib.nh.us) |
+| Nashua Public Library | NH | WordPress-NH | 0 | [Link](https://www.nashualibrary.org) |
+| Concord Public Library | NH | WordPress-NH | 0 | [Link](https://concordpubliclibrary.net) |
+| Dover Public Library | NH | WordPress-NH | 0 | [Link](https://library.dover.nh.gov) |
+| Laconia Public Library | NH | WordPress-NH | 0 | [Link](https://www.laconialibrary.org) |
+| Derry Public Library | NH | WordPress-NH | 0 | [Link](https://www.derrypl.org) |
+| Hampton Lane Memorial Library | NH | WordPress-NH | 0 | [Link](https://www.hampton.lib.nh.us) |
+| Milford Wadleigh Memorial Library | NH | WordPress-NH | 1 | [Link](https://www.wadleighlibrary.org) |
+| Exeter Public Library | NH | WordPress-NH | 0 | [Link](https://www.exeterpl.org) |
+| Goffstown Public Library | NH | WordPress-NH | 0 | [Link](https://goffstownlibrary.com/) |
+| Bedford Public Library | NH | WordPress-NH | 2 | [Link](https://www.bedfordnhlibrary.org) |
+| Amherst Town Library | NH | WordPress-NH | 1 | [Link](https://www.amherstlibrary.org) |
+| Windham Nesmith Library | NH | WordPress-NH | 1 | [Link](https://www.nesmithlibrary.org) |
+| Lebanon Public Libraries | NH | WordPress-NH | 3 | [Link](https://leblibrary.com/) |
+| Salem Kelley Library | NH | WordPress-NH | 0 | [Link](https://www.ci.salem.nh.us/kelleylibrary) |
+| Londonderry Leach Library | NH | WordPress-NH | 0 | [Link](https://www.londonderrynh.org/leach-library) |
+| Hudson Rodgers Memorial Library | NH | WordPress-NH | 1 | [Link](https://www.rodgerslibrary.org/) |
+| Hooksett Public Library | NH | WordPress-NH | 1 | [Link](https://www.hooksettlibrary.org) |
+| Haynes Library | NH | WordPress-NH | 7 | [Link](https://www.alexandrialibrary.org) |
+| Andover Public Library | NH | WordPress-NH | 0 | [Link](https://www.andoverlibrary.org) |
+| Ashland Town Library | NH | WordPress-NH | 0 | [Link]() |
+| Griffin Free Public Library | NH | WordPress-NH | 1 | [Link](https://auburnlibrary.org/) |
+| Barrington Public Library | NH | WordPress-NH | 2 | [Link](https://barringtonlibrary.org/) |
+| Bartlett Public Library | NH | WordPress-NH | 63 | [Link](https://www.bartlettlibrary.org) |
+| Bath Public Library | NH | WordPress-NH | 21 | [Link](https://www.bathlibrary.org) |
+| Belmont Public Library | NH | WordPress-NH | 12 | [Link](https://smcl.org/) |
+| G. E.P. Dodge Library | NH | WordPress-NH | 123 | [Link](https://www.benningtonlibrary.org) |
+| Berlin Public Library | NH | WordPress-NH | 10 | [Link]() |
+| Bethlehem Public Library | NH | WordPress-NH | 0 | [Link](https://www.bethlehemlibrary.org) |
+| Brown Memorial Library | NH | WordPress-NH | 0 | [Link](https://bradfordlibrary.org/) |
+| Mary E. Bartlett Library | NH | WordPress-NH | 0 | [Link](https://www.brentwoodlibrary.org) |
+| Brookline Public Library | NH | WordPress-NH | 19 | [Link]() |
+| Canaan Town Library | NH | WordPress-NH | 25 | [Link](https://www.canaanlibrary.org) |
+| Elkins Library | NH | WordPress-NH | 0 | [Link](https://www.canterburylibrary.org) |
+| James E. Nichols Memorial Library | NH | WordPress-NH | 4 | [Link](https://centerharborlibrary.org/) |
+| Chester Public Library | NH | WordPress-NH | 0 | [Link](https://www.chesterlibrary.org/) |
+| Chesterfield Public Library | NH | WordPress-NH | 1 | [Link](https://www.chesterfieldlibrary.org) |
+| Chocorua Public Library | NH | WordPress-NH | 2 | [Link](https://www.chocorualibrary.org/) |
+| Fiske Free Library | NH | WordPress-NH | 0 | [Link](https://www.claremontlibrary.org/) |
+| Dalton Public Library | NH | WordPress-NH | 36 | [Link](https://www.daltonlibrary.org) |
+| George Gamble Library | NH | WordPress-NH | 0 | [Link](https://danburylibrary.org/) |
+| Colby Memorial Library | NH | WordPress-NH | 0 | [Link]() |
+| Philbrick-James Library | NH | WordPress-NH | 1 | [Link](https://www.deerfieldlibrary.org) |
+| Dublin Public Library | NH | WordPress-NH | 1 | [Link](https://www.dublinlibrary.org/) |
+| Dunbarton Public Library | NH | WordPress-NH | 0 | [Link](https://www.dunbartonlibrary.org) |
+| Durham Public Library | NH | WordPress-NH | 38 | [Link]() |
+| East Kingston Public Library | NH | WordPress-NH | 0 | [Link](https://www.eastkingstonlibrary.org/) |
+| East Rochester Public Library | NH | WordPress-NH | 0 | [Link](https://www.eastrochesterlibrary.org) |
+| Effingham Free Public Library | NH | WordPress-NH | 0 | [Link](https://effinghamlibrary.org/) |
+| Harvey-Mitchell Memorial Library | NH | WordPress-NH | 1 | [Link](https://www.eppinglibrary.org) |
+| Goodwin Library | NH | WordPress-NH | 9 | [Link](https://www.farmingtonpublic.org/) |
+| George Holmes Bixby Memorial Library | NH | WordPress-NH | 0 | [Link](https://www.francestownlibrary.org) |
+| Franklin Public Library | NH | WordPress-NH | 3 | [Link](https://www.franklinlibrary.org) |
+| Fremont Public Library | NH | WordPress-NH | 6 | [Link](https://www.fremontlibrary.org) |
+| Gilford Public Library | NH | WordPress-NH | 1 | [Link](https://gilfordlibrary.org/) |
+| Gorham Public Library | NH | WordPress-NH | 1 | [Link](https://gorhamlibrary.org/) |
+| Olive G. Pettis Library | NH | WordPress-NH | 0 | [Link](https://www.goshenlibrary.org/) |
+| Grafton Public Library | NH | WordPress-NH | 0 | [Link]() |
+| Stephenson Memorial Library | NH | WordPress-NH | 12 | [Link]() |
+| Chamberlin Free Public Library | NH | WordPress-NH | 269 | [Link](https://www.greenvillelibrary.org) |
+| Hampstead Public Library | NH | WordPress-NH | 0 | [Link](https://www.hampsteadlibrary.org/) |
+| Hampton Falls Free Library | NH | WordPress-NH | 115 | [Link](https://hamptonfallslibrary.org/) |
+| Hancock Town Library | NH | WordPress-NH | 4 | [Link](https://hancocklibrary.org/) |
+| Howe Library | NH | WordPress-NH | 0 | [Link]() |
+| Haverhill Library Association | NH | WordPress-NH | 0 | [Link](https://www.haverhilllibrary.org) |
+| Hebron Public Library | NH | WordPress-NH | 0 | [Link](https://www.hebronlibrary.org) |
+| Hill Public Library | NH | WordPress-NH | 65 | [Link](https://www.hilllibrary.org) |
+| Holderness Library | NH | WordPress-NH | 0 | [Link](https://www.holdernesslibrary.org) |
+| Hollis Social Library | NH | WordPress-NH | 0 | [Link](https://www.hollislibrary.org) |
+| Nichols Memorial Library | NH | WordPress-NH | 11 | [Link](https://www.kingstonlibrary.org) |
+| William D. Weeks Memorial Library | NH | WordPress-NH | 0 | [Link]() |
+| Lincoln Public Library | NH | WordPress-NH | 1 | [Link]() |
+| Littleton Public Library | NH | WordPress-NH | 0 | [Link](https://www.littletonlibrary.org) |
+| Madbury Public Library | NH | WordPress-NH | 1 | [Link](https://madburylibrary.org/) |
+| Madison Library | NH | WordPress-NH | 9 | [Link](https://www.madisonlibrary.org) |
+| Mason Public Library | NH | WordPress-NH | 1 | [Link](https://www.masonlibrary.org) |
+| Meredith Public Library | NH | WordPress-NH | 2 | [Link](https://www.meredithlibrary.org) |
+| Meriden Library | NH | WordPress-NH | 62 | [Link]() |
+| Merrimack Public Library | NH | WordPress-NH | 0 | [Link](https://www.merrimacklibrary.org) |
+| Milan Public Library | NH | WordPress-NH | 0 | [Link](https://milanlibrary.org/) |
+| Nute Library | NH | WordPress-NH | 0 | [Link]() |
+| Monroe Public Library | NH | WordPress-NH | 29 | [Link](https://www.monroelibrary.org) |
+| Moultonborough Public Library | NH | WordPress-NH | 1 | [Link](https://www.moultonboroughlibrary.org) |
+| Olivia Rodham Memorial Library | NH | WordPress-NH | 26 | [Link](https://www.nelsonlibrary.org) |
+| New Durham Public Library | NH | WordPress-NH | 17 | [Link](https://newdurhamlibrary.org/) |
+| New Ipswich Library | NH | WordPress-NH | 0 | [Link](https://www.newipswichlibrary.org/) |
+| Tracy Memorial Library | NH | WordPress-NH | 11 | [Link](https://www.newlondonlibrary.org) |
+| Newbury Public Library | NH | WordPress-NH | 1 | [Link](https://www.newburylibrary.org) |
+| Newfields Public Library | NH | WordPress-NH | 26 | [Link](https://www.newfieldslibrary.org) |
+| Newmarket Public Library | NH | WordPress-NH | 0 | [Link](https://newmarketlibrary.org/) |
+| Richards Free Library | NH | WordPress-NH | 9 | [Link]() |
+| Gale Library | NH | WordPress-NH | 0 | [Link](https://www.newtonlibrary.org) |
+| Blaisdell Memorial Library | NH | WordPress-NH | 1 | [Link](https://nottinghamlibrary.org/) |
+| Pelham Public Library | NH | WordPress-NH | 47 | [Link]() |
+| Pembroke Town Library | NH | WordPress-NH | 0 | [Link](https://www.pembrokelibrary.org/) |
+| Piermont Public Library | NH | WordPress-NH | 1 | [Link]() |
+| Pike Library | NH | WordPress-NH | 0 | [Link](https://www.pikelibrary.org) |
+| Bremer Pond Memorial Library | NH | WordPress-NH | 2 | [Link](https://www.pittsburglibrary.org/) |
+| Josiah Carpenter Library | NH | WordPress-NH | 3 | [Link](https://www.pittsfieldlibrary.org/) |
+| Philip Read Memorial Library | NH | WordPress-NH | 7 | [Link](https://www.plainfieldlibrary.org) |
+| Pease Public Library | NH | WordPress-NH | 0 | [Link]() |
+| Portsmouth Public Library | NH | WordPress-NH | 0 | [Link]() |
+| Randolph Public Library | NH | WordPress-NH | 0 | [Link]() |
+| Richmond Public Library | NH | WordPress-NH | 0 | [Link]() |
+| Rollinsford Public Library | NH | WordPress-NH | 23 | [Link](https://www.rollinsfordlibrary.org/) |
+| Byron G. Merrill Library | NH | WordPress-NH | 0 | [Link](https://www.rumneylibrary.org/) |
+| Rye Public Library | NH | WordPress-NH | 2 | [Link](https://www.ryelibrary.org/) |
+| Salisbury Free Library | NH | WordPress-NH | 0 | [Link](https://www.salisburylibrary.org/) |
+| Libbie A. Cass Memorial Library | NH | WordPress-NH | 0 | [Link](https://www.springfieldlibrary.org/) |
+| Stark Public Library | NH | WordPress-NH | 52 | [Link](https://www.starklibrary.org) |
+| Laura Johnson Memorial Library | NH | WordPress-NH | 1 | [Link](https://www.stratfordlibrary.org) |
+| Sullivan Public Library | NH | WordPress-NH | 0 | [Link](https://www.sullivanil.us/) |
+| Cook Memorial Library | NH | WordPress-NH | 10 | [Link](https://www.tamworthlibrary.org) |
+| Mansfield Public Library | NH | WordPress-NH | 0 | [Link](https://www.templelibrary.org) |
+| Gay-Kimball Library | NH | WordPress-NH | 0 | [Link]() |
+| Unity Free Public Library | NH | WordPress-NH | 0 | [Link]() |
+| Wakefield Public Library | NH | WordPress-NH | 5 | [Link](https://wakefieldlibrary.org/) |
+| Walpole Town Library | NH | WordPress-NH | 120 | [Link](https://www.walpolelibrary.org) |
+| Pillsbury Free Library | NH | WordPress-NH | 8 | [Link](https://warnerlibrary.org/) |
+| Joseph Patch Library | NH | WordPress-NH | 1 | [Link](https://www.warrenlibrary.org) |
+| Webster Free Public Library | NH | WordPress-NH | 13 | [Link](https://www.websterlibrary.org) |
+| Westmoreland Public Library | NH | WordPress-NH | 0 | [Link](https://www.westmorelandpubliclibrary.com/) |
+| Whitefield Public Library | NH | WordPress-NH | 29 | [Link](https://www.whitefieldlibrary.org) |
+| Wilmot Public Library | NH | WordPress-NH | 5 | [Link](https://www.wilmotlibrary.org) |
+| Wilton Public Gregg Free Library | NH | WordPress-NH | 1 | [Link](https://www.wiltonlibrary.org) |
+| Conant Public Library | NH | WordPress-NH | 1 | [Link](https://www.winchesterlibrary.org) |
+| Wolfeboro Public Library | NH | WordPress-NH | 1 | [Link](https://wolfeboropubliclibrary.org/) |
+| Decatur County - Gilbert H. Gragg Library | GA | SouthwestGeorgia-GA | 141 | [Link](https://swgrl.org/calendar.php) |
+| Miller County - James W. Merritt Jr. Memorial Library | GA | SouthwestGeorgia-GA | 29 | [Link](https://swgrl.org/calendar.php) |
+| Seminole County Public Library | GA | SouthwestGeorgia-GA | 47 | [Link](https://swgrl.org/calendar.php) |
+| Assabet-NH-MA (multi-system, 18 libraries across NH/MA — see note) | Multi | Assabet-NH-MA | 1107 | [Link](https://dovernh.assabetinteractive.com/calendar/) |
+
+### Cycle-completion check (2026-08-09)
+
+**Complete.** Cross-referencing every active library-family scraper in `scrapers/scraper-registry.js` (filtered through `isScraperActive()`; 104 of the 153 active registry entries are library-family — the remaining 49 are parks/venues/festivals/community-event scrapers excluded per the standing skip list) against the union of `## 2026-08-05` + `## 2026-08-07` + `## 2026-08-08` + `## 2026-08-09`: **all 104 now have at least one logged row this cycle.** Today's run was the cycle's first Group 3 pass, and it picked up the two scrapers explicitly flagged as outstanding in the 2026-08-08 section (LibCal-VA2, Intercept-Camden) along with the rest of Group 3's library-family scrapers.
+
+See the `## Cycle complete — 2026-08-09` summary at the top of this file for the full-cycle totals.
 

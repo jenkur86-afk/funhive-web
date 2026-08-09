@@ -2442,5 +2442,425 @@
   "verdict": "UNVERIFIABLE",
   "comment": "WebFetch returned HTTP 403 from ozark.macaronikid.com — same domain-wide bot-block as Asheville; not investigated further this run.",
   "population": "allages"
+ },
+ "LibCal-FL|||Palm Beach County Library System": {
+  "verdict": "MATCHES",
+  "comment": "Live LibCal calendar page loads under Palm Beach County Library System branding but shows no events in the search-results section, consistent with the scrape.",
+  "population": "zero"
+ },
+ "LibCal-FL|||St. Johns County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "DNS lookup failed (getaddrinfo ENOTFOUND sjcpls.libcal.com) - domain does not resolve, dead-domain.",
+  "population": "zero"
+ },
+ "LibCal-FL|||Seminole County Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "DNS lookup failed (getaddrinfo ENOTFOUND seminolecountylibrary.libcal.com) - domain does not resolve, dead-domain.",
+  "population": "zero"
+ },
+ "WordPress-Events-Calendar|||Washington County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "HTTP 403 Forbidden on https://www.wcpl.net/events/ - bot-blocked, could not verify live content.",
+  "population": "zero"
+ },
+ "WordPress-Events-Calendar|||Heritage Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Page correctly identifies as Heritage Public Library (Charles City/New Kent, VA) but only shows an unrendered [tribe_events] shortcode placeholder with no actual event listings - consistent with 0.",
+  "population": "zero"
+ },
+ "WordPress-Events-Calendar|||Bristol Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: https://bristolpubliclibrary.org/events/ 307-redirects to www.in.gov/bristolpubliclibrary/, which is Bristol Public Library in Bristol, INDIANA (505 W Vistula St), not the intended Bristol Public Library, VA. Wrong institution entirely.",
+  "population": "zero"
+ },
+ "WordPress-Events-Calendar|||Carnegie Library of Pittsburgh": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "HTTP 403 Forbidden on https://www.carnegielibrary.org/events/ - bot-blocked, could not verify live content.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Free Library of Philadelphia": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "No link captured in audit ([Link]() empty) - not guessed, per instructions.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Albion Area Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: https://www.albionlibrary.org/ resolves to Albion District Library in Albion, MICHIGAN (501 S Superior St), not Albion Area Public Library, PA. Site does show a dated event (Aug 18 board mtg) but for the wrong institution.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Allentown Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: configured URL is bare https://sites.google.com/, which redirects to a generic Google account login page - not a real Allentown library site. Clear seed-data placeholder URL, unrelated to the note scraper Allentown-Public which uses the correct allentownpl.org domain.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Ardmore Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "No link captured in audit ([Link]() empty) - not guessed, per instructions.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Ashland Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "No link captured in audit ([Link]() empty) - not guessed, per instructions.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Aston Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Institution confirmed as Aston Public Library, PA (3270 Concord Road). Page shows no dated events itself, directs visitors to an external Delco Libraries calendar system - consistent with 0 at this URL.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Avalon Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: institution confirmed (317 S. Home Ave, Avalon, PA). Live page clearly lists dated upcoming events (Mon Aug 10 Pre-K Story Time, Tue Aug 11 Mahjong, Tue Aug 11 Family Story Time) that the scraper found 0 for.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Avella Area Library Center": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: institution confirmed (11 School Court, Avella, PA). Page shows a dated event (Sept 10, 2026 WCCF Day of Giving) the scraper missed.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Avonmore Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Institution confirmed (437 Westmoreland Ave, Avonmore, PA) but fetched page only shows an EVENTS nav link with no rendered listing content - can't confirm presence/absence of events, possible JS-rendered calendar not captured by fetch.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Bangor Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Institution confirmed (39 South Main St, Bangor, PA). No dated events shown; page only references recurring program names (Book Club, Story Hour) and a recent-acquisitions date, no scheduled event dates - consistent with 0.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Bedford County Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: https://www.bedfordlibrary.org resolves to Bedford Public Library in Bedford, TEXAS (2424 Forest Ridge Dr), not Bedford County Library, PA. Wrong institution and wrong state.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Belle Vernon Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Institution confirmed (Belle Vernon, Fayette City, North Belle Vernon, Washington Township, PA 15012). Page has an Upcoming Events link but no dated events rendered on the fetched page - consistent with 0.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Andrew Bayne Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: https://www.bellevue.net/ is the official City of Bellevue, NEBRASKA government website (1500 Wall Street), not Andrew Bayne Memorial Library, PA. Its own calendar states 'no published events in current month' too, but this is entirely the wrong institution.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Bernville Area Community Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection refused (ECONNREFUSED 216.40.34.41:443) on https://www.bernvillelibrary.org - dead-domain/server not accepting connections.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Bethany Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: https://bethanylibrary.org/ resolves to Clark Memorial Library in Bethany, CONNECTICUT (538 Amity Road), not Bethany Public Library, PA. Ironically shows real dated events (Aug 5/8 Bedazzled Books, Aug 29 Summer Reading deadline) but for the wrong institution/state.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Bethel-Tulpehocken Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "https://www.bethellibrary.org returned no usable content across two fetch attempts (empty content body) - could not verify.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Bethel Park Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Institution confirmed via bethelparklibrary/bethelpark.librarycalendar.com references. No dated events rendered on the fetched page itself - links out to an external librarycalendar.com calendar - consistent with 0 at this URL.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Bethlehem Area Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "https://www.bethlehemlibrary.org returned no usable content across two fetch attempts (empty content body) - could not verify. Note: the same library IS itemized with 24 events under LibraryMarket-PA (bethlehemarea.librarycalendar.com) elsewhere in today's audit, suggesting its real calendar lives on a different platform than this WordPress-PA URL.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Boyertown Community Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Connection refused (ECONNREFUSED 216.40.34.41:443) on https://www.boyertownlibrary.org - dead-domain/server not accepting connections.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Bradford Area Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Institution confirmed (67 W. Washington St, Bradford, PA). Homepage shows only blog-post dates, no rendered dated event listings; links out to a separate Event Calendar page - consistent with 0.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Bridgeville Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Institution confirmed (505 McMillen St, Bridgeville, PA). Page shows blog post dates and named-but-undated promo events (Zumba, Floral Arrangement), directing to bridgeville.librarycalendar.com for the real calendar - no confirmed dated events on this URL, consistent with 0.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Mengle Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "TLS certificate error on https://www.brockwaylibrary.org (unable to verify the first certificate) - could not verify live content.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Green Free Library": {
+  "verdict": "MATCHES",
+  "comment": "Institution confirmed (Canton, PA 17724, self-described as 'a public library in a small community'). Page shows only holiday closing dates, no upcoming programs/events - consistent with 0.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Carbondale Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Domain carbondalelibrary.org loads but is a 'Launching Soon' placeholder page with no state/institution confirmation beyond the name and a 2024 copyright footer - no events possible on an unlaunched site, consistent with 0, though the site itself is not fully live.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Bosler Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "https://www.carlislelibrary.org (and http variant) failed with 'Command failed with no output' across three fetch attempts - could not verify.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Community Library Of Castle Shannon": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: institution confirmed (Castle Shannon, PA 15234). Live page clearly lists multiple dated upcoming events (Summer Reading Challenge through Aug 7, Dee Jay's Fundraiser Aug 27, Friends Raffle Drawing Aug 31, Trustees application deadline Sept 1) that the scraper found 0 for.",
+  "population": "zero"
+ },
+ "WordPress-PA|||John K Tener Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: https://www.charleroilibrary.org 301-redirects to http://statenislander.org/?301=charleroilibrary.org, an unrelated parked/squatter domain - the library's real domain has expired or been repurposed.",
+  "population": "zero"
+ },
+ "WordPress-PA|||J. Lewis Crozer Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: https://www.chesterlibrary.org/ resolves to the Town of Chester Library in Chestertown, NEW YORK (not J. Lewis Crozer Library in Chester, PA). Shows real dated events (Sept 11, Sept 20 meetings) but for the wrong institution/state.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Chester Springs Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: institution confirmed (1709 Art School Road, Chester Springs, PA). Page lists a dated Board of Trustees meeting (Tue Aug 18, 2026) that the scraper found 0 for, though the library notes its building is temporarily closed due to storm damage so broader programming may be paused.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Moores Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: institution confirmed (9 West Slokom Ave, Christiana, PA). Page names a specific dated recurring program ('Story time is back on Wednesday September 4th') plus other recurring clubs, which the scraper found 0 for.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Clairton Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: institution confirmed (616 Miller Ave, Clairton, PA). Page clearly lists dated summer programs (Dinosaur Days June 8-Aug 12, Kid's Day June 10-Aug 12, Summer Reading Club Party Aug 12) that the scraper found 0 for.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Claysburg Area Public Library Inc": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "TLS certificate mismatch on https://www.claysburglibrary.org across two attempts (cert issued for *.web-hosting.com, not the library's domain - looks like an unconfigured hosting placeholder) - could not verify live content.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Coatesville Area Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Institution confirmed (501 Lincoln Highway, Coatesville, PA). Page shows only old (Dec 2023) blog posts and an undated recurring monthly meeting mention, no rendered dated event listings; directs to a separate calendar page - consistent with 0.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Columbia Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: columbialibrary.org resolves to Columbia Public Library in Columbia, Illinois, not the PA borough",
+  "population": "zero"
+ },
+ "WordPress-PA|||Cooperstown Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "dead-domain: cooperstownlibrary.org does not resolve (DNS ENOTFOUND)",
+  "population": "zero"
+ },
+ "WordPress-PA|||Coraopolis Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: confirmed Coraopolis, PA 15108 site shows real dated events (Yarn Bunch, Aug 15/22/29) the scraper returned 0 for",
+  "population": "zero"
+ },
+ "WordPress-PA|||Thomas Beaver Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no link captured",
+  "population": "zero"
+ },
+ "WordPress-PA|||Delmont Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: confirmed Delmont, PA 15626 site lists multiple dated Aug-Oct 2026 events (Qi Gong, LEGO Club, board meetings, STEM workshop) scraper missed",
+  "population": "zero"
+ },
+ "WordPress-PA|||Dover Area Community Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: doverlibrary.org resolves to Dover Public Library, Dover, Ohio (44622), not the PA library",
+  "population": "zero"
+ },
+ "WordPress-PA|||Downingtown Library Company": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "fetch returned no page content on two attempts (likely JS-only render or blocked fetch)",
+  "population": "zero"
+ },
+ "WordPress-PA|||Dunbar Community Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: dunbarlibrary.org resolves to Dunbar Free Library in Grantham, NH, not the PA library; live site does show real dated events under the wrong institution",
+  "population": "zero"
+ },
+ "WordPress-PA|||Easton Area Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: eastonlibrary.org resolves to Easton Public Library, Easton, Connecticut, not the PA library",
+  "population": "zero"
+ },
+ "WordPress-PA|||Ellwood City Area Pub Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "fetch returned no page content (likely JS-only render or blocked fetch)",
+  "population": "zero"
+ },
+ "WordPress-PA|||Emmaus Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "emmauslibrary.org homepage is a bare Koha OPAC catalog shell with no identifying city/state text and no events; /calendar 404s, so institution match and event presence can't be confirmed",
+  "population": "zero"
+ },
+ "WordPress-PA|||Barbara Moscato Brown Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "connection error (\"socket is closed\") fetching emporiumlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-PA|||Erie County Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: confirmed Erie, PA site shows dated summer programs (June 15-Aug 22); real event calendar lives on events.erielibrary.org subdomain, not captured by scraper's configured URL",
+  "population": "zero"
+ },
+ "WordPress-PA|||Evans City Public Library": {
+  "verdict": "MATCHES",
+  "comment": "confirmed Evans City, PA 16033 site; homepage and /events subpage show no specific dated events currently listed",
+  "population": "zero"
+ },
+ "WordPress-PA|||Everett Free Library": {
+  "verdict": "MATCHES",
+  "comment": "confirmed Everett, PA 15537 site; dedicated /event-list page explicitly states \"No events at the moment\"",
+  "population": "zero"
+ },
+ "WordPress-PA|||Bucks County Free Library - Fallsington Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "certificate has expired on fallsingtonlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-PA|||Fleetwood Area Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "fetch returned no page content (likely JS-only render or blocked fetch)",
+  "population": "zero"
+ },
+ "WordPress-PA|||Borough Of Folcroft Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "connection error (\"socket is closed\") fetching folcroftlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-PA|||Foxburg Free Library Association": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: /events page lists real program titles (Story Time, 5 Under Story Hour, Book vs Movie, Books That Shape Us) but dates are embedded in calendar images, likely uncrawlable text for the scraper",
+  "population": "zero"
+ },
+ "WordPress-PA|||Franklin Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: franklinlibrary.org 301-redirects to an unrelated spam/blog site (running-care.com), domain has been repurposed",
+  "population": "zero"
+ },
+ "WordPress-PA|||Pequea Valley Public Library - Gap Branch": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "self-signed certificate error on gaplibrary.org",
+  "population": "zero"
+ },
+ "WordPress-PA|||Genesee Area Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "fetch returned no page content (likely JS-only render or blocked fetch)",
+  "population": "zero"
+ },
+ "WordPress-PA|||Arthur Hufnagel Public Library Of Glen Rock": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no link captured",
+  "population": "zero"
+ },
+ "WordPress-PA|||Glenolden Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "dead-domain: glenoldenlibrary.org has a redirect loop (too many redirects)",
+  "population": "zero"
+ },
+ "WordPress-PA|||Greensburg Hempfield Area Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: greensburglibrary.org resolves to Greensburg Decatur County Public Library, Greensburg, Indiana, not the PA library",
+  "population": "zero"
+ },
+ "WordPress-PA|||Greenville Area Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: greenvillelibrary.org resolves to Greenville County Library System, Greenville, South Carolina, not the PA library; live site shows real dated events under the wrong institution",
+  "population": "zero"
+ },
+ "WordPress-PA|||Hamburg Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: hamburglibrary.org resolves to Hamburg Township Library, Hamburg, Michigan, not the PA library; live site shows real dated events under the wrong institution",
+  "population": "zero"
+ },
+ "WordPress-PA|||Salem Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: hamlinlibrary.org is actually Hamlin Memorial Library in Smethport, PA - config's site name \"Salem Public Library\" does not match the institution at this URL (in-state seed-data mislabel)",
+  "population": "zero"
+ },
+ "WordPress-PA|||Guthrie Memorial Library - Hanovers Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no link captured",
+  "population": "zero"
+ },
+ "WordPress-PA|||Dauphin County Library System": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: harrisburglibrary.org's page title is \"Harrisburg District Library\" (an Illinois/Michigan-style district-library naming convention, not used elsewhere in this PA dataset), not \"Dauphin County Library System\"; no PA address/identifier found on site",
+  "population": "zero"
+ },
+ "WordPress-PA|||Union Library Company Of Hatborough": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: confirmed Hatboro, PA site (\"Union Library of Hatboro\") shows real dated events (Colonial Day Aug 15, Teen Cosplay Aug 25, Family Game Night Aug 27) scraper missed",
+  "population": "zero"
+ },
+ "WordPress-PA|||Hawley Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: confirmed Hawley, PA 18428 site shows real dated events (Mystery Wine Tasting Oct 3, HPL Run to Read 5K) scraper missed",
+  "population": "zero"
+ },
+ "WordPress-PA|||Hazleton Area Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden (bot-blocked) fetching hazletonlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-PA|||Hellertown Area Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: confirmed Hellertown, PA site's /events page lists real recurring programs (Book Club, Quilt Study Group, Spinner's Group, Therapy Dog Days) scraper missed",
+  "population": "zero"
+ },
+ "WordPress-PA|||Hershey Public Library": {
+  "verdict": "MATCHES",
+  "comment": "confirmed Hershey, PA 17033 site; homepage shows no specific dated events (only generic Summer Reading/book sale mentions), /events 404s, real calendar is on an external LibCal system not reachable to independently confirm",
+  "population": "zero"
+ },
+ "WordPress-PA|||Hollidaysburg Area Public Library": {
+  "verdict": "MATCHES",
+  "comment": "confirmed Hollidaysburg, PA site; homepage shows no specific dated events, only a generic \"Calendar of Events\" link",
+  "population": "zero"
+ },
+ "WordPress-PA|||Honey Brook Community Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "500 Internal Server Error fetching honeybrooklibrary.org",
+  "population": "zero"
+ },
+ "WordPress-PA|||Horsham Township Library": {
+  "verdict": "MATCHES",
+  "comment": "confirmed Horsham, PA 19044 site; homepage shows no specific dated events (only a Summer Reading Log deadline), /events 404s",
+  "population": "zero"
+ },
+ "WordPress-PA|||Chartiers-Houston Com Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: houstonlibrary.org resolves to Houston Public Library, Houston, Texas, not the small PA community library",
+  "population": "zero"
+ },
+ "WordPress-PA|||Hyndman-Londonderry Public Library": {
+  "verdict": "MATCHES",
+  "comment": "confirmed Hyndman, PA site; no calendar/events section visible on homepage, no dated events found",
+  "population": "zero"
+ },
+ "LibCal-VA2|||Library of Virginia": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "JS-rendered LibCal calendar; static fetch of lva-virginia.libcal.com/calendar showed only the filter/search UI shell with an empty results section, no actual event titles/descriptions visible to judge age-targeting",
+  "population": "allages"
+ },
+ "MacaroniKid-SC|||Myrtlebeach": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden (bot-blocked) fetching myrtlebeach.macaronikid.com",
+  "population": "allages"
+ },
+ "MacaroniKid-NJ|||Ramsey": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden (bot-blocked) fetching ramsey.macaronikid.com",
+  "population": "allages"
+ },
+ "MacaroniKid-NJ|||Pointpleasantnj": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "403 Forbidden (bot-blocked) fetching pointpleasantnj.macaronikid.com",
+  "population": "allages"
  }
 }
