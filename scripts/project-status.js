@@ -263,11 +263,20 @@ function computeGates() {
   g.unknownSites = { now: count('UNVERIFIABLE'), unit: '', target: 0,
     detail: 'never re-checked; the true bug count sits between the MISMATCH count and MISMATCH+UNVERIFIABLE' };
 
-  // --- Gate 5 — All-Ages share, computed from the age audit's own bracket columns.
-  // Reflects the last completed audit cycle rather than the live DB, which is stated
-  // rather than glossed. Target is intentionally null: some sources (festivals, general
-  // Eventbrite) are genuinely all-ages, so 0% would be a wrong target and only the
-  // project owner can set the right one.
+  // --- Gate 5 — share of audited events that landed in a SPECIFIC age bracket rather
+  // than the All Ages catch-all. Computed from the age audit's own bracket columns, so
+  // it reflects the last completed audit cycle rather than the live DB — stated, not glossed.
+  //
+  // Measured as specificity (higher = better) rather than All-Ages share (lower = better)
+  // because the owner set the goal on 2026-08-09 as "as high as possible, no fixed target".
+  // A maximise-this goal has to be pointed at a maximise-this metric or every delta arrow
+  // in the ledger reads backwards.
+  //
+  // target stays null and `ratchet` is set instead: some sources are GENUINELY all-ages
+  // (festivals, general Eventbrite, KidsOutAndAbout — the same list Step 3c excludes from
+  // flagging), so 100% is neither reachable nor desirable and any fixed number would be
+  // invented. The ratchet compares against the best value ever recorded in STATUS.md, which
+  // makes regressions visible without pretending to know the ceiling.
   let allAges = 0, totalEvents = 0;
   try {
     const ageRows = tablesByHeader(fs.readFileSync(AGE_MD, 'utf8'), /\|\s*site\s*\|\s*scraper\s*\|\s*all ages/i);
@@ -277,8 +286,13 @@ function computeGates() {
       if (a !== null && t !== null && t > 0) { allAges += a; totalEvents += t; }
     });
   } catch { notes.push('AGE-RANGE-AUDIT.md unreadable — gate 5 unavailable.'); }
-  g.allAgesShare = { now: pct(allAges, totalEvents), unit: '%', target: null,
-    detail: totalEvents ? `${allAges} of ${totalEvents} audited events tagged All Ages` : 'no audit rows parsed' };
+  const specific = totalEvents - allAges;
+  g.specificAgeShare = { now: pct(specific, totalEvents), unit: '%', target: null, ratchet: true,
+    detail: totalEvents
+      ? `${specific} of ${totalEvents} audited events carry a specific bracket; ${allAges} are All Ages. ` +
+        `No fixed target by owner decision — some sources are genuinely all-ages, so the goal is ` +
+        `"as high as possible" and the gate ratchets against the best value ever recorded`
+      : 'no audit rows parsed' };
 
   // --- Gates 6 & 7 need a database read. Declared, dated, and marked — never guessed.
   g.nameConformance = { now: STALE_METRICS.nameConformance.value, unit: STALE_METRICS.nameConformance.unit,
@@ -304,7 +318,7 @@ const GATE_ORDER = [
   ['urlCollisions',      '2. URLs unique per state',   'blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library'],
   ['confirmedBugs',      '3. Zero confirmed bugs',     'mostly blocked on gate 2'],
   ['unknownSites',       '4. Zero unknown sites',      'independent — re-checking is its own pass'],
-  ['allAgesShare',       '5. Age detection honest',    'target needs an owner decision'],
+  ['specificAgeShare',   '5. Age brackets resolved',   'no fixed target — maximise; ratchets vs best ever'],
   ['nameConformance',    '6. Names join to registry',  'planned migration, not daily work'],
   ['sourceUrlCoverage',  '7. Provenance (source_url)', 'partly blocked on rotation'],
   ['countyCoverage',     '8. Coverage known per county', 'FINAL — blocked on all of the above'],
@@ -316,7 +330,12 @@ function fmt(gate) {
   return gate.stale ? `${v} ⚠stale` : v;
 }
 function fmtTarget(gate) {
-  if (!gate || gate.target === null || gate.target === undefined) return 'owner-set';
+  if (!gate) return '—';
+  // A ratcheting gate has no fixed target by design; the bar is its own best-ever value.
+  if (gate.ratchet) {
+    return gate.best !== undefined ? `max (best ${gate.best}%)` : 'max';
+  }
+  if (gate.target === null || gate.target === undefined) return 'owner-set';
   return `${gate.target}${gate.unit || ''}`;
 }
 
@@ -330,7 +349,7 @@ function renderTable(gates, prev) {
     if (prev && prev[key] !== undefined && g && typeof g.now === 'number' && typeof prev[key] === 'number') {
       const d = Math.round((g.now - prev[key]) * 10) / 10;
       // Lower is better for the count-style gates; higher is better for the percentage ones.
-      const lowerIsBetter = ['urlCollisions', 'confirmedBugs', 'unknownSites', 'allAgesShare'].includes(key);
+      const lowerIsBetter = ['urlCollisions', 'confirmedBugs', 'unknownSites'].includes(key);
       if (d === 0) delta = '·';
       else {
         const improving = lowerIsBetter ? d < 0 : d > 0;
@@ -365,9 +384,16 @@ function renderBroken(gates, fixNotes) {
     push('🟠', 'Unknown sites (UNVERIFIABLE verdicts)',
       `${gates.unknownSites.now} sites`, 'bot-blocks / JS-only calendars / TLS failures — never re-checked');
   }
-  if (gates.allAgesShare.now >= 50) {
-    push('🟠', 'Age detection skew',
-      `${gates.allAgesShare.now}% All Ages`, 'MASTER-PLAN Phase 5, not started');
+  // Flagged whenever most events still fall in the catch-all, and additionally whenever
+  // specificity has regressed below its own best-ever — the ratchet, since there is no
+  // fixed target to compare against.
+  if (gates.specificAgeShare.now < 50 || gates.specificAgeShare.regressed) {
+    push('🟠', gates.specificAgeShare.regressed
+        ? 'Age detection REGRESSED below best-ever specificity'
+        : 'Age detection — most events still land in the All Ages catch-all',
+      `${gates.specificAgeShare.now}% resolved` +
+        (gates.specificAgeShare.best ? ` (best ever ${gates.specificAgeShare.best}% on ${gates.specificAgeShare.bestDate})` : ''),
+      'MASTER-PLAN Phase 5, not started');
   }
   if (gates.nameConformance.now < 100) {
     push('🟡', 'scraper_name drift — rows cannot join back to the registry',
@@ -406,11 +432,27 @@ function nextAction(gates) {
 // Each entry carries a machine-readable snapshot in an HTML comment. Trend is read from
 // THOSE, never by re-parsing the human tables — markdown formatting drifts, and a parser
 // that depends on it breaks silently (exactly what unescaped pipes did on 2026-08-09).
+function readAllSnapshots() {
+  if (!fs.existsSync(STATUS_MD)) return [];
+  const md = fs.readFileSync(STATUS_MD, 'utf8');
+  const out = [];
+  for (const m of md.matchAll(/<!-- STATUS-DATA (.*?) -->/g)) {
+    try {
+      const snap = JSON.parse(m[1]);
+      // Migration: gate 5 was recorded as allAgesShare (lower-is-better) before the owner
+      // set the goal as maximise-specificity on 2026-08-09. Derive the new metric from the
+      // old one so the trend line survives the flip instead of restarting at zero history.
+      if (snap.specificAgeShare === undefined && typeof snap.allAgesShare === 'number') {
+        snap.specificAgeShare = Math.round((100 - snap.allAgesShare) * 10) / 10;
+      }
+      out.push(snap);
+    } catch { /* skip unparseable snapshot rather than abort the run */ }
+  }
+  return out;                      // newest first — entries are prepended
+}
+
 function readPrevious() {
-  if (!fs.existsSync(STATUS_MD)) return null;
-  const m = /<!-- STATUS-DATA (.*?) -->/.exec(fs.readFileSync(STATUS_MD, 'utf8'));
-  if (!m) return null;
-  try { return JSON.parse(m[1]); } catch { return null; }
+  return readAllSnapshots()[0] || null;
 }
 
 /**
@@ -485,6 +527,17 @@ function main() {
   try { fixNotes = JSON.parse(fs.readFileSync(FIX_NOTES, 'utf8')); } catch {}
 
   const prev = readPrevious();
+
+  // Ratchet for gate 5: the owner set no fixed target ("as high as possible"), so the
+  // bar is the best value ever recorded. Anything below it is a regression worth naming.
+  const history = readAllSnapshots().filter(s => typeof s.specificAgeShare === 'number');
+  if (history.length && gates.specificAgeShare) {
+    const best = history.reduce((a, b) => (b.specificAgeShare > a.specificAgeShare ? b : a));
+    gates.specificAgeShare.best = best.specificAgeShare;
+    gates.specificAgeShare.bestDate = best.date;
+    gates.specificAgeShare.regressed = gates.specificAgeShare.now < best.specificAgeShare;
+  }
+
   const tableMd = renderTable(gates, prev);
   const broken = renderBroken(gates, fixNotes);
   const next = nextAction(gates);
