@@ -7,17 +7,17 @@ the command is in each gate's detail line and the value is dated, never guessed.
 ---
 ## 2026-08-09
 
-<!-- STATUS-DATA {"date":"2026-08-09","countiesResolve":98.4,"urlCollisions":787,"confirmedBugs":88,"unknownSites":348,"specificAgeShare":38.8,"nameConformance":46.4,"sourceUrlCoverage":62,"countyCoverage":0} -->
+<!-- STATUS-DATA {"date":"2026-08-09","countiesResolve":98.4,"urlCollisions":787,"confirmedBugs":120,"unknownSites":383,"specificAgeShare":40.6,"nameConformance":46.4,"sourceUrlCoverage":62,"countyCoverage":0} -->
 
 ### Distance to 100%
 
 | Gate | Now | Δ | Target | Blocking |
 |---|---|---|---|---|
 | 1. Counties resolve | 98.4% | · | 100% | blocks nothing — mechanical once a city→county dataset is chosen |
-| 2. URLs unique per state | 787 | -285 ✅ | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
-| 3. Zero confirmed bugs | 88 | · | 0 | mostly blocked on gate 2 |
-| 4. Zero unknown sites | 348 | · | 0 | independent — re-checking is its own pass |
-| 5. Age brackets resolved | 38.8% | · | max (best 38.8%) | no fixed target — maximise; ratchets vs best ever |
+| 2. URLs unique per state | 787 | · | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
+| 3. Zero confirmed bugs | 120 | +32 ⚠️ | 0 | mostly blocked on gate 2 |
+| 4. Zero unknown sites | 383 | +35 ⚠️ | 0 | independent — re-checking is its own pass |
+| 5. Age brackets resolved | 40.6% | +1.8 ✅ | max (best 38.8%) | no fixed target — maximise; ratchets vs best ever |
 | 6. Names join to registry | 46.4% ⚠stale | · | 100% | planned migration, not daily work |
 | 7. Provenance (source_url) | 62% ⚠stale | · | 90% | partly blocked on rotation |
 | 8. Coverage known per county | 0 | · | 1 | FINAL — blocked on all of the above |
@@ -28,9 +28,9 @@ the command is in each gate's detail line and the value is dated, never guessed.
 |---|---|---|---|
 | 🔴 | Fabricated counties — geocoding falls back to state centroid | worst family MacaroniKid-*: 239 of 243 resolve (98.4%). Fleet-wide 6225 of 6268 (99.3%) — the fleet figure is NOT the gate, it averages the defect away. Worst families: MacaroniKid-* 98.4%, WordPress-* 98.9%, LibCal-* 100%, Communico-* 100%, BiblioCommons-* 100% | needs a real city→county dataset; guessing one at a time is how this started |
 | 🔴 | URL collisions — entries may point at another state's library | 787 entries on 249 hosts claimed by 2+ states | per-file live verification; the main body of MASTER-PLAN Phase 2 |
-| 🟠 | Confirmed open bugs (MISMATCH verdicts) | 88 sites | most blocked on the URL work above |
-| 🟠 | Unknown sites (UNVERIFIABLE verdicts) | 348 sites | bot-blocks / JS-only calendars / TLS failures — never re-checked |
-| 🟠 | Age detection — most events still land in the All Ages catch-all | 38.8% resolved (best ever 38.8% on 2026-08-09) | MASTER-PLAN Phase 5, not started |
+| 🟠 | Confirmed open bugs (MISMATCH verdicts) | 120 sites | most blocked on the URL work above |
+| 🟠 | Unknown sites (UNVERIFIABLE verdicts) | 383 sites | bot-blocks / JS-only calendars / TLS failures — never re-checked |
+| 🟠 | Age detection — most events still land in the All Ages catch-all | 40.6% resolved (best ever 38.8% on 2026-08-09) | MASTER-PLAN Phase 5, not started |
 | 🟡 | scraper_name drift — rows cannot join back to the registry | 46.4% conform (as of 2026-08-09) | deliberate migration, explicitly not daily work |
 | 🟡 | County-level coverage unknown | no libraries audited against what exists | MASTER-PLAN Phase 10 — correctly last |
 
