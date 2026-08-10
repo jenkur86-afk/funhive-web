@@ -13,6 +13,7 @@
 // One entry was CORRECTED rather than removed: hamlinlibrary.org is a real PA library
 // (Hamlin Memorial, Smethport) that had been filed under the wrong name, city and county.
 const { launchBrowser } = require('./helpers/puppeteer-config');
+const { extractJsonLdEvents } = require('./helpers/jsonld-events-helper');
 const { admin, db } = require('./helpers/supabase-adapter');
 
 const { logScraperResult } = require('./scraper-logger');
@@ -256,7 +257,35 @@ async function scrapeGenericEvents() {
       // Wait for any event-like content
       await new Promise(resolve => setTimeout(resolve, 3000));
 
-      const libraryEvents = await page.evaluate((libName) => {
+      // Structured schema.org data beats any DOM guess, so try it before scraping markup.
+      // Found 2026-08-09: 20 of the family's open MISMATCH bugs sit on pages that already
+      // publish <script type="application/ld+json"> Event objects — 59 on Brownell, 107 on
+      // Brandywine Zoo — which the generic selectors below miss entirely. startDate is a
+      // real ISO timestamp, so this also avoids the time-only values behind this family's
+      // InvalidDate counts, and location.address geocodes to the venue not a centroid.
+      const jsonLdEvents = extractJsonLdEvents(await page.content(), library.name);
+      if (jsonLdEvents.length > 0) {
+        jsonLdEvents.forEach(event => events.push({
+          ...event,
+          metadata: {
+            sourceName: library.name,
+            sourceUrl: library.url,
+            scrapedAt: new Date().toISOString(),
+            scraperName: SCRAPER_NAME,
+            category: 'library',
+            platform: 'jsonld',
+            state: event.state || library.state || 'PA',
+            city: event.city || library.city,
+            zipCode: event.zipCode || library.zipCode,
+            needsReview: true
+          }
+        }));
+        await page.close();
+        await new Promise(resolve => setTimeout(resolve, 500));
+        continue;
+      }
+
+            const libraryEvents = await page.evaluate((libName) => {
         const events = [];
 
         // Generic selectors for event cards/items

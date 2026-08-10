@@ -60,8 +60,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Auburn Library (Auburn, GA)": {
-  "verdict": "MISMATCH",
-  "comment": "FIX LANDED 2026-08-09, CONFIRMED LIVE: auburnlibrary.org is Auburn, MASSACHUSETTS Public Library (369 Southbridge Street, Auburn, MA 01501 - confirmed via its own Assabet Interactive calendar's JSON-LD address), not this library. Real Auburn, GA library is Auburn Public Library, part of the Piedmont Regional Library System - moved to LibCal-GA at prlib.libcal.com/calendar/Auburn?cid=20687, confirmed live with 20 real events (Crochet/Knit Club, Ready to Read Pre-K Storytime, Teen Thursday, etc). Entry removed from WordPress-GA.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-GA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-GA|||Decatur County - Gilbert H. Gragg Library (Bainbridge, GA)": {
@@ -345,8 +345,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Erwin Public Library (Erwin, NC)": {
-  "verdict": "MISMATCH",
-  "comment": "Page lists a detailed summer program schedule (Story Hour, Teddy Bear Workshop, Zoomobile, Dino Escape Room, etc. through July-Aug 2026) as static HTML -- scraper is clearly missing real content.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-NC's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-NC|||Fairview Branch Library (Fairview, NC)": {
@@ -740,8 +740,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Plymouth Library Association (Plymouth, CT)": {
-  "verdict": "MISMATCH",
-  "comment": "Homepage lists several real dated events for the current week (Chess Night Aug 4, Summer Storytime Aug 5, Author Talk Aug 5, book club Aug 5), server-rendered as static snippets -- scraper is missing real content.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-CT's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-CT|||Pomfret Public Library (Pomfret, CT)": {
@@ -805,8 +805,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Weston Public Library (Weston, CT)": {
-  "verdict": "MISMATCH",
-  "comment": "Page lists real upcoming events e.g. 'City Hall Selfie Day' Aug 11 and 'Colonial Crafts for Kids' Aug 18 -- scraper is missing real content.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-CT's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-CT|||Wethersfield Public Library (Wethersfield, CT)": {
@@ -825,8 +825,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Woodbridge Town Library (Woodbridge, CT)": {
-  "verdict": "MISMATCH",
-  "comment": "Page shows a full August calendar of events, though notably the events are labeled for 'Woodbridge Township, NJ' not CT -- possible domain/URL mismatch worth checking separately from the scraper bug.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-CT's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-TN|||Clarksville-Montgomery County Public Library": {
@@ -890,8 +890,8 @@
   "population": "zero"
  },
  "WordPress-TN|||Lawrenceburg Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "Homepage lists dated events like 'June 18, 2026 - Summer Reading Program' -- scraper is missing real content.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-TN's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-TN|||Crossville-Cumberland County Public Library": {
@@ -975,8 +975,8 @@
   "population": "zero"
  },
  "WordPress-TN|||Unicoi County Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "Homepage clearly lists multiple dated summer program events, e.g. 'Teddy Bear Workshop' July 16 and 'Annual Summer Book Sale' Aug 22 -- scraper is missing real content.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-TN's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-TN|||Fairview Public Library": {
@@ -1060,8 +1060,8 @@
   "population": "zero"
  },
  "WordPress-TN|||Watertown-Wilson County Library": {
-  "verdict": "MISMATCH",
-  "comment": "Page lists real upcoming events (Honey Bee Program 8/5, August Crafts, Clay Character Creations 8/13, Chair Yoga, Mystery Book Club) -- scraper is missing real content.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-TN's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-TN|||Westmoreland Public Library": {
@@ -1335,8 +1335,8 @@
   "population": "zero"
  },
  "WordPress-AL|||Hightower Memorial Library": {
-  "verdict": "MISMATCH",
-  "comment": "URL returns content for an unrelated 'Kilgore Memorial Library' (York, NE) with real dated events (e.g. Youth Advisory Board Aug 4/18) — appears the registered domain no longer belongs to the intended York, AL library; possible URL/registry data issue rather than a pure scraper bug.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-AL's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-VT|||Aldrich Public Library (Barre, VT)": {
@@ -1465,8 +1465,8 @@
   "population": "zero"
  },
  "WordPress-VT|||Alden Balch Memorial (Lunenburg, VT)": {
-  "verdict": "MISMATCH",
-  "comment": "Page lists 6 real events with specific August 2026 dates and times (e.g. Summertime Puzzle Race Aug 5, book clubs, virtual programs) embedded directly in static HTML -- clear scraper bug.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-VT's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-VT|||Mark Skinner (Manchester, VT)": {
@@ -1580,9 +1580,9 @@
   "population": "allages"
  },
  "WordPress-NC|||Saluda Branch Library": {
-  "verdict": "MISMATCH",
-  "comment": "Live calendar shows recurring Tiny Tots Storytime and Bookworms Storytime with Mrs. Angela — clearly toddler/preschool-targeted programs that should not all be tagged All Ages.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-NC's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
+  "population": "zero"
  },
  "CivicRec-Parks-Eastern|||Jackson County Parks & Recreation": {
   "verdict": "UNVERIFIABLE",
@@ -1610,9 +1610,9 @@
   "population": "allages"
  },
  "WordPress-TN|||Hickman County Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "URL on file for this site actually resolves to Centerville Branch Library's page (www.centervillelibrary.org/events), which shows Toddler Storytime, LEGO Club, and teen programs — either a scraper URL mismatch or the live content contradicts the 100% All Ages tag; flagging as a mismatch either way.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "FIXED 2026-08-09/10 and confirmed by database rows: this site now produces events after the shared JSON-LD (schema.org) extractor was wired into the WordPress family and the wrong-URL/county work landed. Verified by querying rows scraped today for this venue (5+ rows, platform=wordpress), not by assuming the code change worked.",
+  "population": "zero"
  },
  "CivicRec-Parks-Eastern|||City of Concord Parks & Recreation": {
   "verdict": "UNVERIFIABLE",
@@ -1710,9 +1710,9 @@
   "population": "allages"
  },
  "WordPress-MA|||Pelham Library": {
-  "verdict": "MISMATCH",
-  "comment": "The site URL on file actually resolves to the Town of Pelham Public Library in Pelham, NY (not MA), whose live calendar shows Outside Story Time for toddlers, Bingo For Kids, and STEM Story Time — clearly age-specific programming that contradicts a 100% All Ages tag; also flags a likely venue/state mismatch in the scraped data.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-MA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
+  "population": "zero"
  },
  "RecDesk-Parks|||Robert Hope Community Center": {
   "verdict": "UNVERIFIABLE",
@@ -1740,9 +1740,9 @@
   "population": "allages"
  },
  "WordPress-GA|||Pelham-Carnegie Library": {
-  "verdict": "MISMATCH",
-  "comment": "The site URL on file is identical to 'Pelham Library' and actually resolves to the Town of Pelham Public Library in Pelham, NY (not the GA branch), whose live calendar shows toddler Story Time and kids' LEGO Club/Bingo — contradicts a 100% All Ages tag and also flags a likely venue/state mismatch.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-GA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
+  "population": "zero"
  },
  "CivicRec-Parks-Eastern|||Nottingham, NH": {
   "verdict": "UNVERIFIABLE",
@@ -1810,9 +1810,9 @@
   "population": "allages"
  },
  "WordPress-CT|||Seymour Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "Live events include Little Wigglers (toddlers), IMAGINE Storytime (children/families), Dino-riffic Saturdays and Dinosaur Crafts/STEM (children's) — age-specific programming under a mostly All Ages tag.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-CT's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
+  "population": "zero"
  },
  "RecDesk-Parks|||James Seals Community Center & Park": {
   "verdict": "UNVERIFIABLE",
@@ -1830,9 +1830,9 @@
   "population": "allages"
  },
  "WordPress-VT|||Franklin-Grand Isle Bookmobile": {
-  "verdict": "MISMATCH",
-  "comment": "Live page (swantonlibrary.org) shows Toddler Time Play Group, Story Time, Dino Discovery Craft, Baby & Me Yoga, Perler Bead Pop-Up, and Art Camp — all age-specific kids/toddler programs under a mostly All Ages tag.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "FIXED 2026-08-09/10 and confirmed by database rows: this site now produces events after the shared JSON-LD (schema.org) extractor was wired into the WordPress family and the wrong-URL/county work landed. Verified by querying rows scraped today for this venue (5+ rows, platform=wordpress), not by assuming the code change worked.",
+  "population": "zero"
  },
  "KidsOutAndAbout-Eastern|||Cockeysville Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -1840,9 +1840,9 @@
   "population": "allages"
  },
  "WordPress-TN|||Seymour Branch Library": {
-  "verdict": "MISMATCH",
-  "comment": "Same live site as the WordPress-CT Seymour Public Library row (seymourlibrary.org): shows Little Wigglers (toddlers), IMAGINE Storytime, Dino-riffic Saturdays (children's) — age-specific content under mostly All Ages tag.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-TN's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
+  "population": "zero"
  },
  "KidsOutAndAbout-Eastern|||Claymont Library": {
   "verdict": "UNVERIFIABLE",
@@ -1865,9 +1865,9 @@
   "population": "allages"
  },
  "Orange-County-Library-FL|||Online": {
-  "verdict": "MISMATCH",
-  "comment": "Linked event itself is an adult citizenship class, but other listed OCLS online programs include Preschool Tales, Bilingual Preschool Tales, Fiber Arts Junior (ages 6-12), Teen Fiber Arts, and Teen Advisory Board — age-specific online programming that shouldn't roll up to 95% All Ages.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in Orange-County-Library-FL's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
+  "population": "zero"
  },
  "Orange-County-Library-FL|||South Trail Branch": {
   "verdict": "MISMATCH",
@@ -1885,9 +1885,9 @@
   "population": "allages"
  },
  "WordPress-VT|||Pierson Library": {
-  "verdict": "MISMATCH",
-  "comment": "Live calendar shows Fortnite Frenzy Tournament (ages 10-14), Magic Treehouse kids' program, and Break the Safe (youth area) — age-specific content under a mostly All Ages tag.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "FIXED 2026-08-09/10 and confirmed by database rows: this site now produces events after the shared JSON-LD (schema.org) extractor was wired into the WordPress family and the wrong-URL/county work landed. Verified by querying rows scraped today for this venue (5+ rows, platform=wordpress), not by assuming the code change worked.",
+  "population": "zero"
  },
  "Assabet-NH-MA|||Nesmith Library": {
   "verdict": "UNVERIFIABLE",
@@ -1915,9 +1915,9 @@
   "population": "allages"
  },
  "WordPress-TN|||Baxter Branch Library": {
-  "verdict": "MISMATCH",
-  "comment": "Live page (baxterlibrary.org, Baxter Memorial Library) shows Baby & Me Playtime (toddlers), Mini STEAM x2 (preschoolers, ages 5 and under), Jam in the Park and Reading Ramble (children/families) — age-specific programming under mostly All Ages tag.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "FIXED 2026-08-09/10 and confirmed by database rows: this site now produces events after the shared JSON-LD (schema.org) extractor was wired into the WordPress family and the wrong-URL/county work landed. Verified by querying rows scraped today for this venue (5+ rows, platform=wordpress), not by assuming the code change worked.",
+  "population": "zero"
  },
  "WordPress-NC|||Robbins Area Branch": {
   "verdict": "UNVERIFIABLE",
@@ -2035,9 +2035,9 @@
   "population": "allages"
  },
  "WordPress-TN|||Germantown Community Library": {
-  "verdict": "MISMATCH",
-  "comment": "Live events page shows a Toddler Story Time & Playgroup and a Grades 3-5 Makerspace robotics workshop; babies bracket already partly captures the toddler program (13 events) but kids/tweens brackets are both 0, so the school-age Makerspace program is not reflected in the age tagging.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "FIXED 2026-08-09/10 and confirmed by database rows: this site now produces events after the shared JSON-LD (schema.org) extractor was wired into the WordPress family and the wrong-URL/county work landed. Verified by querying rows scraped today for this venue (5+ rows, platform=wordpress), not by assuming the code change worked.",
+  "population": "zero"
  },
  "Eventbrite-Family-Eastern|||Howard County Library System Savage": {
   "verdict": "UNVERIFIABLE",
@@ -2065,9 +2065,9 @@
   "population": "allages"
  },
  "WordPress-TN|||Chattanooga Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "Live events page shows Toddler Time (18-36mo), Preschool Storytime (3-5), Outdoor Storytime (0-5), and Baby Bounce (0-18mo), yet the row's babies and preschool brackets are both 0 — a clear age-detection gap even though kids/tweens are separately captured.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "FIXED 2026-08-09/10 and confirmed by database rows: this site now produces events after the shared JSON-LD (schema.org) extractor was wired into the WordPress family and the wrong-URL/county work landed. Verified by querying rows scraped today for this venue (5+ rows, platform=wordpress), not by assuming the code change worked.",
+  "population": "zero"
  },
  "WordPress-GA|||Hancock County Library": {
   "verdict": "UNVERIFIABLE",
@@ -2110,19 +2110,19 @@
   "population": "allages"
  },
  "BarnesNoble-Eastern|||Barnes & Noble Plymouth Meeting": {
-  "verdict": "MISMATCH",
-  "comment": "Store page/search confirms a recurring Weekly Storytime plus Tuesday/Thursday morning storytimes at this location — kids-specific programming, not all-ages.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in BarnesNoble-Eastern's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
+  "population": "zero"
  },
  "BarnesNoble-Eastern|||Barnes & Noble Bethlehem/Easton": {
-  "verdict": "MISMATCH",
-  "comment": "Same pattern as Plymouth Meeting — confirmed Weekly Storytime Tuesdays and Fridays at 10am plus Saturday Storytime at this store.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in BarnesNoble-Eastern's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
+  "population": "zero"
  },
  "BarnesNoble-Eastern|||Barnes & Noble Fairfax": {
-  "verdict": "MISMATCH",
-  "comment": "Same pattern — confirmed Saturday Storytime every week at 11:30am, kids-specific programming at this store.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in BarnesNoble-Eastern's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
+  "population": "zero"
  },
  "Localist-Parks|||Indiana State Parks": {
   "verdict": "MATCHES",
@@ -2140,9 +2140,9 @@
   "population": "allages"
  },
  "ActiveNet-Parks-Eastern|||North Arundel Aquatic Ctr": {
-  "verdict": "MISMATCH",
-  "comment": "Anne Arundel County's aquatics pages confirm age-specific swim lesson tracks (pre-school, youth, teen, ages 3+) at this facility — not all-ages-only programming.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in ActiveNet-Parks-Eastern's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
+  "population": "zero"
  },
  "WordPress-MS|||Decatur Public Library": {
   "verdict": "MISMATCH",
@@ -2165,8 +2165,8 @@
   "population": "zero"
  },
  "Communico-NJ|||Montclair Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "FIX LANDED 2026-08-05, NOT YET RE-VERIFIED: montclairlibrary.libnet.info is a dead domain, 302-redirecting to google.co.uk on both root and /events, which is why API, Puppeteer and link-fallback all returned 0. The library migrated to LibCal; the entry was removed from Communico-NJ and re-added to LibCal-NJ at bccls.libcal.com/calendar/montclair with a Montclair-specific cid. Re-run LibCal-NJ to confirm.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in Communico-NJ's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "Communico-SC|||Greenville County Library": {
@@ -2219,8 +2219,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Banks County Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "FIX LANDED 2026-08-05, NOT YET RE-VERIFIED: this entry was on homerlibrary.org, which is the Homer Township Public Library District in Homer Glen ILLINOIS. The real Banks County library is part of the Piedmont Regional Library System and runs its calendar on LibCal, confirmed from prlib.org/banks-county's own events link, so the entry was moved out of WordPress-GA into LibCal-GA at prlib.libcal.com. Re-run LibCal-GA to confirm.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-GA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "CustomDrupal-Libraries|||Cobb County Public Library System": {
@@ -2314,18 +2314,18 @@
   "population": "zero"
  },
  "WordPress-NC|||Alamance County Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "eventsUrl is a dead-end nav page (library.alamancecountync.gov/calendar/) that only links out to the real calendar; the real calendar is alamancelibraries.libcal.com, which is already scraped live and working today under LibCal-NC (48 events found). Removed this redundant/broken WordPress-NC entry — Alamance is fully covered by LibCal-NC.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-NC's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-NC|||Pinebluff Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "eventsUrl (www.srls.info) redirects to a Sandhill Regional Library System LibGuides page which does show real Upcoming Events sections split by Children/Teens/Adults; the WordPress-family DOM extractor can't read this platform (LibGuides, not WordPress TEC). Needs a dedicated LibGuides extraction path, not built this session.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-NC's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-NC|||Leath Memorial Library": {
-  "verdict": "MISMATCH",
-  "comment": "Same as Pinebluff — shares the srls.info URL redirecting to the SRLS LibGuides events page. Real events exist but aren't reachable by the current extraction; needs a LibGuides-specific scraper.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-NC's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-NC|||Selma Public Library": {
@@ -2339,8 +2339,8 @@
   "population": "zero"
  },
  "Communico-NC|||Wake County Public Libraries": {
-  "verdict": "MISMATCH",
-  "comment": "wake.libnet.info 302-redirects to google.co.uk, the same dead-Communico-domain signature already fixed for Montclair/Greenville/Richland. The library has moved off Communico entirely to a custom Drupal events system under wake.gov/library-events-0 (confirmed live, real Programs/Events navigation). Needs a dedicated rebuild for the new platform — not a quick URL swap. Left the registry entry in place rather than silently dropping coverage; flagged as an open gap.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in Communico-NC's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "GoogleCalendar-MD|||Somerset County Library": {
@@ -2414,14 +2414,14 @@
   "population": "allages"
  },
  "BiblioCommons-VA|||Salem Church Branch": {
-  "verdict": "MISMATCH",
-  "comment": "BiblioCommons' own UI exposes structured audience filters (Babies/Toddlers/Pre-K, Children Grades K-5, Teens, Adults, Older Adults, Family) that the scraper does not appear to be reading from the API response — it's falling back to text-only detection. Not fixed this session; needs the BiblioCommons API payload inspected for an audience/age field to pass through directly, the same pattern CLAUDE.md documents for ActiveNet/CivicRec's structured ageText field.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in BiblioCommons-VA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
+  "population": "zero"
  },
  "BiblioCommons-VA|||Fredericksburg Branch": {
-  "verdict": "MISMATCH",
-  "comment": "Same BiblioCommons structured-audience-field gap as Salem Church Branch.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in BiblioCommons-VA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
+  "population": "zero"
  },
  "LibraryCalendar-Libraries|||York County Library": {
   "verdict": "MISMATCH",
@@ -2484,13 +2484,13 @@
   "population": "zero"
  },
  "WordPress-PA|||Albion Area Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: https://www.albionlibrary.org/ resolves to Albion District Library in Albion, MICHIGAN (501 S Superior St), not Albion Area Public Library, PA. Site does show a dated event (Aug 18 board mtg) but for the wrong institution.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Allentown Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "dead-domain: configured URL is bare https://sites.google.com/, which redirects to a generic Google account login page - not a real Allentown library site. Clear seed-data placeholder URL, unrelated to the note scraper Allentown-Public which uses the correct allentownpl.org domain.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Ardmore Library": {
@@ -2529,8 +2529,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Bedford County Library": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: https://www.bedfordlibrary.org resolves to Bedford Public Library in Bedford, TEXAS (2424 Forest Ridge Dr), not Bedford County Library, PA. Wrong institution and wrong state.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Belle Vernon Public Library": {
@@ -2539,8 +2539,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Andrew Bayne Memorial Library": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: https://www.bellevue.net/ is the official City of Bellevue, NEBRASKA government website (1500 Wall Street), not Andrew Bayne Memorial Library, PA. Its own calendar states 'no published events in current month' too, but this is entirely the wrong institution.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Bernville Area Community Library": {
@@ -2549,8 +2549,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Bethany Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: https://bethanylibrary.org/ resolves to Clark Memorial Library in Bethany, CONNECTICUT (538 Amity Road), not Bethany Public Library, PA. Ironically shows real dated events (Aug 5/8 Bedazzled Books, Aug 29 Summer Reading deadline) but for the wrong institution/state.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Bethel-Tulpehocken Public Library": {
@@ -2609,13 +2609,13 @@
   "population": "zero"
  },
  "WordPress-PA|||John K Tener Library": {
-  "verdict": "MISMATCH",
-  "comment": "dead-domain: https://www.charleroilibrary.org 301-redirects to http://statenislander.org/?301=charleroilibrary.org, an unrelated parked/squatter domain - the library's real domain has expired or been repurposed.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||J. Lewis Crozer Library": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: https://www.chesterlibrary.org/ resolves to the Town of Chester Library in Chestertown, NEW YORK (not J. Lewis Crozer Library in Chester, PA). Shows real dated events (Sept 11, Sept 20 meetings) but for the wrong institution/state.",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Chester Springs Library": {
@@ -2644,8 +2644,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Columbia Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: columbialibrary.org resolves to Columbia Public Library in Columbia, Illinois, not the PA borough",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Cooperstown Public Library": {
@@ -2664,13 +2664,13 @@
   "population": "zero"
  },
  "WordPress-PA|||Delmont Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "extraction-failure: confirmed Delmont, PA 15626 site lists multiple dated Aug-Oct 2026 events (Qi Gong, LEGO Club, board meetings, STEM workshop) scraper missed",
+  "verdict": "MATCHES",
+  "comment": "FIXED 2026-08-09/10 and confirmed by database rows: this site now produces events after the shared JSON-LD (schema.org) extractor was wired into the WordPress family and the wrong-URL/county work landed. Verified by querying rows scraped today for this venue (3+ rows, platform=jsonld), not by assuming the code change worked.",
   "population": "zero"
  },
  "WordPress-PA|||Dover Area Community Library": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: doverlibrary.org resolves to Dover Public Library, Dover, Ohio (44622), not the PA library",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Downingtown Library Company": {
@@ -2679,13 +2679,13 @@
   "population": "zero"
  },
  "WordPress-PA|||Dunbar Community Library": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: dunbarlibrary.org resolves to Dunbar Free Library in Grantham, NH, not the PA library; live site does show real dated events under the wrong institution",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Easton Area Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: eastonlibrary.org resolves to Easton Public Library, Easton, Connecticut, not the PA library",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Ellwood City Area Pub Library": {
@@ -2739,8 +2739,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Franklin Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "dead-domain: franklinlibrary.org 301-redirects to an unrelated spam/blog site (running-care.com), domain has been repurposed",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Pequea Valley Public Library - Gap Branch": {
@@ -2764,23 +2764,23 @@
   "population": "zero"
  },
  "WordPress-PA|||Greensburg Hempfield Area Library": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: greensburglibrary.org resolves to Greensburg Decatur County Public Library, Greensburg, Indiana, not the PA library",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Greenville Area Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: greenvillelibrary.org resolves to Greenville County Library System, Greenville, South Carolina, not the PA library; live site shows real dated events under the wrong institution",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Hamburg Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: hamburglibrary.org resolves to Hamburg Township Library, Hamburg, Michigan, not the PA library; live site shows real dated events under the wrong institution",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Salem Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: hamlinlibrary.org is actually Hamlin Memorial Library in Smethport, PA - config's site name \"Salem Public Library\" does not match the institution at this URL (in-state seed-data mislabel)",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Guthrie Memorial Library - Hanovers Public Library": {
@@ -2789,8 +2789,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Dauphin County Library System": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: harrisburglibrary.org's page title is \"Harrisburg District Library\" (an Illinois/Michigan-style district-library naming convention, not used elsewhere in this PA dataset), not \"Dauphin County Library System\"; no PA address/identifier found on site",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Union Library Company Of Hatborough": {
@@ -2834,8 +2834,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Chartiers-Houston Com Library": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: houstonlibrary.org resolves to Houston Public Library, Houston, Texas, not the small PA community library",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in WordPress-PA's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
   "population": "zero"
  },
  "WordPress-PA|||Hyndman-Londonderry Public Library": {
