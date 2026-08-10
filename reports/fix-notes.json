@@ -322,6 +322,18 @@
       "expect": "MONTCLAIR CONFIRMED 2026-08-10: identified by source host (bccls.libcal.com), Montclair Public Library rows are present under LibCal-NJ as intended. SOMERSET NJ STILL UNOBSERVED: zero rows carry an sclsnj host. Communico-NJ is a GROUP 2 scraper and the last runs were Group 3, so the branch-filtered sclsnj.libnet.info URL has not executed since it was set - this is a rotation gap, not a failure. Re-check after the next Group 2 run before treating it as broken.",
       "confirm": "npm run scraper -- --scraper Communico-NJ   then: node -e \"require('./scrapers/helpers/supabase-adapter').supabase.from('events').select('id').ilike('source_url','%sclsnj%').range(0,50).then(r=>console.log(r.data.length))\"",
       "added": "2026-08-06"
+    },
+    "supabase-adapter.js": {
+      "what": "Fleet-wide: duplicate .add results no longer counted as new imports, and stable ids no longer collapse on query-carried URLs (2026-08-10)",
+      "expect": "EXPECT NEW COUNTS TO FALL AND DUPES TO RISE ACROSS THE FLEET on the next full 3-day rotation. That is the numbers becoming honest, NOT a regression — do not \"fix\" it. The rows that should disappear are ones that were never written in the first place. Specifically, the Found==New with Dupes 0 signature (BiblioCommons-MA 821/821/0, MacaroniKid-NJ 1989/1989/0, CivicRec-Parks-Eastern 2365/2365) should start showing real duplicate counts. Verified so far on only three scrapers by live run — Dorchester-County 0 imported/12 skipped where it used to claim 12 new, Wicomico-Public claimed 4 new and the DB moved 15 to 19 exactly, RollyPollies-MD 34 found/0 new/34 dupes. The other ~83 modified files are reasoned-and-syntax-checked but UNRUN. Also watch for the new \"STABLE-ID COLLISION\" warning in stdout: it fires only when two DIFFERENTLY-NAMED events hash to one id, which is real data loss and means that scraper is putting a shared URL on every event.",
+      "confirm": "node scripts/audit-add-miscount.js   (expect 96 OK / 0 buggy)   then   node scripts/verify-duplicate-branch-scope.js   (expect all in scope)   then grep the run for collisions:   Select-String -Path scrapers/logs/scraper-stdout.log -Pattern \"STABLE-ID COLLISION\"",
+      "added": "2026-08-10"
+    },
+    "BiblioCommons-NC": {
+      "what": "Canary for the fleet-wide duplicate-miscount fix (2026-08-10)",
+      "expect": "Chosen because it shows the miscount signature most cleanly: 356 found / 356 NEW / 0 dupes on two consecutive runs (2026-08-05 and 2026-08-06) while the database holds 364 rows total — it cannot possibly have been adding 356 genuinely new events per run. It is Group 2 and its file was modified by the codemod, so the next Group 2 run is the first real test. EXPECT: NEW drops sharply from 356 and DUPES becomes large; FOUND should stay near 356. Then confirm the claim against reality — the row count should grow by roughly the reported NEW, not by 356. If NEW is still 356 with 0 dupes, the codemod did not take effect for this file and the whole fleet-wide claim is suspect.",
+      "confirm": "npm run scraper -- --scraper BiblioCommons-NC   then compare the summary line against the DB:   node -e \"require('./scrapers/helpers/supabase-adapter').supabase.from('events').select('id').eq('scraper_name','BiblioCommons-NC').order('id',{ascending:true}).range(0,999).then(r=>console.log('rows now:',r.data.length,'baseline was 364'))\"",
+      "added": "2026-08-10"
     }
   },
   "LibCal-VA": {
@@ -407,6 +419,11 @@
   "RollyPollies-MD": {
     "note": "FIXED 2026-08-10. url is a ternary between two booking-landing pages, so all events collapsed onto at most two ids - claimed 20 new with 1 row present. Identity pinned to name|eventDate|venue and the duplicate return is no longer counted as an import. Live after fix: 10 rows, and a clean re-run now honestly reports 34 found / 0 new / 34 duplicates. The gap between 20 claimed and 10 stored is the schema: idx_events_unique_content is on name+event_date+venue, so two same-named sessions on one day cannot both exist regardless of id. Distinguishing them would need the schema changed to include start_time - not attempted.",
     "priority": "low",
+    "added": "2026-08-10"
+  },
+  "supabase-adapter.js": {
+    "note": "Not a registry scraper — a shared-infra note so this stays visible in the Fix queue. Two fleet-wide changes landed 2026-08-10, both awaiting their first full rotation. (1) STABLE-ID: _stableEventId now folds non-tracking query params into the row-id hash. Previously the entire query string was stripped, so every Google-Calendar htmlLink collapsed to one id fleet-wide and only the first event of each source ever saved. URLs with no query string hash unchanged, so no id churn is expected anywhere else — if a scraper suddenly reports a large jump in NEW with no site change, check that its URLs carry query params before assuming a regression. (2) MISCOUNT: 96 of 96 .add() call sites now treat a {duplicate:true} return as skipped rather than imported. Re-measure both with scripts/audit-add-miscount.js and scripts/verify-duplicate-branch-scope.js.",
+    "priority": "high",
     "added": "2026-08-10"
   }
 }
