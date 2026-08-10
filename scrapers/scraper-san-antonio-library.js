@@ -291,6 +291,11 @@ async function scrapeSanAntonioLibrary() {
         const addResult = await db.collection('events').add(eventDoc);
         if (addResult.skipped) {
           console.log(`  ⏭️  ${addResult.skipReason}`);
+        } else if (addResult.duplicate) {
+          // 23505: the row already existed, nothing was written. Counting this as
+          // an import is what let collapsed-id scrapers report healthy NEW counts
+          // while saving nothing (see SCRAPER-FIX-LOG.jsonl 2026-08-10).
+          totalSkipped++;
         } else {
           console.log(`  ✅ ${event.title.substring(0, 60)}${event.title.length > 60 ? '...' : ''}`);
           totalImported++;

@@ -1018,6 +1018,14 @@ async function saveFarmEvents(stateObj, rawEvents) {
       }
       if (addResult.skipped) {
         console.log(`    ⏭️  ${addResult.skipReason}`);
+      } else if (addResult.duplicate) {
+        // 23505: the row already existed, nothing was written. Counting this as
+        // an import is what let collapsed-id scrapers report healthy NEW counts
+        // while saving nothing (see SCRAPER-FIX-LOG.jsonl 2026-08-10). Fixed by
+        // hand rather than by the codemod: here the result is assigned inside a
+        // try/catch that retries without activity_id, so the declaration and the
+        // assignment are on different lines and the codemod's pattern skips it.
+        skipped++;
       } else {
         process.stdout.write(`    ✅ ${event.name.substring(0, 50)}\n`);
         saved++;
