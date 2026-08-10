@@ -138,6 +138,44 @@ function _stableIdForCollection(collection, data) {
   return crypto.randomUUID();
 }
 
+/**
+ * In-process stable-id collision detector. ZERO extra database reads.
+ *
+ * WHY: 94 of the 96 .add() call sites in scrapers/ increment their own
+ * "imported" counter without checking the `{duplicate:true}` return, so a
+ * scraper whose events all collapse onto ONE id still reports a healthy
+ * "Found N, New N". That is how Dorchester-County reported 12 new events per
+ * run for months while writing nothing (2026-08-09), and how the same defect
+ * in Somerset-County survived a 2026-08-03 "fix" that was never re-measured.
+ *
+ * Fixing the counter in 88 files is a large mechanical change. This catches
+ * the DANGEROUS half of the problem centrally instead: a duplicate id whose
+ * name DIFFERS from the row already queued under it is not a harmless
+ * re-scrape, it is two distinct events collapsing — real data loss. Because
+ * both events pass through this process, we can spot it from memory alone
+ * and never touch the database to do it.
+ *
+ * A duplicate with the SAME name is the normal re-scrape case and stays quiet.
+ */
+const _seenStableIds = new Map(); // id -> first name seen
+const _reportedCollisions = new Set();
+function _noteStableId(id, name, collection) {
+  if (!id || !name) return;
+  const prev = _seenStableIds.get(id);
+  if (prev === undefined) { _seenStableIds.set(id, name); return; }
+  if (prev === name || _reportedCollisions.has(id)) return;
+  _reportedCollisions.add(id);
+  console.warn(
+    `  🚨 STABLE-ID COLLISION in ${collection}: "${String(name).slice(0, 60)}" and ` +
+    `"${String(prev).slice(0, 60)}" both hash to ${id}. These are DIFFERENT events — ` +
+    `only one can exist, the rest are silently dropped. Almost always means the ` +
+    `scraper is putting a shared URL (a library homepage / calendar page) on every ` +
+    `event instead of a per-event link. Fix the url field, not this warning.`
+  );
+}
+/** Test/report hook: how many distinct ids collided this process. */
+function _stableIdCollisionCount() { return _reportedCollisions.size; }
+
 // Initialize Supabase client with service role key (bypasses RLS)
 const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -1617,6 +1655,7 @@ function createFirestoreCompatibleDB() {
             throw e;
           }
           const row = { id, ...flattened };
+          _noteStableId(id, row.name, collectionName);
           const { data: result, error } = await supabase
             .from(mapCollectionName(collectionName))
             .insert(row)
@@ -2136,4 +2175,8 @@ module.exports = {
   // exercise them directly rather than re-implementing the precedence rules.
   flattenEvent,
   resolveAgeRange,
+  // Stable-id derivation + the in-process collision detector, exported so an
+  // audit script can assert the collapse case without hitting the database.
+  _stableEventId,
+  _stableIdCollisionCount,
 };

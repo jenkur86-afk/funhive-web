@@ -19,7 +19,7 @@
  *   node functions/scrapers/scraper-withapps-libraries-VA.js
  */
 
-const { admin, db } = require('./helpers/supabase-adapter');
+const { admin, db, _stableEventId } = require('./helpers/supabase-adapter');
 const { launchBrowser } = require('./puppeteer-config');
 const axios = require('axios');
 const ngeohash = require('ngeohash');
@@ -201,6 +201,14 @@ async function scrapeLibraryEvents(browser) {
         });
 
         const eventDoc = {
+          // The withapps widget exposes no per-event deep link — every event
+          // carries the same events-calendar URL — so deriving the row id from
+          // `url` collapsed all of them onto ONE id. Measured 2026-08-10: this
+          // scraper reported "38 new" while exactly 1 row existed. Same defect
+          // as Dorchester-County and RollyPollies-MD. Pin identity to the
+          // name|eventDate|venue key, which is also the DB's unique-content
+          // index; add() honours data.id ahead of any URL-derived id.
+          id: _stableEventId({ name: event.name, eventDate: normalizedDate, venue: LIBRARY.name }),
           name: event.name,
           venue: LIBRARY.name,
           eventDate: normalizedDate,
@@ -229,6 +237,12 @@ async function scrapeLibraryEvents(browser) {
           },
           url: event.url || LIBRARY.website,
           metadata: {
+            // Registry key, not the display name. Without this, flattenEvent
+            // falls back to metadata.sourceName and every row landed under
+            // "Hampton Public Library", which cannot be joined to the registry
+            // (CLAUDE.md "Scraper Naming"). Old rows keep the old name until
+            // they expire — a rename is not retroactive.
+            scraperName: 'WithApps-Libraries',
             source: 'Hampton Library Scraper',
             sourceName: LIBRARY.name,
             county: LIBRARY.county,

@@ -385,7 +385,7 @@
     "added": "2026-08-07"
   },
   "LibCal-VA2": {
-    "note": "FIXED 2026-08-09: two stacked bugs (stale DOM selectors + registry exportName never wired to a save-and-report function) both confirmed live — see SCRAPER-FIX-LOG.jsonl. Now saves real events for 8 of 11 configured systems: Fairfax, Arlington, Richmond, Norfolk, Roanoke, Suffolk, Williamsburg, Library of Virginia (164 new on first fixed run). OPEN GAP, not fixed: Newport News and Hampton were removed from this file — both eventsUrl domains DNS-failed and neither library is actually on LibCal (Newport News runs its own /264/Events-Calendar page; Hampton's old domain now redirects to an unrelated church site, and hampton.gov has no LibCal calendar). Each needs its own extraction path researched, not a URL swap. Prince William Public Library System resolved fine but returned 0 events this run — not yet investigated, could be a real empty calendar or a genuine miss.",
+    "note": "FIXED 2026-08-09: two stacked bugs (stale DOM selectors + registry exportName never wired to a save-and-report function) both confirmed live — see SCRAPER-FIX-LOG.jsonl. Now saves real events for 8 of 11 configured systems: Fairfax, Arlington, Richmond, Norfolk, Roanoke, Suffolk, Williamsburg, Library of Virginia (164 new on first fixed run). OPEN GAP, not fixed: Newport News and Hampton were removed from this file — both eventsUrl domains DNS-failed and neither library is actually on LibCal (Newport News runs its own /264/Events-Calendar page; Hampton's old domain now redirects to an unrelated church site, and hampton.gov has no LibCal calendar). CORRECTION 2026-08-10: Hampton is NOT a coverage gap - WithApps-Libraries already covers Hampton Public Library via the withapps.io widget behind calendar.hampton.gov, confirmed live with 37 rows. Only NEWPORT NEWS is a genuine open gap (its own /264/Events-Calendar page, no scraper). Prince William Public Library System resolved fine but returned 0 events this run — not yet investigated, could be a real empty calendar or a genuine miss.",
     "priority": "normal",
     "added": "2026-08-09"
   },
@@ -397,6 +397,16 @@
   "Dorchester-County": {
     "note": "FIXED 2026-08-10. Reported \"Found 12, New 12\" on every run while writing ZERO rows for months. Root cause was not in this scraper: _stableEventId() in supabase-adapter.js hashed a query-stripped URL, and Google Calendar htmlLinks carry their identity entirely in ?eid=, so every Google-Calendar event in the fleet collapsed onto ONE row id. The id this scraper kept colliding on was owned by Somerset County Library/Crisfield. Adapter now folds non-tracking query params into the hash; URLs without a query string hash unchanged, so no id churn elsewhere. Confirmed live: 0 -> 12 rows here, 0 -> 153 for Somerset-County. This scrapers success logging also now counts {duplicate:true} as skipped rather than imported - the same miscount exists in other .add()-path scrapers and was NOT swept.",
     "priority": "normal",
+    "added": "2026-08-10"
+  },
+  "WithApps-Libraries": {
+    "note": "FIXED 2026-08-10. Reported \"38 new\" per run while exactly ONE row existed: the withapps widget exposes no per-event deep link, so every event carried the same events-calendar URL and _stableEventId collapsed them all onto one id - same defect as Dorchester-County. Identity now pinned to name|eventDate|venue. Also set metadata.scraperName to the registry key; rows had been landing under the display name \"Hampton Public Library\" and could not be joined to the registry. Live after fix: 37 rows. NOTE this scraper is the real coverage for Hampton Public Library, which was briefly and wrongly reported as an open gap when Hampton was removed from LibCal-VA2 earlier the same day.",
+    "priority": "normal",
+    "added": "2026-08-10"
+  },
+  "RollyPollies-MD": {
+    "note": "FIXED 2026-08-10. url is a ternary between two booking-landing pages, so all events collapsed onto at most two ids - claimed 20 new with 1 row present. Identity pinned to name|eventDate|venue and the duplicate return is no longer counted as an import. Live after fix: 10 rows, and a clean re-run now honestly reports 34 found / 0 new / 34 duplicates. The gap between 20 claimed and 10 stored is the schema: idx_events_unique_content is on name+event_date+venue, so two same-named sessions on one day cannot both exist regardless of id. Distinguishing them would need the schema changed to include start_time - not attempted.",
+    "priority": "low",
     "added": "2026-08-10"
   }
 }

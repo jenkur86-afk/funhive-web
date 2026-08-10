@@ -18,7 +18,7 @@
  *   node scrapers/scraper-rolly-pollies-MD.js --type events
  */
 
-const { admin, db } = require('./helpers/supabase-adapter');
+const { admin, db, _stableEventId } = require('./helpers/supabase-adapter');
 const { launchBrowser } = require('./puppeteer-config');
 const ngeohash = require('ngeohash');
 const { categorizeEvent } = require('./event-categorization-helper');
@@ -435,6 +435,15 @@ async function scrapeRollyPollies(options = {}) {
             website: VENUE.website,
             phone: VENUE.phone
           },
+          // This venue is a booking calendar with no per-event deep links, so
+          // `url` is one of only TWO landing pages. _stableEventId() prefers the
+          // url when deriving a row id, which meant every event here collapsed
+          // onto at most two ids: the scraper reported "20 new" on 2026-08-09
+          // while exactly ONE row existed. Same defect as Dorchester-County.
+          // Keep the landing page for display, but pin identity to the
+          // name|eventDate|venue key (which is also the DB's unique-content
+          // index) by setting the id explicitly — add() honours data.id first.
+          id: _stableEventId({ name: event.name, eventDate: normalizedDate, venue: VENUE.name }),
           url: event.type === 'open_play' ? VENUE.openPlayUrl : VENUE.eventsUrl,
           geohash: ngeohash.encode(VENUE.coordinates.latitude, VENUE.coordinates.longitude, 7),
           metadata: {
@@ -470,6 +479,13 @@ async function scrapeRollyPollies(options = {}) {
         const addResult = await db.collection('events').add(eventDoc);
         if (addResult.skipped) {
           console.log(`  ⏭️  ${addResult.skipReason}`);
+        } else if (addResult.duplicate) {
+          // 23505 means the row already existed — not an import. Counting these
+          // is why this scraper reported "20 new" while 10 rows landed. Same-day
+          // repeat sessions legitimately collide here: the DB's unique-content
+          // index is on name+event_date+venue, so two "Open Play" slots on one
+          // day cannot both exist regardless of id.
+          skipped++;
         } else {
           console.log(`  ✅ ${event.name} - ${event.eventDate} ${event.time}`);
           imported++;
