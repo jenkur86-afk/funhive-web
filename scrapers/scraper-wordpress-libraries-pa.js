@@ -3,6 +3,15 @@
 // other library's events under the wrong name and state. Every removed library is listed
 // with its city, state and old URL in reports/defect-a-removals.md so it can be restored
 // once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
+//
+// A FURTHER 17 removed 2026-08-10, same defect, different evidence path: these came from
+// the daily diagnosis's Step 3d live verification of this file's zero-event entries, which
+// checked each site individually rather than one fetch per shared host. Listed in
+// reports/pa-removals-2026-08-10.json. Highlights: harrisburglibrary.org is Harrisburg
+// district library in ILLINOIS (not Dauphin County PA), eastonlibrary.org is Easton
+// CONNECTICUT, greenvillelibrary.org is Greenville County SOUTH CAROLINA.
+// One entry was CORRECTED rather than removed: hamlinlibrary.org is a real PA library
+// (Hamlin Memorial, Smethport) that had been filed under the wrong name, city and county.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -41,8 +50,6 @@ const LIBRARIES = [
     "platform": "wordpress",
     "eventsUrl": "https://www.carnegielibrary.org/events", county: 'Allegheny'},
   // Additional libraries from spreadsheet coverage expansion
-  { name: 'Albion Area Public Library', url: 'https://www.albionlibrary.org/', eventsUrl: 'https://www.albionlibrary.org/', city: 'Albion', state: 'PA', zipCode: '16401', county: 'Jefferson'},
-  { name: 'Allentown Public Library', url: 'https://sites.google.com/', eventsUrl: 'https://sites.google.com/view/allentownlibrary/home', city: 'Allentown', state: 'PA', zipCode: '18102', county: 'Lehigh'},
   { name: 'Altoona Area Public Library', url: 'https://www.altoonalibrary.org', eventsUrl: 'https://www.altoonalibrary.org/events', city: 'Altoona', state: 'PA', zipCode: '16602', county: 'Blair'},
   { name: 'Aston Public Library', url: 'https://www.astonlibrary.org', eventsUrl: 'https://www.astonlibrary.org/events', city: 'Aston', state: 'PA', zipCode: '19014', county: 'Delaware'},
   { name: 'Spalding Memorial Library', url: 'https://www.athenslibrary.org', eventsUrl: 'https://www.athenslibrary.org/events', city: 'Athens', state: 'PA', zipCode: '18810', county: 'Bradford'},
@@ -51,12 +58,9 @@ const LIBRARIES = [
   { name: 'Avonmore Public Library', url: 'https://www.avonmorelibrary.org', eventsUrl: 'https://www.avonmorelibrary.org/events', city: 'Avonmore', state: 'PA', zipCode: '15618', county: 'Westmoreland'},
   { name: 'Bangor Public Library', url: 'https://www.bangorlibrary.org', eventsUrl: 'https://www.bangorlibrary.org/events', city: 'Bangor', state: 'PA', zipCode: '18013', county: 'Northampton'},
   { name: 'Beaver County Bookmobile Schedule', url: 'https://www.beaverfallslibrary.org', eventsUrl: 'https://www.beaverfallslibrary.org/events', city: 'Beaver Falls', state: 'PA', zipCode: '15010', county: 'Beaver'},
-  { name: 'Bedford County Library', url: 'https://www.bedfordlibrary.org', eventsUrl: 'https://www.bedfordlibrary.org/events', city: 'Bedford', state: 'PA', zipCode: '15522', county: 'Bedford County'},
   { name: 'Belle Vernon Public Library', url: 'https://www.bellevernonlibrary.org/', eventsUrl: 'https://www.bellevernonlibrary.org/upcoming-events/', city: 'Belle Vernon', state: 'PA', zipCode: '15012', county: 'Fayette'},
-  { name: 'Andrew Bayne Memorial Library', url: 'https://www.bellevue.net/', eventsUrl: 'https://www.bellevue.net/176/Library', city: 'Bellevue', state: 'PA', zipCode: '15202', county: 'Allegheny'},
   { name: 'Bellwood Antis Public Library', url: 'https://www.bellwoodlibrary.org', eventsUrl: 'https://www.bellwoodlibrary.org/events', city: 'Bellwood', state: 'PA', zipCode: '16617', county: 'Blair'},
   { name: 'Bernville Area Community Library', url: 'https://www.bernvillelibrary.org', eventsUrl: 'https://www.bernvillelibrary.org/events', city: 'Bernville', state: 'PA', zipCode: '19506', county: 'Berks'},
-  { name: 'Bethany Public Library', url: 'https://bethanylibrary.org/', eventsUrl: 'https://bethanylibrary.org/', city: 'Bethany', state: 'PA', zipCode: '18431', county: 'Wayne'},
   { name: 'Bethel-Tulpehocken Public Library', url: 'https://www.bethellibrary.org', eventsUrl: 'https://www.bethellibrary.org/events', city: 'Bethel', state: 'PA', zipCode: '19507', county: 'Berks'},
   { name: 'Bethel Park Public Library', url: 'https://www.bethelparklibrary.org/', eventsUrl: 'https://www.bethelparklibrary.org/', city: 'Bethel Park', state: 'PA', zipCode: '15102', county: 'Allegheny'},
   { name: 'Bethlehem Area Public Library', url: 'https://www.bethlehemlibrary.org', eventsUrl: 'https://www.bethlehemlibrary.org/events', city: 'Bethlehem', state: 'PA', zipCode: '18018', county: 'Northampton'},
@@ -70,14 +74,11 @@ const LIBRARIES = [
   { name: 'Bosler Free Library', url: 'https://www.carlislelibrary.org', eventsUrl: 'https://www.carlislelibrary.org/events', city: 'Carlisle', state: 'PA', zipCode: '17013', county: 'Cumberland'},
   { name: 'Andrew Carnegie Free Library', url: 'https://www.carnegielibrary.org', eventsUrl: 'https://www.carnegielibrary.org/events', city: 'Carnegie', state: 'PA', zipCode: '15106', county: 'Allegheny'},
   { name: 'Community Library Of Castle Shannon', url: 'https://castleshannonlibrary.org/', eventsUrl: 'https://castleshannonlibrary.org/', city: 'Castle Shannon', state: 'PA', zipCode: '15234', county: 'Allegheny'},
-  { name: 'John K Tener Library', url: 'https://www.charleroilibrary.org', eventsUrl: 'https://www.charleroilibrary.org/events', city: 'Charleroi', state: 'PA', zipCode: '15022', county: 'Washington'},
-  { name: 'J. Lewis Crozer Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'PA', zipCode: '19013', county: 'Chester County'},
   { name: 'Chester Springs Library', url: 'https://www.chesterspringslibrary.org/', eventsUrl: 'https://www.chesterspringslibrary.org/', city: 'Chester Springs', state: 'PA', zipCode: '19425', county: 'Chester'},
   { name: 'Moores Memorial Library', url: 'https://www.christianalibrary.org', eventsUrl: 'https://www.christianalibrary.org/events', city: 'Christiana', state: 'PA', zipCode: '17509', county: 'Lancaster'},
   { name: 'Clairton Public Library', url: 'https://clairtonlibrary.org/', eventsUrl: 'https://clairtonlibrary.org/', city: 'Clairton', state: 'PA', zipCode: '15025', county: 'Allegheny'},
   { name: 'Claysburg Area Public Library Inc', url: 'https://www.claysburglibrary.org', eventsUrl: 'https://www.claysburglibrary.org/events', city: 'Claysburg', state: 'PA', zipCode: '16625', county: 'Blair'},
   { name: 'Coatesville Area Public Library', url: 'https://www.coatesvillelibrary.org', eventsUrl: 'https://www.coatesvillelibrary.org/events', city: 'Coatesville', state: 'PA', zipCode: '19320', county: 'Chester'},
-  { name: 'Columbia Public Library', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'PA', zipCode: '17512', county: 'Columbia County'},
   { name: 'Cooperstown Public Library', url: 'https://www.cooperstownlibrary.org', eventsUrl: 'https://www.cooperstownlibrary.org/events', city: 'Cooperstown', state: 'PA', zipCode: '16317', county: 'Venango'},
   { name: 'Coraopolis Memorial Library', url: 'https://coraopolislibrary.org/', eventsUrl: 'https://coraopolislibrary.org/', city: 'Coraopolis', state: 'PA', zipCode: '15108', county: 'Allegheny'},
   { name: 'Corry Public Library', url: 'https://www.corrylibrary.org', eventsUrl: 'https://www.corrylibrary.org/events', city: 'Corry', state: 'PA', zipCode: '16407', county: 'Erie'},
@@ -86,11 +87,8 @@ const LIBRARIES = [
   { name: 'Dalton Community Library', url: 'https://www.daltonlibrary.org', eventsUrl: 'https://www.daltonlibrary.org/events', city: 'Dalton', state: 'PA', zipCode: '18414', county: 'Lackawanna'},
   { name: 'Darby Library', url: 'https://www.darbylibrary.org', eventsUrl: 'https://www.darbylibrary.org/events', city: 'Darby', state: 'PA', zipCode: '19023', county: 'Delaware'},
   { name: 'Delmont Public Library', url: 'https://www.delmontlibrary.org', eventsUrl: 'https://www.delmontlibrary.org/events', city: 'Delmont', state: 'PA', zipCode: '15626', county: 'Westmoreland'},
-  { name: 'Dover Area Community Library', url: 'https://www.doverlibrary.org', eventsUrl: 'https://www.doverlibrary.org/events', city: 'Dover', state: 'PA', zipCode: '17315', county: 'York'},
   { name: 'Downingtown Library Company', url: 'https://downingtownlibrary.org/', eventsUrl: 'https://downingtownlibrary.org/home/', city: 'Downingtown', state: 'PA', zipCode: '19335', county: 'Chester'},
-  { name: 'Dunbar Community Library', url: 'https://www.dunbarlibrary.org', eventsUrl: 'https://www.dunbarlibrary.org/events', city: 'Dunbar', state: 'PA', zipCode: '15431', county: 'Fayette'},
   { name: 'East Berlin Community Library', url: 'https://www.adamslibrary.org/', eventsUrl: 'https://www.adamslibrary.org/events/upcoming', city: 'East Berlin', state: 'PA', zipCode: '17316', county: 'Adams'},
-  { name: 'Easton Area Public Library', url: 'https://www.eastonlibrary.org/', eventsUrl: 'https://www.eastonlibrary.org/library-events', city: 'Easton', state: 'PA', zipCode: '18042', county: 'Northampton'},
   { name: 'Ellwood City Area Pub Library', url: 'https://www.ellwoodcitylibrary.org', eventsUrl: 'https://www.ellwoodcitylibrary.org/events', city: 'Ellwood City', state: 'PA', zipCode: '16117', county: 'Lawrence'},
   { name: 'Emmaus Public Library', url: 'https://www.emmauslibrary.org/', eventsUrl: 'https://www.emmauslibrary.org/', city: 'Emmaus', state: 'PA', zipCode: '18049', county: 'Lehigh'},
   { name: 'Barbara Moscato Brown Memorial Library', url: 'https://www.emporiumlibrary.org', eventsUrl: 'https://www.emporiumlibrary.org/events', city: 'Emporium', state: 'PA', zipCode: '15834', county: 'Cameron'},
@@ -101,15 +99,15 @@ const LIBRARIES = [
   { name: 'Fleetwood Area Public Library', url: 'https://www.fleetwoodlibrary.org', eventsUrl: 'https://www.fleetwoodlibrary.org/events', city: 'Fleetwood', state: 'PA', zipCode: '19522', county: 'Berks'},
   { name: 'Borough Of Folcroft Public Library', url: 'https://www.folcroftlibrary.org', eventsUrl: 'https://www.folcroftlibrary.org/events', city: 'Folcroft', state: 'PA', zipCode: '19032', county: 'Delaware'},
   { name: 'Foxburg Free Library Association', url: 'https://www.foxburglibrary.org', eventsUrl: 'https://www.foxburglibrary.org/events', city: 'Foxburg', state: 'PA', zipCode: '16036', county: 'Clarion'},
-  { name: 'Franklin Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'PA', zipCode: '16323', county: 'Franklin County'},
   { name: 'Pequea Valley Public Library - Gap Branch', url: 'https://www.gaplibrary.org', eventsUrl: 'https://www.gaplibrary.org/events', city: 'Gap', state: 'PA', zipCode: '17527', county: 'Lancaster'},
   { name: 'Genesee Area Library', url: 'https://www.geneseelibrary.org', eventsUrl: 'https://www.geneseelibrary.org/events', city: 'Genesee', state: 'PA', zipCode: '16923', county: 'Potter'},
   { name: 'Glenolden Library', url: 'https://www.glenoldenlibrary.org', eventsUrl: 'https://www.glenoldenlibrary.org/events', city: 'Glenolden', state: 'PA', zipCode: '19036', county: 'Delaware'},
-  { name: 'Greensburg Hempfield Area Library', url: 'https://www.greensburglibrary.org', eventsUrl: 'https://www.greensburglibrary.org/events', city: 'Greensburg', state: 'PA', zipCode: '15601', county: 'Westmoreland'},
-  { name: 'Greenville Area Public Library', url: 'https://www.greenvillelibrary.org', eventsUrl: 'https://www.greenvillelibrary.org/events', city: 'Greenville', state: 'PA', zipCode: '16125', county: 'Mercer'},
-  { name: 'Hamburg Public Library', url: 'https://www.hamburglibrary.org/', eventsUrl: 'https://www.hamburglibrary.org/', city: 'Hamburg', state: 'PA', zipCode: '19526', county: 'Berks'},
-  { name: 'Salem Public Library', url: 'https://www.hamlinlibrary.org/', eventsUrl: 'https://www.hamlinlibrary.org/', city: 'Hamlin', state: 'PA', zipCode: '18427', county: 'Lebanon'},
-  { name: 'Dauphin County Library System', url: 'https://www.harrisburglibrary.org/', eventsUrl: 'https://www.harrisburglibrary.org/calendar', city: 'Harrisburg', state: 'PA', zipCode: '17101', county: 'Dauphin'},
+  // Corrected 2026-08-10, verified live: hamlinlibrary.org is Hamlin Memorial
+  // Library at 123 South Mechanic Street, SMETHPORT PA (Seneca District
+  // Libraries) — a real PA library that the seed generator had filed under the
+  // wrong name, city and county. Renamed rather than removed: the URL is right,
+  // only the label was wrong, so deleting it would have dropped real coverage.
+  { name: 'Hamlin Memorial Library', url: 'https://www.hamlinlibrary.org/', eventsUrl: 'https://www.hamlinlibrary.org/', city: 'Smethport', state: 'PA', zipCode: '16749', county: 'McKean'},
   { name: 'Union Library Company Of Hatborough', url: 'https://www.hatborolibrary.org', eventsUrl: 'https://www.hatborolibrary.org/events', city: 'Hatboro', state: 'PA', zipCode: '19040', county: 'Montgomery'},
   { name: 'Hawley Library', url: 'https://www.hawleylibrary.org/', eventsUrl: 'https://www.hawleylibrary.org/', city: 'Hawley', state: 'PA', zipCode: '18428', county: 'Wayne'},
   { name: 'Hazleton Area Public Library', url: 'https://www.hazletonlibrary.org/', eventsUrl: 'https://www.hazletonlibrary.org/calendar', city: 'Hazleton', state: 'PA', zipCode: '18201', county: 'Luzerne'},
@@ -118,7 +116,6 @@ const LIBRARIES = [
   { name: 'Hollidaysburg Area Public Library', url: 'https://hollidaysburglibrary.org/', eventsUrl: 'https://hollidaysburglibrary.org/', city: 'Hollidaysburg', state: 'PA', zipCode: '16648', county: 'Blair'},
   { name: 'Honey Brook Community Library', url: 'https://www.honeybrooklibrary.org', eventsUrl: 'https://www.honeybrooklibrary.org/events', city: 'Honey Brook', state: 'PA', zipCode: '19344', county: 'Chester'},
   { name: 'Horsham Township Library', url: 'https://www.horshamlibrary.org/', eventsUrl: 'https://www.horshamlibrary.org/', city: 'Horsham', state: 'PA', zipCode: '19044', county: 'Montgomery'},
-  { name: 'Chartiers-Houston Com Library', url: 'https://www.houstonlibrary.org', eventsUrl: 'https://www.houstonlibrary.org/events', city: 'Houston', state: 'PA', zipCode: '15342', county: 'Washington'},
   { name: 'Hughesville Area Public Library', url: 'https://www.hughesvillelibrary.org', eventsUrl: 'https://www.hughesvillelibrary.org/events', city: 'Hughesville', state: 'PA', zipCode: '17737', county: 'Lycoming'},
   { name: 'Huntingdon County Library', url: 'https://www.huntingdonlibrary.org', eventsUrl: 'https://www.huntingdonlibrary.org/events', city: 'Huntingdon', state: 'PA', zipCode: '16652', county: 'Huntingdon County'},
   { name: 'Hyde Park Public Library', url: 'https://www.hydeparklibrary.org', eventsUrl: 'https://www.hydeparklibrary.org/events', city: 'Hyde Park', state: 'PA', zipCode: '15641', county: 'Berks'},

@@ -363,6 +363,12 @@ async function scrapeDorchesterEvents() {
         const addResult = await db.collection('events').add(eventDoc);
         if (addResult.skipped) {
           console.log(`  ⏭️  ${addResult.skipReason}`);
+        } else if (addResult.duplicate) {
+          // A 23505 means the row already existed — NOT a new import. Counting
+          // these as imported is how this scraper reported "12 new" every run
+          // while writing nothing (2026-08-09): all 12 events collapsed onto one
+          // stable id, so 11 came back duplicate and the 12th was a past event.
+          skipped++;
         } else {
           console.log(`  ✅ ${event.name.substring(0, 60)}${event.name.length > 60 ? '...' : ''}`);
           imported++;

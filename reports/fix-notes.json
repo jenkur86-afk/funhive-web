@@ -311,22 +311,16 @@
       "confirm": "node scripts/find-duplicate-library-urls.js",
       "added": "2026-08-06"
     },
-    "Communico-MD": {
-      "what": "sourceUrl added to metadata (2026-08-07)",
-      "expect": "Next run should populate source_url with each library listing URL (e.g. stmalib.libnet.info/events), which makes verify-coverage.js able to confirm this scraper's coverage instead of returning INCONCLUSIVE.",
-      "confirm": "node scripts/verify-coverage.js --state=MD --exclude-scraper=WordPress-MD --host=stmalib.libnet.info",
-      "added": "2026-08-07"
-    },
     "CustomDrupal-Libraries": {
-      "what": "Cobb County selector collision fixed (2026-08-06)",
-      "expect": "Cobb County shared one selector across date, location and description, so venue became a date string and every event failed to save (7 extracted, 0 in DB). Location/description were repointed to match the other 7 configs in this file. Next run should show Cobb County with nonzero saved rows instead of 0. This scraper stores each library's DISPLAY NAME in scraper_name, not the registry key, so check by venue/county, not by scraper_name = 'CustomDrupal-Libraries'.",
-      "confirm": "npm run scraper -- --scraper CustomDrupal-Libraries   then check the DB for Cobb County rows created after the run",
+      "what": "Cobb County selector collision fixed (2026-08-06) — still unobserved",
+      "expect": "Zero rows from a Cobb host as of 2026-08-10. This is a GROUP 2 scraper and recent runs were Group 3, so the fix has not executed yet - a rotation gap, not a failure. Note this scraper stores each library DISPLAY NAME in scraper_name, so check by source host or venue, never by scraper_name = CustomDrupal-Libraries.",
+      "confirm": "npm run scraper -- --scraper CustomDrupal-Libraries   then check for Cobb rows by source host",
       "added": "2026-08-06"
     },
     "Communico-NJ": {
-      "what": "Two URL fixes awaiting confirmation: Montclair to LibCal-NJ (2026-08-05) and Somerset County NJ branch-filtered URL (2026-08-06)",
-      "expect": "Montclair Public Library was moved out of this scraper to LibCal-NJ with its real bccls.libcal.com URL — confirm it now returns a nonzero count under LibCal-NJ, not Communico-NJ. Separately, Somerset County Library System (NJ) had a bare sclsnj.libnet.info/events URL producing 0 rows in the DB; owner-supplied branch-filtered URL now in place. Confirm Somerset NJ returns events on the next run, and do not confuse it with Maryland's separate Somerset County Library at somelibrary.org, which is a WordPress-MD entry.",
-      "confirm": "npm run scraper -- --scraper Communico-NJ   and separately   npm run scraper -- --scraper LibCal-NJ   then check both for nonzero rows",
+      "what": "Somerset County NJ branch-filtered URL (2026-08-06) — Montclair half now CONFIRMED",
+      "expect": "MONTCLAIR CONFIRMED 2026-08-10: identified by source host (bccls.libcal.com), Montclair Public Library rows are present under LibCal-NJ as intended. SOMERSET NJ STILL UNOBSERVED: zero rows carry an sclsnj host. Communico-NJ is a GROUP 2 scraper and the last runs were Group 3, so the branch-filtered sclsnj.libnet.info URL has not executed since it was set - this is a rotation gap, not a failure. Re-check after the next Group 2 run before treating it as broken.",
+      "confirm": "npm run scraper -- --scraper Communico-NJ   then: node -e \"require('./scrapers/helpers/supabase-adapter').supabase.from('events').select('id').ilike('source_url','%sclsnj%').range(0,50).then(r=>console.log(r.data.length))\"",
       "added": "2026-08-06"
     }
   },
@@ -396,8 +390,13 @@
     "added": "2026-08-09"
   },
   "WordPress-PA": {
-    "note": "VERIFICATION PASS 2026-08-09 (80 of its zero-event entries checked live, first time this family entered the audit cycle): 32 confirmed MISMATCH, 17 MATCHES (genuinely empty), 31 UNVERIFIABLE. Same {city}library.org seed-data collision pattern already documented for WordPress-NC/VT/CT/TN/GA in this file - 16 of the 32 are url-collision (wrong state entirely: Albion->MI, Bedford->TX, Bethany->CT, Crozer->NY, Columbia->IL, Dover->OH, Dunbar->NH, Easton->CT, Greensburg->IN, Greenville->SC, Hamburg->MI, Houston->TX, plus 2 in-state name mislabels: Salem/hamlinlibrary.org is actually Hamlin Memorial Library Smethport PA, Dauphin County/harrisburglibrary.org shows no PA identifiers at all). 3 are dead/parked domains (Allentown Public Library - configured URL is bare sites.google.com redirecting to a Google login page; John K Tener Library/charleroilibrary.org redirects to an unrelated parked domain; Franklin Public Library redirects to a spam blog). 13 are genuine extraction-failure - real PA institution, real live dated events, scraper still returned 0 (Avalon, Avella, Community Library Of Castle Shannon, Chester Springs, Moores Memorial, Clairton, Coraopolis Memorial, Delmont, Erie County, Foxburg, Union Library Company Of Hatborough, Hawley, Hellertown). Per this file's standing WordPress-NC/VT/CT/TN precedent: URLs must be verified/fixed before selector work on this family, otherwise broadening extraction ingests the wrong library's events under the wrong name. NOT fixed this session - 396 more of this family's zero-event entries remain unverified (see spawned task 'Verify remaining ~396 zero-event library sites'). Full verdicts with comments are in reports/verification-comments.json (key prefix 'WordPress-PA|||').",
+    "note": "VERIFICATION PASS 2026-08-09 (80 of its zero-event entries checked live, first time this family entered the audit cycle): 32 confirmed MISMATCH, 17 MATCHES (genuinely empty), 31 UNVERIFIABLE. Same {city}library.org seed-data collision pattern already documented for WordPress-NC/VT/CT/TN/GA in this file - 16 of the 32 are url-collision (wrong state entirely: Albion->MI, Bedford->TX, Bethany->CT, Crozer->NY, Columbia->IL, Dover->OH, Dunbar->NH, Easton->CT, Greensburg->IN, Greenville->SC, Hamburg->MI, Houston->TX, plus 2 in-state name mislabels: Salem/hamlinlibrary.org is actually Hamlin Memorial Library Smethport PA, Dauphin County/harrisburglibrary.org shows no PA identifiers at all). 3 are dead/parked domains (Allentown Public Library - configured URL is bare sites.google.com redirecting to a Google login page; John K Tener Library/charleroilibrary.org redirects to an unrelated parked domain; Franklin Public Library redirects to a spam blog). 13 are genuine extraction-failure - real PA institution, real live dated events, scraper still returned 0 (Avalon, Avella, Community Library Of Castle Shannon, Chester Springs, Moores Memorial, Clairton, Coraopolis Memorial, Delmont, Erie County, Foxburg, Union Library Company Of Hatborough, Hawley, Hellertown). Per this file's standing WordPress-NC/VT/CT/TN precedent: URLs must be verified/fixed before selector work on this family, otherwise broadening extraction ingests the wrong library's events under the wrong name. PARTLY FIXED 2026-08-10: 17 of the 19 url-collision/dead-domain entries removed (reports/pa-removals-2026-08-10.json), 1 corrected in place (hamlinlibrary.org is really Hamlin Memorial, Smethport PA - renamed, not deleted), and exactly 1 genuinely contaminated DB row deleted after a venue-name-based sweep was caught wrongly flagging 61 legitimate rows from other working scrapers. The 13 extraction-failure MISMATCHes remain OPEN and need per-site DOM work. Originally recorded as NOT fixed this session - 396 more of this family's zero-event entries remain unverified (see spawned task 'Verify remaining ~396 zero-event library sites'). Full verdicts with comments are in reports/verification-comments.json (key prefix 'WordPress-PA|||').",
     "priority": "high",
     "added": "2026-08-09"
+  },
+  "Dorchester-County": {
+    "note": "FIXED 2026-08-10. Reported \"Found 12, New 12\" on every run while writing ZERO rows for months. Root cause was not in this scraper: _stableEventId() in supabase-adapter.js hashed a query-stripped URL, and Google Calendar htmlLinks carry their identity entirely in ?eid=, so every Google-Calendar event in the fleet collapsed onto ONE row id. The id this scraper kept colliding on was owned by Somerset County Library/Crisfield. Adapter now folds non-tracking query params into the hash; URLs without a query string hash unchanged, so no id churn elsewhere. Confirmed live: 0 -> 12 rows here, 0 -> 153 for Somerset-County. This scrapers success logging also now counts {duplicate:true} as skipped rather than imported - the same miscount exists in other .add()-path scrapers and was NOT swept.",
+    "priority": "normal",
+    "added": "2026-08-10"
   }
 }

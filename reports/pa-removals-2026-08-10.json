@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Albion Area Public Library",
+    "oldUrl": "https://www.albionlibrary.org/",
+    "reason": "albionlibrary.org serves Albion District Library, MICHIGAN"
+  },
+  {
+    "name": "Bedford County Library",
+    "oldUrl": "https://www.bedfordlibrary.org",
+    "reason": "bedfordlibrary.org serves Bedford Public Library, TEXAS"
+  },
+  {
+    "name": "Andrew Bayne Memorial Library",
+    "oldUrl": "https://www.bellevue.net/",
+    "reason": "bellevue.net is the City of Bellevue, NEBRASKA government site"
+  },
+  {
+    "name": "Bethany Public Library",
+    "oldUrl": "https://bethanylibrary.org/",
+    "reason": "bethanylibrary.org serves Clark Memorial Library, Bethany, CONNECTICUT"
+  },
+  {
+    "name": "J. Lewis Crozer Library",
+    "oldUrl": "https://www.chesterlibrary.org/",
+    "reason": "chesterlibrary.org serves Town of Chester Library, Chestertown, NEW YORK"
+  },
+  {
+    "name": "Columbia Public Library",
+    "oldUrl": "https://www.columbialibrary.org",
+    "reason": "columbialibrary.org serves Columbia, ILLINOIS"
+  },
+  {
+    "name": "Dover Area Community Library",
+    "oldUrl": "https://www.doverlibrary.org",
+    "reason": "doverlibrary.org serves Dover, OHIO"
+  },
+  {
+    "name": "Dunbar Community Library",
+    "oldUrl": "https://www.dunbarlibrary.org",
+    "reason": "dunbarlibrary.org serves Grantham, NEW HAMPSHIRE"
+  },
+  {
+    "name": "Easton Area Public Library",
+    "oldUrl": "https://www.eastonlibrary.org/",
+    "reason": "eastonlibrary.org is Easton Public Library, 691 Morehouse Road, Easton CONNECTICUT (re-verified directly 2026-08-10)"
+  },
+  {
+    "name": "Greensburg Hempfield Area Library",
+    "oldUrl": "https://www.greensburglibrary.org",
+    "reason": "greensburglibrary.org serves Greensburg, INDIANA"
+  },
+  {
+    "name": "Greenville Area Public Library",
+    "oldUrl": "https://www.greenvillelibrary.org",
+    "reason": "greenvillelibrary.org is Greenville County Library System, SOUTH CAROLINA (re-verified directly 2026-08-10; this domain is claimed by 10 states)"
+  },
+  {
+    "name": "Hamburg Public Library",
+    "oldUrl": "https://www.hamburglibrary.org/",
+    "reason": "hamburglibrary.org serves Hamburg, MICHIGAN"
+  },
+  {
+    "name": "Dauphin County Library System",
+    "oldUrl": "https://www.harrisburglibrary.org/",
+    "reason": "harrisburglibrary.org is Harrisburg District Library, 2 W Walnut Street, Harrisburg ILLINOIS (re-verified directly 2026-08-10)"
+  },
+  {
+    "name": "Chartiers-Houston Com Library",
+    "oldUrl": "https://www.houstonlibrary.org",
+    "reason": "houstonlibrary.org serves Houston Public Library, TEXAS"
+  },
+  {
+    "name": "Allentown Public Library",
+    "oldUrl": "https://sites.google.com/",
+    "reason": "dead: configured URL is a bare sites.google.com that redirects to a Google login page"
+  },
+  {
+    "name": "John K Tener Library",
+    "oldUrl": "https://www.charleroilibrary.org",
+    "reason": "dead: charleroilibrary.org redirects to an unrelated parked domain (statenislander.org)"
+  },
+  {
+    "name": "Franklin Public Library",
+    "oldUrl": "https://www.franklinlibrary.org",
+    "reason": "dead: franklinlibrary.org 301-redirects to an unrelated spam blog"
+  }
+]

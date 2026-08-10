@@ -59,11 +59,59 @@ function _normalizeUrl(u) {
     return u.trim().toLowerCase();
   }
 }
+// Query params that are pure tracking noise and drift between scrape runs.
+// Everything NOT in this list is treated as identity-bearing — see
+// _identifyingQuery below for why that distinction is load-bearing.
+const _TRACKING_PARAMS = new Set([
+  'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id',
+  'fbclid', 'gclid', 'msclkid', 'dclid', 'igshid', 'mc_cid', 'mc_eid',
+  '_ga', '_gl', 'ref', 'referrer', 'src', 'cmpid',
+]);
+/**
+ * Returns a stable digest of the URL's IDENTITY-bearing query params, or ''.
+ *
+ * WHY: _normalizeUrl() strips the whole query string, which is right for
+ * tracking junk but catastrophic for sites that put the event's identity
+ * there. Google Calendar is the worst case — every event's htmlLink is
+ * `https://www.google.com/calendar/event?eid=<unique>`, so query-stripping
+ * normalized EVERY Google-Calendar event in the fleet, across all scrapers,
+ * to the single path `https://www.google.com/calendar/event` and therefore to
+ * ONE stable id. First writer won the row; every later event returned
+ * `duplicate: true` and was silently counted as saved.
+ *
+ * Measured 2026-08-09: Dorchester-County reported "Found 12, New 12" on every
+ * run while writing nothing — the id it kept colliding on was owned by
+ * "Somerset County Library / Crisfield Library / Open Gym", a different
+ * library entirely, scraped by GoogleCalendar-MD.
+ *
+ * Params are sorted so ordering drift doesn't change the id.
+ */
+function _identifyingQuery(u) {
+  if (!u || typeof u !== 'string') return '';
+  try {
+    const url = new URL(u);
+    const keep = [];
+    for (const [k, v] of url.searchParams.entries()) {
+      if (_TRACKING_PARAMS.has(k.toLowerCase())) continue;
+      keep.push(`${k.toLowerCase()}=${v}`);
+    }
+    if (!keep.length) return '';
+    keep.sort();
+    return keep.join('&');
+  } catch (_) {
+    return '';
+  }
+}
 function _stableEventId(data) {
   // 1) Prefer URL — most stable across re-scrapes.
   const url = data.url || data.source_url || data.sourceUrl || (data.metadata && data.metadata.sourceUrl) || '';
   const normUrl = _normalizeUrl(url);
-  if (normUrl) return _hash30(`url:${normUrl}`);
+  if (normUrl) {
+    // Fold in identity-bearing query params. URLs without a query string (the
+    // large majority) hash exactly as before, so existing ids do not churn.
+    const q = _identifyingQuery(url);
+    return _hash30(q ? `url:${normUrl}?${q}` : `url:${normUrl}`);
+  }
   // 2) Fallback: name|eventDate|venue (matches Step 2b dedup key + DB unique constraint).
   const name = (data.name || '').toLowerCase().trim();
   const date = (data.eventDate || data.event_date || '').toLowerCase().trim();
