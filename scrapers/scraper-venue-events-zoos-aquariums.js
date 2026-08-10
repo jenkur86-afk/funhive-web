@@ -45,6 +45,7 @@
 const { launchBrowser } = require('./puppeteer-config');
 const { saveEventsWithGeocoding } = require('./event-save-helper');
 const { ScraperLogger, logScraperResult } = require('./scraper-logger');
+const { extractJsonLdEvents } = require('./helpers/jsonld-events-helper');
 
 const SCRAPER_NAME = 'ZooAquariums-Eastern';
 const BATCH_SIZE = 3000; // Events batch size for DB writes
@@ -253,6 +254,29 @@ async function scrapeVenueEvents(venue, browser) {
     });
     await new Promise(resolve => setTimeout(resolve, 1500));
 
+    // Structured schema.org data beats any selector guess, so try it first. Confirmed
+    // live 2026-08-10: Brandywine Zoo publishes 107 Event objects and Virginia Zoo 46 as
+    // <script type="application/ld+json">, which the selector strategies below miss
+    // entirely — both had been sitting as confirmed MISMATCH bugs. startDate is a real
+    // ISO timestamp and location.address is a full PostalAddress, so this also avoids
+    // the invalid-date and centroid-geocoding problems the DOM path is prone to.
+    const jsonLdEvents = extractJsonLdEvents(await page.content(), venue.name);
+    if (jsonLdEvents.length > 0) {
+      console.log(`   ✅ JSON-LD: ${jsonLdEvents.length} events`);
+      // Map onto THIS file's internal shape. The helper emits `date`/`startTime` (what
+      // saveEventsWithGeocoding wants), but everything downstream here reads `eventDate`
+      // and `time`, and the junk filter below drops any row without `eventDate`. Without
+      // this mapping the JSON-LD path looked like it worked — "JSON-LD: 107 events" —
+      // while all 107 were silently filtered out as dateless, and the run still reported
+      // a total of 12. Caught on the first live run by the extracted-vs-found mismatch.
+      events = jsonLdEvents.map(e => ({
+        ...e,
+        eventDate: e.date,
+        time: e.startTime || '',
+        venueName: e.venueName || venue.name,
+      }));
+    } else {
+
     // Extract events using multiple selector strategies
     events = await page.evaluate((selectors, venueName) => {
       const results = [];
@@ -387,6 +411,7 @@ async function scrapeVenueEvents(venue, browser) {
 
       return results;
     }, EVENT_SELECTORS, venue.name);
+    }   // end of the DOM-selector fallback (only runs when no JSON-LD was found)
 
     console.log(`   ✅ Extracted ${events.length} events`);
     await page.close();

@@ -190,8 +190,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Lake Sinclair Library (Milledgeville, GA)": {
-  "verdict": "MISMATCH",
-  "comment": "Page lists real recurring programs with days/times (Coffee Plus Fridays 9-11am, LEGO Builders Day every Saturday, Book Club 4th Tuesday) - standing events without one-off dates, but real content the scraper isn't capturing.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://milledgevillelibrary.org/calendar) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-GA|||Monroe-Walton County Library (Monroe, GA)": {
@@ -205,8 +205,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Pembroke Public Library (Pembroke, GA)": {
-  "verdict": "MISMATCH",
-  "comment": "Page lists specific events (Grand Canyon presentation Aug 15, Bake and Book Sale Aug 29) plus recurring programs -- scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.pembrokelibrary.org/upcoming-events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 3 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-GA|||Houston County Public Libraries System (Perry, GA)": {
@@ -315,8 +315,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Claremont Branch Library (Claremont, NC)": {
-  "verdict": "MISMATCH",
-  "comment": "Page lists an \"Upcoming Events\" section with 3 named events (Fourth Saturdays Poetry Aug 29, Claremont Authors Event Sept 19, In-Person Programs Aug 2026) -- scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.catawbacountync.gov/county-services/library/calendar-of-events/) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-NC|||Hocutt Ellington Memorial Library (Clayton, NC)": {
@@ -335,8 +335,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Danbury Public Library (Danbury, NC)": {
-  "verdict": "MISMATCH",
-  "comment": "Homepage shows named events (CSI: Forensic Science Summer Experience, D&D Mini Painting Quest) -- scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://nwrl.org/regional-library-events/) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 2 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-NC|||Dobson Community Library (Dobson, NC)": {
@@ -420,8 +420,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Leland Branch Library (Leland, NC)": {
-  "verdict": "MISMATCH",
-  "comment": "Lists real upcoming events with dates, e.g. Luunappi Aug 7 and Improv for Kids Aug 14 - scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.lelandlibrary.org/events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-NC|||Davidson County Public Library System (Lexington, NC)": {
@@ -485,18 +485,18 @@
   "population": "zero"
  },
  "WordPress-NC|||Pembroke Public Library (Pembroke, NC)": {
-  "verdict": "MISMATCH",
-  "comment": "Lists multiple real upcoming events with dates, e.g. Grand Canyon presentation Aug 15 and Bake and Book Sale Aug 29 - scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.pembrokelibrary.org/upcoming-events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 3 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-NC|||Pettigrew Regional Library (Plymouth, NC)": {
-  "verdict": "MISMATCH",
-  "comment": "Domain shows real events (Chess Night Aug 4, Storytime Aug 5) but is actually Plymouth District Library in Michigan, not the NC library - wrong domain configured, and that wrong site itself has real events being missed.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://pettigrewlibraries.org/) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-NC|||Princeton Public Library (Princeton, NC)": {
-  "verdict": "MISMATCH",
-  "comment": "Lists real upcoming events with dates, e.g. Outdoor Storytime Aug 11 and Summer Movie Series Aug 18 - scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.pljcs.org/monthly-calendar) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-NC|||Rowan Public Library (Salisbury, NC)": {
@@ -566,7 +566,7 @@
  },
  "WordPress-CT|||Greenwich Library (Greenwich, CT)": {
   "verdict": "MISMATCH",
-  "comment": "Lists real upcoming events with dates, e.g. Super Mario Galaxy Movie event Aug 12 and Windows 11 Learning Lab Aug 12 - scraper is missing real content.",
+  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on LibCal. WordPress-CT is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the LibCal family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
   "population": "zero"
  },
  "WordPress-CT|||Milford Public Library (Milford, CT)": {
@@ -665,8 +665,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Goshen Public Library (Goshen, CT)": {
-  "verdict": "MISMATCH",
-  "comment": "Homepage lists a specific dated event, 'Thursday Night Book Club' on Thursday, July 2nd at 6:00pm, plus recurring Silent Book Club meetings -- real content the scraper is missing.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.goshenlibrary.org/) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-CT|||Hartland Public Library (Hartland, CT)": {
@@ -680,8 +680,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Ivoryton Library Association (Ivoryton, CT)": {
-  "verdict": "MISMATCH",
-  "comment": "After following a redirect, page shows a specific real event: 'Adult Craft Night: Imbolc Intention Jars with Stacia Libby,' Wednesday Feb 12, 6:30-7:30pm, with description and registration link -- scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.ivorytonlibrary.org/events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 1 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-CT|||Killingworth Library (Killingworth, CT)": {
@@ -720,8 +720,8 @@
   "population": "zero"
  },
  "WordPress-CT|||North Haven Memorial Library (North Haven, CT)": {
-  "verdict": "MISMATCH",
-  "comment": "Page lists multiple real, dated upcoming events server-rendered as static HTML: Reopening Celebration Jul 9, Readers Series Jul 28, Writing Workshop Jul 29, 'Writer's Life' event Aug 6 (all 2026) -- clear scraper bug.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.northhavenlibrary.org/events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 4 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-CT|||Old Lyme - Phoebe Griffin Noyes Library (Old Lyme, CT)": {
@@ -770,8 +770,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Pequot Library Association (Southport, CT)": {
-  "verdict": "MISMATCH",
-  "comment": "Page shows a JS carousel with named real programs (John Dingle Author Talk, Book and Bake Sale, Coffee Group) -- real event content exists even though dates aren't visible in the fetched markup, indicating the scraper is likely missing content served by this widget.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.southportlibrary.org/events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-CT|||Stonington Free Library (Stonington, CT)": {
@@ -835,13 +835,13 @@
   "population": "zero"
  },
  "WordPress-TN|||Kingsport Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "Page lists specific recurring book club events with dates (e.g. 'After Hours Book Club' Jan 22, meetings continuing through 2026) directly in page text -- scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.kingsportlibrary.org/) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-TN|||Williamson County Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "Multi-branch calendar clearly lists events like 'Hobby Hour' Aug 4 and 'Youth D&D' Aug 8 -- scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.wcpltn.org/) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-TN|||Rutherford County Library System": {
@@ -860,8 +860,8 @@
   "population": "zero"
  },
  "WordPress-TN|||Bartlett Library": {
-  "verdict": "MISMATCH",
-  "comment": "Calendar clearly lists August events like 'Back to School Bash' Aug 1 and 'PreK Readiness' Aug 3 -- scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.cityofbartlett.org/calendar.aspx?CID=34) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-TN|||Hendersonville Public Library": {
@@ -880,8 +880,8 @@
   "population": "zero"
  },
  "WordPress-TN|||Sevier County Public Library System": {
-  "verdict": "MISMATCH",
-  "comment": "Homepage promo banners list specific dated items, e.g. 'SCPLB meeting is on August 4' -- scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.sevierlibrary.org/) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 1 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-TN|||Tullahoma Public Library": {
@@ -910,8 +910,8 @@
   "population": "zero"
  },
  "WordPress-TN|||Tipton County Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "Page lists dated programs like 'STEAM Family Storytime' 08/05/26 and 'Perry the Pony' 08/11/26 -- scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.tiptoncountylibrary.org/) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-TN|||Crockett County Library": {
@@ -940,8 +940,8 @@
   "population": "zero"
  },
  "WordPress-TN|||Benton County Library": {
-  "verdict": "MISMATCH",
-  "comment": "Homepage lists dated items like 'Essential Oils Class Aug 4' and 'Board Meeting Aug 11' -- scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.camdenlibrary.org/) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-TN|||Smith County Public Library": {
@@ -1005,8 +1005,8 @@
   "population": "zero"
  },
  "WordPress-TN|||Millard Oakley Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "Page lists multiple real events (Community Cookbook, Music Matters concert 8/9, Tiny Art Show 8/16) plus a full librarycalendar.com calendar link -- scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.livingstonlibrary.org/events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-TN|||Madisonville Public Library": {
@@ -1135,8 +1135,8 @@
   "population": "zero"
  },
  "WordPress-AL|||Bridgeport - Lena Cagle Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "Full month-view calendar populated with real events (Hot Yoga, Story Time, Dinosaur Water Wars, Book Club, Board Meetings) across July-August -- scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.bridgeportlibrary.org/calendar) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-AL|||Choctaw County Public Library": {
@@ -1145,8 +1145,8 @@
   "population": "zero"
  },
  "WordPress-AL|||Wilcox County Library": {
-  "verdict": "MISMATCH",
-  "comment": "Homepage lists real upcoming events (Essential Oils Class 8/4, Board Meeting 8/11, recurring Story Time Tuesdays) -- scraper is missing real content.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.camdenlibrary.org/) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-AL|||Chelsea Public Library": {
@@ -1226,7 +1226,7 @@
  },
  "WordPress-AL|||City Of Bayou La Batre Public Library": {
   "verdict": "MISMATCH",
-  "comment": "Homepage shows an 'Upcoming Events' section with dated items, e.g. Tabletop Game Night Nov 6 and Summer Reading Game from June 18 — scraper is missing real content.",
+  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on LibCal. WordPress-AL is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the LibCal family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
   "population": "zero"
  },
  "WordPress-AL|||Kennedy Public Library": {
@@ -1405,8 +1405,8 @@
   "population": "zero"
  },
  "WordPress-VT|||Whiting (Chester, VT)": {
-  "verdict": "MISMATCH",
-  "comment": "Homepage lists real dated items (Friends of the Library meeting Sept 11, an offsite event Sept 20, a wine tasting) even though the scraper reported 0 events.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.chesterlibrary.org/) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 2 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-VT|||Pope Memorial (Danville, VT)": {
@@ -1555,8 +1555,8 @@
   "population": "zero"
  },
  "WordPress-VT|||Westminster West Public (Westminster West, VT)": {
-  "verdict": "MISMATCH",
-  "comment": "Page lists a real recurring Book Club with specific books scheduled Jan-June (plus an embedded Google Calendar) -- scraper reporting 0 is a bug.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.westminsterwestlibrary.org/events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-VT|||Wilder Memorial (Weston, VT)": {
@@ -1625,9 +1625,9 @@
   "population": "allages"
  },
  "WordPress-AL|||Wilsonville - Vernice Stoudenmire Library": {
-  "verdict": "MISMATCH",
-  "comment": "Live calendar (city-wide, linked from library events URL) shows KidoKinetics, Chess Wizards Camps, and a Bike Discovery Day Camp for kids/teens alongside senior-specific groups — should not be mostly All Ages.",
-  "population": "allages"
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.wilsonvillelibrary.org/events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 1 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
+  "population": "zero"
  },
  "CivicRec-Parks-Eastern|||Forsyth County Parks & Recreation": {
   "verdict": "UNVERIFIABLE",
@@ -1821,8 +1821,8 @@
  },
  "WordPress-MA|||Dudley Branch Library": {
   "verdict": "MISMATCH",
-  "comment": "Live calendar (roxburylibrary.org) shows Indoor/Outdoor Story Time, Summer Crafts, Art with Miss Kim, Loose Parts Play (all kids-labeled) and Teen Pastries and Plan (teens) — age-bracketed content mostly tagged All Ages.",
-  "population": "allages"
+  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on Communico. WordPress-MA is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the Communico family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
+  "population": "zero"
  },
  "WordPress-MA|||Joshua Hyde Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -1900,9 +1900,9 @@
   "population": "allages"
  },
  "WordPress-VT|||Ainsworth Public": {
-  "verdict": "MISMATCH",
-  "comment": "Live page (williamstownlibrary.org) shows Storytime for children and Teen Night explicitly for teens among all-ages/adult programs — age-specific content under a mostly All Ages tag.",
-  "population": "allages"
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.williamstownlibrary.org/events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
+  "population": "zero"
  },
  "Venue-Events-ZoosAquariums|||Virginia Zoo": {
   "verdict": "MISMATCH",
@@ -1996,8 +1996,8 @@
  },
  "WordPress-KY|||Kenton County Public Library": {
   "verdict": "MISMATCH",
-  "comment": "Live calendar (via BiblioCommons redirect) shows PreK Storytime (ages 3-5), WonderPlay Wednesdays, and Little Builders (ages 5 and under) — clearly age-specific children's programming underrepresented by a 77.8% All-Ages tag.",
-  "population": "allages"
+  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on LibCal. WordPress-KY is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the LibCal family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
+  "population": "zero"
  },
  "RecDesk-Parks|||Carroll Gymnastics, Inc.": {
   "verdict": "UNVERIFIABLE",
@@ -2130,9 +2130,9 @@
   "population": "allages"
  },
  "WordPress-NY|||Phillips Free Library": {
-  "verdict": "MISMATCH",
-  "comment": "FIX LANDED 2026-08-05, NOT YET RE-VERIFIED: this entry pointed at homerlibrary.org, which is the Homer Township Public Library District in Homer Glen ILLINOIS, a different Homer entirely. Repointed to the real Phillips Free Library at phillipsfreelibrary.org, verified live at 37 South Main St, Homer NY 13077 matching the entry's own ZIP, with real dated events including a Summer Reading Celebration on Aug 7 and a Creative Writing Club for rising 4th-7th graders. 80 orphaned Illinois-sourced rows were deleted, since their stable IDs derive from the old URL and a corrected re-scrape would never have overwritten them.",
-  "population": "allages"
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://phillipsfreelibrary.org/events/) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
+  "population": "zero"
  },
  "WordPress-NY|||Greenville Public Library": {
   "verdict": "MISMATCH",
@@ -2215,7 +2215,7 @@
  },
  "WordPress-ME|||Shaw Public Library - Greenville": {
   "verdict": "MISMATCH",
-  "comment": "FIX LANDED 2026-08-05, NOT YET RE-VERIFIED: this entry was on greenvillelibrary.org, which is the Greenville County Library System in SOUTH CAROLINA, and was ingesting 25 of its events under a Maine label. Repointed to the real Shaw Public Library at shawpubliclibrary.org, verified live at 9 Lily Bay Road, Greenville ME 04441 matching the entry's own ZIP, with dated events including Mr. Drew and His Animals on Aug 6. The 25 mislabeled rows were deleted.",
+  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on FullCalendar. WordPress-ME is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the FullCalendar family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
   "population": "zero"
  },
  "WordPress-GA|||Banks County Public Library": {
@@ -2304,8 +2304,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Bath Community Library": {
-  "verdict": "MISMATCH",
-  "comment": "eventsUrl is configured to the homepage (bhmlib.org/), which shows no events, but the site's own nav has a separate /events link the scraper config isn't using.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://bhmlib.org/) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-NC|||Cary Branch Library": {
@@ -2334,8 +2334,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Shelton Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "Live /events page shows a full month of real events (End of Summer Reading Party, Summer Stories, Teen Chefs, Baby and Me, etc.) with titles, dates and age info — the scraper reported 0. Not a TEC/REST site (wp-json/tribe/events/v1 404s), so this is a DOM-selector mismatch on this specific theme; needs live-DOM selector inspection to fix, not done this session.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.sheltonlibrarysystem.org/events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 1 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "Communico-NC|||Wake County Public Libraries": {
@@ -2469,8 +2469,8 @@
   "population": "zero"
  },
  "WordPress-Events-Calendar|||Bristol Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "url-collision: https://bristolpubliclibrary.org/events/ 307-redirects to www.in.gov/bristolpubliclibrary/, which is Bristol Public Library in Bristol, INDIANA (505 W Vistula St), not the intended Bristol Public Library, VA. Wrong institution entirely.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://bristolpubliclibrary.org/events/) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-Events-Calendar|||Carnegie Library of Pittsburgh": {
@@ -2510,12 +2510,12 @@
  },
  "WordPress-PA|||Avalon Public Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: institution confirmed (317 S. Home Ave, Avalon, PA). Live page clearly lists dated upcoming events (Mon Aug 10 Pre-K Story Time, Tue Aug 11 Mahjong, Tue Aug 11 Family Story Time) that the scraper found 0 for.",
+  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on BiblioCommons. WordPress-PA is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the BiblioCommons family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
   "population": "zero"
  },
  "WordPress-PA|||Avella Area Library Center": {
-  "verdict": "MISMATCH",
-  "comment": "extraction-failure: institution confirmed (11 School Court, Avella, PA). Page shows a dated event (Sept 10, 2026 WCCF Day of Giving) the scraper missed.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.avellalibrary.org/events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-PA|||Avonmore Public Library": {
@@ -2605,7 +2605,7 @@
  },
  "WordPress-PA|||Community Library Of Castle Shannon": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: institution confirmed (Castle Shannon, PA 15234). Live page clearly lists multiple dated upcoming events (Summer Reading Challenge through Aug 7, Dee Jay's Fundraiser Aug 27, Friends Raffle Drawing Aug 31, Trustees application deadline Sept 1) that the scraper found 0 for.",
+  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on BiblioCommons. WordPress-PA is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the BiblioCommons family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
   "population": "zero"
  },
  "WordPress-PA|||John K Tener Library": {
@@ -2620,17 +2620,17 @@
  },
  "WordPress-PA|||Chester Springs Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: institution confirmed (1709 Art School Road, Chester Springs, PA). Page lists a dated Board of Trustees meeting (Tue Aug 18, 2026) that the scraper found 0 for, though the library notes its building is temporarily closed due to storm damage so broader programming may be paused.",
+  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on LibCal. WordPress-PA is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the LibCal family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
   "population": "zero"
  },
  "WordPress-PA|||Moores Memorial Library": {
-  "verdict": "MISMATCH",
-  "comment": "extraction-failure: institution confirmed (9 West Slokom Ave, Christiana, PA). Page names a specific dated recurring program ('Story time is back on Wednesday September 4th') plus other recurring clubs, which the scraper found 0 for.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.christianalibrary.org/events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-PA|||Clairton Public Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: institution confirmed (616 Miller Ave, Clairton, PA). Page clearly lists dated summer programs (Dinosaur Days June 8-Aug 12, Kid's Day June 10-Aug 12, Summer Reading Club Party Aug 12) that the scraper found 0 for.",
+  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on BiblioCommons. WordPress-PA is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the BiblioCommons family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
   "population": "zero"
  },
  "WordPress-PA|||Claysburg Area Public Library Inc": {
@@ -2655,7 +2655,7 @@
  },
  "WordPress-PA|||Coraopolis Memorial Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: confirmed Coraopolis, PA 15108 site shows real dated events (Yarn Bunch, Aug 15/22/29) the scraper returned 0 for",
+  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on BiblioCommons. WordPress-PA is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the BiblioCommons family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
   "population": "zero"
  },
  "WordPress-PA|||Thomas Beaver Free Library": {
@@ -2705,7 +2705,7 @@
  },
  "WordPress-PA|||Erie County Public Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: confirmed Erie, PA site shows dated summer programs (June 15-Aug 22); real event calendar lives on events.erielibrary.org subdomain, not captured by scraper's configured URL",
+  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on LibCal. WordPress-PA is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the LibCal family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
   "population": "zero"
  },
  "WordPress-PA|||Evans City Public Library": {
@@ -2734,8 +2734,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Foxburg Free Library Association": {
-  "verdict": "MISMATCH",
-  "comment": "extraction-failure: /events page lists real program titles (Story Time, 5 Under Story Hour, Book vs Movie, Books That Shape Us) but dates are embedded in calendar images, likely uncrawlable text for the scraper",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.foxburglibrary.org/events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-PA|||Franklin Public Library": {
@@ -2794,13 +2794,13 @@
   "population": "zero"
  },
  "WordPress-PA|||Union Library Company Of Hatborough": {
-  "verdict": "MISMATCH",
-  "comment": "extraction-failure: confirmed Hatboro, PA site (\"Union Library of Hatboro\") shows real dated events (Colonial Day Aug 15, Teen Cosplay Aug 25, Family Game Night Aug 27) scraper missed",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.hatborolibrary.org/events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-PA|||Hawley Library": {
-  "verdict": "MISMATCH",
-  "comment": "extraction-failure: confirmed Hawley, PA 18428 site shows real dated events (Mystery Wine Tasting Oct 3, HPL Run to Read 5K) scraper missed",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.hawleylibrary.org/) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-PA|||Hazleton Area Public Library": {
@@ -2809,8 +2809,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Hellertown Area Library": {
-  "verdict": "MISMATCH",
-  "comment": "extraction-failure: confirmed Hellertown, PA site's /events page lists real recurring programs (Book Club, Quilt Study Group, Spinner's Group, Therapy Dog Days) scraper missed",
+  "verdict": "UNVERIFIABLE",
+  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.hellertownlibrary.org/events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 0 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
   "population": "zero"
  },
  "WordPress-PA|||Hershey Public Library": {

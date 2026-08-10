@@ -35,6 +35,7 @@ const { launchBrowser } = require('./puppeteer-config');
 const axios = require('axios');
 const ngeohash = require('ngeohash');
 const { categorizeEvent } = require('./event-categorization-helper');
+const { extractJsonLdEvents } = require('./helpers/jsonld-events-helper');
 const { generateEventId, generateEventIdFromDetails } = require('./event-id-helper');
 const { ScraperLogger, logScraperResult } = require('./scraper-logger');
 const { normalizeDateString } = require('./date-normalization-helper');
@@ -270,6 +271,26 @@ async function scrapeLibraryEvents(library, browser) {
       await page.waitForSelector('body', { timeout: 5000 });
       await new Promise(resolve => setTimeout(resolve, 3000));
 
+      // Structured schema.org data first — The Events Calendar emits its events as
+      // JSON-LD alongside the markup, and reading that avoids guessing at selectors that
+      // shift between plugin versions. Confirmed live 2026-08-10: Wythe-Grayson Regional
+      // publishes 94 Event objects and Pittsylvania County 71, both of which were open
+      // MISMATCH bugs while the selector list below returned nothing usable.
+      const jsonLdEvents = extractJsonLdEvents(await page.content(), library.name);
+      if (jsonLdEvents.length > 0) {
+        console.log(`   ✅ JSON-LD: ${jsonLdEvents.length} events`);
+        // Map onto this file's internal shape: everything downstream reads `eventDate`
+        // (it is normalised and used as part of the dedup key), not the helper's `date`.
+        // The same mismatch silently voided the JSON-LD path in the zoos scraper on its
+        // first live run, so both are mapped explicitly rather than spread through.
+        events = jsonLdEvents.map(e => ({
+          ...e,
+          name: e.title,
+          eventDate: e.startTime ? `${e.date} ${e.startTime}` : e.date,
+          venueName: e.venueName || library.name,
+        }));
+      } else {
+
       // Extract events from the page
       events = await page.evaluate(() => {
       const results = [];
@@ -365,6 +386,7 @@ async function scrapeLibraryEvents(library, browser) {
 
       return results;
     });
+      }   // end of the DOM-selector fallback (only runs when no JSON-LD was found)
 
       // If we found events, stop trying alternative URLs
       if (events.length > 0) break;
