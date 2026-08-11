@@ -131,17 +131,36 @@ function loadRunLog() {
   const out = new Map();
   if (!fs.existsSync(RUN_LOG)) return out;
   const lines = fs.readFileSync(RUN_LOG, 'utf8').split(/\r?\n/);
-  const re = /^\[(\d{4}-\d{2}-\d{2})T[^\]]*\]\s+(?:⚠️\s*)?([A-Za-z][\w.\- ]*?)\s{2,}([\d,]+)\s+([\d,]+)\s+([\d,]+)(?:\s+([\d,]+))?\s+([\d.]+)\s*$/;
+  // Capture the FULL timestamp, not just the date. Comparing by date alone made
+  // "most recent" mean "last line in the file for that day", which is not the
+  // same thing once a day contains several runs of one scraper.
+  const re = /^\[((\d{4}-\d{2}-\d{2})T[^\]]*)\]\s+(?:⚠️\s*)?([A-Za-z][\w.\- ]*?)\s{2,}([\d,]+)\s+([\d,]+)\s+([\d,]+)(?:\s+([\d,]+))?\s+([\d.]+)\s*$/;
+
+  // A run ends by REPLAYING every scraper's result under a "PER-SCRAPER RESULTS"
+  // header, stamped with the time the run finished rather than the time that
+  // scraper actually ran. The 2026-08-10 nightly run took 29.6 hours (MacaroniKid
+  // Group 1 alone ran 18h), so its recap landed on 2026-08-11 and re-asserted
+  // CivicEngage-Libraries' stale 3am "0 found" over a real 354-found run from
+  // earlier that morning — the report showed a fixed scraper as still broken.
+  // Every recap row duplicates a row already logged live during the run, so
+  // skipping recap blocks loses nothing.
+  let inRecap = false;
+
   for (const line of lines) {
+    if (line.includes('PER-SCRAPER RESULTS')) { inRecap = true; continue; }
+    if (inRecap && /succeeded/.test(line)) { inRecap = false; continue; }
+    if (line.includes('FunHive Scraper Run')) { inRecap = false; continue; }
+    if (inRecap) continue;
+
     const m = re.exec(line);
     if (!m) continue;
-    const name = m[2].trim();
+    const name = m[3].trim();
     if (!name || /^-+$/.test(name) || name === 'SCRAPER') continue;
-    const nums = [m[3], m[4], m[5], m[6]].filter(v => v !== undefined).map(v => parseInt(String(v).replace(/,/g, ''), 10));
+    const nums = [m[4], m[5], m[6], m[7]].filter(v => v !== undefined).map(v => parseInt(String(v).replace(/,/g, ''), 10));
     // 4 numeric cols => FOUND NEW DUPES INVALID ; 3 => FOUND NEW DUPES (older format)
-    const rec = { date: m[1], found: nums[0], nu: nums[1], dupes: nums[2], invalid: nums.length > 3 ? nums[3] : null };
+    const rec = { ts: m[1], date: m[2], found: nums[0], nu: nums[1], dupes: nums[2], invalid: nums.length > 3 ? nums[3] : null };
     const prev = out.get(name);
-    if (!prev || rec.date >= prev.date) out.set(name, rec);   // keep the most recent
+    if (!prev || rec.ts >= (prev.ts || prev.date)) out.set(name, rec);   // keep the most recent
   }
   return out;
 }
@@ -1065,7 +1084,19 @@ function main() {
         // WordPress-AL as having no website, and a same-named but entirely different library
         // exists in WordPress-GA. Claiming that as the new owner would repeat the exact
         // cross-state mix-up this project has spent days undoing.
-        const sameState = owners.filter(k => (rosterByName.get(k) || {}).state === r[1]);
+        // A registry entry marked 'Multi' spans states by definition — its real
+        // per-site state lives in each config entry, not on the registry key — so
+        // comparing the key's state to the row's would never match and a genuine
+        // hand-off reads as "removed with no replacement". Seen 2026-08-11 when
+        // Williamson County Public Library moved from WordPress-TN to
+        // CivicEngage-Libraries: the destination configures it as TN, but the key
+        // is 'Multi', so the report told the owner the library had been dropped.
+        // Multi keys still have to clear the name match above, which is what stops
+        // this from re-opening the cross-state mix-up the guard exists to prevent.
+        const sameState = owners.filter(k => {
+          const st = (rosterByName.get(k) || {}).state;
+          return st === r[1] || st === 'Multi';
+        });
         if (sameState.length) {
           status = 'moved';
           detail = 'no longer configured in ' + r[2] + '; now configured by ' + sameState.slice(0, 3).join(', ')
