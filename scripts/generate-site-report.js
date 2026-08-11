@@ -146,11 +146,28 @@ function loadRunLog() {
   // skipping recap blocks loses nothing.
   let inRecap = false;
 
+  // Fail OPEN, not closed. Recap detection is a heuristic over a log format this
+  // repo controls but has changed before; if the terminator wording ever drifts,
+  // inRecap would stay true and every row after the first recap would be dropped
+  // silently — far worse than the stale-row bug this replaced. The longest recap
+  // ever emitted is 58 data lines (measured over the full cumulative log), so a
+  // block running past 200 means the marker is gone: stop skipping and say so.
+  const RECAP_SANITY_LIMIT = 200;
+  let recapLines = 0;
+  let recapOverflowed = false;
+
   for (const line of lines) {
-    if (line.includes('PER-SCRAPER RESULTS')) { inRecap = true; continue; }
+    if (line.includes('PER-SCRAPER RESULTS')) { inRecap = true; recapLines = 0; continue; }
     if (inRecap && /succeeded/.test(line)) { inRecap = false; continue; }
     if (line.includes('FunHive Scraper Run')) { inRecap = false; continue; }
-    if (inRecap) continue;
+    if (inRecap) {
+      if (++recapLines > RECAP_SANITY_LIMIT) {
+        inRecap = false;
+        recapOverflowed = true;
+      } else {
+        continue;
+      }
+    }
 
     const m = re.exec(line);
     if (!m) continue;
@@ -161,6 +178,11 @@ function loadRunLog() {
     const rec = { ts: m[1], date: m[2], found: nums[0], nu: nums[1], dupes: nums[2], invalid: nums.length > 3 ? nums[3] : null };
     const prev = out.get(name);
     if (!prev || rec.ts >= (prev.ts || prev.date)) out.set(name, rec);   // keep the most recent
+  }
+  if (recapOverflowed) {
+    console.warn('  ⚠️  run-log recap block never terminated — the summary log format has changed.');
+    console.warn('      Skipping was abandoned to avoid dropping rows, so Last-run may show a replayed');
+    console.warn('      stale row again. Fix the block detection in loadRunLog().');
   }
   return out;
 }
