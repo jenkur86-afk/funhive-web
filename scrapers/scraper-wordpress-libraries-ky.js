@@ -180,7 +180,7 @@ async function scrapeGenericEvents() {
               if (possibleTitles.length > 0) {
                 const event = {
                   title: possibleTitles[0].textContent.trim(),
-                  date: resolveEventDate(card) || (possibleDates.length > 0 ? possibleDates[0].textContent.trim() : ''),
+                  date: resolveEventDate(card),
                   description: possibleDescs.length > 0 ? possibleDescs[0].textContent.trim() : '',
                   url: linkEl ? linkEl.href : window.location.href,
                   ageRange: ageEl ? ageEl.textContent.trim() : '',

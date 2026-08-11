@@ -107,7 +107,7 @@ async function scrapeGenericEvents() {
             // Look for age/audience info on the event card
             const ageEl = card ? [card.querySelector('[class*="audience"]'), card.querySelector('[class*="age"]'), card.querySelector('[class*="category"]')].find(el => el && el.textContent.trim().length > 0 && el.textContent.trim().length < 80) : null;
             const descEl = card.querySelector('[class*="description"], [class*="excerpt"], [class*="summary"], p');
-            events.push({ title: title.textContent.trim(), date: resolveEventDate(card) || (date ? date.textContent.trim() : ''), ageRange: ageEl ? ageEl.textContent.trim() : '', description: descEl ? descEl.textContent.trim() : '', location: libName, venueName: libName });
+            events.push({ title: title.textContent.trim(), date: resolveEventDate(card), ageRange: ageEl ? ageEl.textContent.trim() : '', description: descEl ? descEl.textContent.trim() : '', location: libName, venueName: libName });
           }
         });
         const seen = new Set();

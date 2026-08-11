@@ -54,7 +54,20 @@ const LIBRARIES = [
   { name: 'Carver Branch Library', url: 'https://www.sheppardlibrary.org/', eventsUrl: 'https://www.sheppardlibrary.org/calendar.aspx', city: 'Greenville', state: 'NC', zipCode: '00000', county: 'Pitt County'},
   { name: 'Hampstead Branch Library', url: 'https://www.hampsteadlibrary.org/', eventsUrl: 'https://www.hampsteadlibrary.org/', city: 'Hampstead', state: 'NC', zipCode: '00000', county: 'Pender'},
   { name: 'Harmony Branch Library', url: 'https://www.harmonylibrary.org', eventsUrl: 'https://www.harmonylibrary.org/events', city: 'Harmony', state: 'NC', zipCode: '00000', county: 'Iredell'},
-  { name: 'Harrisburg Library', url: 'https://www.harrisburglibrary.org/', eventsUrl: 'https://www.harrisburglibrary.org/calendar', city: 'Harrisburg', state: 'NC', zipCode: '00000', county: 'Cabarrus'},
+  // REMOVED 2026-08-11 — seed-data URL collision (MASTER-PLAN Defect A).
+  // harrisburglibrary.org is Harrisburg DISTRICT Library, 2 W Walnut Street,
+  // Harrisburg, ILLINOIS 62946 (area code 618) — verified live. Not Harrisburg
+  // NC. Illinois is not even in the active region, so had extraction succeeded
+  // this would have imported Illinois events labelled North Carolina; it instead
+  // produced 12 of WordPress-NC's remaining invalid dates.
+  //
+  // THIS LEAVES A REAL COVERAGE GAP, it is not a replacement. Harrisburg NC is
+  // served by Cabarrus County Public Library (~216,000 people), which has NO
+  // active coverage: scraper-activecalendar-cabarrus-nc.js exists but is not in
+  // scraper-registry.js, its ActiveCalendar platform is deprecated, and the
+  // SirsiDynix site it migrated to (cabarrus-cep.bc.sirsidynix.net/events/list/)
+  // sits behind a Cloudflare challenge that Puppeteer did not clear. Tracked as
+  // an open gap in reports/fix-notes.json.
   { name: 'Havelock-Craven County Public', url: 'https://citylibrary.com/', eventsUrl: 'https://citylibrary.com/public-libraries/havelock-public-library/', city: 'Havelock', state: 'NC', zipCode: '00000', county: 'Craven'},
   { name: 'Henderson County Public Library', url: 'https://youseemore.com/', eventsUrl: 'https://youseemore.com/hendersonville/', city: 'Hendersonville', state: 'NC', zipCode: '28739', county: 'Henderson'},
   { name: 'Hickory Public Library', url: 'https://www.hickorylibrary.org', eventsUrl: 'https://www.hickorylibrary.org/events', city: 'Hickory', state: 'NC', zipCode: '28601', county: 'Catawba'},
@@ -243,7 +256,7 @@ async function scrapeGenericEvents() {
               if (possibleTitles.length > 0) {
                 const event = {
                   title: possibleTitles[0].textContent.trim(),
-                  date: resolveEventDate(card) || (possibleDates.length > 0 ? possibleDates[0].textContent.trim() : ''),
+                  date: resolveEventDate(card),
                   time: possibleDates.length > 1 ? possibleDates[1].textContent.trim() : '',
                   description: possibleDescs.length > 0 ? possibleDescs[0].textContent.trim() : '',
                   url: linkEl ? linkEl.href : window.location.href,
