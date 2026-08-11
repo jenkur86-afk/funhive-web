@@ -54,6 +54,99 @@ function parseAgeRange(description, title) {
   return 'All Ages';
 }
 
+// Extract every event card on the currently-loaded archive page
+async function extractEventsOnPage(page) {
+  return page.evaluate(() => {
+    const results = [];
+
+    // Try multiple selectors for WordPress event post types
+    const eventSelectors = [
+      '.event, .lsvr-event',
+      'article[class*="event"]',
+      '[class*="event-item"]',
+      '.post-type-event',
+      'div[class*="event"]'
+    ];
+
+    let eventElements = [];
+    for (const selector of eventSelectors) {
+      eventElements = document.querySelectorAll(selector);
+      if (eventElements.length > 0) break;
+    }
+
+    // If no events found with specific selectors, try articles
+    if (eventElements.length === 0) {
+      eventElements = document.querySelectorAll('article, .item');
+    }
+
+    eventElements.forEach(el => {
+      try {
+        // Extract title
+        const titleEl = el.querySelector('h1, h2, h3, h4, .entry-title, .event-title');
+        if (!titleEl) return;
+
+        const title = titleEl.textContent.trim();
+
+        // Extract date
+        let eventDate = '';
+        const dateEl = el.querySelector('time, .event-date, .date, [class*="date"]');
+        if (dateEl) {
+          eventDate = dateEl.textContent.trim() || dateEl.getAttribute('datetime') || '';
+        }
+
+        // If no date element, try to extract from text
+        if (!eventDate) {
+          const dateMatch = el.textContent.match(/(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}/i);
+          if (dateMatch) eventDate = dateMatch[0];
+        }
+
+        // Extract description
+        let description = '';
+        const descEl = el.querySelector('p, .description, .event-description, .entry-content');
+        if (descEl) {
+          description = descEl.textContent.trim();
+        }
+
+        // Extract location
+        let location = '';
+        const locationEl = el.querySelector('.location, .event-location, [class*="location"]');
+        if (locationEl) {
+          location = locationEl.textContent.trim();
+        }
+
+        // Try to get event URL
+        let url = '';
+        const linkEl = el.querySelector('a');
+        if (linkEl && linkEl.href) {
+          url = linkEl.href;
+        }
+
+        // Extract categories/tags
+        let categories = '';
+        const catEls = el.querySelectorAll('.category, .event-category, [class*="tag"]');
+        if (catEls.length > 0) {
+          categories = Array.from(catEls).map(c => c.textContent.trim()).join(', ');
+        }
+
+        if (title && eventDate) {
+          results.push({
+            name: title,
+            eventDate: eventDate,
+            venue: location,
+            description: description,
+            url: url,
+            categories: categories
+          });
+        }
+      } catch (err) {
+        console.log('Error parsing event:', err.message);
+      }
+    });
+
+    return results;
+  });
+}
+
 // Scrape events from ABBE Regional Library
 async function scrapeWordPressAbbeRegional() {
   console.log('\n📚 WORDPRESS PRESSVILLE SCRAPER - ABBE Regional Library');
@@ -72,105 +165,48 @@ async function scrapeWordPressAbbeRegional() {
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
 
-    await page.goto(LIBRARY.url, {
-      waitUntil: 'networkidle2',
-      timeout: 30000
-    });
+    // The Pressville archive is paginated oldest-first, so page 1 is permanently
+    // stuck in the past — on 2026-08-10 every event on it was a June date and the
+    // scraper reported Found: 0 while pages 2+ held real August/September events.
+    // Walk the pagination and let the past-event filter drop the stale ones.
+    // Out-of-range page numbers clamp to the last real page and re-serve its
+    // content, so stop as soon as a page contributes no new unique events.
+    const MAX_PAGES = 10;
+    const events = [];
+    const seen = new Set();
 
-    // Wait for events to load (WordPress may load via AJAX)
-    await page.waitForSelector('body', { timeout: 5000 });
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    for (let pageNum = 1; pageNum <= MAX_PAGES; pageNum++) {
+      const pageUrl = pageNum === 1 ? LIBRARY.url : `${LIBRARY.url}page/${pageNum}/`;
 
-    // Extract events from the page
-    const events = await page.evaluate(() => {
-      const results = [];
-
-      // Try multiple selectors for WordPress event post types
-      const eventSelectors = [
-        '.event, .lsvr-event',
-        'article[class*="event"]',
-        '[class*="event-item"]',
-        '.post-type-event',
-        'div[class*="event"]'
-      ];
-
-      let eventElements = [];
-      for (const selector of eventSelectors) {
-        eventElements = document.querySelectorAll(selector);
-        if (eventElements.length > 0) break;
+      try {
+        await page.goto(pageUrl, {
+          waitUntil: 'networkidle2',
+          timeout: 30000
+        });
+      } catch (err) {
+        console.log(`   Page ${pageNum}: navigation failed (${err.message}) — stopping`);
+        break;
       }
 
-      // If no events found with specific selectors, try articles
-      if (eventElements.length === 0) {
-        eventElements = document.querySelectorAll('article, .item');
+      // Wait for events to load (WordPress may load via AJAX)
+      await page.waitForSelector('body', { timeout: 5000 });
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      const pageEvents = await extractEventsOnPage(page);
+
+      let added = 0;
+      for (const ev of pageEvents) {
+        const key = `${ev.name}|${ev.eventDate}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        events.push(ev);
+        added++;
       }
 
-      eventElements.forEach(el => {
-        try {
-          // Extract title
-          const titleEl = el.querySelector('h1, h2, h3, h4, .entry-title, .event-title');
-          if (!titleEl) return;
+      console.log(`   Page ${pageNum}: ${pageEvents.length} events, ${added} new`);
 
-          const title = titleEl.textContent.trim();
-
-          // Extract date
-          let eventDate = '';
-          const dateEl = el.querySelector('time, .event-date, .date, [class*="date"]');
-          if (dateEl) {
-            eventDate = dateEl.textContent.trim() || dateEl.getAttribute('datetime') || '';
-          }
-
-          // If no date element, try to extract from text
-          if (!eventDate) {
-            const dateMatch = el.textContent.match(/(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}/i);
-            if (dateMatch) eventDate = dateMatch[0];
-          }
-
-          // Extract description
-          let description = '';
-          const descEl = el.querySelector('p, .description, .event-description, .entry-content');
-          if (descEl) {
-            description = descEl.textContent.trim();
-          }
-
-          // Extract location
-          let location = '';
-          const locationEl = el.querySelector('.location, .event-location, [class*="location"]');
-          if (locationEl) {
-            location = locationEl.textContent.trim();
-          }
-
-          // Try to get event URL
-          let url = '';
-          const linkEl = el.querySelector('a');
-          if (linkEl && linkEl.href) {
-            url = linkEl.href;
-          }
-
-          // Extract categories/tags
-          let categories = '';
-          const catEls = el.querySelectorAll('.category, .event-category, [class*="tag"]');
-          if (catEls.length > 0) {
-            categories = Array.from(catEls).map(c => c.textContent.trim()).join(', ');
-          }
-
-          if (title && eventDate) {
-            results.push({
-              name: title,
-              eventDate: eventDate,
-              venue: location,
-              description: description,
-              url: url,
-              categories: categories
-            });
-          }
-        } catch (err) {
-          console.log('Error parsing event:', err.message);
-        }
-      });
-
-      return results;
-    });
+      if (added === 0) break;
+    }
 
     console.log(`   Found ${events.length} events`);
 
@@ -241,6 +277,8 @@ async function scrapeWordPressAbbeRegional() {
           metadata: {
             source: 'WordPress Pressville Scraper',
             sourceName: LIBRARY.name,
+            scraperName: 'WordPress-Abbe-Regional',
+            sourceUrl: LIBRARY.url,
             county: LIBRARY.county,
             state: LIBRARY.state,
             addedDate: admin.firestore.FieldValue.serverTimestamp()
