@@ -664,7 +664,7 @@ async function scrapeMacaroniKidIllinois() {
     errors: failed
   }, { state: 'IL', source: 'macaroni-kid' });
 
-  return { imported, failed };
+  return { imported, skipped, failed };
 }
 
 if (require.main === module) {

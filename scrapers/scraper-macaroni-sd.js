@@ -653,7 +653,7 @@ async function scrapeMacaroniKidSouthDakota() {
     errors: failed
   }, { state: 'SD', source: 'macaroni-kid' });
 
-  return { imported, failed };
+  return { imported, skipped, failed };
 }
 
 if (require.main === module) {

@@ -368,7 +368,7 @@ async function scrapePGParks(options = {}) {
     errors: failed
   }, { dataType: 'events', state: 'MD' });
 
-  return { imported: saved, failed, total: rawEvents.length };
+  return { imported: saved, skipped, failed, total: rawEvents.length };
 }
 
 async function scrapePGParksCloudFunction() {

@@ -660,7 +660,7 @@ async function scrapeMacaroniKidDC() {
     errors: failed
   }, { state: 'DC', source: 'macaroni-kid' });
 
-  return { imported, failed };
+  return { imported, skipped, failed };
 }
 
 if (require.main === module) {

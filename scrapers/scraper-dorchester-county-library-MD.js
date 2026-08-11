@@ -401,7 +401,7 @@ async function scrapeDorchesterEvents() {
   console.log(`   Failed: ${failed}`);
   console.log('='.repeat(60) + '\n');
 
-  return { imported, failed };
+  return { imported, skipped, failed };
 }
 
 // Run if executed directly

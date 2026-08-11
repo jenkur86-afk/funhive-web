@@ -630,7 +630,7 @@ async function scrapeMacaroniKidAlaska() {
     errors: failed
   }, { state: 'AK', source: 'macaroni-kid' });
 
-  return { imported, failed };
+  return { imported, skipped, failed };
 }
 
 // Run if executed directly

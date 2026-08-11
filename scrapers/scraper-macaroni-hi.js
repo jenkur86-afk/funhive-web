@@ -653,7 +653,7 @@ async function scrapeMacaroniKidHawaii() {
     errors: failed
   }, { state: 'HI', source: 'macaroni-kid' });
 
-  return { imported, failed };
+  return { imported, skipped, failed };
 }
 
 if (require.main === module) {
