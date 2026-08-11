@@ -632,7 +632,11 @@ const SCRAPERS = {
     exportName: 'scrapeCivicEngageLibraries',
     type: 'puppeteer',
     group: 1,
-    state: 'VA'
+    // 'Multi' as of 2026-08-11: the CivicPlus platform is not VA-specific and
+    // this now also covers Williamson County TN. Each config entry carries its
+    // own state, which is what the scraper actually uses.
+    state: 'Multi',
+    sites: 2
   },
   'EventActions-Libraries': {
     file: './scraper-eventactions-libraries-VA.js',

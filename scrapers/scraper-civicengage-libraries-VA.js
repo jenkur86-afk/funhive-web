@@ -32,6 +32,120 @@ const { generateEventId, generateEventIdFromDetails } = require('./event-id-help
 const { logScraperResult } = require('./scraper-logger');
 const { normalizeDateString } = require('./date-normalization-helper');
 const { linkEventToVenue } = require('./venue-matcher');
+const ical = require('node-ical');
+
+/**
+ * Per-site slug for scraper_name, derived from the site's own hostname — never
+ * from a display name (CLAUDE.md, "Scraper Naming"). colonialheightsva.gov ->
+ * "colonialheightsva", www.wcpltn.org -> "wcpltn".
+ */
+function siteSlug(url) {
+  try {
+    return new URL(url).hostname
+      .replace(/^www\./, '')
+      .replace(/\.(gov|org|com|net|us)$/, '')
+      .replace(/[^a-z0-9-]/gi, '')
+      .toLowerCase();
+  } catch (err) {
+    return 'unknown';
+  }
+}
+
+/**
+ * CivicPlus packs a whole postal address into the iCal LOCATION field, in the
+ * shape "<Venue> > <Room> - <Street> <City> <ST> <ZIP>". Stored raw, that lands
+ * an address inside the venue column and re-creates the room-suffix problem
+ * cleanVenueName() exists to prevent (it does not recognise this format).
+ * Splitting it also recovers a real street address, so events geocode to the
+ * branch instead of falling back to the county centroid.
+ */
+function splitCivicPlusLocation(raw) {
+  const s = String(raw || '').replace(/\s+/g, ' ').trim();
+  if (!s) return { venue: '', address: '' };
+
+  const dash = s.indexOf(' - ');
+  let venuePart = dash === -1 ? s : s.slice(0, dash).trim();
+  const address = dash === -1 ? '' : s.slice(dash + 3).trim();
+
+  // Drop the room/department segment after ">".
+  const gt = venuePart.indexOf('>');
+  if (gt !== -1) venuePart = venuePart.slice(0, gt).trim();
+
+  return { venue: venuePart, address };
+}
+
+/**
+ * CivicPlus exposes a per-category iCal feed at
+ *   /common/modules/iCalendar/iCalendar.aspx?catID=<N>&feed=calendar
+ * which is far more robust than scraping the AJAX calendar DOM — the dates are
+ * structured, so there is nothing to mis-select. Only ONE catID works per
+ * request (catID=0, catID=All and comma-separated lists all fail), so an entry
+ * declares its category IDs and we fetch them in sequence.
+ *
+ * Used as a fallback when DOM extraction yields nothing, which is the case on
+ * sites whose markup does not use the .monthItem/.listItem classes this
+ * scraper's selectors were written against.
+ */
+async function fetchIcalEvents(library) {
+  const out = [];
+  const seen = new Set();
+  let base;
+  try {
+    base = new URL(library.url).origin;
+  } catch (err) {
+    return out;
+  }
+
+  for (const catID of library.icalCatIDs) {
+    const feedUrl = `${base}/common/modules/iCalendar/iCalendar.aspx?catID=${catID}&feed=calendar`;
+    try {
+      const parsed = await ical.async.fromURL(feedUrl);
+      const vevents = Object.values(parsed).filter(e => e.type === 'VEVENT');
+      let kept = 0;
+
+      for (const ev of vevents) {
+        if (!ev.start) continue;
+        const start = new Date(ev.start);
+        if (isNaN(start.getTime())) continue;
+
+        const title = String(ev.summary || '').trim();
+        if (!title) continue;
+
+        // Collapse the same event appearing in several branch categories.
+        const key = `${title.toLowerCase()}|${start.toISOString().slice(0, 10)}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+
+        // DO NOT use ev.url — CivicPlus sets it to the FEED url, identical for
+        // every event in the category. _stableEventId hashes the URL first, so
+        // that collapses the whole feed onto one row id: measured here as 387
+        // events becoming 8 imports and 346 phantom "duplicates". The VEVENT
+        // uid is unique and is the site's own EID, so it yields both a distinct
+        // id and a real per-event link.
+        const uid = String(ev.uid || '').trim();
+        const eventUrl = /^\d+$/.test(uid) ? `${base}/calendar.aspx?EID=${uid}` : '';
+
+        const { venue, address } = splitCivicPlusLocation(ev.location);
+
+        out.push({
+          name: title,
+          eventDate: start.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+          venue,
+          address,
+          description: String(ev.description || '').trim().substring(0, 1000),
+          url: eventUrl,
+          audience: ''
+        });
+        kept++;
+      }
+      console.log(`   📅 iCal catID=${catID}: ${vevents.length} in feed, ${kept} kept`);
+    } catch (err) {
+      console.log(`   ⚠️  iCal catID=${catID} failed: ${err.message}`);
+    }
+  }
+
+  return out;
+}
 
 // Library Systems using CivicEngage
 const LIBRARY_SYSTEMS = [
@@ -66,6 +180,30 @@ const LIBRARY_SYSTEMS = [
     website: 'https://colonialheightsva.gov/185/Library',
     city: 'Colonial Heights',
     zipCode: '23834'
+  },
+  {
+    // Added 2026-08-11. Was configured in WordPress-TN, where it returned 0 on
+    // every run for a structural reason: wcpltn.org is CivicPlus (.aspx), not
+    // WordPress, so no amount of selector work in that family could ever reach
+    // it. Verified live — the calendar lists real dated events across the
+    // system's branches, and the whole site IS the library, so the unfiltered
+    // calendar is already the library calendar and needs no CID filter.
+    // Branch CIDs if a narrower feed is ever wanted: Bethesda 22, College Grove
+    // 23, Fairview 25, Franklin Children's 28, Franklin Reference 14, Franklin
+    // Teen 30, Leiper's Fork 26, Nolensville 27.
+    // County is Williamson, NOT "Franklin County" as the old WordPress-TN entry
+    // had it — that was the fabricated-county defect and its centroid sits ~80
+    // miles south of the actual library.
+    name: 'Williamson County Public Library',
+    url: 'https://www.wcpltn.org/calendar.aspx',
+    county: 'Williamson',
+    state: 'TN',
+    website: 'https://www.wcpltn.org/',
+    city: 'Franklin',
+    zipCode: '37064',
+    // This theme matches none of the DOM selectors above, so it uses the iCal
+    // feed. One catID per request — see fetchIcalEvents.
+    icalCatIDs: [14, 22, 23, 25, 26, 27, 28, 30]
   },
   // Culpeper County Library: MOVED to cclva.org — no longer on CivicEngage
   // Now scraped by WordPress-VA scraper at https://www.cclva.org/events/upcoming
@@ -200,7 +338,7 @@ async function scrapeLibraryEvents(library, browser) {
     console.log(`   Page: "${pageTitle}" | monthItem:${diagnostics.monthItems} listItem:${diagnostics.listItems} calItem:${diagnostics.calItems} tableEvents:${diagnostics.tableEvents} links:${diagnostics.anyLinks}`);
 
     // Extract events from the page - CivicEngage calendar structure
-    const events = await page.evaluate(() => {
+    let events = await page.evaluate(() => {
       const results = [];
 
       // CivicEngage uses .monthItem or similar containers for calendar events
@@ -340,6 +478,15 @@ async function scrapeLibraryEvents(library, browser) {
 
     console.log(`   Found ${events.length} events`);
 
+    // The DOM selectors here were written against one CivicPlus theme and match
+    // nothing on others — Williamson County TN renders a real calendar with 239
+    // links and still yielded monthItem:0 listItem:0 calItem:0. Fall back to the
+    // site's own iCal feed, which is structured and theme-independent.
+    if (events.length === 0 && Array.isArray(library.icalCatIDs) && library.icalCatIDs.length) {
+      events = await fetchIcalEvents(library);
+      console.log(`   Found ${events.length} events via iCal feed`);
+    }
+
     // Process each event
     for (const event of events) {
       try {
@@ -410,7 +557,7 @@ async function scrapeLibraryEvents(library, browser) {
           moreInfo: event.audience || '',
           location: {
             name: event.venue || library.name,
-            address: '',
+            address: event.address || '',
             city: library.city,
             state: library.state,
             zipCode: library.zipCode,
@@ -420,10 +567,19 @@ async function scrapeLibraryEvents(library, browser) {
             website: event.url || library.website,
             phone: ''
           },
-          url: event.url || library.website,
+          // Deliberately NOT falling back to library.website: that is one shared
+          // value across every event, and _stableEventId hashes the URL first,
+          // so the fallback would collapse the whole library onto a single row.
+          // An empty url lets the id fall through to name|eventDate|venue.
+          url: event.url || '',
           metadata: {
             source: 'CivicEngage Scraper',
-            scraperName: 'CivicEngage-VA',
+            // Was 'CivicEngage-VA', which matches no registry key and so could
+            // not be joined back to the registry by any audit. Registry key is
+            // CivicEngage-Libraries and this covers more than one site, so it
+            // takes the required <registryKey>-<siteSlug> form.
+            scraperName: `CivicEngage-Libraries-${siteSlug(library.url)}`,
+            sourceUrl: library.url,
             sourceName: library.name,
             county: library.county,
             addedDate: admin.firestore.FieldValue.serverTimestamp()

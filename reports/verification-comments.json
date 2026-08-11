@@ -840,8 +840,8 @@
   "population": "zero"
  },
  "WordPress-TN|||Williamson County Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "Site lists real dated events across 6 branches: STEAM Club and Toddler Time Aug 11, Minecraft Club Aug 12, Story Time Aug 13/20; scraper returned 0",
+  "verdict": "MATCHES",
+  "comment": "FIXED 2026-08-11: wcpltn.org is CivicPlus not WordPress, so this family could never extract it. Moved to CivicEngage-Libraries with an iCal feed path. Verified live, 343 events.",
   "population": "zero"
  },
  "WordPress-TN|||Rutherford County Library System": {
