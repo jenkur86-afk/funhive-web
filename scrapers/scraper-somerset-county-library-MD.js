@@ -162,18 +162,30 @@ async function scrapeSomersetEvents() {
     await page.setRequestInterception(true);
 
     page.on('request', request => {
-      request.continue();
+      // Interception can race with navigation teardown; a double-handled request
+      // throws and would otherwise surface as an unhandled rejection.
+      try { request.continue(); } catch (err) { /* already handled */ }
     });
+
+    // The embedded Google Calendar widgets POLL, so the same calendar URL comes
+    // back many times per page. Keying by URL bounds this to one entry per
+    // calendar instead of letting the array grow without limit — which on
+    // 2026-08-10 made the run never finish (see the snapshot note below).
+    const seenApiUrls = new Set();
+    const MAX_API_RESPONSES = 200;
 
     page.on('response', async response => {
       const url = response.url();
       // Look for calendar-related API calls or JSON responses
       if (url.includes('calendar') || url.includes('event') || url.includes('google') ||
           url.includes('.json') || url.includes('/api/')) {
+        if (seenApiUrls.has(url)) return;
+        if (apiResponses.length >= MAX_API_RESPONSES) return;
         try {
           const contentType = response.headers()['content-type'] || '';
           if (contentType.includes('application/json')) {
             const data = await response.json();
+            seenApiUrls.add(url);
             apiResponses.push({ url, data });
             console.log(`   📡 Found API call: ${url.substring(0, 80)}...`);
           }
@@ -199,6 +211,14 @@ async function scrapeSomersetEvents() {
       }
     }
 
+    // Detach the listeners before processing. The calendar widgets keep polling
+    // in the background for as long as the page is open, and the loop below used
+    // to iterate `apiResponses` directly — a for...of over an array that the
+    // still-attached handler was appending to never terminates. That is what hung
+    // the 2026-08-10 run for 16+ minutes with no completion line.
+    page.removeAllListeners('response');
+    page.removeAllListeners('request');
+
     console.log(`   📡 Captured ${apiResponses.length} API responses across ${PROGRAM_PAGES.length} pages\n`);
 
     // Try to extract events from API responses first (Google Calendar)
@@ -206,7 +226,11 @@ async function scrapeSomersetEvents() {
     let events = [];
     let totalItemsFound = 0;
 
-    for (const apiResp of apiResponses) {
+    // Snapshot as a second guard, so a late in-flight handler cannot extend the
+    // sequence being iterated even if detaching missed one.
+    const capturedResponses = apiResponses.slice();
+
+    for (const apiResp of capturedResponses) {
       try {
         // Look for Google Calendar API response
         if ((apiResp.url.includes('google.com/calendar') || apiResp.url.includes('somelibrary')) &&
