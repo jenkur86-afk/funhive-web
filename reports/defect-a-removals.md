@@ -470,3 +470,51 @@ paid for most.
 | Wells Village | Wells | VT | `wellslibrary.org` | evidence points to ME but not conclusively (page evidence points to ME (score 9 vs runner-up - 0)) |
 | Bennington Free | Bennington | VT | `benningtonlibrary.org` | evidence points to NE but not conclusively (page evidence points to NE (score 9 vs runner-up NY 1)) |
 | G. E.P. Dodge Library | Bennington | NH | `benningtonlibrary.org` | evidence points to NE but not conclusively (page evidence points to NE (score 9 vs runner-up NY 1)) |
+
+
+## Removed 2026-08-11 — acted on the "identified but not acted on" backlog
+
+These were listed as known collisions on 2026-08-09 but left in config. They became urgent
+once the 2026-08-11 date-extraction fixes made these scrapers able to read pages they used to
+fail on: a working extraction against a wrong-state host imports that state's events under the
+wrong name. Each is a RECORDED COVERAGE GAP, restorable once a real URL is verified.
+
+| Library | City | State | Old URL | Why |
+|---|---|---|---|---|
+| Oxford Public Library | Oxford | PA | `oxfordlibrary.org` | host serves WI — removed 2026-08-11 |
+| Berea Branch Library | Oxford | NC | `oxfordlibrary.org` | host serves WI — removed 2026-08-11 |
+| Oxford Public Library | Oxford | NJ | `oxfordlibrary.org` | host serves WI — removed 2026-08-11 |
+| Oxford Public Library | Oxford | CT | `oxfordlibrary.org` | host serves WI — removed 2026-08-11 |
+| Oxford Public Library | Oxford | AL | `oxfordlibrary.org` | host serves WI — removed 2026-08-11 |
+| Canton Branch Library | Canton | NC | `cantonlibrary.org` | host serves PA — removed 2026-08-11 |
+| Canton Public Library | Canton | MA | `cantonlibrary.org` | host serves PA — removed 2026-08-11 |
+| Canton Public Library | Canton | CT | `cantonlibrary.org` | host serves PA — removed 2026-08-11 |
+| Harris County Public Library | Hamilton | GA | `hamiltonlibrary.org` | host serves NY — removed 2026-08-11 |
+| Clyde Nix Public Library | Hamilton | AL | `hamiltonlibrary.org` | host serves NY — removed 2026-08-11 |
+| Pembroke Public Library | Pembroke | GA | `pembrokelibrary.org` | host serves ME — removed 2026-08-11 |
+| Pembroke Public Library | Pembroke | NC | `pembrokelibrary.org` | host serves ME — removed 2026-08-11 |
+| Pembroke Public Library | Pembroke | MA | `pembrokelibrary.org` | host serves ME — removed 2026-08-11 |
+| Stewart County Public Library | Dover | TN | `doverlibrary.org` | host serves OH — removed 2026-08-11 |
+| Rabun Co. Public Library | Clayton | GA | `claytonlibrary.org` | host serves CA — removed 2026-08-11 |
+| Hocutt Ellington Memorial Library | Clayton | NC | `claytonlibrary.org` | host serves CA — removed 2026-08-11 |
+| Prospect Public Library | Prospect | CT | `prospectlibrary.org` | host serves PA — removed 2026-08-11 |
+| Stamford Public Library | Stamford | CT | `stamfordlibrary.org` | host serves VT — removed 2026-08-11 |
+| Maysville Public Library | Maysville | GA | `maysvillelibrary.org` | host serves MO — removed 2026-08-11 |
+| Maysville Public Library | Maysville | NC | `maysvillelibrary.org` | host serves MO — removed 2026-08-11 |
+| Monroe County Public Library | Monroeville | AL | `monroevillelibrary.org` | host serves PA — removed 2026-08-11 |
+| Tyrone Public Library | Tyrone | GA | `tyronelibrary.org` | host serves PA — removed 2026-08-11 |
+| Roddenbery Memorial Library System | Cairo | GA | `cairolibrary.org` | host serves NY — removed 2026-08-11 |
+| Hall Memorial Library | Ellington | CT | `ellingtonlibrary.org` | host serves NY — removed 2026-08-11 |
+| Webster County Library | Preston | GA | `prestonpubliclibrary.org` | host serves CT — removed 2026-08-11 |
+| Hampstead Branch Library | Hampstead | NC | `hampsteadlibrary.org` | host serves NH — removed 2026-08-11 |
+| Henderson County Public Library | Hendersonville | NC | `youseemore.com` | host serves TN — removed 2026-08-11 |
+| Florence Gallier Library | Magnolia | NC | `magnolialibrary.org` | host serves MA — removed 2026-08-11 |
+| Levi E.Coe Library | Middlefield | CT | `middlefieldlibrary.org` | host serves MA — removed 2026-08-11 |
+| Palmer Public Library | Palmer | TN | `palmerlibrary.org` | host serves MA — removed 2026-08-11 |
+| Cordova Branch Library | Cordova | TN | `cordovalibrary.org` | host serves AK — removed 2026-08-11 |
+| Cordova Public Library | Cordova | AL | `cordovalibrary.org` | host serves AK — removed 2026-08-11 |
+| Wells Village | Wells | VT | `wellslibrary.org` | host serves ME — removed 2026-08-11 |
+| Liberty Public Library |  | NY | `` | host serves TX (not a library — Liberty Library Project, a political nonprofit in Conroe TX) — removed 2026-08-11 |
+| Liberty Public Library |  | NC | `` | host serves TX (not a library — Liberty Library Project, a political nonprofit in Conroe TX) — removed 2026-08-11 |
+| Liberty Public Library |  | MS | `` | host serves TX (not a library — Liberty Library Project, a political nonprofit in Conroe TX) — removed 2026-08-11 |
+| Macon County Public Library |  | TN | `` | host serves dead — 301s off-host to running-care.com, a French running blog — removed 2026-08-11 |
