@@ -45,8 +45,8 @@ const TODAY = new Date().toISOString().slice(0, 10);
  */
 const STALE_METRICS = {
   nameConformance: {
-    value: 46.4, unit: '%', measured: '2026-08-09',
-    detail: '246 of 530 distinct scraper_name values conform',
+    value: 47.2, unit: '%', measured: '2026-08-10',
+    detail: '298 of 632 distinct scraper_name values conform (33 EXACT + 265 PREFIXED). Both the numerator and the denominator grew — the MacaroniKid per-site naming fix is minting many new conforming names, so absolute drift rose 291→334 while the share improved',
     refresh: 'node scripts/check-scraper-names.js',
   },
   sourceUrlCoverage: {

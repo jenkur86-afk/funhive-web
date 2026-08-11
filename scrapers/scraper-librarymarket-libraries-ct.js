@@ -28,7 +28,10 @@ const LIBRARIES = [
   },
   {
     name: 'New Britain Public Library',
-    eventsUrl: 'https://www.newbritainlibrary.org/events/month',
+    // 2026-08-10: the /events/month grid renders day cells with no event titles,
+    // so this returned 0 while the library had real events. /events/upcoming lists
+    // them properly — same view the working Ferguson entry above uses.
+    eventsUrl: 'https://www.newbritainlibrary.org/events/upcoming',
     city: 'New Britain',
     state: 'CT',
     zipCode: '06051'
