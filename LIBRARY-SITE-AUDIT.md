@@ -3986,3 +3986,20 @@ Group 1 rotation day. Built with the new scripts/build-library-site-audit.js (st
 | Windham Town | VT | WordPress-VT | 2 |
 | Windsor Public | VT | WordPress-VT | 0 |
 | Woodbury Community | VT | WordPress-VT | 23 |
+
+## 2026-08-11
+
+No full 3-day-rotation group ran today for the non-MacaroniKid library families — today's activity was a manual WordPress-NC/CT/TN debugging session (see SCRAPER-FIX-LOG.jsonl, 6 entries dated 2026-08-11) that invoked scrapers individually via `local-scraper-runner.js` rather than `--group N`, so per-site `\ud83d\udccd {library name}` breakdown lines never reached `scraper-stdout.log` (that file was last touched 08:36 AM and these runs continued past that). Falling back to each scraper's aggregate FOUND from `scraper-run-2026-08-11.log`, using its last run of the day per Step 3b's per-family rules. These are multi-site scrapers (WordPress-NC/CT/TN, CivicEngage-Libraries) reported as one row each since no per-library breakdown was recoverable today — this is a data-availability gap, not a size-based aggregation.
+
+| Library Website | State | Scraper | Events Found |
+|---|---|---|---|
+| WordPress-NC libraries (aggregate, no per-site breakdown available today) | NC | WordPress-NC | 345 |
+| WordPress-CT libraries (aggregate, no per-site breakdown available today) | CT | WordPress-CT | 1400 |
+| WordPress-TN libraries (aggregate, no per-site breakdown available today) | TN | WordPress-TN | 974 |
+| Abbe Regional Library (Pressville) | GA | WordPress-Abbe-Regional | 17 |
+| Dorchester County Library | MD | Dorchester-County | 12 |
+| Pratt Library (Enoch Pratt Free Library system) | MD | Pratt-Library | 2479 |
+| Somerset County Library | MD | Somerset-County | 401 |
+| LibraryMarket-CT libraries (aggregate, no per-site breakdown available today) | CT | LibraryMarket-CT | 198 |
+| Williamson County Public Library system (wcpltn — aggregate, no per-site breakdown available today) | TN | CivicEngage-Libraries-wcpltn | 354 |
+
