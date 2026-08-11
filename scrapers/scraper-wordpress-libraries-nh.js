@@ -76,7 +76,8 @@ const LIBRARIES = [
   { name: 'Chamberlin Free Public Library', url: 'https://www.greenvillelibrary.org', eventsUrl: 'https://www.greenvillelibrary.org/events', city: 'Greenville', state: 'NH', zipCode: '03048', county: 'Hillsborough'},
   { name: 'Hampstead Public Library', url: 'https://www.hampsteadlibrary.org/', eventsUrl: 'https://www.hampsteadlibrary.org/', city: 'Hampstead', state: 'NH', zipCode: '03841', county: 'Rockingham'},
   { name: 'Hampton Falls Free Library', url: 'https://hamptonfallslibrary.org/', eventsUrl: 'https://hamptonfallslibrary.org/calendar/', city: 'Hampton Falls', state: 'NH', zipCode: '03844', county: 'Rockingham'},
-  { name: 'Hancock Town Library', url: 'https://hancocklibrary.org/', eventsUrl: 'https://hancocklibrary.org/', city: 'Hancock', state: 'NH', zipCode: '03449', county: 'Hillsborough'},
+  // URL corrected 2026-08-11 (was hancocklibrary.org): 25 Main Street Hancock NH 03449, phone 603-525-4411, on the Town of Hancock NH official site
+  { name: 'Hancock Town Library', url: 'https://www.hancocknh.org/residents/library/index.php', eventsUrl: 'https://www.hancocknh.org/residents/library/index.php', city: 'Hancock', state: 'NH', zipCode: '03449', county: 'Hillsborough'},
   { name: 'Haverhill Library Association', url: 'https://www.haverhilllibrary.org', eventsUrl: 'https://www.haverhilllibrary.org/events', city: 'Haverhill', state: 'NH', zipCode: '03765', county: 'Grafton'},
   { name: 'Hebron Public Library', url: 'https://www.hebronlibrary.org', eventsUrl: 'https://www.hebronlibrary.org/events', city: 'Hebron', state: 'NH', zipCode: '03241', county: 'Grafton'},
   { name: 'Hill Public Library', url: 'https://www.hilllibrary.org', eventsUrl: 'https://www.hilllibrary.org/events', city: 'Hill', state: 'NH', zipCode: '03243', county: 'Merrimack'},

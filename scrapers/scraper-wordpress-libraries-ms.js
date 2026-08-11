@@ -67,7 +67,8 @@ const LIBRARIES = [
   { name: 'Morton Public Library', url: 'https://mortonlibrary.org/', eventsUrl: 'https://mortonlibrary.org/', city: 'Morton', state: 'MS', zipCode: '00000', county: 'Scott'},
   { name: 'J. Elliott Mcmullan Library', url: 'https://www.newtonlibrary.org', eventsUrl: 'https://www.newtonlibrary.org/events', city: 'Newton', state: 'MS', zipCode: '00000', county: 'Newton County'},
   { name: 'Oakland Public Library', url: 'https://www.oaklandlibrary.org', eventsUrl: 'https://www.oaklandlibrary.org/events', city: 'Oakland', state: 'MS', zipCode: '00000', county: 'Yalobusha'},
-  { name: 'Lafayette County-Oxford Public Library', url: 'https://oxfordlibrary.org/', eventsUrl: 'https://oxfordlibrary.org/', city: 'Oxford', state: 'MS', zipCode: '00000', county: 'Lafayette'},
+  // URL corrected 2026-08-11 (was oxfordlibrary.org): 401 Bramlett Blvd Oxford MS, phone 662-234-5751; branch of First Regional Library system site
+  { name: 'Lafayette County-Oxford Public Library', url: 'https://www.first.lib.ms.us', eventsUrl: 'https://www.first.lib.ms.us', city: 'Oxford', state: 'MS', zipCode: '00000', county: 'Lafayette'},
   { name: 'Clarke County-Quitman Public Library', url: 'https://www.quitmanlibrary.org/', eventsUrl: 'https://www.quitmanlibrary.org/', city: 'Quitman', state: 'MS', zipCode: '00000', county: 'Quitman County'},
   { name: 'Richland Public Library', url: 'https://www.richlandlibrary.org/', eventsUrl: 'https://www.richlandlibrary.org/Calendar', city: 'Richland', state: 'MS', zipCode: '00000', county: 'Rankin'},
   { name: 'Ripley Public Library', url: 'https://ripleylibrary.org/', eventsUrl: 'https://ripleylibrary.org/', city: 'Ripley', state: 'MS', zipCode: '00000', county: 'Tippah'},

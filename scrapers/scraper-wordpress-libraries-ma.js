@@ -145,7 +145,8 @@ const LIBRARIES = [
   { name: 'Norton Public Library', url: 'https://nortonlibrary.org/', eventsUrl: 'https://nortonlibrary.org/', city: 'Norton', state: 'MA', zipCode: '02766', county: 'Bristol'},
   { name: 'Morrill Memorial Library', url: 'https://norwoodlibrary.org/', eventsUrl: 'https://norwoodlibrary.org/', city: 'Norwood', state: 'MA', zipCode: '02062', county: 'Norfolk'},
   { name: 'Oak Bluffs Public Library', url: 'https://www.oakbluffslibrary.org', eventsUrl: 'https://www.oakbluffslibrary.org/events', city: 'Oak Bluffs', state: 'MA', zipCode: '02557', county: 'Dukes'},
-  { name: 'Oxford Free Public Library', url: 'https://oxfordlibrary.org/', eventsUrl: 'https://oxfordlibrary.org/', city: 'Oxford', state: 'MA', zipCode: '01540', county: 'Worcester'},
+  // URL corrected 2026-08-11 (was oxfordlibrary.org): 339 Main Street Oxford MA 01540, phone 508-987-6003
+  { name: 'Oxford Free Public Library', url: 'https://oxfordmapubliclibrary.org', eventsUrl: 'https://oxfordmapubliclibrary.org', city: 'Oxford', state: 'MA', zipCode: '01540', county: 'Worcester'},
   { name: 'Palmer Public Library', url: 'https://www.palmerlibrary.org', eventsUrl: 'https://www.palmerlibrary.org/events', city: 'Palmer', state: 'MA', zipCode: '01069', county: 'Hampden'},
   { name: 'Richards Memorial Library', url: 'https://paxtonflorida.com/', eventsUrl: 'https://paxtonflorida.com/library/', city: 'Paxton', state: 'MA', zipCode: '01612', county: 'Worcester'},
   { name: 'Peabody Institute Library', url: 'https://peabodylibrary.org/', eventsUrl: 'https://peabodylibrary.org/calendar/', city: 'Peabody', state: 'MA', zipCode: '01960', county: 'Essex'},
@@ -154,7 +155,8 @@ const LIBRARIES = [
   { name: 'Peru Library', url: 'https://www.perulibrary.org', eventsUrl: 'https://www.perulibrary.org/events', city: 'Peru', state: 'MA', zipCode: '01235', county: 'Berkshire'},
   { name: 'Petersham Memorial Library', url: 'https://www.petershamlibrary.org', eventsUrl: 'https://www.petershamlibrary.org/events', city: 'Petersham', state: 'MA', zipCode: '01366', county: 'Worcester'},
   { name: 'Berkshire Athenaeum', url: 'https://www.pittsfieldlibrary.org/', eventsUrl: 'https://www.pittsfieldlibrary.org/', city: 'Pittsfield', state: 'MA', zipCode: '01201', county: 'Berkshire'},
-  { name: 'Shaw Memorial Library', url: 'https://www.plainfieldlibrary.org', eventsUrl: 'https://www.plainfieldlibrary.org/events', city: 'Plainfield', state: 'MA', zipCode: '01070', county: 'Hampshire'},
+  // URL corrected 2026-08-11 (was plainfieldlibrary.org): 312 Main St Plainfield MA 01070, phone 413-634-5406, on the Town of Plainfield MA site
+  { name: 'Shaw Memorial Library', url: 'https://www.plainfield-ma.us/shaw-memorial-library', eventsUrl: 'https://www.plainfield-ma.us/shaw-memorial-library', city: 'Plainfield', state: 'MA', zipCode: '01070', county: 'Hampshire'},
   { name: 'Plainville Public Library', url: 'https://www.plainvillelibrary.org', eventsUrl: 'https://www.plainvillelibrary.org/events', city: 'Plainville', state: 'MA', zipCode: '02762', county: 'Norfolk'},
   { name: 'Plympton Public Library', url: 'https://plymptonpubliclibrary.org/', eventsUrl: 'https://plymptonpubliclibrary.org/events-calendar/', city: 'Plympton', state: 'MA', zipCode: '02367', county: 'Plymouth'},
   { name: 'Provincetown Public Library', url: 'https://www.provincetownlibrary.org', eventsUrl: 'https://www.provincetownlibrary.org/events', city: 'Provincetown', state: 'MA', zipCode: '02657', county: 'Barnstable'},
@@ -207,7 +209,8 @@ const LIBRARIES = [
   { name: 'West Falmouth Library, Inc.', url: 'https://www.westfalmouthlibrary.org', eventsUrl: 'https://www.westfalmouthlibrary.org/events', city: 'West Falmouth', state: 'MA', zipCode: '02540', county: 'Barnstable'},
   { name: 'G. A. R. Memorial Library', url: 'https://westnewburylibrary.org/', eventsUrl: 'https://westnewburylibrary.org/', city: 'West Newbury', state: 'MA', zipCode: '01985', county: 'Essex'},
   { name: 'Westborough Public Library', url: 'https://www.westboroughlibrary.org/', eventsUrl: 'https://www.westboroughlibrary.org/', city: 'Westborough', state: 'MA', zipCode: '01581', county: 'Worcester'},
-  { name: 'Westfield Athenaeum', url: 'https://www.westfieldlibrary.org', eventsUrl: 'https://www.westfieldlibrary.org/events', city: 'Westfield', state: 'MA', zipCode: '01085', county: 'Hampden'},
+  // URL corrected 2026-08-11 (was westfieldlibrary.org): fetched site: 6 Elm Street Westfield MA 01085-2997, phone 413-568-7833
+  { name: 'Westfield Athenaeum', url: 'https://www.westath.org', eventsUrl: 'https://westath.libcal.com/calendar/events', city: 'Westfield', state: 'MA', zipCode: '01085', county: 'Hampden'},
   { name: 'J. V. Fletcher Library', url: 'https://www.westfordlibrary.org', eventsUrl: 'https://www.westfordlibrary.org/events', city: 'Westford', state: 'MA', zipCode: '01886', county: 'Middlesex'},
   { name: 'Westhampton Memorial Library', url: 'https://www.westhamptonlibrary.org', eventsUrl: 'https://www.westhamptonlibrary.org/events', city: 'Westhampton', state: 'MA', zipCode: '01027', county: 'Hampshire'},
   { name: 'Forbush Memorial Library', url: 'https://www.westminsterlibrary.org', eventsUrl: 'https://www.westminsterlibrary.org/events', city: 'Westminster', state: 'MA', zipCode: '01473', county: 'Worcester'},
@@ -217,7 +220,8 @@ const LIBRARIES = [
   { name: 'Whitinsville Social Library', url: 'https://www.whitinsvillelibrary.org', eventsUrl: 'https://www.whitinsvillelibrary.org/events', city: 'Whitinsville', state: 'MA', zipCode: '01588', county: 'Worcester'},
   { name: 'Wilbraham Public Library', url: 'https://www.wilbrahamlibrary.org', eventsUrl: 'https://www.wilbrahamlibrary.org/events', city: 'Wilbraham', state: 'MA', zipCode: '01095', county: 'Hampden'},
   { name: 'David Joyce Milne Public Library', url: 'https://www.williamstownlibrary.org', eventsUrl: 'https://www.williamstownlibrary.org/events', city: 'Williamstown', state: 'MA', zipCode: '01267', county: 'Berkshire'},
-  { name: 'Wilmington Memorial Library', url: 'https://www.wilmingtonlibrary.org', eventsUrl: 'https://www.wilmingtonlibrary.org/events', city: 'Wilmington', state: 'MA', zipCode: '01887', county: 'Middlesex'},
+  // URL corrected 2026-08-11 (was wilmingtonlibrary.org): 175 Middlesex Ave Wilmington MA 01887, phone 978-658-2967; events on Communico which this codebase already scrapes
+  { name: 'Wilmington Memorial Library', url: 'https://wilmlibrary.org', eventsUrl: 'https://wilmlibrary.libnet.info/events', city: 'Wilmington', state: 'MA', zipCode: '01887', county: 'Middlesex'},
   { name: 'Beals Memorial Library', url: 'https://winchendonlibrary.org/', eventsUrl: 'https://winchendonlibrary.org/', city: 'Winchendon', state: 'MA', zipCode: '01475', county: 'Worcester'},
   { name: 'Winchester Public Library', url: 'https://www.winchesterlibrary.org', eventsUrl: 'https://www.winchesterlibrary.org/events', city: 'Winchester', state: 'MA', zipCode: '01890', county: 'Middlesex'},
   { name: 'Windsor Free Public Library', url: 'https://www.windsorlibrary.org', eventsUrl: 'https://www.windsorlibrary.org/events', city: 'Windsor', state: 'MA', zipCode: '01270', county: 'Berkshire'},

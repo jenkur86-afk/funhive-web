@@ -61,7 +61,8 @@ const LIBRARIES = [
   { name: 'Arcade Free Library', url: 'https://www.arcadelibrary.org', eventsUrl: 'https://www.arcadelibrary.org/events', city: 'Arcade', state: 'NY', zipCode: '14009', county: 'Wyoming'},
   { name: 'Ardsley Public Library', url: 'https://www.ardsleylibrary.org', eventsUrl: 'https://www.ardsleylibrary.org/events', city: 'Ardsley', state: 'NY', zipCode: '10502', county: 'Westchester'},
   { name: 'Queens Borough Public Library - Astoria', url: 'https://www.astoria.gov/', eventsUrl: 'https://www.astoria.gov/calendar?deptid=6', city: 'Astoria', state: 'NY', zipCode: '11102', county: 'Queens'},
-  { name: 'D.R. Evarts Library', url: 'https://www.athenslibrary.org', eventsUrl: 'https://www.athenslibrary.org/events', city: 'Athens', state: 'NY', zipCode: '12015', county: 'Greene'},
+  // URL corrected 2026-08-11 (was athenslibrary.org): 80 Second Street Athens NY 12015, phone 518-945-1417
+  { name: 'D.R. Evarts Library', url: 'https://www.drevartslibrary.org', eventsUrl: 'https://www.drevartslibrary.org/library-calendar', city: 'Athens', state: 'NY', zipCode: '12015', county: 'Greene'},
   { name: 'Seymour Public Library District', url: 'https://auburnlibrary.org/', eventsUrl: 'https://auburnlibrary.org/', city: 'Auburn', state: 'NY', zipCode: '13021', county: 'Cayuga'},
   { name: 'Aurora Free Library', url: 'https://www.auroralibrary.org', eventsUrl: 'https://www.auroralibrary.org/events', city: 'Aurora', state: 'NY', zipCode: '13026', county: 'Cayuga'},
   { name: 'Babylon School District Public Library', url: 'https://babylonlibrary.org/', eventsUrl: 'https://babylonlibrary.org/', city: 'Babylon', state: 'NY', zipCode: '11702', county: 'Suffolk'},
@@ -295,11 +296,13 @@ const LIBRARIES = [
   { name: 'Ossining Public Library', url: 'https://ossininglibrary.org/', eventsUrl: 'https://ossininglibrary.org/', city: 'Ossining', state: 'NY', zipCode: '10562', county: 'Westchester'},
   { name: 'Oswego School District Public Library', url: 'https://oswego.mykansaslibrary.org/', eventsUrl: 'https://oswego.mykansaslibrary.org/', city: 'Oswego', state: 'NY', zipCode: '13126', county: 'Oswego County'},
   { name: 'Edith B. Ford Memorial Library', url: 'https://www.ovidlibrary.org', eventsUrl: 'https://www.ovidlibrary.org/events', city: 'Ovid', state: 'NY', zipCode: '14521', county: 'Seneca'},
-  { name: 'Oxford Memorial Library', url: 'https://oxfordlibrary.org/', eventsUrl: 'https://oxfordlibrary.org/', city: 'Oxford', state: 'NY', zipCode: '13830', county: 'Chenango'},
+  // URL corrected 2026-08-11 (was oxfordlibrary.org): 8 Fort Hill Park Oxford NY 13830, phone 607-843-6146
+  { name: 'Oxford Memorial Library', url: 'https://oxfordmemoriallibrary.org', eventsUrl: 'https://oxfordmemoriallibrary.org', city: 'Oxford', state: 'NY', zipCode: '13830', county: 'Chenango'},
   { name: 'Oyster Bay-East Norwich Public Library', url: 'https://oysterbaylibrary.org/', eventsUrl: 'https://oysterbaylibrary.org/', city: 'Oyster Bay', state: 'NY', zipCode: '11771', county: 'Nassau'},
   { name: 'Palisades Free Library', url: 'https://palisadeslibrary.org/', eventsUrl: 'https://palisadeslibrary.org/', city: 'Palisades', state: 'NY', zipCode: '10964', county: 'Rockland'},
   { name: 'Parish Public Library', url: 'https://www.parishlibrary.org', eventsUrl: 'https://www.parishlibrary.org/events', city: 'Parish', state: 'NY', zipCode: '13131', county: 'Oswego'},
-  { name: 'Patterson Library', url: 'https://pattersonlibrary.org/', eventsUrl: 'https://pattersonlibrary.org/calendar/', city: 'Patterson', state: 'NY', zipCode: '12563', county: 'Putnam'},
+  // URL corrected 2026-08-11 (was pattersonlibrary.org): fetched site: 40 S. Portage St Westfield NY 14787, phone 716-326-2154
+  { name: 'Patterson Library', url: 'https://pattersonlib.org', eventsUrl: 'https://pattersonlib.org/anchor-links/adultprograms/calendar/', city: 'Patterson', state: 'NY', zipCode: '12563', county: 'Putnam'},
   { name: 'Pawling Free Library', url: 'https://www.pawlinglibrary.org', eventsUrl: 'https://www.pawlinglibrary.org/events', city: 'Pawling', state: 'NY', zipCode: '12564', county: 'Dutchess'},
   { name: 'Pearl River Public Library', url: 'https://pearlriverlibrary.org/', eventsUrl: 'https://pearlriverlibrary.org/', city: 'Pearl River', state: 'NY', zipCode: '10965', county: 'Rockland'},
   { name: 'Town Of Pelham Public Library', url: 'https://www.pelhamlibrary.org/', eventsUrl: 'https://www.pelhamlibrary.org/calendar/', city: 'Pelham', state: 'NY', zipCode: '10803', county: 'Westchester'},
@@ -420,7 +423,8 @@ const LIBRARIES = [
   { name: 'Williamstown Library', url: 'https://www.williamstownlibrary.org', eventsUrl: 'https://www.williamstownlibrary.org/events', city: 'Williamstown', state: 'NY', zipCode: '13493', county: 'Oswego'},
   { name: 'Amherst Public Library Clearfield Branch', url: 'https://www.williamsvillelibrary.org/', eventsUrl: 'https://www.williamsvillelibrary.org/', city: 'Williamsville', state: 'NY', zipCode: '14221', county: 'Erie'},
   { name: 'Williston Park Public Library', url: 'https://www.willistonparklibrary.org', eventsUrl: 'https://www.willistonparklibrary.org/events', city: 'Williston Park', state: 'NY', zipCode: '11596', county: 'Nassau'},
-  { name: 'Wilmington E.M. Cooper Memorial Public Library', url: 'https://www.wilmingtonlibrary.org', eventsUrl: 'https://www.wilmingtonlibrary.org/events', city: 'Wilmington', state: 'NY', zipCode: '12997', county: 'Essex'},
+  // URL corrected 2026-08-11 (was wilmingtonlibrary.org): 5751 Route 86 Wilmington NY 12997, phone 518-946-7701, Clinton-Essex-Franklin Library System member
+  { name: 'Wilmington E.M. Cooper Memorial Public Library', url: 'https://wilmingtoncooperlibrary.org', eventsUrl: 'https://wilmingtoncooperlibrary.org', city: 'Wilmington', state: 'NY', zipCode: '12997', county: 'Essex'},
   { name: 'Wilson Free Library', url: 'https://www.wilsonlibrary.org', eventsUrl: 'https://www.wilsonlibrary.org/events', city: 'Wilson', state: 'NY', zipCode: '14172', county: 'Niagara'},
   { name: 'Windham Public Library', url: 'https://windhamlibrary.org/', eventsUrl: 'https://windhamlibrary.org/', city: 'Windham', state: 'NY', zipCode: '12496', county: 'Greene'},
   { name: 'Wolcott Civic Free Library', url: 'https://www.wolcottlibrary.org', eventsUrl: 'https://www.wolcottlibrary.org/events', city: 'Wolcott', state: 'NY', zipCode: '14590', county: 'Wayne'},

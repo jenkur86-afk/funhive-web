@@ -93,7 +93,8 @@ const LIBRARIES = [
   { name: 'Butterfield', url: 'https://www.westminsterlibrary.org', eventsUrl: 'https://www.westminsterlibrary.org/events', city: 'Westminster', state: 'VT', zipCode: '05158', county: 'Windham'},
   { name: 'Westminster West Public', url: 'https://www.westminsterwestlibrary.org', eventsUrl: 'https://www.westminsterwestlibrary.org/events', city: 'Westminster West', state: 'VT', zipCode: '05346', county: 'Windham'},
   { name: 'Ainsworth Public', url: 'https://www.williamstownlibrary.org', eventsUrl: 'https://www.williamstownlibrary.org/events', city: 'Williamstown', state: 'VT', zipCode: '05679', county: 'Orange'},
-  { name: 'Pettee Memorial', url: 'https://www.wilmingtonlibrary.org', eventsUrl: 'https://www.wilmingtonlibrary.org/events', city: 'Wilmington', state: 'VT', zipCode: '05363', county: 'Windham'},
+  // URL corrected 2026-08-11 (was wilmingtonlibrary.org): 16 South Main St Wilmington VT 05363, phone 802-464-8557
+  { name: 'Pettee Memorial', url: 'https://petteelibrary.org', eventsUrl: 'https://petteelibrary.org', city: 'Wilmington', state: 'VT', zipCode: '05363', county: 'Windham'},
   { name: 'Windham Town', url: 'https://windhamlibrary.org/', eventsUrl: 'https://windhamlibrary.org/', city: 'Windham', state: 'VT', zipCode: '05359', county: 'Windham County'},
   { name: 'Windsor Public', url: 'https://www.windsorlibrary.org', eventsUrl: 'https://www.windsorlibrary.org/events', city: 'Windsor', state: 'VT', zipCode: '05089', county: 'Windsor County'},
   { name: 'G. M. Kelley Community', url: 'https://www.wolcottlibrary.org', eventsUrl: 'https://www.wolcottlibrary.org/events', city: 'Wolcott', state: 'VT', zipCode: '05680', county: 'Lamoille'},

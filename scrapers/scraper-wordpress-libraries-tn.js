@@ -43,7 +43,8 @@ const LIBRARIES = [
   { name: 'Smyrna Public Library', url: 'https://www.smyrnalibrary.org', eventsUrl: 'https://www.smyrnalibrary.org/events', city: 'Smyrna', state: 'TN', zipCode: '37167', county: 'Rutherford'},
   { name: 'Sevier County Public Library System', url: 'https://www.sevierlibrary.org/', eventsUrl: 'https://www.sevierlibrary.org/', city: 'Sevierville', state: 'TN', zipCode: '37862', county: 'Sevier'},
   { name: 'Tullahoma Public Library', url: 'https://www.tullahoma-tn.com/library', eventsUrl: 'https://www.tullahoma-tn.com/library/events', city: 'Tullahoma', state: 'TN', zipCode: '37388', county: 'Coffee'},
-  { name: 'Athens Public Library', url: 'https://www.athenslibrary.org', eventsUrl: 'https://www.athenslibrary.org/events', city: 'Athens', state: 'TN', zipCode: '37303', county: 'McMinn'},
+  // URL corrected 2026-08-11 (was athenslibrary.org): 1289 Ingleside Ave Athens TN 37303, phone 423-745-7782. NOTE the real institution is E.G. Fisher Public Library - the configured NAME is als
+  { name: 'Athens Public Library', url: 'https://fisherlibrary.org', eventsUrl: 'https://fisherlibrary.org', city: 'Athens', state: 'TN', zipCode: '37303', county: 'McMinn'},
   { name: 'Crossville-Cumberland County Public Library', url: 'https://www.cumberlandcountylibrary.org', eventsUrl: 'https://www.cumberlandcountylibrary.org/events', city: 'Crossville', state: 'TN', zipCode: '38555' },
   { name: 'Rogersville Public Library', url: 'https://www.rogersvillelibrary.org', eventsUrl: 'https://www.rogersvillelibrary.org/events', city: 'Rogersville', state: 'TN', zipCode: '37857', county: 'Hawkins'},
   { name: 'Tipton County Public Library', url: 'https://www.tiptoncountylibrary.org/', eventsUrl: 'https://www.tiptoncountylibrary.org/', city: 'Covington', state: 'TN', zipCode: '38019' },

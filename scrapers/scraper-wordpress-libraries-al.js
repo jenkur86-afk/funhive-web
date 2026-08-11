@@ -39,7 +39,8 @@ const LIBRARIES = [
   { name: 'Homewood Public Library', url: 'https://www.homewoodpubliclibrary.org', eventsUrl: 'https://www.homewoodpubliclibrary.org/events', city: 'Homewood', state: 'AL', zipCode: '35209', county: 'Jefferson'},
   { name: 'Jefferson County Library Cooperative', url: 'https://www.jclc.org', eventsUrl: 'https://www.jclc.org/events', city: 'Birmingham', state: 'AL', zipCode: '35203', county: 'Jefferson'},
   { name: 'Selma-Dallas County Public Library', url: 'https://selmalibrary.org/', eventsUrl: 'https://selmalibrary.org/', city: 'Selma', state: 'AL', zipCode: '36701', county: 'Dallas'},
-  { name: 'Athens-Limestone Public Library', url: 'https://www.athenslibrary.org', eventsUrl: 'https://www.athenslibrary.org/events', city: 'Athens', state: 'AL', zipCode: '35611', county: 'Limestone'},
+  // URL corrected 2026-08-11 (was athenslibrary.org): 603 S Jefferson St Athens AL 35611, phone 256-232-1233; events run on The Events Calendar
+  { name: 'Athens-Limestone Public Library', url: 'https://www.alcpl.org', eventsUrl: 'https://www.alcpl.org/events/list/', city: 'Athens', state: 'AL', zipCode: '35611', county: 'Limestone'},
   { name: 'Fairhope Public Library', url: 'https://fairhopelibrary.org/', eventsUrl: 'https://fairhopelibrary.org/index.php/calendar/', city: 'Fairhope', state: 'AL', zipCode: '36532', county: 'Baldwin'},
   { name: 'Daphne Public Library', url: 'http://www.daphneal.com/', eventsUrl: 'http://www.daphneal.com/178/Public-Library', city: 'Daphne', state: 'AL', zipCode: '36526', county: 'Baldwin'},
   { name: 'Scottsboro Public Library', url: 'https://scottsborolibrary.org/', eventsUrl: 'https://scottsborolibrary.org/', city: 'Scottsboro', state: 'AL', zipCode: '35768', county: 'Jackson'},

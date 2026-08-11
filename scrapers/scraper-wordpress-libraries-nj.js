@@ -125,7 +125,8 @@ const LIBRARIES = [
   { name: 'Pennsauken Free Public Library', url: 'https://www.pennsaukenlibrary.org', eventsUrl: 'https://www.pennsaukenlibrary.org/events', city: 'Pennsauken', state: 'NJ', zipCode: '08110', county: 'Camden'},
   { name: 'Pennsville Public Library', url: 'https://www.pennsvillelibrary.org', eventsUrl: 'https://www.pennsvillelibrary.org/events', city: 'Pennsville', state: 'NJ', zipCode: '08070', county: 'Salem'},
   { name: 'Piscataway Public Library', url: 'https://www.piscatawaylibrary.org', eventsUrl: 'https://www.piscatawaylibrary.org/events', city: 'Piscataway', state: 'NJ', zipCode: '08854', county: 'Middlesex'},
-  { name: 'Plainfield Free Public Library', url: 'https://www.plainfieldlibrary.org', eventsUrl: 'https://www.plainfieldlibrary.org/events', city: 'Plainfield', state: 'NJ', zipCode: '07060', county: 'Union'},
+  // URL corrected 2026-08-11 (was plainfieldlibrary.org): fetched site: 800 Park Avenue Plainfield NJ 07060, phone 908-757-1111
+  { name: 'Plainfield Free Public Library', url: 'https://plainfieldlibrarynj.org', eventsUrl: 'https://plainfieldnj.librarycalendar.com/events/month', city: 'Plainfield', state: 'NJ', zipCode: '07060', county: 'Union'},
   { name: 'Plainsboro Free Public Library', url: 'https://www.plainsborolibrary.org', eventsUrl: 'https://www.plainsborolibrary.org/events', city: 'Plainsboro', state: 'NJ', zipCode: '08536', county: 'Middlesex'},
   { name: 'Pompton Lakes Borough Free Public Library', url: 'https://www.pomptonlakeslibrary.org/', eventsUrl: 'https://www.pomptonlakeslibrary.org/', city: 'Pompton Lakes', state: 'NJ', zipCode: '07442', county: 'Passaic'},
   { name: 'Princeton Public Library', url: 'https://www.princetonlibrary.org', eventsUrl: 'https://www.princetonlibrary.org/events', city: 'Princeton', state: 'NJ', zipCode: '08542', county: 'Mercer'},
@@ -165,7 +166,8 @@ const LIBRARIES = [
   { name: 'Waldwick Public Library', url: 'https://www.waldwicklibrary.org/', eventsUrl: 'https://www.waldwicklibrary.org/library-events', city: 'Waldwick', state: 'NJ', zipCode: '07463', county: 'Bergen'},
   { name: 'Wanaque Borough Free Public Library', url: 'https://www.wanaquelibrary.org', eventsUrl: 'https://www.wanaquelibrary.org/events', city: 'Wanaque', state: 'NJ', zipCode: '07465', county: 'Passaic'},
   { name: 'West Orange Free Public Library', url: 'https://www.westorangelibrary.org/', eventsUrl: 'https://www.westorangelibrary.org/', city: 'West Orange', state: 'NJ', zipCode: '07052', county: 'Essex'},
-  { name: 'Westfield Memorial Library', url: 'https://www.westfieldlibrary.org', eventsUrl: 'https://www.westfieldlibrary.org/events', city: 'Westfield', state: 'NJ', zipCode: '07090', county: 'Union'},
+  // URL corrected 2026-08-11 (was westfieldlibrary.org): site is JS-rendered so fetch returned empty; listing confirms 550 East Broad St Westfield NJ, phone 908-789-4090
+  { name: 'Westfield Memorial Library', url: 'https://wmlnj.org', eventsUrl: 'https://wmlnj.org', city: 'Westfield', state: 'NJ', zipCode: '07090', county: 'Union'},
   { name: 'Westwood Free Public Library', url: 'https://www.westwoodlibrary.org', eventsUrl: 'https://www.westwoodlibrary.org/events', city: 'Westwood', state: 'NJ', zipCode: '07675', county: 'Bergen'},
   { name: 'Wharton Public Library', url: 'https://www.whartonlibrary.org', eventsUrl: 'https://www.whartonlibrary.org/events', city: 'Wharton', state: 'NJ', zipCode: '07885', county: 'Morris'},
   { name: 'Monroe Twp Public Library-Gloucester', url: 'https://www.williamstownlibrary.org', eventsUrl: 'https://www.williamstownlibrary.org/events', city: 'Williamstown', state: 'NJ', zipCode: '08094', county: 'Gloucester'},

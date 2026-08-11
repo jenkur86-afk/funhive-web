@@ -53,7 +53,8 @@ const LIBRARIES = [
   // Additional libraries from spreadsheet coverage expansion
   { name: 'Altoona Area Public Library', url: 'https://www.altoonalibrary.org', eventsUrl: 'https://www.altoonalibrary.org/events', city: 'Altoona', state: 'PA', zipCode: '16602', county: 'Blair'},
   { name: 'Aston Public Library', url: 'https://www.astonlibrary.org', eventsUrl: 'https://www.astonlibrary.org/events', city: 'Aston', state: 'PA', zipCode: '19014', county: 'Delaware'},
-  { name: 'Spalding Memorial Library', url: 'https://www.athenslibrary.org', eventsUrl: 'https://www.athenslibrary.org/events', city: 'Athens', state: 'PA', zipCode: '18810', county: 'Bradford'},
+  // URL corrected 2026-08-11 (was athenslibrary.org): 724 South Main Street Athens PA 18810, phone 570-888-7117
+  { name: 'Spalding Memorial Library', url: 'http://spaldinglibrary.org', eventsUrl: 'http://spaldinglibrary.org', city: 'Athens', state: 'PA', zipCode: '18810', county: 'Bradford'},
   { name: 'Avalon Public Library', url: 'https://avalonlibrary.org/', eventsUrl: 'https://avalonlibrary.org/', city: 'Avalon', state: 'PA', zipCode: '15202', county: 'Allegheny'},
   { name: 'Avella Area Library Center', url: 'https://www.avellalibrary.org', eventsUrl: 'https://www.avellalibrary.org/events', city: 'Avella', state: 'PA', zipCode: '15312', county: 'Washington'},
   { name: 'Avonmore Public Library', url: 'https://www.avonmorelibrary.org', eventsUrl: 'https://www.avonmorelibrary.org/events', city: 'Avonmore', state: 'PA', zipCode: '15618', county: 'Westmoreland'},
@@ -224,7 +225,8 @@ const LIBRARIES = [
   { name: 'West Chester Public Library', url: 'https://www.westchesterlibrary.org', eventsUrl: 'https://www.westchesterlibrary.org/events', city: 'West Chester', state: 'PA', zipCode: '19380', county: 'Chester'},
   { name: 'West Newton Public Library', url: 'https://www.westnewtonlibrary.org', eventsUrl: 'https://www.westnewtonlibrary.org/events', city: 'West Newton', state: 'PA', zipCode: '15089', county: 'Westmoreland'},
   { name: 'West Pittston Library', url: 'https://www.westpittstonlibrary.org', eventsUrl: 'https://www.westpittstonlibrary.org/events', city: 'West Pittston', state: 'PA', zipCode: '18643', county: 'Luzerne'},
-  { name: 'Westfield Public Library', url: 'https://www.westfieldlibrary.org', eventsUrl: 'https://www.westfieldlibrary.org/events', city: 'Westfield', state: 'PA', zipCode: '16950', county: 'Tioga'},
+  // URL corrected 2026-08-11 (was westfieldlibrary.org): 147 Maple St Westfield PA 16950, phone 814-367-5411, Potter-Tioga Library System
+  { name: 'Westfield Public Library', url: 'https://www.westfieldpubliclibrary.com', eventsUrl: 'https://www.westfieldpubliclibrary.com', city: 'Westfield', state: 'PA', zipCode: '16950', county: 'Tioga'},
   { name: 'Carnegie Library Of Mckeesport - White Oak', url: 'https://www.whiteoaklibrary.org', eventsUrl: 'https://www.whiteoaklibrary.org/events', city: 'White Oak', state: 'PA', zipCode: '15131', county: 'Allegheny'},
   { name: 'Wilcox Public Library', url: 'https://www.wilcoxlibrary.org/', eventsUrl: 'https://www.wilcoxlibrary.org/', city: 'Wilcox', state: 'PA', zipCode: '15870', county: 'Elk'},
   { name: 'Wilkinsburg Public Library', url: 'https://wilkinsburglibrary.org/', eventsUrl: 'https://wilkinsburglibrary.org/', city: 'Wilkinsburg', state: 'PA', zipCode: '15221', county: 'Allegheny'},

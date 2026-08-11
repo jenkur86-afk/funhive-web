@@ -125,7 +125,8 @@ const LIBRARIES = [
   // Montgomery County Library REMOVED 2026-08-07: see SandhillRegional-NC (same
   // srls.info -> LibGuides migration).
   { name: 'Warsaw-Kornegay Public Library', url: 'https://www.warsawlibrary.org/', eventsUrl: 'https://www.warsawlibrary.org/', city: 'Warsaw', state: 'NC', zipCode: '00000', county: 'Duplin'},
-  { name: 'Myrtle Grove Branch', url: 'https://www.wilmingtonlibrary.org', eventsUrl: 'https://www.wilmingtonlibrary.org/events', city: 'Wilmington', state: 'NC', zipCode: '00000', county: 'New Hanover'},
+  // URL corrected 2026-08-11 (was wilmingtonlibrary.org): New Hanover County Public Library, 230 Grace St Wilmington NC 28401. NOTE Myrtle Grove branch was replaced by the Pine Valley Branch - branc
+  { name: 'Myrtle Grove Branch', url: 'https://www.nhcgov.com/2628/Library', eventsUrl: 'https://www.nhcgov.com/2628/Library', city: 'Wilmington', state: 'NC', zipCode: '00000', county: 'New Hanover'},
   { name: 'East Branch Library', url: 'https://www.wilsoncountypubliclibrary.org/', eventsUrl: 'https://www.wilsoncountypubliclibrary.org/events/library-calendar', city: 'Wilson', state: 'NC', zipCode: '00000', county: 'Wilson County'},
   { name: 'Lawrence Memorial Library', url: 'https://www.windsorlibrary.org', eventsUrl: 'https://www.windsorlibrary.org/events', city: 'Windsor', state: 'NC', zipCode: '00000', county: 'Bertie'},
 ];
