@@ -1,0 +1,142 @@
+#!/usr/bin/env node
+/**
+ * Builds the per-site age-range breakdown for AGE-RANGE-AUDIT.md (Step 3c of the
+ * funhive-scraper-diagnosis task).
+ *
+ * `age_range` is a real column on events, so this is a DB query rather than a
+ * stdout parse. One row per INDIVIDUAL SITE — grouping is (scraper_name, venue),
+ * never scraper_name alone. See AGE-RANGE-AUDIT.md's "No aggregation, ever" rule:
+ * collapsing many-site scrapers into one row hides individual sites that cross
+ * the >=70% All-Ages flag threshold.
+ *
+ * Paginated reads use .order('id') before .range() per CLAUDE.md — an unordered
+ * paginator returns overlapping pages (the 2026-05-15 incident lost ~17k events).
+ * Selective .select() only; no SELECT *.
+ *
+ * Usage:
+ *   node scripts/build-age-range-audit.js --since=2026-08-10T07:00:01Z
+ *   node scripts/build-age-range-audit.js --since=... --out=path.md
+ */
+const fs = require('fs');
+const { supabase } = require('../scrapers/helpers/supabase-adapter');
+
+const args = process.argv.slice(2);
+const sinceArg = args.find(a => a.startsWith('--since='));
+const outArg = args.find(a => a.startsWith('--out='));
+if (!sinceArg) {
+  console.error('Missing --since=<ISO timestamp> (use today\'s run-start from scrapers/logs/scraper-run-<date>.log)');
+  process.exit(1);
+}
+const SINCE = sinceArg.split('=')[1];
+const OUT = outArg ? outArg.split('=')[1] : null;
+
+// The 6 standard brackets, in report order.
+const BRACKETS = [
+  'All Ages',
+  'Babies & Toddlers (0-2)',
+  'Preschool (3-5)',
+  'Kids (6-8)',
+  'Tweens (9-12)',
+  'Teens (13-18)'
+];
+
+// Genuinely broad-content sources — excluded from the >=70% flag, not from the table.
+const KNOWN_BROAD = new Set([
+  'FestivalGuides-Eastern',
+  'FairsFestivals-Eastern',
+  'KidsOutAndAbout-Eastern',
+  'KidsOutAndAbout-DMV',
+  'Eventbrite-Family-Eastern'
+]);
+
+const FLAG_PCT = 0.70;
+const FLAG_MIN_TOTAL = 20;
+
+async function main() {
+  console.log(`Reading events scraped since ${SINCE} ...`);
+
+  const rows = [];
+  const PAGE = 1000;
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
+      .from('events')
+      .select('id, scraper_name, venue, age_range, source_url')
+      .gte('scraped_at', SINCE)
+      .order('id', { ascending: true })   // REQUIRED before .range()
+      .range(from, from + PAGE - 1);
+
+    if (error) { console.error('Query failed:', error.message); process.exit(1); }
+    if (!data || data.length === 0) break;
+    rows.push(...data);
+    process.stdout.write(`\r  ${rows.length} rows`);
+    if (data.length < PAGE) break;
+  }
+  console.log(`\n  ${rows.length} rows total.`);
+
+  // Group by (scraper_name, venue) — one entry per individual site.
+  const sites = new Map();
+  for (const r of rows) {
+    const scraper = r.scraper_name || '(no scraper_name)';
+    const venue = r.venue || '(no venue)';
+    const key = `${scraper}|||${venue}`;
+    if (!sites.has(key)) {
+      sites.set(key, { scraper, venue, counts: {}, total: 0, link: r.source_url || '' });
+    }
+    const s = sites.get(key);
+    const bracket = r.age_range || '(unset)';
+    s.counts[bracket] = (s.counts[bracket] || 0) + 1;
+    s.total++;
+    if (!s.link && r.source_url) s.link = r.source_url;
+  }
+
+  const list = [...sites.values()].sort(
+    (a, b) => a.scraper.localeCompare(b.scraper) || b.total - a.total
+  );
+
+  const flagged = list.filter(s => {
+    if (KNOWN_BROAD.has(s.scraper)) return false;
+    if (s.total < FLAG_MIN_TOTAL) return false;
+    return (s.counts['All Ages'] || 0) / s.total >= FLAG_PCT;
+  });
+
+  const scrapersSeen = new Set(list.map(s => s.scraper));
+
+  // Render
+  const out = [];
+  out.push(`| Site | Scraper | Link | All Ages | Babies 0-2 | Preschool 3-5 | Kids 6-8 | Tweens 9-12 | Teens 13-18 | Other | Total |`);
+  out.push(`|---|---|---|---|---|---|---|---|---|---|---|`);
+  for (const s of list) {
+    const cells = BRACKETS.map(b => s.counts[b] || 0);
+    const other = s.total - cells.reduce((a, b) => a + b, 0);
+    const link = s.link ? `[cal](${s.link})` : '—';
+    const site = s.venue.replace(/\|/g, '/');
+    out.push(`| ${site} | ${s.scraper} | ${link} | ${cells.join(' | ')} | ${other} | ${s.total} |`);
+  }
+
+  out.push('');
+  out.push(`### Flagged: All Ages >= 70% (total >= ${FLAG_MIN_TOTAL} events)`);
+  out.push('');
+  if (flagged.length === 0) {
+    out.push('_None._');
+  } else {
+    out.push(`| Site | Scraper | All Ages | Total | % |`);
+    out.push(`|---|---|---|---|---|`);
+    for (const s of flagged.sort((a, b) => b.total - a.total)) {
+      const aa = s.counts['All Ages'] || 0;
+      out.push(`| ${s.venue.replace(/\|/g, '/')} | ${s.scraper} | ${aa} | ${s.total} | ${((aa / s.total) * 100).toFixed(0)}% |`);
+    }
+  }
+
+  const body = out.join('\n');
+  console.log(`\nsites: ${list.length}   scrapers: ${scrapersSeen.size}   flagged: ${flagged.length}`);
+
+  if (OUT) {
+    fs.writeFileSync(OUT, body, 'utf8');
+    console.log(`wrote ${OUT}`);
+  } else {
+    console.log('\n' + body.split('\n').slice(0, 25).join('\n'));
+    console.log('\n(use --out=<file> to write the full table)');
+  }
+}
+
+main().catch(e => { console.error(e); process.exit(1); });

@@ -89,12 +89,6 @@
     "added": "2026-08-05"
   },
   "_pending": {
-    "MacaroniKid-PA": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-PA-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
-      "added": "2026-08-05"
-    },
     "MacaroniKid-NC": {
       "what": "Listing URL + per-site scraper name (2026-08-05)",
       "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-NC-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
@@ -299,12 +293,6 @@
       "confirm": "node scripts/check-scraper-names.js",
       "added": "2026-08-05"
     },
-    "WordPress-NC": {
-      "what": "Phase 2 URL corrections — extraction unproven (2026-08-06)",
-      "expect": "CONFIRMED 2026-08-09: re-run today (21:50 UTC) shows Found 468, New 138, Duplicates 330, Invalid 142 — extraction genuinely works post-URL-fix (real new events are saving, not just re-finding the same 0). INVALID is still ~30%, a separate open issue (mixed-platform date formats, not a URL problem) — see the WordPress-NC top-level note.",
-      "confirm": "npm run scraper -- --scraper WordPress-NC   then check FOUND/INVALID in scrapers/logs/scraper-summary.log",
-      "added": "2026-08-06"
-    },
     "WordPress-SC": {
       "what": "gastonlibrary.org collision — SC side still wrong (2026-08-06)",
       "expect": "The detector shows gastonlibrary.org spanning NC+SC. The NC entries are CORRECT; the wrong one is SC's 'Lexington County Library - Gaston'. Do not re-fix the NC side — this clears when WordPress-SC is done.",
@@ -325,7 +313,7 @@
     },
     "supabase-adapter.js": {
       "what": "Fleet-wide: duplicate .add results no longer counted as new imports, and stable ids no longer collapse on query-carried URLs (2026-08-10)",
-      "expect": "EXPECT NEW COUNTS TO FALL AND DUPES TO RISE ACROSS THE FLEET on the next full 3-day rotation. That is the numbers becoming honest, NOT a regression — do not \"fix\" it. The rows that should disappear are ones that were never written in the first place. Specifically, the Found==New with Dupes 0 signature (BiblioCommons-MA 821/821/0, MacaroniKid-NJ 1989/1989/0, CivicRec-Parks-Eastern 2365/2365) should start showing real duplicate counts. Verified so far on only three scrapers by live run — Dorchester-County 0 imported/12 skipped where it used to claim 12 new, Wicomico-Public claimed 4 new and the DB moved 15 to 19 exactly, RollyPollies-MD 34 found/0 new/34 dupes. The other ~83 modified files are reasoned-and-syntax-checked but UNRUN. Also watch for the new \"STABLE-ID COLLISION\" warning in stdout: it fires only when two DIFFERENTLY-NAMED events hash to one id, which is real data loss and means that scraper is putting a shared URL on every event.",
+      "expect": "PARTIAL 2026-08-10 PM. Static confirms PASS: audit-add-miscount 96 OK / 0 buggy, verify-duplicate-branch-scope all in scope, zero STABLE-ID COLLISION lines. BUT the fleet-wide effect is still UNPROVEN for the signature scrapers: the nightly Group 1 run started 03:00 EDT and the fix landed 07:36 EDT mid-run, and local-scraper-runner.js clears the require cache for the SCRAPER FILE ONLY (line ~171), never for supabase-adapter.js - so adapter-side changes could not take effect at all in that run, and every Found==New/Dupes=0 scraper (BiblioCommons-NJ 425/425/0, Pratt-Library 969/969/0, Prince-Georges-County 62/62/0) ran pre-fix. Today ALSO surfaced real fallout: 45 scrapers dropped their skipped counter from the return, so the fix made them report 0/0/0 - fixed separately, see the dropped-skipped entry.",
       "confirm": "node scripts/audit-add-miscount.js   (expect 96 OK / 0 buggy)   then   node scripts/verify-duplicate-branch-scope.js   (expect all in scope)   then grep the run for collisions:   Select-String -Path scrapers/logs/scraper-stdout.log -Pattern \"STABLE-ID COLLISION\"",
       "added": "2026-08-10"
     },
@@ -333,6 +321,12 @@
       "what": "Canary for the fleet-wide duplicate-miscount fix (2026-08-10)",
       "expect": "Chosen because it shows the miscount signature most cleanly: 356 found / 356 NEW / 0 dupes on two consecutive runs (2026-08-05 and 2026-08-06) while the database holds 364 rows total — it cannot possibly have been adding 356 genuinely new events per run. It is Group 2 and its file was modified by the codemod, so the next Group 2 run is the first real test. EXPECT: NEW drops sharply from 356 and DUPES becomes large; FOUND should stay near 356. Then confirm the claim against reality — the row count should grow by roughly the reported NEW, not by 356. If NEW is still 356 with 0 dupes, the codemod did not take effect for this file and the whole fleet-wide claim is suspect.",
       "confirm": "npm run scraper -- --scraper BiblioCommons-NC   then compare the summary line against the DB:   node -e \"require('./scrapers/helpers/supabase-adapter').supabase.from('events').select('id').eq('scraper_name','BiblioCommons-NC').order('id',{ascending:true}).range(0,999).then(r=>console.log('rows now:',r.data.length,'baseline was 364'))\"",
+      "added": "2026-08-10"
+    },
+    "dropped-skipped-return": {
+      "what": "Added the local skipped counter to 45 scraper return objects (2026-08-10)",
+      "expect": "CONFIRMED LIVE 2026-08-10 on two scrapers, both directions. Dorchester-County: 0/0/0 before, Found 12 / New 0 / Duplicates 12 after. Pratt-Library, the classic signature scraper: 969 found / 969 new / 0 dupes in the pre-fix nightly, then Found 2479 / New 955 / Duplicates 1524 on re-run - which confirms BOTH this fix (dupes visible at all) and the .add() miscount fix (1524 rows it used to call new were duplicates). The remaining 43 files, all MacaroniKid states plus PGParks-MD, are reasoned and syntax-checked but UNRUN. MacaroniKid-PA and NC ran BEFORE this fix was applied at 00:32 UTC, so PA 630/630/0 in the 2026-08-10 log is pre-fix and is not evidence either way; MK states after NC are the first test.",
+      "confirm": "npm run scraper -- --scraper Pratt-Library   then check the DUPES column is no longer 0 in scrapers/logs/scraper-summary.log",
       "added": "2026-08-10"
     }
   },
