@@ -15,50 +15,65 @@
 $passArgs = $args
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-Write-Host "==================================================="
-Write-Host "  STEP 1: fix-all-data-quality.js"
-Write-Host "  (age ranges, adult events, past events, dates)"
-Write-Host "==================================================="
-node "$scriptDir\fix-all-data-quality.js" --save @passArgs
-if (-not $?) { exit 1 }
+# Steps 1-4 used to `exit 1` the moment one of them failed, which skipped STEP 5
+# entirely — so reports/site-report.html went stale exactly when something had
+# gone wrong and the report was most worth reading. Failures are now recorded
+# and re-raised at the very end, after the report has been refreshed.
+$failedSteps = @()
 
-Write-Host ""
-Write-Host "==================================================="
-Write-Host "  STEP 2: cleanup-nonfamily-events.js"
-Write-Host "  (sexy, burlesque, cannabis, 21+ -- tier 1 auto-delete)"
-Write-Host "==================================================="
-node "$scriptDir\cleanup-nonfamily-events.js" --save @passArgs
-if (-not $?) { exit 1 }
+function Invoke-Step {
+    param([string]$Name, [scriptblock]$Body)
+    Write-Host ""
+    Write-Host "==================================================="
+    Write-Host "  $Name"
+    Write-Host "==================================================="
+    # Check $LASTEXITCODE, NOT $?. For a native command like `node` invoked
+    # through a scriptblock, $? reports whether the process could be started,
+    # not what it exited with — a step that exits 1 leaves $? true and the
+    # failure goes unrecorded. Verified: the $? form missed a deliberate exit 3.
+    $global:LASTEXITCODE = 0
+    & $Body
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "  !! $Name FAILED (exit $LASTEXITCODE) - continuing so the report still refreshes" -ForegroundColor Yellow
+        $script:failedSteps += $Name
+    }
+}
 
-Write-Host ""
-Write-Host "==================================================="
-Write-Host "  STEP 3: fix-event-quality.js"
-Write-Host "  (events + activities: geohash, city, location,"
-Write-Host "   times, junk titles, past events)"
-Write-Host "==================================================="
-node "$scriptDir\fix-event-quality.js" --save @passArgs
-if (-not $?) { exit 1 }
+Invoke-Step "STEP 1: fix-all-data-quality.js (age ranges, adult events, past events, dates)" {
+    node "$scriptDir\fix-all-data-quality.js" --save @passArgs
+}
 
-Write-Host ""
-Write-Host "==================================================="
-Write-Host "  STEP 4: fix-missing-fields.js"
-Write-Host "  (activities: missing address via reverse geocode)"
-Write-Host "  ~80 min for full sweep; seconds in --recent-only."
-Write-Host "==================================================="
-node "$scriptDir\fix-missing-fields.js" --save --addresses @passArgs
-if (-not $?) { exit 1 }
+Invoke-Step "STEP 2: cleanup-nonfamily-events.js (sexy, burlesque, cannabis, 21+ -- tier 1 auto-delete)" {
+    node "$scriptDir\cleanup-nonfamily-events.js" --save @passArgs
+}
+
+Invoke-Step "STEP 3: fix-event-quality.js (events + activities: geohash, city, location, times, junk titles)" {
+    node "$scriptDir\fix-event-quality.js" --save @passArgs
+}
+
+Invoke-Step "STEP 4: fix-missing-fields.js (activities: missing address via reverse geocode)" {
+    node "$scriptDir\fix-missing-fields.js" --save --addresses @passArgs
+}
 
 Write-Host ""
 Write-Host "==================================================="
 Write-Host "  STEP 5: generate-site-report.js"
 Write-Host "  (refresh reports/site-report.html from the run"
 Write-Host "   that just finished - local files only, no egress)"
+Write-Host "  ALWAYS RUNS, even if a step above failed."
 Write-Host "==================================================="
 node "$scriptDir\generate-site-report.js"
 # Deliberately not gated on $? : a report failure must never fail the data-quality chain.
 
 Write-Host ""
 Write-Host "==================================================="
+if ($failedSteps.Count -gt 0) {
+    Write-Host "  COMPLETED WITH FAILURES"
+    foreach ($f in $failedSteps) { Write-Host "    - $f" }
+    Write-Host "  reports\site-report.html was still refreshed."
+    Write-Host "==================================================="
+    exit 1
+}
 Write-Host "  ALL FIXES COMPLETE"
 Write-Host "  Run: node scripts\data-quality-quick.js  (cheap audit)"
 Write-Host "  or:  node scripts\data-quality-check.js  (monthly full audit)"

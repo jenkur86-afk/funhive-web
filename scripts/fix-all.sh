@@ -20,11 +20,23 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ARGS="$@"  # forward --recent-only and any other flags
 
+# `set -e` used to abort the whole script the moment a step failed, which meant
+# STEP 5 never ran and reports/site-report.html went stale exactly when
+# something had gone wrong and the report was most worth reading. Each step is
+# now invoked with `|| record_failure`, which set -e treats as handled, and the
+# accumulated status is re-raised at the very end — after the report refreshes.
+FAILED_STEPS=""
+record_failure() {
+  echo "  !! $1 FAILED - continuing so the report still refreshes"
+  FAILED_STEPS="$FAILED_STEPS
+    - $1"
+}
+
 echo "═══════════════════════════════════════════════════"
 echo "  STEP 1: fix-all-data-quality.js"
 echo "  (age ranges, adult events, past events, dates)"
 echo "═══════════════════════════════════════════════════"
-node "$SCRIPT_DIR/fix-all-data-quality.js" --save $ARGS
+node "$SCRIPT_DIR/fix-all-data-quality.js" --save $ARGS || record_failure "STEP 1: fix-all-data-quality.js"
 
 echo ""
 echo "═══════════════════════════════════════════════════"
@@ -33,7 +45,7 @@ echo "  (sexy, burlesque, cannabis, 21+ — tier 1 auto-delete)"
 echo "  (saveEvent now rejects most of these at scrape time;"
 echo "   this remains as a backstop)"
 echo "═══════════════════════════════════════════════════"
-node "$SCRIPT_DIR/cleanup-nonfamily-events.js" --save $ARGS
+node "$SCRIPT_DIR/cleanup-nonfamily-events.js" --save $ARGS || record_failure "STEP 2: cleanup-nonfamily-events.js"
 
 echo ""
 echo "═══════════════════════════════════════════════════"
@@ -42,7 +54,7 @@ echo "  (events + activities: geohash, city, location,"
 echo "   times, junk titles, past events)"
 echo "  Description backfill removed — descriptions stay empty."
 echo "═══════════════════════════════════════════════════"
-node "$SCRIPT_DIR/fix-event-quality.js" --save $ARGS
+node "$SCRIPT_DIR/fix-event-quality.js" --save $ARGS || record_failure "STEP 3: fix-event-quality.js"
 
 echo ""
 echo "═══════════════════════════════════════════════════"
@@ -51,7 +63,7 @@ echo "  (activities: missing address via reverse geocode)"
 echo "  ⏱️  ~80 min for full sweep (Nominatim rate limit);"
 echo "      seconds in --recent-only mode."
 echo "═══════════════════════════════════════════════════"
-node "$SCRIPT_DIR/fix-missing-fields.js" --save --addresses $ARGS
+node "$SCRIPT_DIR/fix-missing-fields.js" --save --addresses $ARGS || record_failure "STEP 4: fix-missing-fields.js"
 
 echo ""
 echo "═══════════════════════════════════════════════════"
@@ -62,6 +74,13 @@ echo "  (refresh reports/site-report.html from the run that"
 echo "   just finished - local files only, no egress)"
 echo "==================================================="
 node "$SCRIPT_DIR/generate-site-report.js" || true   # never fail the chain on a report error
+
+if [ -n "$FAILED_STEPS" ]; then
+  echo ""
+  echo "  ❌ COMPLETED WITH FAILURES:$FAILED_STEPS"
+  echo "  reports/site-report.html was still refreshed."
+  exit 1
+fi
 
 echo "  ✅ ALL FIXES COMPLETE"
 echo "  Run: node scripts/data-quality-quick.js  (cheap audit)"
