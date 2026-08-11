@@ -10,6 +10,7 @@ const { logScraperResult } = require('./scraper-logger');
 const { saveEventsWithGeocoding } = require('./event-save-helper');
 const { tryFetchTecEvents, tryDomScrapeTecEvents } = require('./helpers/tec-rest-helper');
 const { extractJsonLdEvents } = require('./helpers/jsonld-events-helper');
+const { RESOLVER_SRC } = require('./helpers/dom-date-resolver');
 const ngeohash = require('ngeohash');
 /**
  * Vermont Public Libraries Scraper - Coverage: All Vermont public libraries
@@ -175,7 +176,9 @@ async function scrapeGenericEvents() {
         continue;
       }
 
-            const libraryEvents = await page.evaluate((libName) => {
+            const libraryEvents = await page.evaluate((libName, __resolverSrc) => {
+        // Rehydrate the shared resolver — page.evaluate cannot close over Node scope.
+        const resolveEventDate = new Function('return ' + __resolverSrc)();
         const events = [];
         document.querySelectorAll('[class*="event"], article, .post').forEach(card => {
           const title = card.querySelector('h1, h2, h3, h4, [class*="title"], a');
@@ -184,12 +187,12 @@ async function scrapeGenericEvents() {
             // Look for age/audience info on the event card
             const ageEl = card ? [card.querySelector('[class*="audience"]'), card.querySelector('[class*="age"]'), card.querySelector('[class*="category"]')].find(el => el && el.textContent.trim().length > 0 && el.textContent.trim().length < 80) : null;
             const descEl = card.querySelector('[class*="description"], [class*="excerpt"], [class*="summary"], p');
-            events.push({ title: title.textContent.trim(), date: date ? date.textContent.trim() : '', ageRange: ageEl ? ageEl.textContent.trim() : '', description: descEl ? descEl.textContent.trim() : '', location: libName, venueName: libName });
+            events.push({ title: title.textContent.trim(), date: resolveEventDate(card) || (date ? date.textContent.trim() : ''), ageRange: ageEl ? ageEl.textContent.trim() : '', description: descEl ? descEl.textContent.trim() : '', location: libName, venueName: libName });
           }
         });
         const seen = new Set();
         return events.filter(e => { if (seen.has(e.title.toLowerCase())) return false; seen.add(e.title.toLowerCase()); return true; });
-      }, library.name);
+      }, library.name, RESOLVER_SRC);
       libraryEvents.forEach(event => events.push({ ...event, metadata: { sourceName: library.name, sourceUrl: library.url, scrapedAt: new Date().toISOString(), scraperName: SCRAPER_NAME, category: 'library', state: 'VT', city: library.city, zipCode: library.zipCode }}));
       await page.close();
       await new Promise(resolve => setTimeout(resolve, 500));

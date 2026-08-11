@@ -1,5 +1,6 @@
 const { launchBrowser } = require('./puppeteer-config');
 const { extractJsonLdEvents } = require('./helpers/jsonld-events-helper');
+const { RESOLVER_SRC } = require('./helpers/dom-date-resolver');
 const { logScraperResult } = require('./scraper-logger');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -204,7 +205,9 @@ async function scrapeGenericEvents() {
         continue;
       }
 
-            const libraryEvents = await page.evaluate((libName) => {
+            const libraryEvents = await page.evaluate((libName, __resolverSrc) => {
+        // Rehydrate the shared resolver — page.evaluate cannot close over Node scope.
+        const resolveEventDate = new Function('return ' + __resolverSrc)();
         const events = [];
 
         // Generic selectors for event cards/items
@@ -279,7 +282,7 @@ async function scrapeGenericEvents() {
 
                 const event = {
                   title: cleanTitle,
-                  date: possibleDates.length > 0 ? possibleDates[0].textContent.trim() : '',
+                  date: resolveEventDate(card) || (possibleDates.length > 0 ? possibleDates[0].textContent.trim() : ''),
                   time: possibleDates.length > 1 ? possibleDates[1].textContent.trim() : '',
                   description: possibleDescs.length > 0 ? possibleDescs[0].textContent.trim() : '',
                   url: linkEl ? linkEl.href : window.location.href,
@@ -308,7 +311,7 @@ async function scrapeGenericEvents() {
           seen.add(key);
           return true;
         });
-      }, library.name);
+      }, library.name, RESOLVER_SRC);
 
       console.log(`   ✅ Found ${libraryEvents.length} events`);
 

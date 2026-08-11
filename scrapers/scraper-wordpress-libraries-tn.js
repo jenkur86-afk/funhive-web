@@ -10,6 +10,7 @@ const { logScraperResult } = require('./scraper-logger');
 const { saveEventsWithGeocoding } = require('./event-save-helper');
 const { tryFetchTecEvents, tryDomScrapeTecEvents } = require('./helpers/tec-rest-helper');
 const { extractJsonLdEvents } = require('./helpers/jsonld-events-helper');
+const { RESOLVER_SRC } = require('./helpers/dom-date-resolver');
 const ngeohash = require('ngeohash');
 /**
  * Tennessee Public Libraries Scraper
@@ -27,7 +28,10 @@ const LIBRARIES = [
   { name: 'Clarksville-Montgomery County Public Library', url: 'https://mcgtn.org/library', eventsUrl: 'https://mcgtn.org/library/events', city: 'Clarksville', state: 'TN', zipCode: '37040', county: 'Montgomery'},
   { name: 'Johnson City Public Library', url: 'https://www.jcpl.org', eventsUrl: 'https://www.jcpl.org/events', city: 'Johnson City', state: 'TN', zipCode: '37601', county: 'Washington'},
   { name: 'Kingsport Public Library', url: 'https://www.kingsportlibrary.org/', eventsUrl: 'https://www.kingsportlibrary.org/', city: 'Kingsport', state: 'TN', zipCode: '37660', county: 'Sullivan'},
-  { name: 'Williamson County Public Library', url: 'https://www.wcpltn.org/', eventsUrl: 'https://www.wcpltn.org/', city: 'Franklin', state: 'TN', zipCode: '37064', county: 'Franklin County'},
+  // Williamson County Public Library MOVED to CivicEngage-Libraries 2026-08-11.
+  // wcpltn.org is CivicPlus (.aspx), not WordPress, so this family could never
+  // extract it — it returned 0 on every run. Verified live there before removal;
+  // this is a move, not a dropped library.
   { name: 'Rutherford County Library System', url: 'https://www.rcls.org', eventsUrl: 'https://www.rcls.org/events', city: 'Murfreesboro', state: 'TN', zipCode: '37130', county: 'Rutherford'},
   { name: 'Blount County Public Library', url: 'https://www.blountlibrary.org', eventsUrl: 'https://www.blountlibrary.org/events', city: 'Maryville', state: 'TN', zipCode: '37801', county: 'Blount'},
   { name: 'Cleveland-Bradley County Public Library', url: 'https://clevelandlibrary.org/', eventsUrl: 'https://clevelandlibrary.org/', city: 'Cleveland', state: 'TN', zipCode: '37311', county: 'Bradley'},
@@ -177,7 +181,9 @@ async function scrapeGenericEvents() {
         continue;
       }
 
-            const libraryEvents = await page.evaluate((libName) => {
+            const libraryEvents = await page.evaluate((libName, __resolverSrc) => {
+        // Rehydrate the shared resolver — page.evaluate cannot close over Node scope.
+        const resolveEventDate = new Function('return ' + __resolverSrc)();
         const events = [];
         const eventSelectors = [
           '[class*="event"]',
@@ -227,7 +233,7 @@ async function scrapeGenericEvents() {
               if (possibleTitles.length > 0) {
                 const event = {
                   title: possibleTitles[0].textContent.trim(),
-                  date: possibleDates.length > 0 ? possibleDates[0].textContent.trim() : '',
+                  date: resolveEventDate(card) || (possibleDates.length > 0 ? possibleDates[0].textContent.trim() : ''),
                   description: possibleDescs.length > 0 ? possibleDescs[0].textContent.trim() : '',
                   url: linkEl ? linkEl.href : window.location.href,
                   ageRange: ageEl ? ageEl.textContent.trim() : '',
@@ -250,7 +256,7 @@ async function scrapeGenericEvents() {
           seen.add(key);
           return true;
         });
-      }, library.name);
+      }, library.name, RESOLVER_SRC);
 
       console.log(`   ✅ Found ${libraryEvents.length} events`);
 

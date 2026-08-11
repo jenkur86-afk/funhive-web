@@ -5,6 +5,7 @@
 // once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { extractJsonLdEvents } = require('./helpers/jsonld-events-helper');
+const { RESOLVER_SRC } = require('./helpers/dom-date-resolver');
 const { admin, db } = require('./helpers/supabase-adapter');
 
 const { logScraperResult } = require('./scraper-logger');
@@ -128,7 +129,9 @@ async function scrapeGenericEvents() {
         continue;
       }
 
-            const libraryEvents = await page.evaluate((libName) => {
+            const libraryEvents = await page.evaluate((libName, __resolverSrc) => {
+        // Rehydrate the shared resolver — page.evaluate cannot close over Node scope.
+        const resolveEventDate = new Function('return ' + __resolverSrc)();
         const events = [];
         const eventSelectors = [
           '[class*="event"]',
@@ -177,7 +180,7 @@ async function scrapeGenericEvents() {
               if (possibleTitles.length > 0) {
                 const event = {
                   title: possibleTitles[0].textContent.trim(),
-                  date: possibleDates.length > 0 ? possibleDates[0].textContent.trim() : '',
+                  date: resolveEventDate(card) || (possibleDates.length > 0 ? possibleDates[0].textContent.trim() : ''),
                   description: possibleDescs.length > 0 ? possibleDescs[0].textContent.trim() : '',
                   url: linkEl ? linkEl.href : window.location.href,
                   ageRange: ageEl ? ageEl.textContent.trim() : '',
@@ -200,7 +203,7 @@ async function scrapeGenericEvents() {
           seen.add(key);
           return true;
         });
-      }, library.name);
+      }, library.name, RESOLVER_SRC);
 
       console.log(`   ✅ Found ${libraryEvents.length} events`);
 
