@@ -599,7 +599,15 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
         const shown = looksLikePage
           ? rawDateStr.replace(/\s+/g, ' ').slice(0, 80) + `… [${rawDateStr.length} chars — selector matched a whole page, check this site's URL]`
           : rawDateStr;
-        console.log(`  ⚠️ Skipping event with invalid date: "${shown}" - ${(event.title || event.name || '').substring(0, 40)}`);
+        // Name the source site. Multi-site scrapers pool every library's events
+        // and save them in one batch AFTER the per-library loop, so these lines
+        // all land after the last "📍 <library>" marker in the log — attributing
+        // them by proximity to that marker blames whichever site happened to run
+        // last (2026-08-11: all 126 of WordPress-NC's were pinned on Lawrence
+        // Memorial, which had in fact returned 0 events). Without the source on
+        // the line itself the attribution is simply not recoverable from a log.
+        const src = event.venueName || event.location || (event.metadata && event.metadata.sourceName) || 'unknown source';
+        console.log(`  ⚠️ Skipping event with invalid date: "${shown}" - ${(event.title || event.name || '').substring(0, 40)} [${String(src).substring(0, 45)}]`);
         skipped++;
         skippedInvalidDate++;
         continue;

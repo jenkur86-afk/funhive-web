@@ -527,6 +527,7 @@ td.statuscell{min-width:200px;max-width:330px}
 .rowstat.s-mismatch{background:var(--crit-soft);color:var(--crit);border:1px solid var(--crit)}
 .rowstat.s-moved{background:var(--surface-2);color:var(--text-dim);border:1px solid var(--text-faint)}
 .rowstat.s-unknown{background:var(--surface-2);color:var(--text-faint);border:1px solid var(--border)}
+.rowstat.s-placeholder{background:var(--surface-2);color:var(--text-dim);border:1px dashed var(--text-faint)}
 .statdetail{font-size:11.5px;color:var(--text-dim);margin-top:4px;line-height:1.4}
 .rowstat.s-awaiting{background:var(--accent-soft);color:var(--accent-text);border:1px solid var(--accent)}
 .tag.await{background:var(--accent-soft);color:var(--accent-text);border:1px solid var(--accent)}
@@ -1077,6 +1078,16 @@ function main() {
             + 'Treat as removed-with-no-replacement until someone confirms otherwise.';
           nGone++;
         }
+      } else if (cfgKey(r[0]) === cfgKey(r[2])) {
+        // The site column holds the SCRAPER's own name rather than a library
+        // name — a legacy aggregate row from a cycle that recorded one line per
+        // scraper instead of one per site. There is no library here to match, so
+        // reporting it as "unmatched to config" reads like lost coverage when it
+        // is really a malformed audit row. Surfaced by the owner 2026-08-11 on
+        // "CivicEngage-Libraries (VA)".
+        status = 'placeholder';
+        detail = 'the audit put the scraper name in the site column instead of a library name, so there is nothing to match against config. '
+          + 'A legacy aggregate row, not a coverage gap — the real per-site rows for this scraper are listed separately.';
       } else {
         status = 'unmatched';
         detail = 'could not be matched to an entry in ' + r[2] + "'s config, and no other scraper configures this name — the name may differ there, or the entry may have been removed. Not confirmed either way.";
