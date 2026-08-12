@@ -164,13 +164,31 @@ async function runScraper(name, config) {
     const dupCount = num(result?.duplicates) || num(result?.skipped);
     const errCount = num(result?.errors) || num(result?.failed);
     const stats = {
-      found: num(result?.found) || num(result?.total) || (newCount + dupCount + errCount) || 0,
+      // errCount is deliberately NOT folded into `found`. It used to be, which meant a
+      // state where every site threw reported those throws AS DISCOVERIES: on 2026-08-12
+      // all 39 sites across NJ/VA/SC/DE failed to launch Chrome and the runner logged
+      // "Found: 15, New: 0, Duplicates: 0" for NJ — 15 being purely the error count. The
+      // row looked like a quiet day rather than a total wipeout, so the whole MacaroniKid
+      // group was missed by that day's failure sweep, which keyed off ❌ FAILED lines.
+      found: num(result?.found) || num(result?.total) || (newCount + dupCount) || 0,
       new: newCount,
       duplicates: dupCount,
       errors: errCount
     };
 
-    log(`✅ ${stateName} completed in ${durationMinutes}m - Found: ${stats.found}, New: ${stats.new}, Duplicates: ${stats.duplicates}`);
+    // A state that saved nothing and errored on every site did not succeed, whatever the
+    // child's exit code says. Report it as FAILED so it shows up as a ❌ row in
+    // scraper-summary.log and is picked up by any sweep that looks for failures.
+    const totalWipeout = errCount > 0 && newCount === 0 && dupCount === 0;
+    if (totalWipeout) {
+      const msg = `all ${errCount} site(s) errored — 0 saved`;
+      log(`❌ ${stateName} failed after ${durationMinutes}m: ${msg}`, 'error');
+      logSummary(formatSummaryRow({ success: false, name, error: msg, duration: parseFloat(duration) }));
+      await logToSupabase(name, 'failed', stats, msg, parseFloat(duration));
+      return { success: false, name, stateName, error: msg, stats, duration: parseFloat(duration) };
+    }
+
+    log(`✅ ${stateName} completed in ${durationMinutes}m - Found: ${stats.found}, New: ${stats.new}, Duplicates: ${stats.duplicates}, Errors: ${stats.errors}`);
     logSummary(formatSummaryRow({ success: true, name, stats, duration: parseFloat(duration) }));
 
     // Log to Supabase
