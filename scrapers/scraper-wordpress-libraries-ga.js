@@ -126,7 +126,8 @@ const LIBRARIES = [
   // live) so extraction isn't mixed with the other 4 WGRLS counties.
   { name: 'New Georgia Public Library', url: 'https://wgrls.org', eventsUrl: 'https://wgrls.org/events/list/?tribe_venues%5B%5D=87', city: 'Dallas', state: 'GA', zipCode: '30157', county: 'Paulding'},
   { name: 'Dalton-Whitfield County Public Library', url: 'https://www.daltonlibrary.org', eventsUrl: 'https://www.daltonlibrary.org/events', city: 'Dalton', state: 'GA', zipCode: '00000', county: 'Whitfield'},
-  { name: 'Ida Hilton Public Library', url: 'https://www.darienlibrary.org', eventsUrl: 'https://www.darienlibrary.org/events', city: 'Darien', state: 'GA', zipCode: '00000', county: 'McIntosh'},
+  // URL corrected 2026-08-11 (was darienlibrary.org): 1105 Northway Darien GA 31305, phone 912-217-6659, Three Rivers Regional Library member
+  { name: 'Ida Hilton Public Library', url: 'https://www.trrl.org', eventsUrl: 'https://www.trrl.org', city: 'Darien', state: 'GA', zipCode: '00000', county: 'McIntosh'},
   // URL corrected 2026-08-11 (was decaturlibrary.org): DeKalb County Public Library Covington Library, 3500 Covington Highway Decatur GA 30032, phone 404-508-7180
   { name: 'Covington Branch', url: 'https://dekalblibrary.org/locations/covi', eventsUrl: 'https://events.dekalblibrary.org/events?v=list&r=thisweek', city: 'Decatur', state: 'GA', zipCode: '00000', county: 'Decatur County'},
   // URL corrected 2026-08-11 (was douglaslibrary.org): Satilla Regional Library System page gives 200 Madison Avenue S Suite D, Douglas GA 31533, phone 912-384-4667

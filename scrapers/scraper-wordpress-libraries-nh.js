@@ -117,7 +117,8 @@ const LIBRARIES = [
   { name: 'Philip Read Memorial Library', url: 'https://plainfieldlibraries.org/plainfield', eventsUrl: 'https://plainfieldlibraries.org/calendar/all', city: 'Plainfield', state: 'NH', zipCode: '03781', county: 'Sullivan'},
   { name: 'Rollinsford Public Library', url: 'https://www.rollinsfordlibrary.org/', eventsUrl: 'https://www.rollinsfordlibrary.org/calendar', city: 'Rollinsford', state: 'NH', zipCode: '03869', county: 'Strafford'},
   { name: 'Byron G. Merrill Library', url: 'https://www.rumneylibrary.org/', eventsUrl: 'https://www.rumneylibrary.org/', city: 'Rumney', state: 'NH', zipCode: '03266', county: 'Grafton'},
-  { name: 'Rye Public Library', url: 'https://www.ryelibrary.org/', eventsUrl: 'https://www.ryelibrary.org/', city: 'Rye', state: 'NH', zipCode: '03870', county: 'Rockingham'},
+  // URL corrected 2026-08-11 (was ryelibrary.org): 581 Washington Road Rye NH, site has a dedicated event calendar page
+  { name: 'Rye Public Library', url: 'https://ryepubliclibrary.org', eventsUrl: 'https://ryepubliclibrary.org/calendar/', city: 'Rye', state: 'NH', zipCode: '03870', county: 'Rockingham'},
   { name: 'Salisbury Free Library', url: 'https://www.salisburylibrary.org/', eventsUrl: 'https://www.salisburylibrary.org/', city: 'Salisbury', state: 'NH', zipCode: '03268', county: 'Merrimack'},
   { name: 'Libbie A. Cass Memorial Library', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'NH', zipCode: '03284', county: 'Sullivan'},
   { name: 'Stark Public Library', url: 'https://www.starklibrary.org', eventsUrl: 'https://www.starklibrary.org/events', city: 'Stark', state: 'NH', zipCode: '03582', county: 'Coos'},

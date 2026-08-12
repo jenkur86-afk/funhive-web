@@ -535,3 +535,13 @@ Recorded so they can be restored if one is found later.
 | Central Village Public Library | Plainfield | CT | | no verifiable official site — Town of Plainfield CT library page lists only Aldrich Free Public Library, 299 Main St Moosup. Central Village branch at |
 | Louisville Public Library | Louisville | AL | | no verifiable official site — Library exists at 1951 Main St, Louisville AL 36048, phone 334-266-5210 per library directories, but no official website |
 | Hyde Park Public Library | Hyde Park | PA | | no verifiable official site — Exists at 700 Main St Hyde Park PA 15641, ph 724-845-1944, but contact is a comcast.net email; no site in POWER Library  |
+
+
+## Removed 2026-08-11 — URL lookup found no verifiable site
+
+Each was searched for during the collision cleanup and no official site could be verified.
+Recorded so they can be restored if one is found later.
+
+| Library | City | State | Old URL | Why |
+|---|---|---|---|---|
+| Green County Public Library | Greensburg | KY | | no verifiable official site — 112 West Court St Greensburg KY, phone 270-932-7081, but no standalone official site could be verified - only a Facebook |

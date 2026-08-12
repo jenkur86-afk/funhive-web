@@ -93,7 +93,8 @@ const LIBRARIES = [
   { name: 'Alachua Branch Library', url: 'https://www.alachualibrary.org', eventsUrl: 'https://www.alachualibrary.org/events', city: 'Alachua', state: 'FL', zipCode: '00000', county: 'Alachua County'},
   { name: 'Desoto County Library', url: 'https://www.arcadialibrary.org', eventsUrl: 'https://www.arcadialibrary.org/events', city: 'Arcadia', state: 'FL', zipCode: '00000', county: 'DeSoto'},
   { name: 'Archer Branch Library', url: 'https://www.archerlibrary.org/', eventsUrl: 'https://www.archerlibrary.org/', city: 'Archer', state: 'FL', zipCode: '00000', county: 'Alachua'},
-  { name: 'Auburndale Public Library', url: 'https://auburndalelibrary.org/', eventsUrl: 'https://auburndalelibrary.org/calendar/', city: 'Auburndale', state: 'FL', zipCode: '00000', county: 'Polk'},
+  // URL corrected 2026-08-11 (was auburndalelibrary.org): 100 West Bridgers Avenue Auburndale FL, phone 863-965-5548, Polk County Library Cooperative
+  { name: 'Auburndale Public Library', url: 'https://auburndalefl.com/library/', eventsUrl: 'https://auburndalefl.com/library/', city: 'Auburndale', state: 'FL', zipCode: '00000', county: 'Polk'},
   { name: 'Bartow Public Library', url: 'https://www.bartowlibrary.org', eventsUrl: 'https://www.bartowlibrary.org/events', city: 'Bartow', state: 'FL', zipCode: '00000', county: 'Polk'},
   { name: 'Brandon Branch', url: 'https://www.brandonlibrary.org/', eventsUrl: 'https://www.brandonlibrary.org/events-calendar', city: 'Brandon', state: 'FL', zipCode: '00000', county: 'Hillsborough'},
   { name: 'Levy County Public Library System', url: 'https://www.bronsonlibrary.org/', eventsUrl: 'https://www.bronsonlibrary.org/calendar', city: 'Bronson', state: 'FL', zipCode: '32621', county: 'Levy'},

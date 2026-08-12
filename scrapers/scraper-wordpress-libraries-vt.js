@@ -36,7 +36,8 @@ const LIBRARIES = [
   { name: 'Martha Canfield Memorial', url: 'https://www.arlingtonlibrary.org/', eventsUrl: 'https://www.arlingtonlibrary.org/home', city: 'Arlington', state: 'VT', zipCode: '05250', county: 'Bennington'},
   { name: 'Barton Public', url: 'https://www.bartonlibrary.org', eventsUrl: 'https://www.bartonlibrary.org/events', city: 'Barton', state: 'VT', zipCode: '05822', county: 'Orleans'},
   { name: 'Mount Holly', url: 'https://smcl.org/', eventsUrl: 'https://smcl.org/', city: 'Belmont', state: 'VT', zipCode: '05730', county: 'Rutland'},
-  { name: 'Bennington Free', url: 'https://www.benningtonlibrary.org', eventsUrl: 'https://www.benningtonlibrary.org/events', city: 'Bennington', state: 'VT', zipCode: '05201', county: 'Bennington County'},
+  // URL corrected 2026-08-11 (was benningtonlibrary.org): 101 Silver Street Bennington VT 05201, phone 802-442-9051
+  { name: 'Bennington Free', url: 'https://benningtonfreelibrary.org', eventsUrl: 'https://benningtonfreelibrary.org', city: 'Bennington', state: 'VT', zipCode: '05201', county: 'Bennington County'},
   { name: 'Benson Public', url: 'https://www.bensonlibrary.org', eventsUrl: 'https://www.bensonlibrary.org/events', city: 'Benson', state: 'VT', zipCode: '05731', county: 'Rutland'},
   { name: 'Bethel Public', url: 'https://www.bethellibrary.org', eventsUrl: 'https://www.bethellibrary.org/events', city: 'Bethel', state: 'VT', zipCode: '05032', county: 'Windsor'},
   { name: 'Bradford Public', url: 'https://bradfordlibrary.org/', eventsUrl: 'https://bradfordlibrary.org/', city: 'Bradford', state: 'VT', zipCode: '05033', county: 'Orange'},

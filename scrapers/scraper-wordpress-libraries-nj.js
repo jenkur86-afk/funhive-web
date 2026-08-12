@@ -141,7 +141,8 @@ const LIBRARIES = [
   { name: 'Rahway Public Library', url: 'https://www.rahwaylibrary.org/', eventsUrl: 'https://www.rahwaylibrary.org/', city: 'Rahway', state: 'NJ', zipCode: '07065', county: 'Union'},
   { name: 'Ramsey Free Public Library', url: 'https://www.ramseylibrary.org', eventsUrl: 'https://www.ramseylibrary.org/events', city: 'Ramsey', state: 'NJ', zipCode: '07446', county: 'Bergen'},
   { name: 'Red Bank Public Library', url: 'https://www.redbanklibrary.org/', eventsUrl: 'https://www.redbanklibrary.org/calendar', city: 'Red Bank', state: 'NJ', zipCode: '07701', county: 'Monmouth'},
-  { name: 'Ridgefield Free Public Library', url: 'https://ridgefieldlibrary.org/', eventsUrl: 'https://ridgefieldlibrary.org/', city: 'Ridgefield', state: 'NJ', zipCode: '07657', county: 'Bergen'},
+  // URL corrected 2026-08-11 (was ridgefieldlibrary.org): 527 Morse Ave Ridgefield NJ 07657, phone 201-941-0192, BCCLS member
+  { name: 'Ridgefield Free Public Library', url: 'https://www.ridgefieldpubliclibrary.com', eventsUrl: 'https://www.ridgefieldpubliclibrary.com', city: 'Ridgefield', state: 'NJ', zipCode: '07657', county: 'Bergen'},
   { name: 'Ridgewood Public Library', url: 'https://ridgewoodlibrary.org/', eventsUrl: 'https://ridgewoodlibrary.org/', city: 'Ridgewood', state: 'NJ', zipCode: '07450', county: 'Bergen'},
   { name: 'Ringwood Public Library', url: 'https://www.ringwoodlibrary.org', eventsUrl: 'https://www.ringwoodlibrary.org/events', city: 'Ringwood', state: 'NJ', zipCode: '07456', county: 'Passaic'},
   { name: 'River Vale Public Library', url: 'https://www.rivervalelibrary.org/', eventsUrl: 'https://www.rivervalelibrary.org/calendar', city: 'River Vale', state: 'NJ', zipCode: '07675', county: 'Bergen'},

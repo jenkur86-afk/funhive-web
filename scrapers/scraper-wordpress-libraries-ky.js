@@ -66,7 +66,9 @@ const LIBRARIES = [
   // URL corrected 2026-08-11 (was glasgowlibrary.org): Site header reads Barren County Public Library - Mary Wood Weldon Memorial Library, 1530 S Green St, Glasgow KY 42141, phone 270-651-2824
   { name: 'Mary Wood Weldon Memorial Public Library', url: 'https://weldonpubliclibrary.org', eventsUrl: 'https://weldonpubliclibrary.org/index.php/events/', city: 'Glasgow', state: 'KY', zipCode: '42141', county: 'Barren'},
   { name: 'Mahan-Oldham County Library', url: 'https://www.goshenlibrary.org/', eventsUrl: 'https://www.goshenlibrary.org/', city: 'Goshen', state: 'KY', zipCode: '00000', county: 'Oldham'},
-  { name: 'Green County Public Library', url: 'https://www.greensburglibrary.org', eventsUrl: 'https://www.greensburglibrary.org/events', city: 'Greensburg', state: 'KY', zipCode: '42743', county: 'Green'},
+  // REMOVED 2026-08-11 (Defect A): no verifiable official site. 112 West Court St Greensburg KY, phone 270-932-7081, but no standalone official site could be verified - only a Facebook page and county directory lis
+  // RECORDED COVERAGE GAP - restore if a real URL is found.
+  // { name: 'Green County Public Library', url: 'https://www.greensburglibrary.org', eventsUrl: 'https://www.greensburglibrary.org/events', city: 'Greensburg', state: 'KY', zipCode: '42743', county: 'Green'},
   { name: 'Harlan County Public Library', url: 'https://www.harlanlibrary.org', eventsUrl: 'https://www.harlanlibrary.org/events', city: 'Harlan', state: 'KY', zipCode: '40831', county: 'Harlan County'},
   { name: 'Ohio County Public Library', url: 'https://www.hartfordlibrary.org', eventsUrl: 'https://www.hartfordlibrary.org/events', city: 'Hartford', state: 'KY', zipCode: '42347', county: 'Ohio'},
   { name: 'Perry County Public Library', url: 'https://www.hazardlibrary.org/', eventsUrl: 'https://www.hazardlibrary.org/', city: 'Hazard', state: 'KY', zipCode: '41701', county: 'Perry'},
@@ -78,7 +80,8 @@ const LIBRARIES = [
   // URL corrected 2026-08-11 (was libertylibrary.org): 238 Middleburg St Liberty KY 42539, phone 606-787-9381. libertylibrary.org is a Conroe TX charity, not this library
   { name: 'Casey County Public Library', url: 'https://www.caseylibrary.org', eventsUrl: 'https://www.caseylibrary.org/calendar/', city: 'Liberty', state: 'KY', zipCode: '42539', county: 'Casey'},
   { name: 'Crittenden County Public Library', url: 'https://www.marionlibrary.org/', eventsUrl: 'https://www.marionlibrary.org/', city: 'Marion', state: 'KY', zipCode: '42064', county: 'Marion County'},
-  { name: 'Mason County Public Library', url: 'https://www.maysvillelibrary.org', eventsUrl: 'https://www.maysvillelibrary.org/events', city: 'Maysville', state: 'KY', zipCode: '41056', county: 'Mason'},
+  // URL corrected 2026-08-11 (was maysvillelibrary.org): 218 E Third Street Maysville KY 41056, phone 606-564-3286
+  { name: 'Mason County Public Library', url: 'https://www.masoncountylibrary.com', eventsUrl: 'https://www.masoncountylibrary.com', city: 'Maysville', state: 'KY', zipCode: '41056', county: 'Mason'},
   { name: 'Wayne County Public Library', url: 'https://www.allertonpubliclibrary.org/', eventsUrl: 'https://www.allertonpubliclibrary.org/calendar', city: 'Monticello', state: 'KY', zipCode: '42633', county: 'Wayne'},
   // URL corrected 2026-08-11 (was scottsvillelibrary.org): Site says located in Scottsville Kentucky, phone 270-237-3861 (KY area code). scottsvillelibrary.org is Scottsville Free Library in Scottsvi
   { name: 'Allen County Public Library', url: 'https://www.allencountylibrary.com', eventsUrl: 'https://www.allencountylibrary.com/calendar/', city: 'Scottsville', state: 'KY', zipCode: '42164', county: 'Allen'},

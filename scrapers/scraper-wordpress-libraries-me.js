@@ -24,7 +24,8 @@ const LIBRARIES = [
   { name: 'Augusta - Lithgow Public Library', url: 'https://www.lithgowlibrary.org/', eventsUrl: 'https://www.lithgowlibrary.org/', city: 'Augusta', state: 'ME', zipCode: '04330', county: 'Kennebec'},
   { name: 'Scarborough Public Library', url: 'https://www.scarboroughlibrary.org', eventsUrl: 'https://www.scarboroughlibrary.org/events', city: 'Scarborough', state: 'ME', zipCode: '04074', county: 'Cumberland'},
   { name: 'Waterville Public Library', url: 'https://www.watervillelibrary.org', eventsUrl: 'https://www.watervillelibrary.org/events', city: 'Waterville', state: 'ME', zipCode: '04901', county: 'Kennebec'},
-  { name: 'Westbrook Public Library', url: 'https://www.westbrooklibrary.org', eventsUrl: 'https://www.westbrooklibrary.org/events', city: 'Westbrook', state: 'ME', zipCode: '04092', county: 'Cumberland'},
+  // URL corrected 2026-08-11 (was westbrooklibrary.org): 800 Main St Westbrook ME, phone 207-854-0630. NOTE real institution is Walker Memorial Library - configured NAME is wrong. westbrooklibrary.
+  { name: 'Westbrook Public Library', url: 'https://walkerlibrary.org', eventsUrl: 'https://walkerlibrary.org', city: 'Westbrook', state: 'ME', zipCode: '04092', county: 'Cumberland'},
   { name: 'Brunswick Curtis Memorial Library', url: 'https://curtislibrary.com/', eventsUrl: 'https://curtislibrary.com/', city: 'Brunswick', state: 'ME', zipCode: '04011', county: 'Cumberland'},
   { name: 'Gorham Baxter Memorial Library', url: 'https://www.baxterlibrary.org', eventsUrl: 'https://www.baxterlibrary.org/events', city: 'Gorham', state: 'ME', zipCode: '04038', county: 'Cumberland'},
   { name: 'Windham Public Library', url: 'https://www.windham.lib.me.us/', eventsUrl: 'https://www.windham.lib.me.us/calendar', city: 'Windham', state: 'ME', zipCode: '04062', county: 'Windham County'},
@@ -106,7 +107,8 @@ const LIBRARIES = [
   { name: 'Pittsfield Public Library', url: 'https://www.pittsfield.lib.me.us/', eventsUrl: 'https://www.pittsfield.lib.me.us/events/', city: 'Pittsfield', state: 'ME', zipCode: '04967', county: 'Somerset'},
   { name: 'Mark And Emily Turner Memorial Library', url: 'https://www.presqueislelibrary.org', eventsUrl: 'https://www.presqueislelibrary.org/events', city: 'Presque Isle', state: 'ME', zipCode: '04769', county: 'Aroostook'},
   { name: 'Rangeley Public Library', url: 'https://www.rangeleylibrary.org', eventsUrl: 'https://www.rangeleylibrary.org/events', city: 'Rangeley', state: 'ME', zipCode: '04970', county: 'Franklin'},
-  { name: 'Rockport Public Library', url: 'https://www.rockportlibrary.org', eventsUrl: 'https://www.rockportlibrary.org/events', city: 'Rockport', state: 'ME', zipCode: '04856', county: 'Knox'},
+  // URL corrected 2026-08-11 (was rockportlibrary.org): 1 Limerock Street Rockport ME 04856, phone 207-236-3642. Verified rockportlibrary.org is Rockport MASSACHUSETTS - 17 School St, 978 area cod
+  { name: 'Rockport Public Library', url: 'https://www.rockport.lib.me.us', eventsUrl: 'https://www.rockport.lib.me.us', city: 'Rockport', state: 'ME', zipCode: '04856', county: 'Knox'},
   { name: 'Sargentville Library Assn', url: 'https://www.sargentvillelibrary.org/', eventsUrl: 'https://www.sargentvillelibrary.org/', city: 'Sargentville', state: 'ME', zipCode: '04673', county: 'Hancock'},
   { name: 'Sherman Public Library', url: 'https://www.shermanlibrary.org/', eventsUrl: 'https://www.shermanlibrary.org/', city: 'Sherman', state: 'ME', zipCode: '04776', county: 'Aroostook'},
   { name: 'South Berwick Public Library', url: 'https://www.southberwicklibrary.org', eventsUrl: 'https://www.southberwicklibrary.org/events', city: 'South Berwick', state: 'ME', zipCode: '03908', county: 'York'},
