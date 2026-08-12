@@ -22,7 +22,7 @@ const LIBRARIES = [
   // URL corrected 2026-08-11 (was amherstlibrary.org): Jones Library, Amherst MA 01002, ph 413-259-3090; currently at temporary site 101 University Drive during building project
   { name: 'Jones Library, Inc.', url: 'https://www.joneslibrary.org/', eventsUrl: 'https://www.joneslibrary.org/calendar.aspx', city: 'Amherst', state: 'MA', zipCode: '01002', county: 'Hampshire'},
   { name: 'Memorial Hall Library', url: 'https://www.andoverlibrary.org', eventsUrl: 'https://www.andoverlibrary.org/events', city: 'Andover', state: 'MA', zipCode: '01810', county: 'Essex'},
-  { name: 'Aquinnah Public Library', url: 'https://www.aquinnahlibrary.org', eventsUrl: 'https://www.aquinnahlibrary.org/events', city: 'Aquinnah', state: 'MA', zipCode: '02535', county: 'Aquinnah County'},
+  { name: 'Aquinnah Public Library', url: 'https://www.aquinnahlibrary.org', eventsUrl: 'https://www.aquinnahlibrary.org/events', city: 'Aquinnah', state: 'MA', zipCode: '02535', county: 'Dukes County'},
   { name: 'Edith M. Fox Library', url: 'https://www.arlingtonlibrary.org/', eventsUrl: 'https://www.arlingtonlibrary.org/home', city: 'Arlington', state: 'MA', zipCode: '00000', county: 'Middlesex'},
   { name: 'Stevens Memorial Library', url: 'https://www.ashburnhamlibrary.org', eventsUrl: 'https://www.ashburnhamlibrary.org/events', city: 'Ashburnham', state: 'MA', zipCode: '01430', county: 'Worcester'},
   { name: 'Ashby Free Public Library', url: 'https://www.ashbylibrary.org/', eventsUrl: 'https://www.ashbylibrary.org/calendar/', city: 'Ashby', state: 'MA', zipCode: '01431', county: 'Middlesex'},
@@ -61,7 +61,7 @@ const LIBRARIES = [
   { name: 'Chesterfield Public Library', url: 'https://www.townofchesterfieldma.com/library', eventsUrl: 'https://www.townofchesterfieldma.com/library', city: 'Chesterfield', state: 'MA', zipCode: '01012', county: 'Hampshire'},
   { name: 'Aldenville Branch Library', url: 'https://www.chicopeelibrary.org', eventsUrl: 'https://www.chicopeelibrary.org/events', city: 'Chicopee', state: 'MA', zipCode: '00000', county: 'Hampden'},
   { name: 'Chilmark Free Public Library', url: 'https://www.chilmarklibrary.org', eventsUrl: 'https://www.chilmarklibrary.org/events', city: 'Chilmark', state: 'MA', zipCode: '02535', county: 'Dukes'},
-  { name: 'Clarksburg Town Library', url: 'https://www.clarksburglibrary.org', eventsUrl: 'https://www.clarksburglibrary.org/events', city: 'Clarksburg', state: 'MA', zipCode: '01247', county: 'Clarksburg County'},
+  { name: 'Clarksburg Town Library', url: 'https://www.clarksburglibrary.org', eventsUrl: 'https://www.clarksburglibrary.org/events', city: 'Clarksburg', state: 'MA', zipCode: '01247', county: 'Berkshire County'},
   { name: 'Bigelow Free Public Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'MA', zipCode: '01510', county: 'Worcester'},
   { name: 'Paul Pratt Memorial Library', url: 'https://www.cohassetlibrary.org/', eventsUrl: 'https://www.cohassetlibrary.org/', city: 'Cohasset', state: 'MA', zipCode: '02025', county: 'Norfolk'},
   { name: 'Concord Free Public Library', url: 'https://www.concordlibrary.org', eventsUrl: 'https://www.concordlibrary.org/events', city: 'Concord', state: 'MA', zipCode: '01742', county: 'Middlesex'},

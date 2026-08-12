@@ -28,7 +28,7 @@ const LIBRARIES = [
   { name: 'Westbrook Public Library', url: 'https://walkerlibrary.org', eventsUrl: 'https://walkerlibrary.org', city: 'Westbrook', state: 'ME', zipCode: '04092', county: 'Cumberland'},
   { name: 'Brunswick Curtis Memorial Library', url: 'https://curtislibrary.com/', eventsUrl: 'https://curtislibrary.com/', city: 'Brunswick', state: 'ME', zipCode: '04011', county: 'Cumberland'},
   { name: 'Gorham Baxter Memorial Library', url: 'https://www.baxterlibrary.org', eventsUrl: 'https://www.baxterlibrary.org/events', city: 'Gorham', state: 'ME', zipCode: '04038', county: 'Cumberland'},
-  { name: 'Windham Public Library', url: 'https://www.windham.lib.me.us/', eventsUrl: 'https://www.windham.lib.me.us/calendar', city: 'Windham', state: 'ME', zipCode: '04062', county: 'Windham County'},
+  { name: 'Windham Public Library', url: 'https://www.windham.lib.me.us/', eventsUrl: 'https://www.windham.lib.me.us/calendar', city: 'Windham', state: 'ME', zipCode: '04062', county: 'Cumberland County'},
   { name: 'Kennebunk Free Library', url: 'https://kennebunklibrary.org/', eventsUrl: 'https://kennebunklibrary.org/calendar/', city: 'Kennebunk', state: 'ME', zipCode: '04043', county: 'York'},
   { name: 'Belfast Free Library', url: 'https://www.belfastlibrary.org', eventsUrl: 'https://www.belfastlibrary.org/events', city: 'Belfast', state: 'ME', zipCode: '04915', county: 'Waldo'},
   { name: 'Rockland Public Library', url: 'https://www.rocklandlibrary.org', eventsUrl: 'https://www.rocklandlibrary.org/events', city: 'Rockland', state: 'ME', zipCode: '04841', county: 'Knox'},
@@ -56,7 +56,7 @@ const LIBRARIES = [
   { name: 'Brownville Public Library', url: 'https://www.brownvillelibrary.org', eventsUrl: 'https://www.brownvillelibrary.org/events', city: 'Brownville', state: 'ME', zipCode: '04414', county: 'Piscataquis'},
   // URL corrected 2026-08-11 (was carmellibrary.org): Site lists 8 Plymouth Road (Route 69), Carmel ME 04419, phone 207-848-7145. carmellibrary.org is Reed Memorial Library in Carmel NY
   { name: 'Simpson Memorial Library', url: 'https://www.simpsonmemorial.org', eventsUrl: 'https://www.simpsonmemorial.org/news', city: 'Carmel', state: 'ME', zipCode: '04419', county: 'Penobscot'},
-  { name: 'Cumberland - Chebeague Island Library', url: 'https://www.chebeaguelibrary.org', eventsUrl: 'https://www.chebeaguelibrary.org/events', city: 'Chebeague', state: 'ME', zipCode: '00000', county: 'Chebeague County'},
+  { name: 'Cumberland - Chebeague Island Library', url: 'https://www.chebeaguelibrary.org', eventsUrl: 'https://www.chebeaguelibrary.org/events', city: 'Chebeague Island', state: 'ME', zipCode: '04017', county: 'Cumberland County'},
   { name: 'Brown Memorial Library - Clinton', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'ME', zipCode: '04927', county: 'Kennebec'},
   // URL corrected 2026-08-11 (was cumberlandlibrary.org): Site lists 266 Main Street, Cumberland ME 04021, phone 207-829-2215. cumberlandlibrary.org is Cumberland RI
   { name: 'Prince Memorial Library', url: 'https://www.princememorial.org', eventsUrl: 'https://princememorial.librarycalendar.com/events/upcoming', city: 'Cumberland', state: 'ME', zipCode: '04021', county: 'Cumberland County'},
@@ -68,7 +68,7 @@ const LIBRARIES = [
   { name: 'Fort Fairfield Public Library', url: 'https://www.fortfairfieldlibrary.org/', eventsUrl: 'https://www.fortfairfieldlibrary.org/', city: 'Fort Fairfield', state: 'ME', zipCode: '04742', county: 'Aroostook'},
   { name: 'Freeport Community Library', url: 'https://www.freeportlibrary.org', eventsUrl: 'https://www.freeportlibrary.org/events', city: 'Freeport', state: 'ME', zipCode: '04032', county: 'Cumberland'},
   { name: 'Gardiner Public Library', url: 'https://www.gardinerlibrary.org/', eventsUrl: 'https://www.gardinerlibrary.org/', city: 'Gardiner', state: 'ME', zipCode: '04345', county: 'Kennebec'},
-  { name: 'Julia Adams Morse Memorial Library', url: 'https://www.greenelibrary.org', eventsUrl: 'https://www.greenelibrary.org/events', city: 'Greene', state: 'ME', zipCode: '04236', county: 'Greene County'},
+  { name: 'Julia Adams Morse Memorial Library', url: 'https://www.greenelibrary.org', eventsUrl: 'https://www.greenelibrary.org/events', city: 'Greene', state: 'ME', zipCode: '04236', county: 'Androscoggin County'},
   // URL collision fixed 2026-08-05. Same greenvillelibrary.org collision that
   // hit WordPress-NY: that domain is the Greenville County Library System in
   // SOUTH CAROLINA, and this entry was ingesting 25 of its events under a Maine
@@ -78,7 +78,7 @@ const LIBRARIES = [
   { name: 'Shaw Public Library - Greenville', url: 'https://shawpubliclibrary.org', eventsUrl: 'https://shawpubliclibrary.org/events/', city: 'Greenville', state: 'ME', zipCode: '04441', county: 'Piscataquis'},
   { name: 'Hartland Public Library', url: 'https://www.hartlandlibrary.org', eventsUrl: 'https://www.hartlandlibrary.org/events', city: 'Hartland', state: 'ME', zipCode: '04943', county: 'Somerset'},
   // URL corrected 2026-08-11 (was hollislibrary.org): Own site; 14 Little Falls Road Hollis Center Maine 04042, phone 207-929-3911
-  { name: 'Hollis Center Public Library', url: 'https://www.holliscenterpubliclibrary.org', eventsUrl: 'https://www.holliscenterpubliclibrary.org', city: 'Hollis', state: 'ME', zipCode: '04042', county: 'Hollis County'},
+  { name: 'Hollis Center Public Library', url: 'https://www.holliscenterpubliclibrary.org', eventsUrl: 'https://www.holliscenterpubliclibrary.org', city: 'Hollis', state: 'ME', zipCode: '04042', county: 'York County'},
   { name: 'Thomas Free Library', url: 'https://www.howlandlibrary.org', eventsUrl: 'https://www.howlandlibrary.org/events', city: 'Howland', state: 'ME', zipCode: '04448', county: 'Penobscot'},
   { name: 'Katahdin Public Library', url: 'https://www.islandfallslibrary.org/', eventsUrl: 'https://www.islandfallslibrary.org/', city: 'Island Falls', state: 'ME', zipCode: '04747', county: 'Aroostook'},
   { name: 'Parsonsfield Public Library', url: 'https://www.kezarfallslibrary.org/', eventsUrl: 'https://www.kezarfallslibrary.org/upcoming-events', city: 'Kezar Falls', state: 'ME', zipCode: '00000', county: 'Oxford'},
@@ -87,7 +87,7 @@ const LIBRARIES = [
   { name: 'Ivan O. Davis-Liberty Library', url: 'https://liberty.lib.me.us', eventsUrl: 'https://liberty.lib.me.us/calendar/', city: 'Liberty', state: 'ME', zipCode: '04949', county: 'Waldo'},
   { name: 'Limerick Public Library', url: 'https://www.limericklibrary.org', eventsUrl: 'https://www.limericklibrary.org/events', city: 'Limerick', state: 'ME', zipCode: '04048', county: 'York'},
   { name: 'Frost Memorial Library', url: 'https://www.limestonelibrary.org/', eventsUrl: 'https://www.limestonelibrary.org/', city: 'Limestone', state: 'ME', zipCode: '00000', county: 'Aroostook'},
-  { name: 'Lyman Community Library', url: 'https://www.lymanlibrary.org/', eventsUrl: 'https://www.lymanlibrary.org/', city: 'Lyman', state: 'ME', zipCode: '04002', county: 'Lyman County'},
+  { name: 'Lyman Community Library', url: 'https://www.lymanlibrary.org/', eventsUrl: 'https://www.lymanlibrary.org/', city: 'Lyman', state: 'ME', zipCode: '04002', county: 'York County'},
   { name: 'Machias - Porter Memorial Library', url: 'https://www.machiaslibrary.org', eventsUrl: 'https://www.machiaslibrary.org/events', city: 'Machias', state: 'ME', zipCode: '00000', county: 'Washington'},
   { name: 'Madawaska Public Library', url: 'https://www.madawaskalibrary.org', eventsUrl: 'https://www.madawaskalibrary.org/events', city: 'Madawaska', state: 'ME', zipCode: '04756', county: 'Aroostook'},
   { name: 'Madison Public Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'ME', zipCode: '04950', county: 'Somerset'},
@@ -130,7 +130,7 @@ const LIBRARIES = [
   { name: 'Warren Free Public Library', url: 'https://www.warrenlibrary.org', eventsUrl: 'https://www.warrenlibrary.org/events', city: 'Warren', state: 'ME', zipCode: '04864', county: 'Knox'},
   // URL corrected 2026-08-11 (was washburnlibrary.org): Site shows 1290 Main Street, Washburn ME 04786, phone 207-455-2016, Aroostook County
   { name: 'Washburn Memorial Library', url: 'https://www.washburnlibrary.com/', eventsUrl: 'https://www.washburnlibrary.com/calendar', city: 'Washburn', state: 'ME', zipCode: '04786', county: 'Aroostook'},
-  { name: 'Waterford Library Association', url: 'https://www.waterfordlibrary.org', eventsUrl: 'https://www.waterfordlibrary.org/events', city: 'Waterford', state: 'ME', zipCode: '04088', county: 'Waterford County'},
+  { name: 'Waterford Library Association', url: 'https://www.waterfordlibrary.org', eventsUrl: 'https://www.waterfordlibrary.org/events', city: 'Waterford', state: 'ME', zipCode: '04088', county: 'Oxford County'},
   { name: 'Wells Public Library', url: 'https://wellslibrary.org/', eventsUrl: 'https://wellslibrary.org/', city: 'Wells', state: 'ME', zipCode: '04090', county: 'York'},
   { name: 'West Paris Public Library', url: 'https://www.westparislibrary.org/', eventsUrl: 'https://www.westparislibrary.org/', city: 'West Paris', state: 'ME', zipCode: '04289', county: 'Oxford'},
   { name: 'Wilton Free Public Library', url: 'https://www.wiltonlibrary.org', eventsUrl: 'https://www.wiltonlibrary.org/events', city: 'Wilton', state: 'ME', zipCode: '04294', county: 'Franklin'},

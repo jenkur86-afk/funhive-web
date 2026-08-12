@@ -90,7 +90,7 @@ const LIBRARIES = [
   { name: 'Lyndhurst Free Public Library', url: 'https://lyndhurstlibrary.org/', eventsUrl: 'https://lyndhurstlibrary.org/', city: 'Lyndhurst', state: 'NJ', zipCode: '07071', county: 'Bergen'},
   { name: 'Madison Public Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'NJ', zipCode: '07940', county: 'Morris'},
   { name: 'Maplewood Memorial Library', url: 'https://www.maplewoodlibrary.org/', eventsUrl: 'https://www.maplewoodlibrary.org/', city: 'Maplewood', state: 'NJ', zipCode: '07040', county: 'Essex'},
-  { name: 'Margate City Public Library', url: 'https://www.margatelibrary.org', eventsUrl: 'https://www.margatelibrary.org/events', city: 'Margate', state: 'NJ', zipCode: '08402', county: 'Margate County'},
+  { name: 'Margate City Public Library', url: 'https://www.margatelibrary.org', eventsUrl: 'https://www.margatelibrary.org/events', city: 'Margate', state: 'NJ', zipCode: '08402', county: 'Atlantic County'},
   { name: 'Maywood Public Library', url: 'https://www.maywoodlibrary.org', eventsUrl: 'https://www.maywoodlibrary.org/events', city: 'Maywood', state: 'NJ', zipCode: '07607', county: 'Bergen'},
   { name: 'Metuchen Public Library', url: 'https://www.metuchenlibrary.org/', eventsUrl: 'https://www.metuchenlibrary.org/calendar/', city: 'Metuchen', state: 'NJ', zipCode: '08840', county: 'Middlesex'},
   { name: 'Middletown Township Public Library', url: 'https://www.middletownlibrary.org', eventsUrl: 'https://www.middletownlibrary.org/events', city: 'Middletown', state: 'NJ', zipCode: '07748', county: 'Monmouth'},

@@ -160,7 +160,7 @@ const LIBRARIES = [
   { name: 'Montgomery Area Public Library', url: 'https://www.montgomerylibrary.org', eventsUrl: 'https://www.montgomerylibrary.org/events', city: 'Montgomery', state: 'PA', zipCode: '17752', county: 'Montgomery County'},
   { name: 'South Fayette Township Library', url: 'https://www.morganlibrary.org', eventsUrl: 'https://www.morganlibrary.org/events', city: 'Morgan', state: 'PA', zipCode: '15064', county: 'Delaware'},
   { name: 'Mount Pleasant Free Public Library Association', url: 'https://www.mountpleasantlibrary.org/', eventsUrl: 'https://www.mountpleasantlibrary.org/', city: 'Mount Pleasant', state: 'PA', zipCode: '15666', county: 'Philadelphia'},
-  { name: 'Marian Sutherland Kirby Library', url: 'https://mountaintoplibrary.org/', eventsUrl: 'https://mountaintoplibrary.org/calendar/', city: 'Mountaintop', state: 'PA', zipCode: '18707', county: 'Mountaintop County'},
+  { name: 'Marian Sutherland Kirby Library', url: 'https://mountaintoplibrary.org/', eventsUrl: 'https://mountaintoplibrary.org/calendar/', city: 'Mountain Top', state: 'PA', zipCode: '18707', county: 'Luzerne County'},
   { name: 'Murrysville Community Library', url: 'https://www.murrysvillelibrary.org', eventsUrl: 'https://www.murrysvillelibrary.org/events', city: 'Murrysville', state: 'PA', zipCode: '15668', county: 'Westmoreland'},
   { name: 'Narberth Community Library', url: 'https://www.narberthlibrary.org', eventsUrl: 'https://www.narberthlibrary.org/events', city: 'Narberth', state: 'PA', zipCode: '19072', county: 'Montgomery'},
   { name: 'Memorial Library Of Nazareth Vicinity', url: 'https://www.nazarethlibrary.org', eventsUrl: 'https://www.nazarethlibrary.org/events', city: 'Nazareth', state: 'PA', zipCode: '18064', county: 'Northampton'},
@@ -208,7 +208,7 @@ const LIBRARIES = [
   { name: 'Smithfield Library', url: 'https://www.smithfieldlibrary.org/', eventsUrl: 'https://www.smithfieldlibrary.org/', city: 'Smithfield', state: 'PA', zipCode: '15478', county: 'Fayette'},
   // URL corrected 2026-08-11 (was somersetlibrary.org): Own site; 230 South Rosina Avenue Somerset PA 15501, phone 814-445-4011
   { name: 'Mary S Biesecker Public Library', url: 'https://www.maryslibrary.com', eventsUrl: 'https://www.maryslibrary.com/?page_id=22', city: 'Somerset', state: 'PA', zipCode: '15501', county: 'Somerset County'},
-  { name: 'South Park Township Library', url: 'https://southparklibrary.org/', eventsUrl: 'https://southparklibrary.org/', city: 'South Park', state: 'PA', zipCode: '15129', county: 'South Park County'},
+  { name: 'South Park Township Library', url: 'https://southparklibrary.org/', eventsUrl: 'https://southparklibrary.org/', city: 'South Park', state: 'PA', zipCode: '15129', county: 'Allegheny County'},
   { name: 'Spring City Free Public Library', url: 'https://springcitylibrary.org/', eventsUrl: 'https://springcitylibrary.org/', city: 'Spring City', state: 'PA', zipCode: '19475', county: 'Chester'},
   { name: 'Springdale Free Public Library', url: 'https://springdalelibrary.org/', eventsUrl: 'https://springdalelibrary.org/upcoming-events/', city: 'Springdale', state: 'PA', zipCode: '15144', county: 'Allegheny'},
   { name: 'Springfield Township Library', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'PA', zipCode: '19064', county: 'Delaware'},

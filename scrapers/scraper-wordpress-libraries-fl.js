@@ -112,7 +112,7 @@ const LIBRARIES = [
   // URL corrected 2026-08-11 (was lakeplacidlibrary.org): Highlands County FL Library System branch; 205 W Interlake Blvd Lake Placid FL 33852, phone 863-699-3705
   { name: 'Lake Placid Memorial Library', url: 'https://www.myhlc.org/lake-placid-memorial-library', eventsUrl: 'https://myhlc.specialdistrict.org/programming-upcoming-events', city: 'Lake Placid', state: 'FL', zipCode: '00000', county: 'Highlands'},
   { name: 'Lakeland Public Library', url: 'https://www.lakelandlibrary.org', eventsUrl: 'https://www.lakelandlibrary.org/events', city: 'Lakeland', state: 'FL', zipCode: '00000', county: 'Polk'},
-  { name: 'Land Olakes Branch Library', url: 'https://www.landolakeslibrary.org', eventsUrl: 'https://www.landolakeslibrary.org/events', city: 'Land Olakes', state: 'FL', zipCode: '00000', county: 'Land Olakes County'},
+  { name: 'Land Olakes Branch Library', url: 'https://www.landolakeslibrary.org', eventsUrl: 'https://www.landolakeslibrary.org/events', city: "Land O' Lakes", state: 'FL', zipCode: '34639', county: 'Pasco County'},
   { name: 'Lantana Public Library', url: 'https://www.lantanalibrary.org/', eventsUrl: 'https://www.lantanalibrary.org/', city: 'Lantana', state: 'FL', zipCode: '33462', county: 'Palm Beach'},
   { name: 'Largo Public Library', url: 'https://www.largolibrary.org', eventsUrl: 'https://www.largolibrary.org/events', city: 'Largo', state: 'FL', zipCode: '00000', county: 'Pinellas'},
   { name: 'West Branch Library', url: 'https://www.longwoodlibrary.org', eventsUrl: 'https://www.longwoodlibrary.org/events', city: 'Longwood', state: 'FL', zipCode: '00000', county: 'Seminole'},
