@@ -48,17 +48,21 @@ const LIBRARIES = [
   { name: 'Cornwall Free Public', url: 'https://www.cornwalllibrary.org', eventsUrl: 'https://www.cornwalllibrary.org/events', city: 'Cornwall', state: 'VT', zipCode: '05753', county: 'Addison'},
   { name: 'Pope Memorial', url: 'https://www.danvillelibrary.org', eventsUrl: 'https://www.danvillelibrary.org/events', city: 'Danville', state: 'VT', zipCode: '05828', county: 'Caledonia'},
   { name: 'Essex Free', url: 'https://www.essexlibrary.org', eventsUrl: 'https://www.essexlibrary.org/events', city: 'Essex', state: 'VT', zipCode: '05451', county: 'Essex County'},
-  { name: 'Fair Haven Free', url: 'https://fairhavenlibrary.org/', eventsUrl: 'https://fairhavenlibrary.org/', city: 'Fair Haven', state: 'VT', zipCode: '05743', county: 'Rutland'},
+  // URL corrected 2026-08-11 (was fairhavenlibrary.org): Real name Fair Haven Free Library; site shows 107 North Main Street, Fair Haven VT 05743, phone 802-265-8011
+  { name: 'Fair Haven Free', url: 'https://fairhavenfree.org', eventsUrl: 'https://fairhavenfree.org', city: 'Fair Haven', state: 'VT', zipCode: '05743', county: 'Rutland'},
   { name: 'Fairfax Community', url: 'https://www.fairfaxlibrary.org', eventsUrl: 'https://www.fairfaxlibrary.org/events', city: 'Fairfax', state: 'VT', zipCode: '05454', county: 'Franklin'},
-  { name: 'Bent Northrup Memorial', url: 'https://fairfieldlibrary.org/', eventsUrl: 'https://fairfieldlibrary.org/', city: 'Fairfield', state: 'VT', zipCode: '05455', county: 'Franklin'},
+  // URL corrected 2026-08-11 (was fairfieldlibrary.org): Correct spelling is Bent Northrop; 164 Park Street Fairfield VT 05455, phone 802-827-3945
+  { name: 'Bent Northrup Memorial', url: 'https://www.bentnorthrop.org', eventsUrl: 'https://www.bentnorthrop.org/events.html', city: 'Fairfield', state: 'VT', zipCode: '05455', county: 'Franklin'},
   { name: 'Haston', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'VT', zipCode: '05457', county: 'Franklin County'},
   { name: 'Gilman Public Library', url: 'https://gilmanlibrary.org/', eventsUrl: 'https://gilmanlibrary.org/calendar', city: 'Gilman', state: 'VT', zipCode: '05904', county: 'Essex'},
   { name: 'Glover Public', url: 'https://gloverlibrary.org/', eventsUrl: 'https://gloverlibrary.org/', city: 'Glover', state: 'VT', zipCode: '05839', county: 'Orleans'},
   { name: 'Greensboro Free', url: 'https://www.greensborolibrary.org', eventsUrl: 'https://www.greensborolibrary.org/events', city: 'Greensboro', state: 'VT', zipCode: '05841', county: 'Orleans'},
-  { name: 'Hancock Free Public', url: 'https://hancocklibrary.org/', eventsUrl: 'https://hancocklibrary.org/', city: 'Hancock', state: 'VT', zipCode: '05748', county: 'Addison'},
+  // URL corrected 2026-08-11 (was hancocklibrary.org): No standalone site; page on Town of Hancock Vermont 05748 official site, library on Route 100, town clerk 802-767-3660
+  { name: 'Hancock Free Public', url: 'https://www.hancockvt.org/hancock-free-public-library/', eventsUrl: 'https://www.hancockvt.org/hancock-free-public-library/', city: 'Hancock', state: 'VT', zipCode: '05748', county: 'Addison'},
   { name: 'Hartford', url: 'https://www.hartfordlibrary.org', eventsUrl: 'https://www.hartfordlibrary.org/events', city: 'Hartford', state: 'VT', zipCode: '05047', county: 'Windsor'},
   { name: 'Huntington Public', url: 'https://www.huntingtonlibrary.org/', eventsUrl: 'https://www.huntingtonlibrary.org/', city: 'Huntington', state: 'VT', zipCode: '05462', county: 'Chittenden'},
-  { name: 'Lanpher Memorial', url: 'https://www.hydeparklibrary.org', eventsUrl: 'https://www.hydeparklibrary.org/events', city: 'Hyde Park', state: 'VT', zipCode: '05655', county: 'Lamoille'},
+  // URL corrected 2026-08-11 (was hydeparklibrary.org): Lanpher Memorial Library, 141 Main St Hyde Park VT, ph 802-888-4628, Lamoille County
+  { name: 'Lanpher Memorial', url: 'https://www.lanpherlibrary.org/', eventsUrl: 'https://www.lanpherlibrary.org/calendar-of-events.html', city: 'Hyde Park', state: 'VT', zipCode: '05655', county: 'Lamoille'},
   { name: 'Jaquith Public', url: 'https://marshfieldlibrary.org/', eventsUrl: 'https://marshfieldlibrary.org/', city: 'Marshfield', state: 'VT', zipCode: '05658', county: 'Washington'},
   { name: 'Russell Memorial', url: 'https://www.monktonlibrary.org', eventsUrl: 'https://www.monktonlibrary.org/events', city: 'Monkton', state: 'VT', zipCode: '05469', county: 'Monkton County'},
   { name: 'Tenney Memorial', url: 'https://www.newburylibrary.org', eventsUrl: 'https://www.newburylibrary.org/events', city: 'Newbury', state: 'VT', zipCode: '05051', county: 'Orange'},
@@ -66,15 +70,18 @@ const LIBRARIES = [
   { name: 'North Hero Public', url: 'https://northherolibrary.org/', eventsUrl: 'https://northherolibrary.org/', city: 'North Hero', state: 'VT', zipCode: '05474', county: 'Grand Isle'},
   { name: 'Norwich Public', url: 'https://www.norwichlibrary.org/', eventsUrl: 'https://www.norwichlibrary.org/category/events/', city: 'Norwich', state: 'VT', zipCode: '05055', county: 'Windsor'},
   { name: 'Peacham', url: 'https://www.peachamlibrary.org/', eventsUrl: 'https://www.peachamlibrary.org/', city: 'Peacham', state: 'VT', zipCode: '05862', county: 'Caledonia'},
-  { name: 'Roger Clark Memorial', url: 'https://www.pittsfieldlibrary.org/', eventsUrl: 'https://www.pittsfieldlibrary.org/', city: 'Pittsfield', state: 'VT', zipCode: '05762', county: 'Rutland'},
-  { name: 'Cutler Memorial', url: 'https://www.plainfieldlibrary.org', eventsUrl: 'https://www.plainfieldlibrary.org/events', city: 'Plainfield', state: 'VT', zipCode: '05667', county: 'Washington'},
+  // URL corrected 2026-08-11 (was pittsfieldlibrary.org): Page titled Pittsfields Roger Clark Memorial Library shows 40 Village Green, PO Box 743, Pittsfield VT 05762, phone 802-746-4067; HTTP only
+  { name: 'Roger Clark Memorial', url: 'http://www.pittsfieldlibrary.com', eventsUrl: 'http://www.pittsfieldlibrary.com', city: 'Pittsfield', state: 'VT', zipCode: '05762', county: 'Rutland'},
+  // URL corrected 2026-08-11 (was plainfieldlibrary.org): Site says Cutler Memorial Library, Plainfield Vermont, phone 802.454.8504; 151 High St Plainfield VT 05667. Real name is Cutler Memorial Lib
+  { name: 'Cutler Memorial', url: 'https://www.cutlerlibrary.org', eventsUrl: 'https://www.cutlerlibrary.org', city: 'Plainfield', state: 'VT', zipCode: '05667', county: 'Washington'},
   { name: 'Proctor Free', url: 'https://www.proctorlibrary.org', eventsUrl: 'https://www.proctorlibrary.org/events', city: 'Proctor', state: 'VT', zipCode: '05765', county: 'Rutland'},
   { name: 'Putney Public', url: 'https://www.putneylibrary.org', eventsUrl: 'https://www.putneylibrary.org/events', city: 'Putney', state: 'VT', zipCode: '05346', county: 'Windham'},
   { name: 'Quechee', url: 'https://www.quecheeandwilderlibraries.com/', eventsUrl: 'https://www.quecheeandwilderlibraries.com/', city: 'Quechee', state: 'VT', zipCode: '05059', county: 'Windsor'},
   { name: 'Reading Public', url: 'https://www.readinglibrary.org', eventsUrl: 'https://www.readinglibrary.org/events', city: 'Reading', state: 'VT', zipCode: '05060', county: 'Reading County'},
   { name: 'Readsboro Community', url: 'https://www.readsborolibrary.org', eventsUrl: 'https://www.readsborolibrary.org/events', city: 'Readsboro', state: 'VT', zipCode: '05350', county: 'Bennington'},
   { name: 'Rochester Public', url: 'https://www.rochesterlibrary.org/', eventsUrl: 'https://www.rochesterlibrary.org/', city: 'Rochester', state: 'VT', zipCode: '05767', county: 'Windsor'},
-  { name: 'Roxbury Free', url: 'https://www.roxburylibrary.org', eventsUrl: 'https://www.roxburylibrary.org/events', city: 'Roxbury', state: 'VT', zipCode: '05669', county: 'Washington'},
+  // URL corrected 2026-08-11 (was roxburylibrary.org): Roxbury Free Library, 1491 Roxbury Rd Roxbury VT 05669, ph 802-485-6860
+  { name: 'Roxbury Free', url: 'https://roxburyfreelibrary.org/', eventsUrl: 'https://roxburyfreelibrary.org/community-calendar-copy/', city: 'Roxbury', state: 'VT', zipCode: '05669', county: 'Washington'},
   { name: 'Salisbury Free Public', url: 'https://www.salisburylibrary.org/', eventsUrl: 'https://www.salisburylibrary.org/', city: 'Salisbury', state: 'VT', zipCode: '05769', county: 'Addison'},
   { name: 'Sheldon Public', url: 'https://www.sheldonlibrary.org', eventsUrl: 'https://www.sheldonlibrary.org/events', city: 'Sheldon', state: 'VT', zipCode: '05483', county: 'Franklin'},
   { name: 'Shrewsbury', url: 'https://www.shrewsburylibrary.org', eventsUrl: 'https://www.shrewsburylibrary.org/events', city: 'Shrewsbury', state: 'VT', zipCode: '05738', county: 'Rutland'},
@@ -95,10 +102,13 @@ const LIBRARIES = [
   { name: 'Ainsworth Public', url: 'https://www.williamstownlibrary.org', eventsUrl: 'https://www.williamstownlibrary.org/events', city: 'Williamstown', state: 'VT', zipCode: '05679', county: 'Orange'},
   // URL corrected 2026-08-11 (was wilmingtonlibrary.org): 16 South Main St Wilmington VT 05363, phone 802-464-8557
   { name: 'Pettee Memorial', url: 'https://petteelibrary.org', eventsUrl: 'https://petteelibrary.org', city: 'Wilmington', state: 'VT', zipCode: '05363', county: 'Windham'},
-  { name: 'Windham Town', url: 'https://windhamlibrary.org/', eventsUrl: 'https://windhamlibrary.org/', city: 'Windham', state: 'VT', zipCode: '05359', county: 'Windham County'},
+  // URL corrected 2026-08-11 (was windhamlibrary.org): Real name Windham Town Library, 7071 Windham Hill Road, Windham VT 05359, phone 802-875-4874
+  { name: 'Windham Town', url: 'https://windhamlibrary.wordpress.com/', eventsUrl: 'https://windhamlibrary.wordpress.com/news-and-events/', city: 'Windham', state: 'VT', zipCode: '05359', county: 'Windham County'},
   { name: 'Windsor Public', url: 'https://www.windsorlibrary.org', eventsUrl: 'https://www.windsorlibrary.org/events', city: 'Windsor', state: 'VT', zipCode: '05089', county: 'Windsor County'},
-  { name: 'G. M. Kelley Community', url: 'https://www.wolcottlibrary.org', eventsUrl: 'https://www.wolcottlibrary.org/events', city: 'Wolcott', state: 'VT', zipCode: '05680', county: 'Lamoille'},
-  { name: 'Woodbury Community', url: 'https://www.woodburylibrary.org', eventsUrl: 'https://www.woodburylibrary.org/events', city: 'Woodbury', state: 'VT', zipCode: '05681', county: 'Washington'}
+  // URL corrected 2026-08-11 (was wolcottlibrary.org): Full name Glee Merritt Kelley Community Library, 320 School Hill Dr Wolcott VT 05680, ph 802-472-6551, Lamoille County
+  { name: 'G. M. Kelley Community', url: 'https://gleemerrittkelleylibrary.wordpress.com/', eventsUrl: 'https://gleemerrittkelleylibrary.wordpress.com/', city: 'Wolcott', state: 'VT', zipCode: '05680', county: 'Lamoille'},
+  // URL corrected 2026-08-11 (was woodburylibrary.org): Real name Woodbury Community Library; site lists 69 Valley Lake Road, Woodbury VT 05681, phone 802-472-5710
+  { name: 'Woodbury Community', url: 'https://woodburycommunitylibrary.wordpress.com', eventsUrl: 'https://woodburycommunitylibrary.wordpress.com', city: 'Woodbury', state: 'VT', zipCode: '05681', county: 'Washington'}
 
 ];
 

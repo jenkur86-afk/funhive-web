@@ -39,9 +39,12 @@ const LIBRARIES = [
   { name: 'Hudson Rodgers Memorial Library', url: 'https://www.rodgerslibrary.org/', eventsUrl: 'https://www.rodgerslibrary.org/', city: 'Hudson', state: 'NH', zipCode: '03051', county: 'Hillsborough County'},
   { name: 'Hooksett Public Library', url: 'https://www.hooksettlibrary.org', eventsUrl: 'https://www.hooksettlibrary.org/events', city: 'Hooksett', state: 'NH', zipCode: '03106', county: 'Merrimack County'},
   // Additional libraries from spreadsheet coverage expansion
-  { name: 'Haynes Library', url: 'https://www.alexandrialibrary.org', eventsUrl: 'https://www.alexandrialibrary.org/events', city: 'Alexandria', state: 'NH', zipCode: '03222', county: 'Grafton'},
+  // REMOVED 2026-08-11 (Defect A): no verifiable official site. Haynes Library 33-567 Washburn Rd Alexandria NH 03222, 603-744-6529, but closed since 2019 with all trustees resigned per Laconia Daily Sun; no websit
+  // RECORDED COVERAGE GAP - restore if a real URL is found.
+  // { name: 'Haynes Library', url: 'https://www.alexandrialibrary.org', eventsUrl: 'https://www.alexandrialibrary.org/events', city: 'Alexandria', state: 'NH', zipCode: '03222', county: 'Grafton'},
   { name: 'Andover Public Library', url: 'https://www.andoverlibrary.org', eventsUrl: 'https://www.andoverlibrary.org/events', city: 'Andover', state: 'NH', zipCode: '03216', county: 'Merrimack'},
-  { name: 'Griffin Free Public Library', url: 'https://auburnlibrary.org/', eventsUrl: 'https://auburnlibrary.org/', city: 'Auburn', state: 'NH', zipCode: '03032', county: 'Rockingham'},
+  // URL corrected 2026-08-11 (was auburnlibrary.org): Site lists 22 Hooksett Road, Auburn NH 03032, phone 603-483-5374
+  { name: 'Griffin Free Public Library', url: 'https://griffinfree.org', eventsUrl: 'https://griffinfree.org/events/', city: 'Auburn', state: 'NH', zipCode: '03032', county: 'Rockingham'},
   { name: 'Barrington Public Library', url: 'https://barringtonlibrary.org/', eventsUrl: 'https://barringtonlibrary.org/', city: 'Barrington', state: 'NH', zipCode: '03825', county: 'Strafford'},
   { name: 'Bartlett Public Library', url: 'https://www.bartlettlibrary.org', eventsUrl: 'https://www.bartlettlibrary.org/events', city: 'Bartlett', state: 'NH', zipCode: '03812', county: 'Carroll'},
   { name: 'Bath Public Library', url: 'https://www.bathlibrary.org', eventsUrl: 'https://www.bathlibrary.org/events', city: 'Bath', state: 'NH', zipCode: '03740', county: 'Grafton'},
@@ -58,7 +61,8 @@ const LIBRARIES = [
   { name: 'Chocorua Public Library', url: 'https://www.chocorualibrary.org/', eventsUrl: 'https://www.chocorualibrary.org/', city: 'Chocorua', state: 'NH', zipCode: '03817', county: 'Carroll'},
   { name: 'Fiske Free Library', url: 'https://www.claremontlibrary.org/', eventsUrl: 'https://www.claremontlibrary.org/', city: 'Claremont', state: 'NH', zipCode: '03743', county: 'Sullivan'},
   { name: 'Dalton Public Library', url: 'https://www.daltonlibrary.org', eventsUrl: 'https://www.daltonlibrary.org/events', city: 'Dalton', state: 'NH', zipCode: '03598', county: 'Coos'},
-  { name: 'George Gamble Library', url: 'https://danburylibrary.org/', eventsUrl: 'https://danburylibrary.org/', city: 'Danbury', state: 'NH', zipCode: '03230', county: 'Merrimack'},
+  // URL corrected 2026-08-11 (was danburylibrary.org): Own site, subtitled Danbury Public Library, states Danbury N.H.; 29 Route 104 Danbury NH per NH Library Directory, email georgegamblelibrary
+  { name: 'George Gamble Library', url: 'https://georgegamblelibrary.wordpress.com', eventsUrl: 'https://georgegamblelibrary.wordpress.com/events/', city: 'Danbury', state: 'NH', zipCode: '03230', county: 'Merrimack'},
   { name: 'Philbrick-James Library', url: 'https://www.deerfieldlibrary.org', eventsUrl: 'https://www.deerfieldlibrary.org/events', city: 'Deerfield', state: 'NH', zipCode: '03037', county: 'Grafton'},
   { name: 'Dublin Public Library', url: 'https://www.dublinlibrary.org/', eventsUrl: 'https://www.dublinlibrary.org/', city: 'Dublin', state: 'NH', zipCode: '03444', county: 'Cheshire'},
   { name: 'Dunbarton Public Library', url: 'https://www.dunbartonlibrary.org', eventsUrl: 'https://www.dunbartonlibrary.org/events', city: 'Dunbarton', state: 'NH', zipCode: '03046', county: 'Merrimack'},
@@ -69,7 +73,8 @@ const LIBRARIES = [
   { name: 'Goodwin Library', url: 'https://www.farmingtonpublic.org/', eventsUrl: 'https://www.farmingtonpublic.org/', city: 'Farmington', state: 'NH', zipCode: '03835', county: 'Strafford'},
   { name: 'George Holmes Bixby Memorial Library', url: 'https://www.francestownlibrary.org', eventsUrl: 'https://www.francestownlibrary.org/events', city: 'Francestown', state: 'NH', zipCode: '03043', county: 'Hillsborough'},
   { name: 'Franklin Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'NH', zipCode: '03235', county: 'Merrimack'},
-  { name: 'Fremont Public Library', url: 'https://www.fremontlibrary.org', eventsUrl: 'https://www.fremontlibrary.org/events', city: 'Fremont', state: 'NH', zipCode: '03044', county: 'Rockingham'},
+  // URL corrected 2026-08-11 (was fremontlibrary.org): 7 Jackie Bernier Dr Fremont NH 03044, ph 603-895-9543, per NH State Library directory listing; Rockingham County
+  { name: 'Fremont Public Library', url: 'https://www.fremont.nh.gov/fremont-public-library', eventsUrl: 'https://www.fremont.nh.gov/fremont-public-library', city: 'Fremont', state: 'NH', zipCode: '03044', county: 'Rockingham'},
   { name: 'Gilford Public Library', url: 'https://gilfordlibrary.org/', eventsUrl: 'https://gilfordlibrary.org/', city: 'Gilford', state: 'NH', zipCode: '03249', county: 'Belknap'},
   { name: 'Gorham Public Library', url: 'https://gorhamlibrary.org/', eventsUrl: 'https://gorhamlibrary.org/calendar/', city: 'Gorham', state: 'NH', zipCode: '03581', county: 'Coos'},
   { name: 'Olive G. Pettis Library', url: 'https://www.goshenlibrary.org/', eventsUrl: 'https://www.goshenlibrary.org/', city: 'Goshen', state: 'NH', zipCode: '03752', county: 'Sullivan'},
@@ -102,11 +107,14 @@ const LIBRARIES = [
   { name: 'Newmarket Public Library', url: 'https://newmarketlibrary.org/', eventsUrl: 'https://newmarketlibrary.org/index.html', city: 'Newmarket', state: 'NH', zipCode: '03857', county: 'Rockingham'},
   { name: 'Gale Library', url: 'https://www.newtonlibrary.org', eventsUrl: 'https://www.newtonlibrary.org/events', city: 'Newton', state: 'NH', zipCode: '03858', county: 'Rockingham'},
   { name: 'Blaisdell Memorial Library', url: 'https://nottinghamlibrary.org/', eventsUrl: 'https://nottinghamlibrary.org/', city: 'Nottingham', state: 'NH', zipCode: '03290', county: 'Rockingham'},
-  { name: 'Pembroke Town Library', url: 'https://www.pembrokelibrary.org/', eventsUrl: 'https://www.pembrokelibrary.org/upcoming-events', city: 'Pembroke', state: 'NH', zipCode: '03275', county: 'Merrimack'},
+  // URL corrected 2026-08-11 (was pembrokelibrary.org): Site blocks bots; librarytechnology.org directory lists 313 Pembroke St, Pembroke NH 03275, 603-485-7851, site pembroke-library.org. pembrok
+  { name: 'Pembroke Town Library', url: 'https://pembroke-library.org', eventsUrl: 'https://pembroke-library.org/events-calendar/', city: 'Pembroke', state: 'NH', zipCode: '03275', county: 'Merrimack'},
   { name: 'Pike Library', url: 'https://www.pikelibrary.org', eventsUrl: 'https://www.pikelibrary.org/events', city: 'Pike', state: 'NH', zipCode: '03780', county: 'Grafton'},
   { name: 'Bremer Pond Memorial Library', url: 'https://www.pittsburglibrary.org/', eventsUrl: 'https://www.pittsburglibrary.org/', city: 'Pittsburg', state: 'NH', zipCode: '03592', county: 'Coos'},
-  { name: 'Josiah Carpenter Library', url: 'https://www.pittsfieldlibrary.org/', eventsUrl: 'https://www.pittsfieldlibrary.org/', city: 'Pittsfield', state: 'NH', zipCode: '03263', county: 'Merrimack'},
-  { name: 'Philip Read Memorial Library', url: 'https://www.plainfieldlibrary.org', eventsUrl: 'https://www.plainfieldlibrary.org/events', city: 'Plainfield', state: 'NH', zipCode: '03781', county: 'Sullivan'},
+  // URL corrected 2026-08-11 (was pittsfieldlibrary.org): NH State Library directory lists 41 Main Street, Pittsfield NH 03263, phone 603-435-8406, site pittsfieldnh.gov; town site blocks bots
+  { name: 'Josiah Carpenter Library', url: 'https://www.pittsfieldnh.gov/josiah-carpenter-library', eventsUrl: 'https://www.pittsfieldnh.gov/node/81/events/month', city: 'Pittsfield', state: 'NH', zipCode: '03263', county: 'Merrimack'},
+  // URL corrected 2026-08-11 (was plainfieldlibrary.org): Page shows 1088 NH-12A, Plainfield NH 03781, phone 603-675-6866; part of Plainfield Public Libraries NH
+  { name: 'Philip Read Memorial Library', url: 'https://plainfieldlibraries.org/plainfield', eventsUrl: 'https://plainfieldlibraries.org/calendar/all', city: 'Plainfield', state: 'NH', zipCode: '03781', county: 'Sullivan'},
   { name: 'Rollinsford Public Library', url: 'https://www.rollinsfordlibrary.org/', eventsUrl: 'https://www.rollinsfordlibrary.org/calendar', city: 'Rollinsford', state: 'NH', zipCode: '03869', county: 'Strafford'},
   { name: 'Byron G. Merrill Library', url: 'https://www.rumneylibrary.org/', eventsUrl: 'https://www.rumneylibrary.org/', city: 'Rumney', state: 'NH', zipCode: '03266', county: 'Grafton'},
   { name: 'Rye Public Library', url: 'https://www.ryelibrary.org/', eventsUrl: 'https://www.ryelibrary.org/', city: 'Rye', state: 'NH', zipCode: '03870', county: 'Rockingham'},

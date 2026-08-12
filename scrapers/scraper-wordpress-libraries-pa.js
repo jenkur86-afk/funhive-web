@@ -120,7 +120,9 @@ const LIBRARIES = [
   { name: 'Horsham Township Library', url: 'https://www.horshamlibrary.org/', eventsUrl: 'https://www.horshamlibrary.org/', city: 'Horsham', state: 'PA', zipCode: '19044', county: 'Montgomery'},
   { name: 'Hughesville Area Public Library', url: 'https://www.hughesvillelibrary.org', eventsUrl: 'https://www.hughesvillelibrary.org/events', city: 'Hughesville', state: 'PA', zipCode: '17737', county: 'Lycoming'},
   { name: 'Huntingdon County Library', url: 'https://www.huntingdonlibrary.org', eventsUrl: 'https://www.huntingdonlibrary.org/events', city: 'Huntingdon', state: 'PA', zipCode: '16652', county: 'Huntingdon County'},
-  { name: 'Hyde Park Public Library', url: 'https://www.hydeparklibrary.org', eventsUrl: 'https://www.hydeparklibrary.org/events', city: 'Hyde Park', state: 'PA', zipCode: '15641', county: 'Berks'},
+  // REMOVED 2026-08-11 (Defect A): no verifiable official site. Exists at 700 Main St Hyde Park PA 15641, ph 724-845-1944, but contact is a comcast.net email; no site in POWER Library or county directory
+  // RECORDED COVERAGE GAP - restore if a real URL is found.
+  // { name: 'Hyde Park Public Library', url: 'https://www.hydeparklibrary.org', eventsUrl: 'https://www.hydeparklibrary.org/events', city: 'Hyde Park', state: 'PA', zipCode: '15641', county: 'Berks'},
   { name: 'Hyndman-Londonderry Public Library', url: 'https://www.hyndmanlibrary.org/', eventsUrl: 'https://www.hyndmanlibrary.org/', city: 'Hyndman', state: 'PA', zipCode: '15545', county: 'Bedford'},
   { name: 'Pequea Valley Public Library', url: 'https://www.intercourselibrary.org', eventsUrl: 'https://www.intercourselibrary.org/events', city: 'Intercourse', state: 'PA', zipCode: '17534', county: 'Lancaster'},
   { name: 'Jefferson Hills Public Library', url: 'https://www.jeffersonhillslibrary.org', eventsUrl: 'https://www.jeffersonhillslibrary.org/events', city: 'Jefferson Hills', state: 'PA', zipCode: '15025', county: 'Allegheny'},
@@ -204,7 +206,8 @@ const LIBRARIES = [
   { name: 'Sinking Spring Public Library', url: 'https://www.sinkingspringlibrary.org', eventsUrl: 'https://www.sinkingspringlibrary.org/events', city: 'Sinking Spring', state: 'PA', zipCode: '19608', county: 'Berks'},
   { name: 'Slatington Library Inc', url: 'https://sites.google.com/', eventsUrl: 'https://sites.google.com/view/slatingtonlibrary/calendar', city: 'Slatington', state: 'PA', zipCode: '18080', county: 'Lehigh'},
   { name: 'Smithfield Library', url: 'https://www.smithfieldlibrary.org/', eventsUrl: 'https://www.smithfieldlibrary.org/', city: 'Smithfield', state: 'PA', zipCode: '15478', county: 'Fayette'},
-  { name: 'Mary S Biesecker Public Library', url: 'https://www.somersetlibrary.org', eventsUrl: 'https://www.somersetlibrary.org/events', city: 'Somerset', state: 'PA', zipCode: '15501', county: 'Somerset County'},
+  // URL corrected 2026-08-11 (was somersetlibrary.org): Own site; 230 South Rosina Avenue Somerset PA 15501, phone 814-445-4011
+  { name: 'Mary S Biesecker Public Library', url: 'https://www.maryslibrary.com', eventsUrl: 'https://www.maryslibrary.com/?page_id=22', city: 'Somerset', state: 'PA', zipCode: '15501', county: 'Somerset County'},
   { name: 'South Park Township Library', url: 'https://southparklibrary.org/', eventsUrl: 'https://southparklibrary.org/', city: 'South Park', state: 'PA', zipCode: '15129', county: 'South Park County'},
   { name: 'Spring City Free Public Library', url: 'https://springcitylibrary.org/', eventsUrl: 'https://springcitylibrary.org/', city: 'Spring City', state: 'PA', zipCode: '19475', county: 'Chester'},
   { name: 'Springdale Free Public Library', url: 'https://springdalelibrary.org/', eventsUrl: 'https://springdalelibrary.org/upcoming-events/', city: 'Springdale', state: 'PA', zipCode: '15144', county: 'Allegheny'},

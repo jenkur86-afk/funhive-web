@@ -32,7 +32,8 @@ const LIBRARIES = [
   { name: 'Tuscaloosa Public Library', url: 'https://www.tuscaloosa-library.org', eventsUrl: 'https://www.tuscaloosa-library.org/events', city: 'Tuscaloosa', state: 'AL', zipCode: '35401', county: 'Tuscaloosa County'},
   { name: 'Auburn Public Library', url: 'https://www.auburnal.gov/', eventsUrl: 'https://www.auburnal.gov/library/', city: 'Auburn', state: 'AL', zipCode: '36830', county: 'Lee'},
   { name: 'Dothan Houston County Library System', url: 'https://www.dhcls.org', eventsUrl: 'https://www.dhcls.org/events', city: 'Dothan', state: 'AL', zipCode: '36301', county: 'Houston'},
-  { name: 'Decatur Public Library', url: 'https://www.decaturlibrary.org', eventsUrl: 'https://www.decaturlibrary.org/events', city: 'Decatur', state: 'AL', zipCode: '35601', county: 'Morgan'},
+  // URL corrected 2026-08-11 (was decaturlibrary.org): Site shows 504 Cherry Street, Decatur AL 35601, phone 256-353-2993 (Morgan County)
+  { name: 'Decatur Public Library', url: 'https://mydpl.org', eventsUrl: 'https://mydpl.org/event/', city: 'Decatur', state: 'AL', zipCode: '35601', county: 'Morgan'},
   { name: 'Florence-Lauderdale Public Library', url: 'https://www.flpl.org/', eventsUrl: 'https://www.flpl.org/calendar/', city: 'Florence', state: 'AL', zipCode: '35630', county: 'Lauderdale'},
   { name: 'Hoover Public Library', url: 'https://www.hooverlibrary.org', eventsUrl: 'https://www.hooverlibrary.org/events', city: 'Hoover', state: 'AL', zipCode: '35244', county: 'Jefferson'},
   { name: 'Vestavia Hills Library', url: 'https://www.vestavialibrary.org', eventsUrl: 'https://www.vestavialibrary.org/events', city: 'Vestavia Hills', state: 'AL', zipCode: '35216', county: 'Jefferson'},
@@ -54,13 +55,16 @@ const LIBRARIES = [
   { name: 'Choctaw County Public Library', url: 'https://www.butlerlibrary.org', eventsUrl: 'https://www.butlerlibrary.org/events', city: 'Butler', state: 'AL', zipCode: '36904', county: 'Butler County'},
   { name: 'Wilcox County Library', url: 'https://www.camdenlibrary.org/', eventsUrl: 'https://www.camdenlibrary.org/', city: 'Camden', state: 'AL', zipCode: '36726', county: 'Wilcox'},
   { name: 'Chelsea Public Library', url: 'https://www.chelsealibrary.org', eventsUrl: 'https://www.chelsealibrary.org/events', city: 'Chelsea', state: 'AL', zipCode: '35043', county: 'Shelby'},
-  { name: 'Clayton Town And County Public Library', url: 'https://www.claytonlibrary.org', eventsUrl: 'https://www.claytonlibrary.org/events', city: 'Clayton', state: 'AL', zipCode: '36016', county: 'Barbour'},
+  // REMOVED 2026-08-11 (Defect A): no verifiable official site. Real name Town and County Library, 45 N Midway St Clayton AL 36016, 334-775-3506, Barbour County - only a Facebook page exists, no official website
+  // RECORDED COVERAGE GAP - restore if a real URL is found.
+  // { name: 'Clayton Town And County Public Library', url: 'https://www.claytonlibrary.org', eventsUrl: 'https://www.claytonlibrary.org/events', city: 'Clayton', state: 'AL', zipCode: '36016', county: 'Barbour'},
   { name: 'Collinsville Public Library', url: 'https://www.collinsvillelibrary.org', eventsUrl: 'https://www.collinsvillelibrary.org/events', city: 'Collinsville', state: 'AL', zipCode: '35961', county: 'DeKalb'},
   { name: 'Houston-Love Memorial Library - Columbia', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'AL', zipCode: '36319', county: 'Houston'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in AK, not AL. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Cordova Public Library', url: 'https://cordovalibrary.org/', eventsUrl: 'https://cordovalibrary.org/', city: 'Cordova', state: 'AL', zipCode: '35550', county: 'Walker'},
   { name: 'Daleville Public Library', url: 'https://www.dalevillelibrary.org', eventsUrl: 'https://www.dalevillelibrary.org/events', city: 'Daleville', state: 'AL', zipCode: '36322', county: 'Dale'},
-  { name: 'Walter J. Hanna Memorial Library', url: 'https://fairfieldlibrary.org/', eventsUrl: 'https://fairfieldlibrary.org/', city: 'Fairfield', state: 'AL', zipCode: '35064', county: 'Jefferson'},
+  // URL corrected 2026-08-11 (was fairfieldlibrary.org): Site titled Walter J Hanna (Fairfield) Public Library, Gary Avenue Fairfield AL 35064, phone 205-783-6007
+  { name: 'Walter J. Hanna Memorial Library', url: 'https://fairfield.lib.al.us', eventsUrl: 'https://fairfield.lib.al.us', city: 'Fairfield', state: 'AL', zipCode: '35064', county: 'Jefferson'},
   { name: 'Foley Public Library', url: 'https://www.foleylibrary.org/', eventsUrl: 'https://www.foleylibrary.org/', city: 'Foley', state: 'AL', zipCode: '36535', county: 'Baldwin'},
   { name: 'Grant Public Library', url: 'https://www.grantlibrary.org', eventsUrl: 'https://www.grantlibrary.org/events', city: 'Grant', state: 'AL', zipCode: '35747', county: 'Marshall'},
   { name: 'Hale County Library', url: 'https://www.greensborolibrary.org', eventsUrl: 'https://www.greensborolibrary.org/events', city: 'Greensboro', state: 'AL', zipCode: '36744', county: 'Hale'},
@@ -73,14 +77,18 @@ const LIBRARIES = [
   { name: 'Jane B. Holmes Public Library', url: 'https://www.lclibrary.org/', eventsUrl: 'https://www.lclibrary.org/', city: 'Helena', state: 'AL', zipCode: '35080', county: 'Shelby'},
   { name: 'Hueytown Public Library', url: 'https://www.hueytownlibrary.org/', eventsUrl: 'https://www.hueytownlibrary.org/', city: 'Hueytown', state: 'AL', zipCode: '35023', county: 'Jefferson'},
   { name: 'Irondale Public Library', url: 'https://www.irondalelibrary.org', eventsUrl: 'https://www.irondalelibrary.org/events', city: 'Irondale', state: 'AL', zipCode: '35210', county: 'Jefferson'},
-  { name: 'City Of Bayou La Batre Public Library', url: 'https://irvingtonlibrary.org/', eventsUrl: 'https://irvingtonlibrary.org/', city: 'Irvington', state: 'AL', zipCode: '36509', county: 'Limestone'},
+  // URL corrected 2026-08-11 (was irvingtonlibrary.org): City of Bayou La Batre Public Library, 12747 Padgett Switch Rd Irvington AL 36544, phone 251-824-4213. No calendar page, events via Facebook
+  { name: 'City Of Bayou La Batre Public Library', url: 'https://www.cityofbayoulabatre.com/departments/public_library/index.php', eventsUrl: 'https://www.cityofbayoulabatre.com/departments/public_library/index.php', city: 'Irvington', state: 'AL', zipCode: '36509', county: 'Limestone'},
   { name: 'Kennedy Public Library', url: 'https://www.kennedylibrary.org', eventsUrl: 'https://www.kennedylibrary.org/events', city: 'Kennedy', state: 'AL', zipCode: '35574', county: 'Lamar'},
-  { name: 'Lafayette Pilot Public Library', url: 'https://lafayettelibrary.org/', eventsUrl: 'https://lafayettelibrary.org/', city: 'Lafayette', state: 'AL', zipCode: '36862', county: 'Chambers'},
+  // URL corrected 2026-08-11 (was lafayettelibrary.org): Chambers County Library system site lists LaFayette Library, LaFayette AL, phone 334-864-0012 matching this entry. Site name is LaFayette Li
+  { name: 'Lafayette Pilot Public Library', url: 'https://chamberscountylibrary.org', eventsUrl: 'https://chamberscountylibrary.org/calendar/', city: 'Lafayette', state: 'AL', zipCode: '36862', county: 'Chambers'},
   { name: 'Jane Culbreth Library', url: 'https://www.leedslibrary.org', eventsUrl: 'https://www.leedslibrary.org/events', city: 'Leeds', state: 'AL', zipCode: '35094', county: 'Jefferson'},
   { name: 'Leighton Public Library', url: 'https://www.leightonlibrary.org/', eventsUrl: 'https://www.leightonlibrary.org/news-events/library-events', city: 'Leighton', state: 'AL', zipCode: '35646', county: 'Colbert'},
   { name: 'Burchell Campbell Memorial Library', url: 'https://www.lexingtonlibrary.org', eventsUrl: 'https://www.lexingtonlibrary.org/events', city: 'Lexington', state: 'AL', zipCode: '35648', county: 'Lauderdale'},
   { name: 'Ruby Pickens Tartt Public Library', url: 'https://www.livingstonlibrary.org', eventsUrl: 'https://www.livingstonlibrary.org/events', city: 'Livingston', state: 'AL', zipCode: '35470', county: 'Sumter'},
-  { name: 'Louisville Public Library', url: 'https://www.louisvillelibrary.org', eventsUrl: 'https://www.louisvillelibrary.org/events', city: 'Louisville', state: 'AL', zipCode: '36048', county: 'Barbour'},
+  // REMOVED 2026-08-11 (Defect A): no verifiable official site. Library exists at 1951 Main St, Louisville AL 36048, phone 334-266-5210 per library directories, but no official website; town site louisvillealabama.
+  // RECORDED COVERAGE GAP - restore if a real URL is found.
+  // { name: 'Louisville Public Library', url: 'https://www.louisvillelibrary.org', eventsUrl: 'https://www.louisvillelibrary.org/events', city: 'Louisville', state: 'AL', zipCode: '36048', county: 'Barbour'},
   { name: 'Madison Public Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'AL', zipCode: '35758', county: 'Madison County'},
   { name: 'Marion-Perry County Library', url: 'https://www.marionlibrary.org/', eventsUrl: 'https://www.marionlibrary.org/', city: 'Marion', state: 'AL', zipCode: '36756', county: 'Marion County'},
   { name: 'Millbrook Public Library', url: 'https://millbrooklibrary.org/', eventsUrl: 'https://millbrooklibrary.org/', city: 'Millbrook', state: 'AL', zipCode: '36054', county: 'Elmore'},
@@ -102,8 +110,11 @@ const LIBRARIES = [
   { name: 'Vernon - Mary Wallace Cobb Memorial Library', url: 'https://www.vernonlibrary.org/', eventsUrl: 'https://www.vernonlibrary.org/', city: 'Vernon', state: 'AL', zipCode: '35592', county: 'Lamar'},
   { name: 'Warrior Public Library', url: 'https://www.warriorlibrary.org', eventsUrl: 'https://www.warriorlibrary.org/events', city: 'Warrior', state: 'AL', zipCode: '35180', county: 'Jefferson'},
   { name: 'Wilsonville - Vernice Stoudenmire Library', url: 'https://www.wilsonvillelibrary.org', eventsUrl: 'https://www.wilsonvillelibrary.org/events', city: 'Wilsonville', state: 'AL', zipCode: '35186', county: 'Shelby'},
-  { name: 'Northwest Regional Library', url: 'https://www.winfieldlibrary.org/', eventsUrl: 'https://www.winfieldlibrary.org/', city: 'Winfield', state: 'AL', zipCode: '35594', county: 'Marion'},
-  { name: 'Woodville Public Library', url: 'https://www.woodvillelibrary.org', eventsUrl: 'https://www.woodvillelibrary.org/events', city: 'Woodville', state: 'AL', zipCode: '35776', county: 'Jackson'}
+  // URL corrected 2026-08-11 (was winfieldlibrary.org): 185 Ashwood Dr Winfield AL 35594, ph 205-487-2330, serves Marion, Franklin and Lamar Counties AL
+  { name: 'Northwest Regional Library', url: 'https://northwestregional.net/', eventsUrl: 'https://northwestregional.net/events/', city: 'Winfield', state: 'AL', zipCode: '35594', county: 'Marion'},
+  // REMOVED 2026-08-11 (Defect A): no verifiable official site. 26 Venson Street Woodville AL 35776, phone 256-776-2796, Jackson County - library has only a Facebook page, no official website found
+  // RECORDED COVERAGE GAP - restore if a real URL is found.
+  // { name: 'Woodville Public Library', url: 'https://www.woodvillelibrary.org', eventsUrl: 'https://www.woodvillelibrary.org/events', city: 'Woodville', state: 'AL', zipCode: '35776', county: 'Jackson'}
 
   // 2026-08-05: 'Hightower Memorial Library' (York, AL 36925) removed. Its configured URL
   // https://yorklibrary.org/ serves Kilgore Memorial Library in York, NEBRASKA — verified live.

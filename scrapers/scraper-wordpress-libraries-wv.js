@@ -34,7 +34,8 @@ const LIBRARIES = [
   { name: 'Dunbar Branch Library', url: 'https://www.dunbarlibrary.org', eventsUrl: 'https://www.dunbarlibrary.org/events', city: 'Dunbar', state: 'WV', zipCode: '25064', county: 'Kanawha'},
   { name: 'Pendleton County Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'WV', zipCode: '26807', county: 'Pendleton'},
   { name: 'Gilbert Public Library', url: 'https://www.gilbertlibrary.org/', eventsUrl: 'https://www.gilbertlibrary.org/', city: 'Gilbert', state: 'WV', zipCode: '25621', county: 'Mingo'},
-  { name: 'Glasgow Branch Library', url: 'https://www.glasgowlibrary.org/', eventsUrl: 'https://www.glasgowlibrary.org/upcoming-events', city: 'Glasgow', state: 'WV', zipCode: '25086', county: 'Kanawha'},
+  // URL corrected 2026-08-11 (was glasgowlibrary.org): Kanawha County Public Library branch page: 129 4th Ave, Town Hall, Glasgow WV 25086, phone 304-595-3131
+  { name: 'Glasgow Branch Library', url: 'https://www.kcpls.org/hours-locations/glasgow-branch-library', eventsUrl: 'https://www.kcpls.org/events', city: 'Glasgow', state: 'WV', zipCode: '25086', county: 'Kanawha'},
   { name: 'Hamlin-Lincoln County Public Library', url: 'https://www.hamlinlibrary.org/', eventsUrl: 'https://www.hamlinlibrary.org/', city: 'Hamlin', state: 'WV', zipCode: '25523', county: 'Lincoln'},
   { name: 'Hillsboro Public Library', url: 'https://www.hillsborolibrary.org', eventsUrl: 'https://www.hillsborolibrary.org/events', city: 'Hillsboro', state: 'WV', zipCode: '24946', county: 'Pocahontas'},
   { name: 'Summers County Public Library', url: 'https://www.hintonlibrary.org', eventsUrl: 'https://www.hintonlibrary.org/events', city: 'Hinton', state: 'WV', zipCode: '25951', county: 'Summers'},
@@ -45,13 +46,16 @@ const LIBRARIES = [
   { name: 'Paw Paw Public Library', url: 'https://www.pawpawlibrary.org', eventsUrl: 'https://www.pawpawlibrary.org/events', city: 'Paw Paw', state: 'WV', zipCode: '25434', county: 'Marion'},
   { name: 'Piedmont Public Library', url: 'https://www.piedmontlibrary.org', eventsUrl: 'https://www.piedmontlibrary.org/events', city: 'Piedmont', state: 'WV', zipCode: '26750', county: 'Mercer'},
   { name: 'Richwood Public Library', url: 'https://www.richwoodlibrary.org', eventsUrl: 'https://www.richwoodlibrary.org/events', city: 'Richwood', state: 'WV', zipCode: '26261', county: 'Nicholas'},
-  { name: 'Jackson County Public Library', url: 'https://ripleylibrary.org/', eventsUrl: 'https://ripleylibrary.org/', city: 'Ripley', state: 'WV', zipCode: '25271', county: 'Jackson'},
+  // URL corrected 2026-08-11 (was ripleylibrary.org): Site lists main branch 208 N Church St, Ripley WV 25271, phone 304-372-5343, plus Ravenswood branch
+  { name: 'Jackson County Public Library', url: 'https://jackson.park.lib.wv.us/', eventsUrl: 'https://jackson.park.lib.wv.us/index.php/programs/', city: 'Ripley', state: 'WV', zipCode: '25271', county: 'Jackson'},
   { name: 'Ronceverte Public Library', url: 'https://www.roncevertelibrary.org/', eventsUrl: 'https://www.roncevertelibrary.org/', city: 'Ronceverte', state: 'WV', zipCode: '24970', county: 'Greenbrier'},
   { name: 'South Charleston Public Library', url: 'https://www.scplwv.org/', eventsUrl: 'https://www.scplwv.org/events', city: 'South Charleston', state: 'WV', zipCode: '25303', county: 'Kanawha'},
   { name: 'Pleasants County Public Library', url: 'https://www.stmaryslibrary.org', eventsUrl: 'https://www.stmaryslibrary.org/events', city: 'St. Marys', state: 'WV', zipCode: '26170', county: 'Pleasants'},
   { name: 'Monroe County Public Library', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'WV', zipCode: '24983', county: 'Monroe'},
-  { name: 'Waverly Library', url: 'https://www.waverlylibrary.com/', eventsUrl: 'https://www.waverlylibrary.com/', city: 'Waverly', state: 'WV', zipCode: '26184', county: 'Wood'},
-  { name: 'Whitesville Public Library', url: 'https://www.whitesvillelibrary.org', eventsUrl: 'https://www.whitesvillelibrary.org/events', city: 'Whitesville', state: 'WV', zipCode: '25209', county: 'Boone'},
+  // URL corrected 2026-08-11 (was waverlylibrary.com): Waverly branch of Parkersburg and Wood County Public Library, 450 Virginia St Waverly WV 26184, phone 304-464-5668. WV Library Commission li
+  { name: 'Waverly Library', url: 'https://parkwoodlib.com/waverly-library/', eventsUrl: 'https://parkwoodlib.com/events', city: 'Waverly', state: 'WV', zipCode: '26184', county: 'Wood'},
+  // URL corrected 2026-08-11 (was whitesvillelibrary.org): Branch of Boone-Madison Public Library; 38175 Coal River Road Whitesville WV 25209, phone 304-854-0196. Site confirmed by WV Library Commiss
+  { name: 'Whitesville Public Library', url: 'https://www.bcplwv.org', eventsUrl: 'https://www.bcplwv.org', city: 'Whitesville', state: 'WV', zipCode: '25209', county: 'Boone'},
   { name: 'Williamstown Library', url: 'https://www.williamstownlibrary.org', eventsUrl: 'https://www.williamstownlibrary.org/events', city: 'Williamstown', state: 'WV', zipCode: '26187', county: 'Wood'}
 
 ];

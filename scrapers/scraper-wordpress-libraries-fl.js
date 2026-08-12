@@ -108,7 +108,8 @@ const LIBRARIES = [
   { name: 'Havana Public Library', url: 'https://www.havanalibrary.org/', eventsUrl: 'https://www.havanalibrary.org/calendar', city: 'Havana', state: 'FL', zipCode: '00000', county: 'Gadsden'},
   { name: 'Homestead Branch Library', url: 'https://www.homesteadlibrary.org', eventsUrl: 'https://www.homesteadlibrary.org/events', city: 'Homestead', state: 'FL', zipCode: '00000', county: 'Miami-Dade'},
   { name: 'Hudson Regional Library', url: 'https://www.hudsonlibrary.org', eventsUrl: 'https://www.hudsonlibrary.org/events', city: 'Hudson', state: 'FL', zipCode: '00000', county: 'Pasco'},
-  { name: 'Lake Placid Memorial Library', url: 'https://www.lakeplacidlibrary.org', eventsUrl: 'https://www.lakeplacidlibrary.org/events', city: 'Lake Placid', state: 'FL', zipCode: '00000', county: 'Highlands'},
+  // URL corrected 2026-08-11 (was lakeplacidlibrary.org): Highlands County FL Library System branch; 205 W Interlake Blvd Lake Placid FL 33852, phone 863-699-3705
+  { name: 'Lake Placid Memorial Library', url: 'https://www.myhlc.org/lake-placid-memorial-library', eventsUrl: 'https://myhlc.specialdistrict.org/programming-upcoming-events', city: 'Lake Placid', state: 'FL', zipCode: '00000', county: 'Highlands'},
   { name: 'Lakeland Public Library', url: 'https://www.lakelandlibrary.org', eventsUrl: 'https://www.lakelandlibrary.org/events', city: 'Lakeland', state: 'FL', zipCode: '00000', county: 'Polk'},
   { name: 'Land Olakes Branch Library', url: 'https://www.landolakeslibrary.org', eventsUrl: 'https://www.landolakeslibrary.org/events', city: 'Land Olakes', state: 'FL', zipCode: '00000', county: 'Land Olakes County'},
   { name: 'Lantana Public Library', url: 'https://www.lantanalibrary.org/', eventsUrl: 'https://www.lantanalibrary.org/', city: 'Lantana', state: 'FL', zipCode: '33462', county: 'Palm Beach'},

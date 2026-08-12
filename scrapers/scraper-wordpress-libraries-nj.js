@@ -42,33 +42,39 @@ const LIBRARIES = [
   { name: 'Delanco Public Library', url: 'https://www.delancolibrary.org/', eventsUrl: 'https://www.delancolibrary.org/', city: 'Delanco', state: 'NJ', zipCode: '08075', county: 'Burlington'},
   { name: 'Demarest Public Library Association', url: 'https://www.demarestlibrary.org/', eventsUrl: 'https://www.demarestlibrary.org/calendar/', city: 'Demarest', state: 'NJ', zipCode: '07627', county: 'Bergen'},
   { name: 'Denville Free Public Library', url: 'https://www.denvillelibrary.org/', eventsUrl: 'https://www.denvillelibrary.org/', city: 'Denville', state: 'NJ', zipCode: '07834', county: 'Morris'},
-  { name: 'Dover Free Public Library', url: 'https://www.doverlibrary.org', eventsUrl: 'https://www.doverlibrary.org/events', city: 'Dover', state: 'NJ', zipCode: '07801', county: 'Morris'},
+  // URL corrected 2026-08-11 (was doverlibrary.org): dfpl.org redirects to dfpl.libnet.info showing 32 East Clinton Street, Dover NJ 07801, phone 973-366-0172; Main Library Alliance member
+  { name: 'Dover Free Public Library', url: 'https://dfpl.org', eventsUrl: 'https://dfpl.libnet.info/events', city: 'Dover', state: 'NJ', zipCode: '07801', county: 'Morris'},
   { name: 'Dixon Homestead Library', url: 'https://www.dumontlibrary.org/', eventsUrl: 'https://www.dumontlibrary.org/', city: 'Dumont', state: 'NJ', zipCode: '07628', county: 'Bergen'},
   { name: 'Dunellen Free Public Library', url: 'https://www.dunellenlibrary.org', eventsUrl: 'https://www.dunellenlibrary.org/events', city: 'Dunellen', state: 'NJ', zipCode: '08812', county: 'Middlesex'},
   { name: 'Edgewater Free Public Library', url: 'https://www.edgewaterlibrary.org', eventsUrl: 'https://www.edgewaterlibrary.org/events', city: 'Edgewater', state: 'NJ', zipCode: '07020', county: 'Bergen'},
   { name: 'Elmwood Park Free Public Library', url: 'https://www.elmwoodparklibrary.org', eventsUrl: 'https://www.elmwoodparklibrary.org/events', city: 'Elmwood Park', state: 'NJ', zipCode: '07407', county: 'Bergen'},
   { name: 'Emerson Public Library', url: 'https://www.emersonlibrary.com/', eventsUrl: 'https://www.emersonlibrary.com/', city: 'Emerson', state: 'NJ', zipCode: '07630', county: 'Bergen'},
   { name: 'Englewood Free Public Library', url: 'https://www.englewoodlibrary.org', eventsUrl: 'https://www.englewoodlibrary.org/events', city: 'Englewood', state: 'NJ', zipCode: '07631', county: 'Bergen'},
-  { name: 'Fair Haven Public Library', url: 'https://fairhavenlibrary.org/', eventsUrl: 'https://fairhavenlibrary.org/', city: 'Fair Haven', state: 'NJ', zipCode: '07704', county: 'Monmouth'},
+  // URL corrected 2026-08-11 (was fairhavenlibrary.org): Site shows 748 River Road, Borough Hall, Fair Haven NJ, phone 732-747-0241; Monmouth County Library member
+  { name: 'Fair Haven Public Library', url: 'https://fairhavenlib.org', eventsUrl: 'https://fairhavenlib.org', city: 'Fair Haven', state: 'NJ', zipCode: '07704', county: 'Monmouth'},
   { name: 'Maurice M. Pine Free Public Library', url: 'https://www.fairlawnlibrary.org/', eventsUrl: 'https://www.fairlawnlibrary.org/calendar', city: 'Fair Lawn', state: 'NJ', zipCode: '07410', county: 'Bergen'},
-  { name: 'Anthony Pio Costa Memorial Library', url: 'https://fairfieldlibrary.org/', eventsUrl: 'https://fairfieldlibrary.org/', city: 'Fairfield', state: 'NJ', zipCode: '07004', county: 'Essex'},
+  // URL corrected 2026-08-11 (was fairfieldlibrary.org): Now named Fairfield Free Public Library; 261 Hollywood Ave Fairfield NJ 07004, 973-227-3575 matches old Pio Costa listing
+  { name: 'Anthony Pio Costa Memorial Library', url: 'https://www.ffpl.org', eventsUrl: 'https://www.ffpl.org/calendar.aspx', city: 'Fairfield', state: 'NJ', zipCode: '07004', county: 'Essex'},
   { name: 'Fanwood Memorial Library', url: 'https://fanwoodlibrary.org/', eventsUrl: 'https://fanwoodlibrary.org/', city: 'Fanwood', state: 'NJ', zipCode: '07023', county: 'Union'},
   { name: 'Flemington Free Public Library', url: 'https://www.flemingtonlibrary.org', eventsUrl: 'https://www.flemingtonlibrary.org/events', city: 'Flemington', state: 'NJ', zipCode: '08822', county: 'Hunterdon'},
   { name: 'Fort Lee Free Public Library', url: 'https://www.fortleelibrary.org', eventsUrl: 'https://www.fortleelibrary.org/events', city: 'Fort Lee', state: 'NJ', zipCode: '07024', county: 'Bergen'},
   { name: 'Franklin Lakes Free Public Library', url: 'https://www.franklinlakeslibrary.org', eventsUrl: 'https://www.franklinlakeslibrary.org/events', city: 'Franklin Lakes', state: 'NJ', zipCode: '07417', county: 'Bergen'},
-  { name: 'Franklin Twp Public Library-Gloucester', url: 'https://franklinvillelibrary.org/', eventsUrl: 'https://franklinvillelibrary.org/', city: 'Franklinville', state: 'NJ', zipCode: '08322', county: 'Gloucester'},
+  // URL corrected 2026-08-11 (was franklinvillelibrary.org): Site blocks bots; directories and Franklin Twp Gloucester County municipal brochure quote 1584 Coles Mill Road, Franklinville NJ 08322, phon
+  { name: 'Franklin Twp Public Library-Gloucester', url: 'https://ftlnj.org', eventsUrl: 'https://ftlnj.org/calendar/', city: 'Franklinville', state: 'NJ', zipCode: '08322', county: 'Gloucester'},
   { name: 'Glen Ridge Free Public Library', url: 'https://www.glenridgelibrary.org/', eventsUrl: 'https://www.glenridgelibrary.org/', city: 'Glen Ridge', state: 'NJ', zipCode: '07028', county: 'Essex'},
   { name: 'Glen Rock Public Library', url: 'https://www.glenrocklibrary.org/', eventsUrl: 'https://www.glenrocklibrary.org/', city: 'Glen Rock', state: 'NJ', zipCode: '07452', county: 'Bergen'},
   { name: 'Gloucester City Library', url: 'https://www.gloucestercitylibrary.org', eventsUrl: 'https://www.gloucestercitylibrary.org/events', city: 'Gloucester City', state: 'NJ', zipCode: '08030', county: 'Camden'},
   { name: 'Hackettstown Free Public Library', url: 'https://www.hackettstownlibrary.org', eventsUrl: 'https://www.hackettstownlibrary.org/events', city: 'Hackettstown', state: 'NJ', zipCode: '07840', county: 'Warren'},
   { name: 'Haddonfield Public Library', url: 'https://www.haddonfieldlibrary.org/', eventsUrl: 'https://www.haddonfieldlibrary.org/', city: 'Haddonfield', state: 'NJ', zipCode: '08033', county: 'Camden'},
-  { name: 'Hamilton Township Free Public Library', url: 'https://hamiltonlibrary.org/', eventsUrl: 'https://hamiltonlibrary.org/', city: 'Hamilton', state: 'NJ', zipCode: '08619', county: 'Monmouth'},
+  // URL corrected 2026-08-11 (was hamiltonlibrary.org): Site lists 1 Justice Samuel A. Alito Jr. Way, Hamilton NJ 08619, phone 609-581-4060. hamiltonlibrary.org is Hamilton NY
+  { name: 'Hamilton Township Free Public Library', url: 'https://hamiltonnjpl.org', eventsUrl: 'https://hamiltonnjpl.org/events/', city: 'Hamilton', state: 'NJ', zipCode: '08619', county: 'Monmouth'},
   { name: 'Hasbrouck Heights Free Public Library', url: 'https://www.hasbrouckheightslibrary.org', eventsUrl: 'https://www.hasbrouckheightslibrary.org/events', city: 'Hasbrouck Heights', state: 'NJ', zipCode: '07604', county: 'Bergen'},
   { name: 'Haworth Municipal Library', url: 'https://www.haworthlibrary.org/', eventsUrl: 'https://www.haworthlibrary.org/', city: 'Haworth', state: 'NJ', zipCode: '07641', county: 'Bergen'},
   { name: 'Hillside Free Public Library', url: 'https://www.hillsidelibrary.org', eventsUrl: 'https://www.hillsidelibrary.org/events', city: 'Hillside', state: 'NJ', zipCode: '07205', county: 'Union'},
   { name: 'Worth Pinkham Memorial Library', url: 'https://www.hohokuslibrary.org', eventsUrl: 'https://www.hohokuslibrary.org/events', city: 'Ho-Ho-Kus', state: 'NJ', zipCode: '07423', county: 'Bergen'},
   { name: 'Hoboken Public Library', url: 'https://www.hobokenlibrary.org', eventsUrl: 'https://www.hobokenlibrary.org/events', city: 'Hoboken', state: 'NJ', zipCode: '07030', county: 'Hudson'},
-  { name: 'Irvington Public Library', url: 'https://irvingtonlibrary.org/', eventsUrl: 'https://irvingtonlibrary.org/', city: 'Irvington', state: 'NJ', zipCode: '07111', county: 'Essex'},
+  // URL corrected 2026-08-11 (was irvingtonlibrary.org): Civic Square Irvington NJ 07111, phone 973-372-6400. irvingtonlibrary.org is the Irvington NY library instead
+  { name: 'Irvington Public Library', url: 'https://irvingtonpubliclibrary.org', eventsUrl: 'https://irvingtonpubliclibrary.org/events', city: 'Irvington', state: 'NJ', zipCode: '07111', county: 'Essex'},
   { name: 'Jamesburg Public Library', url: 'https://jamesburglibrary.org/', eventsUrl: 'https://jamesburglibrary.org/', city: 'Jamesburg', state: 'NJ', zipCode: '08831', county: 'Middlesex'},
   { name: 'Kearny Public Library', url: 'https://www.kearnylibrary.org', eventsUrl: 'https://www.kearnylibrary.org/events', city: 'Kearny', state: 'NJ', zipCode: '07032', county: 'Hudson'},
   { name: 'Kenilworth Public Library', url: 'https://kenilworthlibrary.org/', eventsUrl: 'https://kenilworthlibrary.org/', city: 'Kenilworth', state: 'NJ', zipCode: '07033', county: 'Union'},
@@ -91,7 +97,8 @@ const LIBRARIES = [
   { name: 'Midland Park Memorial Library', url: 'https://www.midlandparklibrary.org/', eventsUrl: 'https://www.midlandparklibrary.org/', city: 'Midland Park', state: 'NJ', zipCode: '07432', county: 'Bergen'},
   { name: 'Millburn Free Public Library', url: 'https://www.millburnlibrary.org', eventsUrl: 'https://www.millburnlibrary.org/events', city: 'Millburn', state: 'NJ', zipCode: '07041', county: 'Essex'},
   { name: 'Milltown Public Library', url: 'https://www.milltownlibrary.org/', eventsUrl: 'https://www.milltownlibrary.org/', city: 'Milltown', state: 'NJ', zipCode: '08850', county: 'Middlesex'},
-  { name: 'Millville Public Library', url: 'https://www.millvillelibrary.org', eventsUrl: 'https://www.millvillelibrary.org/events', city: 'Millville', state: 'NJ', zipCode: '08332', county: 'Cumberland'},
+  // URL corrected 2026-08-11 (was millvillelibrary.org): Own site; 210 Buck St Millville NJ 08332, phone 856-825-7087, Cumberland County
+  { name: 'Millville Public Library', url: 'https://millvillepubliclibrary.org/en/', eventsUrl: 'https://www.millvillepubliclibrary.org/en/mpl-calendar', city: 'Millville', state: 'NJ', zipCode: '08332', county: 'Cumberland'},
   { name: 'Monmouth Beach Public Library', url: 'https://monmouthbeachlibrary.org/', eventsUrl: 'https://monmouthbeachlibrary.org/', city: 'Monmouth Beach', state: 'NJ', zipCode: '07750', county: 'Monmouth'},
   { name: 'Monroe Twp Public Library-Middlesex', url: 'http://monroetpl.org/', eventsUrl: 'http://monroetpl.org/', city: 'Monroe Township', state: 'NJ', zipCode: '08831', county: 'Middlesex'},
   { name: 'Montclair Public Library', url: 'https://www.montclairlibrary.org', eventsUrl: 'https://www.montclairlibrary.org/events', city: 'Montclair', state: 'NJ', zipCode: '07042', county: 'Essex'},
@@ -126,6 +133,7 @@ const LIBRARIES = [
   { name: 'Pennsville Public Library', url: 'https://www.pennsvillelibrary.org', eventsUrl: 'https://www.pennsvillelibrary.org/events', city: 'Pennsville', state: 'NJ', zipCode: '08070', county: 'Salem'},
   { name: 'Piscataway Public Library', url: 'https://www.piscatawaylibrary.org', eventsUrl: 'https://www.piscatawaylibrary.org/events', city: 'Piscataway', state: 'NJ', zipCode: '08854', county: 'Middlesex'},
   // URL corrected 2026-08-11 (was plainfieldlibrary.org): fetched site: 800 Park Avenue Plainfield NJ 07060, phone 908-757-1111
+  // URL corrected 2026-08-11 (was plainfieldnj.librarycalendar.com): fetched site: 800 Park Avenue Plainfield NJ 07060, phone 908-757-1111
   { name: 'Plainfield Free Public Library', url: 'https://plainfieldlibrarynj.org', eventsUrl: 'https://plainfieldnj.librarycalendar.com/events/month', city: 'Plainfield', state: 'NJ', zipCode: '07060', county: 'Union'},
   { name: 'Plainsboro Free Public Library', url: 'https://www.plainsborolibrary.org', eventsUrl: 'https://www.plainsborolibrary.org/events', city: 'Plainsboro', state: 'NJ', zipCode: '08536', county: 'Middlesex'},
   { name: 'Pompton Lakes Borough Free Public Library', url: 'https://www.pomptonlakeslibrary.org/', eventsUrl: 'https://www.pomptonlakeslibrary.org/', city: 'Pompton Lakes', state: 'NJ', zipCode: '07442', county: 'Passaic'},
@@ -148,7 +156,8 @@ const LIBRARIES = [
   { name: 'Salem Free Public Library', url: 'https://www.salemlibrary.org', eventsUrl: 'https://www.salemlibrary.org/events', city: 'Salem', state: 'NJ', zipCode: '08079', county: 'Salem County'},
   { name: 'Scotch Plains Public Library', url: 'https://www.scotchplainslibrary.org', eventsUrl: 'https://www.scotchplainslibrary.org/events', city: 'Scotch Plains', state: 'NJ', zipCode: '07076', county: 'Union'},
   { name: 'Secaucus Free Public Library', url: 'https://www.secaucuslibrary.org', eventsUrl: 'https://www.secaucuslibrary.org/events', city: 'Secaucus', state: 'NJ', zipCode: '07094', county: 'Hudson'},
-  { name: 'Franklin Twp Public Library-Somerset', url: 'https://www.somersetlibrary.org', eventsUrl: 'https://www.somersetlibrary.org/events', city: 'Somerset', state: 'NJ', zipCode: '08873', county: 'Somerset County'},
+  // URL corrected 2026-08-11 (was somersetlibrary.org): Library Communico events site names Franklin Township Public Library, 485 Demott Lane Somerset NJ 08873, phone 732-873-8700
+  { name: 'Franklin Twp Public Library-Somerset', url: 'https://www.franklintwp.org', eventsUrl: 'https://franklintwp.libnet.info/events', city: 'Somerset', state: 'NJ', zipCode: '08873', county: 'Somerset County'},
   { name: 'Dowdell Library Of South Amboy', url: 'https://www.southamboylibrary.org', eventsUrl: 'https://www.southamboylibrary.org/events', city: 'South Amboy', state: 'NJ', zipCode: '08879', county: 'Middlesex'},
   { name: 'South River Public Library', url: 'https://www.southriverlibrary.org', eventsUrl: 'https://www.southriverlibrary.org/events', city: 'South River', state: 'NJ', zipCode: '08882', county: 'Middlesex'},
   { name: 'Sparta Public Library', url: 'https://www.spartalibrary.org', eventsUrl: 'https://www.spartalibrary.org/events', city: 'Sparta', state: 'NJ', zipCode: '07871', county: 'Sussex'},

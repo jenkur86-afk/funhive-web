@@ -47,7 +47,8 @@ async function tryFetchLibCalAjaxList(origin, campsId, libName) {
   }
 }
 const LIBRARIES = [
-  { name: 'Wilcox County Public Library', url: 'https://www.abbevillelibrary.org/', eventsUrl: 'https://www.abbevillelibrary.org/', city: 'Abbeville', state: 'GA', zipCode: '00000', county: 'Wilcox'},
+  // URL corrected 2026-08-11 (was abbevillelibrary.org): Ocmulgee Regional Library System branch page lists 104 North Broad Street, Abbeville GA 31001, phone 229-467-2075
+  { name: 'Wilcox County Public Library', url: 'https://orls.org/library/wilcox-county-public-library/', eventsUrl: 'https://orls.org/calendar/', city: 'Abbeville', state: 'GA', zipCode: '00000', county: 'Wilcox'},
   // Wheeler County Library: alamolibrary.org resolved (200) but its entire body
   // was a parked-domain redirect stub — dead domain, confirmed live 2026-08-09.
   // Real institution: part of the Ocmulgee Regional Library System (orls.org),
@@ -102,9 +103,11 @@ const LIBRARIES = [
   { name: 'Byron Public Library', url: 'https://www.byronlibrary.org', eventsUrl: 'https://www.byronlibrary.org/events', city: 'Byron', state: 'GA', zipCode: '00000', county: 'Peach'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in NY, not GA. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Roddenbery Memorial Library System', url: 'https://cairolibrary.org/', eventsUrl: 'https://cairolibrary.org/calendar/', city: 'Cairo', state: 'GA', zipCode: '39828', county: 'Grady'},
-  { name: 'Hickory Flat Public Library', url: 'https://www.cantonlibrary.org', eventsUrl: 'https://www.cantonlibrary.org/events', city: 'Canton', state: 'GA', zipCode: '00000', county: 'Cherokee'},
+  // URL corrected 2026-08-11 (was cantonlibrary.org): Sequoyah Regional Library System branch, 2740 East Cherokee Dr Canton GA, ph 770-345-7565, Cherokee County
+  { name: 'Hickory Flat Public Library', url: 'https://www.sequoyahregionallibrary.org/hickoryflat', eventsUrl: 'https://www.sequoyahregionallibrary.org/events', city: 'Canton', state: 'GA', zipCode: '00000', county: 'Cherokee'},
   { name: 'Cedartown Library', url: 'https://www.cedartownlibrary.org/', eventsUrl: 'https://www.cedartownlibrary.org/', city: 'Cedartown', state: 'GA', zipCode: '00000', county: 'Polk'},
-  { name: 'Centerville Branch Library', url: 'https://www.centervillelibrary.org', eventsUrl: 'https://www.centervillelibrary.org/events', city: 'Centerville', state: 'GA', zipCode: '00000', county: 'Houston'},
+  // URL corrected 2026-08-11 (was centervillelibrary.org): Houston County Public Library system site lists Centerville Branch, 206 Gunn Road, Centerville GA 31028, phone 478-953-4500
+  { name: 'Centerville Branch Library', url: 'https://houpl.org', eventsUrl: 'https://houpl.org', city: 'Centerville', state: 'GA', zipCode: '00000', county: 'Houston'},
   { name: 'Clarkesville-Habersham Co. Lib.', url: 'https://clarkesvillelibrary.org/', eventsUrl: 'https://clarkesvillelibrary.org/library-events', city: 'Clarkesville', state: 'GA', zipCode: '00000', county: 'Habersham'},
   { name: 'Clarkston Branch', url: 'https://www.clarkstonlibrary.org', eventsUrl: 'https://www.clarkstonlibrary.org/events', city: 'Clarkston', state: 'GA', zipCode: '00000', county: 'DeKalb'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in CA, not GA. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
@@ -124,8 +127,10 @@ const LIBRARIES = [
   { name: 'New Georgia Public Library', url: 'https://wgrls.org', eventsUrl: 'https://wgrls.org/events/list/?tribe_venues%5B%5D=87', city: 'Dallas', state: 'GA', zipCode: '30157', county: 'Paulding'},
   { name: 'Dalton-Whitfield County Public Library', url: 'https://www.daltonlibrary.org', eventsUrl: 'https://www.daltonlibrary.org/events', city: 'Dalton', state: 'GA', zipCode: '00000', county: 'Whitfield'},
   { name: 'Ida Hilton Public Library', url: 'https://www.darienlibrary.org', eventsUrl: 'https://www.darienlibrary.org/events', city: 'Darien', state: 'GA', zipCode: '00000', county: 'McIntosh'},
-  { name: 'Covington Branch', url: 'https://www.decaturlibrary.org', eventsUrl: 'https://www.decaturlibrary.org/events', city: 'Decatur', state: 'GA', zipCode: '00000', county: 'Decatur County'},
-  { name: 'Douglas-Coffee County Public Library', url: 'https://douglaslibrary.org/', eventsUrl: 'https://douglaslibrary.org/', city: 'Douglas', state: 'GA', zipCode: '00000', county: 'Douglas County'},
+  // URL corrected 2026-08-11 (was decaturlibrary.org): DeKalb County Public Library Covington Library, 3500 Covington Highway Decatur GA 30032, phone 404-508-7180
+  { name: 'Covington Branch', url: 'https://dekalblibrary.org/locations/covi', eventsUrl: 'https://events.dekalblibrary.org/events?v=list&r=thisweek', city: 'Decatur', state: 'GA', zipCode: '00000', county: 'Decatur County'},
+  // URL corrected 2026-08-11 (was douglaslibrary.org): Satilla Regional Library System page gives 200 Madison Avenue S Suite D, Douglas GA 31533, phone 912-384-4667
+  { name: 'Douglas-Coffee County Public Library', url: 'https://srlsys.org/douglas-coffee-county-public-library/', eventsUrl: 'https://srlsys.org/calendar/', city: 'Douglas', state: 'GA', zipCode: '00000', county: 'Douglas County'},
   { name: 'Laurens County Library', url: 'https://www.dublinlibrary.org/', eventsUrl: 'https://www.dublinlibrary.org/', city: 'Dublin', state: 'GA', zipCode: '00000', county: 'Laurens'},
   { name: 'Duluth', url: 'https://duluthlibrary.org/', eventsUrl: 'https://duluthlibrary.org/', city: 'Duluth', state: 'GA', zipCode: '00000', county: 'Gwinnett'},
   { name: 'Gibbs Memorial Library', url: 'https://www.evanslibrary.org', eventsUrl: 'https://www.evanslibrary.org/events', city: 'Evans', state: 'GA', zipCode: '00000', county: 'Evans County'},
@@ -147,11 +152,13 @@ const LIBRARIES = [
   // prlib.org/banks-county's own events link — a platform this WordPress
   // scraper cannot parse, hence the move rather than a URL swap here.
   { name: 'Wayne County Library', url: 'https://www.jesuplibrary.org', eventsUrl: 'https://www.jesuplibrary.org/events', city: 'Jesup', state: 'GA', zipCode: '00000', county: 'Wayne'},
-  { name: 'Cherokee Regional Library System', url: 'https://lafayettelibrary.org/', eventsUrl: 'https://lafayettelibrary.org/', city: 'Lafayette', state: 'GA', zipCode: '30728', county: 'Walker'},
+  // URL corrected 2026-08-11 (was lafayettelibrary.org): Regional offices 305 S Duke St LaFayette GA, phone 706-638-7557; calendar lists LaFayette-Walker, Rossville, Chickamauga, Dade branches
+  { name: 'Cherokee Regional Library System', url: 'https://chrl.org', eventsUrl: 'https://chrl.org/calendar.php', city: 'Lafayette', state: 'GA', zipCode: '30728', county: 'Walker'},
   { name: 'Lagrange Memorial Library', url: 'https://lagrangelibrary.org/', eventsUrl: 'https://lagrangelibrary.org/', city: 'Lagrange', state: 'GA', zipCode: '00000', county: 'Troup'},
   { name: 'Miller Lakeland Library', url: 'https://llcoop.org/', eventsUrl: 'https://llcoop.org/calendar/', city: 'Lakeland', state: 'GA', zipCode: '00000', county: 'Lanier'},
   { name: 'Oglethorpe County Library', url: 'https://www.lexingtonlibrary.org', eventsUrl: 'https://www.lexingtonlibrary.org/events', city: 'Lexington', state: 'GA', zipCode: '00000', county: 'Oglethorpe'},
-  { name: 'Jefferson County Library System', url: 'https://www.louisvillelibrary.org', eventsUrl: 'https://www.louisvillelibrary.org/events', city: 'Louisville', state: 'GA', zipCode: '30434', county: 'Jefferson'},
+  // URL corrected 2026-08-11 (was louisvillelibrary.org): Site headquarters 306 East Broad Street Louisville GA 30434, phone 478-625-7079; three branches, member of Georgia PINES
+  { name: 'Jefferson County Library System', url: 'https://www.jeffersoncls.org/', eventsUrl: 'https://www.jeffersoncls.org/calendar.php', city: 'Louisville', state: 'GA', zipCode: '30434', county: 'Jefferson'},
   { name: 'Nelle Brown Memorial Public Library', url: 'https://lyonslibrary.org/', eventsUrl: 'https://lyonslibrary.org/', city: 'Lyons', state: 'GA', zipCode: '00000', county: 'Toombs'},
   { name: 'Middle Georgia Regional Library System', url: 'https://www.maconlibrary.org', eventsUrl: 'https://www.maconlibrary.org/events', city: 'Macon', state: 'GA', zipCode: '31201', county: 'Macon County'},
   { name: 'Morgan County Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'GA', zipCode: '00000', county: 'Madison County'},

@@ -49,19 +49,22 @@ const LIBRARIES = [
   { name: 'Whitley County Public Library', url: 'https://www.whitleylibrary.org', eventsUrl: 'https://www.whitleylibrary.org/events', city: 'Williamsburg', state: 'KY', zipCode: '40769', county: 'Whitley'},
   { name: 'Floyd County Public Library', url: 'https://floydlibrary.org/', eventsUrl: 'https://floydlibrary.org/indiana-history-room/events/', city: 'Prestonsburg', state: 'KY', zipCode: '41653', county: 'Floyd'},
   // Additional libraries from spreadsheet coverage expansion
-  { name: 'Auburn Branch', url: 'https://auburnlibrary.org/', eventsUrl: 'https://auburnlibrary.org/', city: 'Auburn', state: 'KY', zipCode: '00000', county: 'Logan'},
+  // URL corrected 2026-08-11 (was auburnlibrary.org): Real name Logan County Public Library Auburn Branch; site lists 106 Spring St, Auburn KY 42206, phone 270-542-8180
+  { name: 'Auburn Branch', url: 'https://loganlibrary.org', eventsUrl: 'https://loganlibrary.org/calendar/', city: 'Auburn', state: 'KY', zipCode: '00000', county: 'Logan'},
   { name: 'Trimble County Public Library', url: 'https://www.bedfordlibrary.org', eventsUrl: 'https://www.bedfordlibrary.org/events', city: 'Bedford', state: 'KY', zipCode: '40006', county: 'Trimble'},
   { name: 'Nicholas County Public Library', url: 'https://www.carlislelibrary.org', eventsUrl: 'https://www.carlislelibrary.org/events', city: 'Carlisle', state: 'KY', zipCode: '40311', county: 'Carlisle County'},
   { name: 'Hickman County Memorial Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'KY', zipCode: '42031', county: 'Clinton County'},
   { name: 'Adair County Public Library', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'KY', zipCode: '42728', county: 'Adair'},
   { name: 'South Branch', url: 'https://corbinlibrary.org/', eventsUrl: 'https://corbinlibrary.org/', city: 'Corbin', state: 'KY', zipCode: '00000', county: 'Whitley'},
   { name: 'Oldham County Public Library', url: 'https://www.crestwoodlibrary.org/', eventsUrl: 'https://www.crestwoodlibrary.org/news-events/lib-cal/calendar', city: 'Crestwood', state: 'KY', zipCode: '40014', county: 'Oldham'},
-  { name: 'Rebecca Caudill Public Library', url: 'https://www.cumberlandlibrary.org', eventsUrl: 'https://www.cumberlandlibrary.org/events', city: 'Cumberland', state: 'KY', zipCode: '00000', county: 'Cumberland County'},
+  // URL corrected 2026-08-11 (was cumberlandlibrary.org): Harlan County Public Libraries site lists Rebecca Caudill branch, 310 West Main Street, Cumberland KY 40823, phone 606-589-2409. No calendar
+  { name: 'Rebecca Caudill Public Library', url: 'https://harlancountylibraries.org', eventsUrl: 'https://harlancountylibraries.org', city: 'Cumberland', state: 'KY', zipCode: '00000', county: 'Cumberland County'},
   { name: 'Cynthiana-Harrison County Public Library', url: 'https://www.cynthianalibrary.org/', eventsUrl: 'https://www.cynthianalibrary.org/calendar', city: 'Cynthiana', state: 'KY', zipCode: '41031', county: 'Harrison'},
   { name: 'Florence Branch', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'KY', zipCode: '00000', county: 'Boone'},
   { name: 'Goodnight Memorial Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'KY', zipCode: '42134', county: 'Franklin County'},
   { name: 'Fulton Public Library', url: 'https://www.facebook.com/', eventsUrl: 'https://www.facebook.com/fultonlibrary', city: 'Fulton', state: 'KY', zipCode: '42041', county: 'Fulton County'},
-  { name: 'Mary Wood Weldon Memorial Public Library', url: 'https://www.glasgowlibrary.org/', eventsUrl: 'https://www.glasgowlibrary.org/upcoming-events', city: 'Glasgow', state: 'KY', zipCode: '42141', county: 'Barren'},
+  // URL corrected 2026-08-11 (was glasgowlibrary.org): Site header reads Barren County Public Library - Mary Wood Weldon Memorial Library, 1530 S Green St, Glasgow KY 42141, phone 270-651-2824
+  { name: 'Mary Wood Weldon Memorial Public Library', url: 'https://weldonpubliclibrary.org', eventsUrl: 'https://weldonpubliclibrary.org/index.php/events/', city: 'Glasgow', state: 'KY', zipCode: '42141', county: 'Barren'},
   { name: 'Mahan-Oldham County Library', url: 'https://www.goshenlibrary.org/', eventsUrl: 'https://www.goshenlibrary.org/', city: 'Goshen', state: 'KY', zipCode: '00000', county: 'Oldham'},
   { name: 'Green County Public Library', url: 'https://www.greensburglibrary.org', eventsUrl: 'https://www.greensburglibrary.org/events', city: 'Greensburg', state: 'KY', zipCode: '42743', county: 'Green'},
   { name: 'Harlan County Public Library', url: 'https://www.harlanlibrary.org', eventsUrl: 'https://www.harlanlibrary.org/events', city: 'Harlan', state: 'KY', zipCode: '40831', county: 'Harlan County'},
@@ -69,13 +72,16 @@ const LIBRARIES = [
   { name: 'Perry County Public Library', url: 'https://www.hazardlibrary.org/', eventsUrl: 'https://www.hazardlibrary.org/', city: 'Hazard', state: 'KY', zipCode: '41701', county: 'Perry'},
   { name: 'Lents Branch', url: 'https://www.hebronlibrary.org', eventsUrl: 'https://www.hebronlibrary.org/events', city: 'Hebron', state: 'KY', zipCode: '00000', county: 'Boone'},
   { name: 'Estill County Public Library', url: 'https://www.irvinelibrary.org', eventsUrl: 'https://www.irvinelibrary.org/events', city: 'Irvine', state: 'KY', zipCode: '40336', county: 'Estill'},
-  { name: 'Irvington Branch', url: 'https://irvingtonlibrary.org/', eventsUrl: 'https://irvingtonlibrary.org/', city: 'Irvington', state: 'KY', zipCode: '00000', county: 'Breckinridge'},
+  // URL corrected 2026-08-11 (was irvingtonlibrary.org): Breckinridge County Public Library Irvington Branch, 1109 US-60 Irvington KY 40146, phone 270-547-7404
+  { name: 'Irvington Branch', url: 'https://bcplibrary.org/irvington-branch', eventsUrl: 'https://bcplibrary.org/program-calendars-1', city: 'Irvington', state: 'KY', zipCode: '00000', county: 'Breckinridge'},
   { name: 'Marion County Public Library', url: 'https://lebanonlibrary.org/', eventsUrl: 'https://lebanonlibrary.org/', city: 'Lebanon', state: 'KY', zipCode: '40033', county: 'Marion'},
-  { name: 'Casey County Public Library', url: 'https://libertylibrary.org/', eventsUrl: 'https://libertylibrary.org/', city: 'Liberty', state: 'KY', zipCode: '42539', county: 'Casey'},
+  // URL corrected 2026-08-11 (was libertylibrary.org): 238 Middleburg St Liberty KY 42539, phone 606-787-9381. libertylibrary.org is a Conroe TX charity, not this library
+  { name: 'Casey County Public Library', url: 'https://www.caseylibrary.org', eventsUrl: 'https://www.caseylibrary.org/calendar/', city: 'Liberty', state: 'KY', zipCode: '42539', county: 'Casey'},
   { name: 'Crittenden County Public Library', url: 'https://www.marionlibrary.org/', eventsUrl: 'https://www.marionlibrary.org/', city: 'Marion', state: 'KY', zipCode: '42064', county: 'Marion County'},
   { name: 'Mason County Public Library', url: 'https://www.maysvillelibrary.org', eventsUrl: 'https://www.maysvillelibrary.org/events', city: 'Maysville', state: 'KY', zipCode: '41056', county: 'Mason'},
   { name: 'Wayne County Public Library', url: 'https://www.allertonpubliclibrary.org/', eventsUrl: 'https://www.allertonpubliclibrary.org/calendar', city: 'Monticello', state: 'KY', zipCode: '42633', county: 'Wayne'},
-  { name: 'Allen County Public Library', url: 'https://www.scottsvillelibrary.org', eventsUrl: 'https://www.scottsvillelibrary.org/events', city: 'Scottsville', state: 'KY', zipCode: '42164', county: 'Allen'},
+  // URL corrected 2026-08-11 (was scottsvillelibrary.org): Site says located in Scottsville Kentucky, phone 270-237-3861 (KY area code). scottsvillelibrary.org is Scottsville Free Library in Scottsvi
+  { name: 'Allen County Public Library', url: 'https://www.allencountylibrary.com', eventsUrl: 'https://www.allencountylibrary.com/calendar/', city: 'Scottsville', state: 'KY', zipCode: '42164', county: 'Allen'},
   { name: 'Washington County Public Library', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'KY', zipCode: '40069', county: 'Washington'},
   { name: 'Gallatin County Public Library', url: 'https://www.warsawlibrary.org/', eventsUrl: 'https://www.warsawlibrary.org/', city: 'Warsaw', state: 'KY', zipCode: '41095', county: 'Gallatin'},
 

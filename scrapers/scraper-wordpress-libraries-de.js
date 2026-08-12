@@ -33,7 +33,8 @@ const LIBRARIES = [
   { name: 'Georgetown Public Library', url: 'https://www.georgetownpubliclibrary.org', eventsUrl: 'https://www.georgetownpubliclibrary.org/events', city: 'Georgetown', state: 'DE', zipCode: '19947', county: 'Sussex'},
   { name: 'Lewes Public Library', url: 'https://www.leweslibrary.org', eventsUrl: 'https://www.leweslibrary.org/events', city: 'Lewes', state: 'DE', zipCode: '19958', county: 'Sussex'},
   { name: 'Rehoboth Beach Public Library', url: 'https://www.rehobothbeachde.gov/library', eventsUrl: 'https://www.rehobothbeachde.gov/experience-rehoboth-beach/calendar/', city: 'Rehoboth Beach', state: 'DE', zipCode: '19971', county: 'Sussex'},
-  { name: 'Bridgeville Public Library', url: 'https://bridgevillelibrary.org/', eventsUrl: 'https://bridgevillelibrary.org/', city: 'Bridgeville', state: 'DE', zipCode: '19933', county: 'Sussex'},
+  // URL corrected 2026-08-11 (was bridgevillelibrary.org): Sussex County Library System site lists Bridgeville Public Library, 600 South Cannon St, Bridgeville DE 19933, 302-337-7401. bridgevillelibr
+  { name: 'Bridgeville Public Library', url: 'https://sussexcounty.lib.de.us', eventsUrl: 'https://delawarelibraries.libcal.com/calendar/bridgeville', city: 'Bridgeville', state: 'DE', zipCode: '19933', county: 'Sussex'},
   { name: 'Laurel Public Library', url: 'https://www.laurellibrary.org', eventsUrl: 'https://www.laurellibrary.org/events', city: 'Laurel', state: 'DE', zipCode: '19956', county: 'Sussex'},
   // Additional libraries from coverage audit
   { name: 'Frankford Public Library', url: 'https://www.frankfordlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.frankfordlibrary.org/events', city: 'Frankford', state: 'DE', zipCode: '19945', county: '' },

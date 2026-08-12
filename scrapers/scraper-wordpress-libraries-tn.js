@@ -51,18 +51,21 @@ const LIBRARIES = [
   { name: 'Savannah-Hardin County Library', url: 'https://www.hardincountylibrary.org', eventsUrl: 'https://www.hardincountylibrary.org/events', city: 'Savannah', state: 'TN', zipCode: '38372' },
   // Additional libraries from spreadsheet coverage expansion
   { name: 'Crockett County Library', url: 'https://www.alamolibrary.org', eventsUrl: 'https://www.alamolibrary.org/events', city: 'Alamo', state: 'TN', zipCode: '38001', county: 'Crockett'},
-  { name: 'Alexandria Branch Library', url: 'https://www.alexandrialibrary.org', eventsUrl: 'https://www.alexandrialibrary.org/events', city: 'Alexandria', state: 'TN', zipCode: '00000', county: 'DeKalb'},
+  // URL corrected 2026-08-11 (was alexandrialibrary.org): DeKalb County TN system site, Justin Potter Library Smithville; Alexandria Library 109 S Public Square Alexandria TN, 615-529-4124 per count
+  { name: 'Alexandria Branch Library', url: 'http://dekalblibraries.net', eventsUrl: 'http://dekalblibraries.net/programsevents.html', city: 'Alexandria', state: 'TN', zipCode: '00000', county: 'DeKalb'},
   { name: 'Southeast Branch Library', url: 'https://www.antiochlibrary.org', eventsUrl: 'https://www.antiochlibrary.org/events', city: 'Antioch', state: 'TN', zipCode: '00000', county: 'Bedford'},
   { name: 'Sam T. Wilson Public Library', url: 'https://www.arlingtonlibrary.org/', eventsUrl: 'https://www.arlingtonlibrary.org/home', city: 'Arlington', state: 'TN', zipCode: '38002', county: 'Shelby'},
   { name: 'Auburntown Public Library', url: 'https://adamsmemoriallibrary.org/', eventsUrl: 'https://adamsmemoriallibrary.org/', city: 'Auburntown', state: 'TN', zipCode: '00000', county: 'Cannon'},
   { name: 'Baxter Branch Library', url: 'https://www.baxterlibrary.org', eventsUrl: 'https://www.baxterlibrary.org/events', city: 'Baxter', state: 'TN', zipCode: '00000', county: 'Putnam'},
   { name: 'The Brentwood Library', url: 'https://www.brentwoodlibrary.org', eventsUrl: 'https://www.brentwoodlibrary.org/events', city: 'Brentwood', state: 'TN', zipCode: '37027', county: 'Williamson'},
   { name: 'Benton County Library', url: 'https://www.camdenlibrary.org/', eventsUrl: 'https://www.camdenlibrary.org/', city: 'Camden', state: 'TN', zipCode: '38320', county: 'Benton'},
-  { name: 'Hickman County Public Library', url: 'https://www.centervillelibrary.org', eventsUrl: 'https://www.centervillelibrary.org/events', city: 'Centerville', state: 'TN', zipCode: '37033', county: 'Hickman'},
+  // URL corrected 2026-08-11 (was centervillelibrary.org): Site is behind Cloudflare; Help4TN state directory lists 120 West Swan Street, Centerville TN 37033, phone 931-729-4151, site hickmancountyl
+  { name: 'Hickman County Public Library', url: 'https://hickmancountylibrary.net', eventsUrl: 'https://hickmancountylibrary.net', city: 'Centerville', state: 'TN', zipCode: '37033', county: 'Hickman'},
   { name: 'Clinton Public Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'TN', zipCode: '37716', county: 'Anderson'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in AK, not TN. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Cordova Branch Library', url: 'https://cordovalibrary.org/', eventsUrl: 'https://cordovalibrary.org/', city: 'Cordova', state: 'TN', zipCode: '00000', county: 'Shelby'},
-  { name: 'Meigs-Decatur Public Library', url: 'https://www.decaturlibrary.org', eventsUrl: 'https://www.decaturlibrary.org/events', city: 'Decatur', state: 'TN', zipCode: '37322', county: 'Decatur County'},
+  // URL corrected 2026-08-11 (was decaturlibrary.org): Contact page shows 120 E. Memorial Dr, Decatur TN 37322, phone 423-334-3332
+  { name: 'Meigs-Decatur Public Library', url: 'https://www.meigscounty-decaturpubliclibrary.com', eventsUrl: 'https://www.meigscounty-decaturpubliclibrary.com', city: 'Decatur', state: 'TN', zipCode: '37322', county: 'Decatur County'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in OH, not TN. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Stewart County Public Library', url: 'https://www.doverlibrary.org', eventsUrl: 'https://www.doverlibrary.org/events', city: 'Dover', state: 'TN', zipCode: '37058', county: 'Stewart'},
   { name: 'Sequatchie County Public Library', url: 'https://www.dunlaplibrary.org', eventsUrl: 'https://www.dunlaplibrary.org/events', city: 'Dunlap', state: 'TN', zipCode: '37327', county: 'Sequatchie'},
@@ -79,24 +82,30 @@ const LIBRARIES = [
   { name: 'Mildred G. Fields Memorial Library', url: 'https://milanlibrary.org/', eventsUrl: 'https://milanlibrary.org/', city: 'Milan', state: 'TN', zipCode: '38358', county: 'Gibson'},
   { name: 'Monterey Branch Library', url: 'https://www.montereylibrary.org', eventsUrl: 'https://www.montereylibrary.org/events', city: 'Monterey', state: 'TN', zipCode: '00000', county: 'Putnam'},
   { name: 'Mt. Juliet-Harvey Freeman Public Library', url: 'https://www.mtjulietlibrary.org', eventsUrl: 'https://www.mtjulietlibrary.org/events', city: 'Mt. Juliet', state: 'TN', zipCode: '37122', county: 'Wilson'},
-  { name: 'Newbern City Library', url: 'https://www.newbernlibrary.org', eventsUrl: 'https://www.newbernlibrary.org/events', city: 'Newbern', state: 'TN', zipCode: '38059', county: 'Dyer'},
+  // URL corrected 2026-08-11 (was newbernlibrary.org): Site lists 220 East Main Street, Newbern TN 38059, phone 731-627-3153; matches cityofnewbern.org library page. newbernlibrary.org is Newbern
+  { name: 'Newbern City Library', url: 'https://newberncitylibrary.weebly.com', eventsUrl: 'https://newberncitylibrary.weebly.com', city: 'Newbern', state: 'TN', zipCode: '38059', county: 'Dyer'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in MA, not TN. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Palmer Public Library', url: 'https://www.palmerlibrary.org', eventsUrl: 'https://www.palmerlibrary.org/events', city: 'Palmer', state: 'TN', zipCode: '37365', county: 'Grundy'},
   { name: 'Parsons Public Library', url: 'https://www.parsonslibrary.org/', eventsUrl: 'https://www.parsonslibrary.org/', city: 'Parsons', state: 'TN', zipCode: '38363', county: 'Decatur'},
-  { name: 'Lauderdale County Library', url: 'https://ripleylibrary.org/', eventsUrl: 'https://ripleylibrary.org/', city: 'Ripley', state: 'TN', zipCode: '38063', county: 'Lauderdale'},
+  // URL corrected 2026-08-11 (was ripleylibrary.org): Site contact page gives 120 Lafayette Ave, Ripley TN 38063, phone 731-635-1872; TN state library directory confirms same address
+  { name: 'Lauderdale County Library', url: 'https://lauderdalecountylibrary.com', eventsUrl: 'https://lauderdalecountylibrary.com/events/', city: 'Ripley', state: 'TN', zipCode: '38063', county: 'Lauderdale'},
   { name: 'White County Public Library', url: 'https://www.spartalibrary.org', eventsUrl: 'https://www.spartalibrary.org/events', city: 'Sparta', state: 'TN', zipCode: '38583', county: 'White'},
   { name: 'Audrey Pack Memorial Library', url: 'https://springcitylibrary.org/', eventsUrl: 'https://springcitylibrary.org/', city: 'Spring City', state: 'TN', zipCode: '37381', county: 'Rhea'},
   { name: 'Spring Hill Public Library', url: 'https://www.springhilllibrary.org', eventsUrl: 'https://www.springhilllibrary.org/events', city: 'Spring Hill', state: 'TN', zipCode: '37174', county: 'Maury'},
   { name: 'Sweetwater Public Library', url: 'https://www.sweetwaterlibrary.org/', eventsUrl: 'https://www.sweetwaterlibrary.org/', city: 'Sweetwater', state: 'TN', zipCode: '37874', county: 'Monroe'},
   { name: 'Mary E. Tippitt Memorial Library', url: 'https://www.townsendlibrary.org', eventsUrl: 'https://www.townsendlibrary.org/events', city: 'Townsend', state: 'TN', zipCode: '37882', county: 'Blount'},
   { name: 'Hamilton Parks Public Library', url: 'https://www.trimblelibrary.org', eventsUrl: 'https://www.trimblelibrary.org/events', city: 'Trimble', state: 'TN', zipCode: '38259', county: 'Dyer'},
-  { name: 'Washburn Public Library', url: 'https://www.washburnlibrary.org', eventsUrl: 'https://www.washburnlibrary.org/events', city: 'Washburn', state: 'TN', zipCode: '37888', county: 'Grainger'},
-  { name: 'Humphreys County Public Library', url: 'https://www.waverlylibrary.com/', eventsUrl: 'https://www.waverlylibrary.com/', city: 'Waverly', state: 'TN', zipCode: '37185', county: 'Humphreys'},
+  // URL corrected 2026-08-11 (was washburnlibrary.org): Site shows 7715 Hwy 131 PO Box 129, Washburn TN, phone 865-497-2506, Grainger County; also listed as Washburn Community Library. No calendar
+  { name: 'Washburn Public Library', url: 'https://washlib.wordpress.com/', eventsUrl: 'https://washlib.wordpress.com/', city: 'Washburn', state: 'TN', zipCode: '37888', county: 'Grainger'},
+  // URL corrected 2026-08-11 (was waverlylibrary.com): 201 Pavo Ave Waverly TN 37185, phone 931-296-2143. humphreyscountypubliclibrary.com 301-redirects to this wordpress host
+  { name: 'Humphreys County Public Library', url: 'https://hclibraryprinting.wordpress.com', eventsUrl: 'https://hclibraryprinting.wordpress.com/upcoming-events/', city: 'Waverly', state: 'TN', zipCode: '37185', county: 'Humphreys'},
   { name: 'Westmoreland Public Library', url: 'https://www.westmorelandpubliclibrary.com/', eventsUrl: 'https://www.westmorelandpubliclibrary.com/', city: 'Westmoreland', state: 'TN', zipCode: '37186', county: 'Sumner'},
   { name: 'White Pine Public Library', url: 'https://whitepinelibrary.org/', eventsUrl: 'https://whitepinelibrary.org/', city: 'White Pine', state: 'TN', zipCode: '37890', county: 'Jefferson'},
   { name: 'Franklin County Public Library', url: 'https://www.winchesterlibrary.org', eventsUrl: 'https://www.winchesterlibrary.org/events', city: 'Winchester', state: 'TN', zipCode: '37398', county: 'Franklin'},
-  { name: 'Winfield Public Library', url: 'https://www.winfieldlibrary.org/', eventsUrl: 'https://www.winfieldlibrary.org/', city: 'Winfield', state: 'TN', zipCode: '37892', county: 'Scott'},
-  { name: 'Adams Memorial Library', url: 'https://www.woodburylibrary.org', eventsUrl: 'https://www.woodburylibrary.org/events', city: 'Woodbury', state: 'TN', zipCode: '00000', county: 'Cannon'},
+  // URL corrected 2026-08-11 (was winfieldlibrary.org): 275 Pine Grove Rd Winfield TN 37892, ph 423-569-9047, Scott County TN
+  { name: 'Winfield Public Library', url: 'https://winfieldpubliclibrary.wordpress.com/', eventsUrl: 'https://winfieldpubliclibrary.wordpress.com/', city: 'Winfield', state: 'TN', zipCode: '37892', county: 'Scott'},
+  // URL corrected 2026-08-11 (was woodburylibrary.org): Site lists 212 College Street, Woodbury TN 37190, phone 615-563-5861, Cannon County Library System. No separate calendar page
+  { name: 'Adams Memorial Library', url: 'https://adamsmemoriallibrary.org', eventsUrl: 'https://adamsmemoriallibrary.org', city: 'Woodbury', state: 'TN', zipCode: '00000', county: 'Cannon'},
   { name: 'Franklin Public Library', url: 'https://www.franklintn.gov/library', eventsUrl: 'https://www.franklintn.gov/library/events', city: 'Franklin', state: 'TN', zipCode: '37064', county: 'Franklin County'}
 
 ];

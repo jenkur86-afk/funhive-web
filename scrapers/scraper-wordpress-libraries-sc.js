@@ -15,13 +15,15 @@ const ngeohash = require('ngeohash');
  * South Carolina Public Libraries Scraper - Coverage: All South Carolina public libraries
  */
 const LIBRARIES = [
-  { name: 'Abbeville County Library System', url: 'https://www.abbevillelibrary.org/', eventsUrl: 'https://www.abbevillelibrary.org/', city: 'Abbeville', state: 'SC', zipCode: '29620', county: 'Abbeville County'},
+  // URL corrected 2026-08-11 (was abbevillelibrary.org): Site lists Abbeville Main Branch, 1407 N. Main St, Abbeville SC 29620, phone 864-459-4009, plus Calhoun Falls and Donalds branches
+  { name: 'Abbeville County Library System', url: 'https://abbevillecounty.org', eventsUrl: 'https://abbevillecounty.org/calendar/', city: 'Abbeville', state: 'SC', zipCode: '29620', county: 'Abbeville County'},
   { name: 'Anderson County Library', url: 'https://www.andersonlibrary.org', eventsUrl: 'https://www.andersonlibrary.org/events', city: 'Anderson', state: 'SC', zipCode: '29621', county: 'Anderson County'},
   { name: 'Kershaw County Library - Camden Branch Library', url: 'https://www.camdenlibrary.org/', eventsUrl: 'https://www.camdenlibrary.org/', city: 'Camden', state: 'SC', zipCode: '29020', county: 'Kershaw'},
   { name: 'Pickens County Library - Central-Clemson Branch Library', url: 'https://www.centrallibrary.org', eventsUrl: 'https://www.centrallibrary.org/events', city: 'Central', state: 'SC', zipCode: '29630', county: 'Pickens'},
   { name: 'Lexington County Library - Chapin', url: 'https://www.chapinlibrary.org', eventsUrl: 'https://www.chapinlibrary.org/events', city: 'Chapin', state: 'SC', zipCode: '29036', county: 'Lexington'},
   { name: 'Chester County Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'SC', zipCode: '29706', county: 'Chester County'},
-  { name: 'Chesterfield County Library System', url: 'https://www.chesterfieldlibrary.org', eventsUrl: 'https://www.chesterfieldlibrary.org/events', city: 'Chesterfield', state: 'SC', zipCode: '29709', county: 'Chesterfield County'},
+  // URL corrected 2026-08-11 (was chesterfieldlibrary.org): Own site; 119 Main St Chesterfield SC 29709, phone 843-623-7489, five-branch county system
+  { name: 'Chesterfield County Library System', url: 'https://www.cclssc.org', eventsUrl: 'https://www.cclssc.org/calendar', city: 'Chesterfield', state: 'SC', zipCode: '29709', county: 'Chesterfield County'},
   { name: 'Clinton Public Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'SC', zipCode: '29325', county: 'Laurens'},
   { name: 'Lexington County Library - Irmo', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'SC', zipCode: '29212', county: 'Richland'},
   { name: 'Dillon County Library System', url: 'https://www.dillonlibrary.org/', eventsUrl: 'https://www.dillonlibrary.org/', city: 'Dillon', state: 'SC', zipCode: '29536', county: 'Dillon County'},
@@ -37,7 +39,8 @@ const LIBRARIES = [
   { name: 'Lamar District Library', url: 'https://www.lamarlibrary.org', eventsUrl: 'https://www.lamarlibrary.org/events', city: 'Lamar', state: 'SC', zipCode: '29069', county: 'Darlington'},
   { name: 'Aiken County Library - Midland Valley Branch Library', url: 'https://www.langleylibrary.org', eventsUrl: 'https://www.langleylibrary.org/events', city: 'Langley', state: 'SC', zipCode: '29834', county: 'Aiken'},
   { name: 'Lexington County Public Library System - Main', url: 'https://www.lexingtonlibrary.org', eventsUrl: 'https://www.lexingtonlibrary.org/events', city: 'Lexington', state: 'SC', zipCode: '29072', county: 'Lexington County'},
-  { name: 'Pickens County Library - Sarlin Branch Library', url: 'https://libertylibrary.org/', eventsUrl: 'https://libertylibrary.org/', city: 'Liberty', state: 'SC', zipCode: '29657', county: 'Pickens'},
+  // URL corrected 2026-08-11 (was libertylibrary.org): Sarlin Library 15 S Palmetto St Liberty SC 29657, 864-843-5805, listed on Pickens County Library System contact page
+  { name: 'Pickens County Library - Sarlin Branch Library', url: 'https://pickenscountylibrarysystem.com', eventsUrl: 'https://pickenscountylibrarysystem.libnet.info/events', city: 'Liberty', state: 'SC', zipCode: '29657', county: 'Pickens'},
   { name: 'Horry County Memorial Library - Loris Library', url: 'https://www.lorislibrary.org/', eventsUrl: 'https://www.lorislibrary.org/', city: 'Loris', state: 'SC', zipCode: '29569', county: 'Horry'},
   { name: 'Marion County Library System', url: 'https://www.marionlibrary.org/', eventsUrl: 'https://www.marionlibrary.org/', city: 'Marion', state: 'SC', zipCode: '29571', county: 'Marion County'},
   { name: 'Mccormick County Library System', url: 'https://mccormicklibrary.org/', eventsUrl: 'https://mccormicklibrary.org/', city: 'Mccormick', state: 'SC', zipCode: '29835', county: 'Mccormick County'},
@@ -50,7 +53,8 @@ const LIBRARIES = [
   { name: 'Spartanburg County Public Library - H. Carlisle Bean Law Library', url: 'https://www.spartanburglibrary.org', eventsUrl: 'https://www.spartanburglibrary.org/events', city: 'Spartanburg', state: 'SC', zipCode: '29306', county: 'Spartanburg County'},
   { name: 'Orangeburg County Library - Springfield Branch Library', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'SC', zipCode: '29146', county: 'Orangeburg'},
   { name: 'Berkeley County Library - Sangaree Library', url: 'https://www.summervillelibrary.org', eventsUrl: 'https://www.summervillelibrary.org/events', city: 'Summerville', state: 'SC', zipCode: '29483', county: 'Dorchester'},
-  { name: 'Lexington County Library - Swansea', url: 'https://www.swansealibrary.org', eventsUrl: 'https://www.swansealibrary.org/events', city: 'Swansea', state: 'SC', zipCode: '29160', county: 'Lexington'},
+  // URL corrected 2026-08-11 (was swansealibrary.org): Lexington County Library locations page lists Swansea branch, 199 N. Lawrence Avenue, Swansea SC 29160, phone 803-785-3519. swansealibrary.o
+  { name: 'Lexington County Library - Swansea', url: 'https://lexcolibrary.com', eventsUrl: 'https://lexcolibrary.libcal.com', city: 'Swansea', state: 'SC', zipCode: '29160', county: 'Lexington'},
   { name: 'Union County Library System', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'SC', zipCode: '29379', county: 'Union County'},
   { name: 'Oconee County Public Library - Westminster Branch Library', url: 'https://www.westminsterlibrary.org', eventsUrl: 'https://www.westminsterlibrary.org/events', city: 'Westminster', state: 'SC', zipCode: '29693', county: 'Oconee'},
   { name: 'York Public Library', url: 'https://yorklibrary.org/', eventsUrl: 'https://yorklibrary.org/', city: 'York', state: 'SC', zipCode: '29745', county: 'York County'}

@@ -92,11 +92,14 @@ const LIBRARIES = [
   { name: 'Cyrenius H. Booth Library', url: 'https://newtownlibrary.org/', eventsUrl: 'https://newtownlibrary.org/', city: 'Newtown', state: 'CT', zipCode: '06470', county: 'Western Connecticut Planning Region'},
   { name: 'Norfolk Library', url: 'https://www.norfolklibrary.org', eventsUrl: 'https://www.norfolklibrary.org/events', city: 'Norfolk', state: 'CT', zipCode: '06058', county: 'Northwest Hills Planning Region'},
   { name: 'North Haven Memorial Library', url: 'https://www.northhavenlibrary.org', eventsUrl: 'https://www.northhavenlibrary.org/events', city: 'North Haven', state: 'CT', zipCode: '06473', county: 'South Central Connecticut Planning Region'},
-  { name: 'Otis Library', url: 'https://www.norwichlibrary.org/', eventsUrl: 'https://www.norwichlibrary.org/category/events/', city: 'Norwich', state: 'CT', zipCode: '06360', county: 'Southeastern Connecticut Planning Region'},
+  // URL corrected 2026-08-11 (was norwichlibrary.org): 261 Main St Norwich CT 06360, phone 860-889-2365, listed in City of Norwich CT gov department directory
+  { name: 'Otis Library', url: 'https://otislibrarynorwich.org', eventsUrl: 'https://otislibrarynorwich.libcal.com/calendar/otislibrary', city: 'Norwich', state: 'CT', zipCode: '06360', county: 'Southeastern Connecticut Planning Region'},
   { name: 'Old Lyme - Phoebe Griffin Noyes Library', url: 'https://www.oldlymelibrary.org', eventsUrl: 'https://www.oldlymelibrary.org/events', city: 'Old Lyme', state: 'CT', zipCode: '06371', county: 'Lower Connecticut River Valley Planning Region'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in WI, not CT. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Oxford Public Library', url: 'https://oxfordlibrary.org/', eventsUrl: 'https://oxfordlibrary.org/', city: 'Oxford', state: 'CT', zipCode: '06478', county: 'Naugatuck Valley Planning Region'},
-  { name: 'Central Village Public Library', url: 'https://www.plainfieldlibrary.org', eventsUrl: 'https://www.plainfieldlibrary.org/events', city: 'Plainfield', state: 'CT', zipCode: '06332', county: 'Northeastern Connecticut Planning Region'},
+  // REMOVED 2026-08-11 (Defect A): no verifiable official site. Town of Plainfield CT library page lists only Aldrich Free Public Library, 299 Main St Moosup. Central Village branch at 51 Black Hill Rd has no own s
+  // RECORDED COVERAGE GAP - restore if a real URL is found.
+  // { name: 'Central Village Public Library', url: 'https://www.plainfieldlibrary.org', eventsUrl: 'https://www.plainfieldlibrary.org/events', city: 'Plainfield', state: 'CT', zipCode: '06332', county: 'Northeastern Connecticut Planning Region'},
   { name: 'Plainville Public Library', url: 'https://www.plainvillelibrary.org', eventsUrl: 'https://www.plainvillelibrary.org/events', city: 'Plainville', state: 'CT', zipCode: '06062', county: 'Capitol Planning Region'},
   { name: 'Pomfret Public Library', url: 'https://www.pomfretlibrary.org', eventsUrl: 'https://www.pomfretlibrary.org/events', city: 'Pomfret', state: 'CT', zipCode: '06258', county: 'Northeastern Connecticut Planning Region'},
   { name: 'Preston Public Library', url: 'https://prestonpubliclibrary.org/', eventsUrl: 'https://prestonpubliclibrary.org/events/', city: 'Preston', state: 'CT', zipCode: '06365', county: 'Preston County'},
@@ -126,11 +129,13 @@ const LIBRARIES = [
   { name: 'Willimantic Public Library', url: 'https://www.willimanticlibrary.org', eventsUrl: 'https://www.willimanticlibrary.org/events', city: 'Willimantic', state: 'CT', zipCode: '06226', county: 'Southeastern Connecticut Planning Region'},
   { name: 'Wilton Library Association', url: 'https://www.wiltonlibrary.org', eventsUrl: 'https://www.wiltonlibrary.org/events', city: 'Wilton', state: 'CT', zipCode: '06897', county: 'Western Connecticut Planning Region'},
   { name: 'Beardsley Memorial Library', url: 'https://www.winchesterlibrary.org', eventsUrl: 'https://www.winchesterlibrary.org/events', city: 'Winchester', state: 'CT', zipCode: '06098', county: 'Winchester County'},
-  { name: 'Windham Free Library', url: 'https://windhamlibrary.org/', eventsUrl: 'https://windhamlibrary.org/', city: 'Windham', state: 'CT', zipCode: '06280', county: 'Windham County'},
+  // URL corrected 2026-08-11 (was windhamlibrary.org): Site shows 7 Windham Green Rd, Windham CT 06280, phone 860-423-0636
+  { name: 'Windham Free Library', url: 'https://thewindhamfreelibrary.org/', eventsUrl: 'https://thewindhamfreelibrary.org/blog/', city: 'Windham', state: 'CT', zipCode: '06280', county: 'Windham County'},
   { name: 'Wilson Branch Library', url: 'https://www.windsorlibrary.org', eventsUrl: 'https://www.windsorlibrary.org/events', city: 'Windsor', state: 'CT', zipCode: '00000', county: 'Capitol Planning Region'},
   { name: 'Windsor Locks Public Library', url: 'https://www.windsorlockslibrary.org', eventsUrl: 'https://www.windsorlockslibrary.org/events', city: 'Windsor Locks', state: 'CT', zipCode: '06096', county: 'Capitol Planning Region'},
   { name: 'Wolcott Public Library', url: 'https://www.wolcottlibrary.org', eventsUrl: 'https://www.wolcottlibrary.org/events', city: 'Wolcott', state: 'CT', zipCode: '06716', county: 'Naugatuck Valley Planning Region'},
-  { name: 'Woodbury Public Library', url: 'https://www.woodburylibrary.org', eventsUrl: 'https://www.woodburylibrary.org/events', city: 'Woodbury', state: 'CT', zipCode: '06798', county: 'Naugatuck Valley Planning Region'},
+  // URL corrected 2026-08-11 (was woodburylibrary.org): Site blocks bots; CT Center for the Book directory lists 269 Main St S, Woodbury CT 06798, 203-263-3502, site woodburylibraryct.org
+  { name: 'Woodbury Public Library', url: 'https://woodburylibraryct.org', eventsUrl: 'https://woodburylibraryct.org', city: 'Woodbury', state: 'CT', zipCode: '06798', county: 'Naugatuck Valley Planning Region'},
 
 ];
 

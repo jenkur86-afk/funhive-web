@@ -44,17 +44,20 @@ const LIBRARIES = [
   { name: 'Mount Vernon Public Library', url: 'https://www.mountvernonpubliclibrary.org', eventsUrl: 'https://www.mountvernonpubliclibrary.org/events', city: 'Mount Vernon', state: 'NY', zipCode: '10550', county: 'Westchester'},
   { name: 'Ithaca Tompkins County Public Library', url: 'https://www.tcpl.org', eventsUrl: 'https://www.tcpl.org/events', city: 'Ithaca', state: 'NY', zipCode: '14850', county: 'Tompkins'},
   // Additional libraries from spreadsheet coverage expansion
-  { name: 'Addison Public Library', url: 'https://www.addisonlibrary.org', eventsUrl: 'https://www.addisonlibrary.org/events', city: 'Addison', state: 'NY', zipCode: '14801', county: 'Steuben'},
+  // URL corrected 2026-08-11 (was addisonlibrary.org): 6 South St Addison NY 14801, phone 607-359-3888, hosted by Southern Tier Library System. addisonlibrary.org is Addison ILLINOIS, 4 Friendshi
+  { name: 'Addison Public Library', url: 'https://addison.stls.org', eventsUrl: 'https://addison.stls.org/events/', city: 'Addison', state: 'NY', zipCode: '14801', county: 'Steuben'},
   { name: 'Newstead Public Library', url: 'https://www.akronlibrary.org', eventsUrl: 'https://www.akronlibrary.org/events', city: 'Akron', state: 'NY', zipCode: '14001', county: 'Erie'},
   { name: 'Shelter Rock Public Library', url: 'https://www.albertsonlibrary.org', eventsUrl: 'https://www.albertsonlibrary.org/events', city: 'Albertson', state: 'NY', zipCode: '11507', county: 'Nassau'},
-  { name: 'Swan Library', url: 'https://www.albionlibrary.org/', eventsUrl: 'https://www.albionlibrary.org/', city: 'Albion', state: 'NY', zipCode: '14411', county: 'Orleans'},
+  // URL corrected 2026-08-11 (was albionlibrary.org): Now named Hoag Library of the Swan Library Association, 134 South Main St, Albion NY 14411, phone 585-589-4246; old Swan Library site at 4 N
+  { name: 'Swan Library', url: 'https://www.hoaglibrary.org', eventsUrl: 'https://www.hoaglibrary.org/events', city: 'Albion', state: 'NY', zipCode: '14411', county: 'Orleans'},
   { name: 'Alden Ewell Free Library', url: 'https://www.aldenlibrary.org/', eventsUrl: 'https://www.aldenlibrary.org/', city: 'Alden', state: 'NY', zipCode: '14004', county: 'Erie'},
   { name: 'Alfred Box Of Books Library', url: 'https://www.alfredlibrary.org', eventsUrl: 'https://www.alfredlibrary.org/events', city: 'Alfred', state: 'NY', zipCode: '14802', county: 'Allegany'},
   { name: 'Allegany Public Library', url: 'https://alleganylibrary.org/', eventsUrl: 'https://alleganylibrary.org/', city: 'Allegany', state: 'NY', zipCode: '14706', county: 'Allegany County'},
   { name: 'Almond Twentieth Century Club Library', url: 'https://almondlibrary.org/', eventsUrl: 'https://almondlibrary.org/calendar/', city: 'Almond', state: 'NY', zipCode: '14804', county: 'Allegany'},
   { name: 'Amagansett Free Library', url: 'https://amagansettlibrary.org/', eventsUrl: 'https://amagansettlibrary.org/calendar/', city: 'Amagansett', state: 'NY', zipCode: '11930', county: 'Suffolk'},
   { name: 'Amenia Free Library', url: 'https://amenialibrary.org/', eventsUrl: 'https://amenialibrary.org/', city: 'Amenia', state: 'NY', zipCode: '12501', county: 'Dutchess'},
-  { name: 'Audubon Branch', url: 'https://www.amherstlibrary.org', eventsUrl: 'https://www.amherstlibrary.org/events', city: 'Amherst', state: 'NY', zipCode: '14228', county: 'Erie'},
+  // URL corrected 2026-08-11 (was amherstlibrary.org): 350 John James Audubon Pkwy Amherst NY 14228, ph 716-689-4922; renamed Honorable Shirley Chisholm Library in 2025, Buffalo and Erie County s
+  { name: 'Audubon Branch', url: 'https://www.buffalolib.org/locations-hours/audubon-branch', eventsUrl: 'https://buffalolib.libcal.com/calendar/events', city: 'Amherst', state: 'NY', zipCode: '14228', county: 'Erie'},
   { name: 'Andes Public Library', url: 'https://www.andeslibrary.org', eventsUrl: 'https://www.andeslibrary.org/events', city: 'Andes', state: 'NY', zipCode: '13731', county: 'Delaware'},
   { name: 'Andover Free Library', url: 'https://www.andoverlibrary.org', eventsUrl: 'https://www.andoverlibrary.org/events', city: 'Andover', state: 'NY', zipCode: '14806', county: 'Allegany'},
   { name: 'Apalachin Library Association', url: 'https://www.apalachinlibrary.org', eventsUrl: 'https://www.apalachinlibrary.org/events', city: 'Apalachin', state: 'NY', zipCode: '13732', county: 'Tioga'},
@@ -63,7 +66,8 @@ const LIBRARIES = [
   { name: 'Queens Borough Public Library - Astoria', url: 'https://www.astoria.gov/', eventsUrl: 'https://www.astoria.gov/calendar?deptid=6', city: 'Astoria', state: 'NY', zipCode: '11102', county: 'Queens'},
   // URL corrected 2026-08-11 (was athenslibrary.org): 80 Second Street Athens NY 12015, phone 518-945-1417
   { name: 'D.R. Evarts Library', url: 'https://www.drevartslibrary.org', eventsUrl: 'https://www.drevartslibrary.org/library-calendar', city: 'Athens', state: 'NY', zipCode: '12015', county: 'Greene'},
-  { name: 'Seymour Public Library District', url: 'https://auburnlibrary.org/', eventsUrl: 'https://auburnlibrary.org/', city: 'Auburn', state: 'NY', zipCode: '13021', county: 'Cayuga'},
+  // URL corrected 2026-08-11 (was auburnlibrary.org): Site shows Seymour Library, 176 Genesee St, Auburn NY 13021, phone 315-252-7571. auburnlibrary.org is Auburn MA
+  { name: 'Seymour Public Library District', url: 'https://seymourlibrary.org', eventsUrl: 'https://seymourlibrary.org/events/', city: 'Auburn', state: 'NY', zipCode: '13021', county: 'Cayuga'},
   { name: 'Aurora Free Library', url: 'https://www.auroralibrary.org', eventsUrl: 'https://www.auroralibrary.org/events', city: 'Aurora', state: 'NY', zipCode: '13026', county: 'Cayuga'},
   { name: 'Babylon School District Public Library', url: 'https://babylonlibrary.org/', eventsUrl: 'https://babylonlibrary.org/', city: 'Babylon', state: 'NY', zipCode: '11702', county: 'Suffolk'},
   { name: 'Bainbridge Free Library', url: 'https://www.bainbridgelibrary.org', eventsUrl: 'https://www.bainbridgelibrary.org/events', city: 'Bainbridge', state: 'NY', zipCode: '13733', county: 'Chenango'},
@@ -94,7 +98,8 @@ const LIBRARIES = [
   { name: 'Camden Library Association', url: 'https://www.camdenlibrary.org/', eventsUrl: 'https://www.camdenlibrary.org/', city: 'Camden', state: 'NY', zipCode: '13316', county: 'Oneida'},
   { name: 'Canajoharie Library And Art Gallery', url: 'https://www.canajoharielibrary.org/', eventsUrl: 'https://www.canajoharielibrary.org/', city: 'Canajoharie', state: 'NY', zipCode: '13317', county: 'Montgomery'},
   { name: 'Canastota Public Library', url: 'https://www.canastotalibrary.org/', eventsUrl: 'https://www.canastotalibrary.org/', city: 'Canastota', state: 'NY', zipCode: '13032', county: 'Madison'},
-  { name: 'Canton Free Library', url: 'https://www.cantonlibrary.org', eventsUrl: 'https://www.cantonlibrary.org/events', city: 'Canton', state: 'NY', zipCode: '13617', county: 'St. Lawrence'},
+  // URL corrected 2026-08-11 (was cantonlibrary.org): 8 Park St Canton NY 13617, ph 315-386-3712, email canlib@ncls.org (North Country Library System, St. Lawrence County)
+  { name: 'Canton Free Library', url: 'https://cantonfreelibrary.org/', eventsUrl: 'https://cantonfreelibrary.org/programs/', city: 'Canton', state: 'NY', zipCode: '13617', county: 'St. Lawrence'},
   { name: 'Cape Vincent Community Library', url: 'https://www.capevincentlibrary.org', eventsUrl: 'https://www.capevincentlibrary.org/events', city: 'Cape Vincent', state: 'NY', zipCode: '13618', county: 'Jefferson'},
   { name: 'Reed Memorial Library', url: 'https://carmellibrary.org/', eventsUrl: 'https://carmellibrary.org/calendar/', city: 'Carmel', state: 'NY', zipCode: '10512', county: 'Putnam'},
   { name: 'Cattaraugus Free Library', url: 'https://www.cattarauguslibrary.org', eventsUrl: 'https://www.cattarauguslibrary.org/events', city: 'Cattaraugus', state: 'NY', zipCode: '14719', county: 'Cattaraugus County'},
@@ -103,11 +108,13 @@ const LIBRARIES = [
   { name: 'Central Islip Public Library', url: 'https://www.centralisliplibrary.org', eventsUrl: 'https://www.centralisliplibrary.org/events', city: 'Central Islip', state: 'NY', zipCode: '11722', county: 'Suffolk'},
   { name: 'Central Square Library', url: 'https://www.centralsquarelibrary.org', eventsUrl: 'https://www.centralsquarelibrary.org/events', city: 'Central Square', state: 'NY', zipCode: '13036', county: 'Oswego'},
   { name: 'Chappaqua Library', url: 'https://www.chappaqualibrary.org', eventsUrl: 'https://www.chappaqualibrary.org/events', city: 'Chappaqua', state: 'NY', zipCode: '10514', county: 'Westchester'},
-  { name: 'Chatham Public Library', url: 'https://chathamlibrary.librarycalendar.com/', eventsUrl: 'https://chathamlibrary.librarycalendar.com/events/month/', city: 'Chatham', state: 'NY', zipCode: '12037', county: 'Columbia'},
+  // URL corrected 2026-08-11 (was chathamlibrary.librarycalendar.com): Site lists 11 Woodbridge Ave, Chatham NY 12037, phone 518-392-3666. Shared host belongs to Library of the Chathams in Chatham NJ
+  { name: 'Chatham Public Library', url: 'https://chathampubliclibrary.org', eventsUrl: 'https://chathampubliclibrary.org/calendar/', city: 'Chatham', state: 'NY', zipCode: '12037', county: 'Columbia'},
   { name: 'Cherry Valley Memorial Library', url: 'https://cherryvalleylibrary.org/', eventsUrl: 'https://cherryvalleylibrary.org/', city: 'Cherry Valley', state: 'NY', zipCode: '13320', county: 'Otsego'},
   { name: 'Chester Public Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'NY', zipCode: '10918', county: 'Orange'},
   { name: 'Claverack Library', url: 'https://claveracklibrary.org/', eventsUrl: 'https://claveracklibrary.org/calendar/', city: 'Claverack', state: 'NY', zipCode: '12513', county: 'Columbia'},
-  { name: 'Hawn Memorial Library', url: 'https://www.claytonlibrary.org', eventsUrl: 'https://www.claytonlibrary.org/events', city: 'Clayton', state: 'NY', zipCode: '13624', county: 'Jefferson'},
+  // URL corrected 2026-08-11 (was claytonlibrary.org): Village of Clayton NY official gov site lists this library at 220 John Street Clayton NY, phone 315-686-3762, site hawnmemoriallibrary.org
+  { name: 'Hawn Memorial Library', url: 'https://hawnmemoriallibrary.org', eventsUrl: 'https://hawnmemoriallibrary.org', city: 'Clayton', state: 'NY', zipCode: '13624', county: 'Jefferson'},
   { name: 'Kirkland Town Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'NY', zipCode: '13323', county: 'Clinton County'},
   { name: 'Clyde-Savannah Public Library', url: 'https://www.clydelibrary.org/', eventsUrl: 'https://www.clydelibrary.org/', city: 'Clyde', state: 'NY', zipCode: '14433', county: 'Wayne'},
   { name: 'Clymer-French Creek Free Library', url: 'https://www.clymerlibrary.org/', eventsUrl: 'https://www.clymerlibrary.org/', city: 'Clymer', state: 'NY', zipCode: '14724', county: 'Chautauqua'},
@@ -177,13 +184,15 @@ const LIBRARIES = [
   // NY 12083, matching this entry's own ZIP.
   { name: 'Greenville Public Library', url: 'https://greenville.lib.ny.us', eventsUrl: 'https://greenville.lib.ny.us/calendar/', city: 'Greenville', state: 'NY', zipCode: '12083', county: 'Greene'},
   { name: 'Guilderland Public Library', url: 'https://www.guilderlandlibrary.org', eventsUrl: 'https://www.guilderlandlibrary.org/events', city: 'Guilderland', state: 'NY', zipCode: '12084', county: 'Albany'},
-  { name: 'Hamburg Library', url: 'https://www.hamburglibrary.org/', eventsUrl: 'https://www.hamburglibrary.org/', city: 'Hamburg', state: 'NY', zipCode: '14075', county: 'Erie'},
+  // URL corrected 2026-08-11 (was hamburglibrary.org): Real name Hamburg Public Library, member of Buffalo and Erie County Public Library; 102 Buffalo St Hamburg NY 14075, phone 716-649-4415
+  { name: 'Hamburg Library', url: 'https://www.buffalolib.org/locations-hours/hamburg-public-library', eventsUrl: 'https://buffalolib.libcal.com', city: 'Hamburg', state: 'NY', zipCode: '14075', county: 'Erie'},
   { name: 'Hamilton Public Library', url: 'https://hamiltonlibrary.org/', eventsUrl: 'https://hamiltonlibrary.org/', city: 'Hamilton', state: 'NY', zipCode: '13346', county: 'Hamilton County'},
   { name: 'Hamlin Public Library', url: 'https://www.hamlinlibrary.org/', eventsUrl: 'https://www.hamlinlibrary.org/', city: 'Hamlin', state: 'NY', zipCode: '14464', county: 'Monroe'},
   { name: 'Hammond Free Library', url: 'https://www.hammondlibrary.org', eventsUrl: 'https://www.hammondlibrary.org/events', city: 'Hammond', state: 'NY', zipCode: '13646', county: 'St. Lawrence'},
   { name: 'Fred And Harriet Taylor Memorial Library', url: 'https://hammondsportlibrary.org/', eventsUrl: 'https://hammondsportlibrary.org/calendar/', city: 'Hammondsport', state: 'NY', zipCode: '14840', county: 'Steuben'},
   { name: 'Hampton Bays Public Library', url: 'https://www.hamptonbayslibrary.org/', eventsUrl: 'https://www.hamptonbayslibrary.org/', city: 'Hampton Bays', state: 'NY', zipCode: '11946', county: 'Suffolk'},
-  { name: 'Louise Adelia Read Memorial Library', url: 'https://hancocklibrary.org/', eventsUrl: 'https://hancocklibrary.org/', city: 'Hancock', state: 'NY', zipCode: '13783', county: 'Delaware'},
+  // URL corrected 2026-08-11 (was hancocklibrary.org): Four County Library System site; 104 Read St Hancock NY 13783, phone 607-637-2519
+  { name: 'Louise Adelia Read Memorial Library', url: 'https://libraries.4cls.org/hancock/', eventsUrl: 'https://libraries.4cls.org/hancock/index.php/calendar/', city: 'Hancock', state: 'NY', zipCode: '13783', county: 'Delaware'},
   { name: 'Hannibal Free Library', url: 'https://www.hanniballibrary.org', eventsUrl: 'https://www.hanniballibrary.org/events', city: 'Hannibal', state: 'NY', zipCode: '13074', county: 'Oswego'},
   { name: 'Harrison Public Library', url: 'https://www.harrisonpl.org/', eventsUrl: 'https://www.harrisonpl.org/', city: 'Harrison', state: 'NY', zipCode: '10528', county: 'Westchester'},
   { name: 'Hauppauge Public Library', url: 'https://www.hauppaugelibrary.org', eventsUrl: 'https://www.hauppaugelibrary.org/events', city: 'Hauppauge', state: 'NY', zipCode: '11788', county: 'Suffolk'},
@@ -193,7 +202,8 @@ const LIBRARIES = [
   { name: 'Sachem Public Library', url: 'https://holbrooklibrary.org/', eventsUrl: 'https://holbrooklibrary.org/', city: 'Holbrook', state: 'NY', zipCode: '11741', county: 'Suffolk'},
   { name: 'Holland Patent Free Library', url: 'https://hollandpatentlibrary.org/', eventsUrl: 'https://hollandpatentlibrary.org/', city: 'Holland Patent', state: 'NY', zipCode: '13354', county: 'Oneida'},
   { name: 'Community Free Library', url: 'https://www.holleylibrary.org', eventsUrl: 'https://www.holleylibrary.org/events', city: 'Holley', state: 'NY', zipCode: '14470', county: 'Orleans'},
-  { name: 'Queens Borough Public Library - Hollis', url: 'https://www.hollislibrary.org', eventsUrl: 'https://www.hollislibrary.org/events', city: 'Hollis', state: 'NY', zipCode: '11423', county: 'Queens'},
+  // URL corrected 2026-08-11 (was hollislibrary.org): QPL branch page: 202-05 Hillside Avenue Hollis NY 11423, phone 718-465-7355. Note branch closed for renovation until Fall 2027
+  { name: 'Queens Borough Public Library - Hollis', url: 'https://www.queenslibrary.org/about-us/locations/hollis', eventsUrl: 'https://www.queenslibrary.org/calendar', city: 'Hollis', state: 'NY', zipCode: '11423', county: 'Queens'},
   // URL collision fixed 2026-08-05. This entry pointed at homerlibrary.org,
   // which is the Homer Township Public Library District in Homer Glen,
   // ILLINOIS — a different Homer entirely. Repointed to the real Phillips Free
@@ -284,7 +294,8 @@ const LIBRARIES = [
   { name: 'North Bellmore Public Library', url: 'https://www.northbellmorelibrary.org', eventsUrl: 'https://www.northbellmorelibrary.org/events', city: 'North Bellmore', state: 'NY', zipCode: '11710', county: 'Nassau'},
   { name: 'North Chatham Free Library', url: 'https://www.northchathamlibrary.org', eventsUrl: 'https://www.northchathamlibrary.org/events', city: 'North Chatham', state: 'NY', zipCode: '12132', county: 'Columbia'},
   { name: 'Northville Public Library', url: 'https://www.northvillelibrary.org', eventsUrl: 'https://www.northvillelibrary.org/events', city: 'Northville', state: 'NY', zipCode: '12134', county: 'Suffolk'},
-  { name: 'Guernsey Memorial Library Of Norwich', url: 'https://www.norwichlibrary.org/', eventsUrl: 'https://www.norwichlibrary.org/category/events/', city: 'Norwich', state: 'NY', zipCode: '13815', county: 'Chenango'},
+  // URL corrected 2026-08-11 (was norwichlibrary.org): 3 Court St Norwich NY 13815, phone 607-334-4034. norwichlibrary.org is Norwich VERMONT public library
+  { name: 'Guernsey Memorial Library Of Norwich', url: 'https://guernseymemoriallibrary.org', eventsUrl: 'https://guernseymemoriallibrary.org', city: 'Norwich', state: 'NY', zipCode: '13815', county: 'Chenango'},
   { name: 'Norwood Library', url: 'https://norwoodlibrary.org/', eventsUrl: 'https://norwoodlibrary.org/', city: 'Norwood', state: 'NY', zipCode: '13668', county: 'St. Lawrence'},
   { name: 'Nyack Library', url: 'https://www.nyacklibrary.org', eventsUrl: 'https://www.nyacklibrary.org/events', city: 'Nyack', state: 'NY', zipCode: '10960', county: 'Rockland'},
   { name: 'Haxton Memorial Library', url: 'https://www.oakfieldlibrary.org', eventsUrl: 'https://www.oakfieldlibrary.org/events', city: 'Oakfield', state: 'NY', zipCode: '14125', county: 'Genesee'},
@@ -324,7 +335,8 @@ const LIBRARIES = [
   { name: 'Portville Free Library', url: 'https://www.portvillelibrary.org', eventsUrl: 'https://www.portvillelibrary.org/events', city: 'Portville', state: 'NY', zipCode: '14770', county: 'Cattaraugus'},
   { name: 'Potsdam Public Library', url: 'https://www.potsdamlibrary.org', eventsUrl: 'https://www.potsdamlibrary.org/events', city: 'Potsdam', state: 'NY', zipCode: '13676', county: 'St. Lawrence'},
   { name: 'Pound Ridge Library District', url: 'https://www.poundridgelibrary.org', eventsUrl: 'https://www.poundridgelibrary.org/events', city: 'Pound Ridge', state: 'NY', zipCode: '10576', county: 'Westchester'},
-  { name: 'Prospect Free Library', url: 'https://www.prospectlibrary.org/', eventsUrl: 'https://www.prospectlibrary.org/calendar', city: 'Prospect', state: 'NY', zipCode: '13435', county: 'Oneida'},
+  // URL corrected 2026-08-11 (was prospectlibrary.org): Mid-York Library System site; 116 State Street Prospect NY 13435, phone 315-896-2736, Oneida County. No separate calendar page
+  { name: 'Prospect Free Library', url: 'https://prospect.midyork.org', eventsUrl: 'https://prospect.midyork.org', city: 'Prospect', state: 'NY', zipCode: '13435', county: 'Oneida'},
   { name: 'Putnam Valley Free Library', url: 'https://putnamvalleylibrary.org/', eventsUrl: 'https://putnamvalleylibrary.org/calendar/', city: 'Putnam Valley', state: 'NY', zipCode: '10579', county: 'Putnam'},
   { name: 'Quogue Library', url: 'https://www.quoguelibrary.org/', eventsUrl: 'https://www.quoguelibrary.org/', city: 'Quogue', state: 'NY', zipCode: '11959', county: 'Suffolk'},
   { name: 'Ransomville Free Library', url: 'https://www.ransomvillelibrary.org/', eventsUrl: 'https://www.ransomvillelibrary.org/', city: 'Ransomville', state: 'NY', zipCode: '14131', county: 'Niagara'},
@@ -342,7 +354,8 @@ const LIBRARIES = [
   { name: 'Bryant Library', url: 'https://www.roslynlibrary.org', eventsUrl: 'https://www.roslynlibrary.org/events', city: 'Roslyn', state: 'NY', zipCode: '11576', county: 'Nassau'},
   { name: 'Womens Round Lake Improvement Society Lib', url: 'https://roundlake.sals.edu/', eventsUrl: 'https://roundlake.sals.edu/', city: 'Round Lake', state: 'NY', zipCode: '12151', county: 'Saratoga'},
   { name: 'Rouses Point Dodge Memorial Library', url: 'https://www.rousespointlibrary.org', eventsUrl: 'https://www.rousespointlibrary.org/events', city: 'Rouses Point', state: 'NY', zipCode: '12979', county: 'Clinton'},
-  { name: 'Roxbury Library Association', url: 'https://www.roxburylibrary.org', eventsUrl: 'https://www.roxburylibrary.org/events', city: 'Roxbury', state: 'NY', zipCode: '12474', county: 'Queens'},
+  // URL corrected 2026-08-11 (was roxburylibrary.org): 53742 State Hwy 30 PO Box 186 Roxbury NY 12474, ph 607-326-7901, Four County Library System
+  { name: 'Roxbury Library Association', url: 'https://libraries.4cls.org/roxbury/', eventsUrl: 'https://libraries.4cls.org/roxbury/events/', city: 'Roxbury', state: 'NY', zipCode: '12474', county: 'Queens'},
   { name: 'Rush Public Library', url: 'https://rushlibrary.org/', eventsUrl: 'https://rushlibrary.org/', city: 'Rush', state: 'NY', zipCode: '14543', county: 'Monroe'},
   { name: 'Russell Public Library', url: 'https://russelllibrary.org/', eventsUrl: 'https://russelllibrary.org/', city: 'Russell', state: 'NY', zipCode: '13684', county: 'St. Lawrence'},
   { name: 'Rye Free Reading Room', url: 'https://www.ryelibrary.org/', eventsUrl: 'https://www.ryelibrary.org/', city: 'Rye', state: 'NY', zipCode: '10580', county: 'Westchester'},
@@ -404,7 +417,8 @@ const LIBRARIES = [
   { name: 'Waterford Public Library', url: 'https://www.waterfordlibrary.org', eventsUrl: 'https://www.waterfordlibrary.org/events', city: 'Waterford', state: 'NY', zipCode: '12188', county: 'Saratoga'},
   { name: 'Waterloo Library And Historical Society', url: 'https://www.waterloolibrary.org', eventsUrl: 'https://www.waterloolibrary.org/events', city: 'Waterloo', state: 'NY', zipCode: '13165', county: 'Seneca'},
   { name: 'Watkins Glen Cen Sch Dis Free Pub Lib', url: 'https://www.watkinsglenlibrary.org', eventsUrl: 'https://www.watkinsglenlibrary.org/events', city: 'Watkins Glen', state: 'NY', zipCode: '14891', county: 'Schuyler'},
-  { name: 'Waverly Free Library', url: 'https://www.waverlylibrary.com/', eventsUrl: 'https://www.waverlylibrary.com/', city: 'Waverly', state: 'NY', zipCode: '14892', county: 'Tioga'},
+  // URL corrected 2026-08-11 (was waverlylibrary.com): 18 Elizabeth St Waverly NY 14892, phone 607-565-9341. waverlylibrary.com is Waverly Community Library in Waverly NEBRASKA
+  { name: 'Waverly Free Library', url: 'https://waverlyfreelibrary.org', eventsUrl: 'https://waverlyfreelibrary.org/events/', city: 'Waverly', state: 'NY', zipCode: '14892', county: 'Tioga'},
   { name: 'Wayland Free Library', url: 'https://www.waylandlibrary.org', eventsUrl: 'https://www.waylandlibrary.org/events', city: 'Wayland', state: 'NY', zipCode: '14572', county: 'Steuben'},
   { name: 'Webster Public Library', url: 'https://www.websterlibrary.org', eventsUrl: 'https://www.websterlibrary.org/events', city: 'Webster', state: 'NY', zipCode: '14580', county: 'Monroe'},
   { name: 'Weedsport Free Library', url: 'https://www.weedsportlibrary.org/', eventsUrl: 'https://www.weedsportlibrary.org/calendar', city: 'Weedsport', state: 'NY', zipCode: '13166', county: 'Cayuga'},
@@ -427,7 +441,8 @@ const LIBRARIES = [
   { name: 'Wilmington E.M. Cooper Memorial Public Library', url: 'https://wilmingtoncooperlibrary.org', eventsUrl: 'https://wilmingtoncooperlibrary.org', city: 'Wilmington', state: 'NY', zipCode: '12997', county: 'Essex'},
   { name: 'Wilson Free Library', url: 'https://www.wilsonlibrary.org', eventsUrl: 'https://www.wilsonlibrary.org/events', city: 'Wilson', state: 'NY', zipCode: '14172', county: 'Niagara'},
   { name: 'Windham Public Library', url: 'https://windhamlibrary.org/', eventsUrl: 'https://windhamlibrary.org/', city: 'Windham', state: 'NY', zipCode: '12496', county: 'Greene'},
-  { name: 'Wolcott Civic Free Library', url: 'https://www.wolcottlibrary.org', eventsUrl: 'https://www.wolcottlibrary.org/events', city: 'Wolcott', state: 'NY', zipCode: '14590', county: 'Wayne'},
+  // URL corrected 2026-08-11 (was wolcottlibrary.org): 5890 New Hartford St Wolcott NY 14590, ph 315-594-2265, OWWL system Wayne County; site brands itself Wolcott Public Library
+  { name: 'Wolcott Civic Free Library', url: 'https://wolcott.owwl.org/', eventsUrl: 'https://wolcott.owwl.org/library-events-2/', city: 'Wolcott', state: 'NY', zipCode: '14590', county: 'Wayne'},
   { name: 'Woodgate Free Library', url: 'https://woodgatelibrary.org/', eventsUrl: 'https://woodgatelibrary.org/calendar/', city: 'Woodgate', state: 'NY', zipCode: '13494', county: 'Oneida'},
   { name: 'Queens Borough Public Library - Woodside', url: 'https://smcl.org/', eventsUrl: 'https://smcl.org/', city: 'Woodside', state: 'NY', zipCode: '11377', county: 'Queens'},
   { name: 'Worcester Free Library', url: 'https://www.worcesterlibrary.org', eventsUrl: 'https://www.worcesterlibrary.org/events', city: 'Worcester', state: 'NY', zipCode: '12197', county: 'Otsego'},

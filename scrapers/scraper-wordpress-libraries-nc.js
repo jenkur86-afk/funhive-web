@@ -49,8 +49,10 @@ const LIBRARIES = [
   { name: 'Farmville Public Library', url: 'https://farmvillelibrary.libguides.com/', eventsUrl: 'https://farmvillelibrary.libguides.com/home', city: 'Farmville', state: 'NC', zipCode: '27828', county: 'Pitt'},
   { name: 'Bordeaux Branch Library', url: 'https://www.fayettevillelibrary.org', eventsUrl: 'https://www.fayettevillelibrary.org/events', city: 'Fayetteville', state: 'NC', zipCode: '00000', county: 'Cumberland'},
   { name: 'Macon County Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'NC', zipCode: '00000', county: 'Franklin County'},
-  { name: 'John W. Clark Public Library', url: 'https://franklinvillelibrary.org/', eventsUrl: 'https://franklinvillelibrary.org/', city: 'Franklinville', state: 'NC', zipCode: '00000', county: 'Randolph'},
-  { name: 'Wayne County Public Library, Fremont', url: 'https://www.fremontlibrary.org', eventsUrl: 'https://www.fremontlibrary.org/events', city: 'Fremont', state: 'NC', zipCode: '00000', county: 'Wayne'},
+  // URL corrected 2026-08-11 (was franklinvillelibrary.org): Randolph County Public Library branch page: 111 Sumner Place, Franklinville NC 27248, phone 336-685-3100; also called Franklinville Public L
+  { name: 'John W. Clark Public Library', url: 'https://randolphlibrary.libguides.com/c.php?g=247617', eventsUrl: 'https://randolphlibrary.libguides.com/c.php?g=1204272&p=8808824', city: 'Franklinville', state: 'NC', zipCode: '00000', county: 'Randolph'},
+  // URL corrected 2026-08-11 (was fremontlibrary.org): Wayne County NC system; Fremont branch now the Northern Wayne Library, 609 S Wilson St Fremont NC 27830, ph 919-705-1892; wcpl.org linked fr
+  { name: 'Wayne County Public Library, Fremont', url: 'https://wcpl.org/', eventsUrl: 'https://wcpl.org/events', city: 'Fremont', state: 'NC', zipCode: '00000', county: 'Wayne'},
   { name: 'Graham Public Library', url: 'https://library.alamancecountync.gov/', eventsUrl: 'https://library.alamancecountync.gov/calendar/', city: 'Graham', state: 'NC', zipCode: '00000', county: 'Alamance County'},
   { name: 'Blanche Benjamin Branch Library', url: 'https://www.greensborolibrary.org', eventsUrl: 'https://www.greensborolibrary.org/events', city: 'Greensboro', state: 'NC', zipCode: '00000', county: 'Guilford'},
   { name: 'Carver Branch Library', url: 'https://www.sheppardlibrary.org/', eventsUrl: 'https://www.sheppardlibrary.org/calendar.aspx', city: 'Greenville', state: 'NC', zipCode: '00000', county: 'Pitt County'},
@@ -96,7 +98,8 @@ const LIBRARIES = [
   // { name: 'Maysville Public Library', url: 'https://www.maysvillelibrary.org', eventsUrl: 'https://www.maysvillelibrary.org/events', city: 'Maysville', state: 'NC', zipCode: '00000', county: 'Jones'},
   { name: 'Union County Public Library', url: 'https://www.monroelibrary.org', eventsUrl: 'https://www.monroelibrary.org/events', city: 'Monroe', state: 'NC', zipCode: '28112', county: 'Union'},
   { name: 'Mooresville Public Library', url: 'https://www.mooresvillelibrary.org/', eventsUrl: 'https://www.mooresvillelibrary.org/', city: 'Mooresville', state: 'NC', zipCode: '28115', county: 'Iredell'},
-  { name: 'Craven-Pamlico-Carteret Regional Library', url: 'https://www.newbernlibrary.org', eventsUrl: 'https://www.newbernlibrary.org/events', city: 'New Bern', state: 'NC', zipCode: '28560', county: 'Craven'},
+  // URL corrected 2026-08-11 (was newbernlibrary.org): Now named Craven-Pamlico Regional Library (Carteret gone); New Bern branch 400 Johnson Street, New Bern NC 28560, phone 252-638-7800
+  { name: 'Craven-Pamlico-Carteret Regional Library', url: 'https://mycprl.org', eventsUrl: 'https://mycprl.org/events/all-library-events', city: 'New Bern', state: 'NC', zipCode: '28560', county: 'Craven'},
   { name: 'Catawba County Library', url: 'https://www.catawbacountync.gov/county-services/library/', eventsUrl: 'https://www.catawbacountync.gov/county-services/library/calendar-of-events/', city: 'Newton', state: 'NC', zipCode: '28658', county: 'Catawba County'},
   { name: 'Norwood Branch Library', url: 'https://norwoodlibrary.org/', eventsUrl: 'https://norwoodlibrary.org/', city: 'Norwood', state: 'NC', zipCode: '00000', county: 'Stanly'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in WI, not NC. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
@@ -115,7 +118,8 @@ const LIBRARIES = [
   // SandhillRegional-NC (same srls.info -> LibGuides migration).
   { name: 'Rowan Public Library', url: 'https://www.salisburylibrary.org/', eventsUrl: 'https://www.salisburylibrary.org/', city: 'Salisbury', state: 'NC', zipCode: '28145', county: 'Rowan'},
   { name: 'Selma Public Library', url: 'https://www.pljcs.org/', eventsUrl: 'https://www.pljcs.org/monthly-calendar', city: 'Selma', state: 'NC', zipCode: '00000', county: 'Johnston County'},
-  { name: 'Cleveland County Memorial Library', url: 'https://www.shelbylibrary.org', eventsUrl: 'https://www.shelbylibrary.org/events', city: 'Shelby', state: 'NC', zipCode: '28150', county: 'Cleveland'},
+  // URL corrected 2026-08-11 (was shelbylibrary.org): Cleveland County NC government library page, phone 704-484-4900, PO Box 1210 Shelby NC 28151; branch at 104 Howie Dr Shelby NC 28150
+  { name: 'Cleveland County Memorial Library', url: 'https://www.clevelandcounty.com/main/departments/library/index.php', eventsUrl: 'https://www.clevelandcounty.com/main/departments/library/index.php', city: 'Shelby', state: 'NC', zipCode: '28150', county: 'Cleveland'},
   { name: 'Public Library Of Johnston County Smithfield', url: 'https://www.pljcs.org/', eventsUrl: 'https://www.pljcs.org/monthly-calendar', city: 'Smithfield', state: 'NC', zipCode: '27577', county: 'Johnston County'},
   { name: 'Brunswick County Library', url: 'https://www.southportlibrary.org', eventsUrl: 'https://www.southportlibrary.org/events', city: 'Southport', state: 'NC', zipCode: '28461', county: 'Brunswick'},
   { name: 'Alleghany County Public Library', url: 'https://www.nwrl.org/', eventsUrl: 'https://nwrl.org/regional-library-events/', city: 'Sparta', state: 'NC', zipCode: '00000', county: 'Alleghany County'},

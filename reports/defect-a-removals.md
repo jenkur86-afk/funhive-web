@@ -518,3 +518,20 @@ wrong name. Each is a RECORDED COVERAGE GAP, restorable once a real URL is verif
 | Liberty Public Library |  | NC | `` | host serves TX (not a library — Liberty Library Project, a political nonprofit in Conroe TX) — removed 2026-08-11 |
 | Liberty Public Library |  | MS | `` | host serves TX (not a library — Liberty Library Project, a political nonprofit in Conroe TX) — removed 2026-08-11 |
 | Macon County Public Library |  | TN | `` | host serves dead — 301s off-host to running-care.com, a French running blog — removed 2026-08-11 |
+
+
+## Removed 2026-08-11 — URL lookup found no verifiable site
+
+Each was searched for during the collision cleanup and no official site could be verified.
+Recorded so they can be restored if one is found later.
+
+| Library | City | State | Old URL | Why |
+|---|---|---|---|---|
+| Dr. Robert T. Hollingsworth Library | Shelby | MS | | no verifiable official site — Bolivar County Library System branches page lists Dr. Robert T. Hollingsworth Public Library as Closed Until Further Not |
+| Clayton Town And County Public Library | Clayton | AL | | no verifiable official site — Real name Town and County Library, 45 N Midway St Clayton AL 36016, 334-775-3506, Barbour County - only a Facebook page  |
+| Woodville Public Library | Woodville | AL | | no verifiable official site — 26 Venson Street Woodville AL 35776, phone 256-776-2796, Jackson County - library has only a Facebook page, no official  |
+| Mayhew Library Assn | Addison | ME | | no verifiable official site — Mayhew Library 290 Water St Addison ME 04606, 207-598-8350 per town site addisonmaine.org, but library has no website of |
+| Haynes Library | Alexandria | NH | | no verifiable official site — Haynes Library 33-567 Washburn Rd Alexandria NH 03222, 603-744-6529, but closed since 2019 with all trustees resigned pe |
+| Central Village Public Library | Plainfield | CT | | no verifiable official site — Town of Plainfield CT library page lists only Aldrich Free Public Library, 299 Main St Moosup. Central Village branch at |
+| Louisville Public Library | Louisville | AL | | no verifiable official site — Library exists at 1951 Main St, Louisville AL 36048, phone 334-266-5210 per library directories, but no official website |
+| Hyde Park Public Library | Hyde Park | PA | | no verifiable official site — Exists at 700 Main St Hyde Park PA 15641, ph 724-845-1944, but contact is a comcast.net email; no site in POWER Library  |

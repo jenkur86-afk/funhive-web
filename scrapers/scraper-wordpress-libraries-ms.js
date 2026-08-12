@@ -44,20 +44,23 @@ const LIBRARIES = [
   { name: 'Columbia-Marion County Library', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'MS', zipCode: '00000', county: 'Marion'},
   { name: 'Crawford Public Library', url: 'https://crawfordlibrary.org/', eventsUrl: 'https://crawfordlibrary.org/', city: 'Crawford', state: 'MS', zipCode: '00000', county: 'Lowndes'},
   { name: 'Crosby Public Library', url: 'https://www.crosbylibrary.org', eventsUrl: 'https://www.crosbylibrary.org/events', city: 'Crosby', state: 'MS', zipCode: '00000', county: 'Amite'},
-  { name: 'Decatur Public Library', url: 'https://www.decaturlibrary.org', eventsUrl: 'https://www.decaturlibrary.org/events', city: 'Decatur', state: 'MS', zipCode: '00000', county: 'Newton'},
+  // URL corrected 2026-08-11 (was decaturlibrary.org): Kemper-Newton Regional Library System Decatur Branch, phone 601-635-2777; real name is Jessie Mae Everett Public Library, 306 W Broad St Dec
+  { name: 'Decatur Public Library', url: 'https://www.knrls.lib.ms.us/', eventsUrl: 'https://www.knrls.lib.ms.us/', city: 'Decatur', state: 'MS', zipCode: '00000', county: 'Newton'},
   { name: 'Dekalb Public Library', url: 'https://www.dekalblibrary.org', eventsUrl: 'https://www.dekalblibrary.org/events', city: 'Dekalb', state: 'MS', zipCode: '00000', county: 'Dekalb County'},
   { name: 'Enterprise Public Library', url: 'https://www.enterpriselibrary.org', eventsUrl: 'https://www.enterpriselibrary.org/events', city: 'Enterprise', state: 'MS', zipCode: '00000', county: 'Clarke'},
   { name: 'Florence Public Library', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'MS', zipCode: '00000', county: 'Rankin'},
   { name: 'Forest Public Library', url: 'https://www.forestlibrary.org/', eventsUrl: 'https://www.forestlibrary.org/', city: 'Forest', state: 'MS', zipCode: '00000', county: 'Scott'},
   { name: 'Itawamba County-Pratt Memorial Library', url: 'https://www.facebook.com/', eventsUrl: 'https://www.facebook.com/fultonlibrary', city: 'Fulton', state: 'MS', zipCode: '00000', county: 'Itawamba'},
-  { name: 'Hamilton Public Library', url: 'https://hamiltonlibrary.org/', eventsUrl: 'https://hamiltonlibrary.org/', city: 'Hamilton', state: 'MS', zipCode: '00000', county: 'Monroe'},
+  // URL corrected 2026-08-11 (was hamiltonlibrary.org): Tombigbee Regional Library System branch page lists 40460 Old Highway 45 South, Hamilton MS 39746, phone 662-343-8962
+  { name: 'Hamilton Public Library', url: 'https://www.tombigbee.lib.ms.us/hamilton', eventsUrl: 'https://www.tombigbee.lib.ms.us/hamilton', city: 'Hamilton', state: 'MS', zipCode: '00000', county: 'Monroe'},
   { name: 'Houston Carnegie Library', url: 'https://www.houstonlibrary.org', eventsUrl: 'https://www.houstonlibrary.org/events', city: 'Houston', state: 'MS', zipCode: '00000', county: 'Chickasaw'},
   { name: 'Leland Public Library', url: 'https://www.lelandlibrary.org', eventsUrl: 'https://www.lelandlibrary.org/events', city: 'Leland', state: 'MS', zipCode: '00000', county: 'Washington'},
   { name: 'Lexington Public Library', url: 'https://www.lexingtonlibrary.org', eventsUrl: 'https://www.lexingtonlibrary.org/events', city: 'Lexington', state: 'MS', zipCode: '00000', county: 'Holmes'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in TX (not a library — Liberty Library Project, a political nonprofit in Conroe TX), not MS. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Liberty Public Library', url: 'https://libertylibrary.org/', eventsUrl: 'https://libertylibrary.org/', city: 'Liberty', state: 'MS', zipCode: '00000', county: 'Amite'},
   { name: 'Long Beach Public Library', url: 'https://www.longbeachlibrary.org', eventsUrl: 'https://www.longbeachlibrary.org/events', city: 'Long Beach', state: 'MS', zipCode: '39560', county: 'Harrison'},
-  { name: 'Winston County Library', url: 'https://www.louisvillelibrary.org', eventsUrl: 'https://www.louisvillelibrary.org/events', city: 'Louisville', state: 'MS', zipCode: '00000', county: 'Winston'},
+  // URL corrected 2026-08-11 (was louisvillelibrary.org): Mid-MS Regional Library System page gives 100 West Park Street, Louisville MS 39339, phone 662-773-3212
+  { name: 'Winston County Library', url: 'https://midmisslib.com/winston/', eventsUrl: 'https://midmisslib.com/events/', city: 'Louisville', state: 'MS', zipCode: '00000', county: 'Winston'},
   { name: 'Ada S. Fant Memorial Library', url: 'https://www.maconlibrary.org', eventsUrl: 'https://www.maconlibrary.org/events', city: 'Macon', state: 'MS', zipCode: '00000', county: 'Noxubee'},
   { name: 'Rebecca Baine Rigby Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'MS', zipCode: '00000', county: 'Madison County'},
   { name: 'Magnolia Public Library', url: 'https://www.magnolialibrary.org', eventsUrl: 'https://www.magnolialibrary.org/events', city: 'Magnolia', state: 'MS', zipCode: '00000', county: 'Pike'},
@@ -71,13 +74,17 @@ const LIBRARIES = [
   { name: 'Lafayette County-Oxford Public Library', url: 'https://www.first.lib.ms.us', eventsUrl: 'https://www.first.lib.ms.us', city: 'Oxford', state: 'MS', zipCode: '00000', county: 'Lafayette'},
   { name: 'Clarke County-Quitman Public Library', url: 'https://www.quitmanlibrary.org/', eventsUrl: 'https://www.quitmanlibrary.org/', city: 'Quitman', state: 'MS', zipCode: '00000', county: 'Quitman County'},
   { name: 'Richland Public Library', url: 'https://www.richlandlibrary.org/', eventsUrl: 'https://www.richlandlibrary.org/Calendar', city: 'Richland', state: 'MS', zipCode: '00000', county: 'Rankin'},
-  { name: 'Ripley Public Library', url: 'https://ripleylibrary.org/', eventsUrl: 'https://ripleylibrary.org/', city: 'Ripley', state: 'MS', zipCode: '00000', county: 'Tippah'},
+  // URL corrected 2026-08-11 (was ripleylibrary.org): Northeast Regional Library page shows 308 Commerce St, Ripley MS 38663, phone 662-837-7773; branch is titled Ripley Library
+  { name: 'Ripley Public Library', url: 'https://www.nereg.lib.ms.us/ripley-public-library/', eventsUrl: 'https://www.nereg.lib.ms.us/events', city: 'Ripley', state: 'MS', zipCode: '00000', county: 'Tippah'},
   { name: 'Field Memorial Library', url: 'https://www.shawlibrary.org/', eventsUrl: 'https://www.shawlibrary.org/', city: 'Shaw', state: 'MS', zipCode: '00000', county: 'Bolivar'},
-  { name: 'Dr. Robert T. Hollingsworth Library', url: 'https://www.shelbylibrary.org', eventsUrl: 'https://www.shelbylibrary.org/events', city: 'Shelby', state: 'MS', zipCode: '00000', county: 'Bolivar'},
+  // REMOVED 2026-08-11 (Defect A): no verifiable official site. Bolivar County Library System branches page lists Dr. Robert T. Hollingsworth Public Library as Closed Until Further Notice; no branch site or calenda
+  // RECORDED COVERAGE GAP - restore if a real URL is found.
+  // { name: 'Dr. Robert T. Hollingsworth Library', url: 'https://www.shelbylibrary.org', eventsUrl: 'https://www.shelbylibrary.org/events', city: 'Shelby', state: 'MS', zipCode: '00000', county: 'Bolivar'},
   { name: 'Sherman Library', url: 'https://www.shermanlibrary.org/', eventsUrl: 'https://www.shermanlibrary.org/', city: 'Sherman', state: 'MS', zipCode: '00000', county: 'Pontotoc'},
   { name: 'Kemper-Newton Regional Library', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'MS', zipCode: '39365', county: 'Union County'},
   { name: 'Evelyn Taylor Majure Library', url: 'https://www.uticalibrary.org', eventsUrl: 'https://www.uticalibrary.org/events', city: 'Utica', state: 'MS', zipCode: '00000', county: 'Hinds'},
-  { name: 'Woodville Public Library', url: 'https://www.woodvillelibrary.org', eventsUrl: 'https://www.woodvillelibrary.org/events', city: 'Woodville', state: 'MS', zipCode: '00000', county: 'Wilkinson'},
+  // URL corrected 2026-08-11 (was woodvillelibrary.org): Wilkinson County Library System site; Woodville branch 489 Main Street Woodville MS 39669, phone 601-888-6712
+  { name: 'Woodville Public Library', url: 'https://www.wcplibrary.com', eventsUrl: 'https://www.wcplibrary.com/events', city: 'Woodville', state: 'MS', zipCode: '00000', county: 'Wilkinson'},
 
 ];
 
