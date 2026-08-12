@@ -143,12 +143,6 @@
       "confirm": "npm run scraper -- --scraper CustomDrupal-Libraries   then check for Cobb rows by source host",
       "added": "2026-08-06"
     },
-    "Communico-NJ": {
-      "what": "Somerset County NJ branch-filtered URL (2026-08-06) — Montclair half now CONFIRMED",
-      "expect": "MONTCLAIR CONFIRMED 2026-08-10: identified by source host (bccls.libcal.com), Montclair Public Library rows are present under LibCal-NJ as intended. SOMERSET NJ STILL UNOBSERVED: zero rows carry an sclsnj host. Communico-NJ is a GROUP 2 scraper and the last runs were Group 3, so the branch-filtered sclsnj.libnet.info URL has not executed since it was set - this is a rotation gap, not a failure. Re-check after the next Group 2 run before treating it as broken.",
-      "confirm": "npm run scraper -- --scraper Communico-NJ   then: node -e \"require('./scrapers/helpers/supabase-adapter').supabase.from('events').select('id').ilike('source_url','%sclsnj%').range(0,50).then(r=>console.log(r.data.length))\"",
-      "added": "2026-08-06"
-    },
     "supabase-adapter.js": {
       "what": "Fleet-wide: duplicate .add results no longer counted as new imports, and stable ids no longer collapse on query-carried URLs (2026-08-10)",
       "expect": "PARTIAL 2026-08-10 PM. Static confirms PASS: audit-add-miscount 96 OK / 0 buggy, verify-duplicate-branch-scope all in scope, zero STABLE-ID COLLISION lines. BUT the fleet-wide effect is still UNPROVEN for the signature scrapers: the nightly Group 1 run started 03:00 EDT and the fix landed 07:36 EDT mid-run, and local-scraper-runner.js clears the require cache for the SCRAPER FILE ONLY (line ~171), never for supabase-adapter.js - so adapter-side changes could not take effect at all in that run, and every Found==New/Dupes=0 scraper (BiblioCommons-NJ 425/425/0, Pratt-Library 969/969/0, Prince-Georges-County 62/62/0) ran pre-fix. Today ALSO surfaced real fallout: 45 scrapers dropped their skipped counter from the return, so the fix made them report 0/0/0 - fixed separately, see the dropped-skipped entry.",
