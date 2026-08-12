@@ -14,8 +14,8 @@
     "added": "2026-08-05"
   },
   "local-scraper-runner.js": {
-    "note": "Not a registry scraper — a shared-infra note so this stays visible in the Fix queue. Fixed 2026-08-06: MacaroniKid group runs (MacaroniKid-Group1/2/3, spawned by runMacaroniGroup() since the 2026-08-04 dead-stub fix) were rendering as 'FAILED — unknown error' in scraper-summary.log even when the child process exited 0 and saved real events. formatSummaryRow() branches on r.success, but the success-path return value had no success flag, so !r.success was always true. Fixed by adding success: true/false to all three return branches in runMacaroniGroup(). CONFIRM on the next MacaroniKid group run (any of Group 1/2/3): the per-scraper table in scrapers/logs/scraper-summary.log should show a normal zero-stats success row for e.g. MacaroniKid-Group2, not a FAILED line, whenever the child process actually exits 0. Delete this note once a post-fix group run has been observed.",
-    "priority": "normal",
+    "note": "RESOLVED 2026-08-12 — confirmed live, keeping the note one cycle for traceability then delete. Fixed 2026-08-06: MacaroniKid group runs (MacaroniKid-Group1/2/3, spawned by runMacaroniGroup() since the 2026-08-04 dead-stub fix) were rendering as 'FAILED — unknown error' in scraper-summary.log even when the child process exited 0 and saved real events. formatSummaryRow() branches on r.success, but the success-path return value had no success flag, so !r.success was always true. Fixed by adding success: true/false to all three return branches in runMacaroniGroup(). CONFIRMATION: the 2026-08-12 Group 3 run shows 'macaroni-runner-group3.js finished with exit code 0' (scraper-run-2026-08-12.log line 350) paired with a normal zero-stats row '⚠️  MacaroniKid-Group3  0  0  0  0  ?' (line 669) — the success-path rendering, not a FAILED line. Fix works as intended.",
+    "priority": "low",
     "added": "2026-08-06"
   },
   "WordPress-NC": {
@@ -89,208 +89,46 @@
     "added": "2026-08-05"
   },
   "_pending": {
-    "MacaroniKid-NC": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-NC-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
-      "added": "2026-08-05"
-    },
-    "MacaroniKid-MA": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-MA-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
-      "added": "2026-08-05"
-    },
-    "MacaroniKid-TN": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-TN-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
-      "added": "2026-08-05"
-    },
-    "MacaroniKid-AL": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-AL-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
-      "added": "2026-08-05"
-    },
-    "MacaroniKid-KY": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-KY-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
-      "added": "2026-08-05"
-    },
-    "MacaroniKid-RI": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-RI-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
-      "added": "2026-08-05"
-    },
-    "MacaroniKid-DC": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-DC-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
-      "added": "2026-08-05"
-    },
-    "MacaroniKid-WV": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-WV-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
-      "added": "2026-08-05"
-    },
     "MacaroniKid-FL": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-FL-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "what": "Listing URL + per-site scraper name (2026-08-05) — blocked on a MacaroniKid GROUP 2 run, not on the fix",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-FL-<siteslug>. STATUS 2026-08-12: the fix itself is PROVEN — the same code change was confirmed live on 11 sibling states (NC, MA, TN, AL, KY, RI, DC, WV, NJ, VA, SC), every one showing 100% per-site source_url, correct MacaroniKid-XX-<slug> names, and zero events.yodel.today URLs. This state is unconfirmed only because it has produced NO rows under a per-site name yet: FL/NY/GA/CT/MD/NH/ME are precisely the seven MacaroniKid GROUP 2 states, and MacaroniKid Group 2 last ran 2026-08-05 to 08-06 — the same date the fix landed — so it has not executed since. This is a rotation gap, not a defect. Clearing it requires a MacaroniKid Group 2 run; note that run historically takes ~20 hours, and it was deliberately NOT started on 2026-08-12 because a regular Group 2 catch-up was already running and concurrent heavy Chrome workloads are the leading suspect for that morning's 37-scraper launch failure.",
+      "confirm": "node scrapers/macaroni-runner-group2.js   then verify per-site rows exist and carry a per-site source_url: node -e \"require('./scrapers/helpers/supabase-adapter').supabase.from('events').select('scraper_name, source_url').like('scraper_name','MacaroniKid-<ST>-%').order('id',{ascending:true}).range(0,999).then(r=>{const d=r.data||[];console.log(d.length+' rows', new Set(d.map(x=>x.scraper_name)).size+' names', 'withSrc:'+d.filter(x=>x.source_url).length, 'yodel:'+d.filter(x=>(x.source_url||'').includes('yodel')).length)})\"",
       "added": "2026-08-05"
     },
     "MacaroniKid-NY": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-NY-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "what": "Listing URL + per-site scraper name (2026-08-05) — blocked on a MacaroniKid GROUP 2 run, not on the fix",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-NY-<siteslug>. STATUS 2026-08-12: the fix itself is PROVEN — the same code change was confirmed live on 11 sibling states (NC, MA, TN, AL, KY, RI, DC, WV, NJ, VA, SC), every one showing 100% per-site source_url, correct MacaroniKid-XX-<slug> names, and zero events.yodel.today URLs. This state is unconfirmed only because it has produced NO rows under a per-site name yet: FL/NY/GA/CT/MD/NH/ME are precisely the seven MacaroniKid GROUP 2 states, and MacaroniKid Group 2 last ran 2026-08-05 to 08-06 — the same date the fix landed — so it has not executed since. This is a rotation gap, not a defect. Clearing it requires a MacaroniKid Group 2 run; note that run historically takes ~20 hours, and it was deliberately NOT started on 2026-08-12 because a regular Group 2 catch-up was already running and concurrent heavy Chrome workloads are the leading suspect for that morning's 37-scraper launch failure.",
+      "confirm": "node scrapers/macaroni-runner-group2.js   then verify per-site rows exist and carry a per-site source_url: node -e \"require('./scrapers/helpers/supabase-adapter').supabase.from('events').select('scraper_name, source_url').like('scraper_name','MacaroniKid-<ST>-%').order('id',{ascending:true}).range(0,999).then(r=>{const d=r.data||[];console.log(d.length+' rows', new Set(d.map(x=>x.scraper_name)).size+' names', 'withSrc:'+d.filter(x=>x.source_url).length, 'yodel:'+d.filter(x=>(x.source_url||'').includes('yodel')).length)})\"",
       "added": "2026-08-05"
     },
     "MacaroniKid-GA": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-GA-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "what": "Listing URL + per-site scraper name (2026-08-05) — blocked on a MacaroniKid GROUP 2 run, not on the fix",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-GA-<siteslug>. STATUS 2026-08-12: the fix itself is PROVEN — the same code change was confirmed live on 11 sibling states (NC, MA, TN, AL, KY, RI, DC, WV, NJ, VA, SC), every one showing 100% per-site source_url, correct MacaroniKid-XX-<slug> names, and zero events.yodel.today URLs. This state is unconfirmed only because it has produced NO rows under a per-site name yet: FL/NY/GA/CT/MD/NH/ME are precisely the seven MacaroniKid GROUP 2 states, and MacaroniKid Group 2 last ran 2026-08-05 to 08-06 — the same date the fix landed — so it has not executed since. This is a rotation gap, not a defect. Clearing it requires a MacaroniKid Group 2 run; note that run historically takes ~20 hours, and it was deliberately NOT started on 2026-08-12 because a regular Group 2 catch-up was already running and concurrent heavy Chrome workloads are the leading suspect for that morning's 37-scraper launch failure.",
+      "confirm": "node scrapers/macaroni-runner-group2.js   then verify per-site rows exist and carry a per-site source_url: node -e \"require('./scrapers/helpers/supabase-adapter').supabase.from('events').select('scraper_name, source_url').like('scraper_name','MacaroniKid-<ST>-%').order('id',{ascending:true}).range(0,999).then(r=>{const d=r.data||[];console.log(d.length+' rows', new Set(d.map(x=>x.scraper_name)).size+' names', 'withSrc:'+d.filter(x=>x.source_url).length, 'yodel:'+d.filter(x=>(x.source_url||'').includes('yodel')).length)})\"",
       "added": "2026-08-05"
     },
     "MacaroniKid-CT": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-CT-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "what": "Listing URL + per-site scraper name (2026-08-05) — blocked on a MacaroniKid GROUP 2 run, not on the fix",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-CT-<siteslug>. STATUS 2026-08-12: the fix itself is PROVEN — the same code change was confirmed live on 11 sibling states (NC, MA, TN, AL, KY, RI, DC, WV, NJ, VA, SC), every one showing 100% per-site source_url, correct MacaroniKid-XX-<slug> names, and zero events.yodel.today URLs. This state is unconfirmed only because it has produced NO rows under a per-site name yet: FL/NY/GA/CT/MD/NH/ME are precisely the seven MacaroniKid GROUP 2 states, and MacaroniKid Group 2 last ran 2026-08-05 to 08-06 — the same date the fix landed — so it has not executed since. This is a rotation gap, not a defect. Clearing it requires a MacaroniKid Group 2 run; note that run historically takes ~20 hours, and it was deliberately NOT started on 2026-08-12 because a regular Group 2 catch-up was already running and concurrent heavy Chrome workloads are the leading suspect for that morning's 37-scraper launch failure.",
+      "confirm": "node scrapers/macaroni-runner-group2.js   then verify per-site rows exist and carry a per-site source_url: node -e \"require('./scrapers/helpers/supabase-adapter').supabase.from('events').select('scraper_name, source_url').like('scraper_name','MacaroniKid-<ST>-%').order('id',{ascending:true}).range(0,999).then(r=>{const d=r.data||[];console.log(d.length+' rows', new Set(d.map(x=>x.scraper_name)).size+' names', 'withSrc:'+d.filter(x=>x.source_url).length, 'yodel:'+d.filter(x=>(x.source_url||'').includes('yodel')).length)})\"",
       "added": "2026-08-05"
     },
     "MacaroniKid-MD": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
+      "what": "Listing URL + per-site scraper name (2026-08-05) — blocked on a MacaroniKid GROUP 2 run, not on the fix",
       "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-MD-<siteslug>. Verified statically through flattenEvent only — no live run yet. ALSO: check-scraper-names.js flags this scraper COLLAPSED (declares 20 sites, 1 distinct name). That is pre-fix data — expect it to clear as old rows expire.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "confirm": "node scrapers/macaroni-runner-group2.js   then verify per-site rows exist and carry a per-site source_url: node -e \"require('./scrapers/helpers/supabase-adapter').supabase.from('events').select('scraper_name, source_url').like('scraper_name','MacaroniKid-<ST>-%').order('id',{ascending:true}).range(0,999).then(r=>{const d=r.data||[];console.log(d.length+' rows', new Set(d.map(x=>x.scraper_name)).size+' names', 'withSrc:'+d.filter(x=>x.source_url).length, 'yodel:'+d.filter(x=>(x.source_url||'').includes('yodel')).length)})\"",
       "added": "2026-08-05"
     },
     "MacaroniKid-NH": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-NH-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
+      "what": "Listing URL + per-site scraper name (2026-08-05) — blocked on a MacaroniKid GROUP 2 run, not on the fix",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-NH-<siteslug>. STATUS 2026-08-12: the fix itself is PROVEN — the same code change was confirmed live on 11 sibling states (NC, MA, TN, AL, KY, RI, DC, WV, NJ, VA, SC), every one showing 100% per-site source_url, correct MacaroniKid-XX-<slug> names, and zero events.yodel.today URLs. This state is unconfirmed only because it has produced NO rows under a per-site name yet: FL/NY/GA/CT/MD/NH/ME are precisely the seven MacaroniKid GROUP 2 states, and MacaroniKid Group 2 last ran 2026-08-05 to 08-06 — the same date the fix landed — so it has not executed since. This is a rotation gap, not a defect. Clearing it requires a MacaroniKid Group 2 run; note that run historically takes ~20 hours, and it was deliberately NOT started on 2026-08-12 because a regular Group 2 catch-up was already running and concurrent heavy Chrome workloads are the leading suspect for that morning's 37-scraper launch failure.",
+      "confirm": "node scrapers/macaroni-runner-group2.js   then verify per-site rows exist and carry a per-site source_url: node -e \"require('./scrapers/helpers/supabase-adapter').supabase.from('events').select('scraper_name, source_url').like('scraper_name','MacaroniKid-<ST>-%').order('id',{ascending:true}).range(0,999).then(r=>{const d=r.data||[];console.log(d.length+' rows', new Set(d.map(x=>x.scraper_name)).size+' names', 'withSrc:'+d.filter(x=>x.source_url).length, 'yodel:'+d.filter(x=>(x.source_url||'').includes('yodel')).length)})\"",
       "added": "2026-08-05"
     },
     "MacaroniKid-ME": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-ME-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
-      "added": "2026-08-05"
-    },
-    "MacaroniKid-NJ": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-NJ-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
-      "added": "2026-08-05"
-    },
-    "MacaroniKid-VA": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-VA-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
-      "added": "2026-08-05"
-    },
-    "MacaroniKid-SC": {
-      "what": "Listing URL + per-site scraper name (2026-08-05)",
-      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-SC-<siteslug>. Verified statically through flattenEvent only — no live run yet.",
-      "confirm": "node scripts/check-source-url-coverage.js --since=<run start>",
-      "added": "2026-08-05"
-    },
-    "VenueList-ArtStudios-DMV": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-05"
-    },
-    "VenueList-BowlingAlleys-DMV": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-05"
-    },
-    "VenueList-ChildrensMuseums-DMV": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-05"
-    },
-    "VenueList-ClimbingGyms-DMV": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-05"
-    },
-    "VenueList-FamilyEntertainment-DMV": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-05"
-    },
-    "VenueList-GymnasticsCenters-DMV": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-05"
-    },
-    "VenueList-IceRinks-DMV": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-05"
-    },
-    "VenueList-IndoorPlaygrounds-DMV": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-05"
-    },
-    "VenueList-MinigolfBatting-DMV": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-05"
-    },
-    "VenueList-MovieTheaters-DMV": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-05"
-    },
-    "VenueList-NatureFarms-DMV": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-05"
-    },
-    "VenueList-RollerSkating-DMV": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-05"
-    },
-    "VenueList-ScienceDiscovery-DMV": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-05"
-    },
-    "VenueList-SwimmingPools-DMV": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-05"
-    },
-    "VenueList-TrampolineNinja-DMV": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
-      "added": "2026-08-05"
-    },
-    "VenueList-Eastern-US": {
-      "what": "Renamed from Activities-* and SCRAPER_NAME aligned (2026-08-05)",
-      "expect": "Rows written before the rename still carry the old name, which now matches no registry key. Expect a one-off drift bump until they age out. Fallout from the rename, not new breakage.",
-      "confirm": "node scripts/check-scraper-names.js",
+      "what": "Listing URL + per-site scraper name (2026-08-05) — blocked on a MacaroniKid GROUP 2 run, not on the fix",
+      "expect": "Next run should emit source_url per site (e.g. apollobeach.macaronikid.com, never events.yodel.today) and scraper_name like MacaroniKid-ME-<siteslug>. STATUS 2026-08-12: the fix itself is PROVEN — the same code change was confirmed live on 11 sibling states (NC, MA, TN, AL, KY, RI, DC, WV, NJ, VA, SC), every one showing 100% per-site source_url, correct MacaroniKid-XX-<slug> names, and zero events.yodel.today URLs. This state is unconfirmed only because it has produced NO rows under a per-site name yet: FL/NY/GA/CT/MD/NH/ME are precisely the seven MacaroniKid GROUP 2 states, and MacaroniKid Group 2 last ran 2026-08-05 to 08-06 — the same date the fix landed — so it has not executed since. This is a rotation gap, not a defect. Clearing it requires a MacaroniKid Group 2 run; note that run historically takes ~20 hours, and it was deliberately NOT started on 2026-08-12 because a regular Group 2 catch-up was already running and concurrent heavy Chrome workloads are the leading suspect for that morning's 37-scraper launch failure.",
+      "confirm": "node scrapers/macaroni-runner-group2.js   then verify per-site rows exist and carry a per-site source_url: node -e \"require('./scrapers/helpers/supabase-adapter').supabase.from('events').select('scraper_name, source_url').like('scraper_name','MacaroniKid-<ST>-%').order('id',{ascending:true}).range(0,999).then(r=>{const d=r.data||[];console.log(d.length+' rows', new Set(d.map(x=>x.scraper_name)).size+' names', 'withSrc:'+d.filter(x=>x.source_url).length, 'yodel:'+d.filter(x=>(x.source_url||'').includes('yodel')).length)})\"",
       "added": "2026-08-05"
     },
     "WordPress-SC": {

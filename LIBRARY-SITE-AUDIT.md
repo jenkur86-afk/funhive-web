@@ -4003,3 +4003,49 @@ No full 3-day-rotation group ran today for the non-MacaroniKid library families 
 | LibraryMarket-CT libraries (aggregate, no per-site breakdown available today) | CT | LibraryMarket-CT | 198 |
 | Williamson County Public Library system (wcpltn — aggregate, no per-site breakdown available today) | TN | CivicEngage-Libraries-wcpltn | 354 |
 
+## 2026-08-12
+
+Group 3 rotation day, day 3 of the current cycle. The cycle is **not** being marked complete: day 2 (Group 2, expected 2026-08-11) never ran — see the 2026-08-11 entry above, which was a manual debugging session rather than a scheduled group run. A catch-up Group 2 run was started manually on 2026-08-12 to close that gap; its per-site results will appear in the next cycle entry.
+
+**Incident:** the 3:00 AM Group 3 run failed 37 of 50 scrapers with an identical `Failed to launch the browser process: Code: 3236495362` Puppeteer/Chromium error, wiping out nearly every library-family scraper for the scheduled run (LibCal-\*, Communico-\*, BiblioCommons-MA, WordPress-PA/MA/KY/SC/WV/DE/RI/NH, LibraryMarket-PA/NC, Squarespace-Libraries, WithApps-Libraries, Drupal-Virginia, Assabet-NH-MA, and others). Verified transient — Chrome launched fine on manual retest both directly and via the shared `launchBrowser()` helper — so no code was changed. All 36 recovery-eligible scrapers were re-run and **all 36 succeeded, 0 failures**, so the events themselves are in the database. See `SCRAPER-FIX-LOG.jsonl` for both entries.
+
+**Why this entry has almost no per-site rows — a capture gap, not a coverage gap.** The recovery re-ran each scraper as an individual `node local-scraper-runner.js --scraper X` invocation instead of through `run-scrapers.bat`, which is what redirects stdout into `scrapers/logs/scraper-stdout.log`. The per-library `📍 {library name}` / `Found {N} events` lines that this audit parses therefore went to a console that was never captured, leaving only each scraper's aggregate line in `scraper-run-2026-08-12.log`. The rows below are the aggregates that survived. **Do not read a missing library here as a library that returned zero** — the DB-backed `AGE-RANGE-AUDIT.md` entry for the same day shows 2439 rows across 492 individual sites and 66 scrapers, which is the trustworthy picture of what actually landed. If a future recovery needs per-site detail, route the re-run through the same stdout redirection the nightly job uses.
+
+| Library Website | State | Scraper | Events Found |
+|---|---|---|---|
+| Somerset County Library (via Google Calendar ICS feeds) | MD | GoogleCalendar-MD | 171 |
+| Nashville Public Library | TN | Nashville-Library-TN | 183 |
+| Orange County Library | FL | Orange-County-Library-FL | 1 |
+| LibCal-NJ libraries (aggregate — per-site stdout not captured, see note above) | NJ | LibCal-NJ | 1135 |
+| Assabet-NH-MA libraries (aggregate — per-site stdout not captured) | NH/MA | Assabet-NH-MA | 1111 |
+| BiblioCommons-MA libraries (aggregate — per-site stdout not captured) | MA | BiblioCommons-MA | 827 |
+| WordPress-MA libraries (aggregate — per-site stdout not captured) | MA | WordPress-MA | 802 |
+| WordPress-NH libraries (aggregate — per-site stdout not captured) | NH | WordPress-NH | 795 |
+| WordPress-WV libraries (aggregate — per-site stdout not captured) | WV | WordPress-WV | 685 |
+| WordPress-KY libraries (aggregate — per-site stdout not captured) | KY | WordPress-KY | 658 |
+| WordPress-PA libraries (aggregate — per-site stdout not captured) | PA | WordPress-PA | 466 |
+| Communico-FL libraries (aggregate — per-site stdout not captured) | FL | Communico-FL | 386 |
+| WordPress-Events-Calendar libraries (aggregate — per-site stdout not captured) | Multi | WordPress-Events-Calendar | 299 |
+| WordPress-SC libraries (aggregate — per-site stdout not captured) | SC | WordPress-SC | 288 |
+| Communico-NY libraries (aggregate — per-site stdout not captured) | NY | Communico-NY | 234 |
+| LibCal-VA2 libraries (aggregate — per-site stdout not captured) | VA | LibCal-VA2 | 183 |
+| Communico-MD libraries (aggregate — per-site stdout not captured) | MD | Communico-MD | 169 |
+| WordPress-DE libraries (aggregate — per-site stdout not captured) | DE | WordPress-DE | 128 |
+| Sandhill Regional Library | NC | SandhillRegional-NC | 99 |
+| WordPress-RI libraries (aggregate — per-site stdout not captured) | RI | WordPress-RI | 91 |
+| LibCal-SC libraries (aggregate — per-site stdout not captured) | SC | LibCal-SC | 77 |
+| LibraryMarket-PA libraries (aggregate — per-site stdout not captured) | PA | LibraryMarket-PA | 72 |
+| LibCal-VA libraries (aggregate — per-site stdout not captured) | VA | LibCal-VA | 54 |
+| WithApps-Libraries (Hampton Public Library) | VA | WithApps-Libraries | 38 |
+| Squarespace-Libraries (aggregate — per-site stdout not captured) | Multi | Squarespace-Libraries | 24 |
+| Drupal-Virginia libraries (aggregate — per-site stdout not captured) | VA | Drupal-Virginia | 21 |
+| Wicomico Public Library | MD | Wicomico-Public | 20 |
+| LibCal-ME libraries (aggregate — per-site stdout not captured) | ME | LibCal-ME | 12 |
+| Dorchester County Library | MD | Dorchester-County | 11 |
+| LibraryMarket-NC libraries (aggregate — per-site stdout not captured) | NC | LibraryMarket-NC | 10 |
+| Communico-WV libraries (aggregate — per-site stdout not captured) | WV | Communico-WV | 9 |
+| Allentown Public Library | PA | Allentown-Public | 7 |
+| Communico-TN libraries (aggregate — per-site stdout not captured) | TN | Communico-TN | 7 |
+| Communico-PA libraries (aggregate — per-site stdout not captured) | PA | Communico-PA | 3 |
+| Communico-NH libraries (aggregate — per-site stdout not captured) | NH | Communico-NH | 2 |
+

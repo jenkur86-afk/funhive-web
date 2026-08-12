@@ -21,6 +21,17 @@
  * Usage:
  *   node scripts/build-library-site-audit.js --since=2026-08-10T07:00:01Z
  *   node scripts/build-library-site-audit.js --since=... --out=path.md
+ *   node scripts/build-library-site-audit.js --since=... --log=path/to/other.log
+ *
+ * --log overrides which stdout capture to parse. It exists because the per-site
+ * "📍 {library}" / "Found {N} events" lines only reach scrapers/logs/scraper-stdout.log
+ * when the runner is invoked through run-scrapers.bat, which does the redirection.
+ * A scraper re-run by hand (`node local-scraper-runner.js --scraper X`, or a recovery
+ * batch) prints those lines to whatever console it was given, so the default log has
+ * no per-site rows for it and this audit silently reports nothing for those scrapers —
+ * which is indistinguishable from the sites returning zero events. That happened for
+ * all 36 scrapers recovered on 2026-08-12. Point --log at the captured output of such
+ * a run to recover the per-site detail instead of losing it.
  */
 const fs = require('fs');
 const path = require('path');
@@ -29,6 +40,7 @@ const readline = require('readline');
 const args = process.argv.slice(2);
 const sinceArg = args.find(a => a.startsWith('--since='));
 const outArg = args.find(a => a.startsWith('--out='));
+const logArg = args.find(a => a.startsWith('--log='));
 if (!sinceArg) {
   console.error('Missing --since=<ISO timestamp>');
   process.exit(1);
@@ -36,7 +48,14 @@ if (!sinceArg) {
 const SINCE = new Date(sinceArg.split('=')[1]).getTime();
 const OUT = outArg ? outArg.split('=')[1] : null;
 
-const LOG = path.join(__dirname, '..', 'scrapers', 'logs', 'scraper-stdout.log');
+const LOG = logArg
+  ? logArg.split('=').slice(1).join('=')
+  : path.join(__dirname, '..', 'scrapers', 'logs', 'scraper-stdout.log');
+
+if (!fs.existsSync(LOG)) {
+  console.error(`Log not found: ${LOG}`);
+  process.exit(1);
+}
 
 const TS = /^\[(\d{4}-\d{2}-\d{2}T[\d:.]+Z)\]/;
 const START = /🚀 Starting ([A-Za-z0-9_-]+)\.\.\./;

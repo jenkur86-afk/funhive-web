@@ -244,7 +244,15 @@ function loadSites() {
   if (!fs.existsSync(LIB_MD)) return { rows: [], error: 'LIBRARY-SITE-AUDIT.md not found' };
   const md = fs.readFileSync(LIB_MD, 'utf8');
   const dataDate = newestDate(md, new Date().toISOString().slice(0,10));
-  const raw = tableRows(md, /Library Website\s*\|\s*State/i, 5, [0, 2]);   // site + scraper
+  // expectedCols is 4, not 5: the Link column is OPTIONAL. Five of this file's sections
+  // carry `| Library Website | State | Scraper | Events Found | Link |` but three
+  // (2026-08-10, 2026-08-11, 2026-08-12) carry the same table without the Link column.
+  // Requiring 5 silently dropped every row in those sections — 622 rows for 2026-08-10
+  // alone — so scrapers that genuinely ran and reported counts rendered as if they had
+  // never been audited. That is precisely the "a missing row is indistinguishable from a
+  // site that does not exist" failure this report exists to prevent, so the parser now
+  // accepts both shapes and treats an absent Link as no-link (parseLink handles undefined).
+  const raw = tableRows(md, /Library Website\s*\|\s*State/i, 4, [0, 2]);   // site + scraper
   const rows = raw.map(c => {
     const { n, note } = parseCount(c[3]);
     const { url, kind } = parseLink(c[4]);

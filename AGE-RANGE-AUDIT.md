@@ -10961,3 +10961,35 @@ This cycle date covers activity outside the normal 3-day rotation: MacaroniKid G
 | Worcester Palladium | MacaroniKid-MA-northworcester | 20 | 20 | 100% |
 | Black Creek Branch Library | wordpress-NC | 18 | 20 | 90% |
 | East Branch Library | wordpress-NC | 18 | 20 | 90% |
+
+## 2026-08-12
+
+Group 3 rotation day, day 3 of the current cycle (started 2026-08-10) — but day 2 (Group 2, expected 2026-08-11) never ran (that date's log shows only manual single-scraper debugging, see the 2026-08-11 entry above and `SCRAPER-FIX-LOG.jsonl`), so this cycle was missing a full rotation group. A catch-up Group 2 run was started manually on 2026-08-12 to close that gap; its results land in the next cycle entry, not this one.
+
+**Major incident this run:** the 3:00 AM Group 3 run failed 37 of 50 scrapers with an identical `Failed to launch the browser process: Code: 3236495362` Puppeteer/Chromium error — confirmed transient (Chrome launches fine on manual retest, no code change made) and fully recovered via a background re-run: all 36 recovery-eligible scrapers succeeded on retry with 0 failures, roughly 2687 new events. See `SCRAPER-FIX-LOG.jsonl` for both entries.
+
+**Data-availability gap from the recovery method itself:** the 36 recovered scrapers were re-run as individual `node local-scraper-runner.js --scraper X` invocations rather than through the normal `run-scrapers.bat` wrapper, so their per-library 📍 stdout lines never reached `scrapers/logs/scraper-stdout.log` — only each scraper's own aggregate line in `scraper-run-2026-08-12.log` survived. `LIBRARY-SITE-AUDIT.md` therefore has no per-site breakdown for those 36 scrapers this cycle. This is a gap in how the recovery was captured, not evidence that those sites returned nothing.
+
+Built with `scripts/build-age-range-audit.js --since=2026-08-12T07:00:02.251Z`, which reads `age_range` directly from the events table and so is unaffected by the stdout-capture gap above — it covers every scraper that wrote a row today regardless of how it was invoked. 2439 rows, 492 individual sites, 66 scrapers, 13 flagged at >=70% All Ages (none on the known-legitimate broad-content exclusion list). The full 492-row per-site table is regenerable with the command above; only the flagged subset is embedded here.
+
+### Flagged: All Ages >= 70% (total >= 20 events), 2026-08-12
+
+| Site | Scraper | All Ages | Total | % |
+|---|---|---|---|---|
+| Pollard Memorial Library | assabet-NH-MA | 52 | 66 | 79% |
+| Lexington Public Library | wordpress-KY | 44 | 45 | 98% |
+| Malden Public Library | assabet-NH-MA | 33 | 38 | 87% |
+| Kelley Library | assabet-NH-MA | 27 | 29 | 93% |
+| Derry Public Library | assabet-NH-MA | 21 | 29 | 72% |
+| Louis T. Graves Memorial Public Library @ 18 Maine St, Kennebunkport, ME 04046, USA | wordpress-KY | 23 | 27 | 85% |
+| Lawrence Public Library | BiblioCommons-MA | 21 | 25 | 84% |
+| Kenton County Public Library | wordpress-KY | 23 | 25 | 92% |
+| Bartlett Public Library | wordpress-NH | 21 | 25 | 84% |
+| Wadleigh Memorial Library | assabet-NH-MA | 22 | 23 | 96% |
+| Lynn Janoff Community Room | generic-PA | 20 | 21 | 95% |
+| Anderson County Library | wordpress-SC | 15 | 21 | 71% |
+| Chicopee Public Library | assabet-NH-MA | 18 | 20 | 90% |
+
+`assabet-NH-MA` accounts for 6 of the 13 and is the clearest single-scraper signal here — worth a targeted look at whether its extraction passes any age/audience field through to `resolveAgeRange()`, in the same shape as the open `BiblioCommons-VA` and `LibraryCalendar-Libraries` notes in `reports/fix-notes.json`.
+
+Two rows attributed to `wordpress-KY` are suspect and should not be read at face value: one carries a Maine street address (Louis T. Graves Memorial Public Library, Kennebunkport ME) under a Kentucky scraper name. That is the known lowercase-vs-registry-key drift (`wordpress-KY` vs `WordPress-KY`) plus an apparent cross-state mis-attribution — flagged here for a future pass rather than treated as a real Kentucky site.
