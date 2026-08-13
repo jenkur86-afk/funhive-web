@@ -28,7 +28,7 @@ const { detectYodel, scrapeYodelEventUrls, extractYodelEventDetails } = require(
 
 // All 1 District of Columbia Macaroni Kid Site
 const DC_MK_SITES = [
-  { url: 'https://dceast.macaronikid.com', name: 'DC East/Capitol Hill', county: 'Washington' }
+  { url: 'https://dceast.macaronikid.com', name: 'DC East/Capitol Hill', county: 'District of Columbia' }
 ];
 
 async function geocodeAddress(address, city, zipCode) {

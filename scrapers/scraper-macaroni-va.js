@@ -32,15 +32,15 @@ const VA_MK_SITES = [
   { url: 'https://fairfax.macaronikid.com', name: 'Fairfax-Burke-Oakton-Chantilly', county: 'Fairfax' },
   { url: 'https://fredericksburg.macaronikid.com', name: 'Fredericksburg-Spotsylvania-Stafford', county: 'Spotsylvania' },
   { url: 'https://gainesville.macaronikid.com', name: 'Gainesville', county: 'Prince William' },
-  { url: 'https://lynchburg.macaronikid.com', name: 'Lynchburg', county: 'Lynchburg' },
+  { url: 'https://lynchburg.macaronikid.com', name: 'Lynchburg', county: 'Lynchburg city' },
   { url: 'https://mclean.macaronikid.com', name: 'McLean-Vienna-Falls Church', county: 'Fairfax' },
   { url: 'https://nrv.macaronikid.com', name: 'New River Valley', county: 'Montgomery' },
   { url: 'https://newington.macaronikid.com', name: 'Newington', county: 'Fairfax' },
-  { url: 'https://norfolk.macaronikid.com', name: 'Norfolk', county: 'Norfolk' },
+  { url: 'https://norfolk.macaronikid.com', name: 'Norfolk', county: 'Norfolk city' },
   { url: 'https://reston.macaronikid.com', name: 'Reston-Herndon-Great Falls', county: 'Fairfax' },
   { url: 'https://richmond.macaronikid.com', name: 'Richmond', county: 'Richmond' },
   { url: 'https://roanoke.macaronikid.com', name: 'Roanoke', county: 'Roanoke' },
-  { url: 'https://virginiabeach.macaronikid.com', name: 'Virginia Beach', county: 'Virginia Beach' },
+  { url: 'https://virginiabeach.macaronikid.com', name: 'Virginia Beach', county: 'Virginia Beach city' },
   { url: 'https://williamsburg.macaronikid.com', name: 'Williamsburg-Hampton', county: 'York' }
 ];
 
