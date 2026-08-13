@@ -32,7 +32,7 @@
  * mis-bucketings traced back to that alone.
  */
 
-const { flattenEvent } = require('../scrapers/helpers/supabase-adapter');
+const { flattenEvent, resolveAgeRange } = require('../scrapers/helpers/supabase-adapter');
 
 // [title, scraper-supplied ageRange, expected bracket, why it matters]
 const CASES = [
@@ -90,6 +90,36 @@ const CASES = [
   ['Held at Lincoln Elementary', '', 'All Ages', 'venue name is not an audience'],
   ['Juneteenth Celebration', '', 'All Ages', '"teen" inside another word'],
   ['Family Fun Day', '', 'All Ages', 'family context'],
+
+  // --- Supplied 'Adults' must not delete an event whose title says otherwise ---
+  // Added 2026-08-13. A supplied value that normalizes to 'Adults' is uniquely
+  // destructive: saveEvent/flattenEvent REJECT the row outright rather than just
+  // mislabelling it. MacaroniKid assigns its "Who" field verbatim, so when the
+  // unit is lost upstream a toddler range arrives as a bare "18-36" -> Adults,
+  // and "Toddler Time (Ages 18-36 months)" was silently dropped 8 times in the
+  // 2026-08-13 NH run. resolveAgeRange() now gives 'Adults' the same second
+  // opinion 'All Ages' already got. The CONTROLS below are the important half:
+  // a genuinely adult event has no non-adult title signal and must STILL resolve
+  // to Adults so it is still rejected.
+  ['Toddler Time (Ages 18-36 months)', '18-36', 'Babies & Toddlers (0-2)', 'unit-stripped Who must not delete a toddler event'],
+  ['Toddler Time (Ages 18-36 months)', '18+', 'Babies & Toddlers (0-2)', 'bogus 18+ Who must not beat an explicit months title'],
+  ['Baby Bounce (Ages 0-18 months)', '18-36', 'Babies & Toddlers (0-2)', 'title months range wins over adult-looking supplied value'],
+];
+
+// Cases whose CORRECT outcome is 'Adults'. These cannot go in CASES above:
+// flattenEvent() rejects an adult-only row (returns null / throws), so the
+// harness can never observe 'Adults' as an age_range through that path. They are
+// asserted directly against resolveAgeRange() instead, and they are the load-
+// bearing half of the 2026-08-13 change — the risk of giving supplied 'Adults' a
+// second opinion is that genuine adult events stop being rejected.
+// Titles are chosen to survive the NON-FAMILY filter, which runs earlier and
+// would otherwise reject them for an unrelated reason and prove nothing:
+// "Adult Book Club", "Wine Tasting (21+)", "Knitting Circle" and "Genealogy
+// Workshop" all trip that filter, so none of them can test this gate.
+const ADULTS_CASES = [
+  ['Quiet Reading Hour', 'Adults', 'supplied Adults with no non-adult title signal must stay Adults'],
+  ['Quiet Reading Hour', '18+', 'supplied 18+ with no non-adult title signal must stay Adults'],
+  ['Afternoon Lecture Series', 'Adults', 'neutral title must not invent a non-adult signal'],
 ];
 
 let pass = 0;
@@ -111,6 +141,16 @@ for (const [title, supplied, expected, why, description] of CASES) {
     pass++;
   } else {
     failures.push({ title, supplied, expected, got, why });
+  }
+}
+
+// Adult-only outcomes, asserted directly (see ADULTS_CASES comment above).
+for (const [title, supplied, why] of ADULTS_CASES) {
+  const got = resolveAgeRange({ name: title, description: '', ageRange: supplied });
+  if (got === 'Adults') {
+    pass++;
+  } else {
+    failures.push({ title, supplied, expected: 'Adults', got, why });
   }
 }
 
@@ -137,6 +177,6 @@ for (const [label, ok] of provChecks) {
   console.log(`${ok ? 'PASS' : 'FAIL'}  ${label}`);
 }
 console.log('─'.repeat(60));
-console.log(`${pass}/${CASES.length} age cases passed, ${failures.length} total failure(s)\n`);
+console.log(`${pass}/${CASES.length + ADULTS_CASES.length} age cases passed, ${failures.length} total failure(s)\n`);
 
 process.exit(failures.length ? 1 : 0);

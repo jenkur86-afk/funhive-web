@@ -665,15 +665,36 @@ function resolveAgeRange(data) {
   const supplied = data.ageRange || data.age_range || null;
   const suppliedNorm = supplied ? normalizeAgeRange(supplied) : null;
 
-  // A specific scraper-provided bracket is authoritative (includes 'Adults',
-  // which callers rely on to reject adult-only events).
-  if (suppliedNorm && suppliedNorm !== 'All Ages') return suppliedNorm;
+  // A specific scraper-provided bracket is authoritative — except 'Adults',
+  // handled below.
+  if (suppliedNorm && suppliedNorm !== 'All Ages' && suppliedNorm !== 'Adults') {
+    return suppliedNorm;
+  }
 
   const detected = detectAgeRange(data.name, data.description);
-  if (detected) {
-    const detectedNorm = normalizeAgeRange(detected);
-    if (detectedNorm && detectedNorm !== 'All Ages') return detectedNorm;
+  const detectedNorm = detected ? normalizeAgeRange(detected) : null;
+
+  // 'Adults' gets a second opinion, because it is the one supplied value that
+  // DELETES the event (flattenEvent/saveEvent reject age_range === 'Adults')
+  // rather than merely mislabelling it. A scraper's supplied value is often raw
+  // page text of unknown quality, and when the unit is lost a toddler range
+  // becomes an adult one: MacaroniKid reads its "Who" field verbatim, so
+  // "Toddler Time (Ages 18-36 months)" arrived as a bare "18-36", normalized to
+  // Adults, and was silently dropped 8 times in the 2026-08-13 NH run even
+  // though its own title says months. detectAgeRange() is anchored and
+  // context-aware (it requires "ages"/parens/"grade"), so a specific non-adult
+  // bracket recovered from the title is the more trustworthy signal and wins.
+  // A genuinely adult event is unaffected: "Adult Book Club" or "Wine Tasting
+  // (21+)" yields no non-adult signal here, so it still resolves to Adults and
+  // is still rejected.
+  if (suppliedNorm === 'Adults') {
+    if (detectedNorm && detectedNorm !== 'All Ages' && detectedNorm !== 'Adults') {
+      return detectedNorm;
+    }
+    return 'Adults';
   }
+
+  if (detectedNorm && detectedNorm !== 'All Ages') return detectedNorm;
 
   return suppliedNorm || 'All Ages';
 }
