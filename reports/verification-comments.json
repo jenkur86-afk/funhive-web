@@ -10,18 +10,18 @@
   "population": "zero"
  },
  "LibCal-RI|||North Kingstown Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 404 at both root and /calendar; nklibrary.libcal.com appears unprovisioned",
+  "verdict": "MISMATCH",
+  "comment": "url-collision - nklibrary.libcal.com 404s; real site nklibrary.org lists Tween Yoga Aug 19 and Inside Modern Iran Aug 20",
   "population": "zero"
  },
  "LibCal-KY|||Kenton County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Calendar path returns HTTP 404; root resolves to correct KY library but shows only room-booking policies, no event list",
+  "verdict": "MISMATCH",
+  "comment": "url-collision - libcal calendar path 404s; real events on kentonlibrary.bibliocommons.com e.g. Madcap Puppets Aug 17 2026",
   "population": "zero"
  },
  "LibCal-KY|||Boone County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 404 on /calendar?cid=-1&t=d and on subdomain root; bcpl.libcal.com appears unprovisioned",
+  "verdict": "MISMATCH",
+  "comment": "url-collision - bcpl.libcal.com 404s entirely; real calendar is boone.libnet.info (Library Market), not LibCal",
   "population": "zero"
  },
  "LibCal-KY|||Warren County Public Library": {
@@ -35,23 +35,23 @@
   "population": "zero"
  },
  "WordPress-VA|||Alexandria Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "JS-only render; /events and /events/all-events/ HTML contain only category nav links, no event data",
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure (real site, real dated events listed, e.g. Writers Group at Beatley Aug 16 1:00pm)",
   "population": "zero"
  },
  "WordPress-VA|||Chesapeake Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "JS-only render on Communico events subdomain; HTML is header/nav only, no event listings",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain (DNS ENOTFOUND for chesapeakepubliclibrary.org with and without www)",
   "population": "zero"
  },
  "WordPress-VA|||Henrico County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "301 to henricolibrary-va.libcal.com/calendar?cid=12755; LibCal results pane is JS-rendered and empty in HTML",
+  "comment": "JS-only LibCal calendar, /events redirects to henricolibrary-va.libcal.com which renders no results to a static fetch",
   "population": "zero"
  },
  "WordPress-VA|||Jefferson-Madison Regional Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Calendar is an EventActions JS widget (eventactions.com); only filter controls present in HTML, no events",
+  "comment": "JS-only calendar at /calendar, filter UI renders but no event rows in static HTML",
   "population": "zero"
  },
  "WordPress-GA|||Wheeler County Library (Alamo, GA)": {
@@ -846,7 +846,7 @@
  },
  "WordPress-TN|||Rutherford County Library System": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 403 Forbidden on rcls.org/events",
+  "comment": "bot-blocked, HTTP 403 Forbidden, could not confirm institution identity",
   "population": "zero"
  },
  "WordPress-TN|||Blount County Public Library": {
@@ -856,7 +856,7 @@
  },
  "WordPress-TN|||Collierville Burch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "connect ECONNREFUSED 162.255.119.168:443",
+  "comment": "connection refused on port 443 at 162.255.119.168, host unreachable on repeated attempts",
   "population": "zero"
  },
  "WordPress-TN|||Bartlett Library": {
@@ -886,7 +886,7 @@
  },
  "WordPress-TN|||Tullahoma Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Empty HTML body returned from tullahoma-tn.com/library/events - JS-only render with no content",
+  "comment": "server returns an empty response body on root, library and calendar paths",
   "population": "zero"
  },
  "WordPress-TN|||Lawrenceburg Public Library": {
@@ -906,7 +906,7 @@
  },
  "WordPress-TN|||Rogersville Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "read ECONNRESET on both www and bare host",
+  "comment": "connection reset by peer on repeated attempts",
   "population": "zero"
  },
  "WordPress-TN|||Tipton County Public Library": {
@@ -921,7 +921,7 @@
  },
  "WordPress-TN|||Southeast Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "TLS hostname mismatch - antiochlibrary.org presents a generic Azure App Service wildcard cert, institution not determinable",
+  "comment": "TLS hostname mismatch, certificate covers only azurewebsites.net wildcards",
   "population": "zero"
  },
  "WordPress-TN|||Ardmore Public Library": {
@@ -931,12 +931,12 @@
  },
  "WordPress-TN|||Sam T. Wilson Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 403 Forbidden on arlingtonlibrary.org/home",
+  "comment": "bot-blocked, HTTP 403 Forbidden, note same URL is also assigned to Martha Canfield Memorial VT",
   "population": "zero"
  },
  "WordPress-TN|||The Brentwood Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "301 redirects to a bare IP host https://165.22.62.213/events - unresolvable cross-host redirect",
+  "comment": "301 redirect to bare IP 165.22.62.213, cross-host redirect to an IP not followed",
   "population": "zero"
  },
  "WordPress-TN|||Benton County Library": {
@@ -966,7 +966,7 @@
  },
  "WordPress-TN|||Sequatchie County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 403 Forbidden on dunlaplibrary.org/events",
+  "comment": "bot-blocked, HTTP 403 Forbidden",
   "population": "zero"
  },
  "WordPress-TN|||Englewood Public Library": {
@@ -991,7 +991,7 @@
  },
  "WordPress-TN|||Harriman Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 522 Unknown Status with Retry-After 120 - Cloudflare origin unreachable",
+  "comment": "HTTP 522 origin unreachable behind Cloudflare on repeated attempts",
   "population": "zero"
  },
  "WordPress-TN|||Carroll County Library": {
@@ -1005,8 +1005,8 @@
   "population": "zero"
  },
  "WordPress-TN|||Millard Oakley Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Empty HTML body returned on both www and bare host - JS-only render with no content",
+  "verdict": "MISMATCH",
+  "comment": "url-collision (resolves to Livingston Public Library, Livingston NJ, which lists its own events)",
   "population": "zero"
  },
  "WordPress-TN|||Madisonville Public Library": {
@@ -1021,12 +1021,12 @@
  },
  "WordPress-TN|||Monterey Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 403 Forbidden on the events page",
+  "comment": "bot-blocked, HTTP 403 Forbidden",
   "population": "zero"
  },
  "WordPress-TN|||Mt. Juliet-Harvey Freeman Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "connect ECONNREFUSED 64.98.135.19:443",
+  "comment": "connection refused on port 443 at 64.98.135.19 for root and events paths",
   "population": "zero"
  },
  "WordPress-TN|||Palmer Public Library": {
@@ -1066,7 +1066,7 @@
  },
  "WordPress-TN|||Westmoreland Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "JS-only render; HTML body on / and /events contained only the string HOME | Westmoreland Public, no event markup",
+  "comment": "response truncated to a bare title, no events section rendered, subpages 404",
   "population": "zero"
  },
  "WordPress-TN|||White Pine Public Library": {
@@ -1076,7 +1076,7 @@
  },
  "WordPress-TN|||Franklin County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 403 Forbidden on the events page",
+  "comment": "bot-blocked, HTTP 403 Forbidden",
   "population": "zero"
  },
  "WordPress-TN|||Winfield Public Library": {
@@ -1086,17 +1086,17 @@
  },
  "WordPress-TN|||Franklin Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 403 Forbidden on franklintn.gov library events page",
+  "comment": "bot-blocked, HTTP 403 Forbidden",
   "population": "zero"
  },
  "WordPress-AL|||Florence-Lauderdale Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Correct AL library, but /calendar/ returns only a Calendar heading with no events in HTML (JS embed) and /events/ 404s",
+  "verdict": "MATCHES",
+  "comment": "correct institution Florence AL; Upcoming Events block holds only promo images, no dated events listed",
   "population": "zero"
  },
  "WordPress-AL|||Homewood Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Correct AL library; /events returns nav template only (JS render), /events/all and /events/upcoming both 404",
+  "comment": "JS-only calendar - events grid at /events renders client-side, only nav links present in fetched HTML",
   "population": "zero"
  },
  "WordPress-AL|||Jefferson County Library Cooperative": {
@@ -1111,7 +1111,7 @@
  },
  "WordPress-AL|||Scottsboro Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Homepage HTML contains only a Home nav element (JS-only render); /events/ returns 404",
+  "comment": "JS-only site - homepage and /calendar render near-empty with no institution or event content in HTML",
   "population": "zero"
  },
  "WordPress-AL|||Troy Public Library": {
@@ -1160,8 +1160,8 @@
   "population": "zero"
  },
  "WordPress-AL|||Collinsville Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Empty response body returned on two attempts",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain - collinsvillelibrary.org 307-redirects to a GoDaddy forsale parked page, no library site",
   "population": "zero"
  },
  "WordPress-AL|||Houston-Love Memorial Library - Columbia": {
@@ -1186,12 +1186,12 @@
  },
  "WordPress-AL|||Hale County Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Connection refused (ECONNREFUSED 192.64.119.228:443) on two attempts",
+  "comment": "dead host - ECONNREFUSED on greensborolibrary.org port 443",
   "population": "zero"
  },
  "WordPress-AL|||Guntersville Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Correct AL library but /events returns the site 404 template (Theres Nothing Here); homepage shows no dated events",
+  "verdict": "MATCHES",
+  "comment": "correct institution Guntersville AL; site shows hours only, no scheduled programs with dates",
   "population": "zero"
  },
  "WordPress-AL|||Clyde Nix Public Library": {
@@ -1201,7 +1201,7 @@
  },
  "WordPress-AL|||Hartford - Mcgregor-Mckinney Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 403 Forbidden on hartfordlibrary.org/events",
+  "comment": "bot-blocked - HTTP 403 from hartfordlibrary.org",
   "population": "zero"
  },
  "WordPress-AL|||Blanche R. Solomon Memorial Library": {
@@ -1241,7 +1241,7 @@
  },
  "WordPress-AL|||Burchell Campbell Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Connection failure (Socket is closed) on two attempts to lexingtonlibrary.org",
+  "comment": "connection reset - socket closed on repeated https and http fetches of lexingtonlibrary.org",
   "population": "zero"
  },
  "WordPress-AL|||Lincoln Public Library": {
@@ -1281,12 +1281,12 @@
  },
  "WordPress-AL|||Piedmont Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Connection refused (ECONNREFUSED 216.40.34.41:443) on two attempts",
+  "comment": "dead host - ECONNREFUSED on piedmontlibrary.org port 443",
   "population": "zero"
  },
  "WordPress-AL|||Clay Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "TLS HANDSHAKE_FAILURE_ON_CLIENT_HELLO on pinsonlibrary.org",
+  "comment": "TLS error - SSLV3 handshake failure on pinsonlibrary.org with and without www",
   "population": "zero"
  },
  "WordPress-AL|||Satsuma Public Library": {
@@ -1296,7 +1296,7 @@
  },
  "WordPress-AL|||Evergreen Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Connection reset (ECONNRESET) on two attempts",
+  "comment": "connection reset - ECONNRESET on repeated fetches of evergreenlibrary.org",
   "population": "zero"
  },
  "WordPress-AL|||Sheffield Public Library": {
@@ -1311,7 +1311,7 @@
  },
  "WordPress-AL|||Stevenson Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "TLS self-signed certificate error on stevensonlibrary.org",
+  "comment": "TLS error - self signed certificate on stevensonlibrary.org",
   "population": "zero"
  },
  "WordPress-AL|||Vernon - Mary Wallace Cobb Memorial Library": {
@@ -1321,7 +1321,7 @@
  },
  "WordPress-AL|||Warrior Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Fetch failed with no output on two attempts to warriorlibrary.org",
+  "comment": "fetch failed with no output on two attempts against warriorlibrary.org",
   "population": "zero"
  },
  "WordPress-AL|||Northwest Regional Library": {
@@ -2870,7 +2870,7 @@
  },
  "WordPress-CT|||Andover Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "TLS UNSUPPORTED_PROTOCOL error on both https and http attempts",
+  "comment": "TLS error - UNSUPPORTED_PROTOCOL on andoverlibrary.org, server uses an obsolete SSL version",
   "population": "zero"
  },
  "WordPress-CT|||Ansonia Public Library": {
@@ -2879,18 +2879,18 @@
   "population": "zero"
  },
  "WordPress-CT|||Beacon Falls Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Correct CT library but /events returns the site 404 template (Theres Nothing Here); real events path not located",
+  "verdict": "MATCHES",
+  "comment": "events page states No events at the moment; correct institution Beacon Falls CT",
   "population": "zero"
  },
  "WordPress-CT|||Bethel Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Empty response body returned on two attempts",
+  "comment": "JS-only calendar - homepage and /events both render nav links only, no dated items in HTML",
   "population": "zero"
  },
  "WordPress-CT|||Bethlehem Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Empty response body returned on two attempts",
+  "comment": "page renders essentially blank - only the domain name returned, no content or institution details",
   "population": "zero"
  },
  "WordPress-CT|||Bridgeport Public Library": {
@@ -2925,7 +2925,7 @@
  },
  "WordPress-CT|||Douglas Library Of Hebron": {
   "verdict": "UNVERIFIABLE",
-  "comment": "TLS certificate hostname mismatch - cert only covers *.squarespace.com, not www.hebronlibrary.org",
+  "comment": "TLS error - Squarespace cert does not cover hebronlibrary.org with or without www",
   "population": "zero"
  },
  "WordPress-CT|||East Hampton Public Library": {
@@ -2935,7 +2935,7 @@
  },
  "WordPress-CT|||East Hartford Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 403 Forbidden from easthartfordct.gov",
+  "comment": "bot-blocked - HTTP 403 from easthartfordct.gov",
   "population": "zero"
  },
  "WordPress-CT|||Easton Public Library": {
@@ -2975,17 +2975,17 @@
  },
  "WordPress-CT|||Hartford Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Correct Hartford CT library but hplct.org root has no dated events in HTML; calendar lives on programs.hplct.org which is also nav-only",
+  "comment": "JS-only calendar - hplct.org events paths 404 and hplct.libnet.info/events renders no dated items",
   "population": "zero"
  },
  "WordPress-CT|||Hartland Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Connection failed twice - Socket is closed on www.hartlandlibrary.org",
+  "comment": "connection reset - socket closed on repeated fetches of hartlandlibrary.org",
   "population": "zero"
  },
  "WordPress-CT|||Henry Carter Hull Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Fetch failed twice with no output from www.clintonlibrary.org",
+  "comment": "fetch failed with no output on two attempts against clintonlibrary.org",
   "population": "zero"
  },
  "WordPress-CT|||Ivoryton Library Association": {
@@ -3015,12 +3015,12 @@
  },
  "WordPress-CT|||Louis Piantino Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Seeded /events path returns HTTP 404 and www host has a cert mismatch; root is the correct West Haven CT library with events on LibCal",
+  "comment": "correct institution West Haven CT but events live on an external LibCal instance not reachable from the configured page",
   "population": "zero"
  },
  "WordPress-CT|||Milford Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "ci.milford.ct.us 301-redirects to www.milfordct.us and that events path returns HTTP 404",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint - ci.milford.ct.us 301s to milfordct.us/milford-public-library which returns 404; real site is milfordlibrary.org",
   "population": "zero"
  },
  "WordPress-CT|||North Haven Memorial Library": {
@@ -3055,12 +3055,12 @@
  },
  "WordPress-CT|||Plainville Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "TLS error twice - unable to get local issuer certificate for plainvillelibrary.org",
+  "comment": "TLS error - unable to get local issuer certificate for plainvillelibrary.org",
   "population": "zero"
  },
  "WordPress-CT|||Pomfret Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 403 Forbidden from www.pomfretlibrary.org",
+  "comment": "bot-blocked - HTTP 403 from pomfretlibrary.org",
   "population": "zero"
  },
  "WordPress-CT|||Prospect Public Library": {
@@ -3069,8 +3069,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Salem Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 522 origin unreachable from www.salemlibrary.org",
+  "verdict": "MISMATCH",
+  "comment": "url-collision - salemlibrary.org 301s to cityofsalem.net/community/library which is Salem OR, not Salem CT",
   "population": "zero"
  },
  "WordPress-CT|||Scoville Memorial Library": {
@@ -3520,22 +3520,22 @@
  },
  "WordPress-VT|||Aldrich Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Correct institution (Barre VT) but calendar is an embedded JS widget; page itself carries an Events not displaying? fallback link, no events in HTML",
+  "comment": "JS-embedded calendar widget did not render, page shows an Events not displaying fallback link",
   "population": "zero"
  },
  "WordPress-VT|||Barton Public": {
   "verdict": "UNVERIFIABLE",
-  "comment": "TLS error TLSV1_ALERT_INTERNAL_ERROR on both / and /events",
+  "comment": "TLS internal error during handshake",
   "population": "zero"
  },
  "WordPress-VT|||Benson Public": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 403 Forbidden on both / and /events",
+  "comment": "bot-blocked, HTTP 403 Forbidden",
   "population": "zero"
  },
  "WordPress-VT|||Bethel Public": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Empty response body returned for both / and /events",
+  "verdict": "MISMATCH",
+  "comment": "url-collision (resolves to Bethel Public Library, Bethel CT, not Bethel VT)",
   "population": "zero"
  },
  "WordPress-VT|||Bradford Public": {
@@ -3550,12 +3550,12 @@
  },
  "WordPress-VT|||Cabot Public": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 404 Not Found on both /events and /",
+  "comment": "HTTP 404 Not Found at the configured URL",
   "population": "zero"
  },
  "WordPress-VT|||Chelsea Public": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "JS-only render; HTML body is just the word Loading... on both / and /events",
+  "verdict": "MISMATCH",
+  "comment": "parked-domain (302 redirects to ww547.chelsealibrary.org which serves only a Loading placeholder, not a library site)",
   "population": "zero"
  },
  "WordPress-VT|||Cobleigh Public Library": {
@@ -3580,12 +3580,12 @@
  },
  "WordPress-VT|||Greensboro Free": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Connection refused (ECONNREFUSED 192.64.119.228:443) on both www and apex host",
+  "comment": "connection refused on port 443 at 192.64.119.228 for root and events paths",
   "population": "zero"
  },
  "WordPress-VT|||Hartford": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 403 Forbidden on both / and /events",
+  "comment": "bot-blocked, HTTP 403 Forbidden",
   "population": "zero"
  },
  "WordPress-VT|||Hartland Public Library": {
@@ -3594,8 +3594,8 @@
   "population": "zero"
  },
  "WordPress-VT|||Haskell Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 525 (Cloudflare origin SSL handshake failed) on both /library/events and /",
+  "verdict": "MISMATCH",
+  "comment": "url-collision (haskellopera.com is a default empty WordPress blog with a Hello world post and no library, /library 404s)",
   "population": "zero"
  },
  "WordPress-VT|||Huntington Public": {
@@ -3610,7 +3610,7 @@
  },
  "WordPress-VT|||Martha Canfield Memorial": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 403 Forbidden on both /home and /",
+  "comment": "bot-blocked, HTTP 403 Forbidden, and the URL is a TN domain also assigned to Sam T. Wilson so a collision is suspected",
   "population": "zero"
  },
  "WordPress-VT|||Moore Free": {
@@ -3635,12 +3635,12 @@
  },
  "WordPress-VT|||Proctor Free": {
   "verdict": "UNVERIFIABLE",
-  "comment": "ECONNRESET on /events; retry on / failed TLS cert check (cert altnames are *.bluehost.com, host not covered)",
+  "comment": "TLS hostname mismatch, certificate is bluehost.com parking wildcard",
   "population": "zero"
  },
  "WordPress-VT|||Readsboro Community": {
   "verdict": "UNVERIFIABLE",
-  "comment": "TLS HANDSHAKE_FAILURE_ON_CLIENT_HELLO on both /events and /",
+  "comment": "SSLv3 alert handshake failure",
   "population": "zero"
  },
  "WordPress-VT|||Rochester Public": {
@@ -3660,7 +3660,7 @@
  },
  "WordPress-VT|||Shrewsbury": {
   "verdict": "UNVERIFIABLE",
-  "comment": "TLS HANDSHAKE_FAILURE_ON_CLIENT_HELLO on both /events and /",
+  "comment": "SSLv3 alert handshake failure",
   "population": "zero"
  },
  "WordPress-VT|||Stamford Community": {
@@ -3669,8 +3669,8 @@
   "population": "zero"
  },
  "WordPress-VT|||Stowe Free": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Stale path: stowelibrary.org/events 301s to stowefreelibrary.org/events which serves a 404 page; correct institution but no reachable events path",
+  "verdict": "MATCHES",
+  "comment": "correct institution Stowe VT via redirect to stowefreelibrary.org, no dated events on the homepage",
   "population": "zero"
  },
  "WordPress-VT|||Tenney Memorial": {
@@ -3695,7 +3695,7 @@
  },
  "WordPress-VT|||Windsor Public": {
   "verdict": "UNVERIFIABLE",
-  "comment": "TLS HANDSHAKE_FAILURE_ON_CLIENT_HELLO on both /events and /",
+  "comment": "SSLv3 alert handshake failure",
   "population": "zero"
  },
  "CivicRec-Parks-Eastern|||Riverview Gymnastics Center": {
@@ -3742,5 +3742,95 @@
   "verdict": "MISMATCH",
   "comment": "Sampled 6 rows: several titles are bare calendar navigation labels, not real events - 'April 2027', 'September 2026', 'June 2026', 'October 2026'. This is a real extraction bug where the scraper is picking up month/year calendar-nav elements as if they were events, and the fake 'events' with year numbers in the title are then getting randomly age-bucketed (e.g. 'April 2027' landed in Babies & Toddlers 0-2) - the same class of numeric-misread issue already tracked under the AGE-YEARPAIR-MISREAD pinned note, but the deeper bug here is upstream: these rows shouldn't be scraped as events at all.",
   "population": "allages"
+ },
+ "Venue-Events-ScienceArts|||Art Institute of Chicago": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no URL in scraper config",
+  "population": "zero"
+ },
+ "Venue-Events-ScienceArts|||EcoTarium": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no URL in scraper config",
+  "population": "zero"
+ },
+ "Venue-Events-ScienceArts|||Fernbank Museum of Natural History": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no URL in scraper config",
+  "population": "zero"
+ },
+ "Venue-Events-ScienceArts|||Griffin Museum of Science and Industry": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "JS-only calendar - events area renders as Loading and no dated items appear in fetched HTML",
+  "population": "zero"
+ },
+ "Venue-Events-ScienceArts|||Imagination Station": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure - real site lists many dated events e.g. Sensory Friendly Sunday Aug 16 2026 and Ice Cream Chemistry Aug 22 2026",
+  "population": "zero"
+ },
+ "Venue-Events-ScienceArts|||Intrepid Sea Air & Space Museum": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure - real dated events listed e.g. Summer Tasting Fest Aug 21 2026 and Movie Night Fievel Goes West Aug 28 2026",
+  "population": "zero"
+ },
+ "Venue-Events-ScienceArts|||Kamin Science Center": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no URL in scraper config",
+  "population": "zero"
+ },
+ "Venue-Events-ScienceArts|||National Building Museum": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no URL in scraper config",
+  "population": "zero"
+ },
+ "WordPress-AL|||Athens-Limestone Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure - homepage lists dated events e.g. Author Talk with Connie Pearson Aug 20 and Percussion Discussion Aug 21",
+  "population": "zero"
+ },
+ "WordPress-AL|||Lafayette Pilot Public Library": {
+  "verdict": "MATCHES",
+  "comment": "resolves to Chambers County Library which includes the LaFayette AL branch; calendar page lists no dated events",
+  "population": "zero"
+ },
+ "WordPress-AL|||Walter J. Hanna Memorial Library": {
+  "verdict": "MATCHES",
+  "comment": "correct institution Fairfield AL; page shows hours and contact only, no event announcements",
+  "population": "zero"
+ },
+ "WordPress-TN|||Humphreys County Public Library": {
+  "verdict": "MATCHES",
+  "comment": "correct institution Waverly TN, Upcoming Events page renders placeholder text only with no dated events",
+  "population": "zero"
+ },
+ "WordPress-TN|||Newbern City Library": {
+  "verdict": "MATCHES",
+  "comment": "correct institution Newbern TN, no calendar or dated events, only an undated LEGO Club note",
+  "population": "zero"
+ },
+ "WordPress-VT|||Cutler Memorial": {
+  "verdict": "MATCHES",
+  "comment": "correct institution Plainfield VT, no dated events on the homepage or the News and Programs page",
+  "population": "zero"
+ },
+ "WordPress-VT|||Fair Haven Free": {
+  "verdict": "MATCHES",
+  "comment": "correct institution Fair Haven VT, Upcoming Events nav exists but no dated events are listed",
+  "population": "zero"
+ },
+ "WordPress-VT|||G. M. Kelley Community": {
+  "verdict": "MATCHES",
+  "comment": "correct institution Wolcott VT, only historical posts, newest dated entry is June 2015, nothing upcoming",
+  "population": "zero"
+ },
+ "WordPress-VT|||Roger Clark Memorial": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "SSLv3 alert handshake failure",
+  "population": "zero"
+ },
+ "WordPress-VT|||Roxbury Free": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure (real site, real dated events listed, e.g. August 29th Lego Brick Builders 10:00am-12:00pm)",
+  "population": "zero"
  }
 }

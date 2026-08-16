@@ -4067,3 +4067,27 @@ Group 3 rotation day (day 15 → Group 3, the second Group 3 run this cycle, aft
 All 5 of LibCal-FL's configured sites are represented ("📍 5 sites tracked" in the run's own summary; "Failed: 2" matches the two rows with no `Found` line). The per-site sum (20+10+1=31) runs slightly below the scraper's aggregate FOUND (33) reported in `scraper-summary.log`; the 2-event gap isn't recoverable from stdout and isn't worth chasing for this audit.
 
 **Cycle-completion check: still not complete.** Comparing every scraper logged 2026-08-10 through today against the 106 active library-family scrapers (`isScraperActive()` over `scrapers/scraper-registry.js`, excluding parks/venue/festival/community families that share the same per-site log shape but aren't libraries), 61 have at least one row this cycle and **46 do not**. Almost all of the gap is Group 2, which has never had a full scheduled rotation run this cycle — 2026-08-11 was a manual WordPress-NC/CT/TN debugging session that only incidentally touched a few Group 2 scrapers, and no make-up Group 2 run has landed since. Missing: BiblioCommons-GA, BiblioCommons-NC, BiblioCommons-NJ, BiblioCommons-VA, Berks-County, Brooklyn-Library, Cecil-County, Communico-AL, Communico-DC, Communico-GA, Communico-KY, Communico-MA, Communico-NC, Communico-NJ, Communico-SC, Communico-VA, CustomDrupal-Libraries, Drupal-Pennsylvania, EventActions-Libraries, FreeLibrary-Philadelphia, Graniculator-Morris, Howard-County, Intercept-Camden, LibCal-CT, LibCal-GA, LibCal-MA, LibCal-NY1, LibCal-PA, LibCal-TN, LibCal-VT, LibCal-WV, LibraryMarket, LibraryMarket-GA, LibraryMarket-ME-NH-MA, Louisville-Library, Prince-Georges-County, Rockbridge-Regional, SouthwestGeorgia-GA, Tockify-Horry, Westmoreland-Library, WordPress-FL, WordPress-MD, WordPress-ME, WordPress-MS, WordPress-NJ, WordPress-NY. The cycle continues; no `Cycle complete` marker is added.
+
+
+## 2026-08-16
+
+Group 1 rotation day; 50 non-MacaroniKid scrapers completed. MacaroniKid Group 1 (9 states, ~139 sites) started 13:43 EST and was **still running** when this section was written, so its states are not represented here and will need to land in a later section of this cycle.
+
+**Only scrapers new to the current cycle are listed**, per this file's don't-duplicate rule. 26 of today's scrapers produced per-site `Found N events` output, but 24 of those were already logged this cycle (most on 2026-08-12's recovery pass), leaving **Communico-MA and Communico-VA** as the only genuinely new per-site entries. A further **8 library scrapers ran today with no per-site log output at all** and are recorded with their aggregate FOUND from `scraper-summary.log`, labelled as aggregates rather than silently presented as one site.
+
+**Prince-Georges-County shows 0 and that row is the last one it will ever produce.** Diagnosed today as a platform migration — pgcmls.info moved to Communico, and the bespoke scraper was still parsing the pre-migration DOM, extracting only nav chrome ("events", "Calendar"). The library is now covered by **Communico-MD**, verified live the same day at **185 events across 26 branch venues**, and the dead scraper was deleted. See `SCRAPER-FIX-LOG.jsonl`. Because Communico-MD was already logged this cycle (2026-08-15), those 185 events do not appear as rows here; they will from the next Group 3 rotation.
+
+| Library Website | State | Scraper | Events Found | Link |
+|---|---|---|---|---|
+| Worcester Public Library | MA | Communico-MA | 86 | https://mywpl.libnet.info/events |
+| Prince William Public Library | VA | Communico-VA | 107 | https://pwcgov.libnet.info/events |
+| BiblioCommons-NJ (scraper aggregate — 43 configured sites, no per-site log output) | NJ | BiblioCommons-NJ | 419 | — |
+| BiblioCommons-VA (scraper aggregate — 43 configured sites, no per-site log output) | VA | BiblioCommons-VA | 340 | — |
+| Communico-DC (scraper aggregate — 96 configured sites, no per-site log output) | DC | Communico-DC | 9 | — |
+| Communico-NC (scraper aggregate — 96 configured sites, no per-site log output) | NC | Communico-NC | 2 | — |
+| Drupal-Pennsylvania (scraper aggregate — 2 configured sites, no per-site log output) | PA | Drupal-Pennsylvania | 1665 | — |
+| FreeLibrary-Philadelphia (scraper aggregate — no per-site log output) | PA | FreeLibrary-Philadelphia | 1000 | — |
+| Prince-Georges-County (scraper aggregate — no per-site log output) | MD | Prince-Georges-County | 0 | https://pgcmls.info/events |
+| Westmoreland-Library (scraper aggregate — no per-site log output) | PA | Westmoreland-Library | 18 | — |
+
+**Cycle-completion check: not complete.** Of 106 active library-family scrapers, **70 have at least one entry this cycle and 36 do not**. The gap remains almost entirely Group 2, which still has not had a full scheduled rotation this cycle — the 2026-08-13 `macaroni-group2` log is two single-state manual runs (`--state ME`, `--state NH`), not a group pass. Missing: Berks-County, BiblioCommons-GA, BiblioCommons-NC, Brooklyn-Library, Cecil-County, Communico-AL, Communico-GA, Communico-KY, Communico-NJ, Communico-SC, CustomDrupal-Libraries, EventActions-Libraries, Graniculator-Morris, Howard-County, Intercept-Camden, LibCal-CT, LibCal-GA, LibCal-MA, LibCal-NY1, LibCal-PA, LibCal-TN, LibCal-VT, LibCal-WV, LibraryMarket, LibraryMarket-GA, LibraryMarket-ME-NH-MA, Louisville-Library, Rockbridge-Regional, SouthwestGeorgia-GA, Tockify-Horry, WordPress-FL, WordPress-MD, WordPress-ME, WordPress-MS, WordPress-NJ, WordPress-NY.
