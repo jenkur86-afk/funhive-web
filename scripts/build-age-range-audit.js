@@ -102,15 +102,25 @@ async function main() {
   const scrapersSeen = new Set(list.map(s => s.scraper));
 
   // Render
+  // COLUMN ORDER IS LOAD-BEARING. scripts/generate-site-report.js's loadAges() matches
+  // the header /Site \| Scraper \| All Ages/ and reads a fixed 10 columns: brackets at
+  // indices 2-7, Total at 8, Link at 9. An earlier version of this builder emitted Link
+  // in position 3 plus an extra "Other" column, so the header never matched and every
+  // section it produced contributed ZERO rows to the report — silently, since the
+  // generator just reported the rows it could parse. Do not reorder these.
+  //
+  // "Other" (rows whose age_range is unset or non-standard) is deliberately not its own
+  // column: Total is the true row count, so the report derives the discrepancy itself and
+  // renders it as "total != bracket sum". That is the same information, in the shape the
+  // consumer already understands.
   const out = [];
-  out.push(`| Site | Scraper | Link | All Ages | Babies 0-2 | Preschool 3-5 | Kids 6-8 | Tweens 9-12 | Teens 13-18 | Other | Total |`);
-  out.push(`|---|---|---|---|---|---|---|---|---|---|---|`);
+  out.push(`| Site | Scraper | All Ages | Babies 0-2 | Preschool 3-5 | Kids 6-8 | Tweens 9-12 | Teens 13-18 | Total | Link |`);
+  out.push(`|---|---|---|---|---|---|---|---|---|---|`);
   for (const s of list) {
     const cells = BRACKETS.map(b => s.counts[b] || 0);
-    const other = s.total - cells.reduce((a, b) => a + b, 0);
     const link = s.link ? `[cal](${s.link})` : '—';
     const site = s.venue.replace(/\|/g, '/');
-    out.push(`| ${site} | ${s.scraper} | ${link} | ${cells.join(' | ')} | ${other} | ${s.total} |`);
+    out.push(`| ${site} | ${s.scraper} | ${cells.join(' | ')} | ${s.total} | ${link} |`);
   }
 
   out.push('');

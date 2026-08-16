@@ -87,7 +87,12 @@ async function main() {
 
     const pin = SITE_PIN.exec(line);
     if (pin && !/Using |Created activity|Library branch detected/.test(pin[1])) {
-      pendingSite = pin[1].trim();
+      // Venue-Events-ScienceArts logs "📍 Scraping: {venue} (ST)" rather than the
+      // bare "📍 {venue} (...)" the other families use. Without stripping the verb,
+      // the site name is stored as "Scraping: Adler Planetarium", which joins to
+      // nothing — not the scraper's config array, not a prior verdict in
+      // reports/verification-comments.json. Site name IS the join key here.
+      pendingSite = pin[1].replace(/^Scraping:\s*/i, '').trim();
       continue;
     }
     const scr = SITE_SCRAPING.exec(line);
