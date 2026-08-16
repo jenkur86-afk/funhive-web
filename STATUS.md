@@ -18,7 +18,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 | 3. Zero confirmed bugs | 142 | · | 0 | mostly blocked on gate 2 |
 | 4. Zero unknown sites | 428 | · | 0 | independent — re-checking is its own pass |
 | 5. Age brackets resolved | 35.3% | · | max (best 40.6%) | no fixed target — maximise; ratchets vs best ever |
-| 6. Names join to registry | 48.3% ⚠stale | +1.1 ✅ | 100% | planned migration, not daily work |
+| 6. Names join to registry | 48.3% ⚠stale | · | 100% | planned migration, not daily work |
 | 7. Provenance (source_url) | 62% ⚠stale | · | 90% | partly blocked on rotation |
 | 8. Coverage known per county | 0 | · | 1 | FINAL — blocked on all of the above |
 
