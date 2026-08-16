@@ -4049,3 +4049,21 @@ Group 3 rotation day, day 3 of the current cycle. The cycle is **not** being mar
 | Communico-PA libraries (aggregate — per-site stdout not captured) | PA | Communico-PA | 3 |
 | Communico-NH libraries (aggregate — per-site stdout not captured) | NH | Communico-NH | 2 |
 
+
+## 2026-08-15
+
+Group 3 rotation day (day 15 → Group 3, the second Group 3 run this cycle, after 2026-08-12's recovery). Today's run covered 32 library-family scrapers: LibCal-FL, LibCal-NJ, LibCal-SC, LibCal-VA, LibCal-ME, LibCal-VA2, Communico-FL, Communico-MD, Communico-NY, Communico-PA, Communico-NH, Communico-TN, Communico-WV, BiblioCommons-MA, WordPress-PA, WordPress-MA, WordPress-KY, WordPress-SC, WordPress-WV, WordPress-DE, WordPress-RI, WordPress-NH, LibraryMarket-PA, LibraryMarket-NC, Dorchester-County, Wicomico-Public, Allentown-Public, WithApps-Libraries, WordPress-Events-Calendar, Squarespace-Libraries, Drupal-Virginia, Nashville-Library-TN, Orange-County-Library-FL (GoogleCalendar-MD and SandhillRegional-NC also ran today but were already logged this cycle on 2026-08-12). Every one of these except **LibCal-FL** was already logged earlier in this cycle (all 31 on 2026-08-12, as aggregates, during the Puppeteer-crash recovery), so per the "don't duplicate a scraper already logged this cycle" rule they are skipped here.
+
+**LibCal-FL is new to this cycle.** It's the one scraper missing from 2026-08-12's table: that day's incident note said 37 scrapers failed to launch Chromium and "all 36 recovery-eligible scrapers were re-run" — LibCal-FL was the 37th, not recovered that day. It ran normally on today's scheduled pass and its per-site `📍 {library}` / `Found {N} events` lines reached `scraper-stdout.log` intact (lines 986486–986546), giving a true per-site breakdown rather than an aggregate.
+
+| Library Website | State | Scraper | Events Found | Link |
+|---|---|---|---|---|
+| Lakeland Public Library | FL | LibCal-FL | 20 | https://lakelandpl.libcal.com/calendar?cid=2787&t=d&d=0000-00-00&cal=2787&inc=0 |
+| Marion County Public Library System | FL | LibCal-FL | 10 | https://mcpls.libcal.com/ |
+| Palm Beach County Library System | FL | LibCal-FL | 1 | https://pbclibrary.libcal.com/calendar?cid=-1&t=d |
+| St. Johns County Public Library | FL | LibCal-FL | — (fetch failed, no per-site output) | https://sjcpls.libcal.com/calendar?cid=-1&t=d |
+| Seminole County Library | FL | LibCal-FL | — (fetch failed, no per-site output) | https://seminolecountylibrary.libcal.com/calendar?cid=-1&t=d |
+
+All 5 of LibCal-FL's configured sites are represented ("📍 5 sites tracked" in the run's own summary; "Failed: 2" matches the two rows with no `Found` line). The per-site sum (20+10+1=31) runs slightly below the scraper's aggregate FOUND (33) reported in `scraper-summary.log`; the 2-event gap isn't recoverable from stdout and isn't worth chasing for this audit.
+
+**Cycle-completion check: still not complete.** Comparing every scraper logged 2026-08-10 through today against the 106 active library-family scrapers (`isScraperActive()` over `scrapers/scraper-registry.js`, excluding parks/venue/festival/community families that share the same per-site log shape but aren't libraries), 61 have at least one row this cycle and **46 do not**. Almost all of the gap is Group 2, which has never had a full scheduled rotation run this cycle — 2026-08-11 was a manual WordPress-NC/CT/TN debugging session that only incidentally touched a few Group 2 scrapers, and no make-up Group 2 run has landed since. Missing: BiblioCommons-GA, BiblioCommons-NC, BiblioCommons-NJ, BiblioCommons-VA, Berks-County, Brooklyn-Library, Cecil-County, Communico-AL, Communico-DC, Communico-GA, Communico-KY, Communico-MA, Communico-NC, Communico-NJ, Communico-SC, Communico-VA, CustomDrupal-Libraries, Drupal-Pennsylvania, EventActions-Libraries, FreeLibrary-Philadelphia, Graniculator-Morris, Howard-County, Intercept-Camden, LibCal-CT, LibCal-GA, LibCal-MA, LibCal-NY1, LibCal-PA, LibCal-TN, LibCal-VT, LibCal-WV, LibraryMarket, LibraryMarket-GA, LibraryMarket-ME-NH-MA, Louisville-Library, Prince-Georges-County, Rockbridge-Regional, SouthwestGeorgia-GA, Tockify-Horry, Westmoreland-Library, WordPress-FL, WordPress-MD, WordPress-ME, WordPress-MS, WordPress-NJ, WordPress-NY. The cycle continues; no `Cycle complete` marker is added.

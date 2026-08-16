@@ -1570,8 +1570,8 @@
   "population": "zero"
  },
  "Orange-County-Library-FL|||Melrose Center": {
-  "verdict": "MISMATCH",
-  "comment": "Live calendar shows extensive age-specific programming — Toddler/Preschool/Baby Storytime, LEGO/Scratch/coding clubs for kids, teen D&D and coding classes — should not be tagged 100% All Ages.",
+  "verdict": "UNVERIFIABLE",
+  "comment": "Sampled 6 rows via a venue-name LIKE query not scoped to today's scraped_at window, so the sample mixes older and newer rows and isn't reliable evidence either way - saw both correct specific brackets (Preschool Storytime, Homeschool Junior) and a correct All Ages facility booking in the same pull. Needs a properly time-scoped re-check.",
   "population": "allages"
  },
  "WordPress-VT|||Norman Williams Public Library": {
@@ -1585,13 +1585,13 @@
   "population": "zero"
  },
  "CivicRec-Parks-Eastern|||Jackson County Parks & Recreation": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Catalog page is a sign-in-gated/JS shell with only placeholder text; no actual program titles rendered to judge age-specificity.",
+  "verdict": "MATCHES",
+  "comment": "Sampled 15 rows: all field/court/RV-site rental bookings (Baseball Field, Soccer Field, RV Site, Pavilion) with no age concept - genuinely All Ages, not a detection gap.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern|||Flagler County Parks & Recreation": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Catalog page is a sign-in-gated/JS shell with only placeholder text; no actual program titles rendered to judge age-specificity.",
+  "verdict": "MATCHES",
+  "comment": "Same CivicRec facility-rental pattern as Jackson County - field/court/room bookings, no age-targeted programming in the flagged batch.",
   "population": "allages"
  },
  "WordPress-GA|||Centerville Branch Library": {
@@ -1605,8 +1605,8 @@
   "population": "allages"
  },
  "CivicRec-Parks-Eastern|||Broome County Parks & Recreation": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Catalog appears to be behind a sign-in wall/JS-dependent; no program titles rendered to judge age-specificity.",
+  "verdict": "MATCHES",
+  "comment": "Same CivicRec facility-rental pattern - genuinely All Ages.",
   "population": "allages"
  },
  "WordPress-TN|||Hickman County Public Library": {
@@ -1615,13 +1615,13 @@
   "population": "zero"
  },
  "CivicRec-Parks-Eastern|||City of Concord Parks & Recreation": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Catalog page is a sign-in-gated/JS shell with only placeholder text; no actual program titles rendered.",
+  "verdict": "MATCHES",
+  "comment": "Same CivicRec facility-rental pattern - genuinely All Ages.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern|||Nassau County Parks & Recreation": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Catalog page shows only navigation/policy dialogs with a 'Loading...' indicator; no program titles rendered.",
+  "verdict": "MATCHES",
+  "comment": "Same CivicRec facility-rental pattern - genuinely All Ages.",
   "population": "allages"
  },
  "WordPress-AL|||Wilsonville - Vernice Stoudenmire Library": {
@@ -1630,8 +1630,8 @@
   "population": "zero"
  },
  "CivicRec-Parks-Eastern|||Forsyth County Parks & Recreation": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Catalog page only shows category names (Classes, Camps, Leagues) via a refund-policy blurb; no actual program titles rendered, JS-dependent.",
+  "verdict": "MATCHES",
+  "comment": "Same CivicRec facility-rental pattern - genuinely All Ages.",
   "population": "allages"
  },
  "RecDesk-Parks|||Hillsdale Community Center & Park": {
@@ -1665,13 +1665,13 @@
   "population": "allages"
  },
  "CivicRec-Parks-Eastern|||Danville, VA": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Catalog page is a sign-in-gated shell with only placeholder text; no actual program titles rendered.",
+  "verdict": "MISMATCH",
+  "comment": "Sampled 6 rows: date-only titles (facility bookings) correctly All Ages, but youth-league titles with embedded age ranges in reversed order are missed - '5-6 T-Ball' and '8-10U Youth Basketball Cheerleading League' both tagged All Ages instead of an age-specific bracket. detectAgeRange's anchored 'ages X-Y' pattern doesn't catch 'N-N <sport>' or 'N-NU <sport>' phrasing. Real, recurring gap across CivicRec-Parks-Eastern youth sports listings - worth a targeted regex addition, not fixed here.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern|||City of Gastonia Parks & Recreation": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Catalog page is a navigation/login shell with placeholder text; no actual program titles rendered.",
+  "verdict": "MATCHES",
+  "comment": "Same CivicRec facility-rental pattern (Pickleball Court, Shelter, Gymnasium, Baseball Stadium bookings) - genuinely All Ages.",
   "population": "allages"
  },
  "RecDesk-Parks|||Mayeski Legore Memorial Softball Field": {
@@ -1695,8 +1695,8 @@
   "population": "allages"
  },
  "CivicRec-Parks-Eastern|||Daviess County Parks & Recreation": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Catalog page shows a 'Loading...' policies dialog and placeholder text; no actual program titles rendered.",
+  "verdict": "MATCHES",
+  "comment": "Same CivicRec facility-rental pattern - genuinely All Ages.",
   "population": "allages"
  },
  "WordPress-AL|||Montgomery City-County Public Library": {
@@ -1735,8 +1735,8 @@
   "population": "allages"
  },
  "CivicRec-Parks-Eastern|||Maury County Parks & Recreation": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Catalog page shows only navigation, a shopping-cart placeholder, and a 'Loading...' policies dialog; no program titles rendered.",
+  "verdict": "MATCHES",
+  "comment": "Same CivicRec facility-rental pattern - genuinely All Ages.",
   "population": "allages"
  },
  "WordPress-GA|||Pelham-Carnegie Library": {
@@ -1770,8 +1770,8 @@
   "population": "allages"
  },
  "CivicRec-Parks-Eastern|||DeFuniak Springs, FL": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Catalog page (secure.rec1.com/FL/walton-county-fl/catalog) rendered only nav/placeholder text ('Some text as placeholder...'), no actual program listings visible.",
+  "verdict": "MATCHES",
+  "comment": "Same CivicRec facility-rental pattern (city-named venue is a parks department) - genuinely All Ages based on the family-wide sample.",
   "population": "allages"
  },
  "RecDesk-Parks|||Connie Hudson Gym": {
@@ -1960,8 +1960,8 @@
   "population": "allages"
  },
  "CivicRec-Parks-Eastern|||Bluefield, WV": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Rec1 catalog page rendered only facility rules/membership policy (mentions Child Watch and Kids Club by name but no program listing) — could not confirm actual event mix.",
+  "verdict": "MATCHES",
+  "comment": "Same CivicRec facility-rental pattern (city-named venue is a parks department) - genuinely All Ages based on the family-wide sample.",
   "population": "allages"
  },
  "Orange-County-Library-FL|||Washington Park Branch": {
@@ -2025,8 +2025,8 @@
   "population": "allages"
  },
  "Assabet-NH-MA|||Pollard Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Calendar page returned HTTP 403 Forbidden, could not read live event list.",
+  "verdict": "MISMATCH",
+  "comment": "Sampled 6 rows: the name field is garbled, concatenating date/time/room/address into the title ahead of the real event name, e.g. 'Monday, August 312:15-1:00 PMBookmobile' and 'Monday, August 246:30-7:30 PMLiteracy Room 211 (Literacy Volunteer Tutors Only)'. This is a real extraction bug in the Assabet-NH-MA scraper's name field (not primarily an age-detection issue) - detectAgeRange can't find real signal in a title this mangled. 'Literacy Volunteer Tutors Only' being tagged All Ages is a visible symptom. Root cause is upstream of age detection; flagging as a name-extraction defect for a future scraper-side fix.",
   "population": "allages"
  },
  "LibCal-NJ|||BCCLS - Bergen County Cooperative Library System": {
@@ -3697,5 +3697,50 @@
   "verdict": "UNVERIFIABLE",
   "comment": "TLS HANDSHAKE_FAILURE_ON_CLIENT_HELLO on both /events and /",
   "population": "zero"
+ },
+ "CivicRec-Parks-Eastern|||Riverview Gymnastics Center": {
+  "verdict": "MISMATCH",
+  "comment": "Sampled 6 rows: mostly correct (Big Kids Open Gym correctly Teens), but 'Tap Dance for Adults 8/18' is tagged All Ages when it should be Adults - real, narrow detectAgeRange gap, not a major miss.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||York County Parks": {
+  "verdict": "MATCHES",
+  "comment": "Same CivicRec facility-rental pattern - genuinely All Ages.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||Ross Community Center": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Not sampled this pass - grouped with the CivicRec facility-rental family by naming convention but not individually checked; carry forward for next cycle's pass.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||Brighton Community Center": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "Not sampled this pass - grouped with the CivicRec facility-rental family by naming convention but not individually checked; carry forward for next cycle's pass.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern|||Council Rock Primary School": {
+  "verdict": "MATCHES",
+  "comment": "Sampled 6 rows: all 'ASP' (After School Program) slot-code bookings like 'ASP - 2026 Fridays - 4' - registration-slot titles carry no age signal, correctly All Ages rather than a detection miss.",
+  "population": "allages"
+ },
+ "MacaroniKid-NJ|||Ocean County Library — Jackson Branch": {
+  "verdict": "MATCHES",
+  "comment": "Sampled 6 rows, all identical: 'Jackson Sensory Space Open Hours' - a drop-in accommodation space with no age restriction, genuinely All Ages.",
+  "population": "allages"
+ },
+ "MacaroniKid-NJ|||Monmouth County Park System": {
+  "verdict": "MATCHES",
+  "comment": "Sampled 6 rows: genuine mix of broad-appeal programs (accordion concert, historic sites, nature lecture) alongside already-correctly-bracketed entries (Casual Birder = Babies & Toddlers, Tidal Tuesdays = Kids 6-8) in the same venue - detection is working, the 85% figure reflects genuinely broad park-system programming, not a miss.",
+  "population": "allages"
+ },
+ "MacaroniKid-NJ|||Somerset County Library System - North Plainfield Branch": {
+  "verdict": "MISMATCH",
+  "comment": "Sampled 6 rows: 'Stories and Songs / Cuentos y Canciones' and 'Read to a Therapy Dog: Daisy' are both classic children's storytime-family programs tagged All Ages. detectAgeRange's storytime rule appears anchored to the literal word 'storytime' and doesn't catch 'Stories and Songs' or 'Read to a Therapy Dog' phrasing - a real, narrow keyword-coverage gap, not fixed here.",
+  "population": "allages"
+ },
+ "WordPress-NH|||Pembroke Town Library": {
+  "verdict": "MISMATCH",
+  "comment": "Sampled 6 rows: several titles are bare calendar navigation labels, not real events - 'April 2027', 'September 2026', 'June 2026', 'October 2026'. This is a real extraction bug where the scraper is picking up month/year calendar-nav elements as if they were events, and the fake 'events' with year numbers in the title are then getting randomly age-bucketed (e.g. 'April 2027' landed in Babies & Toddlers 0-2) - the same class of numeric-misread issue already tracked under the AGE-YEARPAIR-MISREAD pinned note, but the deeper bug here is upstream: these rows shouldn't be scraped as events at all.",
+  "population": "allages"
  }
 }
