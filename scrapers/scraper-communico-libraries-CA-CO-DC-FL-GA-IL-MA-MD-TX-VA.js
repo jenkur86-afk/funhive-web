@@ -721,7 +721,7 @@ const LIBRARY_SYSTEMS = [
     zipCode: '01608'
   },
 
-  // MARYLAND (9 libraries)
+  // MARYLAND (8 libraries)
   {
     name: 'Baltimore County Public Library',
     url: 'https://events.bcpl.info/events',
@@ -784,6 +784,22 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.aacpl.net',
     city: 'Annapolis',
     zipCode: '21401'
+  },
+  {
+    // Migrated to Communico from its old bespoke event grid (confirmed 2026-08-16:
+    // page config emits client:'pgcmls', apiServer:'https://api.communico.co').
+    // Replaces the standalone Prince-Georges-County scraper, which targeted the
+    // pre-migration DOM and was deleted the same day — see SCRAPER-FIX-LOG.jsonl.
+    // This install serves events from the widget only; its /eeventcaldata endpoint
+    // returns [], so it takes the Puppeteer path rather than the API-first path.
+    // First live run here: 185 events across 26 branch venues.
+    name: "Prince George's County Memorial Library System",
+    url: 'https://pgcmls.info/events',
+    county: "Prince George's",
+    state: 'MD',
+    website: 'https://pgcmls.info',
+    city: 'Hyattsville',
+    zipCode: '20781'
   },
   // Howard County Library System and Frederick County Public Libraries removed —
   // they use LibraryCalendar.com, not Communico. Covered by scraper-librarycalendar-libraries-MD-VA.js
@@ -1171,6 +1187,41 @@ const LIBRARY_SYSTEMS = [
 
 // Note: geocodeAddress is now imported from geocoding-helper.js with fallback support
 
+/**
+ * Build the conformant `scraper_name` for one library.
+ *
+ * This file is multi-site (90+ libraries across 28 registry keys), so CLAUDE.md's
+ * "Scraper Naming" rules require `<registryKey>-<siteSlug>` — one distinct name per
+ * site, never a bare key, never a display name. Registry keys for this family are
+ * exactly `Communico-<ST>`, so the key is derivable from library.state.
+ *
+ * Until 2026-08-16 this was never set at all: flattenEvent() fell back to
+ * metadata.sourceName and wrote the library's DISPLAY NAME ("Baltimore County Public
+ * Library"), which joins to no registry entry. That is the FREE_TEXT drift class in
+ * scripts/check-scraper-names.js.
+ *
+ * The slug comes from the listing URL's hostname, never the display name. Leading
+ * GENERIC labels are stripped before the identifying one is taken: `www`, but also
+ * `events`, `calendar`, `programs`, `catalog`, `go`. Taking the first label blindly
+ * would slug events.bcpl.info -> "events" and collapse every library on an `events.`
+ * subdomain onto one name — the same failure as the WordPress-MD `-www` collapse,
+ * where 9 of 12 URLs carried www and a naive split merged 12 libraries into one.
+ */
+const GENERIC_HOST_LABELS = new Set([
+  'www', 'events', 'calendar', 'programs', 'catalog', 'go', 'attend'
+]);
+
+function buildScraperName(library) {
+  const key = `Communico-${library.state}`;
+  let slug = '';
+  try {
+    const labels = new URL(library.url).hostname.toLowerCase().split('.');
+    while (labels.length > 1 && GENERIC_HOST_LABELS.has(labels[0])) labels.shift();
+    slug = (labels[0] || '').replace(/[^a-z0-9-]/g, '');
+  } catch (_) { /* malformed url — fall through to the bare key */ }
+  return slug ? `${key}-${slug}` : key;
+}
+
 // Parse age range from audience text
 function parseAgeRange(audienceText) {
   if (!audienceText) return 'All Ages';
@@ -1388,6 +1439,10 @@ async function scrapeLibraryEvents(library, browser) {
           url: event.url || library.website,
           metadata: {
             source: 'Communico Scraper',
+            // Read FIRST by flattenEvent(). Without it the adapter falls back to
+            // sourceName below and writes the library's display name, which joins
+            // to no registry key. See buildScraperName().
+            scraperName: buildScraperName(library),
             // The listing page this scraper fetches — NOT the event's own url. Without it,
             // verify-coverage.js cannot confirm which libraries this scraper actually covers.
             sourceUrl: library.url,
@@ -1881,6 +1936,10 @@ async function scrapeLibraryEvents(library, browser) {
           url: event.url || library.website,
           metadata: {
             source: 'Communico Scraper',
+            // Read FIRST by flattenEvent(). Without it the adapter falls back to
+            // sourceName below and writes the library's display name, which joins
+            // to no registry key. See buildScraperName().
+            scraperName: buildScraperName(library),
             // The listing page this scraper fetches — NOT the event's own url. Without it,
             // verify-coverage.js cannot confirm which libraries this scraper actually covers.
             sourceUrl: library.url,

@@ -558,13 +558,14 @@ const SCRAPERS = {
     group: 3,
     state: 'MD'
   },
-  'Prince-Georges-County': {
-    file: './scraper-prince-georges-county-library-MD.js',
-    exportName: 'scrapePrinceGeorgesCountyLibrary',
-    type: 'puppeteer',
-    group: 1,
-    state: 'MD'
-  },
+  // 'Prince-Georges-County' REMOVED 2026-08-16. pgcmls.info migrated to Communico
+  // (page config emits client:'pgcmls', apiServer:'api.communico.co'), so the bespoke
+  // scraper's pre-migration selectors matched only nav chrome — it reported Found 0
+  // with 12 junk-title skips ("events", "Calendar") on every run. Replacement is
+  // VERIFIED LIVE, not assumed: the library is now an entry in Communico-MD and a real
+  // run on 2026-08-16 saved 185 events across 26 branch venues, all state=MD with
+  // 100% source_url. Zero DB rows ever carried scraper_name 'Prince-Georges-County',
+  // so removing this key breaks no existing join. See SCRAPER-FIX-LOG.jsonl.
   'Somerset-County': {
     file: './scraper-somerset-county-library-MD.js',
     exportName: 'scrapeSomersetCountyLibrary',
