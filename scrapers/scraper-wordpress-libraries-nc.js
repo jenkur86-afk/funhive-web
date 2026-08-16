@@ -47,7 +47,11 @@ const LIBRARIES = [
   { name: 'Florence S. Shanklin Branch Library', url: 'https://www.denverlibrary.org', eventsUrl: 'https://www.denverlibrary.org/events', city: 'Denver', state: 'NC', zipCode: '00000', county: 'Lincoln'},
   { name: 'Dobson Community Library', url: 'https://www.dobsonlibrary.org', eventsUrl: 'https://www.dobsonlibrary.org/events', city: 'Dobson', state: 'NC', zipCode: '00000', county: 'Surry'},
   { name: 'Farmville Public Library', url: 'https://farmvillelibrary.libguides.com/', eventsUrl: 'https://farmvillelibrary.libguides.com/home', city: 'Farmville', state: 'NC', zipCode: '27828', county: 'Pitt'},
-  { name: 'Bordeaux Branch Library', url: 'https://www.fayettevillelibrary.org', eventsUrl: 'https://www.fayettevillelibrary.org/events', city: 'Fayetteville', state: 'NC', zipCode: '00000', county: 'Cumberland'},
+  // REMOVED 2026-08-16 — fayettevillelibrary.org is HIJACKED and now serves an
+  // Indonesian gambling site, verified live. Same guessed domain was configured in
+  // GA, NC and NY simultaneously. Bordeaux Branch is real: it belongs to Cumberland
+  // County Public Library (cumberlandcountync.gov/library), which is NOT WordPress —
+  // so this is a relocation job, not a URL swap. OPEN COVERAGE GAP until then.
   { name: 'Macon County Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'NC', zipCode: '00000', county: 'Franklin County'},
   // URL corrected 2026-08-11 (was franklinvillelibrary.org): Randolph County Public Library branch page: 111 Sumner Place, Franklinville NC 27248, phone 336-685-3100; also called Franklinville Public L
   { name: 'John W. Clark Public Library', url: 'https://randolphlibrary.libguides.com/c.php?g=247617', eventsUrl: 'https://randolphlibrary.libguides.com/c.php?g=1204272&p=8808824', city: 'Franklinville', state: 'NC', zipCode: '00000', county: 'Randolph'},

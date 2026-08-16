@@ -830,8 +830,8 @@
   "population": "zero"
  },
  "WordPress-TN|||Clarksville-Montgomery County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "301s off-host to montgomerytn.gov; correct institution but the Upcoming Events section is JS-rendered with no dates in the HTML",
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure mcgtn.org redirects to montgomerytn.gov and events live on mcgtn.libcal.com with 246 results e.g. Baby and Me Storytime Aug 17 2026",
   "population": "zero"
  },
  "WordPress-TN|||Kingsport Public Library": {
@@ -951,7 +951,7 @@
  },
  "WordPress-TN|||Clinton Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Fetch failed with no output on both www and bare host",
+  "comment": "dead-domain, clintonlibrary.org resolves only to AWS parking IPs and refuses connections on 443",
   "population": "zero"
  },
  "WordPress-TN|||Cordova Branch Library": {
@@ -2330,7 +2330,7 @@
  },
  "WordPress-NC|||Selma Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "pljcs.org monthly-calendar page renders an embedded calendar widget; no event data present in the HTML. /events returns 404",
+  "comment": "pljcs.org is a Wix site whose monthly calendar renders client-side only; no event data in served HTML",
   "population": "zero"
  },
  "WordPress-CT|||Shelton Public Library": {
@@ -3104,8 +3104,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Torrington Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "TLS handshake failure on client hello for www.torringtonlibrary.org",
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure real site with Google Calendar embed e.g. Stick Dolls and Pets ages 6+ Aug 19 2026 and Teen Slime Party Sep 16 2026",
   "population": "zero"
  },
  "WordPress-CT|||Trumbull Library": {
@@ -3115,7 +3115,7 @@
  },
  "WordPress-CT|||Vernon Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 404 Not Found for vernon-ct.gov/library/events",
+  "comment": "configured URL returns HTTP 404; real library site is rockvillepubliclibrary.org (Rockville Public Library, Vernon CT)",
   "population": "zero"
  },
  "WordPress-CT|||Waterbury Public Library": {
@@ -3124,8 +3124,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Waterford Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "TLS error - certificate has expired for www.waterfordlibrary.org",
+  "verdict": "MISMATCH",
+  "comment": "url-collision (resolves to Rills Specialty Foods, an unrelated food business, not a library)",
   "population": "zero"
  },
  "WordPress-CT|||Wethersfield Public Library": {
@@ -3135,7 +3135,7 @@
  },
  "WordPress-CT|||Wilson Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "TLS handshake failure on client hello for www.windsorlibrary.org",
+  "comment": "windsorlibrary.org TLS handshake failure and mod_security Not Acceptable block on retry",
   "population": "zero"
  },
  "WordPress-CT|||Windsor Locks Public Library": {
@@ -3184,13 +3184,13 @@
   "population": "zero"
  },
  "WordPress-GA|||Fayette County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 526 Unknown Status (origin TLS failure) from fayettevillelibrary.org",
+  "verdict": "MISMATCH",
+  "comment": "url-collision (domain hijacked, now serves an Indonesian gambling site titled OPUNG4D Toto 4D slot, not a library)",
   "population": "zero"
  },
  "WordPress-GA|||Gibbs Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Connection refused, ECONNREFUSED 66.113.136.229:443 on evanslibrary.org",
+  "comment": "evanslibrary.org resolves to 66.113.136.229 but connection refused and times out on 443",
   "population": "zero"
  },
  "WordPress-GA|||Gordon Public Library": {
@@ -3200,7 +3200,7 @@
  },
  "WordPress-GA|||Greene County Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Connection refused, ECONNREFUSED 192.64.119.228:443 on greensborolibrary.org",
+  "comment": "greensborolibrary.org resolves to a Namecheap IP but connection refused and times out on 443",
   "population": "zero"
  },
  "WordPress-GA|||Harris County Public Library": {
@@ -3229,8 +3229,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Lake Sinclair Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "milledgevillelibrary.org/calendar returned an empty body with no content in HTML",
+  "verdict": "MISMATCH",
+  "comment": "url-collision (resolves to Milledgeville Public Library, Milledgeville IL, not Milledgeville GA)",
   "population": "zero"
  },
  "WordPress-GA|||Laurens County Library": {
@@ -3249,8 +3249,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Middle Georgia Regional Library System": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Expired TLS certificate on maconlibrary.org; fetch aborted",
+  "verdict": "MISMATCH",
+  "comment": "url-collision (resolves to Macon Public Library, Macon MO, serving the City of Macon Missouri since 1917)",
   "population": "zero"
  },
  "WordPress-GA|||Monroe County Library": {
@@ -3259,8 +3259,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Monroe-Walton County Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "TLS error, unable to get local issuer certificate on monroelibrary.org",
+  "verdict": "MISMATCH",
+  "comment": "url-collision (monroelibrary.org is a parked monetized redirect router page, not a library site)",
   "population": "zero"
  },
  "WordPress-GA|||Nelle Brown Memorial Public Library": {
@@ -3270,7 +3270,7 @@
  },
  "WordPress-GA|||Oglethorpe County Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Socket closed mid-request on lexingtonlibrary.org",
+  "comment": "lexingtonlibrary.org TLS handshake failure, socket closed on every attempt",
   "population": "zero"
  },
  "WordPress-GA|||Pembroke Public Library": {
@@ -3285,7 +3285,7 @@
  },
  "WordPress-GA|||Rockmart Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Connection refused, ECONNREFUSED 185.46.229.138:443 on rockmartlibrary.org",
+  "comment": "rockmartlibrary.org connection refused then timed out on 443",
   "population": "zero"
  },
  "WordPress-GA|||Roddenbery Memorial Library System": {
@@ -3295,12 +3295,12 @@
  },
  "WordPress-GA|||Rossville Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 403 Forbidden from rossvillelibrary.org; bot-blocked",
+  "comment": "bot-blocked, Cloudflare interstitial returns HTTP 403 Just a moment",
   "population": "zero"
  },
  "WordPress-GA|||Scottdale-Tobie Grant Branch": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "scottdalelibrary.org returned only the word Home with no identifiable institution or content; JS-only render",
+  "verdict": "MISMATCH",
+  "comment": "url-collision (resolves to Scottdale Public Library, Scottdale PA 15683, phone 724.887.6140, not Scottdale GA)",
   "population": "zero"
  },
  "WordPress-GA|||Thomson-Mcduffie County Library": {
@@ -3325,7 +3325,7 @@
  },
  "WordPress-NC|||Blanche Benjamin Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Connection refused, ECONNREFUSED 192.64.119.228:443 on greensborolibrary.org",
+  "comment": "greensborolibrary.org resolves to a Namecheap IP but connection refused and times out on 443",
   "population": "zero"
  },
  "WordPress-NC|||Boonville Community Public Library": {
@@ -3334,8 +3334,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Bordeaux Branch Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 526 Unknown Status (origin TLS failure) from fayettevillelibrary.org",
+  "verdict": "MISMATCH",
+  "comment": "url-collision (domain hijacked, now serves an Indonesian gambling site titled OPUNG4D Toto 4D slot, not a library)",
   "population": "zero"
  },
  "WordPress-NC|||Brunswick County Library": {
@@ -3345,7 +3345,7 @@
  },
  "WordPress-NC|||Bunn Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "bunnlibrary.org fetch failed with no output on two attempts; no response body",
+  "comment": "dead-domain, bunnlibrary.org resolves only to AWS parking IPs and refuses connections on 443",
   "population": "zero"
  },
  "WordPress-NC|||Canton Branch Library": {
@@ -3360,12 +3360,12 @@
  },
  "WordPress-NC|||Davidson County Public Library System": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Socket closed mid-request on lexingtonlibrary.org",
+  "comment": "lexingtonlibrary.org TLS handshake failure, socket closed on every attempt",
   "population": "zero"
  },
  "WordPress-NC|||Dobson Community Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "dobsonlibrary.org fetch failed with no output on two attempts; no response body",
+  "comment": "dead-domain, dobsonlibrary.org resolves only to AWS parking IPs and refuses connections on 443",
   "population": "zero"
  },
  "WordPress-NC|||Farmville Public Library": {
@@ -3379,8 +3379,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Graham Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Correct institution (Alamance County NC) but the /calendar widget renders client-side; no event data present in HTML",
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure Alamance County Public Libraries lists dated events e.g. Silent Book Club Aug 14 and Bored Gamers Aug 17 and Mastering Stress Aug 20",
   "population": "zero"
  },
  "WordPress-NC|||Hampstead Branch Library": {
@@ -3415,7 +3415,7 @@
  },
  "WordPress-NC|||J.C. Holliday Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "clintonlibrary.org fetch failed with no output on two attempts; no response body",
+  "comment": "dead-domain, clintonlibrary.org resolves only to AWS parking IPs and refuses connections on 443",
   "population": "zero"
  },
  "WordPress-NC|||La Grange Branch Library": {
@@ -3425,7 +3425,7 @@
  },
  "WordPress-NC|||Lawrence Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "SSL handshake failure on client hello for windsorlibrary.org",
+  "comment": "windsorlibrary.org TLS handshake failure and mod_security Not Acceptable block on retry",
   "population": "zero"
  },
  "WordPress-NC|||Leland Branch Library": {
@@ -3440,7 +3440,7 @@
  },
  "WordPress-NC|||Littleton Public Library (Wc Jones Memorial)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "read ECONNRESET on /events and on root, three attempts",
+  "comment": "littletonlibrary.org resolves to 207.38.78.120 but every request ends in connection reset",
   "population": "zero"
  },
  "WordPress-NC|||Macon County Public Library": {
@@ -3455,7 +3455,7 @@
  },
  "WordPress-NC|||Mary Duncan Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "pljcs.org monthly-calendar page renders an embedded calendar widget; no event data present in the HTML. /events returns 404",
+  "comment": "pljcs.org is a Wix site whose monthly calendar renders client-side only; no event data in served HTML",
   "population": "zero"
  },
  "WordPress-NC|||Maysville Public Library": {
@@ -3480,12 +3480,12 @@
  },
  "WordPress-NC|||Princeton Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "pljcs.org monthly-calendar page renders an embedded calendar widget; no event data present in the HTML. /events returns 404",
+  "comment": "pljcs.org is a Wix site whose monthly calendar renders client-side only; no event data in served HTML",
   "population": "zero"
  },
  "WordPress-NC|||Public Library Of Johnston County Smithfield": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Correct institution but the monthly calendar is an embedded widget with zero event data in the HTML; /events returns 404",
+  "comment": "pljcs.org is a Wix site whose monthly calendar renders client-side only; no event data in served HTML",
   "population": "zero"
  },
  "WordPress-NC|||Rowan Public Library": {
@@ -3504,18 +3504,18 @@
   "population": "zero"
  },
  "WordPress-NC|||Union County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "TLS failure - unable to get local issuer certificate, on both www and bare host",
+  "verdict": "MISMATCH",
+  "comment": "url-collision (monroelibrary.org is a parked monetized redirect router page, not a library site)",
   "population": "zero"
  },
  "WordPress-NC|||Union West Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "connect ECONNREFUSED 5.230.43.143:443 - server refuses HTTPS connections",
+  "comment": "indiantraillibrary.org resolves to 5.230.43.143 but connection times out on 443",
   "population": "zero"
  },
  "WordPress-NC|||Watauga County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "connect ECONNREFUSED 216.40.34.41:443 - server refuses HTTPS connections",
+  "comment": "boonelibrary.org resolves to 216.40.34.41 but connection times out on 443",
   "population": "zero"
  },
  "WordPress-VT|||Aldrich Public Library": {
@@ -3831,6 +3831,51 @@
  "WordPress-VT|||Roxbury Free": {
   "verdict": "MISMATCH",
   "comment": "extraction-failure (real site, real dated events listed, e.g. August 29th Lego Brick Builders 10:00am-12:00pm)",
+  "population": "zero"
+ },
+ "WordPress-CT|||Woodbury Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure real site on LibCal with 170 events e.g. Rhythm and Rhyme and Book Time Aug 17 2026 and Tuesdays at the Movies Aug 18 2026",
+  "population": "zero"
+ },
+ "WordPress-GA|||Douglas-Coffee County Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Satilla Regional Library System Google Calendar feed has no events after 2020; calendar genuinely empty",
+  "population": "zero"
+ },
+ "WordPress-GA|||Ida Hilton Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure trrl.org calendar 301s to trrl.librarycalendar.com with live events e.g. Tai Chi at Ida Hilton and Teen Night Acrylic Painting Aug 20 2026",
+  "population": "zero"
+ },
+ "WordPress-NC|||Carver Branch Library": {
+  "verdict": "MATCHES",
+  "comment": "Sheppard Memorial Library Greenville NC calendar states there are no published events in current month",
+  "population": "zero"
+ },
+ "WordPress-NC|||Cleveland County Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure real site with Google Calendar embed carrying active open-ended recurring programs Chess Club, Monday Night Book Club and Thread Lightly",
+  "population": "zero"
+ },
+ "WordPress-NC|||John W. Clark Public Library": {
+  "verdict": "MATCHES",
+  "comment": "correct institution Franklinville Public Library, Randolph County NC LibGuide, page lists only recurring program descriptions and no dated upcoming events",
+  "population": "zero"
+ },
+ "WordPress-NC|||Margaret Little Blount Library": {
+  "verdict": "MATCHES",
+  "comment": "Sheppard Memorial Library Greenville NC calendar states there are no published events in current month",
+  "population": "zero"
+ },
+ "WordPress-NC|||Mooresville Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure mooresvillelibrary.org meta-refreshes to mooresvillenc.gov and events live on mooresvillenc.librarycalendar.com e.g. Mahjong at Main Aug 18 2026",
+  "population": "zero"
+ },
+ "WordPress-TN|||Alexandria Branch Library": {
+  "verdict": "MATCHES",
+  "comment": "correct institution DeKalb County TN libraries, Programs and Events page carries only generic text and lists no dated events",
   "population": "zero"
  }
 }

@@ -135,7 +135,12 @@ const LIBRARIES = [
   { name: 'Laurens County Library', url: 'https://www.dublinlibrary.org/', eventsUrl: 'https://www.dublinlibrary.org/', city: 'Dublin', state: 'GA', zipCode: '00000', county: 'Laurens'},
   { name: 'Duluth', url: 'https://duluthlibrary.org/', eventsUrl: 'https://duluthlibrary.org/', city: 'Duluth', state: 'GA', zipCode: '00000', county: 'Gwinnett'},
   { name: 'Gibbs Memorial Library', url: 'https://www.evanslibrary.org', eventsUrl: 'https://www.evanslibrary.org/events', city: 'Evans', state: 'GA', zipCode: '00000', county: 'Evans County'},
-  { name: 'Fayette County Public Library', url: 'https://www.fayettevillelibrary.org', eventsUrl: 'https://www.fayettevillelibrary.org/events', city: 'Fayetteville', state: 'GA', zipCode: '00000', county: 'Fayette'},
+  // REMOVED 2026-08-16 — fayettevillelibrary.org is HIJACKED. It now serves an
+  // Indonesian gambling site ("OPUNG4D Toto 4D", assets from garisdua.click /
+  // touchwork.pics), not a library. Verified live. The same guessed domain was
+  // configured in three states at once (GA/NC/NY), the usual {city}library.org
+  // seed-data collision. Removed rather than repointed: OPEN COVERAGE GAP for
+  // Fayette County Public Library GA — do not re-add a guessed domain.
   { name: 'Monroe County Library', url: 'https://www.forsythlibrary.org', eventsUrl: 'https://www.forsythlibrary.org/events', city: 'Forsyth', state: 'GA', zipCode: '00000', county: 'Forsyth County'},
   { name: 'Heard County Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'GA', zipCode: '00000', county: 'Franklin County'},
   { name: 'Gordon Public Library', url: 'https://gordonlibrary.org/', eventsUrl: 'https://gordonlibrary.org/', city: 'Gordon', state: 'GA', zipCode: '00000', county: 'Gordon County'},

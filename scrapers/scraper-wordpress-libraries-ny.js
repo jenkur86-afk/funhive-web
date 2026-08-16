@@ -154,7 +154,15 @@ const LIBRARIES = [
   { name: 'Fairport Public Library', url: 'https://www.fairportlibrary.org/', eventsUrl: 'https://www.fairportlibrary.org/', city: 'Fairport', state: 'NY', zipCode: '14450', county: 'Monroe'},
   { name: 'Falconer Public Library', url: 'https://www.falconerlibrary.org', eventsUrl: 'https://www.falconerlibrary.org/events', city: 'Falconer', state: 'NY', zipCode: '14733', county: 'Chautauqua'},
   { name: 'Farmingdale Public Library', url: 'https://www.farmingdalelibrary.org', eventsUrl: 'https://www.farmingdalelibrary.org/events', city: 'Farmingdale', state: 'NY', zipCode: '11735', county: 'Nassau'},
-  { name: 'Fayetteville Free Library', url: 'https://www.fayettevillelibrary.org', eventsUrl: 'https://www.fayettevillelibrary.org/events', city: 'Fayetteville', state: 'NY', zipCode: '13066', county: 'Onondaga'},
+  // REMOVED 2026-08-16 — fayettevillelibrary.org is HIJACKED and now serves an
+  // Indonesian gambling site, verified live. Same guessed domain was configured in
+  // GA, NC and NY simultaneously.
+  // LEAD, not yet actioned: this library is real and its own canonical domain
+  // fflib.org 301s to https://onlib-fayetteville.libcal.com/calendar?cid=19949 —
+  // Onondaga County Public Library's LibCal, matching this entry's county. So it
+  // belongs in LibCal-NY, not here. Not moved yet because the LibCal calendar is
+  // JS-rendered and WebFetch could not confirm live events, and an unverified move
+  // would just relocate a zero. OPEN COVERAGE GAP until someone confirms that cid.
   { name: 'Wide Awake Club Library', url: 'https://fillmoreutlibrary.gov/', eventsUrl: 'https://fillmoreutlibrary.gov/upcoming-events/', city: 'Fillmore', state: 'NY', zipCode: '14735', county: 'Allegany'},
   { name: 'Blodgett Memorial Library District Of Fishkill', url: 'https://www.fishkilllibrary.org', eventsUrl: 'https://www.fishkilllibrary.org/events', city: 'Fishkill', state: 'NY', zipCode: '12524', county: 'Dutchess'},
   { name: 'Floral Park Public Library', url: 'https://floralparklibrary.org/', eventsUrl: 'https://floralparklibrary.org/', city: 'Floral Park', state: 'NY', zipCode: '11001', county: 'Nassau'},
