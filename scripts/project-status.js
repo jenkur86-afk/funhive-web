@@ -45,8 +45,8 @@ const TODAY = new Date().toISOString().slice(0, 10);
  */
 const STALE_METRICS = {
   nameConformance: {
-    value: 47.2, unit: '%', measured: '2026-08-10',
-    detail: '298 of 632 distinct scraper_name values conform (33 EXACT + 265 PREFIXED). Both the numerator and the denominator grew — the MacaroniKid per-site naming fix is minting many new conforming names, so absolute drift rose 291→334 while the share improved',
+    value: 48.3, unit: '%', measured: '2026-08-15',
+    detail: '309 of 640 distinct scraper_name values conform (36 EXACT + 273 PREFIXED). 331 names drift, essentially flat vs 2026-08-10s 334 despite the growing denominator — the MacaroniKid per-site naming fix keeps minting new conforming names about as fast as drift accumulates elsewhere. New COLLAPSED entries since last measurement: CivicEngage-Libraries and CustomDrupal-Libraries, in addition to the pre-existing MacaroniKid-MD/MacaroniKid-DE (see check-scraper-names.js multi-site coverage section).',
     refresh: 'node scripts/check-scraper-names.js',
   },
   sourceUrlCoverage: {
