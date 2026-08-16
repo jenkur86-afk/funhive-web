@@ -30,7 +30,6 @@ const LIBRARIES = [
   { name: 'Kershaw County Library - Elgin Branch Library', url: 'https://www.elginlibrary.org/', eventsUrl: 'https://www.elginlibrary.org/', city: 'Elgin', state: 'SC', zipCode: '29045', county: 'Lancaster'},
   { name: 'Hampton County Library - Estill Branch Library', url: 'https://www.estilllibrary.org', eventsUrl: 'https://www.estilllibrary.org/events', city: 'Estill', state: 'SC', zipCode: '29918', county: 'Hampton'},
   { name: 'Florence County Library System', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'SC', zipCode: '29506', county: 'Florence County'},
-  { name: 'Lexington County Library - Gaston', url: 'https://www.gastonlibrary.org/', eventsUrl: 'https://www.gastonlibrary.org/31/Calendar', city: 'Gaston', state: 'SC', zipCode: '29053', county: 'Lexington'},
   { name: 'Lexington County Library - Gilbert-Summit', url: 'https://www.gilbertlibrary.org/', eventsUrl: 'https://www.gilbertlibrary.org/', city: 'Gilbert', state: 'SC', zipCode: '29054', county: 'Lexington'},
   { name: 'Great Falls Library', url: 'https://www.greatfallslibrary.org', eventsUrl: 'https://www.greatfallslibrary.org/events', city: 'Great Falls', state: 'SC', zipCode: '29055', county: 'Chester'},
   { name: 'Greenville County Library - Anderson Road (West) Branch', url: 'https://www.greenvillelibrary.org', eventsUrl: 'https://www.greenvillelibrary.org/events', city: 'Greenville', state: 'SC', zipCode: '29611', county: 'Greenville County'},

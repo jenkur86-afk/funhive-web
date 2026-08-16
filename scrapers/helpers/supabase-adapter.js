@@ -1752,13 +1752,25 @@ function createFirestoreCompatibleDB() {
               if (error.code === '23505' || error.message?.includes('duplicate key') || error.message?.includes('unique constraint')) {
                 console.log(`  ⚠️ Batch upsert hit unique constraint on ${table}, falling back to row-by-row...`);
                 let rowErrors = 0;
+                let rowContentDupes = 0;
                 for (const row of uniqueRows) {
                   const { error: rowErr } = await supabase
                     .from(mapCollectionName(table))
                     .upsert(row, { onConflict: 'id', ignoreDuplicates: true });
                   if (rowErr) {
                     if (rowErr.code === '23505' || rowErr.message?.includes('duplicate key') || rowErr.message?.includes('unique constraint')) {
-                      // Silently skip content-duplicate rows
+                      // Content-duplicate row (matches an existing row's name+event_date+venue
+                      // under a DIFFERENT id, so ON CONFLICT (id) DO NOTHING doesn't suppress
+                      // it and Postgres raises 23505 on the secondary unique index instead).
+                      // Previously this was silently continue'd with no bookkeeping, so the
+                      // caller's saved count never got corrected for it - every one of these
+                      // was miscounted as a fresh save despite writing zero new rows. Found
+                      // 2026-08-15 via WordPressTec-Parks reporting New:25 with zero matching
+                      // DB rows for that day. Push into skippedReasons so the existing
+                      // categorizeCommitSkips()/saved-=c.skippedCount path (already used for
+                      // the other skip types above) picks it up like any other non-insert.
+                      rowContentDupes++;
+                      skippedReasons.push('Skipping content-duplicate row (matches existing name+event_date+venue under a different id)');
                       continue;
                     }
                     console.error(`  ❌ Row upsert error (${row.id}): ${rowErr.message}`);
@@ -1767,8 +1779,10 @@ function createFirestoreCompatibleDB() {
                 }
                 if (rowErrors > 0) {
                   console.log(`  ⚠️ Row-by-row fallback completed with ${rowErrors} errors`);
+                } else if (rowContentDupes > 0) {
+                  console.log(`  ✅ Row-by-row fallback completed successfully (${rowContentDupes} content-duplicate rows skipped, not counted as saved)`);
                 } else {
-                  console.log(`  ✅ Row-by-row fallback completed successfully (skipped duplicates)`);
+                  console.log('  ✅ Row-by-row fallback completed successfully');
                 }
               } else {
                 throw error;
