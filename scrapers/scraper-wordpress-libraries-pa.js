@@ -198,7 +198,7 @@ const LIBRARIES = [
   { name: 'Saxonburg Area Library', url: 'https://www.saxonburglibrary.org', eventsUrl: 'https://www.saxonburglibrary.org/events', city: 'Saxonburg', state: 'PA', zipCode: '16056', county: 'Butler'},
   { name: 'Saxton Community Library', url: 'https://www.saxtonlibrary.org/', eventsUrl: 'https://www.saxtonlibrary.org/', city: 'Saxton', state: 'PA', zipCode: '16678', county: 'Bedford'},
   { name: 'Scottdale Public Library', url: 'https://www.scottdalelibrary.org/', eventsUrl: 'https://www.scottdalelibrary.org/', city: 'Scottdale', state: 'PA', zipCode: '15683', county: 'Westmoreland'},
-  { name: 'Albright Memorial Library', url: 'https://www.scrantonlibrary.org', eventsUrl: 'https://www.scrantonlibrary.org/events', city: 'Scranton', state: 'PA', zipCode: '18509', county: 'Lackawanna'},
+  { name: 'Albright Memorial Library', url: 'https://lclshome.org', eventsUrl: 'https://lclshome.org/event/', city: 'Scranton', state: 'PA', zipCode: '18509', county: 'Lackawanna'},
   { name: 'Sewickley Public Library', url: 'https://www.sewickleylibrary.org', eventsUrl: 'https://www.sewickleylibrary.org/events', city: 'Sewickley', state: 'PA', zipCode: '15143', county: 'Allegheny'},
   { name: 'Sheffield Township Library', url: 'https://www.sheffieldlibrary.org/', eventsUrl: 'https://www.sheffieldlibrary.org/', city: 'Sheffield', state: 'PA', zipCode: '16347', county: 'Warren'},
   { name: 'Shippensburg Public Library', url: 'https://www.shippensburglibrary.org', eventsUrl: 'https://www.shippensburglibrary.org/events', city: 'Shippensburg', state: 'PA', zipCode: '17257', county: 'Cumberland'},

@@ -18,13 +18,17 @@ const LIBRARIES = [
   // New Castle County Libraries
   { name: 'Wilmington Public Library', url: 'https://www.wilmingtonde.gov/library', eventsUrl: 'https://www.wilmingtonde.gov/library/events', city: 'Wilmington', state: 'DE', zipCode: '19801', county: 'New Castle'},
   { name: 'Newark Free Library', url: 'https://www.nccde.org/newark', eventsUrl: 'https://www.nccde.org/newark/events', city: 'Newark', state: 'DE', zipCode: '19711', county: 'New Castle'},
-  { name: 'Bear Library', url: 'https://www.nccde.org/bear', eventsUrl: 'https://www.nccde.org/bear/events', city: 'Bear', state: 'DE', zipCode: '19701', county: 'New Castle'},
+  // Bear Library REMOVED 2026-08-18: nccde.org/bear/events 404s (county rebranded to
+  // newcastlede.gov and dropped native library event pages). Relocated to LibCal-DE
+  // (delawarelibraries.libcal.com/calendar/bear) -- see the shared LibCal scraper file.
   { name: 'Kirkwood Library', url: 'https://www.nccde.org/kirkwood', eventsUrl: 'https://www.nccde.org/kirkwood/events', city: 'Wilmington', state: 'DE', zipCode: '19808', county: 'New Castle'},
-  { name: 'Claymont Library', url: 'https://www.nccde.org/claymont', eventsUrl: 'https://www.nccde.org/claymont/events', city: 'Claymont', state: 'DE', zipCode: '19703', county: 'New Castle'},
+  // Claymont Library REMOVED 2026-08-18: same dead-endpoint reason as Bear Library above.
+  // Relocated to LibCal-DE (delawarelibraries.libcal.com/calendar/claymont).
   { name: 'Elsmere Library', url: 'https://www.nccde.org/elsmere', eventsUrl: 'https://www.nccde.org/elsmere/events', city: 'Elsmere', state: 'DE', zipCode: '19805', county: 'New Castle'},
   { name: 'Hockessin Library', url: 'https://www.nccde.org/hockessin', eventsUrl: 'https://www.nccde.org/hockessin/events', city: 'Hockessin', state: 'DE', zipCode: '19707', county: 'New Castle'},
   { name: 'Garfield Park Library', url: 'https://www.nccde.org/garfield', eventsUrl: 'https://www.nccde.org/garfield/events', city: 'New Castle', state: 'DE', zipCode: '19720', county: 'New Castle County'},
-  { name: 'Brandywine Hundred Library', url: 'https://www.nccde.org/brandywine', eventsUrl: 'https://www.nccde.org/brandywine/events', city: 'Wilmington', state: 'DE', zipCode: '19810', county: 'New Castle'},
+  // Brandywine Hundred Library REMOVED 2026-08-18: same dead-endpoint reason as Bear Library
+  // above. Relocated to LibCal-DE (delawarelibraries.libcal.com/calendar/brandywine).
   { name: 'Woodlawn Library', url: 'https://www.nccde.org/woodlawn', eventsUrl: 'https://www.nccde.org/woodlawn/events', city: 'Wilmington', state: 'DE', zipCode: '19805', county: 'New Castle'},
   // Kent County Libraries
   { name: 'Dover Public Library', url: 'https://www.doverpubliclibrary.org', eventsUrl: 'https://www.doverpubliclibrary.org/events', city: 'Dover', state: 'DE', zipCode: '19901', county: 'Kent'},
@@ -33,12 +37,16 @@ const LIBRARIES = [
   { name: 'Georgetown Public Library', url: 'https://www.georgetownpubliclibrary.org', eventsUrl: 'https://www.georgetownpubliclibrary.org/events', city: 'Georgetown', state: 'DE', zipCode: '19947', county: 'Sussex'},
   { name: 'Lewes Public Library', url: 'https://www.leweslibrary.org', eventsUrl: 'https://www.leweslibrary.org/events', city: 'Lewes', state: 'DE', zipCode: '19958', county: 'Sussex'},
   { name: 'Rehoboth Beach Public Library', url: 'https://www.rehobothbeachde.gov/library', eventsUrl: 'https://www.rehobothbeachde.gov/experience-rehoboth-beach/calendar/', city: 'Rehoboth Beach', state: 'DE', zipCode: '19971', county: 'Sussex'},
-  // URL corrected 2026-08-11 (was bridgevillelibrary.org): Sussex County Library System site lists Bridgeville Public Library, 600 South Cannon St, Bridgeville DE 19933, 302-337-7401. bridgevillelibr
-  { name: 'Bridgeville Public Library', url: 'https://sussexcounty.lib.de.us', eventsUrl: 'https://delawarelibraries.libcal.com/calendar/bridgeville', city: 'Bridgeville', state: 'DE', zipCode: '19933', county: 'Sussex'},
+  // Bridgeville Public Library REMOVED 2026-08-18: its eventsUrl was already pointed at
+  // delawarelibraries.libcal.com/calendar/bridgeville by the 2026-08-11 fix, but it stayed
+  // registered under WordPress-DE, whose Puppeteer extractor is built for WordPress DOM and
+  // can't read LibCal markup -- confirmed live today (verifier: "platform=libcal detected").
+  // Properly relocated to LibCal-DE now.
   { name: 'Laurel Public Library', url: 'https://www.laurellibrary.org', eventsUrl: 'https://www.laurellibrary.org/events', city: 'Laurel', state: 'DE', zipCode: '19956', county: 'Sussex'},
   // Additional libraries from coverage audit
   { name: 'Frankford Public Library', url: 'https://www.frankfordlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.frankfordlibrary.org/events', city: 'Frankford', state: 'DE', zipCode: '19945', county: '' },
-  { name: 'Appoquinimink Public Library', url: 'https://www.nccde.org/appoquinimink', platform: 'wordpress', eventsUrl: 'https://www.nccde.org/appoquinimink/events', city: 'Middletown', state: 'DE', zipCode: '19709', county: '' },
+  // Appoquinimink Public Library REMOVED 2026-08-18: same dead-endpoint reason as Bear
+  // Library above. Relocated to LibCal-DE (delawarelibraries.libcal.com/calendar/appoquinimink).
 ];
 
 const SCRAPER_NAME = 'wordpress-DE';

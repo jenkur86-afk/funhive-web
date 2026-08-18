@@ -389,6 +389,58 @@ const LIBRARY_SYSTEMS = [
     city: 'Dover',
     zipCode: '19901'
   },
+  // DELAWARE - New Castle County branch calendars, relocated 2026-08-18 from WordPress-DE.
+  // Their old nccde.org/{branch}/events pages 404 (county rebranded to newcastlede.gov and
+  // dropped native WordPress event pages entirely, funneling to this shared LibCal system
+  // instead) -- confirmed live via WebFetch, each URL below returns a real per-branch LibCal
+  // page. Bridgeville was already pointed here by the 2026-08-11 fix but left registered
+  // under WordPress-DE, so its Puppeteer DOM extractor (built for WordPress markup) could
+  // never read the LibCal page -- same defect, now fixed for all 5 at once.
+  {
+    name: 'Bear Library',
+    url: 'https://delawarelibraries.libcal.com/calendar/bear',
+    county: 'New Castle',
+    state: 'DE',
+    website: 'https://www.newcastlede.gov/bear',
+    city: 'Bear',
+    zipCode: '19701'
+  },
+  {
+    name: 'Claymont Library',
+    url: 'https://delawarelibraries.libcal.com/calendar/claymont',
+    county: 'New Castle',
+    state: 'DE',
+    website: 'https://www.newcastlede.gov/claymont',
+    city: 'Claymont',
+    zipCode: '19703'
+  },
+  {
+    name: 'Brandywine Hundred Library',
+    url: 'https://delawarelibraries.libcal.com/calendar/brandywine',
+    county: 'New Castle',
+    state: 'DE',
+    website: 'https://www.newcastlede.gov/brandywine',
+    city: 'Wilmington',
+    zipCode: '19810'
+  },
+  {
+    name: 'Appoquinimink Public Library',
+    url: 'https://delawarelibraries.libcal.com/calendar/appoquinimink',
+    county: 'New Castle',
+    state: 'DE',
+    website: 'https://www.newcastlede.gov/appoquinimink',
+    city: 'Middletown',
+    zipCode: '19709'
+  },
+  {
+    name: 'Bridgeville Public Library',
+    url: 'https://delawarelibraries.libcal.com/calendar/bridgeville',
+    county: 'Sussex',
+    state: 'DE',
+    website: 'https://sussexcounty.lib.de.us',
+    city: 'Bridgeville',
+    zipCode: '19933'
+  },
 
   // FLORIDA
   {

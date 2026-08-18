@@ -3877,5 +3877,330 @@
   "verdict": "MATCHES",
   "comment": "correct institution DeKalb County TN libraries, Programs and Events page carries only generic text and lists no dated events",
   "population": "zero"
+ },
+ "MacaroniKid-VA-newington|||Workhouse Arts Center": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "MacaroniKid-VA-virginiabeach|||Virginia Aquarium & Marine Science Center": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "MacaroniKid-NJ-tintonfalls|||Ocean County Library — Jackson Branch": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "MacaroniKid-NJ-tintonfalls|||Monmouth County Park System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "MacaroniKid-NJ-tintonfalls|||Monmouth County Library — Eastern Branch": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "MacaroniKid-NJ-tintonfalls|||Monmouth County Library System - Colts Neck": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "wordpress-KY|||Kenton County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=bibliocommons detected — belongs in a BiblioCommons-* scraper",
+  "population": "zero"
+ },
+ "MacaroniKid-VA-gainesville|||Historic Manassas": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "MacaroniKid-VA-arlington|||Aurora Hill Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "MacaroniKid-VA-roanoke|||PLAY Roanoke Parks and Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-jackson-county-ms|||Jackson County Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-flagler-county|||Flagler County Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-broome-county-ny|||Broome County Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-nassau-county-fl-parks-recreation|||Nassau County Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-concord-nc|||City of Concord Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-forsyth-county-ga|||Forsyth County Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-city-of-danville-va|||Danville, VA": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-city-tallahassee-fl|||Tallahassee, FL": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-newport-news-va|||Riverview Gymnastics Center": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-city-of-gastonia|||City of Gastonia Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-daviess-county-ky|||Daviess County Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-york-county-pa-|||York County Parks": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-maury-county-tn|||Maury County Parks & Recreation": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-huntsville-al|||Huntsville, AL": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-walton-county-fl|||DeFuniak Springs, FL": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-ross-township|||Ross Community Center": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-union-county-nj|||Watchung Stables": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "CivicRec-Parks-Eastern-bluefield-wv|||Bluefield, WV": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-DE|||Appoquinimink Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to newcastlede.gov]",
+  "population": "zero"
+ },
+ "WordPress-DE|||Bear Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to newcastlede.gov]",
+  "population": "zero"
+ },
+ "WordPress-DE|||Brandywine Hundred Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to newcastlede.gov]",
+  "population": "zero"
+ },
+ "WordPress-DE|||Bridgeville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "population": "zero"
+ },
+ "WordPress-DE|||Claymont Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to newcastlede.gov]",
+  "population": "zero"
+ },
+ "WordPress-KY|||Adair County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-KY|||Auburn Branch": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-KY|||Bullitt County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-KY|||Clark County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MA|||Acton Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-KY|||Calloway County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MA|||Andrews Branch Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 125 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-MA|||Amesbury Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NH|||Andover Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.andoverlibrary.org/events",
+  "population": "zero"
+ },
+ "WordPress-MA|||Ashby Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "population": "zero"
+ },
+ "WordPress-NH|||Bethlehem Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 53 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-MA|||Athol Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NH|||Brown Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NH|||Chester Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NH|||Byron G. Merrill Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-PA|||Albright Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show CT not PA; title \"Events – Scranton Library\"",
+  "population": "zero"
+ },
+ "WordPress-RI|||Ashaway Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-PA|||Berks County Public Libraries": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-RI|||George Hail Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-RI|||Exeter Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.exeterlibrary.org/events",
+  "population": "zero"
+ },
+ "WordPress-RI|||Central Falls Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.centralfallslibrary.org/events",
+  "population": "zero"
+ },
+ "WordPress-RI|||Greene Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greenelibrary.org/events",
+  "population": "zero"
+ },
+ "WordPress-SC|||Berkeley County Library - Sangaree Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "population": "zero"
+ },
+ "WordPress-SC|||Chester County Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-SC|||Chesterfield County Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 150 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-SC|||Anderson County Library - Piedmont Branch Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.piedmontlibrary.org/events",
+  "population": "zero"
+ },
+ "WordPress-WV|||Berkeley County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 399 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-WV|||Cameron Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-WV|||Gilbert Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-WV|||East Hardy Branch Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-WV|||Hamlin-Lincoln County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-SC|||Abbeville County Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation timeout after 35000ms",
+  "population": "zero"
  }
 }
