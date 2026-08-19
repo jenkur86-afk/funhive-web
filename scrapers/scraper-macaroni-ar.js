@@ -79,7 +79,7 @@ async function extractEventDetails(page, url) {
   try {
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
     await page.waitForSelector('body', { timeout: 5000 });
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 150)); // MK-PACING per-event settle (was 500ms; body already awaited above)
 
     return await page.evaluate(() => {
       const bodyText = document.body.innerText;
@@ -519,7 +519,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
         }
       }
       // Skipping duplicate logging to reduce noise in Cloud Functions
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 250)); // MK-PACING per-event politeness (was 1000ms)
     }
 
     console.log(`  ✅ ${imported} new | 🔄 ${updated} updated | ⏭️ ${skippedPast} past | ⏩ ${skippedFuture} future | ❓ ${failedExtract} no-date | ⚠️ ${noLocation} no coords`);

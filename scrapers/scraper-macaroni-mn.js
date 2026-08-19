@@ -83,7 +83,7 @@ async function extractEventDetails(page, url) {
   try {
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
     await page.waitForSelector('body', { timeout: 5000 });
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 150)); // MK-PACING per-event settle (was 500ms; body already awaited above)
 
     return await page.evaluate(() => {
       const bodyText = document.body.innerText;
@@ -191,7 +191,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
   try {
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
-    await page.goto(`${site.url}/events/calendar`, { waitUntil: 'networkidle2', timeout: 60000 });
+    await page.goto(`${site.url}/events/calendar`, { waitUntil: 'domcontentloaded', timeout: 60000 /* MK-PACING was networkidle2; the waitForSelector calls below are the real readiness gate */ });
     // Wait for client-side JS to render event links (MacaroniKid is SPA)
     // On old jQuery-platform MK sites, event links are injected by an async API call after
     // jQuery.get() to api.macaronikid.com completes. The generic a[href*="/events/"] selector
@@ -548,7 +548,7 @@ async function scrapeSite(browser, site, maxEvents = 50) {
           console.log(`  ⚠️ Update failed for ${url}: ${updateErr.message}`);
         }
       }
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 250)); // MK-PACING per-event politeness (was 1000ms)
     }
 
     console.log(`  ✅ ${imported} new | 🔄 ${updated} updated | ⏭️ ${skippedPast} past | ⏩ ${skippedFuture} future | ❓ ${failedExtract} no-date | ⚠️ ${noLocation} no coords`);
