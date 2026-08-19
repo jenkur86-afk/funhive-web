@@ -7,14 +7,14 @@ the command is in each gate's detail line and the value is dated, never guessed.
 ---
 ## 2026-08-19
 
-<!-- STATUS-DATA {"date":"2026-08-19","countiesResolve":100,"urlCollisions":534,"confirmedBugs":260,"unknownSites":384,"specificAgeShare":33.2,"nameConformance":50.5,"sourceUrlCoverage":62,"countyCoverage":0} -->
+<!-- STATUS-DATA {"date":"2026-08-19","countiesResolve":100,"urlCollisions":536,"confirmedBugs":260,"unknownSites":384,"specificAgeShare":33.2,"nameConformance":50.5,"sourceUrlCoverage":62,"countyCoverage":0} -->
 
 ### Distance to 100%
 
 | Gate | Now | Δ | Target | Blocking |
 |---|---|---|---|---|
 | 1. Counties resolve | 100% | · | 100% | blocks nothing — mechanical once a city→county dataset is chosen |
-| 2. URLs unique per state | 534 | · | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
+| 2. URLs unique per state | 536 | +2 ⚠️ | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
 | 3. Zero confirmed bugs | 260 | · | 0 | mostly blocked on gate 2 |
 | 4. Zero unknown sites | 384 | · | 0 | independent — re-checking is its own pass |
 | 5. Age brackets resolved | 33.2% | · | max (best 40.6%) | no fixed target — maximise; ratchets vs best ever |
@@ -26,7 +26,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 
 | | Broken | Scale | Why not fixed now |
 |---|---|---|---|
-| 🔴 | URL collisions — entries may point at another state's library | 534 entries on 166 hosts claimed by 2+ states | per-file live verification; the main body of MASTER-PLAN Phase 2 |
+| 🔴 | URL collisions — entries may point at another state's library | 536 entries on 166 hosts claimed by 2+ states | per-file live verification; the main body of MASTER-PLAN Phase 2 |
 | 🟠 | Confirmed open bugs (MISMATCH verdicts) | 260 sites | most blocked on the URL work above |
 | 🟠 | Unknown sites (UNVERIFIABLE verdicts) | 384 sites | bot-blocks / JS-only calendars / TLS failures — never re-checked |
 | 🟠 | Age detection REGRESSED below best-ever specificity | 33.2% resolved (best ever 40.6% on 2026-08-10) | MASTER-PLAN Phase 5, not started |
