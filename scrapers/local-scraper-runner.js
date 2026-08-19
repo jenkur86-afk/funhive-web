@@ -48,6 +48,9 @@ try {
 // Initialize Supabase (replaces Firebase Admin)
 const { db, supabase, saveScraperLog } = require('./helpers/supabase-adapter');
 
+// Starvation-aware group selection (see helpers/group-catchup.js)
+const { selectGroup, recordGroupCompletion } = require('./helpers/group-catchup');
+
 // Import scraper registry
 const {
   SCRAPERS,
@@ -602,9 +605,20 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
     } else {
       // Run today's group (default) - includes Macaroni Kid
       const dayOfMonth = new Date().getDate();
-      const todayGroup = getDayGroup(dayOfMonth);
+      const calendarGroup = getDayGroup(dayOfMonth);
 
-      log(`📅 Today is day ${dayOfMonth} → Group ${todayGroup}`);
+      // A group whose run was dropped is never made up by the calendar alone,
+      // and a dropped run is invisible (MultipleInstances=IgnoreNew). Prefer a
+      // starved group so a missed rotation self-heals. See helpers/group-catchup.js.
+      const selection = selectGroup(calendarGroup);
+      const todayGroup = selection.group;
+
+      if (todayGroup !== calendarGroup) {
+        log(`📅 Today is day ${dayOfMonth} → calendar Group ${calendarGroup}`);
+        log(`🔁 CATCH-UP: ${selection.reason}`);
+      } else {
+        log(`📅 Today is day ${dayOfMonth} → Group ${todayGroup}`);
+      }
       results = { success: [], failed: [], skipped: [] };
 
       // Run regular scrapers
@@ -620,6 +634,12 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
         results.failed.push(...mkResults.failed);
         results.skipped.push(...mkResults.skipped);
       }
+
+      // Only a run that reached the END of the group counts as completed. The
+      // MacaroniKid block is the tail, so a run killed by the 12h execution
+      // limit never gets here — which is exactly what keeps the group marked
+      // starved and eligible for catch-up tomorrow.
+      recordGroupCompletion(todayGroup);
     }
 
     // Print summary
