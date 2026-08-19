@@ -523,7 +523,7 @@ const SCRAPERS = {
   },
   'LibraryMarket': {
     file: './scraper-librarymarket-libraries-CA-CO-FL-MD-TX-VA.js',
-    exportName: 'scrapeLibraryMarketEvents',
+    exportName: 'scrapeLibraryMarketLibraries',
     type: 'puppeteer',
     group: 2,
     state: 'Multi'
@@ -576,14 +576,14 @@ const SCRAPERS = {
   },
   'Cecil-County': {
     file: './scraper-cecil-county-library-MD.js',
-    exportName: 'scrapeCecilCountyLibrary',
+    exportName: 'scrapeCecilEvents',
     type: 'puppeteer',
     group: 2,
     state: 'MD'
   },
   'Dorchester-County': {
     file: './scraper-dorchester-county-library-MD.js',
-    exportName: 'scrapeDorchesterCountyLibrary',
+    exportName: 'scrapeDorchesterEvents',
     type: 'puppeteer',
     group: 3,
     state: 'MD'
@@ -598,7 +598,7 @@ const SCRAPERS = {
   // so removing this key breaks no existing join. See SCRAPER-FIX-LOG.jsonl.
   'Somerset-County': {
     file: './scraper-somerset-county-library-MD.js',
-    exportName: 'scrapeSomersetCountyLibrary',
+    exportName: 'scrapeSomersetEvents',
     type: 'puppeteer',
     group: 2,
     state: 'MD'
@@ -624,7 +624,7 @@ const SCRAPERS = {
   // ============================================================================
   'Berks-County': {
     file: './scraper-berks-county-libraries-PA.js',
-    exportName: 'scrapeBerksCountyLibraries',
+    exportName: 'scrapeBerksLibrary',
     type: 'puppeteer',
     group: 2,
     state: 'PA'
@@ -638,7 +638,7 @@ const SCRAPERS = {
   },
   'Westmoreland-Library': {
     file: './scraper-westmoreland-libraries-PA.js',
-    exportName: 'scrapeWestmorelandLibraries',
+    exportName: 'scrapeWestmorelandLibrary',
     type: 'puppeteer',
     group: 1,
     state: 'PA'
@@ -649,7 +649,7 @@ const SCRAPERS = {
   // ============================================================================
   'Rockbridge-Regional': {
     file: './scraper-rockbridge-regional-library-VA.js',
-    exportName: 'scrapeRockbridgeRegionalLibrary',
+    exportName: 'scrapeRockbridgeEvents',
     type: 'puppeteer',
     group: 2,
     state: 'VA'
@@ -790,7 +790,7 @@ const SCRAPERS = {
   },
   'Tockify-Horry': {
     file: './scraper-tockify-horry-sc.js',
-    exportName: 'scrapeTockifyHorry',
+    exportName: 'scrapeTockifyLibrary',
     type: 'puppeteer',
     group: 2,
     state: 'SC'
@@ -936,7 +936,7 @@ const SCRAPERS = {
   // ============================================================================
   'Venue-Events-ChildrensMuseums': { file: './scraper-venue-events-childrens-museums.js', exportName: 'scrapeChildrensMuseumEvents', type: 'puppeteer', group: 2, state: 'Multi' },
   'Venue-Events-ZoosAquariums': { file: './scraper-venue-events-zoos-aquariums.js', exportName: 'scrapeZooAquariumEvents', type: 'puppeteer', group: 3, state: 'Multi' },
-  'Venue-Events-ScienceArts': { file: './scraper-venue-events-science-arts.js', exportName: 'scrapeScienceArtsEvents', type: 'puppeteer', group: 1, state: 'Multi' },
+  'Venue-Events-ScienceArts': { file: './scraper-venue-events-science-arts.js', exportName: 'scrapeVenueEvents', type: 'puppeteer', group: 1, state: 'Multi' },
 
   // ============================================================================
   // PHASE 5: FESTIVALS & FAIRS (all eastern states)

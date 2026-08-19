@@ -194,6 +194,14 @@ async function runScraper(name, config) {
         throw new Error(`Export '${config.exportName}' not found in ${config.file}. Available: ${Object.keys(scraper).join(', ')}`);
       }
 
+      // Warn loudly rather than repairing in silence. This fallback quietly rewrote the
+      // export name on every run, so 9 registry entries drifted from their files and kept
+      // working — the rot was invisible until an unrelated audit compared them. A silent
+      // self-heal that hides a stale registry is worse than a noisy one: 'Tockify-Horry'
+      // pointed at a function that no longer existed and nobody could tell.
+      log(`REGISTRY DRIFT: '${name}' declares export '${possibleExports[0]}' ` +
+          `but ${config.file} does not export it; falling back to '${foundExport}'. ` +
+          `Fix scraper-registry.js — do not rely on this fallback.`, 'warn');
       config.exportName = foundExport;
     }
 
