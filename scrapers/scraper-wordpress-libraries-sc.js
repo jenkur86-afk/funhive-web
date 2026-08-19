@@ -51,7 +51,9 @@ const LIBRARIES = [
   { name: 'Oconee County Public Library - Seneca Branch Library', url: 'https://www.senecalibrary.org', eventsUrl: 'https://www.senecalibrary.org/events', city: 'Seneca', state: 'SC', zipCode: '29678', county: 'Oconee'},
   { name: 'Spartanburg County Public Library - H. Carlisle Bean Law Library', url: 'https://www.spartanburglibrary.org', eventsUrl: 'https://www.spartanburglibrary.org/events', city: 'Spartanburg', state: 'SC', zipCode: '29306', county: 'Spartanburg County'},
   { name: 'Orangeburg County Library - Springfield Branch Library', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'SC', zipCode: '29146', county: 'Orangeburg'},
-  { name: 'Berkeley County Library - Sangaree Library', url: 'https://www.summervillelibrary.org', eventsUrl: 'https://www.summervillelibrary.org/events', city: 'Summerville', state: 'SC', zipCode: '29483', county: 'Dorchester'},
+  // Berkeley County Library - Sangaree RELOCATED 2026-08-18 to GoogleCalendar-SC.
+  // Same cross-origin Google Calendar iframe pattern as Ashby (MA).
+  // ICS feed verified at 40 events.
   // URL corrected 2026-08-11 (was swansealibrary.org): Lexington County Library locations page lists Swansea branch, 199 N. Lawrence Avenue, Swansea SC 29160, phone 803-785-3519. swansealibrary.o
   { name: 'Lexington County Library - Swansea', url: 'https://lexcolibrary.com', eventsUrl: 'https://lexcolibrary.libcal.com', city: 'Swansea', state: 'SC', zipCode: '29160', county: 'Lexington'},
   { name: 'Union County Library System', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'SC', zipCode: '29379', county: 'Union County'},

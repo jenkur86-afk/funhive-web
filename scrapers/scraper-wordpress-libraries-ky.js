@@ -21,7 +21,10 @@ const LIBRARIES = [
   // Major Metro Libraries
   { name: 'Louisville Free Public Library', url: 'https://www.lfpl.org', eventsUrl: 'https://www.lfpl.org/events', city: 'Louisville', state: 'KY', zipCode: '40203', county: 'Jefferson'},
   { name: 'Lexington Public Library', url: 'https://www.lexpublib.org', eventsUrl: 'https://www.lexpublib.org/events', city: 'Lexington', state: 'KY', zipCode: '40507', county: 'Fayette'},
-  { name: 'Kenton County Public Library', url: 'https://www.kentonlibrary.org', eventsUrl: 'https://www.kentonlibrary.org/events', city: 'Covington', state: 'KY', zipCode: '41011', county: 'Kenton'},
+  // Kenton County Public Library RELOCATED 2026-08-18 to BiblioCommons-KY.
+  // kentonlibrary.org/events 301s to kentonlibrary.bibliocommons.com, so a WordPress
+  // DOM extractor could never read it. Its BiblioCommons config entry already existed
+  // but was orphaned (no wrapper, no registry key); both are now wired up.
   { name: 'Campbell County Public Library', url: 'https://www.cc-pl.org', eventsUrl: 'https://www.cc-pl.org/events', city: 'Cold Spring', state: 'KY', zipCode: '41076', county: 'Campbell'},
   // Regional Libraries
   { name: 'Boone County Public Library', url: 'https://www.bcpl.org', eventsUrl: 'https://www.bcpl.org/events', city: 'Burlington', state: 'KY', zipCode: '41005', county: 'Boone'},

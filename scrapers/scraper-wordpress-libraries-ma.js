@@ -25,7 +25,9 @@ const LIBRARIES = [
   { name: 'Aquinnah Public Library', url: 'https://www.aquinnahlibrary.org', eventsUrl: 'https://www.aquinnahlibrary.org/events', city: 'Aquinnah', state: 'MA', zipCode: '02535', county: 'Dukes County'},
   { name: 'Edith M. Fox Library', url: 'https://www.arlingtonlibrary.org/', eventsUrl: 'https://www.arlingtonlibrary.org/home', city: 'Arlington', state: 'MA', zipCode: '00000', county: 'Middlesex'},
   { name: 'Stevens Memorial Library', url: 'https://www.ashburnhamlibrary.org', eventsUrl: 'https://www.ashburnhamlibrary.org/events', city: 'Ashburnham', state: 'MA', zipCode: '01430', county: 'Worcester'},
-  { name: 'Ashby Free Public Library', url: 'https://www.ashbylibrary.org/', eventsUrl: 'https://www.ashbylibrary.org/calendar/', city: 'Ashby', state: 'MA', zipCode: '01431', county: 'Middlesex'},
+  // Ashby Free Public Library RELOCATED 2026-08-18 to GoogleCalendar-MA.
+  // Its programme lives entirely in a cross-origin Google Calendar iframe, so the
+  // WordPress DOM extractor could never read it. ICS feed verified at 236 events.
   { name: 'Athol Public Library', url: 'https://www.athollibrary.org/', eventsUrl: 'https://www.athollibrary.org/', city: 'Athol', state: 'MA', zipCode: '01331', county: 'Worcester'},
   { name: 'Attleboro Public Library', url: 'https://www.attleborolibrary.org', eventsUrl: 'https://www.attleborolibrary.org/events', city: 'Attleboro', state: 'MA', zipCode: '02703', county: 'Bristol'},
   { name: 'Auburn Free Public Library', url: 'https://auburnlibrary.org/', eventsUrl: 'https://auburnlibrary.org/', city: 'Auburn', state: 'MA', zipCode: '01501', county: 'Worcester'},

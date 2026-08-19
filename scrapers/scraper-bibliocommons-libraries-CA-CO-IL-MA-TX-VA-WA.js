@@ -802,6 +802,11 @@ async function scrapeLibraryEvents(library, browser) {
             source: 'BiblioCommons Scraper',
             scraperName: 'BiblioCommons-' + library.state,
             sourceName: library.name,
+            // The library's own listing page — NOT the individual event's URL, per the
+            // source_url rule in CLAUDE.md. Added 2026-08-18: this family never set it,
+            // so every BiblioCommons row fleet-wide carried a NULL source_url and could
+            // not be identified by host in verify-coverage.js.
+            sourceUrl: library.url,
             county: library.county,
             state: library.state,
             category: 'Storytimes & Library',
@@ -1233,6 +1238,11 @@ async function scrapeLibraryEvents(library, browser) {
             source: 'BiblioCommons Scraper',
             scraperName: 'BiblioCommons-' + library.state,
             sourceName: library.name,
+            // The library's own listing page — NOT the individual event's URL, per the
+            // source_url rule in CLAUDE.md. Added 2026-08-18: this family never set it,
+            // so every BiblioCommons row fleet-wide carried a NULL source_url and could
+            // not be identified by host in verify-coverage.js.
+            sourceUrl: library.url,
             county: library.county,
             state: library.state,
             category: 'Storytimes & Library',
@@ -1468,6 +1478,7 @@ async function scrapeBiblioCommonsCA2() {
 async function scrapeBiblioCommonsCO() { return scrapeBiblioCommonsLibraries('CO'); }
 async function scrapeBiblioCommonsGA() { return scrapeBiblioCommonsLibraries('GA'); }
 async function scrapeBiblioCommonsIL() { return scrapeBiblioCommonsLibraries('IL'); }
+async function scrapeBiblioCommonsKY() { return scrapeBiblioCommonsLibraries('KY'); }
 async function scrapeBiblioCommonsMA() { return scrapeBiblioCommonsLibraries('MA'); }
 async function scrapeBiblioCommonsMI() { return scrapeBiblioCommonsLibraries('MI'); }
 async function scrapeBiblioCommonsMN() { return scrapeBiblioCommonsLibraries('MN'); }
@@ -1523,6 +1534,7 @@ module.exports = {
   scrapeBiblioCommonsCO,
   scrapeBiblioCommonsGA,
   scrapeBiblioCommonsIL,
+  scrapeBiblioCommonsKY,
   scrapeBiblioCommonsMA,
   scrapeBiblioCommonsMI,
   scrapeBiblioCommonsMN,

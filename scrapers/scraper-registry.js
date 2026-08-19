@@ -194,7 +194,13 @@ const SCRAPERS = {
   // Calendar iframe, leaving the host page with no event markup at all — Somerset County
   // Library's events.php has a 493-character body and no dates, so every DOM scraper
   // returned 0 by construction. This reads the public ICS feed behind the iframe instead.
-  'GoogleCalendar-MD': { file: './scraper-gcal-libraries-md.js', exportName: 'scrapeGCalLibrariesMDCloudFunction', type: 'api', group: 3, state: 'MD' },
+  // File renamed 2026-08-18 from scraper-gcal-libraries-md.js: it is no longer MD-only.
+  // MA and SC libraries were relocated here from WordPress-{MA,SC}, where their events sit
+  // in a cross-origin Google Calendar iframe that no DOM extractor can read. Groups chosen
+  // to match each state's existing WordPress rotation day so coverage does not shift.
+  'GoogleCalendar-MD': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesMDCloudFunction', type: 'api', group: 3, state: 'MD' },
+  'GoogleCalendar-MA': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesMACloudFunction', type: 'api', group: 3, state: 'MA' },
+  'GoogleCalendar-SC': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesSCCloudFunction', type: 'api', group: 3, state: 'SC' },
   // 2026-08-09: WordPress-GA's Decatur County - Gilbert H. Gragg Library entry pointed at
   // bainbridgelibrary.org, which times out. The real institution is the Southwest Georgia
   // Regional Library System, whose calendar is a FullCalendar.js widget with no server-
@@ -395,6 +401,19 @@ const SCRAPERS = {
     type: 'puppeteer',
     group: 1,
     state: 'IL'
+  },
+  // Wired up 2026-08-18. The Kenton County config entry already existed in the
+  // BiblioCommons file with a correct, live URL, but had no wrapper and no registry
+  // key, so it had never run once. Kenton was meanwhile configured in WordPress-KY
+  // against kentonlibrary.org/events, which 301s to kentonlibrary.bibliocommons.com --
+  // a WordPress extractor pointed at a BiblioCommons site, hence 0 usable events and
+  // the >=70% All-Ages flag. Group 1 chosen as the lightest active group (49 vs 53/50).
+  'BiblioCommons-KY': {
+    file: './scraper-bibliocommons-libraries-CA-CO-IL-MA-TX-VA-WA.js',
+    exportName: 'scrapeBiblioCommonsKY',
+    type: 'puppeteer',
+    group: 1,
+    state: 'KY'
   },
   'BiblioCommons-MA': {
     file: './scraper-bibliocommons-libraries-CA-CO-IL-MA-TX-VA-WA.js',
