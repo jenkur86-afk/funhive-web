@@ -142,6 +142,7 @@ function loadConfiguredSites() {
   const sites = [];
   let unparseable = 0;
   const fileCache = new Map();
+  const pushedFiles = new Set();
 
   Object.entries(all).forEach(([key, sc]) => {
     if (!sc.file || !reg.isScraperActive(sc, activeStates)) return;
@@ -173,6 +174,19 @@ function loadConfiguredSites() {
       }
       fileCache.set(abs, entries);
     }
+    // Push each FILE's entries exactly once. fileCache above caches the PARSE, not the
+    // insertion, so before 2026-08-18 every registry key pointing at a shared file pushed
+    // that file's entire config again: the LibCal file is registered under 18 active keys
+    // and contributed its 132 entries 18 times, Communico 16x, BiblioCommons 6x. Gates 1
+    // and 2 were inflated by that multiple for exactly those families — and gate 2 is the
+    // headline 🔴 that picks the "next action", so the number driving priorities was wrong.
+    // Caught when adding two GoogleCalendar keys moved gate 2 by +2 with no new config:
+    // one Sangaree entry had simply gone from being counted 1x to 3x.
+    // Families are unaffected by picking a representative key: every key sharing a file
+    // has the same family prefix (LibCal-*, Communico-*, BiblioCommons-*, GoogleCalendar-*),
+    // and gate 1 groups on scraper.split('-')[0].
+    if (pushedFiles.has(abs)) return;
+    pushedFiles.add(abs);
     entries.forEach(e => sites.push({ ...e, scraper: key, state: e.state || sc.state || '' }));
   });
 
@@ -246,8 +260,17 @@ function computeGates() {
   const collidingHosts = [...byHost.entries()].filter(([, states]) => states.size > 1);
   const collidingHostSet = new Set(collidingHosts.map(([h]) => h));
   const collidingEntries = sites.filter(s => collidingHostSet.has(hostOf(s.url))).length;
+  // 2026-08-18: gates 1-2 dropped (gate 2: 536 -> 504) because loadConfiguredSites was
+  // fixed to stop double-counting shared config files, NOT because collisions were
+  // resolved. Any comparison against a STATUS.md entry dated on or before 2026-08-18 is
+  // across a methodology change and is not a like-for-like trend.
   g.urlCollisions = { now: collidingEntries, unit: '', target: 0,
     detail: `${collidingEntries} entries on ${collidingHosts.length} hosts claimed by 2+ states` };
+  if (TODAY <= '2026-08-25') {
+    notes.push('METHODOLOGY CHANGE 2026-08-18: gates 1-2 previously counted a shared config file once per registry key ' +
+               'pointing at it (LibCal x18, Communico x16, BiblioCommons x6), inflating both. Gate 2 fell 536 -> 504 as a ' +
+               'RESULT OF THE FIX, not because any collision was resolved. Do not read that delta as progress.');
+  }
   if (unparseable) {
     notes.push(`${unparseable} config entries have no literal url string and are excluded from gates 1-2 ` +
                `(usually a variable reference — see loadConfiguredSites' header comment).`);
