@@ -14,7 +14,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 | Gate | Now | Δ | Target | Blocking |
 |---|---|---|---|---|
 | 1. Counties resolve | 100% | · | 100% | blocks nothing — mechanical once a city→county dataset is chosen |
-| 2. URLs unique per state | 504 | -32 ✅ | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
+| 2. URLs unique per state | 504 | · | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
 | 3. Zero confirmed bugs | 260 | · | 0 | mostly blocked on gate 2 |
 | 4. Zero unknown sites | 384 | · | 0 | independent — re-checking is its own pass |
 | 5. Age brackets resolved | 33.2% | · | max (best 40.6%) | no fixed target — maximise; ratchets vs best ever |
