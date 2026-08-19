@@ -217,16 +217,13 @@ const LIBRARY_SYSTEMS = [
     zipCode: '80226'
   },
 
-  // CONNECTICUT (1 library)
-  {
-    name: 'Hartford Public Library',
-    url: 'https://hartfordlibrary.bibliocommons.com/v2/events',
-    county: 'Hartford',
-    state: 'CT',
-    website: 'https://www.hplct.org',
-    city: 'Hartford',
-    zipCode: '06103'
-  },
+  // CONNECTICUT — entry REMOVED 2026-08-18, relocated to Communico-CT.
+  // Hartford Public Library was orphaned here: configured but with no wrapper function
+  // and no registry key, so it had never run once. Its URL
+  // (hartfordlibrary.bibliocommons.com/v2/events) also now returns HTTP 404 — the library
+  // migrated off BiblioCommons to Communico. Verified live at programs.hplct.org before
+  // the move: 25 upcoming events across 6 branches via the /eeventcaldata API.
+  // Removed rather than left in place so nothing keeps pointing at a dead endpoint.
 
   // GEORGIA (1 library)
   {

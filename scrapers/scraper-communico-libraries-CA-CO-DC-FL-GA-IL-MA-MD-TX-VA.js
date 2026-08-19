@@ -1183,6 +1183,23 @@ const LIBRARY_SYSTEMS = [
   //   city: 'Jackson',
   //   zipCode: '39201'
   // }
+  // CONNECTICUT
+  // Added 2026-08-18. Hartford was previously configured ONLY in the BiblioCommons file,
+  // where it was orphaned (no wrapper, no registry key, so it never ran once) AND its
+  // hartfordlibrary.bibliocommons.com URL now 404s — the library migrated to Communico.
+  // Verified live before wiring: the /eeventcaldata API returns 25 upcoming events across
+  // six branches (Downtown, Albany, Camp Field, Dwight, Barbour, Park Street @ The Lyric),
+  // nine of them age-targeted. hplct.libnet.info serves the identical payload; the public
+  // programs.hplct.org host is used here since that is the page a person actually opens.
+  {
+    name: 'Hartford Public Library',
+    url: 'https://programs.hplct.org/events',
+    county: 'Hartford',
+    state: 'CT',
+    website: 'https://www.hplct.org',
+    city: 'Hartford',
+    zipCode: '06103'
+  },
 ];
 
 // Note: geocodeAddress is now imported from geocoding-helper.js with fallback support
@@ -2080,6 +2097,7 @@ async function scrapeCommunicoIA() { return scrapeCommunicoLibraries('IA'); }
 async function scrapeCommunicoIL() { return scrapeCommunicoLibraries('IL'); }
 async function scrapeCommunicoIN() { return scrapeCommunicoLibraries('IN'); }
 // scrapeCommunicoMA re-added 2026-07-10 with Worcester Public Library (see comment above).
+async function scrapeCommunicoCT() { return scrapeCommunicoLibraries('CT'); }
 async function scrapeCommunicoMA() { return scrapeCommunicoLibraries('MA'); }
 async function scrapeCommunicoMD() { return scrapeCommunicoLibraries('MD'); }
 async function scrapeCommunicoNJ() { return scrapeCommunicoLibraries('NJ'); }
@@ -2146,6 +2164,7 @@ module.exports = {
   scrapeCommunicoIA,
   scrapeCommunicoIL,
   scrapeCommunicoIN,
+  scrapeCommunicoCT,
   scrapeCommunicoMA,
   scrapeCommunicoMD,
   scrapeCommunicoNJ,

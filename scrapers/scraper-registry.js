@@ -279,6 +279,17 @@ const SCRAPERS = {
   // LibCal-MA" — checked, and LibCal-MA only ever had a TODO stub for it, never a
   // real entry. Worcester was actually uncovered. Verified mywpl.libnet.info/events
   // is a live Communico/LibNet calendar and added it back with the correct URL.
+  // Added 2026-08-18. Hartford Public Library existed ONLY as an orphaned entry in the
+  // BiblioCommons file (no wrapper, no registry key, never ran) whose URL now 404s — the
+  // library migrated to Communico. Verified live: 25 events across 6 branches. Group 1 is
+  // the lightest active group (50 vs 53/52) and matches the rest of the Communico family.
+  'Communico-CT': {
+    file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js',
+    exportName: 'scrapeCommunicoCT',
+    type: 'puppeteer',
+    group: 1,
+    state: 'CT'
+  },
   'Communico-MA': {
     file: './scraper-communico-libraries-CA-CO-DC-FL-GA-IL-MA-MD-TX-VA.js',
     exportName: 'scrapeCommunicoMA',
