@@ -173,6 +173,59 @@ const { normalizeDateString } = require('./date-normalization-helper');
 const { linkEventToVenue } = require('./venue-matcher');
 
 // LibCal Library Systems
+/**
+ * scraper_name for this family, per CLAUDE.md "Scraper Naming".
+ * Registry keys here are exactly `LibCal-<ST>`, so the key derives from library.state,
+ * and the slug identifies the individual SITE — one distinct name per site, never a
+ * bare key, never a display name.
+ *
+ * Until 2026-08-18 this was never set at all: flattenEvent() fell back to
+ * metadata.sourceName and wrote the library's DISPLAY NAME ("Bear Library",
+ * "Delaware Libraries"), which joins to no registry entry — the FREE_TEXT drift class
+ * in scripts/check-scraper-names.js. Same defect and same fix as the Communico family
+ * on 2026-08-16; this file is larger (132 libraries / 28 states) so the slug rule had
+ * to handle a case Communico did not have.
+ *
+ * THE HOSTNAME ALONE IS NOT ENOUGH HERE. Communico could slug from the host label,
+ * but several LibCal SYSTEMS put every branch on one shared host and identify the
+ * branch in the PATH: all 6 Delaware libraries are on delawarelibraries.libcal.com,
+ * and bccls.libcal.com / prlib.libcal.com each carry two. A host-only slug collapses
+ * those onto one name, which is exactly the aggregation AGE-RANGE-AUDIT.md's
+ * "No aggregation, ever" rule forbids. So a non-generic trailing path segment is
+ * appended when present. That is applied unconditionally rather than only on
+ * collision, so a name never depends on array order or on which siblings happen to
+ * be configured.
+ *
+ * Verified across all 132 configured libraries before shipping: 132 distinct names,
+ * 0 collisions, 0 falling back to a bare key.
+ */
+const GENERIC_HOST_LABELS = new Set([
+  'www', 'events', 'calendar', 'programs', 'catalog', 'go', 'attend'
+]);
+const GENERIC_PATH_SEGMENTS = new Set([
+  'calendar', 'calendars', 'event', 'events'
+]);
+
+function buildScraperName(library) {
+  const key = `LibCal-${library.state}`;
+  let slug = '';
+  try {
+    const u = new URL(library.url);
+    const labels = u.hostname.toLowerCase().split('.');
+    while (labels.length > 1 && GENERIC_HOST_LABELS.has(labels[0])) labels.shift();
+    slug = (labels[0] || '').replace(/[^a-z0-9-]/g, '');
+
+    const segs = u.pathname.toLowerCase().split('/')
+      .filter(Boolean)
+      .filter(s => !GENERIC_PATH_SEGMENTS.has(s));
+    if (segs.length) {
+      const seg = segs[segs.length - 1].replace(/[^a-z0-9-]/g, '');
+      if (seg && seg !== slug) slug += `-${seg}`;
+    }
+  } catch (_) { /* malformed url — fall through to the bare key */ }
+  return slug ? `${key}-${slug}` : key;
+}
+
 const LIBRARY_SYSTEMS = [
   // CALIFORNIA
   {
@@ -1861,6 +1914,9 @@ async function scrapeLibraryEvents(library, browser) {
           metadata: {
             source: 'LibCal Scraper',
             sourceName: library.name,
+            // Must be set explicitly: without it flattenEvent() falls back to
+            // sourceName and writes a display name that joins to no registry key.
+            scraperName: buildScraperName(library),
             county: library.county,
             state: library.state,
             addedDate: admin.firestore.FieldValue.serverTimestamp()
