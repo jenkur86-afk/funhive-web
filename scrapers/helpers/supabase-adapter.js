@@ -528,7 +528,12 @@ function detectAgeRange(name, description) {
   if (/\b(baby|babies|infants?|lap\s*sit)\b/.test(text)) return '0-2';
   if (/\btoddler/.test(text)) return '1-3';
   if (/\b(preschool(?:ers?)?|pre-k|prek|pre\s*k)\b/.test(text)) return '3-5';
-  if (/\btween/.test(text)) return '9-12';
+  // "t(w)een" is a real and common library/rec spelling meaning "teen or tween"
+  // — e.g. Springfield City Library's "Crafternoon for T(w)eens", found in the
+  // 2026-08-20 all-ages audit sitting in All Ages despite naming its bracket in
+  // the title. The 'w' stays mandatory so a plain "teen" cannot match here and
+  // is still handled by the teen rule below.
+  if (/\bt\(?w\)?een/.test(text)) return '9-12';
   // 13-18, not 11-18: normalizeAgeRange() buckets by the range's lower bound, so
   // "11-18" resolved to Tweens (9-12) and every bare-"teen" event was being filed
   // as a tween event. 13-18 is also what the platform's own Teens bracket means.
@@ -1072,6 +1077,34 @@ function isJunkTitle(name) {
   ];
   for (const pattern of NAV_JUNK) {
     if (pattern.test(trimmed)) return true;
+  }
+
+  // Municipal governance agendas. Parks-and-rec calendars publish their town's
+  // meeting schedule on the same feed as their programming, so these arrive as
+  // "events": the 2026-08-20 audit found South Kingstown Parks and Recreation
+  // contributing Town Council, Planning Board - Regular Session, Municipal Court,
+  // Housing Court, Probate Court, Zoning Board of Review and four advisory
+  // commissions. None is a family event in any age bracket.
+  //
+  // THE RESCUE BELOW IS LOAD-BEARING — do not remove it. "Teen Advisory Board"
+  // and "Tween Advisory Board" are extremely common REAL library programs, and a
+  // bare /advisory board/ rule deletes them. A measured scan of 12,000 rows hit
+  // 26 governance titles, six of which were exactly those library programs.
+  const GOVERNANCE = [
+    /\b(town|city|village|borough)\s+council\b/i,
+    /\b(municipal|housing|probate|district)\s+court\b/i,
+    /\b(planning|zoning)\s+board\b/i,
+    /\bzoning\s+board\s+of\s+review\b/i,
+    /\b(historic\s+district|waterfront|recreation)\s+commission\b/i,
+    /\badvisory\s+(committee|commission|board)\b/i,
+    /\btechnical\s+review\s+committee\b/i,
+    /\beconomic\s+development\s+committee\b/i,
+  ];
+  const AUDIENCE_RESCUE = /\b(teens?|tweens?|youth|kids?|child(ren)?|famil(y|ies)|students?|junior)\b/i;
+  if (!AUDIENCE_RESCUE.test(trimmed)) {
+    for (const pattern of GOVERNANCE) {
+      if (pattern.test(trimmed)) return true;
+    }
   }
 
   // Title with no letters (just numbers, punctuation, or whitespace)
