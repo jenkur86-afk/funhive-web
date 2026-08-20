@@ -284,6 +284,11 @@ async function scrapeLibraryEvents(library, browser) {
   let imported = 0;
   let skipped = 0;
   let failed = 0;
+  // Counts what the feed displayed, summed across the per-date requests. Needed
+  // because the per-site audit pairs "📍 {library}" with a "Found {N} events" line
+  // and this scraper emitted none at all, so none of its libraries ever reached
+  // LIBRARY-SITE-AUDIT.md or the site report. Diagnosed 2026-08-20.
+  let foundOnPage = 0;
 
   try {
     const dates = getDatesToScrape();
@@ -291,6 +296,7 @@ async function scrapeLibraryEvents(library, browser) {
 
     for (const date of dates) {
       const events = await scrapeDateEvents(library, date);
+      foundOnPage += events.length;
 
       for (const event of events) {
         try {
@@ -435,6 +441,7 @@ async function scrapeLibraryEvents(library, browser) {
       await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
       const fallbackEvents = await scrapeEventsPageFallback(library, page);
       await page.close();
+      foundOnPage += fallbackEvents.length;
       for (const event of fallbackEvents) {
         try {
           const ageRange = mapAgeRange(event.ageGroup);
@@ -518,6 +525,11 @@ async function scrapeLibraryEvents(library, browser) {
     console.error(`  ❌ Error scraping ${library.name}:`, error.message);
     failed++;
   }
+
+  // Emitted unconditionally, including the 0 case: a library that genuinely shows
+  // nothing must still get an audit row, otherwise it is indistinguishable from a
+  // library the audit never saw.
+  console.log(`   Found ${foundOnPage} events`);
 
   if (imported === 0 && failed === 0) {
     console.warn(`  ⚠️  ${library.name}: 0 events from both feed and Puppeteer fallback — feed URL may have changed or no upcoming events`);

@@ -1401,6 +1401,11 @@ async function scrapeLibraryEvents(library, browser) {
   const apiEvents = await tryApiScrape(library);
   if (apiEvents && apiEvents.length > 0) {
     console.log(`   ✓ Using API data (${apiEvents.length} events)`);
+    // See the identical note in scraper-bibliocommons-*: the per-site audit pairs the
+    // "📍 {library}" header with the next "Found {N} events" line, which only existed
+    // on the Puppeteer fallback. The API path runs, so every Communico library was
+    // missing from LIBRARY-SITE-AUDIT.md. Diagnosed 2026-08-20.
+    console.log(`   Found ${apiEvents.length} events`);
 
     for (const event of apiEvents) {
       try {

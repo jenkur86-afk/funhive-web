@@ -735,6 +735,12 @@ async function scrapeLibraryEvents(library, browser) {
   const apiEvents = await tryApiScrape(library);
   if (apiEvents && apiEvents.length > 0) {
     console.log(`   ✓ Using API data (${apiEvents.length} events)`);
+    // The per-site audit (scripts/build-library-site-audit.js) pairs the "📍 {library}"
+    // header with the NEXT "Found {N} events" line. That line only existed on the
+    // Puppeteer fallback path below, and the API path is the one that actually runs —
+    // so every BiblioCommons library was silently dropped from LIBRARY-SITE-AUDIT.md
+    // and from the site report. Diagnosed 2026-08-20.
+    console.log(`   Found ${apiEvents.length} events`);
 
     for (const event of apiEvents) {
       try {
