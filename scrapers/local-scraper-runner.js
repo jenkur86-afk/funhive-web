@@ -600,6 +600,16 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
         results.success.push(...mkResults.success);
         results.failed.push(...mkResults.failed);
         results.skipped.push(...mkResults.skipped);
+
+        // An explicit --group run is how a starved group actually gets caught
+        // up by hand, so it MUST count as a completion — otherwise the group
+        // stays marked starved, and the next scheduled run helpfully repeats
+        // the ~30h of work that was just done instead of advancing to the
+        // group whose turn it really is. Recorded only when the MacaroniKid
+        // tail ran: with --no-macaroni the group is not actually complete, and
+        // a run killed before this line never reaches it, which is the whole
+        // point of the mechanism. Added 2026-08-20.
+        recordGroupCompletion(options.group);
       }
 
     } else {
