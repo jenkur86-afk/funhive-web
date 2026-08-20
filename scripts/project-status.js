@@ -45,8 +45,8 @@ const TODAY = new Date().toISOString().slice(0, 10);
  */
 const STALE_METRICS = {
   nameConformance: {
-    value: 50.5, unit: '%', measured: '2026-08-18',
-    detail: '328 of 649 distinct scraper_name values conform (37 EXACT + 291 PREFIXED). 321 names drift, roughly flat vs 2026-08-15s 331 despite the growing denominator — the MacaroniKid per-site naming fix keeps minting new conforming names about as fast as drift accumulates elsewhere. COLLAPSED entries unchanged: CivicEngage-Libraries, CustomDrupal-Libraries, MacaroniKid-MD, MacaroniKid-DE (see check-scraper-names.js multi-site coverage section).',
+    value: 51.5, unit: '%', measured: '2026-08-20',
+    detail: '320 of 621 distinct scraper_name values conform (38 EXACT + 282 PREFIXED); 301 drift, down from 321 on 2026-08-18 while the denominator also fell 649 -> 621. Read that pair carefully: no renaming was done, so the movement is old rows ageing out of the 2026-08-01 measurement window, not drift being repaired. The MacaroniKid Group 1 run that finished 2026-08-20 minted 67 new per-site names, all conforming, which is what lifts the ratio. Drift classes: FORMAT_DRIFT 79 names / 22949 rows (RecDeskParks-* is the bulk and needs RecDesk-Parks-<slug>), FREE_TEXT 181 / 10479, CASE_MISMATCH 25 / 8308, UNRELATED 15 / 1298, BAD_SLUG 1 / 42. COLLAPSED entries unchanged: CivicEngage-Libraries 2 sites, CustomDrupal-Libraries 8, MacaroniKid-MD 20, MacaroniKid-DE 2.',
     refresh: 'node scripts/check-scraper-names.js',
   },
   sourceUrlCoverage: {
