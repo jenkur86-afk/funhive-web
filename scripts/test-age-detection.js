@@ -42,6 +42,13 @@ const CASES = [
   ['Preschool Storytime Northgate 10 am (Ages 3-5)', 'All Ages', 'Preschool (3-5)', 'supplied catch-all vs explicit ages'],
   ['Toddler Story Time', 'Library Programs', 'Babies & Toddlers (0-2)', 'WordPress category chip is not an audience'],
   ['Tween Crafting With Ms. Ji', 'All Ages', 'Tweens (9-12)', 'supplied catch-all vs keyword'],
+  // Added 2026-08-20 from a confirmed MISMATCH at Springfield City Library:
+  // Mason Square Branch — "Crafternoon for T(w)eens" named its own bracket in
+  // the title and still landed in All Ages, because \btween cannot match the
+  // parenthesised spelling. The two controls below keep the 'w' mandatory.
+  ['Crafternoon for T(w)eens', 'All Ages', 'Tweens (9-12)', 'parenthesised t(w)een spelling'],
+  ['Teen Movie Night', '', 'Teens (13-18)', 'plain teen must NOT be captured by the t(w)een rule'],
+  ['Juneteenth Block Party', '', 'All Ages', 't(w)een rule must not fire inside another word'],
 
   // --- a SPECIFIC supplied value is authoritative and must never be overridden
   ['Family Movie Night', 'Teens (13-18)', 'Teens (13-18)', 'specific supplied value wins'],
@@ -122,6 +129,18 @@ const ADULTS_CASES = [
   ['Afternoon Lecture Series', 'Adults', 'neutral title must not invent a non-adult signal'],
 ];
 
+// The fixture date must always be in the FUTURE. flattenEvent() rejects past
+// events by design, so a hardcoded literal turns this whole suite into a hard
+// crash the moment that date passes — which is exactly what happened: the date
+// was 'August 15, 2026', and on 2026-08-20 the suite could not run at all, so
+// the guard rail CLAUDE.md tells you to run after every detectAgeRange() change
+// was silently down. Derived from today so it can never expire again.
+const FIXTURE_DATE = (() => {
+  const d = new Date();
+  d.setDate(d.getDate() + 30);
+  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+})();
+
 let pass = 0;
 const failures = [];
 
@@ -130,7 +149,7 @@ for (const [title, supplied, expected, why, description] of CASES) {
     name: title,
     description: description || '',
     ageRange: supplied,
-    eventDate: 'August 15, 2026',
+    eventDate: FIXTURE_DATE,
     venue: 'Test Venue',
     city: 'Testville',
     state: 'TN',
@@ -156,7 +175,7 @@ for (const [title, supplied, why] of ADULTS_CASES) {
 
 // Provenance fields — these are what the per-site audits key off.
 const prov = flattenEvent({
-  name: 'Provenance Check', eventDate: 'August 15, 2026', venue: 'V', state: 'TN',
+  name: 'Provenance Check', eventDate: FIXTURE_DATE, venue: 'V', state: 'TN',
   sourceUrl: 'https://lib.example.org/calendar',
   metadata: { scraperName: 'test-age-detection' },
 });
