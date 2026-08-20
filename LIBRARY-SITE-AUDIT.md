@@ -5427,3 +5427,18 @@ Group 3 rotation day (run started 07:00:02Z). 25 library-family scrapers produce
 | Windham Town | VT | WordPress-VT | 2 |
 | Windsor Public | VT | WordPress-VT | 0 |
 | Woodbury Community | VT | WordPress-VT | 1 |
+## 2026-08-20
+
+**Window: 2026-08-19T18:18:54Z → 2026-08-20T15:08Z.** The only scrapers that completed in it were the nine MacaroniKid Group 1 states (PA, NC, MA, TN, AL, KY, RI, DC, WV), which are not a library family, so this run contributes no rotation-driven library rows. Everything else in the 2026-08-19 Group 1 run had already finished before that run's audit was built and is recorded under `## 2026-08-19`.
+
+**Root cause found for a long-standing hole in this file — BiblioCommons-\*, Communico-\* and Drupal-Pennsylvania have never produced per-site rows.** `scripts/build-library-site-audit.js` pairs the `📍 {library}` header with the *next* `Found {N} events` line. In both shared family files that line existed **only on the Puppeteer fallback path**, while the API path — the one that actually runs, logging `✓ Using API data (N events)` — emitted nothing; `scraper-drupal-libraries-PA.js` had no such line anywhere. The 📍 header was therefore parsed, went unpaired, and every one of those libraries was dropped silently. This is why the 2026-08-19 audit shows 25 scrapers while the run table shows BiblioCommons-KY/NJ/VA, Communico-DC/VA/CT/NC/MA and Drupal-Pennsylvania all running successfully that same morning.
+
+Fixed 2026-08-20 in all three files. Verified live rather than by reasoning: a re-run of `Communico-MA` now logs `Found 5 events` and the builder emits the row below, where it previously emitted none.
+
+| Library Website | State | Scraper | Events Found |
+|---|---|---|---|
+| Worcester Public Library | MA | Communico-MA | 5 |
+
+The other affected libraries cannot backfill from the existing `scraper-stdout.log` — the missing line was never written — so they will appear on their next rotation (Group 1, ~2026-08-22). Tracked in `reports/fix-notes.json` `_pending`.
+
+**Cycle-completion check: not complete.** Across the current cycle (`## 2026-08-16`, `## 2026-08-18`, `## 2026-08-19`, plus today) 67 of 109 active library-family scrapers have at least one row and 42 do not. A large part of that 42 is the bug above rather than a rotation gap: BiblioCommons-GA/KY/NC, Communico-AL/CT/GA/KY/NJ/SC, LibraryMarket-GA/ME-NH-MA and the single-system scrapers that have no per-site config array at all. No `Cycle complete` marker is added.
