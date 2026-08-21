@@ -45,8 +45,8 @@ const TODAY = new Date().toISOString().slice(0, 10);
  */
 const STALE_METRICS = {
   nameConformance: {
-    value: 51.5, unit: '%', measured: '2026-08-20',
-    detail: '320 of 621 distinct scraper_name values conform (38 EXACT + 282 PREFIXED); 301 drift, down from 321 on 2026-08-18 while the denominator also fell 649 -> 621. Read that pair carefully: no renaming was done, so the movement is old rows ageing out of the 2026-08-01 measurement window, not drift being repaired. The MacaroniKid Group 1 run that finished 2026-08-20 minted 67 new per-site names, all conforming, which is what lifts the ratio. Drift classes: FORMAT_DRIFT 79 names / 22949 rows (RecDeskParks-* is the bulk and needs RecDesk-Parks-<slug>), FREE_TEXT 181 / 10479, CASE_MISMATCH 25 / 8308, UNRELATED 15 / 1298, BAD_SLUG 1 / 42. COLLAPSED entries unchanged: CivicEngage-Libraries 2 sites, CustomDrupal-Libraries 8, MacaroniKid-MD 20, MacaroniKid-DE 2.',
+    value: 54.2, unit: '%', measured: '2026-08-21',
+    detail: '381 of 703 distinct scraper_name values conform (39 EXACT + 342 PREFIXED); 322 drift. Both numbers rose because the 2026-08-21 Group 2 catch-up minted a large batch of NEW per-site names — MacaroniKid-FL alone contributed 23 conforming ones — so the denominator grew 621 -> 703 while conformance went 51.5% -> 54.2%. As on 2026-08-20, NO renaming was performed; the ratio moves through new conforming rows arriving and old rows ageing out of the 2026-08-01 window, not through drift being repaired. Drift classes: FORMAT_DRIFT 81 names / 23335 rows (RecDeskParks-* is still the bulk and needs RecDesk-Parks-<slug>), FREE_TEXT 188 / 9482, CASE_MISMATCH 25 / 9333, UNRELATED 27 / 1760, BAD_SLUG 1 / 42. COLLAPSED entries unchanged: CivicEngage-Libraries 2 sites, CustomDrupal-Libraries 8, MacaroniKid-MD 20, MacaroniKid-DE 2 — MacaroniKid-MD should resolve once the in-flight Group 2 MacaroniKid tail reaches MD, whose file already carries the per-site fix.',
     refresh: 'node scripts/check-scraper-names.js',
   },
   sourceUrlCoverage: {
