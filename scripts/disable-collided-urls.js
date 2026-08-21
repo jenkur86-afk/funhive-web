@@ -77,6 +77,11 @@ const GROUND_TRUTH = {
   'newlondonlibrary.org':    { state: 'WI', evidence: 'live page: New London Public Library, "113 W North Water Street, New London, Wisconsin 54961", area code 920. Claimed by CT/NH — neither is WI. Explains the identical LEGO Build events under both.' },
   'dallaslibrary.org':       { state: 'TX', evidence: 'live page: Dallas Public Library, Dallas TX. Claimed by WV/NC — neither is TX. 91 rows already in the DB from this host.' },
   'florencelibrary.org':     { state: 'SC', evidence: 'live page: Florence County Library System, Florence SC (six branches). Claimed by MA/SC/KY/MS — the SC entry is the correct one and is KEPT; the other three are wrong.' },
+  // --- third pass, 2026-08-21 --------------------------------------------------
+  'littlefallslibrary.org':  { state: 'NJ', evidence: 'live page: Little Falls Public Library, "8 Warren Street Little Falls, New Jersey 07424", area code 973. The NJ entry is correct and is KEPT; the NY claimant (49 rows already in the DB) is wrong.' },
+  'dekalblibrary.org':       { state: 'GA', evidence: 'live page: DeKalb County Public Library, "215 Sycamore Street, Decatur, Georgia 30030". The GA entry is correct and is KEPT.' },
+  'perulibrary.org':         { state: 'IL', evidence: 'live page: Peru Public Library, "1409 11th Street, Peru, Illinois 61354", area code 815. Illinois is outside the active region; claimed by MA and NY, both wrong, 29 rows already in the DB.' },
+  'warsawlibrary.org':       { state: 'IN', evidence: 'live page: Warsaw Community Public Library, "310 East Main Street Warsaw, Indiana 46580", area code 574. Indiana is outside the active region; claimed by NY/KY/NC, all wrong.' },
 };
 
 function hostOf(u) {

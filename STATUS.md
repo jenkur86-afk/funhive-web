@@ -7,15 +7,15 @@ the command is in each gate's detail line and the value is dated, never guessed.
 ---
 ## 2026-08-21
 
-<!-- STATUS-DATA {"date":"2026-08-21","countiesResolve":100,"urlCollisions":434,"confirmedBugs":330,"unknownSites":399,"specificAgeShare":34.8,"nameConformance":54.2,"sourceUrlCoverage":62,"countyCoverage":0} -->
+<!-- STATUS-DATA {"date":"2026-08-21","countiesResolve":100,"urlCollisions":425,"confirmedBugs":337,"unknownSites":399,"specificAgeShare":34.8,"nameConformance":54.2,"sourceUrlCoverage":62,"countyCoverage":0} -->
 
 ### Distance to 100%
 
 | Gate | Now | Δ | Target | Blocking |
 |---|---|---|---|---|
 | 1. Counties resolve | 100% | · | 100% | blocks nothing — mechanical once a city→county dataset is chosen |
-| 2. URLs unique per state | 434 | -14 ✅ | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
-| 3. Zero confirmed bugs | 330 | +12 ⚠️ | 0 | mostly blocked on gate 2 |
+| 2. URLs unique per state | 425 | -9 ✅ | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
+| 3. Zero confirmed bugs | 337 | +7 ⚠️ | 0 | mostly blocked on gate 2 |
 | 4. Zero unknown sites | 399 | · | 0 | independent — re-checking is its own pass |
 | 5. Age brackets resolved | 34.8% | · | max (best 40.6%) | no fixed target — maximise; ratchets vs best ever |
 | 6. Names join to registry | 54.2% ⚠stale | · | 100% | planned migration, not daily work |
@@ -26,8 +26,8 @@ the command is in each gate's detail line and the value is dated, never guessed.
 
 | | Broken | Scale | Why not fixed now |
 |---|---|---|---|
-| 🔴 | URL collisions — entries may point at another state's library | 434 entries on 148 hosts claimed by 2+ states; a further 58 disabled via urlCollision and excluded | per-file live verification; the main body of MASTER-PLAN Phase 2 |
-| 🟠 | Confirmed open bugs (MISMATCH verdicts) | 330 sites | most blocked on the URL work above |
+| 🔴 | URL collisions — entries may point at another state's library | 425 entries on 144 hosts claimed by 2+ states; a further 65 disabled via urlCollision and excluded | per-file live verification; the main body of MASTER-PLAN Phase 2 |
+| 🟠 | Confirmed open bugs (MISMATCH verdicts) | 337 sites | most blocked on the URL work above |
 | 🟠 | Unknown sites (UNVERIFIABLE verdicts) | 399 sites | bot-blocks / JS-only calendars / TLS failures — never re-checked |
 | 🟠 | Age detection REGRESSED below best-ever specificity | 34.8% resolved (best ever 40.6% on 2026-08-10) | MASTER-PLAN Phase 5, not started |
 | 🟡 | scraper_name drift — rows cannot join back to the registry | 54.2% conform (as of 2026-08-21) | deliberate migration, explicitly not daily work |
@@ -36,7 +36,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 **Next action:** Defect A (URL collisions), worst-collision-state first — it gates the selector and age-detection work behind it.
 
 **Data notes:**
-- METHODOLOGY CHANGE 2026-08-21: 58 entries proven to point at another state's library were flagged urlCollision and are skipped at run time, so they are excluded from gate 2. Gate 2 fell 504 -> 448 as a result. That is a real reduction in RISK — those entries can no longer import another state's events — but it is NOT a URL being corrected: the wrong host is still in the config and each of those libraries is now an explicit, uncovered gap. Do not read the drop as coverage improving. Worklist: node scripts/list-url-collisions.js
+- METHODOLOGY CHANGE 2026-08-21: 65 entries proven to point at another state's library were flagged urlCollision and are skipped at run time, so they are excluded from gate 2. Gate 2 fell 504 -> 448 as a result. That is a real reduction in RISK — those entries can no longer import another state's events — but it is NOT a URL being corrected: the wrong host is still in the config and each of those libraries is now an explicit, uncovered gap. Do not read the drop as coverage improving. Worklist: node scripts/list-url-collisions.js
 - METHODOLOGY CHANGE 2026-08-18: gates 1-2 previously counted a shared config file once per registry key pointing at it (LibCal x18, Communico x16, BiblioCommons x6), inflating both. Gate 2 fell 536 -> 504 as a RESULT OF THE FIX, not because any collision was resolved. Do not read that delta as progress.
 - 1283 config entries have no literal url string and are excluded from gates 1-2 (usually a variable reference — see loadConfiguredSites' header comment).
 

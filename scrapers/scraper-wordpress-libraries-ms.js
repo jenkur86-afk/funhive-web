@@ -46,7 +46,7 @@ const LIBRARIES = [
   { name: 'Crosby Public Library', url: 'https://www.crosbylibrary.org', eventsUrl: 'https://www.crosbylibrary.org/events', city: 'Crosby', state: 'MS', zipCode: '00000', county: 'Amite'},
   // URL corrected 2026-08-11 (was decaturlibrary.org): Kemper-Newton Regional Library System Decatur Branch, phone 601-635-2777; real name is Jessie Mae Everett Public Library, 306 W Broad St Dec
   { name: 'Decatur Public Library', url: 'https://www.knrls.lib.ms.us/', eventsUrl: 'https://www.knrls.lib.ms.us/', city: 'Decatur', state: 'MS', zipCode: '00000', county: 'Newton'},
-  { name: 'Dekalb Public Library', url: 'https://www.dekalblibrary.org', eventsUrl: 'https://www.dekalblibrary.org/events', city: 'Dekalb', state: 'MS', zipCode: '39328', county: 'Kemper County'},
+  { name: 'Dekalb Public Library', url: 'https://www.dekalblibrary.org', eventsUrl: 'https://www.dekalblibrary.org/events', city: 'Dekalb', state: 'MS', zipCode: '39328', county: 'Kemper County', urlCollision: 'dekalblibrary.org is GA, not MS' },
   { name: 'Enterprise Public Library', url: 'https://www.enterpriselibrary.org', eventsUrl: 'https://www.enterpriselibrary.org/events', city: 'Enterprise', state: 'MS', zipCode: '00000', county: 'Clarke'},
   { name: 'Florence Public Library', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'MS', zipCode: '00000', county: 'Rankin', urlCollision: 'florencelibrary.org is SC, not MS' },
   { name: 'Forest Public Library', url: 'https://www.forestlibrary.org/', eventsUrl: 'https://www.forestlibrary.org/', city: 'Forest', state: 'MS', zipCode: '00000', county: 'Scott'},
