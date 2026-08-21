@@ -4422,5 +4422,230 @@
   "verdict": "MISMATCH",
   "comment": "age-detection: live calendar 2026-08-21 lists Tween Advisory Board, Youth Advisory Board, 7th Grade Summer Math Tutoring and Pokemon Club, yet 74 of 94 rows (79%) are All Ages. Exposed a DELETING bug: T(w)een Advisory Board was being dropped by the GOVERNANCE junk rule because AUDIENCE_RESCUE lacked the t(w)een spelling that detectAgeRange() gained the same day (2026-08-20). Rescue fixed 2026-08-21; grade-level phrasing (7th Grade) still resolves to All Ages and remains open.",
   "population": "allages"
+ },
+ "wordpress-AL|||Madison Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): madisonlibrary.org is KY, not AL. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import KY events under AL, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-CT|||Chester Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): chesterlibrary.org is NY, not CT. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import NY events under CT, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-CT|||East Hampton Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): easthamptonlibrary.org is NY, not CT. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import NY events under CT, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-CT|||E.C. Scranton Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): madisonlibrary.org is KY, not CT. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import KY events under CT, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-CT|||Union Free Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): unionlibrary.org is SC, not CT. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import SC events under CT, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-DE|||Laurel Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): laurellibrary.org is KY, not DE. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import KY events under DE, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-FL|||Madison County Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): madisonlibrary.org is KY, not FL. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import KY events under FL, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-FL|||Springfield Branch": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): springfieldlibrary.org is MA, not FL. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import MA events under FL, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-GA|||Dalton-Whitfield County Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): daltonlibrary.org is MA, not GA. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import MA events under GA, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-GA|||Morgan County Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): madisonlibrary.org is KY, not GA. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import KY events under GA, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-GA|||Effingham": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): springfieldlibrary.org is MA, not GA. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import MA events under GA, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-KY|||Washington County Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): springfieldlibrary.org is MA, not KY. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import MA events under KY, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-MA|||Hamilton Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): chesterlibrary.org is NY, not MA. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import NY events under MA, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-MA|||Emily Williston Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): easthamptonlibrary.org is NY, not MA. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import NY events under MA, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-MA|||Westport Free Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): westportlibrary.org is CT, not MA. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import CT events under MA, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-ME|||Machias - Porter Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): machiaslibrary.org is NY, not ME. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import NY events under ME, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-ME|||Madison Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): madisonlibrary.org is KY, not ME. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import KY events under ME, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-ME|||Oakland Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): oaklandlibrary.org is CA, not ME. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import CA events under ME, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-ME|||Vose Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): unionlibrary.org is SC, not ME. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import SC events under ME, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-MS|||Rebecca Baine Rigby Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): madisonlibrary.org is KY, not MS. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import KY events under MS, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-MS|||Oakland Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): oaklandlibrary.org is CA, not MS. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import CA events under MS, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-MS|||Kemper-Newton Regional Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): unionlibrary.org is SC, not MS. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import SC events under MS, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-NC|||Madison Branch Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): madisonlibrary.org is KY, not NC. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import KY events under NC, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-NH|||Chester Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): chesterlibrary.org is NY, not NH. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import NY events under NH, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-NH|||Dalton Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): daltonlibrary.org is MA, not NH. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import MA events under NH, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-NH|||Madison Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): madisonlibrary.org is KY, not NH. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import KY events under NH, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-NH|||Libbie A. Cass Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): springfieldlibrary.org is MA, not NH. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import MA events under NH, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-NJ|||Chester Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): chesterlibrary.org is NY, not NJ. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import NY events under NJ, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-NJ|||Madison Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): madisonlibrary.org is KY, not NJ. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import KY events under NJ, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-NJ|||Oakland Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): oaklandlibrary.org is CA, not NJ. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import CA events under NJ, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-NJ|||Springfield Free Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): springfieldlibrary.org is MA, not NJ. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import MA events under NJ, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-NJ|||Union Free Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): unionlibrary.org is SC, not NJ. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import SC events under NJ, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-NY|||Belfast Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): belfastlibrary.org is ME, not NY. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import ME events under NY, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-NY|||Westport Library Association": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): westportlibrary.org is CT, not NY. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import CT events under NY, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-PA|||Dalton Community Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): daltonlibrary.org is MA, not PA. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import MA events under PA, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-PA|||Springfield Township Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): springfieldlibrary.org is MA, not PA. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import MA events under PA, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-SC|||Chester County Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): chesterlibrary.org is NY, not SC. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import NY events under SC, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-SC|||Orangeburg County Library - Springfield Branch Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): springfieldlibrary.org is MA, not SC. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import MA events under SC, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-TN|||Germantown Community Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): germantownlibrary.org is NY, not TN. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import NY events under TN, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-TN|||Baxter Branch Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): baxterlibrary.org is ME, not TN. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import ME events under TN, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-TN|||Nashville Talking Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): madisonlibrary.org is KY, not TN. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import KY events under TN, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-VT|||Whiting": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): chesterlibrary.org is NY, not VT. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import NY events under VT, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-WV|||Lynn Murray Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): chesterlibrary.org is NY, not WV. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import NY events under WV, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-WV|||Boone-Madison Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): madisonlibrary.org is KY, not WV. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import KY events under WV, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
+ },
+ "wordpress-WV|||Monroe County Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision (DISABLED 2026-08-21): unionlibrary.org is SC, not WV. Proven from the live page/addresses, not from name similarity. The entry is guarded at run time so it can no longer import SC events under WV, but the correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Worklist: node scripts/list-url-collisions.js",
+  "population": "zero"
  }
 }

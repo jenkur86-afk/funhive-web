@@ -152,6 +152,12 @@
       "expect": "No further T(w)een/T(w)eens titles should be deleted. Because isJunkTitle() DELETES rather than marking, prior losses leave no trace and cannot be counted retroactively — the only forward evidence is such rows starting to appear. Ringwood Public Library (WordPress-NJ) is the known live source of one.",
       "confirm": "node scripts/test-junk-titles.js  (expect 38/38)  then after a WordPress-NJ run: node -e \"require(process.cwd()+String.fromCharCode(47)+chr).supabase\" — simpler: query events for name ilike %t(w)een% and expect nonzero",
       "added": "2026-08-21"
+    },
+    "URL-COLLISION-GUARD": {
+      "what": "45 WordPress-* config entries proven to point at ANOTHER STATE's library were flagged urlCollision and a run-time guard added to all 21 active WordPress files (scripts/disable-collided-urls.js). Ground truth for 13 hosts came from live page addresses/ZIPs/area codes, never name similarity. The guard emits the 📍 header AND a Found 0 events line so each library keeps its audit row as an explained gap rather than vanishing.",
+      "expect": "The next WordPress-* rotation should log \"⏭️  skipped — urlCollision: ...\" once per disabled entry, those libraries should show 0 in LIBRARY-SITE-AUDIT.md with a MISMATCH comment, and NO new rows should appear in the DB from the 13 ground-truth hosts under a wrong state. Pre-existing wrong-state rows are NOT removed by this and will persist until they expire — 1,983 WordPress rows currently come from colliding hosts.",
+      "confirm": "grep -c \"urlCollision\" scrapers/logs/scraper-stdout.log after the next WordPress run (expect >0)  and: node scripts/list-url-collisions.js --check  (expect 448 entries / 153 hosts, plus 45 disabled)",
+      "added": "2026-08-21"
     }
   },
   "LibCal-VA": {

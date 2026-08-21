@@ -56,11 +56,11 @@ const LIBRARIES = [
   { name: 'Canaan Town Library', url: 'https://www.canaanlibrary.org', eventsUrl: 'https://www.canaanlibrary.org/events', city: 'Canaan', state: 'NH', zipCode: '03741', county: 'Grafton'},
   { name: 'Elkins Library', url: 'https://www.canterburylibrary.org', eventsUrl: 'https://www.canterburylibrary.org/events', city: 'Canterbury', state: 'NH', zipCode: '03224', county: 'Merrimack'},
   { name: 'James E. Nichols Memorial Library', url: 'https://centerharborlibrary.org/', eventsUrl: 'https://centerharborlibrary.org/', city: 'Center Harbor', state: 'NH', zipCode: '03226', county: 'Carroll'},
-  { name: 'Chester Public Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'NH', zipCode: '03036', county: 'Rockingham'},
+  { name: 'Chester Public Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'NH', zipCode: '03036', county: 'Rockingham', urlCollision: 'chesterlibrary.org is NY, not NH' },
   { name: 'Chesterfield Public Library', url: 'https://www.chesterfieldlibrary.org', eventsUrl: 'https://www.chesterfieldlibrary.org/events', city: 'Chesterfield', state: 'NH', zipCode: '03443', county: 'Cheshire'},
   { name: 'Chocorua Public Library', url: 'https://www.chocorualibrary.org/', eventsUrl: 'https://www.chocorualibrary.org/', city: 'Chocorua', state: 'NH', zipCode: '03817', county: 'Carroll'},
   { name: 'Fiske Free Library', url: 'https://www.claremontlibrary.org/', eventsUrl: 'https://www.claremontlibrary.org/', city: 'Claremont', state: 'NH', zipCode: '03743', county: 'Sullivan'},
-  { name: 'Dalton Public Library', url: 'https://www.daltonlibrary.org', eventsUrl: 'https://www.daltonlibrary.org/events', city: 'Dalton', state: 'NH', zipCode: '03598', county: 'Coos'},
+  { name: 'Dalton Public Library', url: 'https://www.daltonlibrary.org', eventsUrl: 'https://www.daltonlibrary.org/events', city: 'Dalton', state: 'NH', zipCode: '03598', county: 'Coos', urlCollision: 'daltonlibrary.org is MA, not NH' },
   // URL corrected 2026-08-11 (was danburylibrary.org): Own site, subtitled Danbury Public Library, states Danbury N.H.; 29 Route 104 Danbury NH per NH Library Directory, email georgegamblelibrary
   { name: 'George Gamble Library', url: 'https://georgegamblelibrary.wordpress.com', eventsUrl: 'https://georgegamblelibrary.wordpress.com/events/', city: 'Danbury', state: 'NH', zipCode: '03230', county: 'Merrimack'},
   { name: 'Philbrick-James Library', url: 'https://www.deerfieldlibrary.org', eventsUrl: 'https://www.deerfieldlibrary.org/events', city: 'Deerfield', state: 'NH', zipCode: '03037', county: 'Grafton'},
@@ -91,7 +91,7 @@ const LIBRARIES = [
   { name: 'Nichols Memorial Library', url: 'https://www.kingstonlibrary.org', eventsUrl: 'https://www.kingstonlibrary.org/events', city: 'Kingston', state: 'NH', zipCode: '03848', county: 'Rockingham'},
   { name: 'Littleton Public Library', url: 'https://www.littletonlibrary.org', eventsUrl: 'https://www.littletonlibrary.org/events', city: 'Littleton', state: 'NH', zipCode: '03561', county: 'Grafton'},
   { name: 'Madbury Public Library', url: 'https://madburylibrary.org/', eventsUrl: 'https://madburylibrary.org/', city: 'Madbury', state: 'NH', zipCode: '03823', county: 'Strafford'},
-  { name: 'Madison Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'NH', zipCode: '03849', county: 'Carroll'},
+  { name: 'Madison Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'NH', zipCode: '03849', county: 'Carroll', urlCollision: 'madisonlibrary.org is KY, not NH' },
   { name: 'Mason Public Library', url: 'https://www.masonlibrary.org', eventsUrl: 'https://www.masonlibrary.org/events', city: 'Mason', state: 'NH', zipCode: '03048', county: 'Hillsborough'},
   { name: 'Meredith Public Library', url: 'https://www.meredithlibrary.org', eventsUrl: 'https://www.meredithlibrary.org/events', city: 'Meredith', state: 'NH', zipCode: '03253', county: 'Belknap'},
   { name: 'Merrimack Public Library', url: 'https://www.merrimacklibrary.org', eventsUrl: 'https://www.merrimacklibrary.org/events', city: 'Merrimack', state: 'NH', zipCode: '03054', county: 'Merrimack County'},
@@ -120,7 +120,7 @@ const LIBRARIES = [
   // URL corrected 2026-08-11 (was ryelibrary.org): 581 Washington Road Rye NH, site has a dedicated event calendar page
   { name: 'Rye Public Library', url: 'https://ryepubliclibrary.org', eventsUrl: 'https://ryepubliclibrary.org/calendar/', city: 'Rye', state: 'NH', zipCode: '03870', county: 'Rockingham'},
   { name: 'Salisbury Free Library', url: 'https://www.salisburylibrary.org/', eventsUrl: 'https://www.salisburylibrary.org/', city: 'Salisbury', state: 'NH', zipCode: '03268', county: 'Merrimack'},
-  { name: 'Libbie A. Cass Memorial Library', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'NH', zipCode: '03284', county: 'Sullivan'},
+  { name: 'Libbie A. Cass Memorial Library', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'NH', zipCode: '03284', county: 'Sullivan', urlCollision: 'springfieldlibrary.org is MA, not NH' },
   { name: 'Stark Public Library', url: 'https://www.starklibrary.org', eventsUrl: 'https://www.starklibrary.org/events', city: 'Stark', state: 'NH', zipCode: '03582', county: 'Coos'},
   { name: 'Laura Johnson Memorial Library', url: 'https://www.stratfordlibrary.org', eventsUrl: 'https://www.stratfordlibrary.org/events', city: 'Stratford', state: 'NH', zipCode: '03590', county: 'Coos'},
   { name: 'Sullivan Public Library', url: 'https://www.sullivanil.us/', eventsUrl: 'https://www.sullivanil.us/departments/library/index.php', city: 'Sullivan', state: 'NH', zipCode: '03445', county: 'Sullivan County'},
@@ -148,6 +148,18 @@ async function scrapeGenericEvents() {
   for (const library of LIBRARIES) {
     const __eventCountBefore = events.length;
     console.log(`📍 ${library.name} (${library.city}, ${library.state})`);
+      // An entry carrying urlCollision points at a DIFFERENT institution than its own
+      // name and state claim — the guessed {city}library.org host actually belongs to
+      // another state's library. Scraping it imported that library's events under this
+      // state. See scripts/disable-collided-urls.js for the per-host evidence.
+      // The 📍 header above and the "Found 0 events" line below are BOTH required: the
+      // library-site audit pairs them, and dropping the pair would delete this library
+      // from the audit instead of showing it as a known, explained gap.
+      if (library.urlCollision) {
+        console.log(`   ⏭️  skipped — urlCollision: ${library.urlCollision}`);
+        console.log(`   Found 0 events`);
+        continue;
+      }
     try {
       const page = await browser.newPage();
       await page.goto(library.eventsUrl, { waitUntil: 'networkidle2', timeout: 30000 });

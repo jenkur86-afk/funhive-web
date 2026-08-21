@@ -55,13 +55,13 @@ const LIBRARIES = [
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in PA, not CT. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Canton Public Library', url: 'https://www.cantonlibrary.org', eventsUrl: 'https://www.cantonlibrary.org/events', city: 'Canton', state: 'CT', zipCode: '06019', county: 'Capitol Planning Region'},
   { name: 'Cheshire Public Library', url: 'https://www.cheshirelibrary.org', eventsUrl: 'https://www.cheshirelibrary.org/events', city: 'Cheshire', state: 'CT', zipCode: '06410', county: 'Naugatuck Valley Planning Region'},
-  { name: 'Chester Public Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'CT', zipCode: '06412', county: 'Lower Connecticut River Valley Planning Region'},
+  { name: 'Chester Public Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'CT', zipCode: '06412', county: 'Lower Connecticut River Valley Planning Region', urlCollision: 'chesterlibrary.org is NY, not CT' },
   { name: 'Henry Carter Hull Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'CT', zipCode: '06413', county: 'Lower Connecticut River Valley Planning Region'},
   { name: 'Saxton B. Little Free Library', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'CT', zipCode: '06237', county: 'Capitol Planning Region'},
   { name: 'Cornwall Library Association', url: 'https://www.cornwalllibrary.org', eventsUrl: 'https://www.cornwalllibrary.org/events', city: 'Cornwall', state: 'CT', zipCode: '06753', county: 'Northwest Hills Planning Region'},
   { name: 'Darien Library', url: 'https://www.darienlibrary.org', eventsUrl: 'https://www.darienlibrary.org/events', city: 'Darien', state: 'CT', zipCode: '06820', county: 'Western Connecticut Planning Region'},
   { name: 'Durham Public Library', url: 'https://www.durhamlibrary.org', eventsUrl: 'https://www.durhamlibrary.org/events', city: 'Durham', state: 'CT', zipCode: '06422', county: 'Lower Connecticut River Valley Planning Region'},
-  { name: 'East Hampton Public Library', url: 'https://www.easthamptonlibrary.org', eventsUrl: 'https://www.easthamptonlibrary.org/events', city: 'East Hampton', state: 'CT', zipCode: '06424', county: 'Lower Connecticut River Valley Planning Region'},
+  { name: 'East Hampton Public Library', url: 'https://www.easthamptonlibrary.org', eventsUrl: 'https://www.easthamptonlibrary.org/events', city: 'East Hampton', state: 'CT', zipCode: '06424', county: 'Lower Connecticut River Valley Planning Region', urlCollision: 'easthamptonlibrary.org is NY, not CT' },
   { name: 'Easton Public Library', url: 'https://www.eastonlibrary.org/', eventsUrl: 'https://www.eastonlibrary.org/library-events', city: 'Easton', state: 'CT', zipCode: '06612', county: 'Greater Bridgeport Planning Region'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in NY, not CT. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Hall Memorial Library', url: 'https://www.ellingtonlibrary.org', eventsUrl: 'https://www.ellingtonlibrary.org/events', city: 'Ellington', state: 'CT', zipCode: '06029', county: 'Capitol Planning Region'},
@@ -79,7 +79,7 @@ const LIBRARIES = [
   { name: 'Killingworth Library', url: 'https://www.killingworthlibrary.org', eventsUrl: 'https://www.killingworthlibrary.org/events', city: 'Killingworth', state: 'CT', zipCode: '06419', county: 'Lower Connecticut River Valley Planning Region'},
   { name: 'Jonathan Trumbull Library', url: 'https://lebanonlibrary.org/', eventsUrl: 'https://lebanonlibrary.org/', city: 'Lebanon', state: 'CT', zipCode: '06249', county: 'Southeastern Connecticut Planning Region'},
   { name: 'Bill Library', url: 'https://www.ledyardlibrary.org', eventsUrl: 'https://www.ledyardlibrary.org/events', city: 'Ledyard', state: 'CT', zipCode: '00000', county: 'Southeastern Connecticut Planning Region'},
-  { name: 'E.C. Scranton Memorial Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'CT', zipCode: '06443', county: 'South Central Connecticut Planning Region'},
+  { name: 'E.C. Scranton Memorial Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'CT', zipCode: '06443', county: 'South Central Connecticut Planning Region', urlCollision: 'madisonlibrary.org is KY, not CT' },
   { name: 'Middlebury Public Library', url: 'https://www.middleburylibrary.org', eventsUrl: 'https://www.middleburylibrary.org/events', city: 'Middlebury', state: 'CT', zipCode: '06762', county: 'Naugatuck Valley Planning Region'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in MA, not CT. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Levi E.Coe Library', url: 'https://middlefieldlibrary.org/', eventsUrl: 'https://middlefieldlibrary.org/', city: 'Middlefield', state: 'CT', zipCode: '06455', county: 'Lower Connecticut River Valley Planning Region'},
@@ -118,7 +118,7 @@ const LIBRARIES = [
   { name: 'Stonington Free Library', url: 'https://www.stoningtonlibrary.org/', eventsUrl: 'https://www.stoningtonlibrary.org/', city: 'Stonington', state: 'CT', zipCode: '06378', county: 'Southeastern Connecticut Planning Region'},
   { name: 'Kent Memorial Library', url: 'https://www.suffieldlibrary.org', eventsUrl: 'https://www.suffieldlibrary.org/events', city: 'Suffield', state: 'CT', zipCode: '06078', county: 'Capitol Planning Region'},
   { name: 'Thomaston Public Library', url: 'https://thomastonlibrary.org/', eventsUrl: 'https://thomastonlibrary.org/', city: 'Thomaston', state: 'CT', zipCode: '06787', county: 'Naugatuck Valley Planning Region'},
-  { name: 'Union Free Public Library', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'CT', zipCode: '06076', county: 'Northeastern Connecticut Planning Region'},
+  { name: 'Union Free Public Library', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'CT', zipCode: '06076', county: 'Northeastern Connecticut Planning Region', urlCollision: 'unionlibrary.org is SC, not CT' },
   { name: 'Warren Public Library', url: 'https://www.warrenlibrary.org', eventsUrl: 'https://www.warrenlibrary.org/events', city: 'Warren', state: 'CT', zipCode: '06754', county: 'Northwest Hills Planning Region'},
   { name: 'Waterford Public Library', url: 'https://www.waterfordlibrary.org', eventsUrl: 'https://www.waterfordlibrary.org/events', city: 'Waterford', state: 'CT', zipCode: '06385', county: 'Southeastern Connecticut Planning Region'},
   { name: 'Oakville Branch Library', url: 'https://www.watertownlibrary.org/', eventsUrl: 'https://www.watertownlibrary.org/', city: 'Watertown', state: 'CT', zipCode: '00000', county: 'Naugatuck Valley Planning Region'},
@@ -147,6 +147,18 @@ async function scrapeGenericEvents() {
   for (const library of LIBRARIES) {
     const __eventCountBefore = events.length;
     console.log(`📍 ${library.name} (${library.city}, ${library.state})`);
+      // An entry carrying urlCollision points at a DIFFERENT institution than its own
+      // name and state claim — the guessed {city}library.org host actually belongs to
+      // another state's library. Scraping it imported that library's events under this
+      // state. See scripts/disable-collided-urls.js for the per-host evidence.
+      // The 📍 header above and the "Found 0 events" line below are BOTH required: the
+      // library-site audit pairs them, and dropping the pair would delete this library
+      // from the audit instead of showing it as a known, explained gap.
+      if (library.urlCollision) {
+        console.log(`   ⏭️  skipped — urlCollision: ${library.urlCollision}`);
+        console.log(`   Found 0 events`);
+        continue;
+      }
     try {
       // Try the site's TEC REST API before falling back to DOM scraping —
       // see helpers/tec-rest-helper.js for why (2026-07-31 diagnosis).

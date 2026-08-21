@@ -62,14 +62,14 @@ const LIBRARIES = [
   // URL corrected 2026-08-11 (was louisvillelibrary.org): Mid-MS Regional Library System page gives 100 West Park Street, Louisville MS 39339, phone 662-773-3212
   { name: 'Winston County Library', url: 'https://midmisslib.com/winston/', eventsUrl: 'https://midmisslib.com/events/', city: 'Louisville', state: 'MS', zipCode: '00000', county: 'Winston'},
   { name: 'Ada S. Fant Memorial Library', url: 'https://www.maconlibrary.org', eventsUrl: 'https://www.maconlibrary.org/events', city: 'Macon', state: 'MS', zipCode: '00000', county: 'Noxubee'},
-  { name: 'Rebecca Baine Rigby Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'MS', zipCode: '00000', county: 'Madison County'},
+  { name: 'Rebecca Baine Rigby Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'MS', zipCode: '00000', county: 'Madison County', urlCollision: 'madisonlibrary.org is KY, not MS' },
   { name: 'Magnolia Public Library', url: 'https://www.magnolialibrary.org', eventsUrl: 'https://www.magnolialibrary.org/events', city: 'Magnolia', state: 'MS', zipCode: '00000', county: 'Pike'},
   { name: 'William And Dolores Mauldin Library', url: 'https://www.mchenrylibrary.org/', eventsUrl: 'https://www.mchenrylibrary.org/', city: 'Mchenry', state: 'MS', zipCode: '00000', county: 'Stone'},
   { name: 'Franklin County Public Library', url: 'https://www.meadvillelibrary.org', eventsUrl: 'https://www.meadvillelibrary.org/events', city: 'Meadville', state: 'MS', zipCode: '00000', county: 'Franklin'},
   { name: 'Lawrence County Public Library', url: 'https://www.allertonpubliclibrary.org/', eventsUrl: 'https://www.allertonpubliclibrary.org/calendar', city: 'Monticello', state: 'MS', zipCode: '00000', county: 'Lawrence'},
   { name: 'Morton Public Library', url: 'https://mortonlibrary.org/', eventsUrl: 'https://mortonlibrary.org/', city: 'Morton', state: 'MS', zipCode: '00000', county: 'Scott'},
   { name: 'J. Elliott Mcmullan Library', url: 'https://www.newtonlibrary.org', eventsUrl: 'https://www.newtonlibrary.org/events', city: 'Newton', state: 'MS', zipCode: '00000', county: 'Newton County'},
-  { name: 'Oakland Public Library', url: 'https://www.oaklandlibrary.org', eventsUrl: 'https://www.oaklandlibrary.org/events', city: 'Oakland', state: 'MS', zipCode: '00000', county: 'Yalobusha'},
+  { name: 'Oakland Public Library', url: 'https://www.oaklandlibrary.org', eventsUrl: 'https://www.oaklandlibrary.org/events', city: 'Oakland', state: 'MS', zipCode: '00000', county: 'Yalobusha', urlCollision: 'oaklandlibrary.org is CA, not MS' },
   // URL corrected 2026-08-11 (was oxfordlibrary.org): 401 Bramlett Blvd Oxford MS, phone 662-234-5751; branch of First Regional Library system site
   { name: 'Lafayette County-Oxford Public Library', url: 'https://www.first.lib.ms.us', eventsUrl: 'https://www.first.lib.ms.us', city: 'Oxford', state: 'MS', zipCode: '00000', county: 'Lafayette'},
   { name: 'Clarke County-Quitman Public Library', url: 'https://www.quitmanlibrary.org/', eventsUrl: 'https://www.quitmanlibrary.org/', city: 'Quitman', state: 'MS', zipCode: '00000', county: 'Quitman County'},
@@ -81,7 +81,7 @@ const LIBRARIES = [
   // RECORDED COVERAGE GAP - restore if a real URL is found.
   // { name: 'Dr. Robert T. Hollingsworth Library', url: 'https://www.shelbylibrary.org', eventsUrl: 'https://www.shelbylibrary.org/events', city: 'Shelby', state: 'MS', zipCode: '00000', county: 'Bolivar'},
   { name: 'Sherman Library', url: 'https://www.shermanlibrary.org/', eventsUrl: 'https://www.shermanlibrary.org/', city: 'Sherman', state: 'MS', zipCode: '00000', county: 'Pontotoc'},
-  { name: 'Kemper-Newton Regional Library', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'MS', zipCode: '39365', county: 'Union County'},
+  { name: 'Kemper-Newton Regional Library', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'MS', zipCode: '39365', county: 'Union County', urlCollision: 'unionlibrary.org is SC, not MS' },
   { name: 'Evelyn Taylor Majure Library', url: 'https://www.uticalibrary.org', eventsUrl: 'https://www.uticalibrary.org/events', city: 'Utica', state: 'MS', zipCode: '00000', county: 'Hinds'},
   // URL corrected 2026-08-11 (was woodvillelibrary.org): Wilkinson County Library System site; Woodville branch 489 Main Street Woodville MS 39669, phone 601-888-6712
   { name: 'Woodville Public Library', url: 'https://www.wcplibrary.com', eventsUrl: 'https://www.wcplibrary.com/events', city: 'Woodville', state: 'MS', zipCode: '00000', county: 'Wilkinson'},
@@ -97,6 +97,18 @@ async function scrapeGenericEvents() {
   for (const library of LIBRARIES) {
     const __eventCountBefore = events.length;
     console.log(`📍 ${library.name} (${library.city}, ${library.state})`);
+      // An entry carrying urlCollision points at a DIFFERENT institution than its own
+      // name and state claim — the guessed {city}library.org host actually belongs to
+      // another state's library. Scraping it imported that library's events under this
+      // state. See scripts/disable-collided-urls.js for the per-host evidence.
+      // The 📍 header above and the "Found 0 events" line below are BOTH required: the
+      // library-site audit pairs them, and dropping the pair would delete this library
+      // from the audit instead of showing it as a known, explained gap.
+      if (library.urlCollision) {
+        console.log(`   ⏭️  skipped — urlCollision: ${library.urlCollision}`);
+        console.log(`   Found 0 events`);
+        continue;
+      }
     try {
       console.log(`\n📚 Scraping ${library.name}...`);
       // Try the site's TEC REST API before falling back to DOM scraping —

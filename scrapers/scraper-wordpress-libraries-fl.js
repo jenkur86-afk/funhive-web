@@ -116,7 +116,7 @@ const LIBRARIES = [
   { name: 'Lantana Public Library', url: 'https://www.lantanalibrary.org/', eventsUrl: 'https://www.lantanalibrary.org/', city: 'Lantana', state: 'FL', zipCode: '33462', county: 'Palm Beach'},
   { name: 'Largo Public Library', url: 'https://www.largolibrary.org', eventsUrl: 'https://www.largolibrary.org/events', city: 'Largo', state: 'FL', zipCode: '00000', county: 'Pinellas'},
   { name: 'West Branch Library', url: 'https://www.longwoodlibrary.org', eventsUrl: 'https://www.longwoodlibrary.org/events', city: 'Longwood', state: 'FL', zipCode: '00000', county: 'Seminole'},
-  { name: 'Madison County Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'FL', zipCode: '00000', county: 'Madison County'},
+  { name: 'Madison County Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'FL', zipCode: '00000', county: 'Madison County', urlCollision: 'madisonlibrary.org is KY, not FL' },
   { name: 'Margate Catharine Young Branch', url: 'https://www.margatelibrary.org', eventsUrl: 'https://www.margatelibrary.org/events', city: 'Margate', state: 'FL', zipCode: '00000', county: 'Broward'},
   { name: 'Jefferson County R. J. Bailar Public Library', url: 'https://www.monticellolibrary.org', eventsUrl: 'https://www.monticellolibrary.org/events', city: 'Monticello', state: 'FL', zipCode: '00000', county: 'Jefferson'},
   { name: 'Newberry Branch Library', url: 'https://www.newberrylibrary.org', eventsUrl: 'https://www.newberrylibrary.org/events', city: 'Newberry', state: 'FL', zipCode: '00000', county: 'Alachua'},
@@ -131,7 +131,7 @@ const LIBRARIES = [
   { name: 'Polk City Library', url: 'https://www.polkcitylibrary.org', eventsUrl: 'https://www.polkcitylibrary.org/events', city: 'Polk City', state: 'FL', zipCode: '00000', county: 'Polk'},
   { name: 'Reddick Public Library', url: 'https://www.reddicklibrary.org/', eventsUrl: 'https://www.reddicklibrary.org/', city: 'Reddick', state: 'FL', zipCode: '00000', county: 'Marion'},
   { name: 'Safety Harbor Public Library', url: 'https://www.safetyharborlibrary.org', eventsUrl: 'https://www.safetyharborlibrary.org/events', city: 'Safety Harbor', state: 'FL', zipCode: '00000', county: 'Pinellas'},
-  { name: 'Springfield Branch', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'FL', zipCode: '00000', county: 'Bay'},
+  { name: 'Springfield Branch', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'FL', zipCode: '00000', county: 'Bay', urlCollision: 'springfieldlibrary.org is MA, not FL' },
   { name: 'Blake Library', url: 'https://stuartlibrary.org/', eventsUrl: 'https://stuartlibrary.org/calendar/', city: 'Stuart', state: 'FL', zipCode: '00000', county: 'Martin'},
   { name: 'Sunrise Dan Pearl Branch', url: 'https://www.sunriselibrary.org', eventsUrl: 'https://www.sunriselibrary.org/events', city: 'Sunrise', state: 'FL', zipCode: '00000', county: 'Broward'},
   { name: 'Lake County Library System', url: 'https://www.tavareslibrary.org', eventsUrl: 'https://www.tavareslibrary.org/events', city: 'Tavares', state: 'FL', zipCode: '32778', county: 'Lake'},
@@ -155,6 +155,18 @@ async function scrapeGenericEvents() {
   for (const library of LIBRARIES) {
     const __eventCountBefore = events.length;
     console.log(`📍 ${library.name} (${library.city}, ${library.state})`);
+      // An entry carrying urlCollision points at a DIFFERENT institution than its own
+      // name and state claim — the guessed {city}library.org host actually belongs to
+      // another state's library. Scraping it imported that library's events under this
+      // state. See scripts/disable-collided-urls.js for the per-host evidence.
+      // The 📍 header above and the "Found 0 events" line below are BOTH required: the
+      // library-site audit pairs them, and dropping the pair would delete this library
+      // from the audit instead of showing it as a known, explained gap.
+      if (library.urlCollision) {
+        console.log(`   ⏭️  skipped — urlCollision: ${library.urlCollision}`);
+        console.log(`   Found 0 events`);
+        continue;
+      }
     try {
       console.log(`\n📚 Scraping ${library.name}...`);
 

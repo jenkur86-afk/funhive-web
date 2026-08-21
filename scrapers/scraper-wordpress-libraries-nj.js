@@ -33,7 +33,7 @@ const LIBRARIES = [
   { name: 'Carteret Free Public Library', url: 'https://www.carteretlibrary.org', eventsUrl: 'https://www.carteretlibrary.org/events', city: 'Carteret', state: 'NJ', zipCode: '07008', county: 'Middlesex'},
   { name: 'Cedar Grove Free Public Library', url: 'https://www.cedargrovelibrary.org', eventsUrl: 'https://www.cedargrovelibrary.org/events', city: 'Cedar Grove', state: 'NJ', zipCode: '07009', county: 'Essex'},
   { name: 'Chathams Joint Free Public Library', url: 'https://chathamlibrary.librarycalendar.com/', eventsUrl: 'https://chathamlibrary.librarycalendar.com/events/month/', city: 'Chatham', state: 'NJ', zipCode: '07928', county: 'Morris'},
-  { name: 'Chester Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'NJ', zipCode: '07930', county: 'Morris'},
+  { name: 'Chester Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'NJ', zipCode: '07930', county: 'Morris', urlCollision: 'chesterlibrary.org is NY, not NJ' },
   { name: 'Clark Public Library', url: 'https://www.clarklibrary.org', eventsUrl: 'https://www.clarklibrary.org/events', city: 'Clark', state: 'NJ', zipCode: '07066', county: 'Union'},
   { name: 'Cliffside Park Free Public Library', url: 'https://www.cliffsideparklibrary.org', eventsUrl: 'https://www.cliffsideparklibrary.org/events', city: 'Cliffside Park', state: 'NJ', zipCode: '07010', county: 'Bergen'},
   { name: 'Cranford Public Library', url: 'https://www.cranfordlibrary.org/', eventsUrl: 'https://www.cranfordlibrary.org/calendar/', city: 'Cranford', state: 'NJ', zipCode: '07016', county: 'Union'},
@@ -88,7 +88,7 @@ const LIBRARIES = [
   { name: 'Little Silver Public Library', url: 'https://www.littlesilverlibrary.org/', eventsUrl: 'https://www.littlesilverlibrary.org/', city: 'Little Silver', state: 'NJ', zipCode: '07739', county: 'Monmouth'},
   { name: 'Ruth L. Rockwood Memorial Library', url: 'https://www.livingstonlibrary.org', eventsUrl: 'https://www.livingstonlibrary.org/events', city: 'Livingston', state: 'NJ', zipCode: '07039', county: 'Essex'},
   { name: 'Lyndhurst Free Public Library', url: 'https://lyndhurstlibrary.org/', eventsUrl: 'https://lyndhurstlibrary.org/', city: 'Lyndhurst', state: 'NJ', zipCode: '07071', county: 'Bergen'},
-  { name: 'Madison Public Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'NJ', zipCode: '07940', county: 'Morris'},
+  { name: 'Madison Public Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'NJ', zipCode: '07940', county: 'Morris', urlCollision: 'madisonlibrary.org is KY, not NJ' },
   { name: 'Maplewood Memorial Library', url: 'https://www.maplewoodlibrary.org/', eventsUrl: 'https://www.maplewoodlibrary.org/', city: 'Maplewood', state: 'NJ', zipCode: '07040', county: 'Essex'},
   { name: 'Margate City Public Library', url: 'https://www.margatelibrary.org', eventsUrl: 'https://www.margatelibrary.org/events', city: 'Margate', state: 'NJ', zipCode: '08402', county: 'Atlantic County'},
   { name: 'Maywood Public Library', url: 'https://www.maywoodlibrary.org', eventsUrl: 'https://www.maywoodlibrary.org/events', city: 'Maywood', state: 'NJ', zipCode: '07607', county: 'Bergen'},
@@ -117,7 +117,7 @@ const LIBRARIES = [
   { name: 'North Brunswick Free Public Library', url: 'https://northbrunswicklibrary.org/', eventsUrl: 'https://northbrunswicklibrary.org/', city: 'North Brunswick', state: 'NJ', zipCode: '08902', county: 'Middlesex'},
   { name: 'North Haledon Free Public Library', url: 'https://www.northhaledonlibrary.org', eventsUrl: 'https://www.northhaledonlibrary.org/events', city: 'North Haledon', state: 'NJ', zipCode: '07508', county: 'Passaic'},
   { name: 'Norwood Public Library', url: 'https://norwoodlibrary.org/', eventsUrl: 'https://norwoodlibrary.org/', city: 'Norwood', state: 'NJ', zipCode: '07648', county: 'Bergen'},
-  { name: 'Oakland Public Library', url: 'https://www.oaklandlibrary.org', eventsUrl: 'https://www.oaklandlibrary.org/events', city: 'Oakland', state: 'NJ', zipCode: '07436', county: 'Bergen'},
+  { name: 'Oakland Public Library', url: 'https://www.oaklandlibrary.org', eventsUrl: 'https://www.oaklandlibrary.org/events', city: 'Oakland', state: 'NJ', zipCode: '07436', county: 'Bergen', urlCollision: 'oaklandlibrary.org is CA, not NJ' },
   { name: 'Ocean City Free Public Library', url: 'https://www.oceancitylibrary.org/', eventsUrl: 'https://www.oceancitylibrary.org/', city: 'Ocean City', state: 'NJ', zipCode: '08226', county: 'Cape May'},
   { name: 'Old Bridge Public Library', url: 'https://www.oldbridgelibrary.org', eventsUrl: 'https://www.oldbridgelibrary.org/events', city: 'Old Bridge', state: 'NJ', zipCode: '08857', county: 'Middlesex'},
   { name: 'Old Tappan Free Public Library', url: 'https://www.oldtappanlibrary.com/', eventsUrl: 'https://www.oldtappanlibrary.com/calendar', city: 'Old Tappan', state: 'NJ', zipCode: '07675', county: 'Bergen'},
@@ -163,13 +163,13 @@ const LIBRARIES = [
   { name: 'South River Public Library', url: 'https://www.southriverlibrary.org', eventsUrl: 'https://www.southriverlibrary.org/events', city: 'South River', state: 'NJ', zipCode: '08882', county: 'Middlesex'},
   { name: 'Sparta Public Library', url: 'https://www.spartalibrary.org', eventsUrl: 'https://www.spartalibrary.org/events', city: 'Sparta', state: 'NJ', zipCode: '07871', county: 'Sussex'},
   { name: 'Spring Lake Public Library', url: 'https://www.springlakelibrary.org', eventsUrl: 'https://www.springlakelibrary.org/events', city: 'Spring Lake', state: 'NJ', zipCode: '07762', county: 'Monmouth'},
-  { name: 'Springfield Free Public Library', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'NJ', zipCode: '07081', county: 'Union'},
+  { name: 'Springfield Free Public Library', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'NJ', zipCode: '07081', county: 'Union', urlCollision: 'springfieldlibrary.org is MA, not NJ' },
   { name: 'Stratford Public Library', url: 'https://www.stratfordlibrary.org', eventsUrl: 'https://www.stratfordlibrary.org/events', city: 'Stratford', state: 'NJ', zipCode: '08084', county: 'Camden'},
   { name: 'Summit Free Public Library', url: 'https://www.summitlibrary.org/', eventsUrl: 'https://www.summitlibrary.org/', city: 'Summit', state: 'NJ', zipCode: '07901', county: 'Union'},
   { name: 'Teaneck Public Library', url: 'https://www.teanecklibrary.org', eventsUrl: 'https://www.teanecklibrary.org/events', city: 'Teaneck', state: 'NJ', zipCode: '07666', county: 'Bergen'},
   { name: 'Tenafly Free Public Library', url: 'https://www.tenaflylibrary.org/', eventsUrl: 'https://www.tenaflylibrary.org/calendar', city: 'Tenafly', state: 'NJ', zipCode: '07670', county: 'Bergen'},
   { name: 'Dwight D. Eisenhower Library', url: 'https://www.totowalibrary.org', eventsUrl: 'https://www.totowalibrary.org/events', city: 'Totowa', state: 'NJ', zipCode: '07512', county: 'Passaic'},
-  { name: 'Union Free Public Library', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'NJ', zipCode: '07083', county: 'Union County'},
+  { name: 'Union Free Public Library', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'NJ', zipCode: '07083', county: 'Union County', urlCollision: 'unionlibrary.org is SC, not NJ' },
   { name: 'Verona Free Public Library', url: 'https://www.veronalibrary.org', eventsUrl: 'https://www.veronalibrary.org/events', city: 'Verona', state: 'NJ', zipCode: '07044', county: 'Essex'},
   { name: 'Sally Stretch Keen Memorial Library', url: 'https://www.vincentownlibrary.org', eventsUrl: 'https://www.vincentownlibrary.org/events', city: 'Vincentown', state: 'NJ', zipCode: '08088', county: 'Burlington'},
   { name: 'Vineland Public Library', url: 'https://www.vinelandlibrary.org', eventsUrl: 'https://www.vinelandlibrary.org/events', city: 'Vineland', state: 'NJ', zipCode: '08360', county: 'Cumberland'},
@@ -196,6 +196,18 @@ async function scrapeGenericEvents() {
   for (const library of LIBRARIES) {
     const __eventCountBefore = events.length;
     console.log(`📍 ${library.name} (${library.city}, ${library.state})`);
+      // An entry carrying urlCollision points at a DIFFERENT institution than its own
+      // name and state claim — the guessed {city}library.org host actually belongs to
+      // another state's library. Scraping it imported that library's events under this
+      // state. See scripts/disable-collided-urls.js for the per-host evidence.
+      // The 📍 header above and the "Found 0 events" line below are BOTH required: the
+      // library-site audit pairs them, and dropping the pair would delete this library
+      // from the audit instead of showing it as a known, explained gap.
+      if (library.urlCollision) {
+        console.log(`   ⏭️  skipped — urlCollision: ${library.urlCollision}`);
+        console.log(`   Found 0 events`);
+        continue;
+      }
     try {
       // Try the site's TEC REST API before falling back to DOM scraping —
       // see helpers/tec-rest-helper.js for why (2026-07-31 diagnosis).

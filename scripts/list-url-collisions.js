@@ -79,6 +79,7 @@ function domainOf(host) {
   return last2;
 }
 
+let disabled = 0;
 function loadConfiguredSites() {
   const reg = require(path.join(ROOT, 'scrapers', 'scraper-registry.js'));
   const activeStates = reg.getActiveStates();
@@ -87,6 +88,7 @@ function loadConfiguredSites() {
   const sites = [];
   const fileCache = new Map();
   const pushedFiles = new Set();
+  // module-level so main() can report it
 
   Object.entries(all).forEach(([key, sc]) => {
     if (!sc.file || !reg.isScraperActive(sc, activeStates)) return;
@@ -110,6 +112,13 @@ function loadConfiguredSites() {
         const co = field('county').exec(o[0]);
         const val = m => (m ? (m[1] !== undefined ? m[1] : m[2]) : '');
         if (!uu) continue;
+        // An entry flagged urlCollision is skipped at run time by the guard in its scraper
+        // (see scripts/disable-collided-urls.js), so it no longer points anywhere and
+        // cannot import another state's events. Excluded from the collision count for
+        // that reason — but counted separately below so disabling stays visible and is
+        // never mistaken for the URL having been corrected.
+        const uc = field('urlCollision').exec(o[0]);
+        if (uc) { disabled++; continue; }
         entries.push({ name: val(nm), url: val(uu), state: val(st), county: val(co) });
       }
       fileCache.set(abs, entries);
@@ -161,6 +170,7 @@ function main() {
 
   if (CHECK) {
     console.log(`gate 2 parity: ${gate2Entries} entries on ${colliding.length} hosts claimed by 2+ states`);
+    console.log(`  plus ${disabled} entries disabled via urlCollision and therefore excluded`);
     console.log(`  (project-status.js should print the same two numbers)`);
     process.exit(0);
   }
@@ -179,6 +189,7 @@ function main() {
 
   console.log(`configured active sites with a parseable URL : ${sites.length}`);
   console.log(`hosts claimed by 2+ states                    : ${colliding.length}  (gate 2 counts ${gate2Entries} entries on them)`);
+  console.log(`entries DISABLED via urlCollision (excluded)  : ${disabled}  — guarded at run time, not corrected`);
   console.log(`  of which multi-state platforms by design    : ${aggregators.length}  — not seed-data bugs`);
   console.log(`  of which TRUE single-institution collisions : ${trueCollisions.length}  (${trueEntries} entries)  <-- the worklist`);
   console.log('');

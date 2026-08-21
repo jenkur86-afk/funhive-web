@@ -86,7 +86,7 @@ const LIBRARIES = [
   { name: 'Corry Public Library', url: 'https://www.corrylibrary.org', eventsUrl: 'https://www.corrylibrary.org/events', city: 'Corry', state: 'PA', zipCode: '16407', county: 'Erie'},
   { name: 'Coudersport Public Library', url: 'https://www.coudersportlibrary.org', eventsUrl: 'https://www.coudersportlibrary.org/events', city: 'Coudersport', state: 'PA', zipCode: '16915', county: 'Potter'},
   { name: 'Back Mountain Memorial Library', url: 'https://www.dallaslibrary.org', eventsUrl: 'https://www.dallaslibrary.org/events', city: 'Dallas', state: 'PA', zipCode: '18612', county: 'Luzerne'},
-  { name: 'Dalton Community Library', url: 'https://www.daltonlibrary.org', eventsUrl: 'https://www.daltonlibrary.org/events', city: 'Dalton', state: 'PA', zipCode: '18414', county: 'Lackawanna'},
+  { name: 'Dalton Community Library', url: 'https://www.daltonlibrary.org', eventsUrl: 'https://www.daltonlibrary.org/events', city: 'Dalton', state: 'PA', zipCode: '18414', county: 'Lackawanna', urlCollision: 'daltonlibrary.org is MA, not PA' },
   { name: 'Darby Library', url: 'https://www.darbylibrary.org', eventsUrl: 'https://www.darbylibrary.org/events', city: 'Darby', state: 'PA', zipCode: '19023', county: 'Delaware'},
   { name: 'Delmont Public Library', url: 'https://www.delmontlibrary.org', eventsUrl: 'https://www.delmontlibrary.org/events', city: 'Delmont', state: 'PA', zipCode: '15626', county: 'Westmoreland'},
   { name: 'Downingtown Library Company', url: 'https://downingtownlibrary.org/', eventsUrl: 'https://downingtownlibrary.org/home/', city: 'Downingtown', state: 'PA', zipCode: '19335', county: 'Chester'},
@@ -211,7 +211,7 @@ const LIBRARIES = [
   { name: 'South Park Township Library', url: 'https://southparklibrary.org/', eventsUrl: 'https://southparklibrary.org/', city: 'South Park', state: 'PA', zipCode: '15129', county: 'Allegheny County'},
   { name: 'Spring City Free Public Library', url: 'https://springcitylibrary.org/', eventsUrl: 'https://springcitylibrary.org/', city: 'Spring City', state: 'PA', zipCode: '19475', county: 'Chester'},
   { name: 'Springdale Free Public Library', url: 'https://springdalelibrary.org/', eventsUrl: 'https://springdalelibrary.org/upcoming-events/', city: 'Springdale', state: 'PA', zipCode: '15144', county: 'Allegheny'},
-  { name: 'Springfield Township Library', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'PA', zipCode: '19064', county: 'Delaware'},
+  { name: 'Springfield Township Library', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'PA', zipCode: '19064', county: 'Delaware', urlCollision: 'springfieldlibrary.org is MA, not PA' },
   { name: 'Strasburg-Heisler Library', url: 'https://www.strasburglibrary.org', eventsUrl: 'https://www.strasburglibrary.org/events', city: 'Strasburg', state: 'PA', zipCode: '17579', county: 'Lancaster'},
   { name: 'Summerville Public Library', url: 'https://www.summervillelibrary.org', eventsUrl: 'https://www.summervillelibrary.org/events', city: 'Summerville', state: 'PA', zipCode: '15864', county: 'Jefferson'},
   { name: 'Degenstein Community Library', url: 'https://www.sunburylibrary.org', eventsUrl: 'https://www.sunburylibrary.org/events', city: 'Sunbury', state: 'PA', zipCode: '17801', county: 'Northumberland'},
@@ -251,6 +251,18 @@ async function scrapeGenericEvents() {
   for (const library of LIBRARIES) {
     const __eventCountBefore = events.length;
     console.log(`📍 ${library.name} (${library.city}, ${library.state})`);
+      // An entry carrying urlCollision points at a DIFFERENT institution than its own
+      // name and state claim — the guessed {city}library.org host actually belongs to
+      // another state's library. Scraping it imported that library's events under this
+      // state. See scripts/disable-collided-urls.js for the per-host evidence.
+      // The 📍 header above and the "Found 0 events" line below are BOTH required: the
+      // library-site audit pairs them, and dropping the pair would delete this library
+      // from the audit instead of showing it as a known, explained gap.
+      if (library.urlCollision) {
+        console.log(`   ⏭️  skipped — urlCollision: ${library.urlCollision}`);
+        console.log(`   Found 0 events`);
+        continue;
+      }
     try {
       console.log(`\n📚 Scraping ${library.name}...`);
 

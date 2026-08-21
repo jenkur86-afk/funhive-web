@@ -141,6 +141,7 @@ function loadConfiguredSites() {
 
   const sites = [];
   let unparseable = 0;
+  let disabledByCollision = 0;
   const fileCache = new Map();
   const pushedFiles = new Set();
 
@@ -170,6 +171,14 @@ function loadConfiguredSites() {
         const co = field('county').exec(o[0]);
         const val = m => (m ? (m[1] !== undefined ? m[1] : m[2]) : '');
         if (!uu) { unparseable++; continue; }    // counted, not hidden
+        // 2026-08-21: an entry flagged urlCollision is skipped at run time by a guard in
+        // its scraper (scripts/disable-collided-urls.js), so it can no longer point at
+        // another state's library — which is exactly what gate 2 measures. Excluded here
+        // for that reason. THIS IS A METHODOLOGY CHANGE, and the drop it causes is a
+        // genuine reduction in risk but NOT a URL being corrected: the wrong host is still
+        // written in the config, the entry is merely disabled, and the library remains an
+        // uncovered gap. See the data note rendered below.
+        if (field('urlCollision').exec(o[0])) { disabledByCollision++; continue; }
         entries.push({ name: val(nm), url: val(uu), state: val(st), county: val(co) });
       }
       fileCache.set(abs, entries);
@@ -190,7 +199,7 @@ function loadConfiguredSites() {
     entries.forEach(e => sites.push({ ...e, scraper: key, state: e.state || sc.state || '' }));
   });
 
-  return { sites, unparseable };
+  return { sites, unparseable, disabledByCollision };
 }
 
 function hostOf(u) {
@@ -204,7 +213,7 @@ function computeGates() {
   const notes = [];
 
   // --- Gates 1 & 2 come from the scraper configs themselves.
-  const { sites, unparseable } = loadConfiguredSites();
+  const { sites, unparseable, disabledByCollision } = loadConfiguredSites();
   const { getCountyCentroid } = require(path.join(ROOT, 'scrapers', 'utils', 'county-centroids.js'));
 
   // Gate 1 — county values that actually resolve to a centroid. When this fails, the
@@ -265,7 +274,16 @@ function computeGates() {
   // resolved. Any comparison against a STATUS.md entry dated on or before 2026-08-18 is
   // across a methodology change and is not a like-for-like trend.
   g.urlCollisions = { now: collidingEntries, unit: '', target: 0,
-    detail: `${collidingEntries} entries on ${collidingHosts.length} hosts claimed by 2+ states` };
+    detail: `${collidingEntries} entries on ${collidingHosts.length} hosts claimed by 2+ states` +
+      (disabledByCollision ? `; a further ${disabledByCollision} disabled via urlCollision and excluded` : '') };
+  if (disabledByCollision) {
+    notes.push(`METHODOLOGY CHANGE 2026-08-21: ${disabledByCollision} entries proven to point at another state's ` +
+      'library were flagged urlCollision and are skipped at run time, so they are excluded from gate 2. ' +
+      'Gate 2 fell 504 -> 448 as a result. That is a real reduction in RISK — those entries can no longer ' +
+      'import another state\'s events — but it is NOT a URL being corrected: the wrong host is still in ' +
+      'the config and each of those libraries is now an explicit, uncovered gap. Do not read the drop as ' +
+      'coverage improving. Worklist: node scripts/list-url-collisions.js');
+  }
   if (TODAY <= '2026-08-25') {
     notes.push('METHODOLOGY CHANGE 2026-08-18: gates 1-2 previously counted a shared config file once per registry key ' +
                'pointing at it (LibCal x18, Communico x16, BiblioCommons x6), inflating both. Gate 2 fell 536 -> 504 as a ' +

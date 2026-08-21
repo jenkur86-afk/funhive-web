@@ -42,7 +42,7 @@ const LIBRARIES = [
   // registered under WordPress-DE, whose Puppeteer extractor is built for WordPress DOM and
   // can't read LibCal markup -- confirmed live today (verifier: "platform=libcal detected").
   // Properly relocated to LibCal-DE now.
-  { name: 'Laurel Public Library', url: 'https://www.laurellibrary.org', eventsUrl: 'https://www.laurellibrary.org/events', city: 'Laurel', state: 'DE', zipCode: '19956', county: 'Sussex'},
+  { name: 'Laurel Public Library', url: 'https://www.laurellibrary.org', eventsUrl: 'https://www.laurellibrary.org/events', city: 'Laurel', state: 'DE', zipCode: '19956', county: 'Sussex', urlCollision: 'laurellibrary.org is KY, not DE' },
   // Additional libraries from coverage audit
   { name: 'Frankford Public Library', url: 'https://www.frankfordlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.frankfordlibrary.org/events', city: 'Frankford', state: 'DE', zipCode: '19945', county: '' },
   // Appoquinimink Public Library REMOVED 2026-08-18: same dead-endpoint reason as Bear
@@ -57,6 +57,18 @@ async function scrapeGenericEvents() {
   for (const library of LIBRARIES) {
     const __eventCountBefore = events.length;
     console.log(`📍 ${library.name} (${library.city}, ${library.state})`);
+      // An entry carrying urlCollision points at a DIFFERENT institution than its own
+      // name and state claim — the guessed {city}library.org host actually belongs to
+      // another state's library. Scraping it imported that library's events under this
+      // state. See scripts/disable-collided-urls.js for the per-host evidence.
+      // The 📍 header above and the "Found 0 events" line below are BOTH required: the
+      // library-site audit pairs them, and dropping the pair would delete this library
+      // from the audit instead of showing it as a known, explained gap.
+      if (library.urlCollision) {
+        console.log(`   ⏭️  skipped — urlCollision: ${library.urlCollision}`);
+        console.log(`   Found 0 events`);
+        continue;
+      }
     try {
       const page = await browser.newPage();
       await page.goto(library.eventsUrl, { waitUntil: 'networkidle2', timeout: 30000 });

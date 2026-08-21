@@ -58,7 +58,7 @@ const LIBRARIES = [
   { name: 'Eldredge Public Library', url: 'https://eldredgelibrary.org', eventsUrl: 'https://eldredgelibrary.libcal.com/calendar?cid=21029', city: 'Chatham', state: 'MA', zipCode: '02633', county: 'Barnstable'},
   { name: 'Chelmsford Public Library', url: 'https://www.chelmsfordlibrary.org/', eventsUrl: 'https://www.chelmsfordlibrary.org/', city: 'Chelmsford', state: 'MA', zipCode: '01824', county: 'Middlesex'},
   { name: 'Chelsea Public Library', url: 'https://www.chelsealibrary.org', eventsUrl: 'https://www.chelsealibrary.org/events', city: 'Chelsea', state: 'MA', zipCode: '02150', county: 'Suffolk'},
-  { name: 'Hamilton Memorial Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'MA', zipCode: '01011', county: 'Hampden'},
+  { name: 'Hamilton Memorial Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'MA', zipCode: '01011', county: 'Hampden', urlCollision: 'chesterlibrary.org is NY, not MA' },
   // URL corrected 2026-08-11 (was chesterfieldlibrary.org): Site 403s to fetch; MA Board of Library Commissioners directory lists 408 Main Road Chesterfield MA 01012, phone 413-296-4735, this URL
   { name: 'Chesterfield Public Library', url: 'https://www.townofchesterfieldma.com/library', eventsUrl: 'https://www.townofchesterfieldma.com/library', city: 'Chesterfield', state: 'MA', zipCode: '01012', county: 'Hampshire'},
   { name: 'Aldenville Branch Library', url: 'https://www.chicopeelibrary.org', eventsUrl: 'https://www.chicopeelibrary.org/events', city: 'Chicopee', state: 'MA', zipCode: '00000', county: 'Hampden'},
@@ -78,7 +78,7 @@ const LIBRARIES = [
   { name: 'Moses Greeley Parker Memorial Lib.', url: 'https://www.dracutlibrary.org', eventsUrl: 'https://www.dracutlibrary.org/events', city: 'Dracut', state: 'MA', zipCode: '01826', county: 'Middlesex'},
   { name: 'East Bridgewater Public Library', url: 'https://www.eastbridgewaterlibrary.org', eventsUrl: 'https://www.eastbridgewaterlibrary.org/events', city: 'East Bridgewater', state: 'MA', zipCode: '02333', county: 'Plymouth'},
   { name: 'Eastham Public Library', url: 'https://easthamlibrary.org/', eventsUrl: 'https://easthamlibrary.org/', city: 'Eastham', state: 'MA', zipCode: '02642', county: 'Barnstable'},
-  { name: 'Emily Williston Memorial Library', url: 'https://www.easthamptonlibrary.org', eventsUrl: 'https://www.easthamptonlibrary.org/events', city: 'Easthampton', state: 'MA', zipCode: '01027', county: 'Hampshire'},
+  { name: 'Emily Williston Memorial Library', url: 'https://www.easthamptonlibrary.org', eventsUrl: 'https://www.easthamptonlibrary.org/events', city: 'Easthampton', state: 'MA', zipCode: '01027', county: 'Hampshire', urlCollision: 'easthamptonlibrary.org is NY, not MA' },
   { name: 'Five Corners Library', url: 'https://www.eastonlibrary.org/', eventsUrl: 'https://www.eastonlibrary.org/library-events', city: 'Easton', state: 'MA', zipCode: '00000', county: 'Bristol'},
   { name: 'Edgartown Free Public Library', url: 'https://www.edgartownlibrary.org', eventsUrl: 'https://www.edgartownlibrary.org/events', city: 'Edgartown', state: 'MA', zipCode: '02539', county: 'Dukes'},
   { name: 'T.O.H.P. Burnham Free Library', url: 'https://www.essexlibrary.org', eventsUrl: 'https://www.essexlibrary.org/events', city: 'Essex', state: 'MA', zipCode: '01929', county: 'Essex County'},
@@ -229,7 +229,7 @@ const LIBRARIES = [
   { name: 'Westhampton Memorial Library', url: 'https://www.westhamptonlibrary.org', eventsUrl: 'https://www.westhamptonlibrary.org/events', city: 'Westhampton', state: 'MA', zipCode: '01027', county: 'Hampshire'},
   { name: 'Forbush Memorial Library', url: 'https://www.westminsterlibrary.org', eventsUrl: 'https://www.westminsterlibrary.org/events', city: 'Westminster', state: 'MA', zipCode: '01473', county: 'Worcester'},
   { name: 'Weston Public Library', url: 'https://www.westonlibrary.org', eventsUrl: 'https://www.westonlibrary.org/events', city: 'Weston', state: 'MA', zipCode: '02493', county: 'Middlesex'},
-  { name: 'Westport Free Public Library', url: 'https://www.westportlibrary.org', eventsUrl: 'https://www.westportlibrary.org/events', city: 'Westport', state: 'MA', zipCode: '02790', county: 'Bristol'},
+  { name: 'Westport Free Public Library', url: 'https://www.westportlibrary.org', eventsUrl: 'https://www.westportlibrary.org/events', city: 'Westport', state: 'MA', zipCode: '02790', county: 'Bristol', urlCollision: 'westportlibrary.org is CT, not MA' },
   { name: 'Islington Branch Library', url: 'https://www.westwoodlibrary.org', eventsUrl: 'https://www.westwoodlibrary.org/events', city: 'Westwood', state: 'MA', zipCode: '00000', county: 'Norfolk'},
   { name: 'Whitinsville Social Library', url: 'https://www.whitinsvillelibrary.org', eventsUrl: 'https://www.whitinsvillelibrary.org/events', city: 'Whitinsville', state: 'MA', zipCode: '01588', county: 'Worcester'},
   { name: 'Wilbraham Public Library', url: 'https://www.wilbrahamlibrary.org', eventsUrl: 'https://www.wilbrahamlibrary.org/events', city: 'Wilbraham', state: 'MA', zipCode: '01095', county: 'Hampden'},
@@ -251,6 +251,18 @@ async function scrapeGenericEvents() {
   for (const library of LIBRARIES) {
     const __eventCountBefore = events.length;
     console.log(`📍 ${library.name} (${library.city}, ${library.state})`);
+      // An entry carrying urlCollision points at a DIFFERENT institution than its own
+      // name and state claim — the guessed {city}library.org host actually belongs to
+      // another state's library. Scraping it imported that library's events under this
+      // state. See scripts/disable-collided-urls.js for the per-host evidence.
+      // The 📍 header above and the "Found 0 events" line below are BOTH required: the
+      // library-site audit pairs them, and dropping the pair would delete this library
+      // from the audit instead of showing it as a known, explained gap.
+      if (library.urlCollision) {
+        console.log(`   ⏭️  skipped — urlCollision: ${library.urlCollision}`);
+        console.log(`   Found 0 events`);
+        continue;
+      }
     try {
       const page = await browser.newPage();
       await page.goto(library.eventsUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });

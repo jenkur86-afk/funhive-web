@@ -79,7 +79,7 @@ const LIBRARIES = [
   { name: 'Beaver Falls Library', url: 'https://www.beaverfallslibrary.org', eventsUrl: 'https://www.beaverfallslibrary.org/events', city: 'Beaver Falls', state: 'NY', zipCode: '13305', county: 'Lewis'},
   { name: 'Bedford Free Library', url: 'https://www.bedfordlibrary.org', eventsUrl: 'https://www.bedfordlibrary.org/events', city: 'Bedford', state: 'NY', zipCode: '10506', county: 'Westchester'},
   { name: 'Bedford Hills Free Library', url: 'https://www.bedfordhillsfreelibrary.org/', eventsUrl: 'https://www.bedfordhillsfreelibrary.org/events/upcoming', city: 'Bedford Hills', state: 'NY', zipCode: '10507', county: 'Westchester'},
-  { name: 'Belfast Public Library', url: 'https://www.belfastlibrary.org', eventsUrl: 'https://www.belfastlibrary.org/events', city: 'Belfast', state: 'NY', zipCode: '14711', county: 'Allegany'},
+  { name: 'Belfast Public Library', url: 'https://www.belfastlibrary.org', eventsUrl: 'https://www.belfastlibrary.org/events', city: 'Belfast', state: 'NY', zipCode: '14711', county: 'Allegany', urlCollision: 'belfastlibrary.org is ME, not NY' },
   { name: 'Bellmore Memorial Library', url: 'https://www.bellmorelibrary.org', eventsUrl: 'https://www.bellmorelibrary.org/events', city: 'Bellmore', state: 'NY', zipCode: '11710', county: 'Nassau'},
   { name: 'Free Library Of The Belmont Literary And Historical Society', url: 'https://smcl.org/', eventsUrl: 'https://smcl.org/', city: 'Belmont', state: 'NY', zipCode: '14813', county: 'Allegany'},
   { name: 'Bemus Point Public Library', url: 'https://www.bemuspointlibrary.org', eventsUrl: 'https://www.bemuspointlibrary.org/events', city: 'Bemus Point', state: 'NY', zipCode: '14712', county: 'Chautauqua'},
@@ -438,7 +438,7 @@ const LIBRARIES = [
   { name: 'Westbury Memorial Public Library', url: 'https://www.westburylibrary.org/', eventsUrl: 'https://www.westburylibrary.org/', city: 'Westbury', state: 'NY', zipCode: '11590', county: 'Nassau'},
   { name: 'Town Of Westerlo Public Library', url: 'https://www.westerlolibrary.org', eventsUrl: 'https://www.westerlolibrary.org/events', city: 'Westerlo', state: 'NY', zipCode: '12193', county: 'Albany'},
   { name: 'Patterson Library', url: 'https://www.westfieldlibrary.org', eventsUrl: 'https://www.westfieldlibrary.org/events', city: 'Westfield', state: 'NY', zipCode: '14787', county: 'Chautauqua'},
-  { name: 'Westport Library Association', url: 'https://www.westportlibrary.org', eventsUrl: 'https://www.westportlibrary.org/events', city: 'Westport', state: 'NY', zipCode: '12993', county: 'Essex'},
+  { name: 'Westport Library Association', url: 'https://www.westportlibrary.org', eventsUrl: 'https://www.westportlibrary.org/events', city: 'Westport', state: 'NY', zipCode: '12993', county: 'Essex', urlCollision: 'westportlibrary.org is CT, not NY' },
   { name: 'Dunham Public Library', url: 'https://whitesborolibrary.org/', eventsUrl: 'https://whitesborolibrary.org/', city: 'Whitesboro', state: 'NY', zipCode: '13492', county: 'Oneida'},
   { name: 'Whitesville Public Library', url: 'https://www.whitesvillelibrary.org', eventsUrl: 'https://www.whitesvillelibrary.org/events', city: 'Whitesville', state: 'NY', zipCode: '14897', county: 'Allegany'},
   { name: 'Williamson Free Public Library', url: 'https://www.williamsonlibrary.org/', eventsUrl: 'https://www.williamsonlibrary.org/', city: 'Williamson', state: 'NY', zipCode: '14589', county: 'Wayne'},
@@ -466,6 +466,18 @@ async function scrapeGenericEvents() {
   for (const library of LIBRARIES) {
     const __eventCountBefore = events.length;
     console.log(`📍 ${library.name} (${library.city}, ${library.state})`);
+      // An entry carrying urlCollision points at a DIFFERENT institution than its own
+      // name and state claim — the guessed {city}library.org host actually belongs to
+      // another state's library. Scraping it imported that library's events under this
+      // state. See scripts/disable-collided-urls.js for the per-host evidence.
+      // The 📍 header above and the "Found 0 events" line below are BOTH required: the
+      // library-site audit pairs them, and dropping the pair would delete this library
+      // from the audit instead of showing it as a known, explained gap.
+      if (library.urlCollision) {
+        console.log(`   ⏭️  skipped — urlCollision: ${library.urlCollision}`);
+        console.log(`   Found 0 events`);
+        continue;
+      }
     try {
       // Try the site's TEC REST API before falling back to DOM scraping —
       // see helpers/tec-rest-helper.js for why (2026-07-31 diagnosis).

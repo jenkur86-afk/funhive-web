@@ -28,7 +28,7 @@ const LIBRARIES = [
   { name: 'Bridgeport Public Library', url: 'https://www.bridgeportlibrary.org/', eventsUrl: 'https://www.bridgeportlibrary.org/calendar', city: 'Bridgeport', state: 'WV', zipCode: '26330', county: 'Harrison'},
   { name: 'Cameron Public Library', url: 'https://www.cameronlibrary.org/', eventsUrl: 'https://www.cameronlibrary.org/calendar', city: 'Cameron', state: 'WV', zipCode: '26033', county: 'Marshall'},
   { name: 'Center Point Public Library', url: 'https://www.centerpointlibrary.org', eventsUrl: 'https://www.centerpointlibrary.org/events', city: 'Center Point', state: 'WV', zipCode: '26339', county: 'Doddridge'},
-  { name: 'Lynn Murray Memorial Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'WV', zipCode: '26034', county: 'Hancock'},
+  { name: 'Lynn Murray Memorial Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'WV', zipCode: '26034', county: 'Hancock', urlCollision: 'chesterlibrary.org is NY, not WV' },
   { name: 'Clay County Public Library', url: 'https://www.claylibrary.org/', eventsUrl: 'https://www.claylibrary.org/', city: 'Clay', state: 'WV', zipCode: '25043', county: 'Clay County'},
   { name: 'Sand Hill Public Library', url: 'https://www.dallaslibrary.org', eventsUrl: 'https://www.dallaslibrary.org/events', city: 'Dallas', state: 'WV', zipCode: '26036', county: 'Marshall'},
   { name: 'Dunbar Branch Library', url: 'https://www.dunbarlibrary.org', eventsUrl: 'https://www.dunbarlibrary.org/events', city: 'Dunbar', state: 'WV', zipCode: '25064', county: 'Kanawha'},
@@ -39,7 +39,7 @@ const LIBRARIES = [
   { name: 'Hamlin-Lincoln County Public Library', url: 'https://www.hamlinlibrary.org/', eventsUrl: 'https://www.hamlinlibrary.org/', city: 'Hamlin', state: 'WV', zipCode: '25523', county: 'Lincoln'},
   { name: 'Hillsboro Public Library', url: 'https://www.hillsborolibrary.org', eventsUrl: 'https://www.hillsborolibrary.org/events', city: 'Hillsboro', state: 'WV', zipCode: '24946', county: 'Pocahontas'},
   { name: 'Summers County Public Library', url: 'https://www.hintonlibrary.org', eventsUrl: 'https://www.hintonlibrary.org/events', city: 'Hinton', state: 'WV', zipCode: '25951', county: 'Summers'},
-  { name: 'Boone-Madison Public Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'WV', zipCode: '25130', county: 'Boone'},
+  { name: 'Boone-Madison Public Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'WV', zipCode: '25130', county: 'Boone', urlCollision: 'madisonlibrary.org is KY, not WV' },
   { name: 'Montgomery Public Library', url: 'https://www.montgomerylibrary.org', eventsUrl: 'https://www.montgomerylibrary.org/events', city: 'Montgomery', state: 'WV', zipCode: '25136', county: 'Kanawha'},
   { name: 'Swaney Memorial Library', url: 'https://www.newcumberlandlibrary.org', eventsUrl: 'https://www.newcumberlandlibrary.org/events', city: 'New Cumberland', state: 'WV', zipCode: '26047', county: 'Hancock'},
   { name: 'Paden City Public Library', url: 'https://www.padencitylibrary.org/', eventsUrl: 'https://www.padencitylibrary.org/calendar', city: 'Paden City', state: 'WV', zipCode: '26159', county: 'Tyler'},
@@ -51,7 +51,7 @@ const LIBRARIES = [
   { name: 'Ronceverte Public Library', url: 'https://www.roncevertelibrary.org/', eventsUrl: 'https://www.roncevertelibrary.org/', city: 'Ronceverte', state: 'WV', zipCode: '24970', county: 'Greenbrier'},
   { name: 'South Charleston Public Library', url: 'https://www.scplwv.org/', eventsUrl: 'https://www.scplwv.org/events', city: 'South Charleston', state: 'WV', zipCode: '25303', county: 'Kanawha'},
   { name: 'Pleasants County Public Library', url: 'https://www.stmaryslibrary.org', eventsUrl: 'https://www.stmaryslibrary.org/events', city: 'St. Marys', state: 'WV', zipCode: '26170', county: 'Pleasants'},
-  { name: 'Monroe County Public Library', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'WV', zipCode: '24983', county: 'Monroe'},
+  { name: 'Monroe County Public Library', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'WV', zipCode: '24983', county: 'Monroe', urlCollision: 'unionlibrary.org is SC, not WV' },
   // URL corrected 2026-08-11 (was waverlylibrary.com): Waverly branch of Parkersburg and Wood County Public Library, 450 Virginia St Waverly WV 26184, phone 304-464-5668. WV Library Commission li
   { name: 'Waverly Library', url: 'https://parkwoodlib.com/waverly-library/', eventsUrl: 'https://parkwoodlib.com/events', city: 'Waverly', state: 'WV', zipCode: '26184', county: 'Wood'},
   // URL corrected 2026-08-11 (was whitesvillelibrary.org): Branch of Boone-Madison Public Library; 38175 Coal River Road Whitesville WV 25209, phone 304-854-0196. Site confirmed by WV Library Commiss
@@ -68,6 +68,18 @@ async function scrapeGenericEvents() {
   for (const library of LIBRARIES) {
     const __eventCountBefore = events.length;
     console.log(`📍 ${library.name} (${library.city}, ${library.state})`);
+      // An entry carrying urlCollision points at a DIFFERENT institution than its own
+      // name and state claim — the guessed {city}library.org host actually belongs to
+      // another state's library. Scraping it imported that library's events under this
+      // state. See scripts/disable-collided-urls.js for the per-host evidence.
+      // The 📍 header above and the "Found 0 events" line below are BOTH required: the
+      // library-site audit pairs them, and dropping the pair would delete this library
+      // from the audit instead of showing it as a known, explained gap.
+      if (library.urlCollision) {
+        console.log(`   ⏭️  skipped — urlCollision: ${library.urlCollision}`);
+        console.log(`   Found 0 events`);
+        continue;
+      }
     try {
       const page = await browser.newPage();
       await page.goto(library.eventsUrl, { waitUntil: 'networkidle2', timeout: 30000 });

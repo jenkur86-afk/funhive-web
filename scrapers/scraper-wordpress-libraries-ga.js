@@ -125,7 +125,7 @@ const LIBRARIES = [
   // eventsUrl points at the branch-filtered list view (tribe_venues[]=87, confirmed
   // live) so extraction isn't mixed with the other 4 WGRLS counties.
   { name: 'New Georgia Public Library', url: 'https://wgrls.org', eventsUrl: 'https://wgrls.org/events/list/?tribe_venues%5B%5D=87', city: 'Dallas', state: 'GA', zipCode: '30157', county: 'Paulding'},
-  { name: 'Dalton-Whitfield County Public Library', url: 'https://www.daltonlibrary.org', eventsUrl: 'https://www.daltonlibrary.org/events', city: 'Dalton', state: 'GA', zipCode: '00000', county: 'Whitfield'},
+  { name: 'Dalton-Whitfield County Public Library', url: 'https://www.daltonlibrary.org', eventsUrl: 'https://www.daltonlibrary.org/events', city: 'Dalton', state: 'GA', zipCode: '00000', county: 'Whitfield', urlCollision: 'daltonlibrary.org is MA, not GA' },
   // URL corrected 2026-08-11 (was darienlibrary.org): 1105 Northway Darien GA 31305, phone 912-217-6659, Three Rivers Regional Library member
   { name: 'Ida Hilton Public Library', url: 'https://www.trrl.org', eventsUrl: 'https://www.trrl.org', city: 'Darien', state: 'GA', zipCode: '00000', county: 'McIntosh'},
   // URL corrected 2026-08-11 (was decaturlibrary.org): DeKalb County Public Library Covington Library, 3500 Covington Highway Decatur GA 30032, phone 404-508-7180
@@ -167,7 +167,7 @@ const LIBRARIES = [
   { name: 'Jefferson County Library System', url: 'https://www.jeffersoncls.org/', eventsUrl: 'https://www.jeffersoncls.org/calendar.php', city: 'Louisville', state: 'GA', zipCode: '30434', county: 'Jefferson'},
   { name: 'Nelle Brown Memorial Public Library', url: 'https://lyonslibrary.org/', eventsUrl: 'https://lyonslibrary.org/', city: 'Lyons', state: 'GA', zipCode: '00000', county: 'Toombs'},
   { name: 'Middle Georgia Regional Library System', url: 'https://www.maconlibrary.org', eventsUrl: 'https://www.maconlibrary.org/events', city: 'Macon', state: 'GA', zipCode: '31201', county: 'Macon County'},
-  { name: 'Morgan County Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'GA', zipCode: '00000', county: 'Madison County'},
+  { name: 'Morgan County Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'GA', zipCode: '00000', county: 'Madison County', urlCollision: 'madisonlibrary.org is KY, not GA' },
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in MO, not GA. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Maysville Public Library', url: 'https://www.maysvillelibrary.org', eventsUrl: 'https://www.maysvillelibrary.org/events', city: 'Maysville', state: 'GA', zipCode: '00000', county: 'Banks'},
   { name: 'Meigs Public Library', url: 'https://www.meigslibrary.org/', eventsUrl: 'https://www.meigslibrary.org/', city: 'Meigs', state: 'GA', zipCode: '00000', county: 'Thomas'},
@@ -188,7 +188,7 @@ const LIBRARIES = [
   { name: 'Senoia Area Public Library', url: 'https://cowt.ent.sirsi.net/', eventsUrl: 'https://cowt.ent.sirsi.net/client/en_US/default/', city: 'Senoia', state: 'GA', zipCode: '00000', county: 'Coweta'},
   { name: 'Lewis A. Ray Library', url: 'https://www.smyrnalibrary.org', eventsUrl: 'https://www.smyrnalibrary.org/events', city: 'Smyrna', state: 'GA', zipCode: '00000', county: 'Cobb'},
   { name: 'Hancock County Library', url: 'https://www.spartalibrary.org', eventsUrl: 'https://www.spartalibrary.org/events', city: 'Sparta', state: 'GA', zipCode: '00000', county: 'Hancock'},
-  { name: 'Effingham', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'GA', zipCode: '00000', county: 'Effingham'},
+  { name: 'Effingham', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'GA', zipCode: '00000', county: 'Effingham', urlCollision: 'springfieldlibrary.org is MA, not GA' },
   { name: 'Chattooga County Library System', url: 'https://www.summervillelibrary.org', eventsUrl: 'https://www.summervillelibrary.org/events', city: 'Summerville', state: 'GA', zipCode: '30747', county: 'Chattooga'},
   { name: 'Hightower Memorial Library', url: 'https://thomastonlibrary.org/', eventsUrl: 'https://thomastonlibrary.org/', city: 'Thomaston', state: 'GA', zipCode: '00000', county: 'Upson'},
   { name: 'Thomson-Mcduffie County Library', url: 'https://www.thomsonlibrary.org/', eventsUrl: 'https://www.thomsonlibrary.org/', city: 'Thomson', state: 'GA', zipCode: '00000', county: 'McDuffie'},
@@ -206,6 +206,18 @@ async function scrapeGenericEvents() {
   for (const library of LIBRARIES) {
     const __eventCountBefore = events.length;
     console.log(`📍 ${library.name} (${library.city}, ${library.state})`);
+      // An entry carrying urlCollision points at a DIFFERENT institution than its own
+      // name and state claim — the guessed {city}library.org host actually belongs to
+      // another state's library. Scraping it imported that library's events under this
+      // state. See scripts/disable-collided-urls.js for the per-host evidence.
+      // The 📍 header above and the "Found 0 events" line below are BOTH required: the
+      // library-site audit pairs them, and dropping the pair would delete this library
+      // from the audit instead of showing it as a known, explained gap.
+      if (library.urlCollision) {
+        console.log(`   ⏭️  skipped — urlCollision: ${library.urlCollision}`);
+        console.log(`   Found 0 events`);
+        continue;
+      }
     try {
       // Try the site's TEC REST API before falling back to DOM scraping —
       // see helpers/tec-rest-helper.js for why (2026-07-31 diagnosis).
