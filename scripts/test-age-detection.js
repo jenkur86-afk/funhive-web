@@ -68,6 +68,20 @@ const CASES = [
   ['Makerspace Robotics', '', 'Kids (6-8)', 'explicit grade range', 'Grades 3-5 welcome.'],
   ['Robotics Lab', '', 'Kids (6-8)', 'elementary must not land in Preschool', 'Open to elementary students.'],
 
+  // --- a SINGLE grade, no range and no "and up" (added 2026-08-21) -----------
+  // Every grade regex before this one needs a second number or an and-up phrase,
+  // so a lone grade fell through to All Ages. Found on Ringwood Public Library.
+  ['7th Grade Summer Math Tutoring', '', 'Tweens (9-12)', 'lone ordinal grade -> age 12'],
+  ['Grade 3 Book Group', '', 'Kids (6-8)', 'lone word-first grade -> age 8'],
+  ['12th Grade College Prep', '', 'Teens (13-18)', 'lone grade at the top of the range'],
+  // Closed ranges and "and up" must keep priority over the lone-grade rule, or a
+  // range gets truncated to its first grade.
+  ['Lego Club', '', 'Kids (6-8)', 'closed range still wins over lone-grade', 'Grades 3-5 welcome.'],
+  ['Retro Game Night', '', 'Tweens (9-12)', 'and-up still wins over lone-grade', 'Open to youth in grades 6 and up.'],
+  // Negative controls: "grade" in a non-audience sense must not set an age.
+  ['Software Upgrade Help Session', '', 'All Ages', 'upgrade must not match the grade rule'],
+  ['1000 Books Before Kindergarten', '', 'All Ages', 'bare kindergarten is a BABY program — must not become age 5'],
+
   // --- storytime / tots: the most common children's program names -----------
   // Added 2026-08-05. Bare "Storytime" carried no age signal at all and every
   // unqualified one defaulted to All Ages — confirmed live across 15 flagged

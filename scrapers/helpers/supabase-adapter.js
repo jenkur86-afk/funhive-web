@@ -586,6 +586,34 @@ function detectAgeRange(name, description) {
   const gradeAndUpDigitFirst = text.match(/\b(\d{1,2})(?:st|nd|rd|th)?\s*grade\s*(?:and\s+(?:up|older|above)|or\s+(?:up|older|above)|\+)\b/);
   if (gradeAndUpDigitFirst) return `${gradeToAge(parseInt(gradeAndUpDigitFirst[1], 10))}-18`;
 
+  // A SINGLE grade with no range and no "and up": "7th Grade Summer Math Tutoring",
+  // "Grade 3 Book Club". Every grade regex above needs either a second number or an
+  // and-up phrase, so a lone grade fell through to All Ages — found 2026-08-21 on
+  // Ringwood Public Library (WordPress-NJ), whose "7th Grade Summer Math Tutoring"
+  // sat in All Ages while the site was flagged at 79% All Ages.
+  //
+  // MUST run last of the grade rules so closed ranges and "and up" keep priority —
+  // "grades 3-5" would otherwise be truncated to grade 3 alone by the word-first form.
+  //
+  // The digit-first form REQUIRES the ordinal suffix. A bare "\d+ grade" scan is the
+  // same over-broad pattern the 2026-08-03 fix was written to avoid, and "grade" is a
+  // common noun in other senses ("Grade A", "graded readers"). "upgrade" cannot match
+  // either form: there is no word boundary between "up" and "grade".
+  //
+  // Kindergarten is deliberately NOT treated as a lone grade here. "1000 Books Before
+  // Kindergarten" is a ubiquitous library programme aimed at BABIES, and mapping a bare
+  // "kindergarten" to age 5 would file it as Preschool — the opposite of correct.
+  const singleGradeOrdinal = text.match(/\b(\d{1,2})(?:st|nd|rd|th)\s*grade\b/);
+  const singleGradeWordFirst = text.match(/\bgrades?\s*(\d{1,2})\b/);
+  const singleGrade = singleGradeOrdinal || singleGradeWordFirst;
+  if (singleGrade) {
+    const g = parseInt(singleGrade[1], 10);
+    if (g >= 1 && g <= 12) {
+      const age = gradeToAge(g);
+      return `${age}-${age}`;
+    }
+  }
+
   // "elementary" alone is too broad — it's usually a venue name ("held at Lincoln
   // Elementary", "Clinton Elementary Building A"), not an audience descriptor.
   // Require it to actually describe who the event is for (found 2026-08-03 while
