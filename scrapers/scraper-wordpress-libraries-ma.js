@@ -86,7 +86,7 @@ const LIBRARIES = [
   { name: 'Millicent Library', url: 'https://millicentlibrary.org', eventsUrl: 'https://millicentlibrary.org/events-calendar', city: 'Fairhaven', state: 'MA', zipCode: '02719', county: 'Bristol'},
   { name: 'East End Branch Library', url: 'https://www.fallriverlibrary.org', eventsUrl: 'https://www.fallriverlibrary.org/events', city: 'Fall River', state: 'MA', zipCode: '00000', county: 'Bristol'},
   { name: 'Fitchburg Public Library', url: 'http://fitchburgwi.gov/', eventsUrl: 'http://fitchburgwi.gov/2775/Library', city: 'Fitchburg', state: 'MA', zipCode: '01420', county: 'Worcester'},
-  { name: 'Lilly Library', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'MA', zipCode: '01062', county: 'Hampshire'},
+  { name: 'Lilly Library', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'MA', zipCode: '01062', county: 'Hampshire', urlCollision: 'florencelibrary.org is SC, not MA' },
   { name: 'Framingham Public Library', url: 'https://framinghamlibrary.org/', eventsUrl: 'https://framinghamlibrary.org/calendar', city: 'Framingham', state: 'MA', zipCode: '01702', county: 'Middlesex'},
   { name: 'Franklin Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'MA', zipCode: '02038', county: 'Franklin County'},
   { name: 'Levi Heywood Memorial Library', url: 'https://www.gardnerlibrary.org/', eventsUrl: 'https://www.gardnerlibrary.org/', city: 'Gardner', state: 'MA', zipCode: '01440', county: 'Worcester'},

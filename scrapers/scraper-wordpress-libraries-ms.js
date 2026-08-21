@@ -48,7 +48,7 @@ const LIBRARIES = [
   { name: 'Decatur Public Library', url: 'https://www.knrls.lib.ms.us/', eventsUrl: 'https://www.knrls.lib.ms.us/', city: 'Decatur', state: 'MS', zipCode: '00000', county: 'Newton'},
   { name: 'Dekalb Public Library', url: 'https://www.dekalblibrary.org', eventsUrl: 'https://www.dekalblibrary.org/events', city: 'Dekalb', state: 'MS', zipCode: '39328', county: 'Kemper County'},
   { name: 'Enterprise Public Library', url: 'https://www.enterpriselibrary.org', eventsUrl: 'https://www.enterpriselibrary.org/events', city: 'Enterprise', state: 'MS', zipCode: '00000', county: 'Clarke'},
-  { name: 'Florence Public Library', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'MS', zipCode: '00000', county: 'Rankin'},
+  { name: 'Florence Public Library', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'MS', zipCode: '00000', county: 'Rankin', urlCollision: 'florencelibrary.org is SC, not MS' },
   { name: 'Forest Public Library', url: 'https://www.forestlibrary.org/', eventsUrl: 'https://www.forestlibrary.org/', city: 'Forest', state: 'MS', zipCode: '00000', county: 'Scott'},
   { name: 'Itawamba County-Pratt Memorial Library', url: 'https://www.facebook.com/', eventsUrl: 'https://www.facebook.com/fultonlibrary', city: 'Fulton', state: 'MS', zipCode: '00000', county: 'Itawamba'},
   // URL corrected 2026-08-11 (was hamiltonlibrary.org): Tombigbee Regional Library System branch page lists 40460 Old Highway 45 South, Hamilton MS 39746, phone 662-343-8962

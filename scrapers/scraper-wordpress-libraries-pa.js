@@ -85,7 +85,7 @@ const LIBRARIES = [
   { name: 'Coraopolis Memorial Library', url: 'https://coraopolislibrary.org/', eventsUrl: 'https://coraopolislibrary.org/', city: 'Coraopolis', state: 'PA', zipCode: '15108', county: 'Allegheny'},
   { name: 'Corry Public Library', url: 'https://www.corrylibrary.org', eventsUrl: 'https://www.corrylibrary.org/events', city: 'Corry', state: 'PA', zipCode: '16407', county: 'Erie'},
   { name: 'Coudersport Public Library', url: 'https://www.coudersportlibrary.org', eventsUrl: 'https://www.coudersportlibrary.org/events', city: 'Coudersport', state: 'PA', zipCode: '16915', county: 'Potter'},
-  { name: 'Back Mountain Memorial Library', url: 'https://www.dallaslibrary.org', eventsUrl: 'https://www.dallaslibrary.org/events', city: 'Dallas', state: 'PA', zipCode: '18612', county: 'Luzerne'},
+  { name: 'Back Mountain Memorial Library', url: 'https://www.dallaslibrary.org', eventsUrl: 'https://www.dallaslibrary.org/events', city: 'Dallas', state: 'PA', zipCode: '18612', county: 'Luzerne', urlCollision: 'dallaslibrary.org is TX, not PA' },
   { name: 'Dalton Community Library', url: 'https://www.daltonlibrary.org', eventsUrl: 'https://www.daltonlibrary.org/events', city: 'Dalton', state: 'PA', zipCode: '18414', county: 'Lackawanna', urlCollision: 'daltonlibrary.org is MA, not PA' },
   { name: 'Darby Library', url: 'https://www.darbylibrary.org', eventsUrl: 'https://www.darbylibrary.org/events', city: 'Darby', state: 'PA', zipCode: '19023', county: 'Delaware'},
   { name: 'Delmont Public Library', url: 'https://www.delmontlibrary.org', eventsUrl: 'https://www.delmontlibrary.org/events', city: 'Delmont', state: 'PA', zipCode: '15626', county: 'Westmoreland'},

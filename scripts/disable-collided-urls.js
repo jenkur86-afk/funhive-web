@@ -67,6 +67,16 @@ const GROUND_TRUTH = {
   'baxterlibrary.org':       { state: 'ME', evidence: 'verify-sites-puppeteer url-collision: page addresses show ME (Gorham Baxter Memorial Library) under the TN entry.' },
   'machiaslibrary.org':      { state: 'NY', evidence: 'verify-sites-puppeteer url-collision: page addresses show NY under the ME entry.' },
   'laurellibrary.org':       { state: 'KY', evidence: 'verify-sites-puppeteer url-collision: page addresses show KY under the DE entry.' },
+  // --- second pass, 2026-08-21 -------------------------------------------------
+  // These five are the highest-volume offenders in the database. Note that FOUR of
+  // them resolve to a state OUTSIDE the 22-state active region entirely (WI, WI, TX,
+  // and KY for a host claimed only by NY/ME/NH), which is why no entry anywhere is
+  // correct for them and every claimant is disabled.
+  'spartalibrary.org':       { state: 'WI', evidence: 'live page: Sparta Free Library, "124 W Main Street, Sparta, Wisconsin 54656", area code 608. Claimed by NJ/TN/GA/NC — none is WI, so all four are wrong. 173 rows already in the DB from this host.' },
+  'bathlibrary.org':         { state: 'KY', evidence: 'live page: Bath County Memorial Library, "24 West Main St., Owingsville, KY", area code 606. Claimed by NY/ME/NH — none is KY. Explains why Dormann NY, Patten ME and Bath NH all showed the identical Bookmobile events.' },
+  'newlondonlibrary.org':    { state: 'WI', evidence: 'live page: New London Public Library, "113 W North Water Street, New London, Wisconsin 54961", area code 920. Claimed by CT/NH — neither is WI. Explains the identical LEGO Build events under both.' },
+  'dallaslibrary.org':       { state: 'TX', evidence: 'live page: Dallas Public Library, Dallas TX. Claimed by WV/NC — neither is TX. 91 rows already in the DB from this host.' },
+  'florencelibrary.org':     { state: 'SC', evidence: 'live page: Florence County Library System, Florence SC (six branches). Claimed by MA/SC/KY/MS — the SC entry is the correct one and is KEPT; the other three are wrong.' },
 };
 
 function hostOf(u) {

@@ -89,7 +89,7 @@ const LIBRARIES = [
   { name: 'Parsons Public Library', url: 'https://www.parsonslibrary.org/', eventsUrl: 'https://www.parsonslibrary.org/', city: 'Parsons', state: 'TN', zipCode: '38363', county: 'Decatur'},
   // URL corrected 2026-08-11 (was ripleylibrary.org): Site contact page gives 120 Lafayette Ave, Ripley TN 38063, phone 731-635-1872; TN state library directory confirms same address
   { name: 'Lauderdale County Library', url: 'https://lauderdalecountylibrary.com', eventsUrl: 'https://lauderdalecountylibrary.com/events/', city: 'Ripley', state: 'TN', zipCode: '38063', county: 'Lauderdale'},
-  { name: 'White County Public Library', url: 'https://www.spartalibrary.org', eventsUrl: 'https://www.spartalibrary.org/events', city: 'Sparta', state: 'TN', zipCode: '38583', county: 'White'},
+  { name: 'White County Public Library', url: 'https://www.spartalibrary.org', eventsUrl: 'https://www.spartalibrary.org/events', city: 'Sparta', state: 'TN', zipCode: '38583', county: 'White', urlCollision: 'spartalibrary.org is WI, not TN' },
   { name: 'Audrey Pack Memorial Library', url: 'https://springcitylibrary.org/', eventsUrl: 'https://springcitylibrary.org/', city: 'Spring City', state: 'TN', zipCode: '37381', county: 'Rhea'},
   { name: 'Spring Hill Public Library', url: 'https://www.springhilllibrary.org', eventsUrl: 'https://www.springhilllibrary.org/events', city: 'Spring Hill', state: 'TN', zipCode: '37174', county: 'Maury'},
   { name: 'Sweetwater Public Library', url: 'https://www.sweetwaterlibrary.org/', eventsUrl: 'https://www.sweetwaterlibrary.org/', city: 'Sweetwater', state: 'TN', zipCode: '37874', county: 'Monroe'},

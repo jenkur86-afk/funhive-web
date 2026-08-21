@@ -63,7 +63,7 @@ const LIBRARIES = [
   // URL corrected 2026-08-11 (was cumberlandlibrary.org): Harlan County Public Libraries site lists Rebecca Caudill branch, 310 West Main Street, Cumberland KY 40823, phone 606-589-2409. No calendar
   { name: 'Rebecca Caudill Public Library', url: 'https://harlancountylibraries.org', eventsUrl: 'https://harlancountylibraries.org', city: 'Cumberland', state: 'KY', zipCode: '00000', county: 'Cumberland County'},
   { name: 'Cynthiana-Harrison County Public Library', url: 'https://www.cynthianalibrary.org/', eventsUrl: 'https://www.cynthianalibrary.org/calendar', city: 'Cynthiana', state: 'KY', zipCode: '41031', county: 'Harrison'},
-  { name: 'Florence Branch', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'KY', zipCode: '00000', county: 'Boone'},
+  { name: 'Florence Branch', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'KY', zipCode: '00000', county: 'Boone', urlCollision: 'florencelibrary.org is SC, not KY' },
   { name: 'Goodnight Memorial Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'KY', zipCode: '42134', county: 'Franklin County'},
   { name: 'Fulton Public Library', url: 'https://www.facebook.com/', eventsUrl: 'https://www.facebook.com/fultonlibrary', city: 'Fulton', state: 'KY', zipCode: '42041', county: 'Fulton County'},
   // URL corrected 2026-08-11 (was glasgowlibrary.org): Site header reads Barren County Public Library - Mary Wood Weldon Memorial Library, 1530 S Green St, Glasgow KY 42141, phone 270-651-2824
