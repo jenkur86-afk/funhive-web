@@ -1100,7 +1100,15 @@ function isJunkTitle(name) {
     /\btechnical\s+review\s+committee\b/i,
     /\beconomic\s+development\s+committee\b/i,
   ];
-  const AUDIENCE_RESCUE = /\b(teens?|tweens?|youth|kids?|child(ren)?|famil(y|ies)|students?|junior)\b/i;
+  // "t(w)een" must be listed explicitly: \btweens?\b cannot match "T(w)een Advisory
+  // Board" because of the parentheses, so that title fell straight through to the
+  // GOVERNANCE rule and was DELETED. Both of these landed on 2026-08-20 — the
+  // GOVERNANCE list here, and the /\bt\(?w\)?een/ spelling added to detectAgeRange()
+  // above — and they disagreed with each other from the moment they shipped: the
+  // detector learned the spelling, the rescue did not. Caught 2026-08-21 verifying
+  // Ringwood Public Library, whose real calendar runs a Tween Advisory Board.
+  // Keep this alternation in sync with detectAgeRange()'s t(w)een rule.
+  const AUDIENCE_RESCUE = /\b(teens?|tweens?|t\(w\)eens?|youth|kids?|child(ren)?|famil(y|ies)|students?|junior)\b/i;
   if (!AUDIENCE_RESCUE.test(trimmed)) {
     for (const pattern of GOVERNANCE) {
       if (pattern.test(trimmed)) return true;

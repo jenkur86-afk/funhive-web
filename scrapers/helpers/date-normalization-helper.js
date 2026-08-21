@@ -351,6 +351,31 @@ function normalizeDateString(dateString) {
     }
   }
 
+  // === Pattern 5d: Hyphen-separated US date MM-DD-YYYY (e.g., "08-29-2026", "09-03-2026") ===
+  // WordPress "The Events Calendar" permalink-style dates. Mountainside Free Public
+  // Library (WordPress-NJ) publishes every event this way and EVERY one of them was
+  // being dropped as an invalid date, because Pattern 5 only accepted slashes and
+  // Pattern 1 only accepts YYYY-MM-DD. Verified live 2026-08-21 on
+  // mountainsidelibrary.org: its listing runs 08-25-2026 → 09-16-2026 in ascending
+  // order across the month boundary, and "08-28-2026" has a second field of 28, so
+  // the leading field is unambiguously the MONTH (US order), not the day.
+  //
+  // Anchored at start and capped at 2 digits for the first field so this can never
+  // shadow ISO "YYYY-MM-DD" (which Pattern 1 has already returned for by this point
+  // anyway). A first field > 12 is rejected rather than guessed at as DD-MM-YYYY —
+  // silently swapping would invent a date, and a skipped event is recoverable while
+  // a wrong date is not.
+  const hyphenDateMatch = cleaned.match(/^(\d{1,2})-(\d{1,2})-(\d{2}|\d{4})(?:\s|$)/);
+  if (hyphenDateMatch) {
+    const [, month, day, year] = hyphenDateMatch;
+    const monthIndex = parseInt(month) - 1;
+    const dayNum = parseInt(day);
+    const fullYear = year.length === 2 ? 2000 + parseInt(year) : parseInt(year);
+    if (monthIndex >= 0 && monthIndex < 12 && dayNum >= 1 && dayNum <= 31) {
+      return `${monthNamesArray[monthIndex]} ${dayNum}, ${fullYear}`;
+    }
+  }
+
   // === Pattern 6: "Day Month Year" format (e.g., "20 November 2025") ===
   const dayMonthYearMatch = cleaned.match(/(\d{1,2})\s+([A-Za-z]{3,9})\s+(\d{4})/i);
   if (dayMonthYearMatch) {

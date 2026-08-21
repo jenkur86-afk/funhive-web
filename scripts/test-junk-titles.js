@@ -57,6 +57,11 @@ const CASES = [
   // Real library/rec programming that the governance rules would otherwise eat.
   ['Teen Advisory Board', false, 'REAL library program — the rescue exists for this'],
   ['Tween Advisory Board', false, 'REAL library program'],
+  // The "t(w)een" spelling shipped in detectAgeRange() on 2026-08-20 but was NOT
+  // added to the junk-title AUDIENCE_RESCUE the same day, so this exact title was
+  // silently DELETED until 2026-08-21. Both spellings must survive.
+  ['T(w)een Advisory Board', false, 'REAL library program — t(w)een spelling'],
+  ['T(w)eens Advisory Committee', false, 'REAL library program — t(w)eens plural'],
   ['Teen Advisory Board (TAB) Meeting', false, 'REAL library program'],
   ['Mount Airy Teen Advisory Board', false, 'REAL library program, prefixed'],
   ['Teen Advisory Board (TAB) Meeting - Colts Neck Chapter', false, 'REAL library program, suffixed'],

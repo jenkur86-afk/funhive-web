@@ -2110,9 +2110,9 @@
   "population": "allages"
  },
  "BarnesNoble-Eastern|||Barnes & Noble Plymouth Meeting": {
-  "verdict": "MATCHES",
-  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in BarnesNoble-Eastern's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
-  "population": "zero"
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "allages"
  },
  "BarnesNoble-Eastern|||Barnes & Noble Bethlehem/Easton": {
   "verdict": "MATCHES",
@@ -4336,6 +4336,91 @@
  "MacaroniKid-DC-dceast|||Black Cat DC": {
   "verdict": "MATCHES",
   "comment": "18 rows / 18 distinct are individual concert listings at a music club. Broad content; no age targeting.",
+  "population": "allages"
+ },
+ "Festivals-Eastern-US|||(no venue)": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: 1 future-dated events visible under Puppeteer, e.g. Saturday, October 3 • 10 AM - 10 PM 2026-10-03.",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-sarasota|||Sarasota-Venice": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "allages"
+ },
+ "LocalistParks-IN|||Indiana State Parks": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-fortlauderdale|||Museum of Discovery and Science": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "allages"
+ },
+ "LocalistParks-IN|||Center Township Trustee's Office": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-okeechobee|||Palm Beach County Library System - Belle Glade Branch": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "allages"
+ },
+ "generic-FL|||Miami-Dade Public Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "population": "allages"
+ },
+ "wordpress-MS|||Laurel-Jones County Library": {
+  "verdict": "MISMATCH",
+  "comment": "age-detection: 44 of 44 rows (100%) All Ages. Puppeteer confirms 18 future-dated events render and identifies the platform as TEC (tec-wordpress) — so the age signal is present in a structured feed the scraper is not reading. Suggest routing via tec-rest-helper.js. Site unreachable over plain DNS (www.laurel-jones.lib.ms.us NXDOMAIN), so only the browser path can see it.",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-pinecrest|||Miami-Dade Public Library System - Main Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "allages"
+ },
+ "ActiveNet-Parks-Eastern-novaparks|||NOVA Parks (Northern Virginia Regional Park Authority)": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-portstlucie|||Oxbow Eco-Center": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "allages"
+ },
+ "wordpress-NY|||Dormann Library": {
+  "verdict": "MISMATCH",
+  "comment": "age-detection: 23 of 24 rows (96%) All Ages, but the live page renders 6 future-dated events including named Bookmobile routes. Generic-titled bookmobile stops legitimately carry no age signal, so part of this is real; flagged for a per-site look rather than treated as a pure detector defect.",
+  "population": "allages"
+ },
+ "LocalistParks-IN|||Pokagon State Park": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "allages"
+ },
+ "BarnesNoble-Eastern|||Barnes & Noble Manassas": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-brandon|||AR Workshop Brandon": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-portcharlotte|||Fishermen’s Village Events": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "allages"
+ },
+ "wordpress-NJ|||Ringwood Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "age-detection: live calendar 2026-08-21 lists Tween Advisory Board, Youth Advisory Board, 7th Grade Summer Math Tutoring and Pokemon Club, yet 74 of 94 rows (79%) are All Ages. Exposed a DELETING bug: T(w)een Advisory Board was being dropped by the GOVERNANCE junk rule because AUDIENCE_RESCUE lacked the t(w)een spelling that detectAgeRange() gained the same day (2026-08-20). Rescue fixed 2026-08-21; grade-level phrasing (7th Grade) still resolves to All Ages and remains open.",
   "population": "allages"
  }
 }
