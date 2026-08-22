@@ -46,7 +46,7 @@
  },
  "WordPress-VA|||Henrico County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper [redirects to henricolibrary-va.libcal.com]",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
   "population": "zero"
  },
  "WordPress-VA|||Jefferson-Madison Regional Library": {
@@ -856,7 +856,7 @@
  },
  "WordPress-TN|||Collierville Burch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.colliervillelibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.colliervillelibrary.org",
   "population": "zero"
  },
  "WordPress-TN|||Bartlett Library": {
@@ -886,7 +886,7 @@
  },
  "WordPress-TN|||Tullahoma Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 390 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-TN|||Lawrenceburg Public Library": {
@@ -906,7 +906,7 @@
  },
  "WordPress-TN|||Rogersville Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.rogersvillelibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.rogersvillelibrary.org",
   "population": "zero"
  },
  "WordPress-TN|||Tipton County Public Library": {
@@ -951,7 +951,7 @@
  },
  "WordPress-TN|||Clinton Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org",
   "population": "zero"
  },
  "WordPress-TN|||Cordova Branch Library": {
@@ -965,8 +965,8 @@
   "population": "zero"
  },
  "WordPress-TN|||Sequatchie County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "bot-block: 403 even under the stealth browser the scrapers use",
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show IL not TN; title \"Dunlap Public Library District - Dunlap, IL\"",
   "population": "zero"
  },
  "WordPress-TN|||Englewood Public Library": {
@@ -1026,7 +1026,7 @@
  },
  "WordPress-TN|||Mt. Juliet-Harvey Freeman Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.mtjulietlibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.mtjulietlibrary.org",
   "population": "zero"
  },
  "WordPress-TN|||Palmer Public Library": {
@@ -1186,7 +1186,7 @@
  },
  "WordPress-AL|||Hale County Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org",
   "population": "zero"
  },
  "WordPress-AL|||Guntersville Public Library": {
@@ -1241,7 +1241,7 @@
  },
  "WordPress-AL|||Burchell Campbell Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.lexingtonlibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.lexingtonlibrary.org",
   "population": "zero"
  },
  "WordPress-AL|||Lincoln Public Library": {
@@ -1281,12 +1281,12 @@
  },
  "WordPress-AL|||Piedmont Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.piedmontlibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.piedmontlibrary.org",
   "population": "zero"
  },
  "WordPress-AL|||Clay Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.pinsonlibrary.org/events",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.pinsonlibrary.org",
   "population": "zero"
  },
  "WordPress-AL|||Satsuma Public Library": {
@@ -1321,7 +1321,7 @@
  },
  "WordPress-AL|||Warrior Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.warriorlibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.warriorlibrary.org",
   "population": "zero"
  },
  "WordPress-AL|||Northwest Regional Library": {
@@ -2870,7 +2870,7 @@
  },
  "WordPress-CT|||Andover Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.andoverlibrary.org/events",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.andoverlibrary.org",
   "population": "zero"
  },
  "WordPress-CT|||Ansonia Public Library": {
@@ -2885,7 +2885,7 @@
  },
  "WordPress-CT|||Bethel Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 233 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 357 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-CT|||Bethlehem Public Library": {
@@ -2945,7 +2945,7 @@
  },
  "WordPress-CT|||Edith Wheeler Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-CT|||Essex Library Association": {
@@ -2975,17 +2975,17 @@
  },
  "WordPress-CT|||Hartford Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "comment": "Site is Communico-powered and Communico-CT now covers it live 13 events 2026-08-22. BUT WordPress-CT is NOT dead here: 61 future-dated rows carry source_url host hplct.org under wordpress-CT, so todays 0 is transient not structural. Deliberately NOT relocated or removed - removing would risk losing that stream and the covered-elsewhere claim is not provable at branch level.",
   "population": "zero"
  },
  "WordPress-CT|||Hartland Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.hartlandlibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.hartlandlibrary.org",
   "population": "zero"
  },
  "WordPress-CT|||Henry Carter Hull Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org",
   "population": "zero"
  },
  "WordPress-CT|||Ivoryton Library Association": {
@@ -3055,7 +3055,7 @@
  },
  "WordPress-CT|||Plainville Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
   "population": "zero"
  },
  "WordPress-CT|||Pomfret Public Library": {
@@ -3135,7 +3135,7 @@
  },
  "WordPress-CT|||Wilson Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.windsorlibrary.org/events",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.windsorlibrary.org",
   "population": "zero"
  },
  "WordPress-CT|||Windsor Locks Public Library": {
@@ -3190,7 +3190,7 @@
  },
  "WordPress-GA|||Gibbs Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.evanslibrary.org/events",
+  "comment": "navigation timeout after 35000ms",
   "population": "zero"
  },
  "WordPress-GA|||Gordon Public Library": {
@@ -3200,7 +3200,7 @@
  },
  "WordPress-GA|||Greene County Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org",
   "population": "zero"
  },
  "WordPress-GA|||Harris County Public Library": {
@@ -3270,7 +3270,7 @@
  },
  "WordPress-GA|||Oglethorpe County Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.lexingtonlibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.lexingtonlibrary.org",
   "population": "zero"
  },
  "WordPress-GA|||Pembroke Public Library": {
@@ -3285,7 +3285,7 @@
  },
  "WordPress-GA|||Rockmart Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.rockmartlibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.rockmartlibrary.org",
   "population": "zero"
  },
  "WordPress-GA|||Roddenbery Memorial Library System": {
@@ -3325,7 +3325,7 @@
  },
  "WordPress-NC|||Blanche Benjamin Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org",
   "population": "zero"
  },
  "WordPress-NC|||Boonville Community Public Library": {
@@ -3345,7 +3345,7 @@
  },
  "WordPress-NC|||Bunn Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.bunnlibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.bunnlibrary.org",
   "population": "zero"
  },
  "WordPress-NC|||Canton Branch Library": {
@@ -3360,12 +3360,12 @@
  },
  "WordPress-NC|||Davidson County Public Library System": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.lexingtonlibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.lexingtonlibrary.org",
   "population": "zero"
  },
  "WordPress-NC|||Dobson Community Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.dobsonlibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.dobsonlibrary.org",
   "population": "zero"
  },
  "WordPress-NC|||Farmville Public Library": {
@@ -3415,7 +3415,7 @@
  },
  "WordPress-NC|||J.C. Holliday Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org",
   "population": "zero"
  },
  "WordPress-NC|||La Grange Branch Library": {
@@ -3425,7 +3425,7 @@
  },
  "WordPress-NC|||Lawrence Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.windsorlibrary.org/events",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.windsorlibrary.org",
   "population": "zero"
  },
  "WordPress-NC|||Leland Branch Library": {
@@ -3440,7 +3440,7 @@
  },
  "WordPress-NC|||Littleton Public Library (Wc Jones Memorial)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.littletonlibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.littletonlibrary.org",
   "population": "zero"
  },
  "WordPress-NC|||Macon County Public Library": {
@@ -3510,12 +3510,12 @@
  },
  "WordPress-NC|||Union West Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.indiantraillibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.indiantraillibrary.org",
   "population": "zero"
  },
  "WordPress-NC|||Watauga County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.boonelibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.boonelibrary.org",
   "population": "zero"
  },
  "WordPress-VT|||Aldrich Public Library": {
@@ -3525,7 +3525,7 @@
  },
  "WordPress-VT|||Barton Public": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.bartonlibrary.org/events",
+  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.bartonlibrary.org",
   "population": "zero"
  },
  "WordPress-VT|||Benson Public": {
@@ -3580,7 +3580,7 @@
  },
  "WordPress-VT|||Greensboro Free": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org/events",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org",
   "population": "zero"
  },
  "WordPress-VT|||Hartford": {
@@ -3640,7 +3640,7 @@
  },
  "WordPress-VT|||Readsboro Community": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.readsborolibrary.org/events",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.readsborolibrary.org",
   "population": "zero"
  },
  "WordPress-VT|||Rochester Public": {
@@ -3660,7 +3660,7 @@
  },
  "WordPress-VT|||Shrewsbury": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.shrewsburylibrary.org/events",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.shrewsburylibrary.org",
   "population": "zero"
  },
  "WordPress-VT|||Stamford Community": {
@@ -3695,7 +3695,7 @@
  },
  "WordPress-VT|||Windsor Public": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.windsorlibrary.org/events",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.windsorlibrary.org",
   "population": "zero"
  },
  "CivicRec-Parks-Eastern|||Riverview Gymnastics Center": {
@@ -4742,5 +4742,780 @@
   "verdict": "MISMATCH",
   "comment": "url-collision (DISABLED 2026-08-21): warsawlibrary.org is IN, not NY. Proven from the live page address/ZIP/area code, not name similarity. Guarded at run time — PROVEN LIVE on WordPress-DE, which logged the skip and still emitted Found 0 events, so the library keeps its audit row. It can no longer import IN events under NY. The correct URL for this library is still UNKNOWN and it is now an explicit coverage gap. Pre-existing wrong-state rows are NOT removed and persist until they expire.",
   "population": "zero"
+ },
+ "CivicEngage-Libraries|||Williamson County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "Venue-Events-ScienceArts|||Franklin Institute": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-AL|||Madison Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "event containers present (.event-card:6) but no parseable dates",
+  "population": "zero"
+ },
+ "WordPress-CT|||E.C. Scranton Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "event containers present (.event-card:6) but no parseable dates",
+  "population": "zero"
+ },
+ "WordPress-CT|||Mystic Noank Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to dot-book.org]",
+  "population": "zero"
+ },
+ "WordPress-CT|||Public Library Of New London": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision NOT extraction-failure: entry already carries urlCollision newlondonlibrary.org is WI not CT, so the scraper skips it and 0 is CORRECT. The 3 future-dated events the verifier saw are the WISCONSIN New London library. Bucket corrected by hand 2026-08-22 - do not open DOM selector work here.",
+  "population": "zero"
+ },
+ "WordPress-CT|||Union Free Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show SC not CT; title \"Union County Library\"",
+  "population": "zero"
+ },
+ "WordPress-CT|||Willimantic Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "population": "zero"
+ },
+ "WordPress-GA|||Coolidge Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 397 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-GA|||Dalton-Whitfield County Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show MA not GA; title \"Dalton Free Public Library\"",
+  "population": "zero"
+ },
+ "WordPress-GA|||Effingham": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show MA not GA; title \"Springfield City Library – All Yours Just Ask\"",
+  "population": "zero"
+ },
+ "WordPress-GA|||Morgan County Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "event containers present (.event-card:6) but no parseable dates",
+  "population": "zero"
+ },
+ "WordPress-NC|||Catawba County Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "population": "zero"
+ },
+ "WordPress-NC|||Claremont Branch Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "population": "zero"
+ },
+ "WordPress-NC|||Madison Branch Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "event containers present (.event-card:6) but no parseable dates",
+  "population": "zero"
+ },
+ "WordPress-NC|||Warsaw-Kornegay Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-TN|||Nashville Talking Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "event containers present (.event-card:6) but no parseable dates",
+  "population": "zero"
+ },
+ "WordPress-VT|||Fairfax Community": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 395 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "RecDeskParks-crpr|||-None Specified-": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 5 distinct All-Ages titles carry any age signal, e.g. \"Fall Tennis League: Mixed Dbls-Require Partner (-None S\"; \"Fall Tennis League: Intermediate Mixed Doubles (-None S\"; \"Fall Tennis League: Competitive Mixed Doubles (-None Sp\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-rrparksandrec|||Chris Wicker Aquatic Center": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 5 distinct All-Ages titles carry any age signal, e.g. \"Lap Swim (Chris Wicker Aquatic Center)\"; \"City Employee Swimmer (Chris Wicker Aquatic Center)\"; \"West Rock Swimmer (Chris Wicker Aquatic Center)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-lcncpr|||Gymnastics Building 2105 Nash St": {
+  "verdict": "MISMATCH",
+  "comment": "age-detection gap: 4 of 27 distinct All-Ages titles DO carry an age signal the detector now reads, e.g. \"Gymnastics PreK2 4-5YR (Gymnastics Building 2105 Nash St) -> 4-5\"; \"Gymnastics PreK1 (Gymnastics Building 2105 Nash St) -> 3-5\"; \"Gymnastics PreK2 4-5 YR (Gymnastics Building 2105 Nash St) -> 4-5\" (15% of distinct titles). Adjudicated 2026-08-22 from the events own titles rather than a page fetch, which is the decisive evidence for this question.",
+  "population": "allages"
+ },
+ "RecDeskParks-wheeling|||JB Chambers Memorial Rec. Turf Field-16th St": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 36 distinct All-Ages titles carry any age signal, e.g. \"Central Girl's Soccer Regionals (JB Chambers Memorial R\"; \"Little Patriot Football Practice (JB Chambers Memorial \"; \"Central Boy's Soccer Practice (JB Chambers Memorial Rec\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-westhartford|||-None Specified-": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 5 distinct All-Ages titles carry any age signal, e.g. \"Dial-A-Ride Annual Membership FY 27 (-None Specified-)\"; \"Med Admin Authorization Form (-None Specified-)\"; \"Beachland Adventure Camper Profile (-None Specified-)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Mayeski Field 4 Baseball with MP overlay": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"WRC Soccer - soccer field 1 and soccer field 2 (Mayeski\"; \"WRC softball - coordinating with soccer (Mayeski Field \"; \"SCHS Soccer - Soccer Field 1 & 2 - Soccer Field 1 & 2 (\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Mayeski Field 3 Softball with MP Overlay": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"WRC softball - coordinating with soccer (Mayeski Field \"; \"WRC Soccer - soccer field 3 (Mayeski Field 3 Softball w\"; \"SCHS Soccer - Soccer Field 3 - Soccer Field 3 (Mayeski \". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Mayeski Legore Memorial Softball Field": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 4 distinct All-Ages titles carry any age signal, e.g. \"WRC Baseball - coordinating with football, whole field \"; \"WRC softball - coordinating with baseball (Mayeski Lego\"; \"WRC Football (Mayeski Legore Memorial Softball Field)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-habershamga|||-None Specified-": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"COACH Application - Fall Flag Football 2026 (-None Spec\"; \"COACH Application - Fall NGYFA Football 2026 (-None Spe\"; \"COACH Application - Fall NGYFA Cheerleading 2026 (-None\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-crpr|||SCASD Natatorium": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 14 distinct All-Ages titles carry any age signal, e.g. \"Swim Lessons Level 1 - Oct 19 (SCASD Natatorium)\"; \"Swim Lessons Level 2 - Sept 21 (SCASD Natatorium)\"; \"Springboard Diving - Int./Advanced - Sept 21 (SCASD Nat\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Sandymount Field 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"Central Carroll Rec Council Club Soccer - Soccer Club (\"; \"Central Carroll Rec Council Rec Soccer - Rec Soccer (Sa\"; \"Central Carroll Rec Council Finksburg Softball - Finksb\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Deer Park Meadow Field": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"Central Carroll Rec Council Finksburg Softball - Finksb\"; \"Central Carroll Rec Council Club Soccer - Club Soccer (\"; \"Central Carroll Rec Council CHE Soccer - CHE Soccer (De\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Mayeski Field 2 Softball with MP overlay": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"WRC Football (Mayeski Field 2 Softball with MP overlay)\"; \"WRC softball - coordinating with football (Mayeski Fiel\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-providenceri|||Kennedy Recreation Center": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 5 distinct All-Ages titles carry any age signal, e.g. \"Kennedy @ Esek Boy’s Basketball Skills & Drills (Kenned\"; \"Kennedy @ Esek after school Program (Kennedy Recreation\"; \"Kennedy @Esek Plushie Pal Club (Kennedy Recreation Cent\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-westhartford|||Webster Hill Soccer 3": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 11 distinct All-Ages titles carry any age signal, e.g. \"Soccer Shots Mini Web Hill Sat 9am (Webster Hill Soccer\"; \"Soccer Shots Classic - Web Hill Sat 10am (Webster Hill \"; \"Soccer Shots Classic - Web Hill Sat 1:45pm (Webster Hil\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-carolinabeach|||Multi-Purpose Room": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 5 distinct All-Ages titles carry any age signal, e.g. \"Line Dance (Multi-Purpose Room)\"; \"Cycling with Candy & Bill (Multi-Purpose Room)\"; \"Strength Fusion (Multi-Purpose Room)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Willow Springs Golf Course": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 24 distinct All-Ages titles carry any age signal, e.g. \"Advanced Golf (Sat. 9/5-28/26) 10AM (Willow Springs Gol\"; \"Beginner Golf (Mon. 9/7-28/26) 5PM (Willow Springs Golf\"; \"Beginner Golf (Sat. 10/3-24/26) 10AM (Willow Springs Go\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Deer Park Main Field": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"Central Carroll Rec Council Crusaders Football - Crusad\"; \"Central Carroll Rec Council Gamber Football - Gamber Fo\"; \"Central Carroll Rec Council Crusaders Football - Crusad\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-marysvilleoh|||Baseball Field B - Eljer Park": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"Marysville Mitts (Baseball Field B - Eljer Park)\"; \"YMCA Baseball (Baseball Field B - Eljer Park)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-wheeling|||I470 Complex-Field #3 (Lisa's Field)": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 6 distinct All-Ages titles carry any age signal, e.g. \"Fall Ball (I470 Complex-Field #3 (Lisa's Field))\"; \"Wheeling U Softball Practice (I470 Complex-Field #3 (Li\"; \"Nail City Bronco Fall Ball - Nail City Bronco Fall Ball\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-marysvilleoh|||Baseball Field A - Eljer Park": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"Marysville Mitts (Baseball Field A - Eljer Park)\"; \"MJBSA (Baseball Field A - Eljer Park)\"; \"YMCA Baseball (Baseball Field A - Eljer Park)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Cape Horn Field 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"CH - NCRC Travel Soccer Games 8/1/26 to 11/28/26 (Sat-S\"; \"CH - NCRC Travel Soccer Practices 8/3/26 to 11/30/26 (M\"; \"CH - NCRC Rec Soccer Games 8/15/26 to 11/15/26 (Sat-Su)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Cape Horn Field 2": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"CH - NCRC Travel Soccer Games 8/1/26 to 11/28/26 (Sat-S\"; \"CH - NCRC Rec Soccer Games 8/15/26 to 11/15/26 (Sat-Su)\"; \"CH - NCRC Travel Soccer Practices 8/3/26 to 11/30/26 (M\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-westhartford|||ECC Room 24": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 21 distinct All-Ages titles carry any age signal, e.g. \"Kindermusik - Level 1 Thu 9/10-12/10 10:40-11:25A (ECC \"; \"Kindermusik - Level 1 Fri 9/11-12/4 9:30-10:15A (ECC Ro\"; \"Kindermusik- Level 1 Wed 9/9-12/9 9:30-10:15A (ECC Room\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Sandymount Field 2": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"Central Carroll Rec Council Club Soccer - Soccer Club (\"; \"Central Carroll Rec Council Rec Soccer - Rec Soccer 1/2\"; \"Central Carroll Rec Council Rec Soccer - Rec Soccer (Sa\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "wordpress-VT|||West Hartford": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 46 distinct All-Ages titles carry any age signal, e.g. \"Outdoor Movie: Goat (FX)\"; \"Intro to Animation: We Came, We Saw, We Built a Zoetrop\"; \"Closed: Town Holiday\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Deer Park Memorial Field": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 4 distinct All-Ages titles carry any age signal, e.g. \"Central Carroll Rec Council CHE Soccer - CHE Soccer (De\"; \"Central Carroll Rec Council Baseball - Finksburg Baseba\"; \"Central Carroll Rec Council Gamber Football - Gamber Fo\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-marysvilleoh|||Mill Valley South- Soccer Fields": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"UCISL (Mill Valley South- Soccer Fields )\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Deer Park Baker Field 2": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"Central Carroll Rec Council Gamber Football - Gamber Fl\"; \"Central Carroll Rec Council Check-hers - Check-hers (De\"; \"Central Carroll Rec Council CHE Soccer - CHE Soccer (De\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Deer Park Baker Field 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"Central Carroll Rec Council Gamber Football - Gamber Fl\"; \"Central Carroll Rec Council Check-hers - Check-hers (De\"; \"Central Carroll Rec Council CHE Soccer - CHE Soccer (De\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "wordpress-VT|||Ainsworth Public": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 4 distinct All-Ages titles carry any age signal, e.g. \"Tech Talk Thursdays\"; \"RSVP Osteo Bone Builders Class\"; \"Library Board Meeting\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-wheeling|||I470 Complex-Field #1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 4 distinct All-Ages titles carry any age signal, e.g. \"Fall Ball (I470 Complex-Field #1)\"; \"Field Prep (I470 Complex-Field #1)\"; \"Practice Steel Valley Jen (I470 Complex-Field #1)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-wheeling|||I470 Complex-Field #2": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 4 distinct All-Ages titles carry any age signal, e.g. \"Softball Tournament (I470 Complex-Field #2)\"; \"Practice - Practice (I470 Complex-Field #2)\"; \"Fall Ball (I470 Complex-Field #2)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Sheppard Chase Gym (RMC)": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 19 distinct All-Ages titles carry any age signal, e.g. \"Drop-In Pickleball (Sheppard Chase Gym (RMC))\"; \"Youth Pickleball (Sheppard Chase Gym (RMC))\"; \"Penn-Mar (Sheppard Chase Gym (RMC))\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-keeneparks|||Rec Room": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"KPRD Afterschool! (Rec Room)\"; \"Chair Yoga - Sept/Oct 2026 (Rec Room)\"; \"Qi Gong July/Aug 2026 (Rec Room)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-wheeling|||I470 Complex-Field #4 (Ben's Field)": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"Field Prep (I470 Complex-Field #4 (Ben's Field))\"; \"Fall Ball (I470 Complex-Field #4 (Ben's Field))\"; \"Softball Tournament (I470 Complex-Field #4 (Ben's Field\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-carolinabeach|||Carolina Beach Volleyball Court": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"Pleasure Island Volleyball (Carolina Beach Volleyball C\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Bennett Cerf Baseball Field": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"WARC - Westminster Baseball (Bennett Cerf Baseball Fiel\"; \"Warc - Westminster Baseball (Bennett Cerf Baseball Fiel\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Krimgold Park Field 10": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WRC Field Hockey (Krimgold Park Field 10)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Mayeski Field 5 Softball with MP overlay": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WRC softball (Mayeski Field 5 Softball with MP overlay)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Cherrytown Road Field 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"CCRC Cyclones Fastpitch Softball (Cherrytown Road Field\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Mayeski Field 6 Softball": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WRC softball (Mayeski Field 6 Softball )\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Cape Horn Field 3": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"CH - NCRC Rec Soccer Practices 8/17/26 to 11/13/26 (Mon\"; \"CH - NCRC Rec Soccer Games 8/15/26 to 11/15/26 (Sat-Su)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Cape Horn Field 5 Baseball": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"CH - NCRC Rec Soccer Games 8/15/26 to 11/15/26 (Sat-Su)\"; \"CH - NCRC Baseball Practices 8/17/26 to 11/13/26 (Mon t\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Mayeski Field 7 Softball": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WRC softball (Mayeski Field 7 Softball )\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Krimgold Park Field 3": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WRC Field Hockey (Krimgold Park Field 3)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Cape Horn Field 4 Softball": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"CH - NCRC Hot Shot Practices 8/17/26 to 11/10/26 (Mon t\"; \"CH - NCRC Rec Soccer Games 8/15/26 to 11/15/26 (Sat-Su)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Winfield Park Field 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WRC Baseball (Winfield Park Field 1)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Mayeski Field 1 Softball": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WRC softball (Mayeski Field 1 Softball)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Bark Hill Field 2": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"Rugby (Bark Hill Field 2)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Bark Hill Field 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"Rugby (Bark Hill Field 1)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-marysvilleoh|||City Field 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"UCISL (City Field 1)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-marysvilleoh|||City Field 2": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"UCISL (City Field 2)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-marysvilleoh|||Mill Valley Central Soccer Field": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"UCISL (Mill Valley Central Soccer Field)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Oakmont Green Golf Course": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 19 distinct All-Ages titles carry any age signal, e.g. \"Introduction to Golf (Sun 9/6-28/26) 6P (Oakmont Green \"; \"X'd Introduction to Golf (Wed. 8/5-30/26) (Oakmont Gree\"; \"X'd Introduction to Golf (Tue. 8/4-30/26) (Oakmont Gree\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-habershamga|||Ruby Fulbright Aquatic Center GRAY Gym": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 5 distinct All-Ages titles carry any age signal, e.g. \"Tai Chi Free Community Class (Ruby Fulbright Aquatic Ce\"; \"HCPC Pickleball- INSIDE - PLAYERS: Go to habpickleball.\"; \"HCPC Pickleball- INSIDE - PLAYERS:GO TO:habpickleball.c\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-wheeling|||35th Street Field": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 12 distinct All-Ages titles carry any age signal, e.g. \"Post3 12u practice - Post3 12u practice (35th Street Fi\"; \"Queen Bee's 9U Practice (35th Street Field)\"; \"Thunder Bunnies Practice (35th Street Field)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-westhartford|||ECC Room 21": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 14 distinct All-Ages titles carry any age signal, e.g. \"Table Tennis- Recreational 1:00 - 3:00P (ECC Room 21)\"; \"Table Tennis- Recreational 12:30 - 4:00P (ECC Room 21)\"; \"Inter Swing Review-More Cool Jitterbug Moves 6:30P (ECC\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-keeneparks|||Multi Purpose Room": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 4 distinct All-Ages titles carry any age signal, e.g. \"Cheshire Cats Jump Rope Team (Multi Purpose Room)\"; \"Zumba Gold - SEP/OCT 2026 (Multi Purpose Room)\"; \"Intro to Line Dancing (Multi Purpose Room)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-rrparksandrec|||Swim Lanes 1-3": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"Open Swim (Swim Lanes 1-3)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-westhartford|||Aerials Gymnastics": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 10 distinct All-Ages titles carry any age signal, e.g. \"Aerials Gymnastics: 3-year-old 9/12-10/3 10am (Aerials \"; \"Aerials Gymnastics: Beginner Age5-8 9/12-10/3 12pm (Aer\"; \"Aerials Gymnastics: Parent & Child 9/12-10/3 9am (Aeria\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-clintonrec|||Clinton Elementary School": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"After-School Playground (FULL SY 26-27) (Clinton Elemen\"; \"Before-School Playground (FULL SY 26-27) (Clinton Eleme\"; \"Half-Day PD Playground (September 2026) (Clinton Elemen\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-marysvilleoh|||Baseball City Field A": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"MJBSA: Softball/Baseball (Baseball City Field A)\"; \"MittsFP12U (Baseball City Field A)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Mayeski Field 1 Football": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WRC Football (Mayeski Field 1 Football)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Mayeski Practice Area 2": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WRC Football (Mayeski Practice Area 2)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Mayeski Practice Area 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WRC Football (Mayeski Practice Area 1)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Salt Box Field 2": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"MAYAA Softball (Salt Box Field 2 )\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Salt Box Field 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"MAYAA Softball (Salt Box Field 1)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Leister Park Field 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"NCRC Club Soccer Practices 8/17/26 to 11/30/26 (Mon-Fri\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-wheeling|||Fulton Ballfield": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 4 distinct All-Ages titles carry any age signal, e.g. \"Practice Matt (Fulton Ballfield)\"; \"Practice Jack (Fulton Ballfield)\"; \"Woodsdale Hearts Practice (Fulton Ballfield)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-habershamga|||Ruby Fulbright Aquatic Center BLUE Gym": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 5 distinct All-Ages titles carry any age signal, e.g. \"HCPC Pickleball- INSIDE - PLAYERS: Go to habpickleball.\"; \"HCPC Pickleball-INSIDE - PLAYERS:GO TO habpickleball.co\"; \"Meet Your Goverment Event (Ruby Fulbright Aquatic Cente\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-jcrec|||Martucci Field": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 6 distinct All-Ages titles carry any age signal, e.g. \"Advanced Soccer U9 (Tues/Thurs) (Martucci Field)\"; \"Advanced Soccer U9 (B) (Tues/Thurs) (Martucci Field)\"; \"Advanced Soccer U13 (Mon/Wed/Fri) (Martucci Field)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-crpr|||Puddle Jumpers Classroom": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"Puddle Jumpers: Fall 2026: Tuesday & Thursday (Puddle J\"; \"Puddle Jumpers: Fall 2026: Friday (Puddle Jumpers Class\"; \"Puddle Jumpers: Fall 2026: Monday & Wednesday (Puddle J\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-rrparksandrec|||Chockoyotte Park": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 5 distinct All-Ages titles carry any age signal, e.g. \"FALL RVYSA Youth Soccer 13U (Chockoyotte Park)\"; \"FALL RVYSA Youth Soccer 4 Year Olds (Chockoyotte Park)\"; \"FALL RVYSA Youth Soccer 3 Year Olds (Chockoyotte Park)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-westhartford|||ECC Gymnasium": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 13 distinct All-Ages titles carry any age signal, e.g. \"Beginner Gymnastics Tues 9/15-11/24 6:30P-7:15P (ECC Gy\"; \"Beginner Gymnastics Thu 9/17-11/19 5:30P-6:15P (ECC Gym\"; \"Pickleball Drill & Play Fri 9/18-10/9 5:30-7:00 (ECC Gy\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-westhartford|||BCSC Main Room (Entire Room)": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 13 distinct All-Ages titles carry any age signal, e.g. \"Chair Yoga 10:15 - 11:00A (BCSC Main Room (Entire Room)\"; \"Gentle Cardio Drum Fitness 10:30-11:30A (BCSC Main Room\"; \"NEW - Total Body Resistance - 9:00 - 9:45A (BCSC Main R\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-westhartford|||Westmoor Park": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 18 distinct All-Ages titles carry any age signal, e.g. \"Westmoor Park Feast on the Farm (Westmoor Park)\"; \"Westmoor Park Nature Pals (Westmoor Park)\"; \"Westmoor Park Gentle Touch (Westmoor Park)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-raymond|||Raymond Elementary School": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"Camp Raymond - After School Program (Raymond Elementary\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-habershamga|||Ruby Fulbright AC Pickleball Courts": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"HCPC Pickleball-OUTSIDE - Players : Go to habpickleball\"; \"HCPC Pickleball-OUTSIDE - PLAYERS: GO TO:habpickleball.\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Charles Carroll": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 15 distinct All-Ages titles carry any age signal, e.g. \"Karaoke - Session 1. Sept. 11 (Charles Carroll - Activi\"; \"Kenpo Karate - Wednesdays - 6 to 13yr (Charles Carroll \"; \"Jewelry from the Earth - Crafting With Care (Charles Ca\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Landon C. Burns Field 1 Lower": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 5 distinct All-Ages titles carry any age signal, e.g. \"WARC - Westminster Baseball (Landon C. Burns Field 1 Lo\"; \"NO USE - Secret Garden Wine, Music & Arts Festival (Lan\"; \"NO USE - Steam Show Days (Landon C. Burns Field 1 Lower\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-lcncpr|||Tramway Road Park: Field 3": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 7 distinct All-Ages titles carry any age signal, e.g. \"Perfect Game Softball Tournament (Tramway Road Park: Fi\"; \"Tournament Prep Day - LCPR (Tramway Road Park: Field 3)\"; \"SanLee Middle School Softball (Tramway Road Park: Field\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Deer Park Magin Field": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"Central Carroll Rec Council CHE Soccer - CHE Soccer (De\"; \"Central Carroll Rec Council Club Soccer - Club Soccer (\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-lcncpr|||LCAP - Multipurpose Field 10 (Natural Grass)": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"SASL Practice (LCAP - Multipurpose Field 10 (Natural Gr\"; \"SASL Game (LCAP - Multipurpose Field 10 (Natural Grass)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||RMC Activity Room": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 8 distinct All-Ages titles carry any age signal, e.g. \"Defensive Carry Fundamentals (MD Wear and Carry) (RMC A\"; \"Penn-Mar (RMC Activity Room)\"; \"WARC Carroll County Cloggers (RMC Activity Room)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Carroll Gymnastics, Inc.": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 6 distinct All-Ages titles carry any age signal, e.g. \"Boys Basic Gymnastics (9/5-10/17/26) (Carroll Gymnastic\"; \"Tumbling Gymnastics (9/3-10/15/26) (Carroll Gymnastics,\"; \"Girls Basic Gymnastics (9/5-10/17/26) (Carroll Gymnasti\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-cityofaikensc|||Computer Lab": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"Computer Lounge (Computer Lab)\"; \"Creative Arts (Computer Lab)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-collegedale|||West Community Room": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 5 distinct All-Ages titles carry any age signal, e.g. \"Happy Hookers - Yarn Club (West Community Room)\"; \"Game Night (West Community Room)\"; \"Game Club 2026 (West Community Room)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-lcncpr|||-None Specified-": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 9 distinct All-Ages titles carry any age signal, e.g. \"3-4 (4u) Fall Coed T-Ball (-None Specified-)\"; \"SOLCBocce2026 (-None Specified-)\"; \"5-6 (6u) Coed T-Ball (-None Specified-)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "Pratt-Library|||Northwood Library": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 24 distinct All-Ages titles carry any age signal, e.g. \"Objects Made Holy\"; \"Chromebook Basics\"; \"Computer Basics & Microsoft Office 365 & 2024\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "Pratt-Library|||Southeast Anchor Library": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 24 distinct All-Ages titles carry any age signal, e.g. \"Digital Drop In\"; \"Make It Arty Wednesdays: Make It Messy\"; \"Pass It On: Shared Community History for All- Black Sto\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-carolinabeach|||Gymnasium": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"CB Wrestling (Gymnasium)\"; \"Carolina Beach Wrestling Grades K-12th (Gymnasium)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-lcncpr|||LCAP - Multipurpose Field 7 (Natural Grass)": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"CCCC (LCAP - Multipurpose Field 7 (Natural Grass))\"; \"training - Joey Morton (LCAP - Multipurpose Field 7 (Na\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-lcncpr|||LCAP - Multipurpose Field 9 (Natural Grass)": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"SASL Practice (LCAP - Multipurpose Field 9 (Natural Gra\"; \"SASL Game (LCAP - Multipurpose Field 9 (Natural Grass))\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-charparksandrec|||Sister City - Field 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 18 distinct All-Ages titles carry any age signal, e.g. \"Baker's Construction vs. Bob Oetting (Sister City - Fie\"; \"Dilgent Hands vs. Coach D's FUNdamentals (Sister City -\"; \"Dilgent Hands vs. Baker's Construction (Sister City - F\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-lcncpr|||Tramway Road Park: Field 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 8 distinct All-Ages titles carry any age signal, e.g. \"Tournament Prep Day - LCPR (Tramway Road Park: Field 1)\"; \"Ghost 12U 50/70 - Jeremy Palme (Tramway Road Park: Fiel\"; \"Top Gun Baseball Tournament (Tramway Road Park: Field 1\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-lcncpr|||Bob Hales: Full Court": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 12 distinct All-Ages titles carry any age signal, e.g. \"Basketball - Tyralle Toomer/ Buzz Wilson (Bob Hales: Fu\"; \"LCPR Volleyball Leagues (Bob Hales: Full Court)\"; \"BOE - Karen Marosites - Board of Elections (Bob Hales: \". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-merrimack|||Function Hall": {
+  "verdict": "MISMATCH",
+  "comment": "age-detection gap: 1 of 4 distinct All-Ages titles DO carry an age signal the detector now reads, e.g. \"Naticook After School Program - Sept Gr.K-2 (Function Hall) -> 5-7\" (25% of distinct titles). Adjudicated 2026-08-22 from the events own titles rather than a page fetch, which is the decisive evidence for this question.",
+  "population": "allages"
+ },
+ "RecDeskParks-lcncpr|||LCAP - Baseball/Softball Field 3": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 5 distinct All-Ages titles carry any age signal, e.g. \"No Bookings - Black Out Date - LCAP (LCAP - Baseball/So\"; \"LCPR - Fall Baseball/Softball Leagues (LCAP - Baseball/\"; \"Perfect Game Baseball Tournament (LCAP - Baseball/Softb\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-westhartford|||ECC Room 212": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 6 distinct All-Ages titles carry any age signal, e.g. \"Total Body - Stronger Seniors 9:00-10:00A (ECC Room 212\"; \"Chair Yoga Intro 10:15-11:15A (ECC Room 212)\"; \"Mexican Train Organized Play 1:00 - 3:30P Mon (ECC Room\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-wheeling|||Patterson Complex-Field #3 (Small Field)": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"Practice Brenda (Patterson Complex-Field #3 (Small Fiel\"; \"Practice Ruckh (Patterson Complex-Field #3 (Small Field\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "wordpress-VT|||Putney Public": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 10 distinct All-Ages titles carry any age signal, e.g. \"Once Upon a Page Fantasy Fiction Book Group\"; \"Putney Amblers Walking Group\"; \"Putney Plant Adventures with Rich Grumbine! **AT FOREST\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Kate Wagner Field 3": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WHS Soccer (Kate Wagner Field 3)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Krimgold Park Field 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WRC Lacrosse (Krimgold Park Field 1)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Krimgold Park Field 2": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WRC Lacrosse/Field hockey (Krimgold Park Field 2)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Kate Wagner Field 2": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WHS Soccer (Kate Wagner Field 2)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Kate Wagner Field 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WHS Soccer (Kate Wagner Field 1)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Kate Wagner Field 6": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"WHS Soccer (Kate Wagner Field 6)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-lcncpr|||LCAP - Baseball Field 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 5 distinct All-Ages titles carry any age signal, e.g. \"Perfect Game Baseball Tournament (LCAP - Baseball Field\"; \"No Bookings- Black Out Date - LCAP (LCAP - Baseball Fie\"; \"LCPR - Fall Baseball/Softball Leagues (LCAP - Baseball \". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-lcncpr|||LCAP - Baseball/Softball Field 4": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 4 distinct All-Ages titles carry any age signal, e.g. \"No Bookings - Black Out Date - LCAP (LCAP - Baseball/So\"; \"Perfect Game Baseball Tournament (LCAP - Baseball/Softb\"; \"LCPR - Fall Baseball/Softball Leagues (LCAP - Baseball/\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-lcncpr|||LCAP - Baseball/Softball Field 2": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 4 distinct All-Ages titles carry any age signal, e.g. \"Perfect Game Baseball Tournament (LCAP - Baseball/Softb\"; \"No Bookings - Black Out Date - LCAP (LCAP - Baseball/So\"; \"Top Gun Baseball Tournament (LCAP - Baseball/Softball F\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-lcncpr|||Tramway Road Park: Field 4": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 6 distinct All-Ages titles carry any age signal, e.g. \"Perfect Game Softball Tournament (Tramway Road Park: Fi\"; \"Top Gun Baseball Tournament (Tramway Road Park: Field 4\"; \"Tournament Prep Day - LCPR (Tramway Road Park: Field 4)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-lcncpr|||Tramway Road Park: Field 2": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 6 distinct All-Ages titles carry any age signal, e.g. \"Tournament Prep Day - LCPR (Tramway Road Park: Field 2)\"; \"Top Gun Baseball Tournament (Tramway Road Park: Field 2\"; \"Top Gun Softball Tournament (Tramway Road Park: Field 2\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "librarymarket-SC|||Beaufort County Library": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 20 distinct All-Ages titles carry any age signal, e.g. \"Invisible Ink\"; \"First Friday, First Chapters!\"; \"Board Of Elections\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-cityofaikensc|||Teaching Courts": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"Tennis Rogerson 60min Lesson (Teaching Courts)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-cityofaikensc|||Hansen Aerobics Room": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 6 distinct All-Ages titles carry any age signal, e.g. \"Aiken Saber Academy - September 2026 (Hansen Aerobics R\"; \"Line Dancing - DROP IN (Hansen Aerobics Room)\"; \"FLEX - 4 week Acoustic Guitar (Hansen Aerobics Room)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Landon C. Burns Field 2 upper": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 7 distinct All-Ages titles carry any age signal, e.g. \"Old-Fashioned Baseball Game - Keystone vs. Gettysburg (\"; \"WARC - Westminster Baseball (Landon C. Burns Field 2 up\"; \"Ponce de Leon Baseball (Landon C. Burns Field 2 upper)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-westhartford|||ECC Room 22": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 8 distinct All-Ages titles carry any age signal, e.g. \"Jewelry Making for Beginners (ECC Room 22)\"; \"Open Art Space 1:00-3:00P (ECC Room 22)\"; \"Art Journey 10:00A-12:00P (ECC Room 22)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "Pratt-Library|||Brooklyn Library": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 17 distinct All-Ages titles carry any age signal, e.g. \"Monday Movies: Inside Out 2 & Craft\"; \"Horror Movie Night: Arachnophobia\"; \"Crafternoon: Kandinsky Circles\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "Pratt-Library|||Orleans Library": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 16 distinct All-Ages titles carry any age signal, e.g. \"Digital Drop In\"; \"Computer Basics & Microsoft Office 365 & 2024\"; \"Digital Drop-In\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-crpr|||Millbrook Marsh Nature Center": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 5 distinct All-Ages titles carry any age signal, e.g. \"Marsh-ology September (Millbrook Marsh Nature Center)\"; \"Youth Bird Club at Millbrook Marsh (Millbrook Marsh Nat\"; \"Marsh-ology October (Millbrook Marsh Nature Center)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-habershamga|||Aquatic Center Field 1": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 12 distinct All-Ages titles carry any age signal, e.g. \"Crown Athletics; eXposure Baseball-Klein - Every Wed & \"; \"3-4 Tball - McAllister vs. 3-4 Tball - Robinson (Aquati\"; \"5-6 Coach Pitch - Thomas vs. 5-6 Coach Pitch - Eaton (A\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-cityofaikensc|||Odell Weeks, Gym 2": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 1 distinct All-Ages titles carry any age signal, e.g. \"Open Play Pickleball - ** Schedule subject to change (O\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-crpr|||Parks: Greenbriar Saybrook Park": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"Soccer Shots Mini- Sundays Fall (Parks: Greenbriar Sayb\"; \"Soccer Shots Premier- Sundays Fall (Parks: Greenbriar S\"; \"Soccer Shots Classic- Sundays Fall (Parks: Greenbriar S\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-keeneparks|||Esports Room": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"Esports & More! Session 1.0 (Esports Room )\"; \"Esports & More! Session 2.0 (Esports Room )\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-lcncpr|||Ingram Center": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 7 distinct All-Ages titles carry any age signal, e.g. \"Yoga Class - Enrichment Center (Ingram Center)\"; \"Tai-Chi Advanced - Enrichment Center (Ingram Center)\"; \"Family Reunion - Davis, Marilyn (Requesting A Bounce Ho\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-westhartford|||BCSC TV Room": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 5 distinct All-Ages titles carry any age signal, e.g. \"French-Conversational 11:00A-12:00P (BCSC TV Room)\"; \"Total Body - Stronger Seniors 9:00-10:00A (BCSC TV Room\"; \"Watercolor 10:30a - 12:00p (BCSC TV Room)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-wheeling|||Elm Terrace Ballfield": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"Practice Cait (Elm Terrace Ballfield)\"; \"Practice Cody (Elm Terrace Ballfield)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-carolinabeach|||Mike Chappell Multi-Purpose Field": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 2 distinct All-Ages titles carry any age signal, e.g. \"Fall Youth Lacrosse League K-8th (Mike Chappell Multi-P\"; \"PISA - FULL FIELD (Mike Chappell Multi-Purpose Field)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-ccrec|||Bear Branch Nature Center": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 20 distinct All-Ages titles carry any age signal, e.g. \"Fire Building (Bear Branch Nature Center)\"; \"Owl Prowl - August - BBNC (Bear Branch Nature Center)\"; \"DIY Flowerpot Painting (Bear Branch Nature Center)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-crpr|||Virtual Program (Zoom 4)": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"HIIT Fitness & Weight Training-Fall Sess. I (Virtual Pr\"; \"HIIT Fitness-Fall Sess. I (Virtual Program (Zoom 4))\"; \"Weight Training - Sess. I (Online) (Virtual Program (Zo\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-habershamga|||Habersham County Fairgrounds": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 11 distinct All-Ages titles carry any age signal, e.g. \"Chattahoochee Mountain Fair - Fair set up- closed to th\"; \"Chattahoochee Mountain Fair - Fair tear down day-closed\"; \"Habersham Animal Shelter - HALLOWEEN FUNDRAISER (Habers\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-mprd|||Harmon - Thomas Community Center & Park": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 5 distinct All-Ages titles carry any age signal, e.g. \"After School Nutrition Program (Harmon - Thomas Communi\"; \"Harmon Gaming Tournament (Harmon - Thomas Community Cen\"; \"The Racing Accelerated Readers (Harmon - Thomas Communi\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-portland|||Portland Riverfront Park": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 6 distinct All-Ages titles carry any age signal, e.g. \"Tai Chi for Long Life (Sat. Summer Session) (Portland R\"; \"Tai Chi for Long Life (Sat. Fall Session) (Portland Riv\"; \"Tai Chi for Long Life (Wed. Fall Session) (Portland Riv\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-westhartford|||Fernridge Park": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 8 distinct All-Ages titles carry any age signal, e.g. \"Tennis Pre-School Clinic Fern Sat 10:45am (Fernridge Pa\"; \"Tennis Pre-School Clinic Fern Sat 10am (Fernridge Park)\"; \"Tennis Pre-School Clinic Fern Tue 4pm (Fernridge Park)\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "RecDeskParks-wheeling|||Bridge Park Ballfield (Big Field)": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"Practice - Steel Valley Genesis - Practice - Steel Vall\"; \"OV Force Practice (Bridge Park Ballfield (Big Field))\"; \"Practice Jen (Bridge Park Ballfield (Big Field))\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
+ },
+ "wordpress-VA|||Culpeper County Library": {
+  "verdict": "MATCHES",
+  "comment": "genuinely age-neutral: 0 of 14 distinct All-Ages titles carry any age signal, e.g. \"Discover Girl Scouts\"; \"Knit Workshop\"; \"Data Centers in Virginia and Culpeper - Guest Speaker E\". These are facility bookings / open-attendance sessions, so All Ages is correct and this is NOT a detection bug.",
+  "population": "allages"
  }
 }
