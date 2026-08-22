@@ -191,6 +191,65 @@ Register-ScheduledTask `
     -ErrorAction Stop | Out-Null
 Write-Host "Registered: FunHive-Monitor (daily 8:00 AM)"
 
+# ── Task 3: Daily data-quality pass at 1:00 PM ───────────────────────────────
+# Added 2026-08-22. This work used to be the second line of run-scrapers.bat.
+#
+# WHY IT MOVED. Rotations grew to 23-31 hours while FunHive-Scrapers carried a
+# 12-hour ExecutionTimeLimit, so Task Scheduler terminated that batch every
+# night before it reached the fix-all line. Crucially the kill does NOT take the
+# detached node child with it, so the scrape completed normally and the run
+# tables looked perfectly healthy - the only trace was scraper-stdout.log
+# collecting "FunHive scrapers starting" with no matching "finished". Measured
+# 2026-08-22: 7 starts since 2026-08-12, ZERO finishes, and fix-all had last run
+# 2026-08-20 03:11 - only 4 times in 11 days, exactly the days a run happened to
+# fit inside 12 hours. The backlog that had silently accumulated was 8,206 stale
+# or junk rows plus 723 unrepaired fields.
+#
+# So the requirement is not "a longer timeout" - it is that the data-quality
+# pass must not be downstream of the rotation AT ALL. Its own task with its own
+# trigger fires whether the rotation is still running, already finished, or was
+# never triggered that day.
+#
+# WHY 1:00 PM. The rotation now occupies most of the clock, so there is no quiet
+# window to aim for and overlap is the normal case, not the exception. 1:00 PM
+# gives the rotation a 10-hour head start (so the window has real data in it)
+# and lands ~70 minutes before the 2:12 PM funhive-scraper-diagnosis task, which
+# therefore reads freshly-cleaned data and a freshly-regenerated
+# reports/site-report.html rather than yesterday's.
+#
+# OVERLAP IS SAFE. fix-all does database work plus Nominatim geocoding and
+# launches no Chrome, so it does not contend with the scrapers' browsers - the
+# hazard recorded in reports/fix-notes.json is specifically concurrent heavy
+# CHROME workloads. Verified empirically 2026-08-22: a full catch-up ran to
+# completion (exit 0) while the MacaroniKid Group 1 rotation was mid-scrape.
+#
+# MultipleInstances is left at the default (IgnoreNew) deliberately: if a pass
+# ever overruns into the next day's trigger, skip that day rather than stacking
+# two concurrent full-table sweeps against the Supabase egress budget.
+#
+# 4h limit: observed 3-15 min on a normal 24h window, ~35 min clearing a 3-day
+# backlog. 4h is generous headroom without being the kind of over-tight limit
+# that created this bug in the first place.
+$action3  = New-ScheduledTaskAction `
+    -Execute "cmd.exe" `
+    -Argument "/c `"$scraperDir\run-fix-all.bat`"" `
+    -WorkingDirectory $scraperDir
+$trigger3 = New-ScheduledTaskTrigger -Daily -At "1:00PM"
+$settings3 = New-ScheduledTaskSettingsSet `
+    -ExecutionTimeLimit (New-TimeSpan -Hours 4) `
+    -Priority 7 `
+    -AllowStartIfOnBatteries `
+    -DontStopIfGoingOnBatteries
+Register-ScheduledTask `
+    -TaskName "FunHive-DataQuality" `
+    -Action $action3 `
+    -Trigger $trigger3 `
+    -Settings $settings3 `
+    -Principal $principal `
+    -Force `
+    -ErrorAction Stop | Out-Null
+Write-Host "Registered: FunHive-DataQuality (daily 1:00 PM, fix-all --recent-only)"
+
 # ── Note: com.funhive.eventseries.plist ──────────────────────────────────────
 # local-create-event-series.js does not exist yet.
 # When it is created, add a task here running at 0:30, 6:30, 12:30, 18:30.
@@ -202,12 +261,25 @@ Write-Host "Registered: FunHive-Monitor (daily 8:00 AM)"
 # so assert the three settings that matter rather than trusting the Write-Host
 # above. Read back from Task Scheduler, not from our own local variables.
 $expected = @{ LogonType = 'S4U'; StopIfGoingOnBatteries = $false; DisallowStartIfOnBatteries = $false }
+
+# ExecutionTimeLimit is asserted per task because it is now load-bearing, not
+# cosmetic. A limit shorter than the job's real runtime is exactly what silently
+# broke the fix-all chain between 2026-08-12 and 2026-08-22: Task Scheduler
+# terminated the batch mid-run every night, the detached node child survived to
+# finish the scrape, and nothing anywhere reported an error. These are ISO 8601
+# durations as Task Scheduler stores them.
+$expectedLimit = @{
+    "FunHive-Scrapers"    = "PT36H"
+    "FunHive-Monitor"     = "PT1H"
+    "FunHive-DataQuality" = "PT4H"
+}
 $bad = @()
-foreach ($name in @("FunHive-Scrapers", "FunHive-Monitor")) {
+foreach ($name in @("FunHive-Scrapers", "FunHive-Monitor", "FunHive-DataQuality")) {
     $t = Get-ScheduledTask -TaskName $name -ErrorAction Stop
     if ($t.Principal.LogonType -ne $expected.LogonType)                        { $bad += "$name LogonType=$($t.Principal.LogonType) (want $($expected.LogonType))" }
     if ($t.Settings.StopIfGoingOnBatteries -ne $expected.StopIfGoingOnBatteries)         { $bad += "$name StopIfGoingOnBatteries=$($t.Settings.StopIfGoingOnBatteries) (want $($expected.StopIfGoingOnBatteries))" }
     if ($t.Settings.DisallowStartIfOnBatteries -ne $expected.DisallowStartIfOnBatteries) { $bad += "$name DisallowStartIfOnBatteries=$($t.Settings.DisallowStartIfOnBatteries) (want $($expected.DisallowStartIfOnBatteries))" }
+    if ($t.Settings.ExecutionTimeLimit -ne $expectedLimit[$name])              { $bad += "$name ExecutionTimeLimit=$($t.Settings.ExecutionTimeLimit) (want $($expectedLimit[$name]))" }
 }
 if ($bad) {
     Write-Host ""
@@ -215,14 +287,21 @@ if ($bad) {
     $bad | ForEach-Object { Write-Host "  $_" -ForegroundColor Red }
     throw "Scheduled task settings did not take. See above."
 }
-Write-Host "Verified: both tasks are S4U with battery-kill disabled."
+Write-Host "Verified: all three tasks are S4U, battery-kill disabled, time limits as intended."
 
 Write-Host ""
 Write-Host "Done. To verify: Get-ScheduledTask | Where-Object { `$_.TaskName -like 'FunHive*' }"
 Write-Host "Logs will be written to: $logDir"
 Write-Host ""
-Write-Host "NOTE: Task Scheduler itself does not capture stdout/stderr - run-scrapers.bat"
-Write-Host "handles that by redirecting into logs\scraper-stdout.log, logs\scraper-stderr.log,"
-Write-Host "and (as of 2026-07-11) logs\fix-all-recent.log for the chained data-quality pass."
-Write-Host "FunHive-Monitor (8:00 AM) may run while a still-in-progress scraper batch is"
-Write-Host "running past its usual window - that's fine, it just reports current state."
+Write-Host "NOTE: Task Scheduler itself does not capture stdout/stderr - the .bat files do."
+Write-Host "run-scrapers.bat redirects into logs\scraper-stdout.log and logs\scraper-stderr.log;"
+Write-Host "run-fix-all.bat redirects into logs\fix-all-recent.log."
+Write-Host "FunHive-Monitor (8:00 AM) and FunHive-DataQuality (1:00 PM) both run while the"
+Write-Host "rotation is usually still in progress. That is expected: the monitor only reports"
+Write-Host "current state, and fix-all does DB + geocoding work with no Chrome, so it does not"
+Write-Host "contend with the scrapers' browsers."
+Write-Host ""
+Write-Host "HEALTH CHECK - if data quality ever looks stale again, check this FIRST:"
+Write-Host "  Get-ScheduledTaskInfo -TaskName FunHive-DataQuality | Select LastRunTime,LastTaskResult"
+Write-Host "  Get-Content logs\fix-all-recent.log -Tail 5"
+Write-Host "LastTaskResult 267014 means SCHED_S_TASK_TERMINATED - the task hit its time limit."
