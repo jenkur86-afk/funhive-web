@@ -24,7 +24,7 @@
  *   node fix-event-quality.js --save         # Save changes to DB
  */
 
-const { supabase } = require('../scrapers/helpers/supabase-adapter');
+const { supabase, isJunkTitle } = require('../scrapers/helpers/supabase-adapter');
 
 // Inline geohash encoder (no dependency needed)
 const BASE32 = '0123456789bcdefghjkmnpqrstuvwxyz';
@@ -507,6 +507,17 @@ async function main() {
   const junkEvents = allForJunk.filter(e => {
     if (!e.name) return true;
     const n = e.name.trim();
+    // Delegate to the SAME isJunkTitle() saveEvent()/flattenEvent() use at scrape time.
+    // Until 2026-08-22 this step carried only the hand-rolled checks below, so every rule
+    // added to isJunkTitle() was invisible to the backfill path — the municipal-governance
+    // rules added 2026-08-20 (Town Council, Municipal/Probate/Housing Court, Planning
+    // Board, Zoning Board of Review, advisory commissions, Technical Review Committee)
+    // never removed a single pre-existing row. Proven live: the 2026-08-22 chain deleted
+    // 76 junk events while all 20 governance rows under South Kingstown Parks and
+    // Recreation survived, even though isJunkTitle() classifies every one of them as junk.
+    // isJunkTitle() carries its own AUDIENCE_RESCUE, so Teen/T(w)een Advisory Board are
+    // still protected — verified by direct call before this change.
+    if (isJunkTitle(n)) return true;
     if (n.length < 5) return true;  // Too short to be a real event name
     if (n.length < 8 && /^[A-Z\s\d]+$/.test(n)) return true;  // All-caps gibberish
     if (/^(menu|home|about|contact|login|sign\s*up|subscribe|search|nav|header|footer|click\s+here|read\s+more|learn\s+more|view\s+all)$/i.test(n)) return true;  // Navigation junk
