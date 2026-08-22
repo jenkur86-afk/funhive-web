@@ -15,9 +15,9 @@ the command is in each gate's detail line and the value is dated, never guessed.
 |---|---|---|---|---|
 | 1. Counties resolve | 100% | · | 100% | blocks nothing — mechanical once a city→county dataset is chosen |
 | 2. URLs unique per state | 425 | · | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
-| 3. Zero confirmed bugs | 344 | +7 ⚠️ | 0 | mostly blocked on gate 2 |
-| 4. Zero unknown sites | 412 | +13 ⚠️ | 0 | independent — re-checking is its own pass |
-| 5. Age brackets resolved | 33.1% | -1.7 ⚠️ | max (best 40.6%) | no fixed target — maximise; ratchets vs best ever |
+| 3. Zero confirmed bugs | 344 | · | 0 | mostly blocked on gate 2 |
+| 4. Zero unknown sites | 412 | · | 0 | independent — re-checking is its own pass |
+| 5. Age brackets resolved | 33.1% | · | max (best 40.6%) | no fixed target — maximise; ratchets vs best ever |
 | 6. Names join to registry | 54.2% ⚠stale | · | 100% | planned migration, not daily work |
 | 7. Provenance (source_url) | 62% ⚠stale | · | 90% | partly blocked on rotation |
 | 8. Coverage known per county | 0 | · | 1 | FINAL — blocked on all of the above |
