@@ -125,6 +125,24 @@ const CASES = [
   ['Toddler Time (Ages 18-36 months)', '18-36', 'Babies & Toddlers (0-2)', 'unit-stripped Who must not delete a toddler event'],
   ['Toddler Time (Ages 18-36 months)', '18+', 'Babies & Toddlers (0-2)', 'bogus 18+ Who must not beat an explicit months title'],
   ['Baby Bounce (Ages 0-18 months)', '18-36', 'Babies & Toddlers (0-2)', 'title months range wins over adult-looking supplied value'],
+
+  // --- RecDesk notation: bare range + YR/YRS suffix, PreK levels, Gr K --------
+  // Added 2026-08-22 from the Step 3c all-ages audit. Gymnastics Building 2105 Nash St
+  // (RecDeskParks-lcncpr) sat at 174/175 All Ages while its own titles named the
+  // bracket. Three separate shapes were unreachable by every existing rule.
+  ['Gymnastics PreK2 4-5YR', 'All Ages', 'Preschool (3-5)', 'bare range with YR suffix'],
+  ['Tumbling 6-8YR', 'All Ages', 'Kids (6-8)', 'YR suffix, no "ages" keyword'],
+  ['Youth Basketball 9-12YRS', '', 'Tweens (9-12)', 'YRS plural suffix'],
+  ['Swim Lessons 5-7 year olds', '', 'Preschool (3-5)', 'spelled-out "year olds"'],
+  ['Gymnastics PreK1', '', 'Preschool (3-5)', 'PreK with a level digit — trailing \\b used to block this'],
+  ['Camp Naticook: Chickadees: Gr K Session 9', 'All Ages', 'Preschool (3-5)', 'lone abbreviated Gr K'],
+  ['Gr K-2 Art Club', '', 'Preschool (3-5)', 'abbreviated grade range with K lower bound'],
+  // CONTROLS for the three rules above — the YR rule is the only bare digit-range
+  // scan in detectAgeRange(), so its anchor must hold against the classic shapes.
+  ['Registration 2608-2026 Open', '', 'All Ages', 'four-digit ID pair has no YR anchor'],
+  ['Bake Sale Tickets 10-15 dollars', '', 'All Ages', 'price range must not read as ages'],
+  ['Grade A Beef Cookout', '', 'All Ages', '"Grade A" is not a school grade'],
+  ['1000 Books Before Kindergarten', '', 'All Ages', 'spelled-out kindergarten stays excluded — this is a babies programme'],
 ];
 
 // Cases whose CORRECT outcome is 'Adults'. These cannot go in CASES above:

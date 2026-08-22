@@ -520,6 +520,22 @@ function detectAgeRange(name, description) {
     return isMonths ? `${parenMatch[1]}-${parenMatch[2]} months` : `${parenMatch[1]}-${parenMatch[2]}`;
   }
 
+  // Bare numeric range with an explicit YR/YRS/year-old suffix: "4-5YR", "6-8 yrs",
+  // "9-12YRS", "5-7 year olds". This is RecDesk's house notation and it carries no
+  // "ages" keyword, so neither of the two checks above could see it. Found 2026-08-22
+  // in the Step 3c all-ages audit: Gymnastics Building 2105 Nash St
+  // (RecDeskParks-lcncpr) sat at 174/175 All Ages while its own titles read
+  // "Gymnastics PreK2 4-5YR" and "Tumbling 6-8YR".
+  //
+  // Safe to run this early despite being a bare digit range, because the YR/YRS token
+  // is a hard anchor — the false positives the 2026-08-03 fix was written to avoid
+  // cannot carry it. A time ("1:00 - 2:30p") has a colon and a meridian, a
+  // registration-ID/year pair ("2608-2026") has 4-digit parts that {1,2} rejects, and
+  // a price has a currency symbol. Ordered before the keyword rules so the explicit
+  // numbers beat a co-occurring keyword: "PreK2 4-5YR" is 4-5, not the generic 3-5.
+  const yrRange = text.match(/\b(\d{1,2})\s*[-–]\s*(\d{1,2})\s*(?:yr?s?\b|years?\s*olds?\b)/);
+  if (yrRange) return `${yrRange[1]}-${yrRange[2]}`;
+
   // Specific group keywords (order matters — check specific before general)
   // Plurals matter: these were written with trailing \b anchors that silently
   // missed the most common real-world phrasings — "Preschoolers", "Infants",
@@ -527,7 +543,11 @@ function detectAgeRange(name, description) {
   // 2026-08-04. "\bteen" keeps its leading boundary so "Juneteenth" can't match.
   if (/\b(baby|babies|infants?|lap\s*sit)\b/.test(text)) return '0-2';
   if (/\btoddler/.test(text)) return '1-3';
-  if (/\b(preschool(?:ers?)?|pre-k|prek|pre\s*k)\b/.test(text)) return '3-5';
+  // The trailing \b meant "PreK1" / "PreK2" did NOT match — k and 1 are both word
+  // characters, so there is no boundary between them. Every RecDesk gymnastics class
+  // named "Gymnastics PreK1" fell through to All Ages (found 2026-08-22). The optional
+  // trailing digit is a level number, not an age, so it does not change the bracket.
+  if (/\b(preschool(?:ers?)?|pre-k|prek\d?|pre\s*k)\b/.test(text)) return '3-5';
   // "t(w)een" is a real and common library/rec spelling meaning "teen or tween"
   // — e.g. Springfield City Library's "Crafternoon for T(w)eens", found in the
   // 2026-08-20 all-ages audit sitting in All Ages despite naming its bracket in
@@ -562,6 +582,18 @@ function detectAgeRange(name, description) {
   const gradeToAge = (g) => g + 5; // grade 0 (kindergarten) -> age 5
   const gradeAbbrev = text.match(/\bgr\.?\s*(\d{1,2})\s*[-–to]+\s*(\d{1,2})\b/);
   if (gradeAbbrev) return `${gradeToAge(parseInt(gradeAbbrev[1], 10))}-${gradeToAge(parseInt(gradeAbbrev[2], 10))}`;
+  // "Gr K-2", "Gr. K to 3" — the abbreviated form with a kindergarten lower bound.
+  // gradeAbbrev above requires a DIGIT on both sides, and gradeWordRange requires the
+  // spelled-out word "grade(s)", so this shape reached neither. Found 2026-08-22 on
+  // RecDeskParks-merrimack ("Camp Naticook: Chickadees: Gr K Session 9").
+  const gradeAbbrevKLow = text.match(/\bgr\.?\s*k\s*[-–to]+\s*(\d{1,2})\b/);
+  if (gradeAbbrevKLow) return `${gradeToAge(0)}-${gradeToAge(parseInt(gradeAbbrevKLow[1], 10))}`;
+  // A lone "Gr K" / "Gr. K". Deliberately restricted to the ABBREVIATION — the spelled
+  // out word "kindergarten" is excluded here for the reason given further down: "1000
+  // Books Before Kindergarten" is a babies programme, and "Gr K" never appears in that
+  // kind of prose. Requires a non-letter after the k so "gr kids" cannot match.
+  const gradeAbbrevKOnly = text.match(/\bgr\.?\s*k(?![a-z])/);
+  if (gradeAbbrevKOnly) return `${gradeToAge(0)}-${gradeToAge(0)}`;
   const kToGrade = text.match(/\bk(?:inder(?:garten)?)?[\s-]+(\d{1,2})(?:st|nd|rd|th)?\s*grade\b/);
   if (kToGrade) return `${gradeToAge(0)}-${gradeToAge(parseInt(kToGrade[1], 10))}`;
   const ordGradeRange = text.match(/\b(\d{1,2})(?:st|nd|rd|th)?\s*[-–to]+\s*(\d{1,2})(?:st|nd|rd|th)?\s*grade\b/);
