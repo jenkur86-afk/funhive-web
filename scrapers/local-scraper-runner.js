@@ -411,6 +411,7 @@ async function runMacaroniGroup(group, options = {}) {
   log(`🍝 Running MacaroniKid scrapers for Group ${group} (macaroni-runner-group${group}.js)`);
   log(`${'='.repeat(60)}\n`);
 
+  const spawnStartedAt = Date.now();
   const result = spawnSync(process.execPath, [scriptPath], {
     cwd: __dirname,
     stdio: 'inherit',
@@ -424,10 +425,31 @@ async function runMacaroniGroup(group, options = {}) {
   const ok = result.status === 0;
   log(`${ok ? '✅' : '❌'} macaroni-runner-group${group}.js finished with exit code ${result.status}`);
 
-  // formatSummaryRow() branches on r.success, so every entry pushed into either
-  // array must set it explicitly — this entry has no per-site stats (the child
-  // process logs its own rows into scraper-summary.log via the shared logger),
-  // so it renders as a zero-found success row rather than a stats line.
+  // The child writes its real per-state results here right before exiting. Read them
+  // back so the end-of-run recap lists MacaroniKid-FL, MacaroniKid-NY, ... exactly like
+  // every other scraper. Before this existed the parent synthesised one stats-less
+  // `MacaroniKid-Group${group}` entry, which formatSummaryRow() rendered as
+  // "⚠️  MacaroniKid-GroupN  0  0  0  0  ?" — a warning marker on a group that had just
+  // scraped thousands of events. That false row appeared on all 10 runs between
+  // 2026-08-08 and 2026-08-22, so a genuinely dead group would have looked identical.
+  const resultsPath = path.join(__dirname, 'logs', `macaroni-group${group}-results.json`);
+  try {
+    const raw = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
+    // Only trust a file this run actually produced — a stale one from a previous night
+    // would report yesterday's numbers as today's.
+    if (new Date(raw.finishedAt).getTime() >= spawnStartedAt) {
+      const success = Array.isArray(raw.success) ? raw.success : [];
+      const failed = Array.isArray(raw.failed) ? raw.failed : [];
+      log(`   Read back ${success.length} succeeded / ${failed.length} failed state(s) from ${path.basename(resultsPath)}`);
+      return { success, failed, skipped: Array.isArray(raw.skipped) ? raw.skipped : [] };
+    }
+    log(`⚠️  ${path.basename(resultsPath)} is stale (finishedAt ${raw.finishedAt}) — falling back to exit-code-only result`, 'error');
+  } catch (err) {
+    log(`⚠️  Could not read ${path.basename(resultsPath)}: ${err.message} — falling back to exit-code-only result`, 'error');
+  }
+
+  // Fallback: no readable results file (older child, crash before write). formatSummaryRow()
+  // branches on r.success, so the entry must set it explicitly.
   return ok
     ? { success: [{ success: true, name: `MacaroniKid-Group${group}` }], failed: [], skipped: [] }
     : { success: [], failed: [{ success: false, name: `MacaroniKid-Group${group}`, error: `exit code ${result.status}` }], skipped: [] };

@@ -383,6 +383,27 @@ Group 2 States: ${Object.values(MACARONI_SCRAPERS)
   logSummary(SUMMARY_TABLE_DIVIDER);
   logSummary(`✅ ${results.success.length} succeeded  ❌ ${results.failed.length} failed  ⏱️ ${totalDuration} min total (MacaroniKid Group ${CONFIG.GROUP})`);
 
+  // Hand the per-state results back to local-scraper-runner.js, which spawns this file
+  // as a child process and so cannot see `results` directly. Without this the parent's
+  // end-of-run recap invented a single stats-less "MacaroniKid-GroupN" row, which
+  // formatSummaryRow() rendered as "⚠️  MacaroniKid-GroupN  0  0  0  0  ?" — a warning
+  // marker on a group that had in fact scraped thousands of events. That false row fired
+  // on all 10 runs between 2026-08-08 and 2026-08-22 and made a healthy group
+  // indistinguishable from a dead one.
+  try {
+    const resultsPath = path.join(__dirname, 'logs', `macaroni-group${CONFIG.GROUP}-results.json`);
+    fs.writeFileSync(resultsPath, JSON.stringify({
+      group: CONFIG.GROUP,
+      finishedAt: new Date().toISOString(),
+      success: results.success,
+      failed: results.failed,
+      skipped: results.skipped || [],
+    }, null, 2));
+  } catch (err) {
+    log(`⚠️  Could not write group results file: ${err.message}`, 'error');
+  }
+
+
   // Exit with error code if any failed
   process.exit(results.failed.length > 0 ? 1 : 0);
 }
