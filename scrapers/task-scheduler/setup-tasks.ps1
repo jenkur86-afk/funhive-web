@@ -5,7 +5,7 @@
 #   .\scrapers\task-scheduler\setup-tasks.ps1
 #
 # To remove all tasks:
-#   Unregister-ScheduledTask -TaskName "FunHive-Scrapers","FunHive-Monitor" -Confirm:$false
+#   Unregister-ScheduledTask -TaskName "FunHive-Scrapers","FunHive-Monitor","FunHive-DataQuality" -Confirm:$false
 #
 # 2026-07-12: a bad -DisallowStartIfOnBatteries/-StopIfGoingOnBatteries
 # parameter name (New-ScheduledTaskSettingsSet doesn't have those - the real
@@ -51,16 +51,25 @@ New-Item -ItemType Directory -Force $logDir | Out-Null
 #
 # Action points at run-scrapers.bat, NOT node directly - the bat file is what
 # actually captures stdout/stderr to logs\ (Task Scheduler doesn't do this on
-# its own, see the note at the bottom of this file) and, as of 2026-07-11,
-# chains scripts\fix-all.ps1 --recent-only after the scraper run finishes so
-# same-day data quality issues get cleaned up automatically each morning
-# instead of requiring a separate manual/scheduled pass.
+# its own, see the note at the bottom of this file).
 #
-# ExecutionTimeLimit is 12h, not 4h: observed group runs have taken 5-10+
-# hours depending on how much content changed since the last rotation, and
-# the fix-all step adds more time on top of that. A tighter limit risks
-# Task Scheduler killing a legitimately-still-running job (and skipping the
-# fix-all step entirely that day) rather than catching a genuinely stuck one.
+# 2026-07-11 to 2026-08-22 this batch ALSO chained scripts\fix-all.ps1
+# --recent-only after the scraper run. That is now Task 3 (FunHive-DataQuality)
+# instead. See the block above Task 3 for why - in short, the chain had stopped
+# running entirely and the failure was invisible.
+#
+# ExecutionTimeLimit is 36h, raised from 12h on 2026-08-22. The 12h value was
+# chosen when runs took 5-10 hours; measured rotations are now 23-31h (Group 1
+# runs on 2026-08-07/10/13/16 all exceeded 29h), so the limit had stopped
+# catching stuck jobs and started terminating healthy ones every single night.
+# Confirmed live: FunHive-Scrapers LastTaskResult was 267014
+# (SCHED_S_TASK_TERMINATED) at 3:00 PM on 2026-08-22 while its node child was
+# still happily scraping. Because Task Scheduler kills the batch but NOT the
+# detached node child, the visible symptom was not a failed scrape - it was
+# scraper-stdout.log accumulating "FunHive scrapers starting" markers with no
+# matching "finished", and everything after the node line silently never
+# happening. Same reasoning as the original note: a limit tighter than real
+# runtimes catches healthy jobs, not stuck ones.
 #
 # 2026-07-12 incident: the 2026-07-12 run died silently ~66 minutes in with
 # no crash trace - Task Scheduler's own LastTaskResult (3221225786 /
@@ -146,7 +155,7 @@ $action1  = New-ScheduledTaskAction `
     -WorkingDirectory $scraperDir
 $trigger1 = New-ScheduledTaskTrigger -Daily -At "3:00AM"
 $settings1 = New-ScheduledTaskSettingsSet `
-    -ExecutionTimeLimit (New-TimeSpan -Hours 12) `
+    -ExecutionTimeLimit (New-TimeSpan -Hours 36) `
     -Priority 7 `
     -AllowStartIfOnBatteries `
     -DontStopIfGoingOnBatteries
@@ -158,7 +167,7 @@ Register-ScheduledTask `
     -Principal $principal `
     -Force `
     -ErrorAction Stop | Out-Null
-Write-Host "Registered: FunHive-Scrapers (daily 3:00 AM, runs scrapers then fix-all --recent-only)"
+Write-Host "Registered: FunHive-Scrapers (daily 3:00 AM, scrapers only - 36h limit)"
 
 # ── Task 2: Daily monitor at 8:00 AM ─────────────────────────────────────────
 # Equivalent: com.funhive.monitor.plist

@@ -82,6 +82,11 @@ const GROUND_TRUTH = {
   'dekalblibrary.org':       { state: 'GA', evidence: 'live page: DeKalb County Public Library, "215 Sycamore Street, Decatur, Georgia 30030". The GA entry is correct and is KEPT.' },
   'perulibrary.org':         { state: 'IL', evidence: 'live page: Peru Public Library, "1409 11th Street, Peru, Illinois 61354", area code 815. Illinois is outside the active region; claimed by MA and NY, both wrong, 29 rows already in the DB.' },
   'warsawlibrary.org':       { state: 'IN', evidence: 'live page: Warsaw Community Public Library, "310 East Main Street Warsaw, Indiana 46580", area code 574. Indiana is outside the active region; claimed by NY/KY/NC, all wrong.' },
+  // Added by the 2026-08-22 scheduled diagnosis as a hand edit to scraper-wordpress-
+  // libraries-tn.js (commit 40c9a62). Recorded here so this script stays the single
+  // source of truth for what is disabled and why — otherwise a later --save would not
+  // know about it and the evidence would live only in a commit message.
+  'dunlaplibrary.org':       { state: 'IL', evidence: 'Dunlap IL, not Dunlap TN. Found by the 2026-08-22 diagnosis; the Sequatchie County Public Library (TN) entry pointed at it.' },
 };
 
 function hostOf(u) {
@@ -140,7 +145,13 @@ function main() {
       flagged++;
       byHost[hostOf(url)] = byHost[hostOf(url)] || [];
       byHost[hostOf(url)].push(`${state} ${name}  (${f})`);
-      const reason = `${hostOf(url)} is ${truth.state}, not ${state}`;
+      // DEAD is not a state — it means the host does not resolve, 404s, or serves an
+      // unrelated site, so NO claimant is correct and every one is disabled. Kept as a
+      // distinct marker rather than inventing a state, because "is DEAD, not NJ" would
+      // read as a geographic claim and this is a liveness claim.
+      const reason = truth.state === 'DEAD'
+        ? `${hostOf(url)} is dead or serves an unrelated site — no state's entry is correct`
+        : `${hostOf(url)} is ${truth.state}, not ${state}`;
       // Insert before the closing brace of the entry.
       return line.replace(/\}\s*,?\s*$/, m2 => `, urlCollision: '${reason}' ${m2}`);
     }).join('\n');
