@@ -319,6 +319,25 @@ Stage it in the same `git add` group as the fix it documents. `scripts/scraper-f
 - `scripts/diagnose-duplicates.js` — Read-only: reports which scrapers produce duplicate `name+event_date+venue` groups, whether dupes are within-scraper or cross-scraper, and URL drift patterns. Supports `--limit=N`.
 - `scripts/archive/` — Retired scripts kept for reference (e.g., `fix-duplicate-dates.js` — Communico bug fixed Apr 2026).
 
+### URL collisions (Defect A) — the `{city}library.org` guess
+**83% of WordPress-\* config URLs (3,156 of 3,802) were generated as a guessed `{city}library.org`.** Where two guesses land on the same string, every claiming state scrapes the one real library behind it — `madisonlibrary.org` is in **Kentucky** and was claimed by 11 eastern states; `spartalibrary.org` is in **Wisconsin**. This put ~2,000 wrong-state rows in the database before it was found on 2026-08-21.
+
+Four scripts, in the order you use them:
+- `scripts/list-url-collisions.js` — the worklist. Turns gate 2's single number into per-host detail, worst first. Separates true single-institution collisions from multi-state platforms that legitimately share a host (`libcal.com`, `macaronikid.com`). `--check` asserts it still agrees with `project-status.js`; `--state=XX` and `--json` for filtering.
+- `scripts/resolve-collision-host-state.js` — works out which state a host really serves. Tries three URL variants and nine likely paths, then weighs three signals: ZIP-anchored `ST 12345`, phone area code, and `City, Full State`. **Outputs evidence, not a decision** — it proposes a state only when signals agree and the winner doubles the runner-up, otherwise `CONFLICTED`/`UNRESOLVED`.
+- `scripts/disable-collided-urls.js` — flags wrong-state entries with `urlCollision` and installs a run-time guard in the 21 active WordPress files. **Dry-run by default.**
+- `scripts/purge-wrong-state-collision-rows.js` — deletes rows those entries already wrote under the wrong state. Selects the id list read-only *before* deleting, always `.order()` before `.range()`, refuses above a ceiling.
+
+**Rules when working this defect:**
+- **Identity comes from the live page only** — a street address, ZIP, or phone area code. Never name similarity: library names are mostly geography, and every town has a `{town}library.org` that might belong to any of six states.
+- **An unresolved host is unknown, not safe.** Never disable on a guess; leave it in the worklist.
+- **Disabling is not deleting.** The entry stays with its wrong URL recorded and the guard emits the `📍` header *and* a `Found 0 events` line, so the library keeps its row in `LIBRARY-SITE-AUDIT.md` as an explained gap. Dropping that pair is what hid BiblioCommons-\*/Communico-\* from the audit until 2026-08-20.
+- **Run `node -c` on every touched config file.** A generated reason string containing an apostrophe broke four config files on 2026-08-22; only `node -c` caught it.
+- **A disabled library is a real coverage gap** until someone finds its correct URL. Check `scripts/verify-coverage.js` before claiming another family already covers it.
+- Gate 2 excludes `urlCollision` entries, so the number drops as you disable. That is a reduction in **risk**, not a URL being corrected — `STATUS.md` carries a methodology note saying so.
+
+**A DNS sweep is not a valid liveness test here.** `dns.resolve4` returns `ECONNREFUSED` for every host in this sandbox, including `google.com`. Use the Puppeteer-based scripts, whose browser stack reaches these sites.
+
 ### Prompts (top-level)
 - `SCRAPER-DIAGNOSIS-PROMPT.md` — Paste into Cowork after running scrapers
 - `DATA-QUALITY-DIAGNOSIS-PROMPT.md` — Paste into Cowork after running data-quality-check.js
