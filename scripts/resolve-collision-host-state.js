@@ -39,6 +39,18 @@
  * human to look at — never silently resolved. Copy accepted lines into GROUND_TRUTH in
  * scripts/disable-collided-urls.js; nothing here writes to a config file.
  *
+ * KNOWN LIMIT — read this before believing an UNREACHABLE
+ * -------------------------------------------------------
+ * On the 2026-08-23 run, 16 of the 18 UNREACHABLE hosts ended on
+ * `net::ERR_BLOCKED_BY_CLIENT` against the `http://` variant. That is Chrome refusing to
+ * issue the request locally — an extension, policy or interception rule in the launch
+ * config — NOT evidence about the site. Those hosts had already timed out on both https
+ * variants, so the honest verdict is inconclusive and they must NOT be marked DEAD.
+ *
+ * This is the same trap as the DNS sweep that reported 162/162 hosts dead in this
+ * sandbox while `google.com` failed identically. When a whole class of probes fails the
+ * same way, suspect the probe before the world.
+ *
  * Usage:
  *   node scripts/resolve-collision-host-state.js --in=hosts.txt      # one host per line
  *   node scripts/resolve-collision-host-state.js --in=... --concurrency=2
