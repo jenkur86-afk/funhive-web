@@ -18,7 +18,7 @@ const LIBRARIES = [
   // URL corrected 2026-08-11 (was abbevillelibrary.org): Site lists Abbeville Main Branch, 1407 N. Main St, Abbeville SC 29620, phone 864-459-4009, plus Calhoun Falls and Donalds branches
   { name: 'Abbeville County Library System', url: 'https://abbevillecounty.org', eventsUrl: 'https://abbevillecounty.org/calendar/', city: 'Abbeville', state: 'SC', zipCode: '29620', county: 'Abbeville County'},
   { name: 'Anderson County Library', url: 'https://www.andersonlibrary.org', eventsUrl: 'https://www.andersonlibrary.org/events', city: 'Anderson', state: 'SC', zipCode: '29621', county: 'Anderson County'},
-  { name: 'Kershaw County Library - Camden Branch Library', url: 'https://www.camdenlibrary.org/', eventsUrl: 'https://www.camdenlibrary.org/', city: 'Camden', state: 'SC', zipCode: '29020', county: 'Kershaw'},
+  { name: 'Kershaw County Library - Camden Branch Library', url: 'https://www.camdenlibrary.org/', eventsUrl: 'https://www.camdenlibrary.org/', city: 'Camden', state: 'SC', zipCode: '29020', county: 'Kershaw', urlCollision: 'camdenlibrary.org is MI, not SC' },
   { name: 'Pickens County Library - Central-Clemson Branch Library', url: 'https://www.centrallibrary.org', eventsUrl: 'https://www.centrallibrary.org/events', city: 'Central', state: 'SC', zipCode: '29630', county: 'Pickens'},
   { name: 'Lexington County Library - Chapin', url: 'https://www.chapinlibrary.org', eventsUrl: 'https://www.chapinlibrary.org/events', city: 'Chapin', state: 'SC', zipCode: '29036', county: 'Lexington'},
   { name: 'Chester County Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'SC', zipCode: '29706', county: 'Chester County', urlCollision: 'chesterlibrary.org is NY, not SC' },
@@ -44,9 +44,9 @@ const LIBRARIES = [
   { name: 'Marion County Library System', url: 'https://www.marionlibrary.org/', eventsUrl: 'https://www.marionlibrary.org/', city: 'Marion', state: 'SC', zipCode: '29571', county: 'Marion County'},
   { name: 'Mccormick County Library System', url: 'https://mccormicklibrary.org/', eventsUrl: 'https://mccormicklibrary.org/', city: 'Mccormick', state: 'SC', zipCode: '29835', county: 'Mccormick County'},
   { name: 'Hal Kohn Memorial Library', url: 'https://www.newberrylibrary.org', eventsUrl: 'https://www.newberrylibrary.org/events', city: 'Newberry', state: 'SC', zipCode: '29108', county: 'Newberry County'},
-  { name: 'Orangeburg County Library Commission', url: 'https://orangeburglibrary.org/', eventsUrl: 'https://orangeburglibrary.org/', city: 'Orangeburg', state: 'SC', zipCode: '29115', county: 'Orangeburg County'},
+  { name: 'Orangeburg County Library Commission', url: 'https://orangeburglibrary.org/', eventsUrl: 'https://orangeburglibrary.org/', city: 'Orangeburg', state: 'SC', zipCode: '29115', county: 'Orangeburg County', urlCollision: 'orangeburglibrary.org is NY, not SC' },
   { name: 'Anderson County Library - Piedmont Branch Library', url: 'https://www.piedmontlibrary.org', eventsUrl: 'https://www.piedmontlibrary.org/events', city: 'Piedmont', state: 'SC', zipCode: '29673', county: 'Anderson'},
-  { name: 'Oconee County Public Library - Salem Branch Library', url: 'https://www.salemlibrary.org', eventsUrl: 'https://www.salemlibrary.org/events', city: 'Salem', state: 'SC', zipCode: '29676', county: 'Oconee'},
+  { name: 'Oconee County Public Library - Salem Branch Library', url: 'https://www.salemlibrary.org', eventsUrl: 'https://www.salemlibrary.org/events', city: 'Salem', state: 'SC', zipCode: '29676', county: 'Oconee', urlCollision: 'salemlibrary.org is OR, not SC' },
   { name: 'Saluda County Library System', url: 'https://www.saludalibrary.org', eventsUrl: 'https://www.saludalibrary.org/events', city: 'Saluda', state: 'SC', zipCode: '29138', county: 'Saluda County'},
   { name: 'Oconee County Public Library - Seneca Branch Library', url: 'https://www.senecalibrary.org', eventsUrl: 'https://www.senecalibrary.org/events', city: 'Seneca', state: 'SC', zipCode: '29678', county: 'Oconee'},
   { name: 'Spartanburg County Public Library - H. Carlisle Bean Law Library', url: 'https://www.spartanburglibrary.org', eventsUrl: 'https://www.spartanburglibrary.org/events', city: 'Spartanburg', state: 'SC', zipCode: '29306', county: 'Spartanburg County'},
@@ -57,8 +57,8 @@ const LIBRARIES = [
   // URL corrected 2026-08-11 (was swansealibrary.org): Lexington County Library locations page lists Swansea branch, 199 N. Lawrence Avenue, Swansea SC 29160, phone 803-785-3519. swansealibrary.o
   { name: 'Lexington County Library - Swansea', url: 'https://lexcolibrary.com', eventsUrl: 'https://lexcolibrary.libcal.com', city: 'Swansea', state: 'SC', zipCode: '29160', county: 'Lexington'},
   { name: 'Union County Library System', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'SC', zipCode: '29379', county: 'Union County'},
-  { name: 'Oconee County Public Library - Westminster Branch Library', url: 'https://www.westminsterlibrary.org', eventsUrl: 'https://www.westminsterlibrary.org/events', city: 'Westminster', state: 'SC', zipCode: '29693', county: 'Oconee'},
-  { name: 'York Public Library', url: 'https://yorklibrary.org/', eventsUrl: 'https://yorklibrary.org/', city: 'York', state: 'SC', zipCode: '29745', county: 'York County'}
+  { name: 'Oconee County Public Library - Westminster Branch Library', url: 'https://www.westminsterlibrary.org', eventsUrl: 'https://www.westminsterlibrary.org/events', city: 'Westminster', state: 'SC', zipCode: '29693', county: 'Oconee', urlCollision: 'westminsterlibrary.org is CO, not SC' },
+  { name: 'York Public Library', url: 'https://yorklibrary.org/', eventsUrl: 'https://yorklibrary.org/', city: 'York', state: 'SC', zipCode: '29745', county: 'York County', urlCollision: 'yorklibrary.org is NE, not SC' }
 ];
 
 const SCRAPER_NAME = 'wordpress-SC';

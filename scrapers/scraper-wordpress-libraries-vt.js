@@ -66,7 +66,7 @@ const LIBRARIES = [
   { name: 'Lanpher Memorial', url: 'https://www.lanpherlibrary.org/', eventsUrl: 'https://www.lanpherlibrary.org/calendar-of-events.html', city: 'Hyde Park', state: 'VT', zipCode: '05655', county: 'Lamoille'},
   { name: 'Jaquith Public', url: 'https://marshfieldlibrary.org/', eventsUrl: 'https://marshfieldlibrary.org/', city: 'Marshfield', state: 'VT', zipCode: '05658', county: 'Washington'},
   { name: 'Russell Memorial', url: 'https://www.monktonlibrary.org', eventsUrl: 'https://www.monktonlibrary.org/events', city: 'Monkton', state: 'VT', zipCode: '05469', county: 'Addison County'},
-  { name: 'Tenney Memorial', url: 'https://www.newburylibrary.org', eventsUrl: 'https://www.newburylibrary.org/events', city: 'Newbury', state: 'VT', zipCode: '05051', county: 'Orange'},
+  { name: 'Tenney Memorial', url: 'https://www.newburylibrary.org', eventsUrl: 'https://www.newburylibrary.org/events', city: 'Newbury', state: 'VT', zipCode: '05051', county: 'Orange', urlCollision: 'newburylibrary.org is MA, not VT' },
   { name: 'Moore Free', url: 'https://www.newfanelibrary.org', eventsUrl: 'https://www.newfanelibrary.org/events', city: 'Newfane', state: 'VT', zipCode: '05345', county: 'Windham'},
   { name: 'North Hero Public', url: 'https://northherolibrary.org/', eventsUrl: 'https://northherolibrary.org/', city: 'North Hero', state: 'VT', zipCode: '05474', county: 'Grand Isle'},
   { name: 'Norwich Public', url: 'https://www.norwichlibrary.org/', eventsUrl: 'https://www.norwichlibrary.org/category/events/', city: 'Norwich', state: 'VT', zipCode: '05055', county: 'Windsor'},
@@ -83,7 +83,7 @@ const LIBRARIES = [
   { name: 'Rochester Public', url: 'https://www.rochesterlibrary.org/', eventsUrl: 'https://www.rochesterlibrary.org/', city: 'Rochester', state: 'VT', zipCode: '05767', county: 'Windsor'},
   // URL corrected 2026-08-11 (was roxburylibrary.org): Roxbury Free Library, 1491 Roxbury Rd Roxbury VT 05669, ph 802-485-6860
   { name: 'Roxbury Free', url: 'https://roxburyfreelibrary.org/', eventsUrl: 'https://roxburyfreelibrary.org/community-calendar-copy/', city: 'Roxbury', state: 'VT', zipCode: '05669', county: 'Washington'},
-  { name: 'Salisbury Free Public', url: 'https://www.salisburylibrary.org/', eventsUrl: 'https://www.salisburylibrary.org/', city: 'Salisbury', state: 'VT', zipCode: '05769', county: 'Addison'},
+  { name: 'Salisbury Free Public', url: 'https://www.salisburylibrary.org/', eventsUrl: 'https://www.salisburylibrary.org/', city: 'Salisbury', state: 'VT', zipCode: '05769', county: 'Addison', urlCollision: 'salisburylibrary.org is MA, not VT' },
   { name: 'Sheldon Public', url: 'https://www.sheldonlibrary.org', eventsUrl: 'https://www.sheldonlibrary.org/events', city: 'Sheldon', state: 'VT', zipCode: '05483', county: 'Franklin'},
   { name: 'Shrewsbury', url: 'https://www.shrewsburylibrary.org', eventsUrl: 'https://www.shrewsburylibrary.org/events', city: 'Shrewsbury', state: 'VT', zipCode: '05738', county: 'Rutland'},
   { name: 'Stamford Community', url: 'https://www.stamfordlibrary.org', eventsUrl: 'https://www.stamfordlibrary.org/events', city: 'Stamford', state: 'VT', zipCode: '05352', county: 'Bennington'},
@@ -93,14 +93,14 @@ const LIBRARIES = [
   { name: 'Latham Memorial', url: 'https://www.thetfordlibrary.org', eventsUrl: 'https://www.thetfordlibrary.org/events', city: 'Thetford', state: 'VT', zipCode: '05074', county: 'Orange County'},
   { name: 'Tunbridge Public', url: 'https://www.tunbridgelibrary.org', eventsUrl: 'https://www.tunbridgelibrary.org/events', city: 'Tunbridge', state: 'VT', zipCode: '05077', county: 'Orange'},
   { name: 'Vernon Free', url: 'https://www.vernonlibrary.org/', eventsUrl: 'https://www.vernonlibrary.org/', city: 'Vernon', state: 'VT', zipCode: '05354', county: 'Windham'},
-  { name: 'Warren Public', url: 'https://www.warrenlibrary.org', eventsUrl: 'https://www.warrenlibrary.org/events', city: 'Warren', state: 'VT', zipCode: '05674', county: 'Washington'},
+  { name: 'Warren Public', url: 'https://www.warrenlibrary.org', eventsUrl: 'https://www.warrenlibrary.org/events', city: 'Warren', state: 'VT', zipCode: '05674', county: 'Washington', urlCollision: 'warrenlibrary.org is PA, not VT' },
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in ME, not VT. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Wells Village', url: 'https://wellslibrary.org/', eventsUrl: 'https://wellslibrary.org/', city: 'Wells', state: 'VT', zipCode: '05774', county: 'Rutland'},
   { name: 'West Hartford', url: 'https://www.westhartfordlibrary.org/', eventsUrl: 'https://www.westhartfordlibrary.org/', city: 'West Hartford', state: 'VT', zipCode: '05084', county: 'Windsor'},
-  { name: 'Hitchcock Museum', url: 'https://www.westfieldlibrary.org', eventsUrl: 'https://www.westfieldlibrary.org/events', city: 'Westfield', state: 'VT', zipCode: '05874', county: 'Orleans'},
-  { name: 'Butterfield', url: 'https://www.westminsterlibrary.org', eventsUrl: 'https://www.westminsterlibrary.org/events', city: 'Westminster', state: 'VT', zipCode: '05158', county: 'Windham'},
+  { name: 'Hitchcock Museum', url: 'https://www.westfieldlibrary.org', eventsUrl: 'https://www.westfieldlibrary.org/events', city: 'Westfield', state: 'VT', zipCode: '05874', county: 'Orleans', urlCollision: 'westfieldlibrary.org is WI, not VT' },
+  { name: 'Butterfield', url: 'https://www.westminsterlibrary.org', eventsUrl: 'https://www.westminsterlibrary.org/events', city: 'Westminster', state: 'VT', zipCode: '05158', county: 'Windham', urlCollision: 'westminsterlibrary.org is CO, not VT' },
   { name: 'Westminster West Public', url: 'https://www.westminsterwestlibrary.org', eventsUrl: 'https://www.westminsterwestlibrary.org/events', city: 'Westminster West', state: 'VT', zipCode: '05346', county: 'Windham'},
-  { name: 'Ainsworth Public', url: 'https://www.williamstownlibrary.org', eventsUrl: 'https://www.williamstownlibrary.org/events', city: 'Williamstown', state: 'VT', zipCode: '05679', county: 'Orange'},
+  { name: 'Ainsworth Public', url: 'https://www.williamstownlibrary.org', eventsUrl: 'https://www.williamstownlibrary.org/events', city: 'Williamstown', state: 'VT', zipCode: '05679', county: 'Orange', urlCollision: 'williamstownlibrary.org is NY, not VT' },
   // URL corrected 2026-08-11 (was wilmingtonlibrary.org): 16 South Main St Wilmington VT 05363, phone 802-464-8557
   { name: 'Pettee Memorial', url: 'https://petteelibrary.org', eventsUrl: 'https://petteelibrary.org', city: 'Wilmington', state: 'VT', zipCode: '05363', county: 'Windham'},
   // URL corrected 2026-08-11 (was windhamlibrary.org): Real name Windham Town Library, 7071 Windham Hill Road, Windham VT 05359, phone 802-875-4874

@@ -54,7 +54,7 @@ const LIBRARIES = [
   // Additional libraries from spreadsheet coverage expansion
   // URL corrected 2026-08-11 (was auburnlibrary.org): Real name Logan County Public Library Auburn Branch; site lists 106 Spring St, Auburn KY 42206, phone 270-542-8180
   { name: 'Auburn Branch', url: 'https://loganlibrary.org', eventsUrl: 'https://loganlibrary.org/calendar/', city: 'Auburn', state: 'KY', zipCode: '00000', county: 'Logan'},
-  { name: 'Trimble County Public Library', url: 'https://www.bedfordlibrary.org', eventsUrl: 'https://www.bedfordlibrary.org/events', city: 'Bedford', state: 'KY', zipCode: '40006', county: 'Trimble'},
+  { name: 'Trimble County Public Library', url: 'https://www.bedfordlibrary.org', eventsUrl: 'https://www.bedfordlibrary.org/events', city: 'Bedford', state: 'KY', zipCode: '40006', county: 'Trimble', urlCollision: 'bedfordlibrary.org is TX, not KY' },
   { name: 'Nicholas County Public Library', url: 'https://www.carlislelibrary.org', eventsUrl: 'https://www.carlislelibrary.org/events', city: 'Carlisle', state: 'KY', zipCode: '40311', county: 'Carlisle County'},
   { name: 'Hickman County Memorial Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'KY', zipCode: '42031', county: 'Clinton County'},
   { name: 'Adair County Public Library', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'KY', zipCode: '42728', county: 'Adair'},
@@ -79,13 +79,13 @@ const LIBRARIES = [
   { name: 'Estill County Public Library', url: 'https://www.irvinelibrary.org', eventsUrl: 'https://www.irvinelibrary.org/events', city: 'Irvine', state: 'KY', zipCode: '40336', county: 'Estill'},
   // URL corrected 2026-08-11 (was irvingtonlibrary.org): Breckinridge County Public Library Irvington Branch, 1109 US-60 Irvington KY 40146, phone 270-547-7404
   { name: 'Irvington Branch', url: 'https://bcplibrary.org/irvington-branch', eventsUrl: 'https://bcplibrary.org/program-calendars-1', city: 'Irvington', state: 'KY', zipCode: '00000', county: 'Breckinridge'},
-  { name: 'Marion County Public Library', url: 'https://lebanonlibrary.org/', eventsUrl: 'https://lebanonlibrary.org/', city: 'Lebanon', state: 'KY', zipCode: '40033', county: 'Marion'},
+  { name: 'Marion County Public Library', url: 'https://lebanonlibrary.org/', eventsUrl: 'https://lebanonlibrary.org/', city: 'Lebanon', state: 'KY', zipCode: '40033', county: 'Marion', urlCollision: 'lebanonlibrary.org is OH, not KY' },
   // URL corrected 2026-08-11 (was libertylibrary.org): 238 Middleburg St Liberty KY 42539, phone 606-787-9381. libertylibrary.org is a Conroe TX charity, not this library
   { name: 'Casey County Public Library', url: 'https://www.caseylibrary.org', eventsUrl: 'https://www.caseylibrary.org/calendar/', city: 'Liberty', state: 'KY', zipCode: '42539', county: 'Casey'},
   { name: 'Crittenden County Public Library', url: 'https://www.marionlibrary.org/', eventsUrl: 'https://www.marionlibrary.org/', city: 'Marion', state: 'KY', zipCode: '42064', county: 'Marion County'},
   // URL corrected 2026-08-11 (was maysvillelibrary.org): 218 E Third Street Maysville KY 41056, phone 606-564-3286
   { name: 'Mason County Public Library', url: 'https://www.masoncountylibrary.com', eventsUrl: 'https://www.masoncountylibrary.com', city: 'Maysville', state: 'KY', zipCode: '41056', county: 'Mason'},
-  { name: 'Wayne County Public Library', url: 'https://www.allertonpubliclibrary.org/', eventsUrl: 'https://www.allertonpubliclibrary.org/calendar', city: 'Monticello', state: 'KY', zipCode: '42633', county: 'Wayne'},
+  { name: 'Wayne County Public Library', url: 'https://www.allertonpubliclibrary.org/', eventsUrl: 'https://www.allertonpubliclibrary.org/calendar', city: 'Monticello', state: 'KY', zipCode: '42633', county: 'Wayne', urlCollision: 'allertonpubliclibrary.org is IL, not KY' },
   // URL corrected 2026-08-11 (was scottsvillelibrary.org): Site says located in Scottsville Kentucky, phone 270-237-3861 (KY area code). scottsvillelibrary.org is Scottsville Free Library in Scottsvi
   { name: 'Allen County Public Library', url: 'https://www.allencountylibrary.com', eventsUrl: 'https://www.allencountylibrary.com/calendar/', city: 'Scottsville', state: 'KY', zipCode: '42164', county: 'Allen'},
   { name: 'Washington County Public Library', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'KY', zipCode: '40069', county: 'Washington', urlCollision: 'springfieldlibrary.org is MA, not KY' },

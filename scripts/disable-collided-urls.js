@@ -87,6 +87,69 @@ const GROUND_TRUTH = {
   // source of truth for what is disabled and why — otherwise a later --save would not
   // know about it and the evidence would live only in a commit message.
   'dunlaplibrary.org':       { state: 'IL', evidence: 'Dunlap IL, not Dunlap TN. Found by the 2026-08-22 diagnosis; the Sequatchie County Public Library (TN) entry pointed at it.' },
+  // --- fourth pass, 2026-08-22: bulk resolve of all remaining colliding hosts ----
+  // Method: verify-sites-puppeteer.js was run once per HOST with the sentinel expected
+  // state ZZ. Because its identity check reports every address-shaped state mention that
+  // differs from the expected one, and no page can be in ZZ, this makes it NAME the state
+  // the page actually belongs to instead of only firing on a conflict with one claimant.
+  // 53 of 140 hosts resolved this way; 2 more are dead. The other 85 stayed UNVERIFIABLE
+  // (bot-blocks, JS-only calendars, no address in the DOM) and are deliberately NOT listed
+  // here — an unresolved host is unknown, not safe, and must not be disabled on a guess.
+  'warrenlibrary.org':         { state: 'PA', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read PA; title Warren Public Library   Start here. Go anywhere..' },
+  'camdenlibrary.org':         { state: 'MI', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read MI; title Welcome to the Camden Twp. Library — Camden Townsh.' },
+  'kingstonlibrary.org':       { state: 'NY', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read NY; title Kingston Library - Kingston Library.' },
+  'salemlibrary.org':          { state: 'OR', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read OR; title Library   Salem, Oregon.' },
+  'norwoodlibrary.org':        { state: 'MA', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read MA; title Morrill Memorial Library.' },
+  'salisburylibrary.org':      { state: 'MA', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read MA; title Home.' },
+  'williamstownlibrary.org':   { state: 'NY', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read NY.' },
+  'lebanonlibrary.org':        { state: 'OH', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read OH; title Lebanon Public Library   Lebanon, Ohio.' },
+  'livingstonlibrary.org':     { state: 'NJ', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read NJ; title Livingston Public Library.' },
+  'shermanlibrary.org':        { state: 'CT', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read CT; title The Sherman Library.' },
+  'websterlibrary.org':        { state: 'NY', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read NY; title Home - Webster Public Library.' },
+  'allertonpubliclibrary.org': { state: 'IL', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read IL; title Homepage Allerton Public Library District.' },
+  'winchesterlibrary.org':     { state: 'KS', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read KS; title Winchester Homepage   Winchester Public Library.' },
+  'bedfordlibrary.org':        { state: 'TX', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read TX; title Bedford Public Library.' },
+  'farmingtonpublic.org':      { state: 'IL', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read IL; title Homepage Farmington Area Public Library District.' },
+  'newmilfordlibrary.org':     { state: 'CT', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read CT; title New Milford Public Library – The Public Library of.' },
+  'perrylibrary.org':          { state: 'NC', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read NC; title Perry Memorial Library.' },
+  'richlandlibrary.org':       { state: 'MI', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read MI; title Richland Community Library.' },
+  'russelllibrary.org':        { state: 'CT', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read CT; title Homepage - Russell Library.' },
+  'southportlibrary.org':      { state: 'ME', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read ME; title Home   Southport Library.' },
+  'westminsterlibrary.org':    { state: 'CO', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read CO; title Libraries   Westminster, CO.' },
+  'wiltonlibrary.org':         { state: 'CT', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read CT; title Wilton Library - Home - Wilton Library.' },
+  'yorklibrary.org':           { state: 'NE', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read NE; title Kilgore Memorial Library – 520 Nebraska Avenue   Y.' },
+  'beaverfallslibrary.org':    { state: 'NY', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read NY; title Beaver Falls Library.' },
+  'brownvillelibrary.org':     { state: 'NY', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read NY; title Brownville – Glen Park Library.' },
+  'cambridgelibrary.org':      { state: 'MA', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read MA; title Cambridge Public Library.' },
+  'canterburylibrary.org':     { state: 'CT', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read CT; title Canterbury Public Library.' },
+  'clermontlibrary.org':       { state: 'OH', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read OH; title Clermont County Public Library   Clermont County, .' },
+  'cooperstownlibrary.org':    { state: 'DEAD', evidence: 'verify-sites-puppeteer 2026-08-22: DNS does not resolve even under the stealth browser, so no claimant can be right.' },
+  'eastonlibrary.org':         { state: 'CT', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read CT; title Easton Public Library.' },
+  'edgewaterlibrary.org':      { state: 'DEAD', evidence: 'verify-sites-puppeteer 2026-08-22: HTTP 503 on the configured URL, so no claimant can be right.' },
+  'gorhamlibrary.org':         { state: 'NH', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read NH; title Gorham Public Library.' },
+  'granbylibrary.org':         { state: 'MA', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read MA; title Granby Free Public Library.' },
+  'kennedylibrary.org':        { state: 'MA', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read MA; title Home   JFK Library.' },
+  'lagrangelibrary.org':       { state: 'IL', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read IL; title Home - La Grange Public Library.' },
+  'lakewoodlibrary.org':       { state: 'NY', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read NY; title Lakewood Memorial Library.' },
+  'lelandlibrary.org':         { state: 'MI', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read MI; title Home   Leland Library.' },
+  'longbeachlibrary.org':      { state: 'NY', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read NY; title Long Beach Public Library (New York)   Long Beach .' },
+  'lyonslibrary.org':          { state: 'IL', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read IL; title Lyons Public Library – Your Journey Begins Here.' },
+  'mercerlibrary.org':         { state: 'OH', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read OH; title Mercer County District Library   More Than Just Bo.' },
+  'meadvillelibrary.org':      { state: 'PA', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read PA; title MPL main   Meadville Public Library.' },
+  'millbrooklibrary.org':      { state: 'NY', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read NY; title Millbrook Library.' },
+  'morristownlibrary.org':     { state: 'NJ', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read NJ; title Home - Morristown & Morris Township Library.' },
+  'newburylibrary.org':        { state: 'MA', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read MA; title Newbury Town Library   0 Lunt St, Byfield, MA 0192.' },
+  'orangeburglibrary.org':     { state: 'NY', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read NY; title Home - Orangeburg Library.' },
+  'riverdalelibrary.org':      { state: 'NJ', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read NJ; title Riverdale Public Library in Morris County NJ - 973.' },
+  'quitmanlibrary.org':        { state: 'TX', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read TX; title Quitman Public Library — QUITMAN PUBLIC LIBRARY QU.' },
+  'stamfordlibrary.org':       { state: 'VT', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read VT; title Home   Stamford Library.' },
+  'sullivanil.us':             { state: 'IL', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read IL; title Welcome to Sullivan, IL.' },
+  'wakefieldlibrary.org':      { state: 'MA', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read MA; title Home - Lucius Beebe Memorial Library.' },
+  'walpolelibrary.org':        { state: 'MA', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read MA; title Welcome to Walpole Public Library   Located in Wal.' },
+  'waylandlibrary.org':        { state: 'MA', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read MA; title Wayland Free Public Library   Explore. Learn. Conn.' },
+  'westfieldlibrary.org':      { state: 'WI', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read WI; title Welcome   Ethel Everhard Memorial Library.' },
+  'westmorelandpubliclibrary.com': { state: 'TN', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read TN; title HOME   Westmoreland Public.' },
+  'westwoodlibrary.org':       { state: 'MA', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read MA; title Westwood Public Library.' },
 };
 
 function hostOf(u) {
@@ -150,7 +213,10 @@ function main() {
       // distinct marker rather than inventing a state, because "is DEAD, not NJ" would
       // read as a geographic claim and this is a liveness claim.
       const reason = truth.state === 'DEAD'
-        ? `${hostOf(url)} is dead or serves an unrelated site — no state's entry is correct`
+        // NO APOSTROPHES in this string. It is written into a single-quoted JS literal in
+        // the config files, and "no state's entry" broke four of them on 2026-08-22 —
+        // caught by the node -c pass, which is exactly why that pass is mandatory.
+        ? `${hostOf(url)} is dead or serves an unrelated site — no state entry is correct`
         : `${hostOf(url)} is ${truth.state}, not ${state}`;
       // Insert before the closing brace of the entry.
       return line.replace(/\}\s*,?\s*$/, m2 => `, urlCollision: '${reason}' ${m2}`);

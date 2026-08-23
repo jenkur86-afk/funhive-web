@@ -56,7 +56,7 @@ const LIBRARIES = [
   { name: 'Waverly Library', url: 'https://parkwoodlib.com/waverly-library/', eventsUrl: 'https://parkwoodlib.com/events', city: 'Waverly', state: 'WV', zipCode: '26184', county: 'Wood'},
   // URL corrected 2026-08-11 (was whitesvillelibrary.org): Branch of Boone-Madison Public Library; 38175 Coal River Road Whitesville WV 25209, phone 304-854-0196. Site confirmed by WV Library Commiss
   { name: 'Whitesville Public Library', url: 'https://www.bcplwv.org', eventsUrl: 'https://www.bcplwv.org', city: 'Whitesville', state: 'WV', zipCode: '25209', county: 'Boone'},
-  { name: 'Williamstown Library', url: 'https://www.williamstownlibrary.org', eventsUrl: 'https://www.williamstownlibrary.org/events', city: 'Williamstown', state: 'WV', zipCode: '26187', county: 'Wood'}
+  { name: 'Williamstown Library', url: 'https://www.williamstownlibrary.org', eventsUrl: 'https://www.williamstownlibrary.org/events', city: 'Williamstown', state: 'WV', zipCode: '26187', county: 'Wood', urlCollision: 'williamstownlibrary.org is NY, not WV' }
 
 ];
 
