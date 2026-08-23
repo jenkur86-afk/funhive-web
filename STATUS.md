@@ -7,18 +7,18 @@ the command is in each gate's detail line and the value is dated, never guessed.
 ---
 ## 2026-08-23
 
-<!-- STATUS-DATA {"date":"2026-08-23","countiesResolve":100,"urlCollisions":122,"confirmedBugs":532,"unknownSites":392,"specificAgeShare":33.1,"nameConformance":54.2,"sourceUrlCoverage":62,"countyCoverage":0} -->
+<!-- STATUS-DATA {"date":"2026-08-23","countiesResolve":100,"urlCollisions":122,"confirmedBugs":535,"unknownSites":392,"specificAgeShare":35.2,"nameConformance":60.8,"sourceUrlCoverage":62,"countyCoverage":0} -->
 
 ### Distance to 100%
 
 | Gate | Now | Δ | Target | Blocking |
 |---|---|---|---|---|
 | 1. Counties resolve | 100% | · | 100% | blocks nothing — mechanical once a city→county dataset is chosen |
-| 2. URLs unique per state | 122 | -20 ✅ | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
-| 3. Zero confirmed bugs | 532 | +14 ⚠️ | 0 | mostly blocked on gate 2 |
+| 2. URLs unique per state | 122 | · | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
+| 3. Zero confirmed bugs | 535 | · | 0 | mostly blocked on gate 2 |
 | 4. Zero unknown sites | 392 | · | 0 | independent — re-checking is its own pass |
-| 5. Age brackets resolved | 33.1% | · | max (best 40.6%) | no fixed target — maximise; ratchets vs best ever |
-| 6. Names join to registry | 54.2% ⚠stale | · | 100% | planned migration, not daily work |
+| 5. Age brackets resolved | 35.2% | · | max (best 40.6%) | no fixed target — maximise; ratchets vs best ever |
+| 6. Names join to registry | 60.8% ⚠stale | +6.6 ✅ | 100% | planned migration, not daily work |
 | 7. Provenance (source_url) | 62% ⚠stale | · | 90% | partly blocked on rotation |
 | 8. Coverage known per county | 0 | · | 1 | FINAL — blocked on all of the above |
 
@@ -27,10 +27,10 @@ the command is in each gate's detail line and the value is dated, never guessed.
 | | Broken | Scale | Why not fixed now |
 |---|---|---|---|
 | 🔴 | URL collisions — entries may point at another state's library | 122 entries on 39 hosts claimed by 2+ states; a further 311 disabled via urlCollision and excluded | per-file live verification; the main body of MASTER-PLAN Phase 2 |
-| 🟠 | Confirmed open bugs (MISMATCH verdicts) | 532 sites | most blocked on the URL work above |
+| 🟠 | Confirmed open bugs (MISMATCH verdicts) | 535 sites | most blocked on the URL work above |
 | 🟠 | Unknown sites (UNVERIFIABLE verdicts) | 392 sites | bot-blocks / JS-only calendars / TLS failures — never re-checked |
-| 🟠 | Age detection REGRESSED below best-ever specificity | 33.1% resolved (best ever 40.6% on 2026-08-10) | MASTER-PLAN Phase 5, not started |
-| 🟡 | scraper_name drift — rows cannot join back to the registry | 54.2% conform (as of 2026-08-21) | deliberate migration, explicitly not daily work |
+| 🟠 | Age detection REGRESSED below best-ever specificity | 35.2% resolved (best ever 40.6% on 2026-08-10) | MASTER-PLAN Phase 5, not started |
+| 🟡 | scraper_name drift — rows cannot join back to the registry | 60.8% conform (as of 2026-08-23) | deliberate migration, explicitly not daily work |
 | 🟡 | County-level coverage unknown | no libraries audited against what exists | MASTER-PLAN Phase 10 — correctly last |
 
 **Next action:** Defect A (URL collisions), worst-collision-state first — it gates the selector and age-detection work behind it.
