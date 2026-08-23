@@ -54,7 +54,7 @@ const LIBRARIES = [
   { name: 'Bridgeport - Lena Cagle Public Library', url: 'https://www.bridgeportlibrary.org/', eventsUrl: 'https://www.bridgeportlibrary.org/calendar', city: 'Bridgeport', state: 'AL', zipCode: '35740', county: 'Jackson', urlCollision: 'bridgeportlibrary.org is MI, not AL' },
   { name: 'Choctaw County Public Library', url: 'https://www.butlerlibrary.org', eventsUrl: 'https://www.butlerlibrary.org/events', city: 'Butler', state: 'AL', zipCode: '36904', county: 'Butler County', urlCollision: 'butlerlibrary.org is NJ, not AL' },
   { name: 'Wilcox County Library', url: 'https://www.camdenlibrary.org/', eventsUrl: 'https://www.camdenlibrary.org/', city: 'Camden', state: 'AL', zipCode: '36726', county: 'Wilcox', urlCollision: 'camdenlibrary.org is MI, not AL' },
-  { name: 'Chelsea Public Library', url: 'https://www.chelsealibrary.org', eventsUrl: 'https://www.chelsealibrary.org/events', city: 'Chelsea', state: 'AL', zipCode: '35043', county: 'Shelby'},
+  { name: 'Chelsea Public Library', url: 'https://www.chelsealibrary.org', eventsUrl: 'https://www.chelsealibrary.org/events', city: 'Chelsea', state: 'AL', zipCode: '35043', county: 'Shelby', urlCollision: 'chelsealibrary.org is dead or serves an unrelated site — no state entry is correct' },
   // REMOVED 2026-08-11 (Defect A): no verifiable official site. Real name Town and County Library, 45 N Midway St Clayton AL 36016, 334-775-3506, Barbour County - only a Facebook page exists, no official website
   // RECORDED COVERAGE GAP - restore if a real URL is found.
   // { name: 'Clayton Town And County Public Library', url: 'https://www.claytonlibrary.org', eventsUrl: 'https://www.claytonlibrary.org/events', city: 'Clayton', state: 'AL', zipCode: '36016', county: 'Barbour'},

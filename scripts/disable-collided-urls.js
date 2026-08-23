@@ -143,6 +143,18 @@ const GROUND_TRUTH = {
   'martinsburglibrary.org':    { state: 'NY', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://martinsburglibrary.org; zip={"NY":1} area={"NY":1} name={}' },
   'piersonlibrary.org':        { state: 'VT', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://piersonlibrary.org; zip={} area={"VT":3} name={"VT":1}' },
   'westhartfordlibrary.org':   { state: 'CT', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://westhartfordlibrary.org; zip={} area={"CT":4} name={}' },
+  // --- sixth pass, 2026-08-23: expired domains resold to unrelated sites ----------
+  // These five never resolved to a library because they are no longer libraries. Each
+  // redirects off-site to something with no connection to the institution, which is the
+  // "dead/hijacked domain" bucket in SCRAPER-DIAGNOSIS-PROMPT.md — a seed-data problem,
+  // NOT an extraction bug, so no amount of selector work would ever have fixed them.
+  // The redirect TARGET is the evidence; the targets themselves were deliberately not
+  // fetched, since they are untrusted third-party content and add nothing.
+  'franklinlibrary.org':     { state: 'DEAD', evidence: 'HTTP 301 to running-care.com, a French running-injury blog. Claimed by NY/GA/NC/MA/CT/KY/WV/VT/NH — nine states pointing at an expired domain that was resold.' },
+  'chelsealibrary.org':      { state: 'DEAD', evidence: 'HTTP 302 to ww547.chelsealibrary.org/?tkn=... — the wildcard-subdomain-plus-token shape of a parked/ad-monetised domain, not a library.' },
+  'brentwoodlibrary.org':    { state: 'DEAD', evidence: 'redirects to the bare IP 165.22.62.213 and then 403s even under the stealth browser. No library content reachable.' },
+  'huntingtonlibrary.org':   { state: 'DEAD', evidence: 'redirects off-site to spool.swatcha.net, unrelated to any library.' },
+  'harmonylibrary.org':      { state: 'DEAD', evidence: 'redirects off-site to fresupdate.com, unrelated to any library.' },
   // --- fourth pass, 2026-08-22: bulk resolve of all remaining colliding hosts ----
   // Method: verify-sites-puppeteer.js was run once per HOST with the sentinel expected
   // state ZZ. Because its identity check reports every address-shaped state mention that

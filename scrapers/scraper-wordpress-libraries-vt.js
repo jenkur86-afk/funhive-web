@@ -44,7 +44,7 @@ const LIBRARIES = [
   { name: 'Brandon Free Public', url: 'https://www.brandonlibrary.org/', eventsUrl: 'https://www.brandonlibrary.org/events-calendar', city: 'Brandon', state: 'VT', zipCode: '05733', county: 'Rutland', urlCollision: 'brandonlibrary.org is MI, not VT' },
   { name: 'Cabot Public', url: 'https://www.cabotlibrary.org', eventsUrl: 'https://www.cabotlibrary.org/events', city: 'Cabot', state: 'VT', zipCode: '05647', county: 'Washington'},
   { name: 'Charlotte', url: 'https://charlottelibrary.org/', eventsUrl: 'https://charlottelibrary.org/calendar/', city: 'Charlotte', state: 'VT', zipCode: '05445', county: 'Chittenden'},
-  { name: 'Chelsea Public', url: 'https://www.chelsealibrary.org', eventsUrl: 'https://www.chelsealibrary.org/events', city: 'Chelsea', state: 'VT', zipCode: '05038', county: 'Orange'},
+  { name: 'Chelsea Public', url: 'https://www.chelsealibrary.org', eventsUrl: 'https://www.chelsealibrary.org/events', city: 'Chelsea', state: 'VT', zipCode: '05038', county: 'Orange', urlCollision: 'chelsealibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'Whiting', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'VT', zipCode: '05143', county: 'Windsor', urlCollision: 'chesterlibrary.org is NY, not VT' },
   { name: 'Cornwall Free Public', url: 'https://www.cornwalllibrary.org', eventsUrl: 'https://www.cornwalllibrary.org/events', city: 'Cornwall', state: 'VT', zipCode: '05753', county: 'Addison', urlCollision: 'cornwalllibrary.org is CT, not VT' },
   { name: 'Pope Memorial', url: 'https://www.danvillelibrary.org', eventsUrl: 'https://www.danvillelibrary.org/events', city: 'Danville', state: 'VT', zipCode: '05828', county: 'Caledonia'},
@@ -54,14 +54,14 @@ const LIBRARIES = [
   { name: 'Fairfax Community', url: 'https://www.fairfaxlibrary.org', eventsUrl: 'https://www.fairfaxlibrary.org/events', city: 'Fairfax', state: 'VT', zipCode: '05454', county: 'Franklin'},
   // URL corrected 2026-08-11 (was fairfieldlibrary.org): Correct spelling is Bent Northrop; 164 Park Street Fairfield VT 05455, phone 802-827-3945
   { name: 'Bent Northrup Memorial', url: 'https://www.bentnorthrop.org', eventsUrl: 'https://www.bentnorthrop.org/events.html', city: 'Fairfield', state: 'VT', zipCode: '05455', county: 'Franklin'},
-  { name: 'Haston', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'VT', zipCode: '05457', county: 'Franklin County'},
+  { name: 'Haston', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'VT', zipCode: '05457', county: 'Franklin County', urlCollision: 'franklinlibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'Gilman Public Library', url: 'https://gilmanlibrary.org/', eventsUrl: 'https://gilmanlibrary.org/calendar', city: 'Gilman', state: 'VT', zipCode: '05904', county: 'Essex'},
   { name: 'Glover Public', url: 'https://gloverlibrary.org/', eventsUrl: 'https://gloverlibrary.org/', city: 'Glover', state: 'VT', zipCode: '05839', county: 'Orleans'},
   { name: 'Greensboro Free', url: 'https://www.greensborolibrary.org', eventsUrl: 'https://www.greensborolibrary.org/events', city: 'Greensboro', state: 'VT', zipCode: '05841', county: 'Orleans'},
   // URL corrected 2026-08-11 (was hancocklibrary.org): No standalone site; page on Town of Hancock Vermont 05748 official site, library on Route 100, town clerk 802-767-3660
   { name: 'Hancock Free Public', url: 'https://www.hancockvt.org/hancock-free-public-library/', eventsUrl: 'https://www.hancockvt.org/hancock-free-public-library/', city: 'Hancock', state: 'VT', zipCode: '05748', county: 'Addison'},
   { name: 'Hartford', url: 'https://www.hartfordlibrary.org', eventsUrl: 'https://www.hartfordlibrary.org/events', city: 'Hartford', state: 'VT', zipCode: '05047', county: 'Windsor', urlCollision: 'hartfordlibrary.org is WI, not VT' },
-  { name: 'Huntington Public', url: 'https://www.huntingtonlibrary.org/', eventsUrl: 'https://www.huntingtonlibrary.org/', city: 'Huntington', state: 'VT', zipCode: '05462', county: 'Chittenden'},
+  { name: 'Huntington Public', url: 'https://www.huntingtonlibrary.org/', eventsUrl: 'https://www.huntingtonlibrary.org/', city: 'Huntington', state: 'VT', zipCode: '05462', county: 'Chittenden', urlCollision: 'huntingtonlibrary.org is dead or serves an unrelated site — no state entry is correct' },
   // URL corrected 2026-08-11 (was hydeparklibrary.org): Lanpher Memorial Library, 141 Main St Hyde Park VT, ph 802-888-4628, Lamoille County
   { name: 'Lanpher Memorial', url: 'https://www.lanpherlibrary.org/', eventsUrl: 'https://www.lanpherlibrary.org/calendar-of-events.html', city: 'Hyde Park', state: 'VT', zipCode: '05655', county: 'Lamoille'},
   { name: 'Jaquith Public', url: 'https://marshfieldlibrary.org/', eventsUrl: 'https://marshfieldlibrary.org/', city: 'Marshfield', state: 'VT', zipCode: '05658', county: 'Washington'},

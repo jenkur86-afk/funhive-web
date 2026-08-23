@@ -142,7 +142,7 @@ const LIBRARIES = [
   // seed-data collision. Removed rather than repointed: OPEN COVERAGE GAP for
   // Fayette County Public Library GA — do not re-add a guessed domain.
   { name: 'Monroe County Library', url: 'https://www.forsythlibrary.org', eventsUrl: 'https://www.forsythlibrary.org/events', city: 'Forsyth', state: 'GA', zipCode: '00000', county: 'Forsyth County'},
-  { name: 'Heard County Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'GA', zipCode: '00000', county: 'Franklin County'},
+  { name: 'Heard County Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'GA', zipCode: '00000', county: 'Franklin County', urlCollision: 'franklinlibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'Gordon Public Library', url: 'https://gordonlibrary.org/', eventsUrl: 'https://gordonlibrary.org/', city: 'Gordon', state: 'GA', zipCode: '00000', county: 'Gordon County'},
   { name: 'Grantville Public Library', url: 'https://cowt.ent.sirsi.net/', eventsUrl: 'https://cowt.ent.sirsi.net/client/en_US/default/', city: 'Grantville', state: 'GA', zipCode: '00000', county: 'Coweta'},
   { name: 'Greene County Library', url: 'https://www.greensborolibrary.org', eventsUrl: 'https://www.greensborolibrary.org/events', city: 'Greensboro', state: 'GA', zipCode: '00000', county: 'Greene'},

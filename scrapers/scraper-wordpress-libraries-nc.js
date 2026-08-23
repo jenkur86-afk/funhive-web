@@ -52,7 +52,7 @@ const LIBRARIES = [
   // GA, NC and NY simultaneously. Bordeaux Branch is real: it belongs to Cumberland
   // County Public Library (cumberlandcountync.gov/library), which is NOT WordPress —
   // so this is a relocation job, not a URL swap. OPEN COVERAGE GAP until then.
-  { name: 'Macon County Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'NC', zipCode: '00000', county: 'Franklin County'},
+  { name: 'Macon County Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'NC', zipCode: '00000', county: 'Franklin County', urlCollision: 'franklinlibrary.org is dead or serves an unrelated site — no state entry is correct' },
   // URL corrected 2026-08-11 (was franklinvillelibrary.org): Randolph County Public Library branch page: 111 Sumner Place, Franklinville NC 27248, phone 336-685-3100; also called Franklinville Public L
   { name: 'John W. Clark Public Library', url: 'https://randolphlibrary.libguides.com/c.php?g=247617', eventsUrl: 'https://randolphlibrary.libguides.com/c.php?g=1204272&p=8808824', city: 'Franklinville', state: 'NC', zipCode: '00000', county: 'Randolph'},
   // URL corrected 2026-08-11 (was fremontlibrary.org): Wayne County NC system; Fremont branch now the Northern Wayne Library, 609 S Wilson St Fremont NC 27830, ph 919-705-1892; wcpl.org linked fr
@@ -62,7 +62,7 @@ const LIBRARIES = [
   { name: 'Carver Branch Library', url: 'https://www.sheppardlibrary.org/', eventsUrl: 'https://www.sheppardlibrary.org/calendar.aspx', city: 'Greenville', state: 'NC', zipCode: '00000', county: 'Pitt County'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in NH, not NC. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Hampstead Branch Library', url: 'https://www.hampsteadlibrary.org/', eventsUrl: 'https://www.hampsteadlibrary.org/', city: 'Hampstead', state: 'NC', zipCode: '00000', county: 'Pender'},
-  { name: 'Harmony Branch Library', url: 'https://www.harmonylibrary.org', eventsUrl: 'https://www.harmonylibrary.org/events', city: 'Harmony', state: 'NC', zipCode: '00000', county: 'Iredell'},
+  { name: 'Harmony Branch Library', url: 'https://www.harmonylibrary.org', eventsUrl: 'https://www.harmonylibrary.org/events', city: 'Harmony', state: 'NC', zipCode: '00000', county: 'Iredell', urlCollision: 'harmonylibrary.org is dead or serves an unrelated site — no state entry is correct' },
   // REMOVED 2026-08-11 — seed-data URL collision (MASTER-PLAN Defect A).
   // harrisburglibrary.org is Harrisburg DISTRICT Library, 2 W Walnut Street,
   // Harrisburg, ILLINOIS 62946 (area code 618) — verified live. Not Harrisburg

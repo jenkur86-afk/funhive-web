@@ -57,7 +57,7 @@ const LIBRARIES = [
   // URL corrected 2026-08-11 (was chathamlibrary.librarycalendar.com): Site lists 564 Main Street, Chatham MA 02633, phone 508-945-5170
   { name: 'Eldredge Public Library', url: 'https://eldredgelibrary.org', eventsUrl: 'https://eldredgelibrary.libcal.com/calendar?cid=21029', city: 'Chatham', state: 'MA', zipCode: '02633', county: 'Barnstable'},
   { name: 'Chelmsford Public Library', url: 'https://www.chelmsfordlibrary.org/', eventsUrl: 'https://www.chelmsfordlibrary.org/', city: 'Chelmsford', state: 'MA', zipCode: '01824', county: 'Middlesex'},
-  { name: 'Chelsea Public Library', url: 'https://www.chelsealibrary.org', eventsUrl: 'https://www.chelsealibrary.org/events', city: 'Chelsea', state: 'MA', zipCode: '02150', county: 'Suffolk'},
+  { name: 'Chelsea Public Library', url: 'https://www.chelsealibrary.org', eventsUrl: 'https://www.chelsealibrary.org/events', city: 'Chelsea', state: 'MA', zipCode: '02150', county: 'Suffolk', urlCollision: 'chelsealibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'Hamilton Memorial Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'MA', zipCode: '01011', county: 'Hampden', urlCollision: 'chesterlibrary.org is NY, not MA' },
   // URL corrected 2026-08-11 (was chesterfieldlibrary.org): Site 403s to fetch; MA Board of Library Commissioners directory lists 408 Main Road Chesterfield MA 01012, phone 413-296-4735, this URL
   { name: 'Chesterfield Public Library', url: 'https://www.townofchesterfieldma.com/library', eventsUrl: 'https://www.townofchesterfieldma.com/library', city: 'Chesterfield', state: 'MA', zipCode: '01012', county: 'Hampshire'},
@@ -88,7 +88,7 @@ const LIBRARIES = [
   { name: 'Fitchburg Public Library', url: 'http://fitchburgwi.gov/', eventsUrl: 'http://fitchburgwi.gov/2775/Library', city: 'Fitchburg', state: 'MA', zipCode: '01420', county: 'Worcester'},
   { name: 'Lilly Library', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'MA', zipCode: '01062', county: 'Hampshire', urlCollision: 'florencelibrary.org is SC, not MA' },
   { name: 'Framingham Public Library', url: 'https://framinghamlibrary.org/', eventsUrl: 'https://framinghamlibrary.org/calendar', city: 'Framingham', state: 'MA', zipCode: '01702', county: 'Middlesex'},
-  { name: 'Franklin Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'MA', zipCode: '02038', county: 'Franklin County'},
+  { name: 'Franklin Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'MA', zipCode: '02038', county: 'Franklin County', urlCollision: 'franklinlibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'Levi Heywood Memorial Library', url: 'https://www.gardnerlibrary.org/', eventsUrl: 'https://www.gardnerlibrary.org/', city: 'Gardner', state: 'MA', zipCode: '01440', county: 'Worcester'},
   { name: 'Gloucester Lyceum Sawyer Free Lib', url: 'https://www.gloucesterlibrary.org', eventsUrl: 'https://www.gloucesterlibrary.org/events', city: 'Gloucester', state: 'MA', zipCode: '01930', county: 'Essex'},
   { name: 'Goshen Free Public Library', url: 'https://www.goshenlibrary.org/', eventsUrl: 'https://www.goshenlibrary.org/', city: 'Goshen', state: 'MA', zipCode: '01032', county: 'Hampshire'},
@@ -110,7 +110,7 @@ const LIBRARIES = [
   { name: 'Hopkinton Public Library', url: 'https://hopkintonlibrary.org/', eventsUrl: 'https://hopkintonlibrary.org/calendar/', city: 'Hopkinton', state: 'MA', zipCode: '01748', county: 'Middlesex'},
   { name: 'Hubbardston Public Library', url: 'http://hubbardston.blogspot.com/', eventsUrl: 'http://hubbardston.blogspot.com/', city: 'Hubbardston', state: 'MA', zipCode: '01452', county: 'Worcester'},
   { name: 'Hudson Public Library', url: 'https://www.hudsonlibrary.org', eventsUrl: 'https://www.hudsonlibrary.org/events', city: 'Hudson', state: 'MA', zipCode: '01749', county: 'Middlesex', urlCollision: 'hudsonlibrary.org is OH, not MA' },
-  { name: 'Huntington Public Library', url: 'https://www.huntingtonlibrary.org', eventsUrl: 'https://www.huntingtonlibrary.org/events', city: 'Huntington', state: 'MA', zipCode: '01050', county: 'Hampshire'},
+  { name: 'Huntington Public Library', url: 'https://www.huntingtonlibrary.org', eventsUrl: 'https://www.huntingtonlibrary.org/events', city: 'Huntington', state: 'MA', zipCode: '01050', county: 'Hampshire', urlCollision: 'huntingtonlibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'Hyannis Public Library Assoc.', url: 'https://www.hyannislibrary.org', eventsUrl: 'https://www.hyannislibrary.org/events', city: 'Hyannis', state: 'MA', zipCode: '02601', county: 'Barnstable'},
   // URL corrected 2026-08-11 (was hydeparklibrary.org): Boston Public Library Hyde Park branch, 35 Harvard Ave Hyde Park MA 02136, ph 617-361-2524
   { name: 'Hyde Park Branch Library', url: 'https://www.bpl.org/locations/hyde-park/', eventsUrl: 'https://bpl.bibliocommons.com/events/', city: 'Hyde Park', state: 'MA', zipCode: '00000', county: 'Suffolk'},

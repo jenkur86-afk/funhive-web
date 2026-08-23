@@ -72,6 +72,14 @@ function hostOf(u) {
 
 async function main() {
   const GT = loadGroundTruth();
+  // DEAD hosts are EXCLUDED on purpose, and this is not an oversight. A dead host has no
+  // true state, so "wrong state" is undefined for it and there is nothing to compare
+  // against. More importantly the rows it left behind are ambiguous rather than wrong:
+  // franklinlibrary.org now 301s to a French running blog, but its 10 remaining rows are
+  // tagged VT and Franklin VT is a real library, so they are most likely genuine events
+  // scraped before the domain expired. Deleting them would destroy possibly-real data to
+  // tidy up a host that already stopped being scraped. They age out via the normal
+  // past-event cleanup instead.
   const hosts = Object.keys(GT).filter(h => GT[h] !== 'DEAD');
   console.log(`ground-truth hosts with a real state: ${hosts.length}`);
   if (!hosts.length) { console.log('nothing to do'); return; }
