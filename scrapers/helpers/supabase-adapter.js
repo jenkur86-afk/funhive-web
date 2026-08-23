@@ -304,11 +304,51 @@ function cleanVenueName(venue) {
 // from source markup, e.g. "Toddler Time (TICKET LINK)", "Fall Fest [SOLD OUT]".
 // Also collapses leftover double-spaces (from HTML whitespace or the strip
 // above) — harmless and desirable regardless of whether a bracket matched.
-const PROMO_BRACKET_RE = /\s*[([]\s*(tickets?|ticket\s*link|buy\s*tickets?|sold\s*out|register(?:\s*(now|here))?|rsvp|click\s*here|more\s*info|link\s*in\s*bio)\s*[)\]]\s*/gi;
+//
+// The second group is SCREEN-READER CHROME, not promo text: markup like
+// `<a>Baby Storytime<span class="sr-only">(Opens in a new tab)</span></a>` puts
+// the hint inside the link, so a textContent read appends it to the title.
+// Found 2026-08-23 on four MacaroniKid sites — 61 rows including "Toddler
+// Storytime(Opens in a new tab)" and "Baby Storytime(Opens in a new tab)".
+// Note there is often no space before the bracket, which the leading \s* allows.
+const PROMO_BRACKET_RE = /\s*[([]\s*(tickets?|ticket\s*link|buy\s*tickets?|sold\s*out|register(?:\s*(now|here))?|rsvp|click\s*here|more\s*info|link\s*in\s*bio|opens?\s*in\s*(?:a\s*)?new\s*(?:tab|window)|external\s*link|link\s*is\s*external)\s*[)\]]\s*/gi;
 
 function stripPromoBracketCruft(title) {
   if (!title || typeof title !== 'string') return title;
   return title.replace(PROMO_BRACKET_RE, ' ').replace(/\s{2,}/g, ' ').trim();
+}
+
+/**
+ * Collapse a title that is the same phrase written twice with no separator:
+ * "Family FestFamily Fest" -> "Family Fest".
+ *
+ * Some sites put the event name in two nested elements (a visible heading and a
+ * screen-reader or tooltip copy) and a container-level textContent read
+ * concatenates both. Found 2026-08-23 on the Pittsburgh Cultural Trust listings
+ * reaching MacaroniKid-PA-southhills and -cityofpittsburgh: 33 rows in one
+ * window, every title doubled — "Disney's The Lion KingDisney's The Lion King",
+ * "Ninja KidzNinja Kidz". Besides being unreadable, the seam destroys word
+ * boundaries, so "Ninja KidzNinja Kidz" is not a \bkids?\b match and the row
+ * cannot be age-detected either.
+ *
+ * TWO GUARDS, both load-bearing, because English has real doubled words:
+ *   1. Each half must contain whitespace, i.e. be multi-word. Without this,
+ *      "couscous" -> "cous", "bonbon" -> "bon", "cancan" -> "can".
+ *   2. Each half must be at least 8 characters.
+ * A genuine title whose two halves are identical multi-word phrases run
+ * together with no space, comma or dash between them does not occur — the
+ * natural forms all keep a separator ("New York, New York", "Duran Duran"),
+ * which makes the halves unequal and leaves them untouched.
+ */
+function collapseDoubledTitle(title) {
+  if (!title || typeof title !== 'string') return title;
+  const t = title.trim();
+  if (t.length < 16 || t.length % 2 !== 0) return title;
+  const half = t.length / 2;
+  const a = t.slice(0, half);
+  if (a !== t.slice(half)) return title;
+  if (a.length < 8 || !/\s/.test(a.trim())) return title;
+  return a.trim();
 }
 
 // Small words kept lowercase in title-case output (except when first word).
@@ -503,6 +543,35 @@ function _isTimeOnlyDateString(s) {
 
 function detectAgeRange(name, description) {
   const text = `${name || ''} ${description || ''}`.toLowerCase();
+  const titleText = `${name || ''}`.toLowerCase();
+
+  // FIELD-SCOPED GUARDS. Four of the keyword rules below carry a negative guard
+  // — "…and not family", "…and not adults" — whose documented purpose is to keep
+  // "Family Storytime" out of Preschool and "Adult Book Club" out of a children's
+  // bracket. Both are statements about the EVENT'S OWN TITLE, but every guard was
+  // being evaluated over name + description combined, so one incidental word
+  // anywhere in the blurb cancelled an unambiguous audience keyword in the title.
+  //
+  // Found 2026-08-23 in the Step 3c all-ages audit. Wilmington Memorial Library
+  // (MacaroniKid-MA-burlingtonma) sat at 75% All Ages, and its "Bilingual Story
+  // Hour" resolved to All Ages purely because the blurb names the "Community
+  // Teamwork FAMILY Resource Network" — an organisation, not an audience. The
+  // same shape is far worse elsewhere: "Teen Book Club" + "Bring the family!"
+  // also resolved to All Ages, discarding an explicit teen label in the title.
+  //
+  // Rule: when the audience keyword is in the TITLE, only the TITLE can veto it.
+  // When the keyword appears only in the description, the guard still reads the
+  // whole text, which preserves the original behaviour for that case — a blurb
+  // reading "a family storytime for all ages" under a generic title is still
+  // All Ages. This never makes a guard fire where it did not fire before; it only
+  // stops a description-only mention from overriding the title.
+  const guarded = (keywordRe, guardRe) => {
+    if (!keywordRe.test(text)) return false;
+    return keywordRe.test(titleText) ? !guardRe.test(titleText) : !guardRe.test(text);
+  };
+  const FAMILY_RE = /\bfamil(y|ies)\b/;
+  const ADULTS_RE = /\badults?\b/;
+
 
   // Explicit age ranges: "ages 3-5", "age 6 to 12", "ages 0-18"
   // Check for "months" or "mo" after the range to preserve month-based ages
@@ -536,6 +605,25 @@ function detectAgeRange(name, description) {
   const yrRange = text.match(/\b(\d{1,2})\s*[-–]\s*(\d{1,2})\s*(?:yr?s?\b|years?\s*olds?\b)/);
   if (yrRange) return `${yrRange[1]}-${yrRange[2]}`;
 
+  // An explicit all-ages LABEL in the title beats every keyword rule below.
+  // The keyword rules run before the generic "all ages" rule at the bottom of
+  // this function, so a title that states its bracket outright was still being
+  // overridden by a co-occurring keyword: "Musical Storytime (All Ages)"
+  // resolved to Preschool on the storytime rule, discarding the one part of the
+  // title that is unambiguous. Surfaced 2026-08-23 while measuring the guard fix
+  // above, which is what made these rows reachable.
+  //
+  // Deliberately restricted to a BRACKETED label — "(all ages)", "[all ages]".
+  // Running prose is excluded on purpose: "Hunt & Riddle - For kids of all ages"
+  // and "Storytime for children of all ages" use the phrase as a modifier of a
+  // specific audience word, and there the keyword is the better signal. A
+  // bracketed label has no such second reading.
+  //
+  // Placed AFTER the three numeric-range rules above, so a title carrying real
+  // numbers as well as the label — "Storytime (Ages 3-5) (All Ages)" — still
+  // resolves on the numbers. The label only outranks the keyword rules below it.
+  if (/[(\[]\s*all\s*ages\s*[)\]]/.test(titleText)) return 'All Ages';
+
   // Specific group keywords (order matters — check specific before general)
   // Plurals matter: these were written with trailing \b anchors that silently
   // missed the most common real-world phrasings — "Preschoolers", "Infants",
@@ -559,7 +647,7 @@ function detectAgeRange(name, description) {
   // as a tween event. 13-18 is also what the platform's own Teens bracket means.
   // (Explicit "ages 11-18" text is still honored by the age-range check above —
   // this only governs the bare keyword.) Verified 2026-08-04.
-  if (/\b(teens?|teenagers?)\b/.test(text) && !/\bfamil(y|ies)\b/.test(text)) return '13-18';
+  if (guarded(/\b(teens?|teenagers?)\b/, FAMILY_RE)) return '13-18';
   // Grade-level phrasing is checked BEFORE the generic "kids"/"children" and
   // "elementary" keywords below, because it is strictly more specific. Until
   // 2026-08-04 it ran last, so a description like "for kids from 3rd grade to
@@ -660,13 +748,13 @@ function detectAgeRange(name, description) {
   // events. The colloquial "kids" reads as school-age, which is Kids (6-8).
   // Anything genuinely preschool-aged is caught by the earlier, more specific
   // preschool/toddler/baby keywords before reaching here. Verified 2026-08-04.
-  if (/\b(kids?|children)\b/.test(text) && !/\bfamil(y|ies)\b/.test(text)) return '6-12';
+  if (guarded(/\b(kids?|children)\b/, FAMILY_RE)) return '6-12';
 
   // "Tots" and "tykes" are unambiguous young-child words that the baby/toddler
   // keywords above miss entirely ("Tot Time", "Tiny Tots Storytime", "Wild
   // Tykes"). Checked before the storytime rule below so "Tiny Tots Storytime"
   // resolves on the more specific signal rather than the generic one.
-  if (/\b(tots?|tykes?)\b/.test(text) && !/\bfamil(y|ies)\b/.test(text)) return '1-3';
+  if (guarded(/\b(tots?|tykes?)\b/, FAMILY_RE)) return '1-3';
 
   // Storytime is the most common name for a children's program at both libraries
   // and bookstores, and carried no age signal at all until 2026-08-05 — a bare
@@ -692,10 +780,21 @@ function detectAgeRange(name, description) {
   // adult-audience storytime must not become a children's event; and "...in the
   // Storytime Room" is a venue mention rather than an audience — the same
   // venue-name false positive that "elementary" hit on 2026-08-03.
-  const isStorytime = /\b(story\s*times?|story\s*hours?)\b/.test(text);
+  //
+  // The FAMILY guard is field-scoped through guarded() — see the note at the top
+  // of this function. "Bilingual Story Hour" whose blurb happens to name a
+  // "Family Resource Network" is still a preschool storytime.
+  //
+  // The ADULTS guard deliberately stays whole-text and is NOT field-scoped. The
+  // two guards are not symmetric in what they cost when wrong: filing a family
+  // event as preschool loses a filter, while filing an adults-only event as a
+  // children's event puts it in front of the wrong audience. So "Storytime" with
+  // a blurb reading "an adults-only storytime" still returns null, exactly as
+  // before. Checked as a negative control when this change was made.
+  const STORYTIME_RE = /\b(story\s*times?|story\s*hours?)\b/;
   const storytimeIsVenueMention = /\bstory\s*time\s+room\b/.test(text);
-  if (isStorytime && !storytimeIsVenueMention
-      && !/\bfamil(y|ies)\b/.test(text) && !/\badults?\b/.test(text)) return '3-5';
+  if (!storytimeIsVenueMention && !ADULTS_RE.test(text)
+      && guarded(STORYTIME_RE, FAMILY_RE)) return '3-5';
 
   // Family / all ages
   if (/\ball\s*ages\b/.test(text)) return 'All Ages';
@@ -1321,7 +1420,7 @@ async function saveEvent(id, data) {
 
   const row = {
     id,
-    name: truncate(normalizeShoutedTitle(stripPromoBracketCruft(data.name)), 300),
+    name: truncate(normalizeShoutedTitle(collapseDoubledTitle(stripPromoBracketCruft(data.name))), 300),
     event_date: truncate(evtDateStr, 100),
     date: data.date instanceof Date ? data.date.toISOString()
       : (typeof data.date?.toDate === 'function') ? data.date.toDate().toISOString()
@@ -2042,7 +2141,7 @@ function flattenEvent(data) {
   const trunc = (str, maxLen) => str && str.length > maxLen ? str.substring(0, maxLen) : str;
 
   const row = {};
-  row.name = trunc(normalizeShoutedTitle(stripPromoBracketCruft(data.name.trim())), 300);
+  row.name = trunc(normalizeShoutedTitle(collapseDoubledTitle(stripPromoBracketCruft(data.name.trim()))), 300);
   if (data.eventDate) row.event_date = trunc(data.eventDate, 100);
   if (data.date) {
     if (data.date instanceof Date) row.date = data.date.toISOString();
@@ -2303,6 +2402,7 @@ module.exports = {
   cleanVenueName,
   deriveVenueFallback,
   stripPromoBracketCruft,
+  collapseDoubledTitle,
   normalizeShoutedTitle,
   isJunkTitle,
   detectAgeRange,

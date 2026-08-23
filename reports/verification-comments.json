@@ -4250,7 +4250,7 @@
  },
  "MacaroniKid-MA-burlingtonma|||Wilmington Memorial Library": {
   "verdict": "MISMATCH",
-  "comment": "73 rows / 17 distinct split two ways, both wrong. Adult services are tagged All Ages (Connect with a Social Worker, Tech Help One-on-One, Friends of WML), while genuinely young-child programming that should have bracketed is also sitting in All Ages (Bilingual Story Hour, Wilmington Community Playgroup).",
+  "comment": "ROOT CAUSE FOUND AND FIXED 2026-08-23. 80 of 107 in All Ages. Bilingual Story Hour resolved to All Ages only because its blurb names the Community Teamwork Family Resource Network - the not-family guards on the teen/kids/tots/storytime rules in detectAgeRange() were evaluated over title plus description combined, so an organisation name in a description cancelled an explicit audience keyword in the title. Guard is now field-scoped. Re-measure after this site is next scraped.",
   "population": "allages"
  },
  "MacaroniKid-KY-louisvillesw|||Churchill Downs": {
@@ -6327,5 +6327,90 @@
   "verdict": "MISMATCH",
   "comment": "url-collision (DISABLED): franklinlibrary.org is dead or serves an unrelated site — no state entry is correct. The domain is expired or parked and no longer serves a library at all — a seed-data problem, not an extraction bug. Proven from the live page (address/ZIP/area code or the off-site redirect target), never name similarity. Guarded at run time — proven live on WordPress-DE, which logged the skip and still emitted Found 0 events so the library keeps its audit row. Wrong-state rows this entry had written were deleted (1,345 rows, 2026-08-23). The correct URL for this library is still UNKNOWN and it is now an explicit coverage gap.",
   "population": "zero"
+ },
+ "MacaroniKid-MA-salempeabody|||Peabody Recreation Parks and Forestry": {
+  "verdict": "MISMATCH",
+  "comment": "235 of 232-plus rows sit in All Ages while the titles name youth sports outright - Peabody Youth Football, Little League Baseball, Middle Essex Fall Practices and Games, PVMHS Freshman and JV Soccer Practices. detectAgeRange() has no rule for youth-sports level names (youth, little league, JV, freshman, PVMHS), so none of these bracket even after the 2026-08-23 family-guard fix. Real detection gap, still open.",
+  "population": "allages"
+ },
+ "MacaroniKid-MA-ssboston|||Duxbury Free Library": {
+  "verdict": "MISMATCH",
+  "comment": "44 of 62 in All Ages. Music and Movement is a canonical toddler/preschool library programme and Flourish Feeding Breastfeeding Support Group is unambiguously a babies audience, but neither carries a keyword detectAgeRange() knows. The rest (Crochet and Knit Club, Halloween Costume Swap, Pop Up Art School) are genuinely unlabelled. Detection gap, still open.",
+  "population": "allages"
+ },
+ "MacaroniKid-MA-bridgewater|||East Bridgewater Public Library": {
+  "verdict": "MATCHES",
+  "comment": "27 of 38 in All Ages, and the live titles justify it: Lego Kit Fridays, Monthly Scavenger Hunt, Halloween Costume Exchange and Friends of the Library book sale carry no age signal, and Diaper Drive is a donation collection rather than a programme. Only Messy Thursdays and Homeschool Draw and Discover are arguably age-targeted, which is under the flag threshold on its own.",
+  "population": "allages"
+ },
+ "MacaroniKid-PA-southyork|||York County Libraries - Paul Smith Library of Southern York County": {
+  "verdict": "MATCHES",
+  "comment": "23 of 24 in All Ages across just four distinct programmes - American Mah Jongg, Crochet Meetup, Chess Club, Bookmark Club. All four are genuinely open-audience library clubs with no stated bracket. Correct as All Ages.",
+  "population": "allages"
+ },
+ "MacaroniKid-PA-kennettsquare|||Longwood Gardens": {
+  "verdict": "MATCHES",
+  "comment": "122 of 126 in All Ages. Titles are fountain performances, Festival of Fountains, Open Air Theatre shows, garden talks and a fireworks raindate - a public garden's general programming, genuinely age-agnostic.",
+  "population": "allages"
+ },
+ "MacaroniKid-PA-harrisburg|||Dauphin County Parks and Recreation": {
+  "verdict": "MATCHES",
+  "comment": "37 of 47 in All Ages. Wellness walks, forest bathing, Master Gardener series, tree walks, fall wreath workshop, a coal-mining history bus trip - adult-leaning general parks programming with no children's bracket to assign.",
+  "population": "allages"
+ },
+ "MacaroniKid-PA-pittsburgheast|||Donora Roll'R'Way": {
+  "verdict": "MATCHES",
+  "comment": "45 of 45 in All Ages and the titles say so themselves - Family Glow Skate, Saturday Family Skate, Family Fun Day Skate, Family Skate Night, plus Home School Skate and $2 Skate Night. A public skating session genuinely has no target bracket.",
+  "population": "allages"
+ },
+ "MacaroniKid-PA-pittsburghnorth|||Allegheny RiverTrail Park": {
+  "verdict": "MATCHES",
+  "comment": "45 of 45 in All Ages. Food Truck Friday, a summer concert series, yoga flow, a pop-up coffee vendor and a venue-in-use wedding block. General park and event-space programming, not children's programming.",
+  "population": "allages"
+ },
+ "MacaroniKid-PA-york|||Flinchbaughâ€™s Orchard & Farm Market": {
+  "verdict": "MATCHES",
+  "comment": "45 of 45 in All Ages across five titles - Clydesdale Corn Maze, U-Pick Pumpkin Patch, Harvest Saturday, Clydesdale Horses at the Farm, U-Pick Flowers. Farm-visit programming, correctly unbracketed. SEPARATE BUG: this venue name is stored mojibaked as Flinchbaugh + a-hat-euro-tm + s, UTF-8 bytes decoded as Latin-1 somewhere in the MacaroniKid text path.",
+  "population": "allages"
+ },
+ "MacaroniKid-KY-centrallouisville|||Louisville Central": {
+  "verdict": "MATCHES",
+  "comment": "33 of 35 in All Ages - four farmers markets, a Louisville Bats minor-league game and a cycling BBQ. Genuinely open-audience city events.",
+  "population": "allages"
+ },
+ "MacaroniKid-NC-durham|||Sky Zone Trampoline Park Durham": {
+  "verdict": "MATCHES",
+  "comment": "17 of 24 in All Ages, and all 17 are one repeating title: Bounce with the Best: Family Fun Bundle. A family bundle is correctly All Ages.",
+  "population": "allages"
+ },
+ "MacaroniKid-PA-erie|||Macaroni KID Erie": {
+  "verdict": "MATCHES",
+  "comment": "21 of 23 in All Ages. Free community days, farmers markets, a Polish festival, Presque Isle pontoon tours, Bicentennial Tower free admission. Open community events with no bracket. Note the venue is the MacaroniKid publication itself rather than a real venue, which is a separate venue-attribution weakness, not an age bug.",
+  "population": "allages"
+ },
+ "MacaroniKid-PA-southhills|||Pittsburgh Cultural Trust": {
+  "verdict": "MISMATCH",
+  "comment": "23 of 23 in All Ages, but the evidence here is an extraction bug rather than an age one: every title is stored DOUBLED - Disney's The Lion KingDisney's The Lion King, Ninja KidzNinja Kidz, Family FestFamily Fest. The concatenation also defeats detection, since Ninja Kidz repeated is not a word-boundary match for kids. Fix the title extraction first; the bracket question cannot be judged until then.",
+  "population": "allages"
+ },
+ "MacaroniKid-MA-salempeabody|||The Good Witch of Salem": {
+  "verdict": "MATCHES",
+  "comment": "22 of 22 in All Ages across four titles - three monthly Potion of the Month entries and Summer Hat Decorating. Shop programming with no stated audience.",
+  "population": "allages"
+ },
+ "MacaroniKid-NC-hendersonville|||185 King Street": {
+  "verdict": "MATCHES",
+  "comment": "22 of 22 in All Ages and every title is a named music act or Trivia Night at a listening room. Correct as All Ages.",
+  "population": "allages"
+ },
+ "MacaroniKid-PA-southyork|||Northern Central Railway": {
+  "verdict": "MATCHES",
+  "comment": "21 of 21 in All Ages - Fall Foliage flyers behind Steam Engine No. 17, Pumpkin Patch Express, Bike Aboard, Bingo Express, Howard Tunnel Special. Heritage-railway excursions genuinely carry no bracket. Five of these will bracket after the 2026-08-23 detector fix on next scrape.",
+  "population": "allages"
+ },
+ "MacaroniKid-PA-carlisle|||State Parks - Kings Gap, Pine Grove Furnace, and Little Buffalo": {
+  "verdict": "MATCHES",
+  "comment": "19 of 20 in All Ages - furnace walking tour, trail bridges, fall mushrooms, mansion open house, kayak-thru-history. Interpretive state-park programming. Kings Gap Homeschool Day is the only age-adjacent title and one row does not move the flag.",
+  "population": "allages"
  }
 }

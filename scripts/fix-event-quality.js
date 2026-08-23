@@ -127,7 +127,18 @@ async function fetchAll(table, select, filters = {}) {
       await sleep(2000 * retries);
     }
 
-    if (error) { console.error(`  ❌ Query failed: ${error.message}`); break; }
+    // Throw rather than return a short read. Every caller reports its result as
+    // "Found N …", so a page that never arrived was being presented as an
+    // absence of work: on 2026-08-23 STEP 2b printed "Found 0 duplicate events
+    // to remove" immediately after two statement-timeout retries, which is
+    // indistinguishable from a genuinely clean table. main() exits non-zero on a
+    // throw, so the fix-all chain now reports the step as failed instead.
+    if (error) {
+      throw new Error(
+        `Could not read ${table} at offset ${from} after 3 attempts: ${error.message}. ` +
+        `Aborting rather than reporting an incomplete scan as clean.`
+      );
+    }
     all = all.concat(data);
     if (data.length < pageSize) break;
     from += pageSize;

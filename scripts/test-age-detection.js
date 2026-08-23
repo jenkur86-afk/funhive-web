@@ -102,6 +102,43 @@ const CASES = [
   ['Family Storytime', '', 'All Ages', 'family storytime must stay All Ages'],
   ['Storytime for Adults', '', 'All Ages', 'adult storytime must not become a kids event'],
   ['Book Club in the Storytime Room', '', 'All Ages', 'venue mention is not an audience'],
+
+  // --- FIELD-SCOPED FAMILY GUARD (2026-08-23) --------------------------------
+  // The "…and not family" guards on the teen / kids / tots / storytime rules
+  // were evaluated over title + description combined, so one incidental word in
+  // a blurb cancelled an explicit audience keyword in the title. Found on
+  // Wilmington Memorial Library (MacaroniKid-MA-burlingtonma), 75% All Ages,
+  // whose "Bilingual Story Hour" was All Ages only because its blurb names the
+  // "Community Teamwork Family Resource Network" — an organisation, not an
+  // audience. Both directions are covered; do not delete either half.
+  ['Bilingual Story Hour', '', 'Preschool (3-5)',
+    'family word in the DESCRIPTION must not cancel a storytime title',
+    'Practice a new language with the Community Teamwork Family Resource Network!'],
+  ['Teen Book Club', '', 'Teens (13-18)',
+    'family word in the DESCRIPTION must not cancel a teen title',
+    'Bring the family!'],
+  ['Kids Craft Slime', '', 'Kids (6-8)',
+    'family word in the DESCRIPTION must not cancel a kids title',
+    'A great family activity.'],
+  ['Tot Time', '', 'Babies & Toddlers (0-2)',
+    'family word in the DESCRIPTION must not cancel a tots title',
+    'A family favourite at our branch.'],
+  // …and the guard must still fire when the family word is in the TITLE.
+  ['Family Storytime', '', 'All Ages',
+    'family in the TITLE still vetoes the storytime rule', 'Join us on Saturday!'],
+  ['Family Movie Night for Kids', '', 'All Ages',
+    'family in the TITLE still vetoes the kids rule', ''],
+  // The ADULTS guard is deliberately NOT field-scoped — mislabelling an
+  // adults-only event as a children's event is the costlier direction.
+  ['Storytime', '', 'All Ages',
+    'adults-only in the DESCRIPTION still vetoes the storytime rule',
+    'An adults-only storytime with wine.'],
+  // An explicit bracketed all-ages LABEL outranks the keyword rules…
+  ['Musical Storytime (All Ages)', '', 'All Ages', 'bracketed all-ages label beats the storytime rule'],
+  ['Craft Club [All Ages]', '', 'All Ages', 'square-bracket form of the same label'],
+  // …but never the numeric rules, and never running prose.
+  ['Storytime (Ages 3-5) (All Ages)', '', 'Preschool (3-5)', 'real numbers still outrank the label'],
+  ['Hunt & Riddle - For kids of all ages', '', 'Kids (6-8)', 'prose "of all ages" is not a label'],
   ['Adventures in Acrylics 1:00 - 2:30p', 'All Ages', 'All Ages', 'time must not read as ages'],
   ['2608-2026 Swim Lessons Level 3', 'All Ages', 'All Ages', 'registration ID must not read as ages'],
   ['Route 66 Heritage Festival', '', 'All Ages', 'route number must not read as ages'],

@@ -43,15 +43,48 @@ const RECENT_THRESHOLD_ISO = RECENT_ONLY
 // HELPERS
 // ============================================================================
 
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+/**
+ * Paginated read. Retries a failed page, and THROWS if it still cannot read one.
+ *
+ * It used to `break` on the first error and return whatever it had accumulated,
+ * which on a page-1 failure is an empty array. Every caller treats an empty
+ * result as "nothing to fix", so a single statement timeout turned this whole
+ * script into a no-op that printed zeros for every step and then "✅ ALL DONE".
+ * That is precisely the failure the diagnosis task warns about — a broken run
+ * that looks identical to a healthy one.
+ *
+ * It happened for real on 2026-08-23: the first page timed out, the script
+ * reported "Total events: 0" over a 24h window that actually contained ~4,700
+ * newly-scraped MacaroniKid events, and reported success. The window was never
+ * cleaned and nothing anywhere recorded that it had been skipped.
+ *
+ * So: three attempts with linear backoff (the same shape fix-event-quality.js
+ * already uses), then throw. main() has a .catch that exits non-zero, so the
+ * fix-all chain now reports the step as failed — loudly and for the right
+ * reason — instead of silently doing nothing.
+ */
 async function fetchAll(table, select) {
   let all = [];
   let from = 0;
   while (true) {
-    let q = supabase.from(table).select(select);
-    if (RECENT_THRESHOLD_ISO) q = q.gte('created_at', RECENT_THRESHOLD_ISO);
-    // .order('id') required for stable pagination — see 2026-05-15 incident.
-    const { data, error } = await q.order('id', { ascending: true }).range(from, from + 999);
-    if (error) { console.error(`Error: ${error.message}`); break; }
+    let data, error;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      let q = supabase.from(table).select(select);
+      if (RECENT_THRESHOLD_ISO) q = q.gte('created_at', RECENT_THRESHOLD_ISO);
+      // .order('id') required for stable pagination — see 2026-05-15 incident.
+      ({ data, error } = await q.order('id', { ascending: true }).range(from, from + 999));
+      if (!error) break;
+      console.log(`  ⚠️ Retry ${attempt}/3 reading ${table} at offset ${from}: ${error.message}`);
+      await sleep(2000 * attempt);
+    }
+    if (error) {
+      throw new Error(
+        `Could not read ${table} at offset ${from} after 3 attempts: ${error.message}. ` +
+        `Aborting rather than reporting an incomplete scan as clean.`
+      );
+    }
     if (!data || data.length === 0) break;
     all = all.concat(data);
     if (data.length < 1000) break;

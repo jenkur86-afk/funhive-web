@@ -6970,3 +6970,9 @@ The other affected libraries cannot backfill from the existing `scraper-stdout.l
 | Windsor Public | VT | WordPress-VT | 0 |
 | Woodbury Community | VT | WordPress-VT | 1 |
 **Cycle-completion check: not complete.** Across the current cycle (`## 2026-08-16`, `## 2026-08-18`, `## 2026-08-19`, `## 2026-08-20`, `## 2026-08-21`, plus today) **96 of 100** active library-family scrapers have at least one row. The four without one — `GoogleCalendar-MA`, `GoogleCalendar-SC`, `SandhillRegional-NC`, `WordPressTec-Parks` — are **all Group 3**, which has not run in this cycle. This is a rotation gap, not a bug. No `Cycle complete` marker is added.
+
+**Cycle status — 2026-08-23 (no dated section: no library scraper ran).**
+
+**No new library-site rows.** The only scraper activity in this window (2026-08-22T18:00:57Z → 2026-08-23T11:17Z) was the MacaroniKid Group 1 tail, which contains no library-family scrapers. `build-library-site-audit.js` over that window returned 0 per-site rows, 0 scrapers with per-site output — a genuine absence of library scraping, not a parse failure.
+
+**The 2026-08-23 rotation did not run.** Day 23 maps to Group 2, but the 2026-08-22 run was still executing at 03:00 (it took 28.3 hours end to end, finishing 11:17Z), so the scheduler slot was already occupied. **Group 2 therefore has no data in the current cycle**, and this cycle cannot complete until a Group 2 run happens. The newest dated section remains `## 2026-08-22`; no rows were added or changed today.
