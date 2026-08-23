@@ -266,12 +266,20 @@ $expected = @{ LogonType = 'S4U'; StopIfGoingOnBatteries = $false; DisallowStart
 # cosmetic. A limit shorter than the job's real runtime is exactly what silently
 # broke the fix-all chain between 2026-08-12 and 2026-08-22: Task Scheduler
 # terminated the batch mid-run every night, the detached node child survived to
-# finish the scrape, and nothing anywhere reported an error. These are ISO 8601
-# durations as Task Scheduler stores them.
+# finish the scrape, and nothing anywhere reported an error.
+#
+# Compare as TimeSpans, NEVER as strings. Task Scheduler NORMALISES the ISO 8601
+# duration it stores, rolling any whole days out of the hours component: ask for
+# 36 hours and it reads back "P1DT12H", not "PT36H". The first version of this
+# check compared strings and failed the whole script on 2026-08-22 against a
+# task that was in fact registered exactly as intended - a false alarm, and the
+# precise inverse of the silent-wrong-state bug this block exists to catch.
+# Limits under 24h (PT1H, PT4H) round-trip unchanged, which is why only the
+# 36-hour one tripped it. XmlConvert parses every form Task Scheduler emits.
 $expectedLimit = @{
-    "FunHive-Scrapers"    = "PT36H"
-    "FunHive-Monitor"     = "PT1H"
-    "FunHive-DataQuality" = "PT4H"
+    "FunHive-Scrapers"    = New-TimeSpan -Hours 36
+    "FunHive-Monitor"     = New-TimeSpan -Hours 1
+    "FunHive-DataQuality" = New-TimeSpan -Hours 4
 }
 $bad = @()
 foreach ($name in @("FunHive-Scrapers", "FunHive-Monitor", "FunHive-DataQuality")) {
@@ -279,7 +287,11 @@ foreach ($name in @("FunHive-Scrapers", "FunHive-Monitor", "FunHive-DataQuality"
     if ($t.Principal.LogonType -ne $expected.LogonType)                        { $bad += "$name LogonType=$($t.Principal.LogonType) (want $($expected.LogonType))" }
     if ($t.Settings.StopIfGoingOnBatteries -ne $expected.StopIfGoingOnBatteries)         { $bad += "$name StopIfGoingOnBatteries=$($t.Settings.StopIfGoingOnBatteries) (want $($expected.StopIfGoingOnBatteries))" }
     if ($t.Settings.DisallowStartIfOnBatteries -ne $expected.DisallowStartIfOnBatteries) { $bad += "$name DisallowStartIfOnBatteries=$($t.Settings.DisallowStartIfOnBatteries) (want $($expected.DisallowStartIfOnBatteries))" }
-    if ($t.Settings.ExecutionTimeLimit -ne $expectedLimit[$name])              { $bad += "$name ExecutionTimeLimit=$($t.Settings.ExecutionTimeLimit) (want $($expectedLimit[$name]))" }
+    # An empty/absent limit means "run indefinitely" and would throw in ToTimeSpan,
+    # so treat it as zero and let the comparison below report it as the mismatch it is.
+    $rawLimit = $t.Settings.ExecutionTimeLimit
+    $actualLimit = if ([string]::IsNullOrWhiteSpace($rawLimit)) { [TimeSpan]::Zero } else { [System.Xml.XmlConvert]::ToTimeSpan($rawLimit) }
+    if ($actualLimit -ne $expectedLimit[$name]) { $bad += "$name ExecutionTimeLimit=$rawLimit ($($actualLimit.TotalHours)h, want $($expectedLimit[$name].TotalHours)h)" }
 }
 if ($bad) {
     Write-Host ""
