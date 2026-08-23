@@ -25,7 +25,7 @@ const LIBRARIES = [
   // Additional libraries from spreadsheet coverage expansion
   { name: 'East Hardy Branch Public Library', url: 'https://www.bakerlibrary.org/', eventsUrl: 'https://www.bakerlibrary.org/', city: 'Baker', state: 'WV', zipCode: '26801', county: 'Hardy'},
   { name: 'Barrett-Wharton Public Library', url: 'https://www.barrettlibrary.org', eventsUrl: 'https://www.barrettlibrary.org/events', city: 'Barrett', state: 'WV', zipCode: '25208', county: 'Boone'},
-  { name: 'Bridgeport Public Library', url: 'https://www.bridgeportlibrary.org/', eventsUrl: 'https://www.bridgeportlibrary.org/calendar', city: 'Bridgeport', state: 'WV', zipCode: '26330', county: 'Harrison'},
+  { name: 'Bridgeport Public Library', url: 'https://www.bridgeportlibrary.org/', eventsUrl: 'https://www.bridgeportlibrary.org/calendar', city: 'Bridgeport', state: 'WV', zipCode: '26330', county: 'Harrison', urlCollision: 'bridgeportlibrary.org is MI, not WV' },
   { name: 'Cameron Public Library', url: 'https://www.cameronlibrary.org/', eventsUrl: 'https://www.cameronlibrary.org/calendar', city: 'Cameron', state: 'WV', zipCode: '26033', county: 'Marshall'},
   { name: 'Center Point Public Library', url: 'https://www.centerpointlibrary.org', eventsUrl: 'https://www.centerpointlibrary.org/events', city: 'Center Point', state: 'WV', zipCode: '26339', county: 'Doddridge'},
   { name: 'Lynn Murray Memorial Library', url: 'https://www.chesterlibrary.org/', eventsUrl: 'https://www.chesterlibrary.org/', city: 'Chester', state: 'WV', zipCode: '26034', county: 'Hancock', urlCollision: 'chesterlibrary.org is NY, not WV' },
@@ -33,10 +33,10 @@ const LIBRARIES = [
   { name: 'Sand Hill Public Library', url: 'https://www.dallaslibrary.org', eventsUrl: 'https://www.dallaslibrary.org/events', city: 'Dallas', state: 'WV', zipCode: '26036', county: 'Marshall', urlCollision: 'dallaslibrary.org is TX, not WV' },
   { name: 'Dunbar Branch Library', url: 'https://www.dunbarlibrary.org', eventsUrl: 'https://www.dunbarlibrary.org/events', city: 'Dunbar', state: 'WV', zipCode: '25064', county: 'Kanawha'},
   { name: 'Pendleton County Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'WV', zipCode: '26807', county: 'Pendleton'},
-  { name: 'Gilbert Public Library', url: 'https://www.gilbertlibrary.org/', eventsUrl: 'https://www.gilbertlibrary.org/', city: 'Gilbert', state: 'WV', zipCode: '25621', county: 'Mingo'},
+  { name: 'Gilbert Public Library', url: 'https://www.gilbertlibrary.org/', eventsUrl: 'https://www.gilbertlibrary.org/', city: 'Gilbert', state: 'WV', zipCode: '25621', county: 'Mingo', urlCollision: 'gilbertlibrary.org is CT, not WV' },
   // URL corrected 2026-08-11 (was glasgowlibrary.org): Kanawha County Public Library branch page: 129 4th Ave, Town Hall, Glasgow WV 25086, phone 304-595-3131
   { name: 'Glasgow Branch Library', url: 'https://www.kcpls.org/hours-locations/glasgow-branch-library', eventsUrl: 'https://www.kcpls.org/events', city: 'Glasgow', state: 'WV', zipCode: '25086', county: 'Kanawha'},
-  { name: 'Hamlin-Lincoln County Public Library', url: 'https://www.hamlinlibrary.org/', eventsUrl: 'https://www.hamlinlibrary.org/', city: 'Hamlin', state: 'WV', zipCode: '25523', county: 'Lincoln'},
+  { name: 'Hamlin-Lincoln County Public Library', url: 'https://www.hamlinlibrary.org/', eventsUrl: 'https://www.hamlinlibrary.org/', city: 'Hamlin', state: 'WV', zipCode: '25523', county: 'Lincoln', urlCollision: 'hamlinlibrary.org is PA, not WV' },
   { name: 'Hillsboro Public Library', url: 'https://www.hillsborolibrary.org', eventsUrl: 'https://www.hillsborolibrary.org/events', city: 'Hillsboro', state: 'WV', zipCode: '24946', county: 'Pocahontas'},
   { name: 'Summers County Public Library', url: 'https://www.hintonlibrary.org', eventsUrl: 'https://www.hintonlibrary.org/events', city: 'Hinton', state: 'WV', zipCode: '25951', county: 'Summers'},
   { name: 'Boone-Madison Public Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'WV', zipCode: '25130', county: 'Boone', urlCollision: 'madisonlibrary.org is KY, not WV' },

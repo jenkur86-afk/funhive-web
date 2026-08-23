@@ -57,7 +57,7 @@ const LIBRARIES = [
   { name: 'Trimble County Public Library', url: 'https://www.bedfordlibrary.org', eventsUrl: 'https://www.bedfordlibrary.org/events', city: 'Bedford', state: 'KY', zipCode: '40006', county: 'Trimble', urlCollision: 'bedfordlibrary.org is TX, not KY' },
   { name: 'Nicholas County Public Library', url: 'https://www.carlislelibrary.org', eventsUrl: 'https://www.carlislelibrary.org/events', city: 'Carlisle', state: 'KY', zipCode: '40311', county: 'Carlisle County'},
   { name: 'Hickman County Memorial Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'KY', zipCode: '42031', county: 'Clinton County'},
-  { name: 'Adair County Public Library', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'KY', zipCode: '42728', county: 'Adair'},
+  { name: 'Adair County Public Library', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'KY', zipCode: '42728', county: 'Adair', urlCollision: 'columbialibrary.org is IL, not KY' },
   { name: 'South Branch', url: 'https://corbinlibrary.org/', eventsUrl: 'https://corbinlibrary.org/', city: 'Corbin', state: 'KY', zipCode: '00000', county: 'Whitley'},
   { name: 'Oldham County Public Library', url: 'https://www.crestwoodlibrary.org/', eventsUrl: 'https://www.crestwoodlibrary.org/news-events/lib-cal/calendar', city: 'Crestwood', state: 'KY', zipCode: '40014', county: 'Oldham'},
   // URL corrected 2026-08-11 (was cumberlandlibrary.org): Harlan County Public Libraries site lists Rebecca Caudill branch, 310 West Main Street, Cumberland KY 40823, phone 606-589-2409. No calendar
@@ -73,7 +73,7 @@ const LIBRARIES = [
   // RECORDED COVERAGE GAP - restore if a real URL is found.
   // { name: 'Green County Public Library', url: 'https://www.greensburglibrary.org', eventsUrl: 'https://www.greensburglibrary.org/events', city: 'Greensburg', state: 'KY', zipCode: '42743', county: 'Green'},
   { name: 'Harlan County Public Library', url: 'https://www.harlanlibrary.org', eventsUrl: 'https://www.harlanlibrary.org/events', city: 'Harlan', state: 'KY', zipCode: '40831', county: 'Harlan County'},
-  { name: 'Ohio County Public Library', url: 'https://www.hartfordlibrary.org', eventsUrl: 'https://www.hartfordlibrary.org/events', city: 'Hartford', state: 'KY', zipCode: '42347', county: 'Ohio'},
+  { name: 'Ohio County Public Library', url: 'https://www.hartfordlibrary.org', eventsUrl: 'https://www.hartfordlibrary.org/events', city: 'Hartford', state: 'KY', zipCode: '42347', county: 'Ohio', urlCollision: 'hartfordlibrary.org is WI, not KY' },
   { name: 'Perry County Public Library', url: 'https://www.hazardlibrary.org/', eventsUrl: 'https://www.hazardlibrary.org/', city: 'Hazard', state: 'KY', zipCode: '41701', county: 'Perry'},
   { name: 'Lents Branch', url: 'https://www.hebronlibrary.org', eventsUrl: 'https://www.hebronlibrary.org/events', city: 'Hebron', state: 'KY', zipCode: '00000', county: 'Boone'},
   { name: 'Estill County Public Library', url: 'https://www.irvinelibrary.org', eventsUrl: 'https://www.irvinelibrary.org/events', city: 'Irvine', state: 'KY', zipCode: '40336', county: 'Estill'},
@@ -82,7 +82,7 @@ const LIBRARIES = [
   { name: 'Marion County Public Library', url: 'https://lebanonlibrary.org/', eventsUrl: 'https://lebanonlibrary.org/', city: 'Lebanon', state: 'KY', zipCode: '40033', county: 'Marion', urlCollision: 'lebanonlibrary.org is OH, not KY' },
   // URL corrected 2026-08-11 (was libertylibrary.org): 238 Middleburg St Liberty KY 42539, phone 606-787-9381. libertylibrary.org is a Conroe TX charity, not this library
   { name: 'Casey County Public Library', url: 'https://www.caseylibrary.org', eventsUrl: 'https://www.caseylibrary.org/calendar/', city: 'Liberty', state: 'KY', zipCode: '42539', county: 'Casey'},
-  { name: 'Crittenden County Public Library', url: 'https://www.marionlibrary.org/', eventsUrl: 'https://www.marionlibrary.org/', city: 'Marion', state: 'KY', zipCode: '42064', county: 'Marion County'},
+  { name: 'Crittenden County Public Library', url: 'https://www.marionlibrary.org/', eventsUrl: 'https://www.marionlibrary.org/', city: 'Marion', state: 'KY', zipCode: '42064', county: 'Marion County', urlCollision: 'marionlibrary.org is OH, not KY' },
   // URL corrected 2026-08-11 (was maysvillelibrary.org): 218 E Third Street Maysville KY 41056, phone 606-564-3286
   { name: 'Mason County Public Library', url: 'https://www.masoncountylibrary.com', eventsUrl: 'https://www.masoncountylibrary.com', city: 'Maysville', state: 'KY', zipCode: '41056', county: 'Mason'},
   { name: 'Wayne County Public Library', url: 'https://www.allertonpubliclibrary.org/', eventsUrl: 'https://www.allertonpubliclibrary.org/calendar', city: 'Monticello', state: 'KY', zipCode: '42633', county: 'Wayne', urlCollision: 'allertonpubliclibrary.org is IL, not KY' },

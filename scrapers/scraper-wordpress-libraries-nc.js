@@ -41,7 +41,7 @@ const LIBRARIES = [
   // Per the State Library of NC directory, Tyrrell County Library is a branch of Pettigrew
   // Regional Library — same verified system site as the Plymouth entry below.
   { name: 'Tyrrell County Library', url: 'https://pettigrewlibraries.org/', eventsUrl: 'https://pettigrewlibraries.org/', city: 'Columbia', state: 'NC', zipCode: '27925', county: 'Tyrrell County'},
-  { name: 'Polk County Public Library', url: 'https://www.columbuslibrary.org', eventsUrl: 'https://www.columbuslibrary.org/events', city: 'Columbus', state: 'NC', zipCode: '28722', county: 'Columbus County'},
+  { name: 'Polk County Public Library', url: 'https://www.columbuslibrary.org', eventsUrl: 'https://www.columbuslibrary.org/events', city: 'Columbus', state: 'NC', zipCode: '28722', county: 'Columbus County', urlCollision: 'columbuslibrary.org is OH, not NC' },
   { name: 'Dallas Branch Library', url: 'https://gastonlibrary.org/', eventsUrl: 'https://gastonlibrary.org/calendar.aspx', city: 'Dallas', state: 'NC', zipCode: '00000', county: 'Gaston County'},
   { name: 'Danbury Public Library', url: 'https://www.nwrl.org/', eventsUrl: 'https://nwrl.org/regional-library-events/', city: 'Danbury', state: 'NC', zipCode: '00000', county: 'Stokes County'},
   { name: 'Florence S. Shanklin Branch Library', url: 'https://www.denverlibrary.org', eventsUrl: 'https://www.denverlibrary.org/events', city: 'Denver', state: 'NC', zipCode: '00000', county: 'Lincoln'},
@@ -81,7 +81,7 @@ const LIBRARIES = [
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in TN, not NC. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Henderson County Public Library', url: 'https://youseemore.com/', eventsUrl: 'https://youseemore.com/hendersonville/', city: 'Hendersonville', state: 'NC', zipCode: '28739', county: 'Henderson'},
   { name: 'Hickory Public Library', url: 'https://www.hickorylibrary.org', eventsUrl: 'https://www.hickorylibrary.org/events', city: 'Hickory', state: 'NC', zipCode: '28601', county: 'Catawba'},
-  { name: 'Hudson Branch Library', url: 'https://www.hudsonlibrary.org', eventsUrl: 'https://www.hudsonlibrary.org/events', city: 'Hudson', state: 'NC', zipCode: '00000', county: 'Caldwell'},
+  { name: 'Hudson Branch Library', url: 'https://www.hudsonlibrary.org', eventsUrl: 'https://www.hudsonlibrary.org/events', city: 'Hudson', state: 'NC', zipCode: '00000', county: 'Caldwell', urlCollision: 'hudsonlibrary.org is OH, not NC' },
   { name: 'Union West Branch Library', url: 'https://www.indiantraillibrary.org', eventsUrl: 'https://www.indiantraillibrary.org/events', city: 'Indian Trail', state: 'NC', zipCode: '00000', county: 'Union'},
   { name: 'King Public Library', url: 'https://www.kinglibrary.org', eventsUrl: 'https://www.kinglibrary.org/events', city: 'King', state: 'NC', zipCode: '00000', county: 'Stokes'},
   { name: 'La Grange Branch Library', url: 'https://lagrangelibrary.org/', eventsUrl: 'https://lagrangelibrary.org/', city: 'La Grange', state: 'NC', zipCode: '00000', county: 'Lenoir', urlCollision: 'lagrangelibrary.org is IL, not NC' },
@@ -95,7 +95,7 @@ const LIBRARIES = [
   { name: 'Madison Branch Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'NC', zipCode: '00000', county: 'Madison County', urlCollision: 'madisonlibrary.org is KY, not NC' },
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in MA, not NC. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Florence Gallier Library', url: 'https://www.magnolialibrary.org', eventsUrl: 'https://www.magnolialibrary.org/events', city: 'Magnolia', state: 'NC', zipCode: '00000', county: 'Duplin'},
-  { name: 'Mcdowell County Law Library', url: 'https://www.marionlibrary.org/', eventsUrl: 'https://www.marionlibrary.org/', city: 'Marion', state: 'NC', zipCode: '00000', county: 'McDowell'},
+  { name: 'Mcdowell County Law Library', url: 'https://www.marionlibrary.org/', eventsUrl: 'https://www.marionlibrary.org/', city: 'Marion', state: 'NC', zipCode: '00000', county: 'McDowell', urlCollision: 'marionlibrary.org is OH, not NC' },
   { name: 'Madison County Public Library', url: 'https://www.marshalllibrary.org', eventsUrl: 'https://www.marshalllibrary.org/events', city: 'Marshall', state: 'NC', zipCode: '28753', county: 'Madison'},
   { name: 'Matthews Branch Library', url: 'https://www.cmlibrary.org/', eventsUrl: 'https://www.cmlibrary.org/programs-and-events', city: 'Matthews', state: 'NC', zipCode: '00000', county: 'Mecklenburg County'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in MO, not NC. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
@@ -127,7 +127,7 @@ const LIBRARIES = [
   { name: 'Public Library Of Johnston County Smithfield', url: 'https://www.pljcs.org/', eventsUrl: 'https://www.pljcs.org/monthly-calendar', city: 'Smithfield', state: 'NC', zipCode: '27577', county: 'Johnston County'},
   { name: 'Brunswick County Library', url: 'https://www.southportlibrary.org', eventsUrl: 'https://www.southportlibrary.org/events', city: 'Southport', state: 'NC', zipCode: '28461', county: 'Brunswick', urlCollision: 'southportlibrary.org is ME, not NC' },
   { name: 'Alleghany County Public Library', url: 'https://www.nwrl.org/', eventsUrl: 'https://nwrl.org/regional-library-events/', city: 'Sparta', state: 'NC', zipCode: '00000', county: 'Alleghany County'},
-  { name: 'Spring Lake Branch', url: 'https://www.springlakelibrary.org', eventsUrl: 'https://www.springlakelibrary.org/events', city: 'Spring Lake', state: 'NC', zipCode: '00000', county: 'Cumberland'},
+  { name: 'Spring Lake Branch', url: 'https://www.springlakelibrary.org', eventsUrl: 'https://www.springlakelibrary.org/events', city: 'Spring Lake', state: 'NC', zipCode: '00000', county: 'Cumberland', urlCollision: 'springlakelibrary.org is NJ, not NC' },
   { name: 'Stanley Branch Library', url: 'https://gastonlibrary.org/', eventsUrl: 'https://gastonlibrary.org/calendar.aspx', city: 'Stanley', state: 'NC', zipCode: '00000', county: 'Gaston County'},
   { name: 'Star Branch', url: 'https://www.starlibrary.org', eventsUrl: 'https://www.starlibrary.org/events', city: 'Star', state: 'NC', zipCode: '00000', county: 'Montgomery'},
   // Montgomery County Library REMOVED 2026-08-07: see SandhillRegional-NC (same
@@ -136,7 +136,7 @@ const LIBRARIES = [
   // URL corrected 2026-08-11 (was wilmingtonlibrary.org): New Hanover County Public Library, 230 Grace St Wilmington NC 28401. NOTE Myrtle Grove branch was replaced by the Pine Valley Branch - branc
   { name: 'Myrtle Grove Branch', url: 'https://www.nhcgov.com/2628/Library', eventsUrl: 'https://www.nhcgov.com/2628/Library', city: 'Wilmington', state: 'NC', zipCode: '00000', county: 'New Hanover'},
   { name: 'East Branch Library', url: 'https://www.wilsoncountypubliclibrary.org/', eventsUrl: 'https://www.wilsoncountypubliclibrary.org/events/library-calendar', city: 'Wilson', state: 'NC', zipCode: '00000', county: 'Wilson County'},
-  { name: 'Lawrence Memorial Library', url: 'https://www.windsorlibrary.org', eventsUrl: 'https://www.windsorlibrary.org/events', city: 'Windsor', state: 'NC', zipCode: '00000', county: 'Bertie'},
+  { name: 'Lawrence Memorial Library', url: 'https://www.windsorlibrary.org', eventsUrl: 'https://www.windsorlibrary.org/events', city: 'Windsor', state: 'NC', zipCode: '00000', county: 'Bertie', urlCollision: 'windsorlibrary.org is VT, not NC' },
 ];
 
 const SCRAPER_NAME = 'wordpress-NC';

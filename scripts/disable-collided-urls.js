@@ -87,6 +87,62 @@ const GROUND_TRUTH = {
   // source of truth for what is disabled and why — otherwise a later --save would not
   // know about it and the evidence would live only in a commit message.
   'dunlaplibrary.org':       { state: 'IL', evidence: 'Dunlap IL, not Dunlap TN. Found by the 2026-08-22 diagnosis; the Sequatchie County Public Library (TN) entry pointed at it.' },
+  // --- fifth pass, 2026-08-23: scripts/resolve-collision-host-state.js ------------
+  // The 85 hosts the ZZ-sentinel pass could not settle, re-probed with the purpose-built
+  // resolver: three URL variants (many of these only failed because www did not serve
+  // TLS), nine likely contact/about/hours paths, and three weighted signals — ZIP-anchored
+  // state, phone area code, and "City, Full State". 46 resolved, 18 stayed UNREACHABLE,
+  // 20 UNRESOLVED and 1 CONFLICTED; those 39 are deliberately absent — unresolved is
+  // unknown, not safe. Validated first against four hosts with independently known
+  // answers (ringwood NJ, belfast ME, mountainside NJ, sparta WI), all correct.
+  // NOTE worcesterlibrary.org really is MD, so the MD claimant is CORRECT and kept —
+  // the 34 MD rows from that host were never wrong.
+  'greenvillelibrary.org':     { state: 'SC', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://greenvillelibrary.org; zip={} area={"SC":56} name={}' },
+  'bradfordlibrary.org':       { state: 'PA', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://bradfordlibrary.org; zip={} area={"PA":4} name={"PA":1}' },
+  'columbialibrary.org':       { state: 'IL', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://columbialibrary.org; zip={"IL":1} area={"IL":2} name={}' },
+  'hudsonlibrary.org':         { state: 'OH', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://hudsonlibrary.org; zip={} area={"OH":5} name={"OH":2}' },
+  'butlerlibrary.org':         { state: 'NJ', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://butlerlibrary.org; zip={} area={"NJ":1} name={}' },
+  'waterfordlibrary.org':      { state: 'WA', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://waterfordlibrary.org; zip={} area={"WA":2} name={}' },
+  'bridgeportlibrary.org':     { state: 'MI', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://bridgeportlibrary.org; zip={"MI":1} area={"MI":1} name={}' },
+  'cornwalllibrary.org':       { state: 'CT', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://cornwalllibrary.org; zip={"CT":2} area={"CT":3} name={"CT":1}' },
+  'hamlinlibrary.org':         { state: 'PA', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://hamlinlibrary.org; zip={} area={"PA":1} name={}' },
+  'hartfordlibrary.org':       { state: 'WI', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://hartfordlibrary.org; zip={} area={"WI":2} name={"WI":1}' },
+  'vernonlibrary.org':         { state: 'TX', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://www.vernonlibrary.org; zip={} area={"TX":1} name={}' },
+  'readinglibrary.org':        { state: 'VT', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://readinglibrary.org; zip={} area={"VT":1} name={"VT":3}' },
+  'rochesterlibrary.org':      { state: 'IL', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://rochesterlibrary.org; zip={} area={"IL":2} name={}' },
+  'summervillelibrary.org':    { state: 'PA', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://summervillelibrary.org; zip={"PA":1} area={"PA":1} name={}' },
+  'akronlibrary.org':          { state: 'OH', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://akronlibrary.org; zip={} area={"OH":1} name={"OH":1}' },
+  'clarksburglibrary.org':     { state: 'WV', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://clarksburglibrary.org; zip={"WV":1} area={"WV":8} name={}' },
+  'brandonlibrary.org':        { state: 'MI', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://brandonlibrary.org; zip={"MI":1} area={"MI":1} name={}' },
+  'columbuslibrary.org':       { state: 'OH', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://columbuslibrary.org; zip={} area={"OH":1} name={}' },
+  'gilbertlibrary.org':        { state: 'CT', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://gilbertlibrary.org; zip={} area={"CT":2} name={}' },
+  'maconlibrary.org':          { state: 'MO', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://maconlibrary.org; zip={} area={"MO":1} name={"MO":1}' },
+  'huntingdonlibrary.org':     { state: 'PA', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://huntingdonlibrary.org; zip={} area={"PA":2} name={}' },
+  'middletonlibrary.org':      { state: 'TN', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://middletonlibrary.org; zip={} area={"TN":1} name={}' },
+  'milanlibrary.org':          { state: 'MI', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://milanlibrary.org; zip={} area={"MI":4} name={"MI":1}' },
+  'northhavenlibrary.org':     { state: 'ME', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://northhavenlibrary.org; zip={} area={"ME":1} name={"ME":2}' },
+  'scottdalelibrary.org':      { state: 'PA', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://scottdalelibrary.org; zip={} area={"PA":2} name={}' },
+  'springlakelibrary.org':     { state: 'NJ', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://springlakelibrary.org; zip={"NJ":1} area={"NJ":1} name={}' },
+  'springcitylibrary.org':     { state: 'PA', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://springcitylibrary.org; zip={"PA":1} area={"PA":1} name={}' },
+  'unadillalibrary.org':       { state: 'NY', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://unadillalibrary.org; zip={} area={"NY":1} name={}' },
+  'hartlandlibrary.org':       { state: 'WI', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://hartlandlibrary.org; zip={"WI":1} area={"WI":1} name={}' },
+  'marionlibrary.org':         { state: 'OH', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://marionlibrary.org; zip={} area={"OH":2} name={"OH":1}' },
+  'brownelllibrary.org':       { state: 'VT', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://brownelllibrary.org; zip={} area={"VT":2} name={}' },
+  'sheffieldlibrary.org':      { state: 'PA', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://sheffieldlibrary.org; zip={} area={"PA":1} name={}' },
+  'clevelandlibrary.org':      { state: 'TN', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://clevelandlibrary.org; zip={"TN":2} area={"TN":2} name={}' },
+  'holbrooklibrary.org':       { state: 'AZ', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://holbrooklibrary.org; zip={} area={"AZ":1} name={}' },
+  'windsorlibrary.org':        { state: 'VT', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://windsorlibrary.org; zip={"VT":1} area={"VT":1} name={}' },
+  'essexlibrary.org':          { state: 'NY', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://essexlibrary.org; zip={} area={"NY":1} name={"NY":1}' },
+  'arlingtonlibrary.org':      { state: 'TX', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://arlingtonlibrary.org; zip={"TX":7} area={"TX":7} name={}' },
+  'stratfordlibrary.org':      { state: 'CT', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://stratfordlibrary.org; zip={"CT":2} area={"CT":2} name={}' },
+  'smcl.org':                  { state: 'CA', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://smcl.org; zip={"CA":14} area={} name={}' },
+  'worcesterlibrary.org':      { state: 'MD', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://worcesterlibrary.org; zip={} area={"MD":2} name={"MD":1}' },
+  'gardinerlibrary.org':       { state: 'NY', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://gardinerlibrary.org; zip={} area={"NY":1} name={"NY":1}' },
+  'margatelibrary.org':        { state: 'NJ', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://margatelibrary.org; zip={} area={"NJ":5} name={}' },
+  'granvillelibrary.org':      { state: 'OH', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://granvillelibrary.org; zip={} area={"OH":1} name={"OH":1}' },
+  'martinsburglibrary.org':    { state: 'NY', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://martinsburglibrary.org; zip={"NY":1} area={"NY":1} name={}' },
+  'piersonlibrary.org':        { state: 'VT', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://piersonlibrary.org; zip={} area={"VT":3} name={"VT":1}' },
+  'westhartfordlibrary.org':   { state: 'CT', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://westhartfordlibrary.org; zip={} area={"CT":4} name={}' },
   // --- fourth pass, 2026-08-22: bulk resolve of all remaining colliding hosts ----
   // Method: verify-sites-puppeteer.js was run once per HOST with the sentinel expected
   // state ZZ. Because its identity check reports every address-shaped state mention that

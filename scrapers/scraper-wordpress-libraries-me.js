@@ -49,7 +49,7 @@ const LIBRARIES = [
   { name: 'Blue Hill Library', url: 'https://www.bluehilllibrary.org', eventsUrl: 'https://www.bluehilllibrary.org/events', city: 'Blue Hill', state: 'ME', zipCode: '00000', county: 'Hancock'},
   { name: 'Boothbay Harbor Memorial Library', url: 'https://www.boothbayharborlibrary.org', eventsUrl: 'https://www.boothbayharborlibrary.org/events', city: 'Boothbay Harbor', state: 'ME', zipCode: '04538', county: 'Lincoln'},
   { name: 'Bowdoinham Public Library', url: 'https://www.bowdoinhamlibrary.org', eventsUrl: 'https://www.bowdoinhamlibrary.org/events', city: 'Bowdoinham', state: 'ME', zipCode: '04008', county: 'Sagadahoc'},
-  { name: 'John B. Curtis Free Public Library', url: 'https://bradfordlibrary.org/', eventsUrl: 'https://bradfordlibrary.org/', city: 'Bradford', state: 'ME', zipCode: '04410', county: 'Penobscot'},
+  { name: 'John B. Curtis Free Public Library', url: 'https://bradfordlibrary.org/', eventsUrl: 'https://bradfordlibrary.org/', city: 'Bradford', state: 'ME', zipCode: '04410', county: 'Penobscot', urlCollision: 'bradfordlibrary.org is PA, not ME' },
   { name: 'Bremen Public Library', url: 'https://www.bremenlibrary.org', eventsUrl: 'https://www.bremenlibrary.org/events', city: 'Bremen', state: 'ME', zipCode: '04551', county: 'Lincoln'},
   { name: 'Bridgton Public Library', url: 'https://www.bridgtonlibrary.org', eventsUrl: 'https://www.bridgtonlibrary.org/events', city: 'Bridgton', state: 'ME', zipCode: '04009', county: 'Cumberland'},
   { name: 'Brooksville Free Public Library', url: 'https://www.brooksvillelibrary.org', eventsUrl: 'https://www.brooksvillelibrary.org/events', city: 'Brooksville', state: 'ME', zipCode: '04617', county: 'Hancock'},
@@ -67,7 +67,7 @@ const LIBRARIES = [
   { name: 'Farmington Public Library', url: 'https://www.farmingtonpublic.org/', eventsUrl: 'https://www.farmingtonpublic.org/', city: 'Farmington', state: 'ME', zipCode: '04938', county: 'Franklin', urlCollision: 'farmingtonpublic.org is IL, not ME' },
   { name: 'Fort Fairfield Public Library', url: 'https://www.fortfairfieldlibrary.org/', eventsUrl: 'https://www.fortfairfieldlibrary.org/', city: 'Fort Fairfield', state: 'ME', zipCode: '04742', county: 'Aroostook'},
   { name: 'Freeport Community Library', url: 'https://www.freeportlibrary.org', eventsUrl: 'https://www.freeportlibrary.org/events', city: 'Freeport', state: 'ME', zipCode: '04032', county: 'Cumberland'},
-  { name: 'Gardiner Public Library', url: 'https://www.gardinerlibrary.org/', eventsUrl: 'https://www.gardinerlibrary.org/', city: 'Gardiner', state: 'ME', zipCode: '04345', county: 'Kennebec'},
+  { name: 'Gardiner Public Library', url: 'https://www.gardinerlibrary.org/', eventsUrl: 'https://www.gardinerlibrary.org/', city: 'Gardiner', state: 'ME', zipCode: '04345', county: 'Kennebec', urlCollision: 'gardinerlibrary.org is NY, not ME' },
   { name: 'Julia Adams Morse Memorial Library', url: 'https://www.greenelibrary.org', eventsUrl: 'https://www.greenelibrary.org/events', city: 'Greene', state: 'ME', zipCode: '04236', county: 'Androscoggin County'},
   // URL collision fixed 2026-08-05. Same greenvillelibrary.org collision that
   // hit WordPress-NY: that domain is the Greenville County Library System in
@@ -76,7 +76,7 @@ const LIBRARIES = [
   // Road, Greenville ME 04441, matching this entry's own ZIP, with real dated
   // events on /events/.
   { name: 'Shaw Public Library - Greenville', url: 'https://shawpubliclibrary.org', eventsUrl: 'https://shawpubliclibrary.org/events/', city: 'Greenville', state: 'ME', zipCode: '04441', county: 'Piscataquis'},
-  { name: 'Hartland Public Library', url: 'https://www.hartlandlibrary.org', eventsUrl: 'https://www.hartlandlibrary.org/events', city: 'Hartland', state: 'ME', zipCode: '04943', county: 'Somerset'},
+  { name: 'Hartland Public Library', url: 'https://www.hartlandlibrary.org', eventsUrl: 'https://www.hartlandlibrary.org/events', city: 'Hartland', state: 'ME', zipCode: '04943', county: 'Somerset', urlCollision: 'hartlandlibrary.org is WI, not ME' },
   // URL corrected 2026-08-11 (was hollislibrary.org): Own site; 14 Little Falls Road Hollis Center Maine 04042, phone 207-929-3911
   { name: 'Hollis Center Public Library', url: 'https://www.holliscenterpubliclibrary.org', eventsUrl: 'https://www.holliscenterpubliclibrary.org', city: 'Hollis', state: 'ME', zipCode: '04042', county: 'York County'},
   { name: 'Thomas Free Library', url: 'https://www.howlandlibrary.org', eventsUrl: 'https://www.howlandlibrary.org/events', city: 'Howland', state: 'ME', zipCode: '04448', county: 'Penobscot'},
@@ -130,7 +130,7 @@ const LIBRARIES = [
   { name: 'Warren Free Public Library', url: 'https://www.warrenlibrary.org', eventsUrl: 'https://www.warrenlibrary.org/events', city: 'Warren', state: 'ME', zipCode: '04864', county: 'Knox', urlCollision: 'warrenlibrary.org is PA, not ME' },
   // URL corrected 2026-08-11 (was washburnlibrary.org): Site shows 1290 Main Street, Washburn ME 04786, phone 207-455-2016, Aroostook County
   { name: 'Washburn Memorial Library', url: 'https://www.washburnlibrary.com/', eventsUrl: 'https://www.washburnlibrary.com/calendar', city: 'Washburn', state: 'ME', zipCode: '04786', county: 'Aroostook'},
-  { name: 'Waterford Library Association', url: 'https://www.waterfordlibrary.org', eventsUrl: 'https://www.waterfordlibrary.org/events', city: 'Waterford', state: 'ME', zipCode: '04088', county: 'Oxford County'},
+  { name: 'Waterford Library Association', url: 'https://www.waterfordlibrary.org', eventsUrl: 'https://www.waterfordlibrary.org/events', city: 'Waterford', state: 'ME', zipCode: '04088', county: 'Oxford County', urlCollision: 'waterfordlibrary.org is WA, not ME' },
   { name: 'Wells Public Library', url: 'https://wellslibrary.org/', eventsUrl: 'https://wellslibrary.org/', city: 'Wells', state: 'ME', zipCode: '04090', county: 'York'},
   { name: 'West Paris Public Library', url: 'https://www.westparislibrary.org/', eventsUrl: 'https://www.westparislibrary.org/', city: 'West Paris', state: 'ME', zipCode: '04289', county: 'Oxford'},
   { name: 'Wilton Free Public Library', url: 'https://www.wiltonlibrary.org', eventsUrl: 'https://www.wiltonlibrary.org/events', city: 'Wilton', state: 'ME', zipCode: '04294', county: 'Franklin', urlCollision: 'wiltonlibrary.org is CT, not ME' },

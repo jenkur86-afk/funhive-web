@@ -39,9 +39,9 @@ const LIBRARIES = [
   { name: 'Tombigbee Regional Library System', url: 'https://www.tombigbee.lib.ms.us/', eventsUrl: 'https://www.tombigbee.lib.ms.us/', city: 'West Point', state: 'MS', zipCode: '39773', county: 'Clay'},
   // Additional libraries from spreadsheet coverage expansion
   { name: 'William Estes Powell Memorial Library', url: 'https://www.beaumontlibrary.org', eventsUrl: 'https://www.beaumontlibrary.org/events', city: 'Beaumont', state: 'MS', zipCode: '00000', county: 'Perry'},
-  { name: 'Belmont Public Library', url: 'https://smcl.org/', eventsUrl: 'https://smcl.org/', city: 'Belmont', state: 'MS', zipCode: '00000', county: 'Tishomingo'},
+  { name: 'Belmont Public Library', url: 'https://smcl.org/', eventsUrl: 'https://smcl.org/', city: 'Belmont', state: 'MS', zipCode: '00000', county: 'Tishomingo', urlCollision: 'smcl.org is CA, not MS' },
   { name: 'A. E. Wood Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'MS', zipCode: '00000', county: 'Hinds'},
-  { name: 'Columbia-Marion County Library', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'MS', zipCode: '00000', county: 'Marion'},
+  { name: 'Columbia-Marion County Library', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'MS', zipCode: '00000', county: 'Marion', urlCollision: 'columbialibrary.org is IL, not MS' },
   { name: 'Crawford Public Library', url: 'https://crawfordlibrary.org/', eventsUrl: 'https://crawfordlibrary.org/', city: 'Crawford', state: 'MS', zipCode: '00000', county: 'Lowndes'},
   { name: 'Crosby Public Library', url: 'https://www.crosbylibrary.org', eventsUrl: 'https://www.crosbylibrary.org/events', city: 'Crosby', state: 'MS', zipCode: '00000', county: 'Amite'},
   // URL corrected 2026-08-11 (was decaturlibrary.org): Kemper-Newton Regional Library System Decatur Branch, phone 601-635-2777; real name is Jessie Mae Everett Public Library, 306 W Broad St Dec
@@ -61,7 +61,7 @@ const LIBRARIES = [
   { name: 'Long Beach Public Library', url: 'https://www.longbeachlibrary.org', eventsUrl: 'https://www.longbeachlibrary.org/events', city: 'Long Beach', state: 'MS', zipCode: '39560', county: 'Harrison', urlCollision: 'longbeachlibrary.org is NY, not MS' },
   // URL corrected 2026-08-11 (was louisvillelibrary.org): Mid-MS Regional Library System page gives 100 West Park Street, Louisville MS 39339, phone 662-773-3212
   { name: 'Winston County Library', url: 'https://midmisslib.com/winston/', eventsUrl: 'https://midmisslib.com/events/', city: 'Louisville', state: 'MS', zipCode: '00000', county: 'Winston'},
-  { name: 'Ada S. Fant Memorial Library', url: 'https://www.maconlibrary.org', eventsUrl: 'https://www.maconlibrary.org/events', city: 'Macon', state: 'MS', zipCode: '00000', county: 'Noxubee'},
+  { name: 'Ada S. Fant Memorial Library', url: 'https://www.maconlibrary.org', eventsUrl: 'https://www.maconlibrary.org/events', city: 'Macon', state: 'MS', zipCode: '00000', county: 'Noxubee', urlCollision: 'maconlibrary.org is MO, not MS' },
   { name: 'Rebecca Baine Rigby Library', url: 'https://www.madisonlibrary.org', eventsUrl: 'https://www.madisonlibrary.org/events', city: 'Madison', state: 'MS', zipCode: '00000', county: 'Madison County', urlCollision: 'madisonlibrary.org is KY, not MS' },
   { name: 'Magnolia Public Library', url: 'https://www.magnolialibrary.org', eventsUrl: 'https://www.magnolialibrary.org/events', city: 'Magnolia', state: 'MS', zipCode: '00000', county: 'Pike'},
   { name: 'William And Dolores Mauldin Library', url: 'https://www.mchenrylibrary.org/', eventsUrl: 'https://www.mchenrylibrary.org/', city: 'Mchenry', state: 'MS', zipCode: '00000', county: 'Stone'},
