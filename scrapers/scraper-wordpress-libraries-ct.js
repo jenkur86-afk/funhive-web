@@ -23,8 +23,23 @@ const LIBRARIES = [
   // Regional Libraries
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in VT, not CT. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Stamford Public Library', url: 'https://www.stamfordlibrary.org', eventsUrl: 'https://www.stamfordlibrary.org/events', city: 'Stamford', state: 'CT', zipCode: '06901', county: 'Western Connecticut Planning Region'},
-  { name: 'Waterbury Public Library', url: 'https://www.siloam.com', eventsUrl: 'https://www.siloam.com/events', city: 'Waterbury', state: 'CT', zipCode: '06702', county: 'Naugatuck Valley Planning Region'},
-  { name: 'Norwalk Public Library', url: 'https://www.norwalkpubliclibrary.org', eventsUrl: 'https://www.norwalkpubliclibrary.org/events', city: 'Norwalk', state: 'CT', zipCode: '06850', county: 'Western Connecticut Planning Region'},
+  // URL CORRECTED 2026-08-23. Was siloam.com, which serves an empty page and is not a
+  // library at all. Waterbury's public library is the Silas Bronson Library:
+  // bronsonlibrary.org titles itself "Silas Bronson Library" and gives "267 Grand Street,
+  // Waterbury, CT 06702" with 203-574-8225 — the ZIP matches this entry exactly, which is
+  // what makes the identification safe rather than a name guess.
+  // NOTE it runs LibraryAware, not a WordPress calendar, so this entry may still return 0
+  // until it is relocated; the URL had to be right either way.
+  { name: 'Waterbury Public Library', url: 'https://bronsonlibrary.org', eventsUrl: 'https://bronsonlibrary.org/events', city: 'Waterbury', state: 'CT', zipCode: '06702', county: 'Naugatuck Valley Planning Region'},
+  // URL CORRECTED 2026-08-23, and this one was urgent. norwalkpubliclibrary.org now
+  // redirects to agentaruhanjuditogel.com, an Indonesian online-gambling domain — an
+  // expired library domain resold, the same pattern as newfanelibrary.org. On a family
+  // events site that is a content-safety problem, not just a coverage one.
+  // norwalkpl.org verified live: "Norwalk Public Library", "1 Belden Avenue, Norwalk, CT
+  // 06850" (ZIP matches this entry), phone 203-899-2780.
+  // It runs CivicPlus, so this belongs in CivicEngage-Libraries eventually; corrected in
+  // place first because pointing at a gambling site could not wait for a relocation.
+  { name: 'Norwalk Public Library', url: 'https://norwalkpl.org', eventsUrl: 'https://norwalkpl.org/calendar.aspx', city: 'Norwalk', state: 'CT', zipCode: '06850', county: 'Western Connecticut Planning Region'},
   { name: 'Danbury Public Library', url: 'https://danburylibrary.org/', eventsUrl: 'https://danburylibrary.org/', city: 'Danbury', state: 'CT', zipCode: '06810', county: 'Western Connecticut Planning Region'},
   { name: 'New Britain Public Library', url: 'https://www.nbpl.info', eventsUrl: 'https://www.nbpl.info/events', city: 'New Britain', state: 'CT', zipCode: '06051', county: 'Capitol Planning Region'},
   { name: 'West Hartford Public Library', url: 'https://www.westhartfordlibrary.org/', eventsUrl: 'https://www.westhartfordlibrary.org/', city: 'West Hartford', state: 'CT', zipCode: '06107', county: 'Capitol Planning Region'},

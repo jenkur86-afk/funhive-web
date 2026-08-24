@@ -15,7 +15,13 @@ const ngeohash = require('ngeohash');
  * Maine Public Libraries Scraper - Coverage: All Maine public libraries
  */
 const LIBRARIES = [
-  { name: 'Portland Public Library', url: 'https://www.portlandlibrary.com', eventsUrl: 'https://www.portlandlibrary.com/events', city: 'Portland', state: 'ME', zipCode: '04101', county: 'Cumberland'},
+  // URL CORRECTED 2026-08-23: .com -> .org. portlandlibrary.com redirects to
+  // portlandlibrary.org, which titles itself "Explore Your Public Library | Portland
+  // Public Library". The redirect meant this entry was never broken, but it was also
+  // never accurate, and following an extra hop on every fetch is wasted work.
+  // It runs LibCal, so the WordPress DOM extractor will still find nothing here — this
+  // entry is a relocation candidate for LibCal-ME, tracked in the platform-mismatch list.
+  { name: 'Portland Public Library', url: 'https://www.portlandlibrary.org', eventsUrl: 'https://www.portlandlibrary.org/events', city: 'Portland', state: 'ME', zipCode: '04101', county: 'Cumberland'},
   { name: 'Bangor Public Library', url: 'https://bangorpubliclibrary.org/', eventsUrl: 'https://bangorpubliclibrary.org/', city: 'Bangor', state: 'ME', zipCode: '04401', county: 'Penobscot'},
   { name: 'Lewiston Public Library', url: 'https://www.lplonline.org', eventsUrl: 'https://www.lplonline.org/events', city: 'Lewiston', state: 'ME', zipCode: '04240', county: 'Androscoggin'},
   { name: 'Auburn Public Library', url: 'https://www.auburnpubliclibrary.org', eventsUrl: 'https://www.auburnpubliclibrary.org/events', city: 'Auburn', state: 'ME', zipCode: '04210', county: 'Androscoggin'},

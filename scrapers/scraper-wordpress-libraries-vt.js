@@ -87,7 +87,13 @@ const LIBRARIES = [
   { name: 'Sheldon Public', url: 'https://www.sheldonlibrary.org', eventsUrl: 'https://www.sheldonlibrary.org/events', city: 'Sheldon', state: 'VT', zipCode: '05483', county: 'Franklin'},
   { name: 'Shrewsbury', url: 'https://www.shrewsburylibrary.org', eventsUrl: 'https://www.shrewsburylibrary.org/events', city: 'Shrewsbury', state: 'VT', zipCode: '05738', county: 'Rutland'},
   { name: 'Stamford Community', url: 'https://www.stamfordlibrary.org', eventsUrl: 'https://www.stamfordlibrary.org/events', city: 'Stamford', state: 'VT', zipCode: '05352', county: 'Bennington'},
-  { name: 'Stowe Free', url: 'https://www.stowelibrary.org', eventsUrl: 'https://www.stowelibrary.org/events', city: 'Stowe', state: 'VT', zipCode: '05672', county: 'Lamoille'},
+  // URL CORRECTED 2026-08-23. stowelibrary.org redirects off-domain to
+  // stowefreelibrary.org, which is the library's actual site: title "Home | Stowe Free
+  // Library", address "90 Pond Street, Stowe, VT, 05672", phone 802-253-6145 — the ZIP
+  // matches this entry exactly. Naming it directly removes a redirect hop and, more
+  // importantly, stops the entry looking like an unexplained off-host jump to the next
+  // person auditing it.
+  { name: 'Stowe Free', url: 'https://www.stowefreelibrary.org', eventsUrl: 'https://www.stowefreelibrary.org/events', city: 'Stowe', state: 'VT', zipCode: '05672', county: 'Lamoille'},
   { name: 'Morrill Mem. Harris', url: 'https://www.straffordlibrary.org/', eventsUrl: 'https://www.straffordlibrary.org/', city: 'Strafford', state: 'VT', zipCode: '05072', county: 'Orange'},
   { name: 'Franklin-Grand Isle Bookmobile', url: 'https://www.swantonlibrary.org', eventsUrl: 'https://www.swantonlibrary.org/events', city: 'Swanton', state: 'VT', zipCode: '05488', county: 'Franklin'},
   { name: 'Latham Memorial', url: 'https://www.thetfordlibrary.org', eventsUrl: 'https://www.thetfordlibrary.org/events', city: 'Thetford', state: 'VT', zipCode: '05074', county: 'Orange County'},
