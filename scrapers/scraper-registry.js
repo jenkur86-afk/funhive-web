@@ -1001,7 +1001,14 @@ const SCRAPERS = {
   // to restore RI to its originally-registered group.
 
   // --- Assabet Interactive platform scraper ---
-  'Assabet-NH-MA': { file: './scraper-assabet-libraries-nh-ma.js', exportName: 'scrapeAssabetLibrariesCloudFunction', type: 'puppeteer', group: 3, state: 'Multi' },
+  // 2026-08-24: grew 18 -> 41 sites. 23 libraries were relocated here from
+  // WordPress-{MA,NH,RI}, where they ran Assabet and could only ever return 0.
+  // `sites` is declared so check-scraper-names.js can assert the per-site
+  // scraper_name count — without it, a COLLAPSED scraper cannot be detected, which
+  // is why this one emitted a single bare name for all 18 sites unnoticed until now.
+  // NOTE the file name still says nh-ma while it now also covers RI; renaming it
+  // needs a git mv plus this entry, so it is recorded rather than done silently.
+  'Assabet-NH-MA': { file: './scraper-assabet-libraries-nh-ma.js', exportName: 'scrapeAssabetLibrariesCloudFunction', type: 'puppeteer', group: 3, state: 'Multi', sites: 41 },
 
   // ============================================================================
   // PHASE 7: GAP COVERAGE SCRAPERS (non-library family event sources)

@@ -38,9 +38,79 @@ const LIBRARIES = [
   { name: 'Weymouth Public Libraries', slug: 'weymouth', eventsUrl: 'https://weymouth.assabetinteractive.com/calendar/', city: 'Weymouth', state: 'MA', zipCode: '02188' },
   { name: 'Chicopee Public Library', slug: 'chicopeepubliclibrary', eventsUrl: 'https://chicopeepubliclibrary.assabetinteractive.com/calendar/', city: 'Chicopee', state: 'MA', zipCode: '01013' },
   { name: 'Pollard Memorial Library', slug: 'pollardml', eventsUrl: 'https://pollardml.assabetinteractive.com/calendar/', city: 'Lowell', state: 'MA', zipCode: '01852' },
+
+  // --- Added 2026-08-24 from the Step 3d zero-event verification -------------
+  // All 23 were configured under WordPress-{MA,NH,RI}, where they returned 0
+  // events on every run: they run Assabet, which the WordPress DOM extractor
+  // cannot read. They were NOT found by name matching. Each slug was READ from
+  // the library own site by scripts/find-assabet-instances.js, because the slug
+  // is not derivable from the town name - actonmemoriallibrary, dracutlibrary,
+  // northbridgemass, sherbornma and newburyportpl are five different conventions,
+  // and guessing {city}.assabetinteractive.com would repeat the guessed
+  // {city}library.org defect that produced 355 cross-state collisions.
+  //
+  // Every entry below was then CONFIRMED to carry real upcoming events via its
+  // own /calendar/upcoming-events.rss feed before being wired; the trailing
+  // comment records the item count seen. Four further candidates (Derry, Dover,
+  // Taunton, and Hampton Lane Memorial) were dropped as ALREADY CONFIGURED -
+  // matched on SLUG, not name, which is what caught Hampton Lane Memorial Library
+  // already being present as Lane Memorial Library. Somerset Public Library was
+  // dropped too: its resolved instance 404s, so it stays an open gap.
+  // Uxbridge Free Public Library named no instance at all and also stays a gap.
+  { name: 'Hampstead Public Library', slug: 'hampsteadlibrary', eventsUrl: 'https://hampsteadlibrary.assabetinteractive.com/calendar/', city: 'Hampstead', state: 'NH', zipCode: '03841' },   // 81 upcoming in RSS
+  { name: 'Rye Public Library', slug: 'ryepubliclibrary', eventsUrl: 'https://ryepubliclibrary.assabetinteractive.com/calendar/', city: 'Rye', state: 'NH', zipCode: '03870' },   // 74 upcoming in RSS
+  { name: 'Acton Memorial Library', slug: 'actonmemoriallibrary', eventsUrl: 'https://actonmemoriallibrary.assabetinteractive.com/calendar/', city: 'Acton', state: 'MA', zipCode: '01720' },   // 115 upcoming in RSS
+  { name: 'Amesbury Public Library', slug: 'amesburylibrary', eventsUrl: 'https://amesburylibrary.assabetinteractive.com/calendar/', city: 'Amesbury', state: 'MA', zipCode: '01913' },   // 26 upcoming in RSS
+  { name: 'Boxford Town Library', slug: 'boxfordlibrary', eventsUrl: 'https://boxfordlibrary.assabetinteractive.com/calendar/', city: 'Boxford', state: 'MA', zipCode: '01921' },   // 30 upcoming in RSS
+  { name: 'Moses Greeley Parker Memorial Lib.', slug: 'dracutlibrary', eventsUrl: 'https://dracutlibrary.assabetinteractive.com/calendar/', city: 'Dracut', state: 'MA', zipCode: '01826' },   // 53 upcoming in RSS
+  { name: 'Grafton Public Library', slug: 'graftonlibrary', eventsUrl: 'https://graftonlibrary.assabetinteractive.com/calendar/', city: 'Grafton', state: 'MA', zipCode: '01519' },   // 58 upcoming in RSS
+  { name: 'Hanson Public Library', slug: 'hansonlibrary', eventsUrl: 'https://hansonlibrary.assabetinteractive.com/calendar/', city: 'Hanson', state: 'MA', zipCode: '02341' },   // 42 upcoming in RSS
+  { name: 'Hopkinton Public Library', slug: 'hopkintonlibrary', eventsUrl: 'https://hopkintonlibrary.assabetinteractive.com/calendar/', city: 'Hopkinton', state: 'MA', zipCode: '01748' },   // 56 upcoming in RSS
+  { name: 'Lunenburg Public Library', slug: 'lunenburglibrary', eventsUrl: 'https://lunenburglibrary.assabetinteractive.com/calendar/', city: 'Lunenburg', state: 'MA', zipCode: '01462' },   // 29 upcoming in RSS
+  { name: 'Lynnfield Public Library', slug: 'lynnfieldlibrary', eventsUrl: 'https://lynnfieldlibrary.assabetinteractive.com/calendar/', city: 'Lynnfield', state: 'MA', zipCode: '01940' },   // 39 upcoming in RSS
+  { name: 'Medford Public Library', slug: 'medfordlibrary', eventsUrl: 'https://medfordlibrary.assabetinteractive.com/calendar/', city: 'Medford', state: 'MA', zipCode: '02155' },   // 160 upcoming in RSS
+  { name: 'Needham Free Public Library', slug: 'needhamma', eventsUrl: 'https://needhamma.assabetinteractive.com/calendar/', city: 'Needham', state: 'MA', zipCode: '02494' },   // 72 upcoming in RSS
+  { name: 'Newburyport Public Library', slug: 'newburyportpl', eventsUrl: 'https://newburyportpl.assabetinteractive.com/calendar/', city: 'Newburyport', state: 'MA' },   // 43 upcoming in RSS
+  { name: 'Northborough Free Library', slug: 'northboroughlibrary', eventsUrl: 'https://northboroughlibrary.assabetinteractive.com/calendar/', city: 'Northborough', state: 'MA', zipCode: '01532' },   // 76 upcoming in RSS
+  { name: 'Oxford Free Public Library', slug: 'oxfordmapubliclibrary', eventsUrl: 'https://oxfordmapubliclibrary.assabetinteractive.com/calendar/', city: 'Oxford', state: 'MA', zipCode: '01540' },   // 21 upcoming in RSS
+  { name: 'Palmer Public Library', slug: 'palmerlibrary', eventsUrl: 'https://palmerlibrary.assabetinteractive.com/calendar/', city: 'Palmer', state: 'MA', zipCode: '01069' },   // 20 upcoming in RSS
+  { name: 'Rowley Public Library', slug: 'rowleylibrary', eventsUrl: 'https://rowleylibrary.assabetinteractive.com/calendar/', city: 'Rowley', state: 'MA', zipCode: '01969' },   // 73 upcoming in RSS
+  { name: 'Sherborn Library', slug: 'sherbornma', eventsUrl: 'https://sherbornma.assabetinteractive.com/calendar/', city: 'Sherborn', state: 'MA', zipCode: '01770' },   // 32 upcoming in RSS
+  { name: 'Townsend Public Library', slug: 'townsendlibrary', eventsUrl: 'https://townsendlibrary.assabetinteractive.com/calendar/', city: 'Townsend', state: 'MA', zipCode: '01469' },   // 263 upcoming in RSS
+  { name: 'Weston Public Library', slug: 'westonlibrary', eventsUrl: 'https://westonlibrary.assabetinteractive.com/calendar/', city: 'Weston', state: 'MA', zipCode: '02493' },   // 47 upcoming in RSS
+  { name: 'Whitinsville Social Library', slug: 'northbridgemass', eventsUrl: 'https://northbridgemass.assabetinteractive.com/calendar/', city: 'Whitinsville', state: 'MA', zipCode: '01588' },   // 27 upcoming in RSS
+  { name: 'Portsmouth Free Public Library', slug: 'portsmouthlibrary', eventsUrl: 'https://portsmouthlibrary.assabetinteractive.com/calendar/', city: 'Portsmouth', state: 'RI', zipCode: '02871' },   // 27 upcoming in RSS
 ];
 
-const SCRAPER_NAME = 'assabet-NH-MA';
+// The registry key, byte-for-byte. This was 'assabet-NH-MA' (lowercase 'a') until
+// 2026-08-24, which is a CASE_MISMATCH under CLAUDE.md's naming rules and joins to
+// no registry entry. Fixed while adding the 23 relocated libraries below.
+const REGISTRY_KEY = 'Assabet-NH-MA';
+
+/**
+ * PER-SITE scraper_name is NOT possible here, and this note exists so it is not
+ * attempted a third time.
+ *
+ * This scraper covers 41 library websites that all write the SAME bare name, which
+ * is the "No aggregation, ever" problem AGE-RANGE-AUDIT.md describes — 41 libraries
+ * collapse to one row in the per-site audits. The obvious fix is to emit
+ * `Assabet-NH-MA-<slug>` per event, and it does NOT work: this scraper saves through
+ * saveEventsWithGeocoding(), and that helper REBUILDS metadata from its own options
+ * and overwrites metadata.scraperName with the single option-level value. Tried and
+ * measured on 2026-08-24 — all 562 rows from that run came back under the bare name.
+ *
+ * It is not merely overridden, it is load-bearing: verifyAndCleanupEvents() looks
+ * existing events up by `metadata.scraperName == scraperName`, so a per-site variant
+ * makes that lookup miss every row. That is why the same attempt was REVERTED on
+ * 2026-08-06 (see the comment in event-save-helper.js next to `platform`), and that
+ * function deletes, so breaking its lookup is not a cosmetic risk.
+ *
+ * Fixing this properly means changing the helper's lookup to prefix-match the
+ * registry key across all ~50 scrapers that use it — a deliberate shared-helper
+ * migration, not a daily-diagnosis change. `sites: 41` is declared in the registry
+ * so check-scraper-names.js reports this scraper as COLLAPSED and the debt stays
+ * visible instead of silently passing.
+ */
 
 async function scrapeAssabetEvents() {
   const browser = await launchBrowser();
@@ -188,7 +258,10 @@ async function scrapeAssabetEvents() {
             sourceName: library.name,
             sourceUrl: library.eventsUrl,
             scrapedAt: new Date().toISOString(),
-            scraperName: SCRAPER_NAME,
+            // Overwritten by saveEventsWithGeocoding with its option-level value —
+            // see the REGISTRY_KEY note above. Kept as the registry key so it is
+            // correct either way rather than silently wrong if that ever changes.
+            scraperName: REGISTRY_KEY,
             category: 'library',
             state: library.state,
             city: library.city,
@@ -210,8 +283,13 @@ async function scrapeAssabetEvents() {
 
 async function saveToDatabase(events) {
   return await saveEventsWithGeocoding(events, LIBRARIES, {
-    scraperName: SCRAPER_NAME,
-    // Each library carries its own `state` field (NH or MA) which takes priority
+    // Option-level FALLBACK only. flattenEvent() reads metadata.scraperName first,
+    // and every event above now carries its own per-site name, so this is only
+    // reached if that is ever dropped. The bare registry key is the right value
+    // here — a slug would be wrong for whichever library it did not come from.
+    scraperName: REGISTRY_KEY,
+    // Each library carries its own `state` field (NH, MA or RI as of 2026-08-24)
+    // which takes priority
     // inside saveEventsWithGeocoding via `library.state || state`. The option-level
     // `state` is required as a fallback, so pass a multi-state sentinel.
     state: 'NH',
