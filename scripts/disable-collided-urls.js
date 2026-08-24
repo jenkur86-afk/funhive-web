@@ -143,6 +143,22 @@ const GROUND_TRUTH = {
   'martinsburglibrary.org':    { state: 'NY', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://martinsburglibrary.org; zip={"NY":1} area={"NY":1} name={}' },
   'piersonlibrary.org':        { state: 'VT', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://piersonlibrary.org; zip={} area={"VT":3} name={"VT":1}' },
   'westhartfordlibrary.org':   { state: 'CT', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://westhartfordlibrary.org; zip={} area={"CT":4} name={}' },
+  // --- tenth pass, 2026-08-23: a collision CREATED by fixing a different entry -------
+  //
+  // One host, and it is here because gate 2 went UP by 2 and the cause had to be named
+  // rather than smoothed over. Correcting Waterbury Public Library CT from siloam.com to
+  // bronsonlibrary.org (see scraper-wordpress-libraries-ct.js) pointed a second state at a
+  // host WordPress-FL was already claiming for "Levy County Public Library System" in
+  // Bronson, Florida — another guessed {city}library.org, invisible until now precisely
+  // because only one state claimed it.
+  //
+  // So the gate briefly regressed while the data got MORE correct, which is worth
+  // understanding before reading any future +2 as damage: an entry pointing at a wrong
+  // host that nobody else claims is not counted by gate 2 at all, and fixing a different
+  // entry onto the right host is what surfaced it. The CT entry is the correct one and is
+  // kept; the FL claimant is disabled.
+  'bronsonlibrary.org':        { state: 'CT', evidence: 'the site reads "Silas Bronson Library" with "267 Grand Street, Waterbury, CT 06702" and 203-574-8225, matching the CT entry ZIP exactly. Bronson FLORIDA is a real town but this is not its library, so the WordPress-FL Levy County claimant is wrong.' },
+
   // --- ninth pass, 2026-08-23: an empty server is not the same as an unreachable one --
   //
   // Only one entry here, and the distinction it rests on is the point. Four hosts were

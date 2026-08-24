@@ -97,7 +97,7 @@ const LIBRARIES = [
   { name: 'Auburndale Public Library', url: 'https://auburndalefl.com/library/', eventsUrl: 'https://auburndalefl.com/library/', city: 'Auburndale', state: 'FL', zipCode: '00000', county: 'Polk'},
   { name: 'Bartow Public Library', url: 'https://www.bartowlibrary.org', eventsUrl: 'https://www.bartowlibrary.org/events', city: 'Bartow', state: 'FL', zipCode: '00000', county: 'Polk'},
   { name: 'Brandon Branch', url: 'https://www.brandonlibrary.org/', eventsUrl: 'https://www.brandonlibrary.org/events-calendar', city: 'Brandon', state: 'FL', zipCode: '00000', county: 'Hillsborough', urlCollision: 'brandonlibrary.org is MI, not FL' },
-  { name: 'Levy County Public Library System', url: 'https://www.bronsonlibrary.org/', eventsUrl: 'https://www.bronsonlibrary.org/calendar', city: 'Bronson', state: 'FL', zipCode: '32621', county: 'Levy'},
+  { name: 'Levy County Public Library System', url: 'https://www.bronsonlibrary.org/', eventsUrl: 'https://www.bronsonlibrary.org/calendar', city: 'Bronson', state: 'FL', zipCode: '32621', county: 'Levy', urlCollision: 'bronsonlibrary.org is CT, not FL' },
   { name: 'Celebration Library', url: 'https://www.celebrationlibrary.org', eventsUrl: 'https://www.celebrationlibrary.org/events', city: 'Celebration', state: 'FL', zipCode: '00000', county: 'Osceola'},
   { name: 'Cooper Memorial Library', url: 'https://www.clermontlibrary.org/', eventsUrl: 'https://www.clermontlibrary.org/', city: 'Clermont', state: 'FL', zipCode: '00000', county: 'Lake', urlCollision: 'clermontlibrary.org is OH, not FL' },
   { name: 'Coleman Library', url: 'https://www.colemanlibrary.org/', eventsUrl: 'https://www.colemanlibrary.org/calendar', city: 'Coleman', state: 'FL', zipCode: '00000', county: 'Sumter'},
