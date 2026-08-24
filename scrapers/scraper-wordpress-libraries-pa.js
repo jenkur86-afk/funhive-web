@@ -295,7 +295,10 @@ async function scrapeGenericEvents() {
             zipCode: library.zipCode
           }
         }));
-        console.log(`   Found ${tecEvents.length} events`);
+        // No "Found N events" log here: the loop's `finally` block already prints
+        // one for every library, and a `continue` inside `try` still runs it. Logging
+        // it here too printed the line TWICE, which matters because the library-site
+        // audit pairs each "📍 {library}" header with a following "Found {N} events".
         continue;
       }
 
