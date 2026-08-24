@@ -19,7 +19,7 @@ const LIBRARIES = [
   { name: 'Ohio County Public Library', url: 'https://www.ohiocountylibrary.org/', eventsUrl: 'https://www.ohiocountylibrary.org/calendar', city: 'Wheeling', state: 'WV', zipCode: '26003' },
   { name: 'Berkeley County Public Library', url: 'https://bcpls.org/', eventsUrl: 'https://bcpls.org/', city: 'Martinsburg', state: 'WV', zipCode: '25401', county: 'Berkeley'},
   { name: 'Harrison County Public Library', url: 'https://www.clarksburglibrary.org', eventsUrl: 'https://www.clarksburglibrary.org/events', city: 'Clarksburg', state: 'WV', zipCode: '26301', county: 'Harrison'},
-  { name: 'Marion County Public Library', url: 'https://www.marioncountylibrary.org/', eventsUrl: 'https://www.marioncountylibrary.org/calendar', city: 'Fairmont', state: 'WV', zipCode: '26554' },
+  { name: 'Marion County Public Library', url: 'https://www.marioncountylibrary.org/', eventsUrl: 'https://www.marioncountylibrary.org/calendar', city: 'Fairmont', state: 'WV', zipCode: '26554' , urlCollision: 'marioncountylibrary.org is SC, not WV' },
   { name: 'Mercer County Public Library', url: 'https://www.mercercountylibrary.org/', eventsUrl: 'https://www.mercercountylibrary.org/', city: 'Princeton', state: 'WV', zipCode: '24740' },
   { name: 'Putnam County Public Library', url: 'https://putnamcountylibrary.org/', eventsUrl: 'https://putnamcountylibrary.org/', city: 'Hurricane', state: 'WV', zipCode: '25526' },
   // Additional libraries from spreadsheet coverage expansion

@@ -331,6 +331,25 @@ const GROUND_TRUTH = {
   'westfieldlibrary.org':      { state: 'WI', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read WI; title Welcome   Ethel Everhard Memorial Library.' },
   'westmorelandpubliclibrary.com': { state: 'TN', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read TN; title HOME   Westmoreland Public.' },
   'westwoodlibrary.org':       { state: 'MA', evidence: 'verify-sites-puppeteer 2026-08-22, address-shaped state mentions on the live page read MA; title Westwood Public Library.' },
+  // --- 2026-08-24 pass, from the Step 3d zero-event verification ---------------
+  // All eleven are the same {city}library.org guess as the rest of Defect A, and
+  // NONE of them appeared in gate 2: each host is claimed by exactly ONE state, so
+  // there was no second claimant to collide with. They surfaced only because the
+  // library returned zero events and the Puppeteer verifier read the address on
+  // the page it actually landed on. Same lesson as the 2026-08-23 Thomson GA case.
+  // Evidence strings deliberately carry NO apostrophes: a generated reason string
+  // containing one broke four config files on 2026-08-22.
+  'blackstonelibrary.org':     { state: 'CT', evidence: 'verify-sites-puppeteer 2026-08-24, address-shaped state mentions on the live page read CT; title Home - James Blackstone Library. Claimed only by MA.' },
+  'brightonlibrary.org':       { state: 'NY', evidence: 'verify-sites-puppeteer 2026-08-24, address-shaped state mentions on the live page read NY; title HOME BrightonMemLibrary. Claimed only by MA.' },
+  'carverlibrary.org':         { state: 'ME', evidence: 'verify-sites-puppeteer 2026-08-24, address-shaped state mentions on the live page read ME; title CARVER MEMORIAL LIBRARY - Home. Claimed only by MA.' },
+  'hollandlibrary.org':        { state: 'NJ', evidence: 'verify-sites-puppeteer 2026-08-24, address-shaped state mentions on the live page read NJ; title Holland Free Public Library - Home. Claimed only by MA.' },
+  'lenoxlibrary.org':          { state: 'MI', evidence: 'verify-sites-puppeteer 2026-08-24, address-shaped state mentions on the live page read MI; title Homepage Jean Waterloo Lenox Township Library. Michigan is outside the active region. Claimed only by MA.' },
+  'westhamptonlibrary.org':    { state: 'NY', evidence: 'verify-sites-puppeteer 2026-08-24, address-shaped state mentions on the live page read NY; title Westhampton Free Library, Westhampton Beach NY. Claimed only by MA.' },
+  'effinghamlibrary.org':      { state: 'IL', evidence: 'verify-sites-puppeteer 2026-08-24, address-shaped state mentions on the live page read IL; title Effingham Public Library. Illinois is outside the active region. Claimed only by NH.' },
+  'starklibrary.org':          { state: 'OH', evidence: 'verify-sites-puppeteer 2026-08-24, address-shaped state mentions on the live page read OH; title Stark Library. Ohio is outside the active region. Claimed only by NH.' },
+  'estilllibrary.org':         { state: 'KY', evidence: 'verify-sites-puppeteer 2026-08-24, address-shaped state mentions on the live page read KY; title Estill County Public Library. Claimed only by SC.' },
+  'lamarlibrary.org':          { state: 'GA', evidence: 'verify-sites-puppeteer 2026-08-24, address-shaped state mentions on the live page read GA; title Georgia PINES Library System, BARNESVILLE-LAMAR. Claimed only by SC.' },
+  'marioncountylibrary.org':   { state: 'SC', evidence: 'verify-sites-puppeteer 2026-08-24, address-shaped state mentions on the live page read SC; title Home MCLS. Claimed only by WV.' },
 };
 
 function hostOf(u) {
