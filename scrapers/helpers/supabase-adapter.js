@@ -1291,7 +1291,23 @@ function isCancelledEvent(name, description) {
 
   // Facility/library closure notices — Communico libraries publish these as calendar entries.
   // "Library Closed", "All CCPL Locations Closed", "Branch Closed for Juneteenth", etc.
-  if (/\b(library|branch[es]?|location[s]?|center)\s+closed\b/i.test(nameStr)) return true;
+  if (/\b(library|branch[es]?|location[s]?|center|room)\s+closed\b/i.test(nameStr)) return true;
+
+  // Closure notices whose wording the rule above cannot reach. Found 2026-08-24
+  // in WordPress-PA after the TEC feed was wired in: 18 of its rows were pure
+  // status text — "Holiday Closure" x7, "Closed Federal Holiday" x5, "Closed
+  // Federal Holiday Observed" x3, "PA Room Closed 9/24" x3 (the last now caught
+  // by adding `room` above). None carries any event content.
+  //
+  // ANCHORED AT THE START on purpose, and NOT widened to a bare "closure" or a
+  // bare holiday name. The 2026-08-23 pass deliberately left "Closed - Christmas"
+  // and "Library Holiday - Closed" alone because a title carrying a venue or a
+  // holiday name has the same shape as a real event ("Closed for Christmas" vs a
+  // Christmas party). These two forms are pure status and carry neither.
+  // "Closing Reception" and "Closing Night" are real events and are unaffected —
+  // both are negative controls in scripts/test-cancelled-events.js.
+  if (/^\s*holiday\s+closure\b/i.test(nameStr)) return true;
+  if (/^\s*closed\s+(for\s+)?federal\s+holiday\b/i.test(nameStr)) return true;
 
   // Strong signals in the DESCRIPTION — only cancelled/postponed/suspended (NOT "closed")
   // "closed" in descriptions causes too many false positives (gates close, road closed, registration closed, etc.)
@@ -2581,6 +2597,12 @@ module.exports = {
   decodeHtmlEntities,
   normalizeShoutedTitle,
   isJunkTitle,
+  // Exported 2026-08-24 so scripts/test-cancelled-events.js can drive the real
+  // predicate instead of re-implementing it. This function DELETES — an event it
+  // rejects never reaches the events table across all 185+ scrapers — and it had
+  // no regression coverage at all, the same gap isJunkTitle's suite was created
+  // to close.
+  isCancelledEvent,
   detectAgeRange,
   // Exported for testability: flattenEvent and resolveAgeRange are pure and are
   // the code path every scraper's save goes through, so regression suites should
