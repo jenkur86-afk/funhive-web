@@ -59,6 +59,9 @@ const SKIP_DB = args.includes('--skip-db');
 const AS_JSON = args.includes('--json');
 
 const HEARTBEAT_MAX_AGE_DAYS = 2;   // matches Step 0.3 of the task file
+// 30h, not 24: FunHive-DataQuality runs daily at 1:00 PM and this preflight runs at
+// 2:12 PM, so a healthy gap is ~23h. A 24h threshold would warn on every normal run.
+const DQ_MAX_AGE_HOURS = 30;
 
 const results = [];
 const record = (status, check, detail) => results.push({ status, check, detail });
@@ -138,6 +141,34 @@ function checkHeartbeat() {
     fail('audit heartbeat', `${detail} — runs were MISSED; report the gap as the first line of the run report, and note the affected cycles have holes that will not backfill`);
   } else {
     pass('audit heartbeat', detail);
+  }
+}
+
+// The data-quality pass is the one scheduled dependency with no other alarm on it.
+// Between 2026-08-12 and 2026-08-22 it did not run at ALL for ten days and nothing
+// noticed: it was chained onto the end of run-scrapers.bat, rotations grew past the
+// 12h ExecutionTimeLimit, Task Scheduler killed the batch before it reached that line,
+// and the detached node child still finished the scrape — so every scraper table looked
+// healthy while 8,206 stale/junk rows piled up behind them. It now owns its own task
+// (FunHive-DataQuality, daily 1:00 PM), but a task can stop firing too, so check the
+// artifact rather than trusting the schedule.
+//
+// WARN, never FAIL: a stale data-quality pass makes the DB dirty, not the diagnosis
+// invalid. The rest of this run is still worth doing — it just needs saying out loud.
+function checkDataQualityFreshness() {
+  const file = path.join(ROOT, 'scrapers', 'logs', 'fix-all-recent.log');
+  if (!fs.existsSync(file)) {
+    return warn('data-quality pass ran recently', 'scrapers/logs/fix-all-recent.log not found — has FunHive-DataQuality ever run?');
+  }
+  const ageHours = (Date.now() - fs.statSync(file).mtimeMs) / 3600000;
+  const detail = `fix-all-recent.log last written ${ageHours.toFixed(1)}h ago`;
+  if (ageHours > DQ_MAX_AGE_HOURS) {
+    warn('data-quality pass ran recently',
+      `${detail} — expected daily. Check the TASK before the data: ` +
+      `Get-ScheduledTaskInfo -TaskName FunHive-DataQuality | Select LastRunTime,LastTaskResult ` +
+      `(267014 = SCHED_S_TASK_TERMINATED, it hit its time limit). Report this in the run report.`);
+  } else {
+    pass('data-quality pass ran recently', detail);
   }
 }
 
@@ -228,6 +259,7 @@ async function checkDatabase() {
 (async () => {
   checkWritable();
   checkHeartbeat();
+  checkDataQualityFreshness();
   checkContracts();
   await checkDatabase();
 

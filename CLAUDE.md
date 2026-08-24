@@ -222,14 +222,31 @@ The `click_events` table (see Database Schema above) has no SELECT policy — th
 
 ## Automated Maintenance
 
-Three things run on a schedule — two via Windows Task Scheduler, one via Claude Code:
+**Four** things run on a schedule — three via Windows Task Scheduler, one via Claude Code. All three Task Scheduler entries are registered by `scrapers/task-scheduler/setup-tasks.ps1` (run once, elevated); that script is the source of truth for their settings and asserts them on read-back.
 
-- **`FunHive-Scrapers`** (Task Scheduler, daily 3:00 AM, 12h limit) — runs the day's rotation group, then chains `scripts/fix-all.ps1 --recent-only`. Writes `scrapers/logs/scraper-summary.log` (cumulative per-scraper table: FOUND/NEW/DUPES/INVALID/TIME) and `logs/fix-all-recent.log`.
-  - **The site report refreshes on every run.** `fix-all.ps1`/`.sh` end by running `scripts/generate-site-report.js`, so `reports/site-report.html` reflects the run that just finished rather than waiting for the 2:12 PM diagnosis. **This is the standard — a scraper that runs on its rotation day has an up-to-date status in the report the same morning.** The regeneration is deliberately not gated on the exit status of the fix steps: a report failure must never fail the data-quality chain.
+| Task | Runs | Wrapper | Time limit | Writes |
+|---|---|---|---|---|
+| `FunHive-Scrapers` | daily 3:00 AM | `scrapers/run-scrapers.bat` | 36h | `scrapers/logs/scraper-summary.log`, `scraper-stdout.log`, `scraper-stderr.log` |
+| `FunHive-Monitor` | daily 8:00 AM | `local-scraper-monitor.js` | 1h | — |
+| `FunHive-DataQuality` | daily 1:00 PM | `scrapers/run-fix-all.bat` | 4h | `scrapers/logs/fix-all-recent.log` |
+| `funhive-scraper-diagnosis` | daily 2:12 PM (Claude Code) | `~/.claude/scheduled-tasks/funhive-scraper-diagnosis/SKILL.md` | — | audits, `reports/`, commits |
+
+- **`FunHive-Scrapers`** — runs the day's rotation group. Writes the cumulative per-scraper table (FOUND/NEW/DUPES/INVALID/TIME) to `scrapers/logs/scraper-summary.log`.
+  - **It does NOT run the data-quality pass. Do not re-chain it here.** It did until 2026-08-22, and that chain silently stopped executing on 2026-08-12: rotations grew to 23–31h against what was then a 12h `ExecutionTimeLimit`, so Task Scheduler terminated the batch before it reached the fix-all line — while the *detached node child survived and finished the scrape*. So the scraper tables looked perfectly healthy with no data-quality pass behind them for ten days. Measured at the time: 7 `FunHive scrapers starting` markers since 08-12 with **zero** matching `finished`, `fix-all` last run 08-20, and a backlog of 8,206 stale/junk rows plus 723 unrepaired fields. The limit is now 36h (Task Scheduler stores that as `P1DT12H`) and the data-quality pass owns its own task.
+- **`FunHive-DataQuality`** — runs `scripts/fix-all.ps1 --recent-only`, independent of the rotation, so it fires whether the rotation is still running, already finished, or never triggered that day. Overlap with a live rotation is expected and safe: fix-all is database + Nominatim work and launches no Chrome, so it does not contend with the scrapers' browsers.
+  - **The site report refreshes on every data-quality run.** `fix-all.ps1`/`.sh` end by running `scripts/generate-site-report.js`, so `reports/site-report.html` is regenerated daily at ~1:00 PM — roughly 70 minutes before the 2:12 PM diagnosis, which therefore reads a current report rather than yesterday's. The regeneration is deliberately not gated on the exit status of the fix steps: a report failure must never fail the data-quality chain.
   - The report's **Last run** column (Coverage tab) is parsed from `scraper-summary.log`, so it is current for every scraper regardless of when the audit files were last rebuilt. A scraper that ran today shows a green badge with FOUND / NEW / INVALID; one that has never appeared in the log shows `never`. The other tabs still project the audit files, which only Steps 3b/3c rebuild — that is why the Library sites tab carries its own per-row `current` / `refixed` / `unmatched` status.
-- **`FunHive-Monitor`** (Task Scheduler, daily 8:00 AM).
-- **`funhive-scraper-diagnosis`** (Claude Code scheduled task, daily 2:12 PM) — reads the tail of `scraper-summary.log`, diagnoses per `SCRAPER-DIAGNOSIS-PROMPT.md`, applies fixes, and auto-commits/pushes scraper-side files only. It will **not** commit `src/**`, `public/**`, `next.config.*`, or `package.json` — those auto-deploy to Vercel and are left for human review. Prompt lives at `~/.claude/scheduled-tasks/funhive-scraper-diagnosis/SKILL.md`; permissions in `.claude/settings.json`. Only runs while the Claude Code app is open; a missed run fires at next launch.
+- **`funhive-scraper-diagnosis`** — reads the tail of `scraper-summary.log`, diagnoses per `SCRAPER-DIAGNOSIS-PROMPT.md`, applies fixes, and auto-commits/pushes scraper-side files only. It will **not** commit `src/**`, `public/**`, `next.config.*`, or `package.json` — those auto-deploy to Vercel and are left for human review. Permissions in `.claude/settings.json`. Only runs while the Claude Code app is open; a missed run fires at next launch.
   - It deliberately references `CLAUDE.md` and `SCRAPER-DIAGNOSIS-PROMPT.md` rather than copying their contents. Keep it that way — an inlined copy silently forks from these files the first time either is edited.
+
+**If data quality ever looks stale, check the task before the code** — that is the lesson of the ten-day outage above, which presented as a data problem and was a scheduling one:
+
+```
+Get-ScheduledTaskInfo -TaskName FunHive-DataQuality | Select LastRunTime,LastTaskResult
+Get-Content scrapers\logs\fix-all-recent.log -Tail 5
+```
+
+`LastTaskResult` `267014` is `SCHED_S_TASK_TERMINATED` — the task hit its `ExecutionTimeLimit`.
 
 ### `SCRAPER-FIX-LOG.jsonl` (repo root)
 One JSON object per line, append-only, one entry per **logical fix** (not per commit or per file). Written by the diagnosis routine and by any session that fixes a scraper; read at the start of each diagnosis so known-dead or already-diagnosed scrapers aren't re-investigated daily.
