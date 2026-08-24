@@ -7,14 +7,14 @@ the command is in each gate's detail line and the value is dated, never guessed.
 ---
 ## 2026-08-24
 
-<!-- STATUS-DATA {"date":"2026-08-24","countiesResolve":100,"urlCollisions":18,"confirmedBugs":535,"unknownSites":392,"specificAgeShare":35.2,"nameConformance":60.8,"sourceUrlCoverage":62,"countyCoverage":0} -->
+<!-- STATUS-DATA {"date":"2026-08-24","countiesResolve":100,"urlCollisions":20,"confirmedBugs":535,"unknownSites":392,"specificAgeShare":35.2,"nameConformance":60.8,"sourceUrlCoverage":62,"countyCoverage":0} -->
 
 ### Distance to 100%
 
 | Gate | Now | Δ | Target | Blocking |
 |---|---|---|---|---|
 | 1. Counties resolve | 100% | · | 100% | blocks nothing — mechanical once a city→county dataset is chosen |
-| 2. URLs unique per state | 18 | -104 ✅ | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
+| 2. URLs unique per state | 20 | +2 ⚠️ | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
 | 3. Zero confirmed bugs | 535 | · | 0 | mostly blocked on gate 2 |
 | 4. Zero unknown sites | 392 | · | 0 | independent — re-checking is its own pass |
 | 5. Age brackets resolved | 35.2% | · | max (best 40.6%) | no fixed target — maximise; ratchets vs best ever |
@@ -26,7 +26,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 
 | | Broken | Scale | Why not fixed now |
 |---|---|---|---|
-| 🔴 | URL collisions — entries may point at another state's library | 18 entries on 7 hosts claimed by 2+ states; a further 402 disabled via urlCollision and excluded | per-file live verification; the main body of MASTER-PLAN Phase 2 |
+| 🔴 | URL collisions — entries may point at another state's library | 20 entries on 8 hosts claimed by 2+ states; a further 403 disabled via urlCollision and excluded | per-file live verification; the main body of MASTER-PLAN Phase 2 |
 | 🟠 | Confirmed open bugs (MISMATCH verdicts) | 535 sites | most blocked on the URL work above |
 | 🟠 | Unknown sites (UNVERIFIABLE verdicts) | 392 sites | bot-blocks / JS-only calendars / TLS failures — never re-checked |
 | 🟠 | Age detection REGRESSED below best-ever specificity | 35.2% resolved (best ever 40.6% on 2026-08-10) | MASTER-PLAN Phase 5, not started |
@@ -36,7 +36,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 **Next action:** Defect A (URL collisions), worst-collision-state first — it gates the selector and age-detection work behind it.
 
 **Data notes:**
-- METHODOLOGY CHANGE 2026-08-21: 402 entries proven to point at another state's library were flagged urlCollision and are skipped at run time, so they are excluded from gate 2. Gate 2 fell 504 -> 448 as a result. That is a real reduction in RISK — those entries can no longer import another state's events — but it is NOT a URL being corrected: the wrong host is still in the config and each of those libraries is now an explicit, uncovered gap. Do not read the drop as coverage improving. Worklist: node scripts/list-url-collisions.js
+- METHODOLOGY CHANGE 2026-08-21: 403 entries proven to point at another state's library were flagged urlCollision and are skipped at run time, so they are excluded from gate 2. Gate 2 fell 504 -> 448 as a result. That is a real reduction in RISK — those entries can no longer import another state's events — but it is NOT a URL being corrected: the wrong host is still in the config and each of those libraries is now an explicit, uncovered gap. Do not read the drop as coverage improving. Worklist: node scripts/list-url-collisions.js
 - METHODOLOGY CHANGE 2026-08-18: gates 1-2 previously counted a shared config file once per registry key pointing at it (LibCal x18, Communico x16, BiblioCommons x6), inflating both. Gate 2 fell 536 -> 504 as a RESULT OF THE FIX, not because any collision was resolved. Do not read that delta as progress.
 - 1283 config entries have no literal url string and are excluded from gates 1-2 (usually a variable reference — see loadConfiguredSites' header comment).
 
