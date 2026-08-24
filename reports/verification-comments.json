@@ -6420,7 +6420,7 @@
  },
  "WordPress-DE|||Frankford Public Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "dead-endpoint confirmed 2026-08-24. frankfordlibrary.org returns 404 on EVERY path tried including the ROOT - the host answers but serves nothing. This is a wrong-or-dead domain, not a wrong path, and needs a replacement URL discovered before the entry can work. Real coverage gap.",
   "population": "zero"
  },
  "WordPress-DE|||Garfield Park Library": {
@@ -6430,7 +6430,7 @@
  },
  "WordPress-DE|||Georgetown Public Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 520 on the configured URL",
+  "comment": "dead-endpoint confirmed 2026-08-24. georgetownpubliclibrary.org returns HTTP 520 at the root and 404 on every other path - origin is failing. Wrong-or-dead domain; needs a replacement URL. Real coverage gap.",
   "population": "zero"
  },
  "WordPress-DE|||Hockessin Library": {
@@ -6440,7 +6440,7 @@
  },
  "WordPress-DE|||Kent County Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "dead-endpoint confirmed under Puppeteer 2026-08-24. kentcountyde.gov is ALIVE (Kent County Levy Court) but /library/events 404s and /calendar.aspx 404s. Stale path, not a dead domain. Note Delaware's county libraries are largely branches of the state system, so check whether this is covered by a state-level feed before rebuilding an entry.",
   "population": "zero"
  },
  "WordPress-DE|||Kirkwood Library": {
@@ -6460,7 +6460,7 @@
  },
  "WordPress-DE|||Wilmington Public Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "dead-endpoint confirmed under Puppeteer 2026-08-24. wilmingtonde.gov is ALIVE (real City of Wilmington site) but /library/events returns a genuine 404 page, and /calendar also 404s. The library section has moved somewhere not yet located. Not a dead domain - a stale path. Needs the current library events URL found from the site's own navigation.",
   "population": "zero"
  },
  "WordPress-DE|||Woodlawn Library": {
@@ -6520,7 +6520,7 @@
  },
  "WordPress-KY|||Jessamine County Public Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 20 future-dated events visible under Puppeteer, e.g. Aug 24, 2026 2026-08-24; Aug 24 2026-08-24.",
+  "comment": "CONFIRMED and FIXED 2026-08-24. jesspublib.org/events is a 1KB shell rendering no events; it only links out to jessamine.librarycalendar.com. Relocated to LibraryCalendar-Libraries and PROVEN LIVE: 12 rows saved under LibraryCalendar-Libraries-jessamine with correct source_url, including Preschool Storytime, LEGO Club and Family Storytime. The WordPress-KY entry is commented out with the evidence.",
   "population": "zero"
  },
  "WordPress-KY|||Laurel County Public Library": {
@@ -6555,7 +6555,7 @@
  },
  "WordPress-KY|||Woodford County Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "dead-endpoint confirmed 2026-08-24. woodfordlibrary.org returns 404 on every path including the root. Wrong-or-dead domain, needs a replacement URL. Real coverage gap in Versailles KY.",
   "population": "zero"
  },
  "WordPress-KY|||Whitley County Public Library": {
@@ -7100,7 +7100,7 @@
  },
  "WordPress-NH|||Fremont Public Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "dead-endpoint, ROOT CAUSE IDENTIFIED 2026-08-24, deliberately not rewired. The configured path 404s but the town site is alive and runs CivicEngage: https://www.fremont.nh.gov/calendar.aspx returns 200, titles 'Calendar - Fremont, NH - CivicEngage' and carries ~53 calendar elements. NOT wired in, on purpose: that is the TOWN-WIDE calendar, so pointing a library entry at it would import selectmen and committee meetings under a library venue - the same mis-attribution as the George Hail RI consortium case. Correct fix is a CivicEngage category filter limiting it to library programming, then relocate to CivicEngage-Libraries.",
   "population": "zero"
  },
  "WordPress-NH|||Gale Library": {
@@ -7140,7 +7140,7 @@
  },
  "WordPress-NH|||Holderness Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "dead-endpoint confirmed 2026-08-24. holdernesslibrary.org fails TLS to plain HTTP (EPROTO on every path) and returns a bare '404 Not Found' 57-byte response under the stealth browser. No working path found at root or any of seven common calendar paths. Treat as an unreachable host pending a correct URL.",
   "population": "zero"
  },
  "WordPress-NH|||Hollis Social Library": {
@@ -7150,7 +7150,7 @@
  },
  "WordPress-NH|||Josiah Carpenter Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "dead-endpoint, ROOT CAUSE IDENTIFIED 2026-08-24, deliberately not rewired. Configured /node/81/events/month 404s. Town site is alive on CivicEngage: https://www.pittsfieldnh.gov/calendar.aspx returns 200, titles 'Calendar - Pittsfield, NH - CivicEngage', ~49 calendar elements. Same caveat as Fremont: town-wide, needs a library category filter before it can be attributed to this library.",
   "population": "zero"
  },
  "WordPress-NH|||Littleton Public Library": {
@@ -7310,7 +7310,7 @@
  },
  "WordPress-PA|||Malvern Public Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 522 on the configured URL",
+  "comment": "dead-endpoint 2026-08-24: malvernlibrary.org TIMED OUT on all seven paths tried. A timeout is NOT the same evidence as a 404 - the host may simply be slow or blocking - so this is recorded as unreachable rather than dead, per the same rule applied to the three unresolved Defect A hosts. Re-probe on a later run before concluding.",
   "population": "zero"
  },
  "WordPress-PA|||Mars Area Public Library": {
@@ -7345,7 +7345,7 @@
  },
  "WordPress-PA|||Mifflin County Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 15 future-dated events visible under Puppeteer, e.g. Aug 25 2026-08-25; 10:30 am – 12:00 pm 2026-08-25. platform=tec-wordpress (TEC — use tec-rest-helper.js)",
+  "comment": "CONFIRMED and FIXED 2026-08-24. Runs The Events Calendar - 81 tribe-* elements on the page - and its REST feed returns 49 real events, while the scraper stored 0. Cause was that WordPress-PA never had tec-rest-helper.js wired in; it was one of ten active states still missing it. Wired in, matching the pattern already used by al/ct/fl/ga/me/ms/nc/nj/ny/tn/vt.",
   "population": "zero"
  },
  "WordPress-PA|||Monessen Public Library District Center": {
@@ -7599,8 +7599,8 @@
   "population": "zero"
  },
  "WordPress-RI|||Langworthy Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "extraction-failure: 4 future-dated events visible under Puppeteer, e.g. Genealogy and Local History Research 2026-08-24; Knitting Group 2026-08-25.",
+  "verdict": "MATCHES",
+  "comment": "Verdict CORRECTED 2026-08-24 from MISMATCH/extraction-failure. The site runs Modern Events Calendar (body class post-type-archive-mec-events) and its /events page renders 34 .mec-event-article elements that ALL contain the literal text 'No Events' - empty month placeholders. The earlier '4 future-dated events visible' reading was the verifier counting date-shaped month headings in an empty MEC grid as events. The page explicitly states it has no upcoming events, which is the one condition Step 3d accepts for MATCHES. Not an extraction bug and not a coverage gap.",
   "population": "zero"
  },
  "WordPress-RI|||Middletown Public Library": {
@@ -7615,7 +7615,7 @@
  },
  "WordPress-RI|||North Smithfield Public Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "dead-endpoint confirmed 2026-08-24. northsmithfieldlibrary.org returns 404 on every path including the root. Wrong-or-dead domain, needs a replacement URL. Real coverage gap in Slatersville RI.",
   "population": "zero"
  },
  "WordPress-RI|||Portsmouth Free Public Library": {
@@ -7675,7 +7675,7 @@
  },
  "WordPress-SC|||Oconee County Public Library - Seneca Branch Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 522 on the configured URL",
+  "comment": "dead-endpoint 2026-08-24: senecalibrary.org TIMED OUT on all seven paths tried. Recorded as unreachable rather than dead, same rule as Malvern. Re-probe later.",
   "population": "zero"
  },
  "WordPress-SC|||Pickens County Library - Central-Clemson Branch Library": {
