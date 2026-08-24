@@ -353,6 +353,75 @@ const BUCKET_ACTION = {
   'age-detection': 'Live site shows clearly age-targeted programming that is not landing in a bracket. Check detectAgeRange()/resolveAgeRange() in scrapers/helpers/supabase-adapter.js plus any local detector in this file, then re-run `node scripts/test-age-detection.js`.',
 };
 
+/**
+ * Collapse rows that a SCRAPER RENAME split into two.
+ *
+ * The mirror image of the site-name-drift collapse in main(): there the site text moved
+ * and the scraper stayed put; here the scraper name moved and the site stayed put. Both
+ * produce two rows for one real site, and both defeat tableRows()'s dedup, which keys on
+ * the raw (site, scraper) pair.
+ *
+ * Found 2026-08-23 from the report itself. Jackson County Parks & Recreation appeared
+ * twice in the Age breakdown with identical counts of 115 — once under
+ * `CivicRec-Parks-Eastern` and once under `CivicRec-Parks-Eastern-jackson-county-ms` —
+ * which reads as two sites and is one. The database settled it: ZERO rows remain under the
+ * bare name for that venue, so the older row was a historical audit artifact, not live
+ * data. The audit file is right to keep both — it is an append-only ledger of dated
+ * sections spanning the rename — but the report projects a CYCLE, and within one cycle
+ * they are the same site.
+ *
+ * WHAT COUNTS AS A RENAME: one scraper name is a strict hyphen-prefix of the other,
+ * `CivicRec-Parks-Eastern` -> `CivicRec-Parks-Eastern-jackson-county-ms`. That is exactly
+ * the "<registryKey>-<siteSlug>" migration CLAUDE.md prescribes. Two unrelated scrapers
+ * that both cover one venue share no such prefix and are deliberately left as two rows —
+ * that is real dual coverage, and hiding it would be the "No aggregation, ever" mistake
+ * this file's header warns against.
+ *
+ * MATCHED ON EXACT SITE TEXT, NOT cfgKey(). The first cut used cfgKey — the same
+ * normalization the site-name collapse uses — and it collapsed 801 age rows instead of
+ * the expected handful. Checking that number rather than banking it found the reason:
+ * cfgKey strips a trailing parenthetical, so "Rourk Meeting Room (rear half)",
+ * "(front half)" and "(combined)" all normalize to one key. Those are three separately
+ * bookable rooms, and dropping one because another exists under the renamed scraper is
+ * precisely the "No aggregation, ever" mistake this file's header warns about — the same
+ * mistake that once wiped 10 SandhillRegional-NC branches down to a single row.
+ *
+ * A rename does not change the site text — by construction only the scraper name moved —
+ * so exact match loses nothing real. A row whose site text ALSO drifted simply does not
+ * collapse here, which is a cosmetic duplicate rather than a hidden site, and the
+ * site-name collapse in main() already handles text drift within one scraper.
+ *
+ * Keeps whichever row appears LAST in file order, matching the existing collapse:
+ * tableRows() scans top-to-bottom across all `## date` sections, so later = more recent.
+ *
+ * DISPLAY ONLY. Nothing is rewritten in the audit files, and gate 6 still counts the
+ * drift — a collapsed row is not a repaired name.
+ */
+function collapseRenamedScrapers(rows, siteIdx, scraperIdx) {
+  const bySite = new Map();
+  rows.forEach((r, i) => {
+    const k = String(r[siteIdx] || '');
+    if (!bySite.has(k)) bySite.set(k, []);
+    bySite.get(k).push({ i, scraper: r[scraperIdx] });
+  });
+
+  const drop = new Set();
+  for (const group of bySite.values()) {
+    if (group.length < 2) continue;
+    for (const a of group) {
+      for (const b of group) {
+        if (a.i === b.i || a.scraper === b.scraper) continue;
+        // b is the renamed (longer) form of a, so a's row is the stale one.
+        if (b.scraper.startsWith(a.scraper + '-')) drop.add(a.i);
+      }
+    }
+  }
+  if (drop.size) {
+    console.log(`  rename dupes : ${drop.size} row(s) collapsed onto their post-rename scraper name`);
+  }
+  return rows.filter((_, i) => !drop.has(i));
+}
+
 function buildFixQueue({ sites, ages, comments, roster, fixNotes }) {
   const byScraper = new Map();
   const get = name => {
@@ -973,7 +1042,8 @@ function main() {
   const notes = [];
   const { idx: cfgIdx, counts: cfgCounts, byName: cfgByName } = loadConfigIndex();
   const { rows: sitesRaw, dataDate: libDate, error: sitesErr } = loadSites();
-  const { rows: ages, dataDate: ageDate, error: agesErr } = loadAges();
+  const { rows: agesRaw, dataDate: ageDate, error: agesErr } = loadAges();
+  const ages = collapseRenamedScrapers(agesRaw, 0, 1);
   if (sitesErr) notes.push('Library audit: ' + sitesErr + ' — the Library sites tab will be empty.');
   if (agesErr) notes.push('Age audit: ' + agesErr + ' — the Age breakdown and Flagged tabs will be empty.');
 
@@ -1005,7 +1075,8 @@ function main() {
       if (!byKey.has(k)) order.push(k);
       byKey.set(k, r);
     });
-    return order.map(k => byKey.get(k));
+    // …then the mirror case: one site split across a pre- and post-rename scraper name.
+    return collapseRenamedScrapers(order.map(k => byKey.get(k)), 0, 2);
   })();
 
   const comments = loadComments();

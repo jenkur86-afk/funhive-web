@@ -158,6 +158,12 @@
       "expect": "The 40 relocations are NOT done and are the substance of this item. Each needs its feed confirmed to carry real dated events before the entry is moved — a platform marker in the HTML is not proof the platform holds that library's programme. The four corrected URLs should stop appearing as OFF_HOST/EMPTY on the next detector run, and Norwalk/Waterbury/Portland should then show as PLATFORM (civicplus / libraryaware / libcal), which is the correct next state for them, not a failure.",
       "confirm": "node scripts/detect-site-platform.js --in=<the same site list> --concurrency=4   then compare against the Totals table in reports/platform-mismatches.md.",
       "added": "2026-08-23"
+    },
+    "RENAME-SAFE-VERDICTS": {
+      "what": "A scraper rename used to orphan a site's verification verdict and duplicate its audit row, because both stores are keyed on the scraper name. Reported by the owner from the report itself: Jackson County Parks & Recreation appeared twice in the Age breakdown with identical counts of 115, MATCHES under CivicRec-Parks-Eastern and UNVERIFIABLE under CivicRec-Parks-Eastern-jackson-county-ms. Same site, same events, only the name had moved — the DB has ZERO rows left under the bare name for that venue. Two fixes: merge-verification-comments.js --migrate-renames carries a settled verdict onto the post-rename key and drops the stale one (16 recovered: 15 MATCHES, 1 MISMATCH; gate 4 fell 392 -> 376), and generate-site-report.js collapses the duplicated audit rows on EXACT site text.",
+      "expect": "This matters far more forward than backward. Gate 6 counts 283 names still to migrate and the two largest drift families, CivicRec-Parks-* and RecDeskParks-*, are hundreds of sites each — before this, every one of those renames would have discarded its verdicts and doubled its audit rows. After any future rename batch, run --migrate-renames and expect it to carry verdicts rather than report conflicts. A CONFLICT line means two settled adjudications disagree and needs a person, not a re-run.",
+      "confirm": "node scripts/merge-verification-comments.js --migrate-renames   (expect 0 to carry on a clean store)   then node scripts/generate-site-report.js and check the rename dupes line.",
+      "added": "2026-08-23"
     }
   },
   "LibCal-VA": {
