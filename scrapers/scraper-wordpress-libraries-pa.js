@@ -14,6 +14,7 @@
 // (Hamlin Memorial, Smethport) that had been filed under the wrong name, city and county.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { extractJsonLdEvents } = require('./helpers/jsonld-events-helper');
+const { tryFetchTecEvents, tryDomScrapeTecEvents } = require('./helpers/tec-rest-helper');
 const { admin, db } = require('./helpers/supabase-adapter');
 
 const { logScraperResult } = require('./scraper-logger');
@@ -242,7 +243,12 @@ const LIBRARIES = [
 
 ];
 
-const SCRAPER_NAME = 'generic-PA';
+// The registry key, byte-for-byte. This was 'generic-PA' until 2026-08-24 — a name
+// that matches NO registry key at all (the UNRELATED drift class, 256 rows), so
+// none of its rows could be joined back to the scraper that produced them.
+// Rows written before today keep 'generic-PA' until they expire; _stableEventId()
+// ignores scraper_name, so the rename cannot duplicate anything.
+const SCRAPER_NAME = 'WordPress-PA';
 
 async function scrapeGenericEvents() {
   const browser = await launchBrowser();
@@ -265,6 +271,33 @@ async function scrapeGenericEvents() {
       }
     try {
       console.log(`\n📚 Scraping ${library.name}...`);
+
+      // The Events Calendar REST feed, tried BEFORE any DOM work — TEC's list view
+      // groups events under a bare day heading ("Tue 4") carrying no month or year,
+      // which no ancestor-DOM-walk can recover a full date from. Wired into PA on
+      // 2026-08-24 after the Step 3d verification confirmed Mifflin County Library
+      // (lewistownlibrary.org) as an extraction-failure: 81 tribe-* elements on the
+      // page and its REST endpoint returning events, while the scraper stored 0.
+      // Already wired into al/ct/fl/ga/me/ms/nc/nj/ny/tn/vt; PA was one of ten
+      // active states still missing it.
+      const tecEvents = await tryFetchTecEvents(library.url, library.name);
+      if (tecEvents) {
+        tecEvents.forEach(event => events.push({
+          ...event,
+          metadata: {
+            sourceName: library.name,
+            sourceUrl: library.url,
+            scrapedAt: new Date().toISOString(),
+            scraperName: SCRAPER_NAME,
+            category: 'library',
+            state: 'PA',
+            city: library.city,
+            zipCode: library.zipCode
+          }
+        }));
+        console.log(`   Found ${tecEvents.length} events`);
+        continue;
+      }
 
       const page = await browser.newPage();
       await page.goto(library.eventsUrl, {
