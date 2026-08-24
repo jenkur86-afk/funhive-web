@@ -23,7 +23,10 @@ const ngeohash = require('ngeohash');
 const LIBRARIES = [
   { name: 'Alexandria Library', url: 'https://alexlibraryva.org', eventsUrl: 'https://alexlibraryva.org/events', city: 'Alexandria', state: 'VA', zipCode: '22314', county: 'Alexandria city' },
   { name: 'Chesapeake Public Library', url: 'https://www.chesapeakepubliclibrary.org', eventsUrl: 'https://events.chesapeakelibrary.org/events', city: 'Chesapeake', state: 'VA', zipCode: '23320', county: 'Chesapeake city' },
-  { name: 'Henrico County Public Library', url: 'https://www.henricolibrary.org', eventsUrl: 'https://www.henricolibrary.org/events', city: 'Henrico', state: 'VA', zipCode: '23228', county: 'Henrico' },
+  // Henrico County Public Library RELOCATED 2026-08-23 to LibCal-VA.
+  // The site runs LibCal, so no DOM extractor here could ever read its programme.
+  // Instance henricolibrary-va.libcal.com verified live before the move: HTTP 200,
+  // title "LibCal - Henrico County Public Library", 50 event cards.
   { name: 'Jefferson-Madison Regional Library', url: 'https://jmrl.org/', eventsUrl: 'https://jmrl.org/calendar', city: 'Charlottesville', state: 'VA', zipCode: '22902', county: 'Charlottesville city' },
   { name: 'Manassas Park City Library', url: 'https://www.manassasparkcitylibrary.org', eventsUrl: 'https://www.manassasparkcitylibrary.org/events', city: 'Manassas Park', state: 'VA', zipCode: '20111', county: 'Manassas Park city' },
   // Newport News: removed — CivicEngage site, already covered by libcal-VA scraper

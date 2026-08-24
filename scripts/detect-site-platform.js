@@ -113,18 +113,39 @@ const toText = (html) => String(html)
  * output says where a mis-filed entry should go rather than only what it is.
  */
 const PLATFORMS = [
-  [/\.libcal\.com|libcal\.js|libcal-/i, 'libcal', 'LibCal-{ST}'],
-  [/\.bibliocommons\.com|bibliocommons\.js/i, 'bibliocommons', 'BiblioCommons-{ST}'],
-  [/\.libnet\.info|communico/i, 'communico', 'Communico-{ST}'],
-  [/assabetinteractive\.com|assabet/i, 'assabet', 'Assabet-NH-MA'],
-  [/libraryinsight|librarymarket|\.libraryhost\./i, 'librarymarket', 'LibraryMarket-{ST}'],
-  [/calendar\.google\.com/i, 'google-calendar', 'GoogleCalendar-Libraries'],
-  [/eventkeeper|evanced|signupsigns|ekp\.plymouthrocket/i, 'eventkeeper', '(none — needs new scraper)'],
-  [/libraryaware\.com|wowbrary/i, 'libraryaware', '(none — newsletter tool, not a calendar)'],
-  [/tribe-events|the-events-calendar|tribe_events/i, 'tribe', 'WordPress-{ST} (REST feed available)'],
-  [/squarespace/i, 'squarespace', 'Squarespace-Libraries'],
-  [/civicplus|civicengage/i, 'civicplus', 'CivicEngage-Libraries'],
+  // The instance regex EXCLUDES api*/static/assets hosts: every LibCal site loads
+  // api3.libcal.com, so matching it would report the vendor API as the institution's
+  // instance. Seen live on Wethersfield CT, whose real instance is elsewhere on the page.
+  [/\.libcal\.com|libcal\.js|libcal-/i, 'libcal', 'LibCal-{ST}', /https?:\/\/(?!api\d*\.|static\.|assets\.)([a-z0-9-]+\.libcal\.com)/i],
+  [/\.bibliocommons\.com|bibliocommons\.js/i, 'bibliocommons', 'BiblioCommons-{ST}', /https?:\/\/([a-z0-9-]+\.bibliocommons\.com)/i],
+  [/\.libnet\.info|communico/i, 'communico', 'Communico-{ST}', /https?:\/\/([a-z0-9-]+\.libnet\.info)/i],
+  [/assabetinteractive\.com|assabet/i, 'assabet', 'Assabet-NH-MA', /https?:\/\/(?:www\.)?assabetinteractive\.com\/([a-z0-9-]+)/i],
+  [/libraryinsight|librarymarket|\.libraryhost\./i, 'librarymarket', 'LibraryMarket-{ST}', /https?:\/\/([a-z0-9-]+\.libraryhost\.com)/i],
+  [/calendar\.google\.com/i, 'google-calendar', 'GoogleCalendar-Libraries', /([a-z0-9._%+-]+(?:%40|@)group\.calendar\.google\.com)/i],
+  [/eventkeeper|evanced|signupsigns|ekp\.plymouthrocket/i, 'eventkeeper', '(none — needs new scraper)', null],
+  [/libraryaware\.com|wowbrary/i, 'libraryaware', '(none — newsletter tool, not a calendar)', null],
+  [/tribe-events|the-events-calendar|tribe_events/i, 'tribe', 'WordPress-{ST} (REST feed available)', null],
+  [/squarespace/i, 'squarespace', 'Squarespace-Libraries', null],
+  [/civicplus|civicengage/i, 'civicplus', 'CivicEngage-Libraries', null],
 ];
+
+/**
+ * The platform INSTANCE, e.g. "henricolibrary.libcal.com".
+ *
+ * This is the actionable half of a platform verdict and it does double duty. It is the
+ * `eventsUrl` the destination family's config entry needs, AND it is identity evidence in
+ * its own right — a LibCal or BiblioCommons subdomain is chosen by the institution and
+ * names it, unlike a Google Calendar id, which is an opaque hash that told us nothing when
+ * two Georgia relocations turned out to be libraries in New York and Illinois.
+ *
+ * Still not proof on its own: confirm the instance actually belongs to the library named
+ * in the config entry before relocating anything.
+ */
+function extractInstance(html, re) {
+  if (!re) return null;
+  const m = String(html).match(re);
+  return m ? decodeURIComponent(m[1]) : null;
+}
 
 const PARKED_RE = /domain is for sale|namebright|godaddy\b|sedo\b|this domain|under construction|coming soon|sedang maintenance|buy this domain/i;
 
@@ -145,7 +166,13 @@ async function probe(site) {
   if (PARKED_RE.test(text.slice(0, 1500))) return { ...site, verdict: 'PARKED', detail: text.slice(0, 80) };
 
   const hit = PLATFORMS.find(([re]) => re.test(r.body));
-  if (hit) return { ...site, verdict: 'PLATFORM', platform: hit[1], belongsIn: hit[2], detail: hit[1] };
+  if (hit) {
+    const instance = extractInstance(r.body, hit[3]);
+    return {
+      ...site, verdict: 'PLATFORM', platform: hit[1], belongsIn: hit[2],
+      instance, detail: instance ? `${hit[1]} @ ${instance}` : hit[1],
+    };
+  }
   return { ...site, verdict: 'PLAIN_HTML', detail: `${text.length} chars, no platform marker` };
 }
 
@@ -176,7 +203,7 @@ async function main() {
     console.log('Confirm the feed carries real dated events before relocating any of these:');
     for (const [p, rows] of Object.entries(byPlat).sort((a, b) => b[1].length - a[1].length)) {
       console.log(`\n  ${p}  (${rows.length})  -> ${rows[0].belongsIn}`);
-      rows.forEach((r) => console.log(`     ${r.state} ${r.scraper.padEnd(15)} ${r.name.padEnd(42)} ${r.url}`));
+      rows.forEach((r) => console.log(`     ${r.state} ${r.scraper.padEnd(15)} ${r.name.padEnd(40)} ${r.url}\n         instance: ${r.instance || '(not found in page — needs a look)'}`));
     }
   }
   if (OUT) { fs.writeFileSync(OUT, JSON.stringify(results, null, 1)); console.log(`\nwrote ${OUT}`); }

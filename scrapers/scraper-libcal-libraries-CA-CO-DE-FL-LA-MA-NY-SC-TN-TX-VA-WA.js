@@ -369,6 +369,22 @@ const LIBRARY_SYSTEMS = [
     zipCode: '06604'
   },
   {
+    // Relocated from WordPress-CT 2026-08-23, found by scripts/detect-site-platform.js
+    // working the UNVERIFIABLE backlog. wethersfieldlibrary.org runs LibCal, so the
+    // WordPress DOM extractor could never read an event from it and the site had been
+    // sitting at "renders fully but shows no dated events".
+    // Instance proven live over plain HTTP before wiring — no Chrome, because a rotation
+    // was running: https://wethersfieldlibrary.libcal.com/calendar returns HTTP 200,
+    // titles itself "LibCal - Wethersfield Library" and carries 38 event cards.
+    name: 'Wethersfield Public Library',
+    url: 'https://wethersfieldlibrary.libcal.com',
+    county: 'Hartford',
+    state: 'CT',
+    website: 'https://www.wethersfieldlibrary.org',
+    city: 'Wethersfield',
+    zipCode: '06109'
+  },
+  {
     name: 'New Haven Free Public Library',
     url: 'https://nhfpl.libcal.com/calendar?cid=-1&t=d',
     county: 'New Haven',
@@ -591,6 +607,23 @@ const LIBRARY_SYSTEMS = [
     website: 'https://library.arlingtonva.us',
     city: 'Arlington',
     zipCode: '22204'
+  },
+  {
+    // Relocated from WordPress-VA 2026-08-23, same discovery pass as Wethersfield CT.
+    // henricolibrary.org runs LibCal; the WordPress entry could only ever return 0, and
+    // Henrico County is one of the larger systems in the state, so this is a real gap.
+    // Instance proven live over plain HTTP before wiring — no Chrome, because a rotation
+    // was running: https://henricolibrary-va.libcal.com/calendar returns HTTP 200, titles
+    // itself "LibCal - Henrico County Public Library" and carries 50 event cards.
+    // Note the instance subdomain carries a "-va" suffix, which is unusual and worth not
+    // "correcting" to henricolibrary.libcal.com — that is a different host.
+    name: 'Henrico County Public Library',
+    url: 'https://henricolibrary-va.libcal.com',
+    county: 'Henrico',
+    state: 'VA',
+    website: 'https://www.henricolibrary.org',
+    city: 'Henrico',
+    zipCode: '23228'
   },
 
   {

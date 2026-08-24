@@ -140,7 +140,10 @@ const LIBRARIES = [
   { name: 'Louis Piantino Branch Library', url: 'https://www.westhavenlibrary.org', eventsUrl: 'https://www.westhavenlibrary.org/events', city: 'West Haven', state: 'CT', zipCode: '00000', county: 'South Central Connecticut Planning Region'},
   { name: 'Westbrook Public Library', url: 'https://www.westbrooklibrary.org', eventsUrl: 'https://www.westbrooklibrary.org/events', city: 'Westbrook', state: 'CT', zipCode: '06498', county: 'Lower Connecticut River Valley Planning Region'},
   { name: 'Westport Library', url: 'https://www.westportlibrary.org', eventsUrl: 'https://www.westportlibrary.org/events', city: 'Westport', state: 'CT', zipCode: '06880', county: 'Western Connecticut Planning Region'},
-  { name: 'Wethersfield Public Library', url: 'https://www.wethersfieldlibrary.org/', eventsUrl: 'https://www.wethersfieldlibrary.org/', city: 'Wethersfield', state: 'CT', zipCode: '06109', county: 'Capitol Planning Region'},
+  // Wethersfield Public Library RELOCATED 2026-08-23 to LibCal-CT.
+  // The site runs LibCal, so no DOM extractor here could ever read its programme.
+  // Instance wethersfieldlibrary.libcal.com verified live before the move: HTTP 200,
+  // title "LibCal - Wethersfield Library", 38 event cards.
   { name: 'Willimantic Public Library', url: 'https://www.willimanticlibrary.org', eventsUrl: 'https://www.willimanticlibrary.org/events', city: 'Willimantic', state: 'CT', zipCode: '06226', county: 'Southeastern Connecticut Planning Region'},
   { name: 'Wilton Library Association', url: 'https://www.wiltonlibrary.org', eventsUrl: 'https://www.wiltonlibrary.org/events', city: 'Wilton', state: 'CT', zipCode: '06897', county: 'Western Connecticut Planning Region'},
   { name: 'Beardsley Memorial Library', url: 'https://www.winchesterlibrary.org', eventsUrl: 'https://www.winchesterlibrary.org/events', city: 'Winchester', state: 'CT', zipCode: '06098', county: 'Litchfield County', urlCollision: 'winchesterlibrary.org is KS, not CT' },

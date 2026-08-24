@@ -97,7 +97,17 @@ const LIBRARIES = [
   // { name: 'Florence Gallier Library', url: 'https://www.magnolialibrary.org', eventsUrl: 'https://www.magnolialibrary.org/events', city: 'Magnolia', state: 'NC', zipCode: '00000', county: 'Duplin'},
   { name: 'Mcdowell County Law Library', url: 'https://www.marionlibrary.org/', eventsUrl: 'https://www.marionlibrary.org/', city: 'Marion', state: 'NC', zipCode: '00000', county: 'McDowell', urlCollision: 'marionlibrary.org is OH, not NC' },
   { name: 'Madison County Public Library', url: 'https://www.marshalllibrary.org', eventsUrl: 'https://www.marshalllibrary.org/events', city: 'Marshall', state: 'NC', zipCode: '28753', county: 'Madison'},
-  { name: 'Matthews Branch Library', url: 'https://www.cmlibrary.org/', eventsUrl: 'https://www.cmlibrary.org/programs-and-events', city: 'Matthews', state: 'NC', zipCode: '00000', county: 'Mecklenburg County'},
+  // Matthews Branch Library REMOVED 2026-08-23 — genuinely redundant, proven not assumed.
+  // cmlibrary.org runs BiblioCommons, so this WordPress entry could never read an event
+  // from it. BiblioCommons-NC already scrapes cmlibrary.bibliocommons.com and holds 102
+  // rows from that host, 18 of them under the venue "Matthews".
+  // Verified with scripts/verify-coverage.js --state=NC --exclude-scraper=WordPress-NC
+  // --host=cmlibrary.bibliocommons.com -> VERDICT: COVERED. Identity is by source_url host,
+  // and the audited scraper's own 152 rows were excluded from the evidence.
+  //
+  // The sibling entry above (Beatties Ford Road Branch, same cmlibrary.org URL) is
+  // DELIBERATELY LEFT IN PLACE: no row under that venue name exists in the BiblioCommons
+  // window, and an absence is not proof of coverage. It stays as an explained gap.
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in MO, not NC. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Maysville Public Library', url: 'https://www.maysvillelibrary.org', eventsUrl: 'https://www.maysvillelibrary.org/events', city: 'Maysville', state: 'NC', zipCode: '00000', county: 'Jones'},
   { name: 'Union County Public Library', url: 'https://www.monroelibrary.org', eventsUrl: 'https://www.monroelibrary.org/events', city: 'Monroe', state: 'NC', zipCode: '28112', county: 'Union', urlCollision: 'monroelibrary.org is dead or serves an unrelated site — no state entry is correct' },

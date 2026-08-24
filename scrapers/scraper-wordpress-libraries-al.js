@@ -37,7 +37,14 @@ const LIBRARIES = [
   { name: 'Florence-Lauderdale Public Library', url: 'https://www.flpl.org/', eventsUrl: 'https://www.flpl.org/calendar/', city: 'Florence', state: 'AL', zipCode: '35630', county: 'Lauderdale'},
   { name: 'Hoover Public Library', url: 'https://www.hooverlibrary.org', eventsUrl: 'https://www.hooverlibrary.org/events', city: 'Hoover', state: 'AL', zipCode: '35244', county: 'Jefferson'},
   { name: 'Vestavia Hills Library', url: 'https://www.vestavialibrary.org', eventsUrl: 'https://www.vestavialibrary.org/events', city: 'Vestavia Hills', state: 'AL', zipCode: '35216', county: 'Jefferson'},
-  { name: 'Homewood Public Library', url: 'https://www.homewoodpubliclibrary.org', eventsUrl: 'https://www.homewoodpubliclibrary.org/events', city: 'Homewood', state: 'AL', zipCode: '35209', county: 'Jefferson'},
+  // Homewood Public Library REMOVED 2026-08-23 — redundant, proven not assumed.
+  // The site runs Communico, so this WordPress entry could never read an event from it.
+  // Communico-AL already scrapes homewood.libnet.info and holds rows from that host under
+  // scraper_name Communico-AL-homewood.
+  // Verified with scripts/verify-coverage.js --state=AL --exclude-scraper=WordPress-AL
+  // --host=homewood.libnet.info -> VERDICT: COVERED, with this scraper's own 523 rows
+  // excluded from the evidence. Only 5 rows currently, but coverage is about which scraper
+  // owns the site, not how busy the calendar is this week.
   { name: 'Jefferson County Library Cooperative', url: 'https://www.jclc.org', eventsUrl: 'https://www.jclc.org/events', city: 'Birmingham', state: 'AL', zipCode: '35203', county: 'Jefferson'},
   { name: 'Selma-Dallas County Public Library', url: 'https://selmalibrary.org/', eventsUrl: 'https://selmalibrary.org/', city: 'Selma', state: 'AL', zipCode: '36701', county: 'Dallas'},
   // URL corrected 2026-08-11 (was athenslibrary.org): 603 S Jefferson St Athens AL 35611, phone 256-232-1233; events run on The Events Calendar

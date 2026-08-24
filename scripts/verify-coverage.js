@@ -15,7 +15,8 @@
  *
  * THE RULES THIS SCRIPT ENFORCES
  *  1. Identity is established by source_url HOST ONLY. Never by name similarity.
- *  2. The scraper under audit is excluded from its own evidence (--exclude-scraper).
+ *  2. The scraper under audit is excluded from its own evidence (--exclude-scraper),
+ *     INCLUDING any per-site renamed form of it (Family-ST -> Family-ST-siteslug).
  *  3. Output is three-valued and defaults to INCONCLUSIVE. Only host evidence yields
  *     COVERED. Name matches are reported as hints alongside INCONCLUSIVE, never as proof.
  *  4. events and activities are queried and reported SEPARATELY. A venue row in
@@ -50,6 +51,31 @@ if (!exclude && !summary) {
 const hostOf = u => { try { return new URL(u).host.replace(/^www\./, ''); } catch (e) { return null; } };
 const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
 
+/**
+ * Is this row's scraper the one under audit — INCLUDING a renamed form of it?
+ *
+ * norm() already handles the case and punctuation drift that makes "wordpress-CT" and
+ * "WordPress-CT" the same scraper. What it did not handle is the per-site rename now in
+ * flight across the fleet: `CivicRec-Parks-Eastern` -> `CivicRec-Parks-Eastern-jackson-county-ms`.
+ * Under the old exact comparison, a renamed variant of the AUDITED scraper counted as
+ * third-party evidence, so a scraper could be judged "covered elsewhere" by rows it had
+ * produced itself under its new name — precisely the circular argument this file exists to
+ * prevent, reintroduced by a migration that postdates it.
+ *
+ * Not hypothetical: gate 6 counts 283 names still to migrate, and CivicRec-Parks-* and
+ * RecDeskParks-* are hundreds of sites each.
+ *
+ * A strict hyphen-prefix is the test, matching the rename shape CLAUDE.md prescribes. It is
+ * deliberately directional-agnostic — either name may be the older one — and it will not
+ * match an unrelated family, because "communico ct hplct" does not start with "wordpress ct".
+ */
+const isSelf = (rowScraper, audited) => {
+  const a = norm(rowScraper);
+  const b = norm(audited);
+  if (!b) return false;
+  return a === b || a.startsWith(b + ' ') || b.startsWith(a + ' ');
+};
+
 async function pageAll(table, cols) {
   const out = [];
   for (let from = 0; ; from += 1000) {
@@ -70,10 +96,10 @@ async function pageAll(table, cols) {
   const acts = await pageAll('activities', 'name, source, city');
   console.log(`state=${state}  events=${events.length}  activities=${acts.length}`);
   if (exclude) {
-    const self = events.filter(e => norm(e.scraper_name) === norm(exclude)).length;
+    const self = events.filter(e => isSelf(e.scraper_name, exclude)).length;
     console.log(`excluded from evidence: ${self} event rows produced by "${exclude}"`);
   }
-  const others = events.filter(e => norm(e.scraper_name) !== norm(exclude));
+  const others = events.filter(e => !isSelf(e.scraper_name, exclude));
 
   if (summary) {
     const byHost = {};
