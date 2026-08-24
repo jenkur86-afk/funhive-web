@@ -271,7 +271,10 @@ function normalizeCategory(cat) {
 
 function cleanVenueName(venue) {
   if (!venue || typeof venue !== 'string') return venue;
-  let cleaned = venue.trim();
+  // Decode first, so the room-suffix rules below see a real dash. "Osterhout Free Library
+  // &#8211; Central Branch" is a dash-separated branch name that the entity hid from the
+  // `\s+[-–—]\s+` search entirely, which is how it kept its suffix.
+  let cleaned = decodeHtmlEntities(venue).trim();
 
   // If venue contains " - " and anything after the first " - " has a room keyword,
   // keep only the part before the first " - "
@@ -316,6 +319,63 @@ const PROMO_BRACKET_RE = /\s*[([]\s*(tickets?|ticket\s*link|buy\s*tickets?|sold\
 function stripPromoBracketCruft(title) {
   if (!title || typeof title !== 'string') return title;
   return title.replace(PROMO_BRACKET_RE, ' ').replace(/\s{2,}/g, ' ').trim();
+}
+
+// A practical subset of named HTML entities — the ones that actually turn up in library
+// and museum event titles. Anything not listed is left as written rather than guessed at.
+const NAMED_ENTITIES = {
+  amp: '&', quot: '"', apos: "'", nbsp: ' ', ndash: '–', mdash: '—',
+  hellip: '…', rsquo: '’', lsquo: '‘', ldquo: '“', rdquo: '”',
+  sbquo: '‚', bdquo: '„', middot: '·', bull: '•', deg: '°',
+  eacute: 'é', egrave: 'è', agrave: 'à', ccedil: 'ç', uuml: 'ü',
+  ouml: 'ö', auml: 'ä', ntilde: 'ñ', reg: '®', copy: '©',
+  trade: '™', frac12: '½', frac14: '¼', times: '×',
+};
+const ENTITY_RE = /&(?:#\d{2,5}|#x[0-9a-f]{2,4}|[a-z][a-z0-9]{1,10});/i;
+
+/**
+ * Decode HTML entities that scrapers store raw in titles and venue names.
+ *
+ * Found 2026-08-23 while auditing the opening-hours junk rules: 344 event names and 7
+ * venues hold an undecoded entity, and they render literally on the site — "Rocky&#8217;s
+ * Book Club", "Sit &amp; Stitch @ Wylliesburg Library", "Tween Dungeons &amp; Dragons
+ * Club". This is a user-visible defect, not just an internal tidiness one. Concentrated in
+ * a handful of scrapers that read an attribute rather than textContent (Library System of
+ * Lancaster County 97, ChildrensMuseums-Events-Eastern 85, Jefferson-Madison 63, York
+ * County Libraries 50), so it is a systematic extraction habit rather than stray data.
+ *
+ * `<` and `>` are DELIBERATELY NOT DECODED. Titles are rendered as text so there is no
+ * injection risk either way, but decoding them can only turn readable text into something
+ * that looks like broken markup, and neither appeared anywhere in the 123,485 rows
+ * measured. Leaving them is the choice that cannot make a title worse.
+ *
+ * Two passes at most, because double-encoded data is real ("&amp;#8217;"), and stopping as
+ * soon as a pass changes nothing so a pathological input cannot loop.
+ */
+function decodeHtmlEntities(text) {
+  if (!text || typeof text !== 'string') return text;
+  if (!ENTITY_RE.test(text)) return text;
+
+  const fromCodePoint = (n) => {
+    // Skip control characters and the two angle brackets; return the original match so
+    // the caller sees no change rather than a mangled one.
+    if (!Number.isFinite(n) || n < 32 || n === 60 || n === 62 || n > 0x10ffff) return null;
+    try { return String.fromCodePoint(n); } catch { return null; }
+  };
+
+  let out = text;
+  for (let pass = 0; pass < 2; pass++) {
+    const before = out;
+    out = out
+      .replace(/&#(\d{2,5});/g, (m, d) => fromCodePoint(parseInt(d, 10)) ?? m)
+      .replace(/&#x([0-9a-f]{2,4});/gi, (m, h) => fromCodePoint(parseInt(h, 16)) ?? m)
+      .replace(/&([a-z][a-z0-9]{1,10});/gi, (m, n) => {
+        const v = NAMED_ENTITIES[n.toLowerCase()];
+        return v === undefined ? m : v;
+      });
+    if (out === before) break;
+  }
+  return out.replace(/\s{2,}/g, ' ').trim();
 }
 
 /**
@@ -1436,7 +1496,7 @@ async function saveEvent(id, data) {
 
   const row = {
     id,
-    name: truncate(normalizeShoutedTitle(collapseDoubledTitle(stripPromoBracketCruft(data.name))), 300),
+    name: truncate(normalizeShoutedTitle(collapseDoubledTitle(stripPromoBracketCruft(decodeHtmlEntities(data.name)))), 300),
     event_date: truncate(evtDateStr, 100),
     date: data.date instanceof Date ? data.date.toISOString()
       : (typeof data.date?.toDate === 'function') ? data.date.toDate().toISOString()
@@ -2157,7 +2217,7 @@ function flattenEvent(data) {
   const trunc = (str, maxLen) => str && str.length > maxLen ? str.substring(0, maxLen) : str;
 
   const row = {};
-  row.name = trunc(normalizeShoutedTitle(collapseDoubledTitle(stripPromoBracketCruft(data.name.trim()))), 300);
+  row.name = trunc(normalizeShoutedTitle(collapseDoubledTitle(stripPromoBracketCruft(decodeHtmlEntities(data.name.trim())))), 300);
   if (data.eventDate) row.event_date = trunc(data.eventDate, 100);
   if (data.date) {
     if (data.date instanceof Date) row.date = data.date.toISOString();
@@ -2419,6 +2479,7 @@ module.exports = {
   deriveVenueFallback,
   stripPromoBracketCruft,
   collapseDoubledTitle,
+  decodeHtmlEntities,
   normalizeShoutedTitle,
   isJunkTitle,
   detectAgeRange,

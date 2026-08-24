@@ -22,6 +22,7 @@
 const {
   stripPromoBracketCruft,
   collapseDoubledTitle,
+  decodeHtmlEntities,
   normalizeShoutedTitle,
 } = require('../scrapers/helpers/supabase-adapter');
 
@@ -70,6 +71,22 @@ const CASES = [
     'NEGATIVE CONTROL: an age bracket is not promo cruft and must survive'],
   [stripPromoBracketCruft, 'Movie Night (1994)', 'Movie Night (1994)',
     'NEGATIVE CONTROL: a year is not promo cruft'],
+
+  // --- decodeHtmlEntities (added 2026-08-23) ---------------------------------
+  // 344 event names and 7 venues stored a raw entity and rendered it literally on the
+  // site. Concentrated in scrapers that read an attribute instead of textContent.
+  [decodeHtmlEntities, "Rocky&#8217;s Book Club", "Rocky’s Book Club", "numeric entity, the most common shape"],
+  [decodeHtmlEntities, "Sit &amp; Stitch @ Wylliesburg Library", "Sit & Stitch @ Wylliesburg Library", "named entity"],
+  [decodeHtmlEntities, "Little Readers Club &#8211; Wythe County Library", "Little Readers Club – Wythe County Library", "en-dash"],
+  [decodeHtmlEntities, "&quot;Fill a Bag&quot; Fundraiser", "\"Fill a Bag\" Fundraiser", "quotes"],
+  [decodeHtmlEntities, "Caf&#233; Night", "Café Night", "accented letter"],
+  [decodeHtmlEntities, "Double &amp;#8217; encoded", "Double ’ encoded", "double-encoded — needs the second pass"],
+  // MUST BE UNTOUCHED. Do not delete.
+  [decodeHtmlEntities, "Storytime & Craft", "Storytime & Craft", "a bare ampersand is not an entity"],
+  [decodeHtmlEntities, "Q&A with the Author", "Q&A with the Author", "NEGATIVE CONTROL: &A is not an entity"],
+  [decodeHtmlEntities, "Rock &amp roll", "Rock &amp roll", "NEGATIVE CONTROL: no semicolon, not an entity"],
+  [decodeHtmlEntities, "Code &lt;script&gt; Club", "Code &lt;script&gt; Club",
+    "angle brackets are DELIBERATELY left encoded — decoding can only make a title look like broken markup"],
 
   // --- normalizeShoutedTitle -------------------------------------------------
   [normalizeShoutedTitle, 'PUMPKIN PATCH FAMILY FUN DAY', 'Pumpkin Patch Family Fun Day', 'shouted title normalized'],

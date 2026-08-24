@@ -12,6 +12,8 @@
  *            "Baby Storytime(Opens in a new tab)" -> "Baby Storytime"
  *   Step 1b: Collapse a title stored as the same phrase twice, e.g.
  *            "Family FestFamily Fest" -> "Family Fest"
+ *   Step 1c: Decode HTML entities left raw in a title or venue, e.g.
+ *            "Rocky&#8217;s Book Club" -> "Rocky’s Book Club"
  *   Step 2 : Normalize SHOUTED all-caps titles to Title Case (guarded against
  *            mangling short acronyms like "GLOW"/"STEM"/"4H")
  *   Step 3 : Null out + re-derive venue when venue exactly duplicates the
@@ -21,7 +23,7 @@
  *   node scripts/fix-venue-title-quality.js                # Dry run (preview)
  *   node scripts/fix-venue-title-quality.js --save          # Save changes to DB
  *   node scripts/fix-venue-title-quality.js --recent-only   # Last 24h only (FIX_WINDOW_HOURS to override)
- *   node scripts/fix-venue-title-quality.js --only=1b       # Run one step only (ids: 1, 1b, 2, 3)
+ *   node scripts/fix-venue-title-quality.js --only=1b       # Run one step only (ids: 1, 1b, 1c, 2, 3)
  *
  * This script is NOT part of the nightly fix-all chain — it is run by hand.
  */
@@ -32,14 +34,15 @@ const {
   deriveVenueFallback,
   stripPromoBracketCruft,
   collapseDoubledTitle,
+  decodeHtmlEntities,
   normalizeShoutedTitle,
 } = require('../scrapers/helpers/supabase-adapter');
 
 const SAVE = process.argv.includes('--save');
 const RECENT_ONLY = process.argv.includes('--recent-only');
 // --only=<ids> runs just the named steps, e.g. --only=1b or --only=1,1b.
-// Valid ids: 1 (promo/a11y cruft), 1b (doubled titles), 2 (shouted titles),
-// 3 (venue == title). Default is all four.
+// Valid ids: 1 (promo/a11y cruft), 1b (doubled titles), 1c (HTML entities),
+// 2 (shouted titles), 3 (venue == title). Default is all of them.
 //
 // It exists because the steps have independent risk profiles and a targeted
 // backfill should not have to accept an unrelated rewrite as a side effect:
@@ -199,6 +202,41 @@ async function main() {
       doubledRows.slice(0, 10).forEach(e => console.log(`  - "${e.name}" -> "${e.cleaned}"`));
     }
     totalFixed += doubledRows.length;
+  }
+
+  if (runStep("1c")) {
+    // ── Step 1c: Decode HTML entities left raw in titles and venue names ──
+    // 344 event names and 7 venues held an undecoded entity and rendered it literally on
+    // the site — "Rocky&#8217;s Book Club", "Sit &amp; Stitch". flattenEvent() now decodes
+    // at save time; this is the backfill. Venues go through cleanVenueName(), which decodes
+    // first and can then also see a dash the entity had been hiding.
+    console.log(`\n🔤 STEP 1c: Decode HTML entities in titles and venues`);
+    console.log(`───────────────────────────────────────`);
+    const forEnt = await fetchAll("events", "id, name, venue");
+    const entNameRows = forEnt
+      .map(e => ({ id: e.id, name: e.name, cleaned: decodeHtmlEntities(e.name) }))
+      .filter(e => e.cleaned && e.cleaned !== e.name);
+    const entVenueRows = forEnt
+      .map(e => ({ id: e.id, venue: e.venue, cleaned: e.venue ? cleanVenueName(e.venue) : null }))
+      .filter(e => e.cleaned && e.cleaned !== e.venue);
+    console.log(`  Scanned ${forEnt.length} events`);
+    console.log(`  Found ${entNameRows.length} titles and ${entVenueRows.length} venues with an HTML entity`);
+    if (SAVE && (entNameRows.length || entVenueRows.length)) {
+      const counts = { renamed: 0, deduped: 0, failed: 0 };
+      for (const e of entNameRows) counts[await renameOrDedupe(e.id, e.cleaned)]++;
+      reportRenameOutcome("titles decoded", counts);
+      let venues = 0;
+      for (const e of entVenueRows) {
+        const { error } = await supabase.from("events").update({ venue: e.cleaned }).eq("id", e.id);
+        if (error) console.log(`  ⚠️ venue update failed for ${e.id}: ${error.message}`);
+        else venues++;
+      }
+      if (entVenueRows.length) console.log(`  ✅ ${venues} venues decoded`);
+    } else {
+      entNameRows.slice(0, 10).forEach(e => console.log(`  - "${e.name}" -> "${e.cleaned}"`));
+      entVenueRows.slice(0, 5).forEach(e => console.log(`  - venue "${e.venue}" -> "${e.cleaned}"`));
+    }
+    totalFixed += entNameRows.length + entVenueRows.length;
   }
 
   if (runStep("2")) {
