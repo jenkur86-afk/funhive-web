@@ -176,6 +176,73 @@ function _noteStableId(id, name, collection) {
 /** Test/report hook: how many distinct ids collided this process. */
 function _stableIdCollisionCount() { return _reportedCollisions.size; }
 
+/**
+ * Resolve an EVENT row id, defending against SHARED (non-per-event) URLs.
+ *
+ * _stableEventId() prefers the URL because it is the most stable identity key
+ * across re-scrapes — but that only holds when the URL identifies the EVENT.
+ * ~25 call sites across the library/venue scrapers use the idiom
+ *
+ *     url: event.url || library.website
+ *
+ * so the moment per-event link extraction fails, every event at that library
+ * inherits ONE shared URL, hashes to ONE id, and all but the first are dropped
+ * by the insert. The detector above could only WARN about that; the events were
+ * still lost. This turns the same signal into a repair.
+ *
+ * We cannot tell from a single event whether its URL is per-event or shared.
+ * We CAN tell the instant a second, differently-named event claims the same id:
+ * at that point the URL is proven shared, so the newcomer is re-keyed onto the
+ * content fallback (name|eventDate|venue) — the identity it should have had —
+ * instead of colliding.
+ *
+ * Blast radius is deliberately small:
+ *  - Events with genuine per-event URLs never collide, so they never reach here
+ *    and their ids do not churn.
+ *  - The FIRST event under a shared URL keeps its URL-derived id, so it does not
+ *    churn either. Only the events that are currently being LOST change id.
+ *  - name|eventDate|venue matches the DB's idx_events_unique_content key, so a
+ *    genuine duplicate still collapses correctly rather than double-inserting.
+ *
+ * Registration into _seenStableIds stays with _noteStableId (called after
+ * flatten, on the final id) so there is exactly one writer and the names being
+ * compared always come from the same source. Do not register here.
+ */
+function _resolveEventId(data) {
+  const id = _stableEventId(data);
+  const name = (data.name || '').trim();
+  if (!name) return id;
+
+  const prev = _seenStableIds.get(id);
+  // undefined  -> first sighting, nothing proven yet.
+  // same name  -> ordinary re-scrape of the same event, must keep the same id.
+  if (prev === undefined || prev === name) return id;
+
+  // A different name already owns this id: the URL is shared, not per-event.
+  const n = name.toLowerCase();
+  const date = (data.eventDate || data.event_date || '').toLowerCase().trim();
+  const venue = (data.venue || '').toLowerCase().trim();
+  // No usable content key -> fall through to the old behaviour and let
+  // _noteStableId report the unrecoverable collision.
+  if (!n || !date || !venue) return id;
+
+  const rekeyed = _hash30(`evt:${n}|${date}|${venue}`);
+  if (rekeyed === id) return id;
+  if (!_rekeyedSharedUrlIds.has(id)) {
+    _rekeyedSharedUrlIds.add(id);
+    console.warn(
+      `  🔑 SHARED-URL RE-KEY in events: "${String(name).slice(0, 60)}" collided with ` +
+      `"${String(prev).slice(0, 60)}" on ${id} because the scraper put one shared URL on ` +
+      `both. Re-keyed to name|eventDate|venue so the event is SAVED rather than dropped. ` +
+      `This is a repair, not a pass: fix the scraper's url field to a real per-event link.`
+    );
+  }
+  return rekeyed;
+}
+const _rekeyedSharedUrlIds = new Set();
+/** Test/report hook: how many distinct shared-url ids were re-keyed this process. */
+function _sharedUrlRekeyCount() { return _rekeyedSharedUrlIds.size; }
+
 // Initialize Supabase client with service role key (bypasses RLS)
 const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -640,6 +707,26 @@ function detectAgeRange(name, description) {
     const isMonths = ageMatch[3] || (parseInt(ageMatch[1]) <= 36 && parseInt(ageMatch[2]) <= 36 && /month|mo\b/i.test(text));
     return isMonths ? `${ageMatch[1]}-${ageMatch[2]} months` : `${ageMatch[1]}-${ageMatch[2]}`;
   }
+
+  // Open-ended lower bound: "ages 18+", "age 55+", "ages 21 and up/older/over".
+  // The closed-range check above needs TWO numbers, so an open-ended minimum fell
+  // through every numeric rule and landed on the All Ages catch-all. Found
+  // 2026-08-24 in the Step 3c audit: CivicRec's Recreation Campus
+  // (CivicRec-Parks-Eastern-middletown-ny) stored "October 2026 Registration -
+  // Ages 18+" as All Ages.
+  //
+  // This direction is the EXPENSIVE one. Adult-only rows are supposed to be
+  // REJECTED at save time on a family events site, and they can only be rejected
+  // if they resolve to Adults first — so an unread "18+" does not merely mistag a
+  // row, it publishes it.
+  //
+  // Anchored on the "age(s)" keyword exactly like the closed-range check, for the
+  // reason recorded on 2026-08-03: a bare "18+" elsewhere in the text can be a
+  // price, a room number or a capacity. Returns the raw "N+" form because
+  // normalizeAgeRange() already buckets it natively (18+/21+/55+ -> Adults,
+  // 13+ -> Teens, 6+ -> Kids), so no bucketing logic is duplicated here.
+  const ageMinMatch = text.match(/\bages?\s+(\d{1,2})\s*(?:\+|and\s+(?:up|older|over))/);
+  if (ageMinMatch) return `${ageMinMatch[1]}+`;
 
   // Parenthetical ages: "(ages 11-18)", "(3-5 yrs)", "(6-24 months)"
   const parenMatch = text.match(/\((?:ages?\s+)?(\d{1,2})\s*[-–]\s*(\d{1,2})(?:\s*(?:months?|mos?\.?|yrs?|years?))?\)/);
@@ -1935,7 +2022,13 @@ function createFirestoreCompatibleDB() {
           // scrapers call `.add()` without setting data.id, so every re-scrape
           // produced a new random row with identical content.
           // Same event → same id → upsert dedupes naturally.
-          const id = data.id || _stableIdForCollection(collectionName, data);
+          // Events go through _resolveEventId so a shared (non-per-event) URL
+          // cannot collapse many distinct events onto one row id. See its
+          // comment block — the re-key only fires on a PROVEN collision, so ids
+          // for normally-keyed events are unchanged.
+          const id = data.id || (collectionName === 'events'
+            ? _resolveEventId(data)
+            : _stableIdForCollection(collectionName, data));
           let flattened;
           try {
             flattened = flattenForTable(collectionName, data);
@@ -1952,7 +2045,13 @@ function createFirestoreCompatibleDB() {
             throw e;
           }
           const row = { id, ...flattened };
-          _noteStableId(id, row.name, collectionName);
+          // Register with the RAW data.name, not the flattened row.name:
+          // _resolveEventId compares against this map using data.name, and
+          // flattenEvent() rewrites titles (HTML-entity decode, ALL-CAPS ->
+          // Title Case). Registering the cleaned form would make the same event
+          // look like a different one on its next sighting and trigger a
+          // spurious re-key. One name source, both directions.
+          _noteStableId(id, data.name || row.name, collectionName);
           const { data: result, error } = await supabase
             .from(mapCollectionName(collectionName))
             .insert(row)
@@ -2492,4 +2591,10 @@ module.exports = {
   // audit script can assert the collapse case without hitting the database.
   _stableEventId,
   _stableIdCollisionCount,
+  _sharedUrlRekeyCount,
+  _resolveEventId,
+  // Exported so scripts/test-shared-url-rekey.js can drive the REAL registration
+  // path instead of re-implementing it — a forked predicate in a test proves
+  // nothing about production (see the 2026-08-22 predicate-fork incident).
+  _noteStableId,
 };
