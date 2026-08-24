@@ -125,6 +125,37 @@ function findBranchCoordinates(locationName, libraryName, libraryState) {
   return null;
 }
 
+const REGISTRY_KEY = 'LibraryCalendar-Libraries';
+
+/**
+ * Per-site scraper_name: `LibraryCalendar-Libraries-<siteSlug>`.
+ *
+ * This scraper covers 22 separate library systems. Until 2026-08-24 it set no
+ * metadata.scraperName at all, so flattenEvent() fell back to metadata.sourceName
+ * and every row was stored under a library DISPLAY NAME — unjoinable to the
+ * registry, and the exact drift CLAUDE.md's naming section describes.
+ *
+ * The slug is taken from the LibraryCalendar instance SUBDOMAIN (jessamine,
+ * howardcounty, frederick…), per the rule that a siteSlug comes from the site's
+ * own hostname and never from a display name. Falling back to the bare registry
+ * key is deliberate: a wrong slug is worse than an honestly generic one.
+ *
+ * Safe to change here, unlike the Assabet case: this scraper saves through its own
+ * .add() path rather than saveEventsWithGeocoding, so the value is not overwritten,
+ * and its dedup lookup keys on metadata.sourceName (not scraperName), so renaming
+ * cannot break it. _stableEventId() ignores scraper_name, so no row can duplicate —
+ * but rows written before today keep the old display name until they expire, so
+ * both will show in the audits for a while.
+ */
+function scraperNameFor(library) {
+  let slug = '';
+  try {
+    const host = new URL(library.url).host;              // jessamine.librarycalendar.com
+    slug = host.split('.')[0].toLowerCase().replace(/[^a-z0-9-]/g, '');
+  } catch (e) { /* fall through to the bare key */ }
+  return slug ? `${REGISTRY_KEY}-${slug}` : REGISTRY_KEY;
+}
+
 // LibraryCalendar Library Systems
 const LIBRARY_SYSTEMS = [
   // MARYLAND
@@ -329,6 +360,26 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.mybpl.org',
     city: 'Bloomingdale',
     zipCode: '60108'
+  },
+
+  // KENTUCKY
+  // Relocated from WordPress-KY 2026-08-24. Its Step 3d verdict was
+  // "extraction-failure: 20 future-dated events visible under Puppeteer" — the
+  // right site, real events, scraper returning 0. Reading the live DOM showed why:
+  // jesspublib.org/events is a 1KB SHELL that renders no events itself and simply
+  // links out to this LibraryCalendar instance, so the WordPress DOM extractor had
+  // nothing to find and no selector work could ever have fixed it.
+  // Instance confirmed before wiring: /events/upcoming returns HTTP 200, titles
+  // itself "Upcoming Events | Jessamine County Public Library" and carries 24
+  // per-event /event/<slug> links. First KY entry in this family.
+  {
+    name: 'Jessamine County Public Library',
+    url: 'https://jessamine.librarycalendar.com/events/upcoming',
+    county: 'Jessamine',
+    state: 'KY',
+    website: 'https://www.jesspublib.org',
+    city: 'Nicholasville',
+    zipCode: '40356'
   }
 ];
 
@@ -567,6 +618,18 @@ async function scrapeLibraryEvents(library, browser) {
           metadata: {
             source: 'LibraryCalendar Scraper',
             sourceName: library.name,
+            // Must be set EXPLICITLY. flattenEvent() reads metadata.scraperName
+            // first and silently falls back to metadata.sourceName when it is
+            // absent — which is exactly what happened here: every row this
+            // scraper has ever written carries a library DISPLAY NAME as its
+            // scraper_name ("Jessamine County Public Library"), which joins to no
+            // registry key and is the FREE_TEXT drift class CLAUDE.md forbids.
+            // Found 2026-08-24 while relocating Jessamine into this family.
+            scraperName: scraperNameFor(library),
+            // source_url was NULL on every row for the same reason — nothing set a
+            // listing URL. library.url IS the site's own calendar page, which is
+            // what this field is defined to hold (never the individual event URL).
+            sourceUrl: library.url,
             county: library.county,
             state: library.state,
             addedDate: admin.firestore.FieldValue.serverTimestamp()

@@ -712,12 +712,18 @@ const SCRAPERS = {
   // ============================================================================
   // OTHER LIBRARY PLATFORMS
   // ============================================================================
+  // 2026-08-24: gained Jessamine County KY (relocated from WordPress-KY, whose
+  // /events page is a shell that only links here) and per-site scraper_name.
+  // `sites` is declared so check-scraper-names.js can assert the distinct-name
+  // count matches — this scraper previously wrote a library DISPLAY NAME as its
+  // scraper_name for all 22 systems and nothing could detect that.
   'LibraryCalendar-Libraries': {
     file: './scraper-librarycalendar-libraries-MD-VA.js',
     exportName: 'scrapeLibraryCalendarLibraries',
     type: 'puppeteer',
     group: 1,
-    state: 'Multi'
+    state: 'Multi',
+    sites: 22
   },
   'CustomDrupal-Libraries': {
     file: './scraper-custom-drupal-libraries-GA-NC-SC-WV.js',

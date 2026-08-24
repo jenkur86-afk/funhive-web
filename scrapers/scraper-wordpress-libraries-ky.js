@@ -35,7 +35,13 @@ const LIBRARIES = [
   { name: 'Madison County Public Library', url: 'https://www.madisoncountylibrary.org', eventsUrl: 'https://www.madisoncountylibrary.org/events', city: 'Richmond', state: 'KY', zipCode: '40475' },
   { name: 'Oldham County Public Library', url: 'https://www.oldhampl.org', eventsUrl: 'https://www.oldhampl.org/events', city: 'La Grange', state: 'KY', zipCode: '40031', county: 'Oldham'},
   { name: 'Bullitt County Public Library', url: 'https://bcplibrary.org/', eventsUrl: 'https://bcplibrary.org/', city: 'Shepherdsville', state: 'KY', zipCode: '40165', county: 'Bullitt'},
-  { name: 'Jessamine County Public Library', url: 'https://www.jesspublib.org', eventsUrl: 'https://www.jesspublib.org/events', city: 'Nicholasville', state: 'KY', zipCode: '40356', county: 'Jessamine'},
+  // RELOCATED to LibraryCalendar-Libraries 2026-08-24 as jessamine.librarycalendar.com.
+  // Not deleted as "covered elsewhere" on an assumption: the destination instance was
+  // fetched first and returns HTTP 200, titles itself "Upcoming Events | Jessamine
+  // County Public Library" and carries 24 per-event links. jesspublib.org/events is a
+  // 1KB shell that renders no events and only links out to that instance, so this entry
+  // could never have returned anything regardless of selector work.
+  // { name: 'Jessamine County Public Library', url: 'https://www.jesspublib.org', eventsUrl: 'https://www.jesspublib.org/events', city: 'Nicholasville', state: 'KY', zipCode: '40356', county: 'Jessamine'},
   { name: 'Scott County Public Library', url: 'https://scottpublib.org/', eventsUrl: 'https://scottpublib.org/', city: 'Georgetown', state: 'KY', zipCode: '40324', county: 'Scott'},
   { name: 'Clark County Public Library', url: 'https://www.clarkbooks.org', eventsUrl: 'https://www.clarkbooks.org/events', city: 'Winchester', state: 'KY', zipCode: '40391', county: 'Clark'},
   { name: 'Laurel County Public Library', url: 'https://www.laurellibrary.org', eventsUrl: 'https://www.laurellibrary.org/events', city: 'London', state: 'KY', zipCode: '40741', county: 'Laurel'},
