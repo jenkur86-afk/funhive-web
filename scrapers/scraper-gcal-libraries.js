@@ -67,8 +67,21 @@ const LIBRARIES = [
     // ("Activity Room", "Mobile Library"), none of them Sangaree. The only Sangaree rows
     // in the DB come incidentally from MacaroniKid-SC-northcharleston (5 upcoming).
     // OPEN COVERAGE GAP; the real fix is why LibCal-SC under-collects Berkeley branches.
+    // URL CORRECTED 2026-08-23 (Defect A). It read summervillelibrary.org/events, which
+    // is Summerville PENNSYLVANIA — the same guessed {city}library.org shape that put 400
+    // entries on colliding hosts. This one was harmless in practice, because the scraper
+    // reads the Google Calendar feed above and never fetches `url` at all, so no
+    // Pennsylvania events were ever ingested under a South Carolina name. It still had to
+    // change: `url` is what LIBRARY-SITE-AUDIT.md links a reader to, and it fed gate 2 as
+    // a live collision.
+    //
+    // This is a CORRECTION, not a disable — the first in this defect. Every other
+    // colliding entry was guarded because its true owner was another state's library; here
+    // the entry is legitimately South Carolina's and only the URL was wrong.
+    // berkeleylibrarysc.org verified live: "Berkeley County Library System, South
+    // Carolina", phone 843-719-4223 (843 = SC), and /locations-and-hours/ returns 200.
     name: 'Berkeley County Library - Sangaree Library',
-    url: 'https://www.summervillelibrary.org/events',
+    url: 'https://berkeleylibrarysc.org/locations-and-hours/',
     calendarIds: ['1688576522e507061425c53184e34f7054e3b8af8dd47ec00491cba17e6fb71d@group.calendar.google.com'],
     city: 'Summerville', state: 'SC', zipCode: '29483', county: 'Dorchester',
   },

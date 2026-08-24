@@ -39,17 +39,37 @@
  * human to look at — never silently resolved. Copy accepted lines into GROUND_TRUTH in
  * scripts/disable-collided-urls.js; nothing here writes to a config file.
  *
- * KNOWN LIMIT — read this before believing an UNREACHABLE
- * -------------------------------------------------------
- * On the 2026-08-23 run, 16 of the 18 UNREACHABLE hosts ended on
- * `net::ERR_BLOCKED_BY_CLIENT` against the `http://` variant. That is Chrome refusing to
- * issue the request locally — an extension, policy or interception rule in the launch
- * config — NOT evidence about the site. Those hosts had already timed out on both https
- * variants, so the honest verdict is inconclusive and they must NOT be marked DEAD.
+ * NODE FIRST, CHROME SECOND — changed 2026-08-23
+ * ----------------------------------------------
+ * The paragraph that used to sit here warned that a `net::ERR_BLOCKED_BY_CLIENT` on the
+ * `http://` variant is Chrome refusing to issue the request locally rather than evidence
+ * about the site, and concluded that such hosts are simply unknowable. The warning was
+ * right; the conclusion was wrong. On the 2026-08-23 run 16 of 35 hosts came back
+ * UNREACHABLE that way, and every one of them answered a plain Node request instantly:
  *
- * This is the same trap as the DNS sweep that reported 162/162 hosts dead in this
- * sandbox while `google.com` failed identically. When a whole class of probes fails the
- * same way, suspect the probe before the world.
+ *     node   http://clintonlibrary.org    -> 301 http://www.clintonpresidentialcenter.org
+ *     node   http://lexingtonlibrary.org  -> 200, 12 KB of real HTML
+ *     chrome all variants                 -> ERR_BLOCKED_BY_CLIENT
+ *
+ * So the whole UNREACHABLE class was an artefact of the probe, exactly as the DNS sweep
+ * had been before it. `node:http`/`node:https` are not subject to Chrome's client-side
+ * blocking and, unlike the browser, they expose the REDIRECT CHAIN.
+ *
+ * That chain is the strongest identity signal in this file. A host that leaves its own
+ * registrable domain has been sold, parked or repointed, and no claiming state can be
+ * right about it — clintonlibrary.org, claimed by NINE states, is the Clinton
+ * PRESIDENTIAL library. Note the hop counts even when the destination then refuses us:
+ * an earlier cut only inspected the FINAL url, so a chain ending in 403 was recorded as
+ * UNREACHABLE and the redirect was discarded.
+ *
+ * Chrome remains as the fallback, for two things Node cannot do: render a JS-only site,
+ * and follow a script or meta-refresh redirect (which leaves the HTTP status at 200 —
+ * newtonlibrary.org is the live example, 200 over plain HTTP with a script that sends
+ * the browser to an affiliate redirector).
+ *
+ * DO NOT reintroduce a dns.resolve4 pre-check. It still returns ECONNREFUSED for every
+ * host in this sandbox including google.com; http.get resolves names fine through the OS
+ * resolver, and only the dns module's own path is blocked.
  *
  * Usage:
  *   node scripts/resolve-collision-host-state.js --in=hosts.txt      # one host per line
@@ -135,6 +155,211 @@ const AREA_CODE = {
 
 const PATHS = ['', '/contact', '/contact-us', '/about', '/about-us', '/hours', '/hours-and-locations', '/locations', '/visit'];
 
+// ─────────────────────────────────────────────────────────────────────────────
+// NODE HTTP LAYER — the primary fetch path. Chrome is now the FALLBACK.
+//
+// Added 2026-08-23 after the Chrome-only resolver returned UNREACHABLE for 16 of
+// 35 hosts, every one of them ending on `net::ERR_BLOCKED_BY_CLIENT` against the
+// http:// variant. That is Chrome refusing to issue the request locally, and the
+// header note above already warned it is not evidence about the site. What it did
+// not say is that the sites are trivially reachable WITHOUT Chrome:
+//
+//   node:  http://clintonlibrary.org      -> 301 http://www.clintonpresidentialcenter.org
+//   node:  http://lexingtonlibrary.org    -> 200, 12 KB of real HTML
+//   node:  http://greensborolibrary.org   -> 302 https://library.greensboro-nc.gov
+//   chrome: all three -> ERR_BLOCKED_BY_CLIENT
+//
+// So the whole UNREACHABLE class was an artefact of the probe. Node's http/https
+// modules are not subject to Chrome's client-side blocking, follow redirects when
+// asked, and — crucially — expose the FINAL HOST, which is the single strongest
+// identity signal available: a host that redirects off its own registrable domain
+// has been sold or repointed, and no claiming state can be right about it.
+//
+// dns.resolve4 remains broken in this sandbox (google.com returns ECONNREFUSED),
+// so DO NOT reintroduce a DNS pre-check here. http.get resolves names fine through
+// the OS resolver; only the dns module's own path is blocked.
+//
+// Chrome is still needed for JS-rendered sites that serve an empty body over plain
+// HTTP, so it stays as a second attempt rather than being removed.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const http = require('http');
+const https = require('https');
+
+function registrable(hostname) {
+  const parts = String(hostname || '').replace(/^www\./, '').toLowerCase().split('.');
+  return parts.slice(-2).join('.');
+}
+
+/** One HTTP(S) GET, following up to `max` redirects. Never throws. */
+function fetchNode(url, { timeout = 15000, max = 6 } = {}) {
+  return new Promise((resolve) => {
+    const hops = [];
+    const step = (u, left) => {
+      let mod;
+      try { mod = u.startsWith('https:') ? https : http; } catch { return resolve({ err: 'BAD_URL', hops }); }
+      const req = mod.get(u, {
+        timeout,
+        // Chrome runs with --ignore-certificate-errors in puppeteer-config.js; match it,
+        // because a lapsed certificate says nothing about which state a library is in.
+        rejectUnauthorized: false,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml',
+        },
+      }, (res) => {
+        const loc = res.headers.location;
+        if (res.statusCode >= 300 && res.statusCode < 400 && loc && left > 0) {
+          res.resume();
+          let next;
+          try { next = new URL(loc, u).href; } catch { return resolve({ err: 'BAD_REDIRECT', finalUrl: u, hops }); }
+          hops.push({ from: u, status: res.statusCode, to: next });
+          return step(next, left - 1);
+        }
+        let body = '';
+        res.on('data', (c) => { if (body.length < 400000) body += c; });
+        res.on('end', () => resolve({ status: res.statusCode, finalUrl: u, body, hops }));
+      });
+      req.on('timeout', () => { req.destroy(); resolve({ err: 'TIMEOUT', hops }); });
+      req.on('error', (e) => resolve({ err: String(e.code || e.message).slice(0, 40), hops }));
+    };
+    step(url, max);
+  });
+}
+
+/**
+ * Crude HTML -> text. extractSignals() wants both a text view (for "ST 12345",
+ * phone numbers and ", Full State") and the raw HTML (for tel: links), and the
+ * signals it looks for are all plain substrings, so a real parser buys nothing here.
+ */
+function htmlToText(html) {
+  return String(html || '')
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|div|li|tr|h[1-6])>/gi, '\n')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&#(\d+);/g, (_m, d) => String.fromCharCode(parseInt(d, 10)))
+    .replace(/[ \t]{2,}/g, ' ');
+}
+
+/**
+ * Pull the site's OWN contact/about/hours links out of its markup.
+ *
+ * Guessing paths misses most small library sites — they run on site builders with
+ * URLs like /pages/contact-us-2 or /index.php?id=14. Following the nav is how you
+ * find the address page that the guessed PATHS list never reaches, and it is why
+ * 16 hosts scored a literal `{}` on the Chrome-only run despite serving real pages.
+ */
+function discoverContactLinks(baseUrl, html, limit = 6) {
+  const out = [];
+  const seen = new Set();
+  // "faq" earns its place: goshenlibrary.org keeps its only address there
+  // ("36 Mill Village Road North, Goshen, NH, 03752 ... 603-863-6921") and nowhere else,
+  // so without it the host stayed UNRESOLVED across three passes while five states
+  // claimed it.
+  const want = /(contact|about|hour|location|visit|direction|find-us|our-library|info|faq)/i;
+  for (const m of String(html).matchAll(/<a\b[^>]*href\s*=\s*["']([^"']+)["'][^>]*>([\s\S]{0,120}?)<\/a>/gi)) {
+    const href = m[1];
+    const label = m[2].replace(/<[^>]+>/g, ' ');
+    if (!want.test(href) && !want.test(label)) continue;
+    let abs;
+    try { abs = new URL(href, baseUrl).href; } catch { continue; }
+    if (!/^https?:/i.test(abs)) continue;
+    try { if (registrable(new URL(abs).hostname) !== registrable(new URL(baseUrl).hostname)) continue; } catch { continue; }
+    const key = abs.split('#')[0];
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(key);
+    if (out.length >= limit) break;
+  }
+  return out;
+}
+
+/**
+ * Node-first probe. Returns null when Node could not reach the host at all, so the
+ * caller can still try Chrome; returns a result object otherwise.
+ */
+async function probeNode(host) {
+  const variants = [`https://${host}`, `https://www.${host}`, `http://${host}`, `http://www.${host}`];
+  const merged = { zip: {}, area: {}, name: {} };
+  const mergeIn = (s) => { for (const k of ['zip', 'area', 'name']) for (const [st, n] of Object.entries(s[k])) merged[k][st] = (merged[k][st] || 0) + n; };
+
+  // THE REDIRECT ITSELF IS THE EVIDENCE, even when the destination refuses us.
+  //
+  // A first cut only checked the FINAL url, so a chain that left the domain and then
+  // ended in a 403 was reported as UNREACHABLE and the redirect was thrown away. That
+  // lost the single biggest collision on the board: clintonlibrary.org 301s to
+  // clintonpresidentialcenter.org — the Clinton Presidential Library, not a public
+  // library at all — and NINE states claim it. Its destination 403s a bare Node
+  // request, so the old logic saw only "HTTP 403" and learned nothing.
+  //
+  // So: watch every hop across every variant, and treat the first departure from the
+  // registrable domain as decisive whatever happens afterwards.
+  let first = null, lastErr = '';
+  let offHopTo = null;
+  const noteOffHop = (r) => {
+    if (offHopTo) return;
+    for (const h of r.hops || []) {
+      try {
+        if (registrable(new URL(h.to).hostname) !== registrable(host)) { offHopTo = registrable(new URL(h.to).hostname); return; }
+      } catch { /* an unparseable Location is not evidence */ }
+    }
+  };
+  for (const v of variants) {
+    const r = await fetchNode(v);
+    noteOffHop(r);
+    if (r.err) { lastErr = r.err; continue; }
+    if (r.status >= 400) { lastErr = `HTTP ${r.status}`; continue; }
+    first = r;
+    break;
+  }
+
+  // Deliberately NOT fetching the destination: it is untrusted third-party content and
+  // is not needed, because the hop away from the domain already answers the question.
+  const offHostResult = (to, reached) => ({
+    host, verdict: 'OFF_HOST', state: null, via: 'node',
+    reached, redirectedTo: to,
+    note: `redirects off-domain to ${to}`,
+    signals: merged, score: {},
+  });
+
+  if (!first) {
+    if (offHopTo) return offHostResult(offHopTo, `https://${host}`);
+    return { host, verdict: 'UNREACHABLE', note: lastErr, via: 'node' };
+  }
+
+  let finalHost = '';
+  try { finalHost = new URL(first.finalUrl).hostname; } catch {}
+  if (finalHost && registrable(finalHost) !== registrable(host)) {
+    return offHostResult(registrable(finalHost), first.finalUrl);
+  }
+  if (offHopTo) return offHostResult(offHopTo, first.finalUrl);
+
+  mergeIn(extractSignals(htmlToText(first.body), first.body));
+  if (decide(merged).verdict !== 'RESOLVED') {
+    const links = discoverContactLinks(first.finalUrl, first.body);
+    const guessed = PATHS.filter(Boolean).map((p) => {
+      try { return new URL(p, first.finalUrl).href; } catch { return null; }
+    }).filter(Boolean);
+    for (const u of [...links, ...guessed]) {
+      const r = await fetchNode(u);
+      if (r.err || r.status >= 400 || !r.body) continue;
+      mergeIn(extractSignals(htmlToText(r.body), r.body));
+      if (decide(merged).verdict === 'RESOLVED') break;
+    }
+  }
+
+  const d = decide(merged);
+  // Distinguish "read the pages, found nothing" from "found conflicting things".
+  if (d.verdict === 'UNRESOLVED' && first.body && first.body.length < 800) {
+    return { host, verdict: 'EMPTY_BODY', state: null, via: 'node', reached: first.finalUrl, signals: merged, score: d.score };
+  }
+  return { host, ...d, via: 'node', reached: first.finalUrl, signals: merged };
+}
+
 function extractSignals(text, html) {
   const sig = { zip: {}, area: {}, name: {} };
   const bump = (b, s) => { if (s && ST_SET.has(s)) b[s] = (b[s] || 0) + 1; };
@@ -143,7 +368,14 @@ function extractSignals(text, html) {
   for (const m of text.matchAll(/\b([A-Z]{2})[\s,]+(\d{5})(?:-\d{4})?\b/g)) bump(sig.zip, m[1]);
 
   // B. phone area codes, in phone-shaped context only.
-  for (const m of text.matchAll(/(?:\(\s*(\d{3})\s*\)|\b(\d{3}))[\s.\-]\s*\d{3}[\s.\-]\d{4}\b/g)) {
+  //
+  // The separator after a PARENTHESISED area code is optional — "(203)794-8756" with no
+  // space is ordinary usage and the old `[\s.\-]` made it mandatory, so bethellibrary.org
+  // scored a literal {} and sat unresolved across three passes while its contact page
+  // said "(203)794-8756 ... 189 Greenwood Avenue" the whole time. A BARE three-digit area
+  // code still requires the separator: without the parentheses, "2037948756" run together
+  // is not phone-shaped enough to trust.
+  for (const m of text.matchAll(/(?:\(\s*(\d{3})\s*\)[\s.\-]?|\b(\d{3})[\s.\-])\s*\d{3}[\s.\-]\d{4}\b/g)) {
     const code = parseInt(m[1] || m[2], 10);
     bump(sig.area, AREA_CODE[code]);
   }
@@ -194,6 +426,27 @@ async function probe(browser, host) {
     }
     if (!reached) { await page.close(); return { host, verdict: 'UNREACHABLE', note: lastErr }; }
 
+    // A JS or meta-refresh redirect leaves the HTTP status at 200, so probeNode()
+    // cannot see it — this is the only place an off-domain hop of that kind shows up.
+    // newtonlibrary.org is the live example: plain HTTP returns 200 with a script that
+    // sends the browser to an affiliate redirector, and six states claim the host.
+    // Give the redirect a moment to fire before reading location.href.
+    await new Promise(r => setTimeout(r, 2500));
+    const landed = await page.evaluate(() => location.href).catch(() => null);
+    if (landed) {
+      let lh = '';
+      try { lh = new URL(landed).hostname; } catch {}
+      if (lh && registrable(lh) !== registrable(host)) {
+        await page.close();
+        return {
+          host, verdict: 'OFF_HOST', state: null, reached: landed,
+          redirectedTo: registrable(lh),
+          note: `client-side redirect off-domain to ${registrable(lh)}`,
+          signals: merged, score: {},
+        };
+      }
+    }
+
     for (const p of PATHS) {
       try {
         if (p) {
@@ -224,10 +477,21 @@ async function main() {
   const worker = async () => {
     while (i < hosts.length) {
       const h = hosts[i++];
-      const r = await probe(browser, h).catch(e => ({ host: h, verdict: 'ERROR', note: String(e.message || e).slice(0, 70) }));
+      // Node first — it reaches hosts Chrome refuses locally, and it is the only
+      // path that can see an off-domain redirect. Chrome is the fallback, for
+      // JS-rendered sites that serve nothing useful over plain HTTP.
+      let r = await probeNode(h).catch(e => ({ host: h, verdict: 'ERROR', via: 'node', note: String(e.message || e).slice(0, 70) }));
+      if (['UNREACHABLE', 'UNRESOLVED', 'EMPTY_BODY', 'ERROR'].includes(r.verdict)) {
+        const c = await probe(browser, h).catch(e => ({ host: h, verdict: 'ERROR', note: String(e.message || e).slice(0, 70) }));
+        // Only let Chrome overturn Node when it actually settles the question.
+        // A Chrome UNREACHABLE on top of a Node UNRESOLVED is not more information,
+        // and letting it overwrite would throw away the pages Node did read.
+        if (['RESOLVED', 'CONFLICTED', 'OFF_HOST'].includes(c.verdict)) r = { ...c, via: 'chrome' };
+        else r = { ...r, chromeAlso: c.verdict };
+      }
       results.push(r);
-      const fmt = r.state ? r.state : (r.note || r.verdict);
-      console.log(`  ${results.length}/${hosts.length}  ${String(r.verdict).padEnd(12)} ${r.host.padEnd(32)} ${fmt}`);
+      const fmt = r.state ? r.state : (r.redirectedTo || r.note || r.verdict);
+      console.log(`  ${results.length}/${hosts.length}  ${String(r.verdict).padEnd(12)} ${String(r.via || '').padEnd(6)} ${r.host.padEnd(30)} ${fmt}`);
     }
   };
   await Promise.all(Array.from({ length: CONCURRENCY }, worker));
@@ -246,9 +510,16 @@ async function main() {
     fs.writeFileSync(OUT, lines.join('\n') + '\n');
     console.log(`wrote ${lines.length} GROUND_TRUTH lines to ${OUT}`);
   }
-  console.log('\nCONFLICTED / UNRESOLVED need a human — they are NOT safe to disable:');
-  results.filter(r => r.verdict === 'CONFLICTED' || r.verdict === 'UNRESOLVED')
-    .forEach(r => console.log(`  ${r.host.padEnd(32)} ${JSON.stringify(r.score || {})}`));
+  const offHost = results.filter(r => r.verdict === 'OFF_HOST');
+  if (offHost.length) {
+    console.log('\nOFF_HOST — the domain now serves something else, so no claiming state');
+    console.log('can be right about it. These are DEAD candidates for disable-collided-urls.js:');
+    offHost.forEach(r => console.log(`  ${r.host.padEnd(30)} -> ${r.redirectedTo}`));
+  }
+
+  console.log('\nCONFLICTED / UNRESOLVED / UNREACHABLE need a human — they are NOT safe to disable:');
+  results.filter(r => ['CONFLICTED', 'UNRESOLVED', 'UNREACHABLE', 'EMPTY_BODY', 'ERROR'].includes(r.verdict))
+    .forEach(r => console.log(`  ${String(r.verdict).padEnd(12)} ${r.host.padEnd(30)} ${JSON.stringify(r.score || {})} ${r.note || ''}`));
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

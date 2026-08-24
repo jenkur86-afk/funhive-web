@@ -143,6 +143,103 @@ const GROUND_TRUTH = {
   'martinsburglibrary.org':    { state: 'NY', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://martinsburglibrary.org; zip={"NY":1} area={"NY":1} name={}' },
   'piersonlibrary.org':        { state: 'VT', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://piersonlibrary.org; zip={} area={"VT":3} name={"VT":1}' },
   'westhartfordlibrary.org':   { state: 'CT', evidence: 'resolve-collision-host-state.js 2026-08-23 via https://westhartfordlibrary.org; zip={} area={"CT":4} name={}' },
+  // --- ninth pass, 2026-08-23: an empty server is not the same as an unreachable one --
+  //
+  // Only one entry here, and the distinction it rests on is the point. Four hosts were
+  // left after the eighth pass and all four "failed to load", but they failed in two
+  // different ways and only one of them is evidence:
+  //
+  //   middletownlibrary.org  IIS answers on every variant. Root returns 403 (directory
+  //                          listing denied, no default document) and EVERY path — /events
+  //                          /calendar /index.html /default.aspx /about /contact — returns
+  //                          404. Googlebot and a bare client get the identical 403, so it
+  //                          is not a bot block. The server is up and hosts nothing.
+  //                          Nobody can be scraping a library here, so no claimant is right.
+  //
+  //   montgomerylibrary.org  ETIMEDOUT on all four URL variants at a 40s timeout, under
+  //   greenelibrary.org      both node:http and the stealth browser. That is an ABSENCE of
+  //   newberrylibrary.org    evidence, not evidence of absence — a timeout can be transient,
+  //                          geo-blocked, or firewalled against this sandbox specifically,
+  //                          and the DNS sweep and the ERR_BLOCKED_BY_CLIENT episode are
+  //                          both cautionary tales about reading a failed probe as a fact.
+  //                          They are DELIBERATELY NOT LISTED HERE and remain gate-2 open
+  //                          items. Retry them; do not mark them dead on a timeout.
+  'middletownlibrary.org':     { state: 'DEAD', evidence: 'IIS server is up but hosts no site: root 403 with no default document, and /events /calendar /index.html /default.aspx /about /contact all 404. Identical response to Googlebot and to a bare client, so not a bot block. Claimed by PA/NY/NJ/RI.' },
+
+  // --- eighth pass, 2026-08-23: read the landing pages instead of scoring them -----
+  //
+  // Nine more, and the lesson is that a SCORING resolver is the wrong instrument for a
+  // dead domain. Seven of these carry no address because they are no longer libraries,
+  // and the resolver can only report {} for that — indistinguishable from a real library
+  // that keeps its address on a page we did not visit. Reading the landing text settles
+  // it in one look. lexingtonlibrary.org alone was claimed by SIX states while serving a
+  // registrar parking page.
+  //
+  // The two that ARE still libraries were both unlocked by a fix to the resolver in the
+  // same commit, so neither is a hand-entered exception:
+  //   - bethellibrary.org sat at {} for three passes because its phone reads
+  //     "(203)794-8756" with no separator after the parenthesis, and the area-code regex
+  //     required one. Loosened for the parenthesised form only.
+  //   - goshenlibrary.org keeps its only address on /faq, which was neither in PATHS nor
+  //     matched by the nav-link discovery. "faq" added to that pattern.
+  // Both now resolve automatically, and the six known-answer hosts still resolve
+  // correctly after the change.
+  'lexingtonlibrary.org':      { state: 'DEAD', evidence: 'serves a NameBright registrar parking page reading "lexingtonlibrary.org is coming soon. This domain is managed at NameBright". Claimed by GA/NC/MA/AL/SC/MS — six states pointing at a domain nobody is using.' },
+  'hebronlibrary.org':         { state: 'DEAD', evidence: 'serves a placeholder reading "Coming Soon. hebronlibrary.org. We are under construction." No library content at all. Claimed by CT/KY/NH.' },
+  'smyrnalibrary.org':         { state: 'DEAD', evidence: 'serves a coupon-affiliate template headed "YourBRAND / Welcome to BRAND / Couponing Deals" — an unedited spam theme, not a library. Claimed by NY/GA/TN.' },
+  'alfredlibrary.org':         { state: 'DEAD', evidence: 'the domain now belongs to "Alfred Care Group" and titles itself "Library Services - Alfred Care Group"; the word library here is a services menu, not an institution. Claimed by NY/ME.' },
+  'haverhilllibrary.org':      { state: 'DEAD', evidence: 'serves a bare "UNDER CONSTRUCTION. This Web site is currently under construction." placeholder. Claimed by MA/NH.' },
+  'newfanelibrary.org':        { state: 'DEAD', evidence: 'the domain now serves STARSLOTS88, an Indonesian online-gambling site. Claimed by NY/VT. Flagged here as much for content as for coverage — this must never reach a family site.' },
+  'stoningtonlibrary.org':     { state: 'DEAD', evidence: 'serves an Indonesian "SEDANG MAINTENANCE" holding page, the same hijack family as newfanelibrary.org. Claimed by CT/ME.' },
+  'goshenlibrary.org':         { state: 'NH', evidence: 'its /faq page gives "Our address is 36 Mill Village Road North, Goshen, NH, 03752", "Olive G Pettis Library, PO Box 57, Goshen, NH, 03752" and 603-863-6921. The NH claimant is CORRECT and is kept; NY/MA/CT/KY are wrong.' },
+  'bethellibrary.org':         { state: 'CT', evidence: 'contact page reads "call (203)794-8756. Find us across from Bethel Municipal Center at 189 Greenwood Avenue" — area 203 is Connecticut. The CT claimant is CORRECT and is kept; PA/ME/VT are wrong.' },
+
+  // --- seventh pass, 2026-08-23: the hosts Chrome could not reach at all ----------
+  //
+  // These 22 were the residue nothing had settled, and the reason was the PROBE, not the
+  // sites. resolve-collision-host-state.js was Chrome-only, and 16 of the 35 remaining
+  // hosts came back UNREACHABLE ending on net::ERR_BLOCKED_BY_CLIENT — Chrome refusing to
+  // issue the request locally. Every one of them answers a plain node:http request. The
+  // resolver is now node-first with Chrome as the fallback, and it was re-validated
+  // against six hosts with independently known answers (ringwood NJ, belfast ME,
+  // mountainside NJ, worcester MD, sparta WI, hartford WI) before being trusted here.
+  //
+  // Node also exposes the REDIRECT CHAIN, which turned out to be the strongest signal in
+  // the whole exercise. Five of these hosts are not dead at all — they moved to the real
+  // institution's current domain, and marking them DEAD would have deleted genuine
+  // coverage. The state below is the redirect target's own state, confirmed by fetching
+  // that target and reading its address.
+  //
+  // The thinnest four resolutions were each spot-checked by hand against the live page
+  // rather than accepted on score alone, because a wrong call here disables a real
+  // library: montereylibrary.org carries area code 831 (Monterey CA), dublinlibrary.org
+  // titles itself "Dublin Public Library, Dublin Texas", townsendlibrary.org says
+  // "Townsend Massachusetts", and shrewsburylibrary.org's about.html gives
+  // "98 Town Hill Rd, Cuttingsville, VT 05738, 802-492-3410" — Shrewsbury VT, so the
+  // plausible-looking MA claimant is the wrong one.
+  'clintonlibrary.org':        { state: 'DEAD', evidence: 'HTTP 301 to clintonpresidentialcenter.org, which itself redirects to clintonfoundation.org. This is the Clinton PRESIDENTIAL library, not a public library, and NINE states claimed it — the single largest collision on the board.' },
+  'newtonlibrary.org':         { state: 'DEAD', evidence: 'serves a page reading "This domain is for sale. Contact the Owner"; the stealth browser is then sent on to depressively.com, an affiliate redirector. Claimed by GA/NJ/MA/AL/MS/NH.' },
+  'monroelibrary.org':         { state: 'DEAD', evidence: 'title "Redirecting..." with an empty body over plain HTTP; under the browser it lands on wherewindsmeetgame.com, a video-game site. Claimed by NY/GA/NC/CT/ME/NH.' },
+  'plainvillelibrary.org':     { state: 'DEAD', evidence: 'same shape and same destination as monroelibrary.org — "Redirecting..." shell to wherewindsmeetgame.com. Two unrelated library domains landing on one game site is the signature of a parking network.' },
+  'bethlehemlibrary.org':      { state: 'DEAD', evidence: 'page title is the bare string bethlehemlibrary.org and every asset loads from northwavepoint.com — a parking page. Claimed by PA/CT/NH.' },
+  'andoverlibrary.org':        { state: 'KS', evidence: 'live page reads "Central Ave, Andover, Kansas" with phone 316-558-3500 (area 316 = KS). Claimed by NY/MA/CT/ME/NH, so all five are wrong.' },
+  'carlislelibrary.org':       { state: 'IA', evidence: 'HTTP 301 to carlislepubliclibrary.org, which resolves to IOWA. Claimed by PA/MA/KY, so all three are wrong.' },
+  'piedmontlibrary.org':       { state: 'OK', evidence: 'HTTP 302 to www.piedmont.okpls.org — Pioneer Library System, Piedmont OKLAHOMA. Claimed by AL/SC/WV, so all three are wrong. NOT dead: it is a real library, just not in the region.' },
+  'greensborolibrary.org':     { state: 'NC', evidence: 'HTTP 302 to library.greensboro-nc.gov, resolved NC from that site. The NC claimant is CORRECT and is kept; GA/AL/VT are wrong.' },
+  'littletonlibrary.org':      { state: 'MA', evidence: 'redirects to littletonma.org, resolved MA. The MA claimant (Reuben Hoar Library) is CORRECT and is kept; NC/NH are wrong.' },
+  'newcumberlandlibrary.org':  { state: 'PA', evidence: 'redirects to cumberlandcountylibraries.org, resolved PA. The PA claimant is CORRECT and is kept; WV is wrong.' },
+  'eastrochesterlibrary.org':  { state: 'NY', evidence: 'redirects to eastrochesterny.gov, resolved NY. The NY claimant is CORRECT and is kept; NH is wrong.' },
+  'shrewsburylibrary.org':     { state: 'VT', evidence: 'about.html gives "PO Box 396, 98 Town Hill Rd, Cuttingsville, VT 05738" and 802-492-3410. The VT claimant is CORRECT and is kept; the plausible-looking MA one and a PA entry pointing at it are wrong.' },
+  'pikelibrary.org':           { state: 'KY', evidence: 'resolve-collision-host-state.js 2026-08-23 node path; area={"KY":8}. The KY claimant (Pike County Public Library) is kept; NY/NH are wrong.' },
+  'thomastonlibrary.org':      { state: 'CT', evidence: 'resolve-collision-host-state.js 2026-08-23 node path; zip={"CT":1} area={"CT":1} name={"CT":1} all agree. The CT claimant is kept; GA/ME are wrong.' },
+  'cutlerlibrary.org':         { state: 'VT', evidence: 'resolve-collision-host-state.js 2026-08-23 node path; area={"VT":2}. The VT claimant (Cutler Memorial) is kept; ME is wrong.' },
+  'townsendlibrary.org':       { state: 'MA', evidence: 'site title reads "Townsend Public Library in Townsend Massachusetts"; zip={"MA":1}. The MA claimant is kept; TN is wrong.' },
+  'summervillelibrary.org':    { state: 'PA', evidence: 'resolve-collision-host-state.js 2026-08-23 node path; zip={"PA":1} area={"PA":1} — Summerville PA, Jefferson County. The PA claimant is kept; the SC entry (a Berkeley County SC branch) is wrong.' },
+  'freeportlibrary.org':       { state: 'PA', evidence: 'resolve-collision-host-state.js 2026-08-23 node path; zip={"PA":1} area={"PA":1}. Claimed by FL/ME, so both are wrong.' },
+  'marshfieldlibrary.org':     { state: 'WI', evidence: 'resolve-collision-host-state.js 2026-08-23 node path; zip={"WI":1} area={"WI":1}. Claimed by MA/VT, so both are wrong.' },
+  'montereylibrary.org':       { state: 'CA', evidence: 'live page lists (831) 646-3933 and (831) 648-5760; area 831 is Monterey CALIFORNIA. Claimed by MA/TN, so both are wrong.' },
+  'dublinlibrary.org':         { state: 'TX', evidence: 'site titles itself "Dublin Public Library, Dublin Texas". Claimed by GA/NH, so both are wrong.' },
+
   // --- sixth pass, 2026-08-23: expired domains resold to unrelated sites ----------
   // These five never resolved to a library because they are no longer libraries. Each
   // redirects off-site to something with no connection to the institution, which is the

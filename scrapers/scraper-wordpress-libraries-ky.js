@@ -55,8 +55,8 @@ const LIBRARIES = [
   // URL corrected 2026-08-11 (was auburnlibrary.org): Real name Logan County Public Library Auburn Branch; site lists 106 Spring St, Auburn KY 42206, phone 270-542-8180
   { name: 'Auburn Branch', url: 'https://loganlibrary.org', eventsUrl: 'https://loganlibrary.org/calendar/', city: 'Auburn', state: 'KY', zipCode: '00000', county: 'Logan'},
   { name: 'Trimble County Public Library', url: 'https://www.bedfordlibrary.org', eventsUrl: 'https://www.bedfordlibrary.org/events', city: 'Bedford', state: 'KY', zipCode: '40006', county: 'Trimble', urlCollision: 'bedfordlibrary.org is TX, not KY' },
-  { name: 'Nicholas County Public Library', url: 'https://www.carlislelibrary.org', eventsUrl: 'https://www.carlislelibrary.org/events', city: 'Carlisle', state: 'KY', zipCode: '40311', county: 'Carlisle County'},
-  { name: 'Hickman County Memorial Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'KY', zipCode: '42031', county: 'Clinton County'},
+  { name: 'Nicholas County Public Library', url: 'https://www.carlislelibrary.org', eventsUrl: 'https://www.carlislelibrary.org/events', city: 'Carlisle', state: 'KY', zipCode: '40311', county: 'Carlisle County', urlCollision: 'carlislelibrary.org is IA, not KY' },
+  { name: 'Hickman County Memorial Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'KY', zipCode: '42031', county: 'Clinton County', urlCollision: 'clintonlibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'Adair County Public Library', url: 'https://www.columbialibrary.org', eventsUrl: 'https://www.columbialibrary.org/events', city: 'Columbia', state: 'KY', zipCode: '42728', county: 'Adair', urlCollision: 'columbialibrary.org is IL, not KY' },
   { name: 'South Branch', url: 'https://corbinlibrary.org/', eventsUrl: 'https://corbinlibrary.org/', city: 'Corbin', state: 'KY', zipCode: '00000', county: 'Whitley'},
   { name: 'Oldham County Public Library', url: 'https://www.crestwoodlibrary.org/', eventsUrl: 'https://www.crestwoodlibrary.org/news-events/lib-cal/calendar', city: 'Crestwood', state: 'KY', zipCode: '40014', county: 'Oldham'},
@@ -68,14 +68,14 @@ const LIBRARIES = [
   { name: 'Fulton Public Library', url: 'https://www.facebook.com/', eventsUrl: 'https://www.facebook.com/fultonlibrary', city: 'Fulton', state: 'KY', zipCode: '42041', county: 'Fulton County'},
   // URL corrected 2026-08-11 (was glasgowlibrary.org): Site header reads Barren County Public Library - Mary Wood Weldon Memorial Library, 1530 S Green St, Glasgow KY 42141, phone 270-651-2824
   { name: 'Mary Wood Weldon Memorial Public Library', url: 'https://weldonpubliclibrary.org', eventsUrl: 'https://weldonpubliclibrary.org/index.php/events/', city: 'Glasgow', state: 'KY', zipCode: '42141', county: 'Barren'},
-  { name: 'Mahan-Oldham County Library', url: 'https://www.goshenlibrary.org/', eventsUrl: 'https://www.goshenlibrary.org/', city: 'Goshen', state: 'KY', zipCode: '00000', county: 'Oldham'},
+  { name: 'Mahan-Oldham County Library', url: 'https://www.goshenlibrary.org/', eventsUrl: 'https://www.goshenlibrary.org/', city: 'Goshen', state: 'KY', zipCode: '00000', county: 'Oldham', urlCollision: 'goshenlibrary.org is NH, not KY' },
   // REMOVED 2026-08-11 (Defect A): no verifiable official site. 112 West Court St Greensburg KY, phone 270-932-7081, but no standalone official site could be verified - only a Facebook page and county directory lis
   // RECORDED COVERAGE GAP - restore if a real URL is found.
   // { name: 'Green County Public Library', url: 'https://www.greensburglibrary.org', eventsUrl: 'https://www.greensburglibrary.org/events', city: 'Greensburg', state: 'KY', zipCode: '42743', county: 'Green'},
   { name: 'Harlan County Public Library', url: 'https://www.harlanlibrary.org', eventsUrl: 'https://www.harlanlibrary.org/events', city: 'Harlan', state: 'KY', zipCode: '40831', county: 'Harlan County'},
   { name: 'Ohio County Public Library', url: 'https://www.hartfordlibrary.org', eventsUrl: 'https://www.hartfordlibrary.org/events', city: 'Hartford', state: 'KY', zipCode: '42347', county: 'Ohio', urlCollision: 'hartfordlibrary.org is WI, not KY' },
   { name: 'Perry County Public Library', url: 'https://www.hazardlibrary.org/', eventsUrl: 'https://www.hazardlibrary.org/', city: 'Hazard', state: 'KY', zipCode: '41701', county: 'Perry'},
-  { name: 'Lents Branch', url: 'https://www.hebronlibrary.org', eventsUrl: 'https://www.hebronlibrary.org/events', city: 'Hebron', state: 'KY', zipCode: '00000', county: 'Boone'},
+  { name: 'Lents Branch', url: 'https://www.hebronlibrary.org', eventsUrl: 'https://www.hebronlibrary.org/events', city: 'Hebron', state: 'KY', zipCode: '00000', county: 'Boone', urlCollision: 'hebronlibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'Estill County Public Library', url: 'https://www.irvinelibrary.org', eventsUrl: 'https://www.irvinelibrary.org/events', city: 'Irvine', state: 'KY', zipCode: '40336', county: 'Estill'},
   // URL corrected 2026-08-11 (was irvingtonlibrary.org): Breckinridge County Public Library Irvington Branch, 1109 US-60 Irvington KY 40146, phone 270-547-7404
   { name: 'Irvington Branch', url: 'https://bcplibrary.org/irvington-branch', eventsUrl: 'https://bcplibrary.org/program-calendars-1', city: 'Irvington', state: 'KY', zipCode: '00000', county: 'Breckinridge'},
