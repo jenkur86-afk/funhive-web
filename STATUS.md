@@ -7,7 +7,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 ---
 ## 2026-08-24
 
-<!-- STATUS-DATA {"date":"2026-08-24","countiesResolve":100,"urlCollisions":18,"confirmedBugs":563,"unknownSites":609,"specificAgeShare":35.8,"nameConformance":60.8,"sourceUrlCoverage":62,"countyCoverage":0} -->
+<!-- STATUS-DATA {"date":"2026-08-24","countiesResolve":100,"urlCollisions":18,"confirmedBugs":562,"unknownSites":609,"specificAgeShare":35.8,"nameConformance":60.8,"sourceUrlCoverage":62,"countyCoverage":0} -->
 
 ### Distance to 100%
 
@@ -15,7 +15,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 |---|---|---|---|---|
 | 1. Counties resolve | 100% | · | 100% | blocks nothing — mechanical once a city→county dataset is chosen |
 | 2. URLs unique per state | 18 | · | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
-| 3. Zero confirmed bugs | 563 | · | 0 | mostly blocked on gate 2 |
+| 3. Zero confirmed bugs | 562 | -1 ✅ | 0 | mostly blocked on gate 2 |
 | 4. Zero unknown sites | 609 | · | 0 | independent — re-checking is its own pass |
 | 5. Age brackets resolved | 35.8% | · | max (best 40.6%) | no fixed target — maximise; ratchets vs best ever |
 | 6. Names join to registry | 60.8% ⚠stale | · | 100% | planned migration, not daily work |
@@ -27,7 +27,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 | | Broken | Scale | Why not fixed now |
 |---|---|---|---|
 | 🔴 | URL collisions — entries may point at another state's library | 18 entries on 7 hosts claimed by 2+ states; a further 415 disabled via urlCollision and excluded | per-file live verification; the main body of MASTER-PLAN Phase 2 |
-| 🟠 | Confirmed open bugs (MISMATCH verdicts) | 563 sites | most blocked on the URL work above |
+| 🟠 | Confirmed open bugs (MISMATCH verdicts) | 562 sites | most blocked on the URL work above |
 | 🟠 | Unknown sites (UNVERIFIABLE verdicts) | 609 sites | bot-blocks / JS-only calendars / TLS failures — never re-checked |
 | 🟠 | Age detection REGRESSED below best-ever specificity | 35.8% resolved (best ever 40.6% on 2026-08-10) | MASTER-PLAN Phase 5, not started |
 | 🟡 | scraper_name drift — rows cannot join back to the registry | 60.8% conform (as of 2026-08-23) | deliberate migration, explicitly not daily work |
