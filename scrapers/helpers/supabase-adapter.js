@@ -1233,6 +1233,22 @@ function isJunkTitle(name) {
     // The heading text itself is a bare full date, never a real event title.
     /^(sunday|monday|tuesday|wednesday|thursday|friday|saturday),?\s+\w+\s+\d{1,2},?\s+\d{4}$/i,
     /^ongoing\s+events?\s+for\b/i,
+    // OPENING-HOURS AND CLOSURE MARKERS. Small libraries commonly run one Google
+    // Calendar for both their programme and their open/closed status, so "Library OPEN"
+    // arrives once per opening day as a recurring all-day "event". Found 2026-08-23 the
+    // moment GoogleCalendar-VT first ran: 39 of its 42 saved rows were "Library OPEN",
+    // and only two were real programmes. Left alone, one small library would have
+    // out-posted a whole state.
+    //
+    // ANCHORED AT BOTH ENDS and deliberately narrow, because "open" is a common word in
+    // real event names. Open Mic Night, Open House, Open Play, Open Gym, Open Swim,
+    // Grand Opening and Opening Reception all carry extra words and so cannot match;
+    // each is a negative control in test-junk-titles.js. Anything with real content
+    // beyond the status phrase is a real event and must survive.
+    /^(the\s+)?library\s+(is\s+|will\s+be\s+)?(open|opened|closed|close)$/i,
+    /^(open|closed)$/i,
+    /^(the\s+)?library\s+clos(ed|ing)\b.{0,40}$/i,
+    /^clos(ed|ing)\s+(today|early|for\s+the\s+(day|holiday|season))$/i,
   ];
   for (const pattern of NAV_JUNK) {
     if (pattern.test(trimmed)) return true;

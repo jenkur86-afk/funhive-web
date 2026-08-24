@@ -201,6 +201,10 @@ const SCRAPERS = {
   'GoogleCalendar-MD': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesMDCloudFunction', type: 'api', group: 3, state: 'MD' },
   'GoogleCalendar-MA': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesMACloudFunction', type: 'api', group: 3, state: 'MA' },
   'GoogleCalendar-SC': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesSCCloudFunction', type: 'api', group: 3, state: 'SC' },
+  // Added 2026-08-23 from the platform-mismatch pass (reports/platform-mismatches.md).
+  // A GoogleCalendar-GA key was drafted the same day and DELIBERATELY NOT ADDED: both
+  // Georgia candidates turned out to be libraries in NY and IL. See scraper-gcal-libraries.js.
+  'GoogleCalendar-VT': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesVTCloudFunction', type: 'api', group: 3, state: 'VT' },
   // 2026-08-09: WordPress-GA's Decatur County - Gilbert H. Gragg Library entry pointed at
   // bainbridgelibrary.org, which times out. The real institution is the Southwest Georgia
   // Regional Library System, whose calendar is a FullCalendar.js widget with no server-

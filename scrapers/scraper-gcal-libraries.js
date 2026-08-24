@@ -21,11 +21,19 @@ const ical = require('node-ical');
 const { saveEventsWithGeocoding } = require('./event-save-helper');
 
 // Registry keys in this family are exactly `GoogleCalendar-<ST>`. Each state below
-// currently configures exactly ONE library, so the bare key is the correct
-// scraper_name per CLAUDE.md's "one site -> exactly the registry key" rule.
+// configures exactly ONE library, so the bare key is the correct scraper_name per
+// CLAUDE.md's "one site -> exactly the registry key" rule.
 // IF A STATE EVER GAINS A SECOND LIBRARY this must become `<key>-<siteSlug>`
 // (slug from the listing URL hostname), or the two sites collapse onto one name and
 // violate the "No aggregation, ever" rule in AGE-RANGE-AUDIT.md.
+//
+// 2026-08-23: this nearly changed, and the near-miss is worth recording. Two Georgia
+// candidates were queued from the platform-mismatch pass and would have made GA the
+// first two-library state, so the per-site slug was actually implemented — then BOTH
+// were rejected on identity before wiring (see the note above the Pittsfield entry).
+// The slug was reverted rather than left in place: with one library per state the bare
+// key is what the rule above prescribes, and a speculative rename would have churned
+// attribution on MD/MA/SC's existing rows for nothing.
 const scraperNameFor = state => `GoogleCalendar-${state}`;
 const MAX_DAYS_AHEAD = 90;
 
@@ -84,6 +92,48 @@ const LIBRARIES = [
     url: 'https://berkeleylibrarysc.org/locations-and-hours/',
     calendarIds: ['1688576522e507061425c53184e34f7054e3b8af8dd47ec00491cba17e6fb71d@group.calendar.google.com'],
     city: 'Summerville', state: 'SC', zipCode: '29483', county: 'Dorchester',
+  },
+  // TWO GEORGIA CANDIDATES REJECTED 2026-08-23, BEFORE WIRING. Both were surfaced by
+  // scripts/detect-site-platform.js as running a Google Calendar embed, and both had a
+  // live feed with upcoming events — cairolibrary.org 91 VEVENTs (6 upcoming), and
+  // thomsonlibrary.org 316. The platform diagnosis was right and the feeds were real.
+  //
+  // They were still wrong, because a working feed says nothing about WHOSE feed it is:
+  //   cairolibrary.org  = Cairo Public Library, 15 Railroad Ave, Cairo, NY 12413,
+  //                       (518) 622-9864. NEW YORK. Roddenbery Memorial Library in
+  //                       Cairo GEORGIA is a different institution that happens to sit
+  //                       in a town of the same name. WordPress-GA had already removed
+  //                       this entry on 2026-08-11 for exactly this reason, and that
+  //                       note was correct.
+  //   thomsonlibrary.org = "Thomson Illinois York Township Public Library", 815-259-2480.
+  //                       ILLINOIS. Not Thomson-McDuffie County Library, Georgia.
+  //
+  // Wiring either would have imported another state's events under a Georgia library's
+  // name — the precise failure the whole URL-collision effort exists to undo, arrived at
+  // from a new direction. This is why reports/platform-mismatches.md says a platform
+  // marker proves the platform is REFERENCED, not that it holds that library's events.
+  // Do not re-add these without an address that matches the Georgia entry.
+  {
+    // Relocated from WordPress-VT 2026-08-23. Note the configured host is
+    // pittsfieldlibrary.com and the stderr log had been reporting
+    // net::ERR_BLOCKED_BY_CLIENT against it for weeks — which, per the finding recorded in
+    // resolve-collision-host-state.js, is Chrome refusing the request locally and says
+    // nothing about the site. Fetched with node:http it answers immediately.
+    // Feed verified: 1004 VEVENTs, X-WR-CALNAME "Pittsfield Library". The calendar id here
+    // is a plain gmail.com address rather than the usual group.calendar.google.com form,
+    // which is legitimate for a small library publishing from a single account.
+    //
+    // EXPECT A SMALL NUMBER, AND KNOW WHY. The first live run returned 45 occurrences in
+    // the 90-day window, of which 39 were "Library OPEN" — this library uses one calendar
+    // for both its programme and its opening hours, which is what prompted the
+    // opening-hours rules added to isJunkTitle() the same day. Steady state is therefore
+    // ~3 real events, not 45. Measured, not estimated: the re-run after those rules landed
+    // reported "3 saved, 42 skipped, 39 junk title". A future run reporting 40+ saved rows
+    // here means the junk rules have stopped firing, not that the library got busier.
+    name: 'Roger Clark Memorial Library',
+    url: 'http://www.pittsfieldlibrary.com',
+    calendarIds: ['pittsfieldvtlibrary@gmail.com'],
+    city: 'Pittsfield', state: 'VT', zipCode: '05762', county: 'Rutland',
   },
 ];
 
@@ -243,6 +293,7 @@ async function runState(state) {
 async function scrapeGCalLibrariesMDCloudFunction() { return runState('MD'); }
 async function scrapeGCalLibrariesMACloudFunction() { return runState('MA'); }
 async function scrapeGCalLibrariesSCCloudFunction() { return runState('SC'); }
+async function scrapeGCalLibrariesVTCloudFunction() { return runState('VT'); }
 
 module.exports = {
   scrapeGCalLibraries,
@@ -250,4 +301,5 @@ module.exports = {
   scrapeGCalLibrariesMDCloudFunction,
   scrapeGCalLibrariesMACloudFunction,
   scrapeGCalLibrariesSCCloudFunction,
+  scrapeGCalLibrariesVTCloudFunction,
 };

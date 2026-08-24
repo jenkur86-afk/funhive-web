@@ -191,7 +191,14 @@ const LIBRARIES = [
   { name: 'Effingham', url: 'https://www.springfieldlibrary.org/', eventsUrl: 'https://www.springfieldlibrary.org/library/', city: 'Springfield', state: 'GA', zipCode: '00000', county: 'Effingham', urlCollision: 'springfieldlibrary.org is MA, not GA' },
   { name: 'Chattooga County Library System', url: 'https://www.summervillelibrary.org', eventsUrl: 'https://www.summervillelibrary.org/events', city: 'Summerville', state: 'GA', zipCode: '30747', county: 'Chattooga', urlCollision: 'summervillelibrary.org is PA, not GA' },
   { name: 'Hightower Memorial Library', url: 'https://thomastonlibrary.org/', eventsUrl: 'https://thomastonlibrary.org/', city: 'Thomaston', state: 'GA', zipCode: '00000', county: 'Upson', urlCollision: 'thomastonlibrary.org is CT, not GA' },
-  { name: 'Thomson-Mcduffie County Library', url: 'https://www.thomsonlibrary.org/', eventsUrl: 'https://www.thomsonlibrary.org/', city: 'Thomson', state: 'GA', zipCode: '00000', county: 'McDuffie'},
+  // urlCollision added 2026-08-23. thomsonlibrary.org titles itself "Thomson Illinois York
+  // Township Public Library" and lists 815-259-2480 (area 815 = ILLINOIS). It is not
+  // Thomson-McDuffie County Library, Georgia. Same {city}library.org guessing defect as
+  // the rest of Defect A, but it never appeared in gate 2 because no second state happened
+  // to claim the host — found instead while checking it as a Google Calendar relocation
+  // candidate, where the feed was real and the institution was not.
+  // RECORDED COVERAGE GAP: no working URL for the real Thomson-McDuffie library yet.
+  { name: 'Thomson-Mcduffie County Library', url: 'https://www.thomsonlibrary.org/', eventsUrl: 'https://www.thomsonlibrary.org/', city: 'Thomson', state: 'GA', zipCode: '00000', county: 'McDuffie', urlCollision: 'thomsonlibrary.org is Thomson IL, not GA'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in PA, not GA. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Tyrone Public Library', url: 'https://www.tyronelibrary.org', eventsUrl: 'https://www.tyronelibrary.org/events', city: 'Tyrone', state: 'GA', zipCode: '00000', county: 'Fayette'},
   { name: 'Elizabeth Harris Library', url: 'https://www.unadillalibrary.org', eventsUrl: 'https://www.unadillalibrary.org/events', city: 'Unadilla', state: 'GA', zipCode: '00000', county: 'Dooly', urlCollision: 'unadillalibrary.org is NY, not GA' },

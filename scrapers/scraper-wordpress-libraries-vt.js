@@ -72,7 +72,15 @@ const LIBRARIES = [
   { name: 'Norwich Public', url: 'https://www.norwichlibrary.org/', eventsUrl: 'https://www.norwichlibrary.org/category/events/', city: 'Norwich', state: 'VT', zipCode: '05055', county: 'Windsor'},
   { name: 'Peacham', url: 'https://www.peachamlibrary.org/', eventsUrl: 'https://www.peachamlibrary.org/', city: 'Peacham', state: 'VT', zipCode: '05862', county: 'Caledonia'},
   // URL corrected 2026-08-11 (was pittsfieldlibrary.org): Page titled Pittsfields Roger Clark Memorial Library shows 40 Village Green, PO Box 743, Pittsfield VT 05762, phone 802-746-4067; HTTP only
-  { name: 'Roger Clark Memorial', url: 'http://www.pittsfieldlibrary.com', eventsUrl: 'http://www.pittsfieldlibrary.com', city: 'Pittsfield', state: 'VT', zipCode: '05762', county: 'Rutland'},
+  // Roger Clark Memorial Library RELOCATED 2026-08-23 to GoogleCalendar-VT.
+  // Its programme is published entirely through a Google Calendar the site embeds, so the
+  // WordPress DOM extractor could never read it. Identity confirmed from the live page
+  // before moving: "Pittsfield's Roger Clark Memorial Library, 40 Village Green, PO Box
+  // 743, Pittsfield, VT 05762", 802-746-4067 — the ZIP matches this entry exactly.
+  // Feed verified at 1004 VEVENTs, 3 upcoming.
+  // Worth knowing: scraper-stderr.log had been reporting net::ERR_BLOCKED_BY_CLIENT for
+  // this host for weeks, which reads like a dead site and is not — it is Chrome refusing
+  // the request locally. Fetched with node:http the site answers immediately.
   // URL corrected 2026-08-11 (was plainfieldlibrary.org): Site says Cutler Memorial Library, Plainfield Vermont, phone 802.454.8504; 151 High St Plainfield VT 05667. Real name is Cutler Memorial Lib
   { name: 'Cutler Memorial', url: 'https://www.cutlerlibrary.org', eventsUrl: 'https://www.cutlerlibrary.org', city: 'Plainfield', state: 'VT', zipCode: '05667', county: 'Washington'},
   { name: 'Proctor Free', url: 'https://www.proctorlibrary.org', eventsUrl: 'https://www.proctorlibrary.org/events', city: 'Proctor', state: 'VT', zipCode: '05765', county: 'Rutland'},

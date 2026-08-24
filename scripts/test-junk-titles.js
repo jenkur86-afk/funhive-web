@@ -37,6 +37,28 @@ const CASES = [
   ['12345', true, 'no letters'],
   ['ab', true, 'too short'],
 
+  // --- opening-hours / closure markers (added 2026-08-23) --------------------
+  // Small libraries run one Google Calendar for both programme and open/closed status.
+  // GoogleCalendar-VT saved 42 rows on its first run and 39 were "Library OPEN".
+  ["Library OPEN", true, "opening-hours marker, not an event"],
+  ["LIBRARY OPEN", true, "same, shouted"],
+  ["The Library is Closed", true, "closure marker"],
+  ["Open", true, "bare status word"],
+  ["Closed", true, "bare status word"],
+  ["Library Closed for Labor Day", true, "holiday closure marker"],
+  ["Closed Today", true, "closure marker"],
+  // MUST SURVIVE: "open" is a common word in real event names. Every one of these
+  // carries content beyond the status phrase and is real programming.
+  ["Open Mic Night", false, "real event — do not let the open rule widen"],
+  ["Open House", false, "real event"],
+  ["Grand Opening", false, "real event"],
+  ["Opening Reception", false, "real event"],
+  ["Open Play", false, "real drop-in programme"],
+  ["Open Gym Time", false, "real drop-in programme"],
+  ["Open Swim", false, "real drop-in programme"],
+  ["Library Open House", false, "real event that also names the library"],
+  ["Closed Captioning Workshop", false, "closed as a modifier, not a status"],
+
   // --- municipal governance agendas (added 2026-08-20) ----------------------
   ['Town Council', true, 'governance body'],
   ['Town Council Meeting', true, 'governance body'],
