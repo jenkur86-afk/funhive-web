@@ -32,7 +32,7 @@
  * mis-bucketings traced back to that alone.
  */
 
-const { flattenEvent, resolveAgeRange } = require('../scrapers/helpers/supabase-adapter');
+const { flattenEvent, resolveAgeRange, detectAgeRange } = require('../scrapers/helpers/supabase-adapter');
 
 // [title, scraper-supplied ageRange, expected bracket, why it matters]
 const CASES = [
@@ -163,6 +163,24 @@ const CASES = [
   ['Toddler Time (Ages 18-36 months)', '18+', 'Babies & Toddlers (0-2)', 'bogus 18+ Who must not beat an explicit months title'],
   ['Baby Bounce (Ages 0-18 months)', '18-36', 'Babies & Toddlers (0-2)', 'title months range wins over adult-looking supplied value'],
 
+  // --- Open-ended lower bound: "ages N+" / "ages N and up" -------------------
+  // Added 2026-08-24 from the Step 3c audit. The closed-range rule needs TWO
+  // numbers, so "Ages 18+" fell through every numeric rule to the All Ages
+  // catch-all. CivicRec's Recreation Campus (middletown-ny) stored "October 2026
+  // Registration - Ages 18+" that way. The adult direction is the expensive one:
+  // adult-only rows are meant to be REJECTED at save time on a family site, and
+  // they can only be rejected if they resolve to Adults first.
+  // The ADULT outcomes of this rule live in ADULTS_CASES below, because
+  // flattenEvent() rejects adult-only rows outright and cannot report a bracket.
+  ['Teen Night Ages 13+', '', 'Teens (13-18)', 'open-ended minimum that is NOT adult'],
+  ['Lego Club Ages 6+', '', 'Kids (6-8)', 'open-ended minimum buckets on lower bound'],
+  ['Ages 3-5 Storytime', '', 'Preschool (3-5)', 'closed range still beats the open-ended rule'],
+  // The NEGATIVE controls for this rule are asserted directly against
+  // detectAgeRange() in OPEN_ENDED_NEGATIVES below — they cannot run through
+  // flattenEvent(), because a bare "18+" anywhere in a title trips the separate
+  // pre-existing non-family rule and the row is rejected before any bracket is
+  // reported. That rejection is orthogonal to what this rule is being tested for.
+
   // --- RecDesk notation: bare range + YR/YRS suffix, PreK levels, Gr K --------
   // Added 2026-08-22 from the Step 3c all-ages audit. Gymnastics Building 2105 Nash St
   // (RecDeskParks-lcncpr) sat at 174/175 All Ages while its own titles named the
@@ -196,6 +214,12 @@ const ADULTS_CASES = [
   ['Quiet Reading Hour', 'Adults', 'supplied Adults with no non-adult title signal must stay Adults'],
   ['Quiet Reading Hour', '18+', 'supplied 18+ with no non-adult title signal must stay Adults'],
   ['Afternoon Lecture Series', 'Adults', 'neutral title must not invent a non-adult signal'],
+  // Open-ended lower bound, added 2026-08-24. Before this, "Ages 18+" matched no
+  // numeric rule and resolved to the All Ages catch-all — which on a family events
+  // site means an adult-only row gets PUBLISHED rather than rejected.
+  ['October 2026 Registration - Ages 18+', '', 'detected "ages 18+" must reach Adults, not All Ages'],
+  ['Pickleball Ages 21 and up', '', 'spelled-out "and up" reaches Adults'],
+  ['Open Swim Ages 55 and older', '', 'spelled-out "and older" reaches Adults'],
 ];
 
 // The fixture date must always be in the FUTURE. flattenEvent() rejects past
@@ -232,6 +256,25 @@ for (const [title, supplied, expected, why, description] of CASES) {
   }
 }
 
+// Negative controls for the open-ended "ages N+" rule (2026-08-24), asserted
+// against detectAgeRange() directly. A bare "N+" with no "age(s)" keyword is a
+// price, a room number or a capacity — never an audience. This is the same
+// anchoring discipline recorded on 2026-08-03, when feeding raw titles into
+// normalizeAgeRange() misread times and registration IDs as age ranges.
+const OPEN_ENDED_NEGATIVES = [
+  ['Concert tickets $18+ at the door', 'price, no "ages" keyword'],
+  ['Room 18+ Annex Meeting', 'room number, no "ages" keyword'],
+  ['Fits 21+ people in the hall', 'capacity, no "ages" keyword'],
+];
+for (const [title, why] of OPEN_ENDED_NEGATIVES) {
+  const got = detectAgeRange(title, '');
+  if (got === null || got === undefined) {
+    pass++;
+  } else {
+    failures.push({ title, supplied: '', expected: 'null (no age signal)', got, why });
+  }
+}
+
 // Adult-only outcomes, asserted directly (see ADULTS_CASES comment above).
 for (const [title, supplied, why] of ADULTS_CASES) {
   const got = resolveAgeRange({ name: title, description: '', ageRange: supplied });
@@ -265,6 +308,10 @@ for (const [label, ok] of provChecks) {
   console.log(`${ok ? 'PASS' : 'FAIL'}  ${label}`);
 }
 console.log('─'.repeat(60));
-console.log(`${pass}/${CASES.length + ADULTS_CASES.length} age cases passed, ${failures.length} total failure(s)\n`);
+// Every assertion group must be counted here. OPEN_ENDED_NEGATIVES was added
+// 2026-08-24 and briefly made the suite print "83/80", which reads as a broken
+// harness rather than a passing one — if you add a group, add it to this sum.
+const TOTAL_CASES = CASES.length + ADULTS_CASES.length + OPEN_ENDED_NEGATIVES.length;
+console.log(`${pass}/${TOTAL_CASES} age cases passed, ${failures.length} total failure(s)\n`);
 
 process.exit(failures.length ? 1 : 0);
