@@ -237,7 +237,17 @@ const LIBRARIES = [
   // URL corrected 2026-08-11 (was wilmingtonlibrary.org): 175 Middlesex Ave Wilmington MA 01887, phone 978-658-2967; events on Communico which this codebase already scrapes
   // URL corrected 2026-08-11 (was wilmlibrary.libnet.info): 175 Middlesex Ave Wilmington MA 01887, phone 978-658-2967; events on Communico which this codebase already scrapes
   { name: 'Wilmington Memorial Library', url: 'https://wilmlibrary.org', eventsUrl: 'https://wilmlibrary.libnet.info/events', city: 'Wilmington', state: 'MA', zipCode: '01887', county: 'Middlesex'},
-  { name: 'Beals Memorial Library', url: 'https://winchendonlibrary.org/', eventsUrl: 'https://winchendonlibrary.org/', city: 'Winchendon', state: 'MA', zipCode: '01475', county: 'Worcester'},
+  // URL corrected 2026-08-24. winchendonlibrary.org serves "Domain registration has
+  // expired" — the third expired/hijacked library domain found on this project after
+  // newfanelibrary.org and norwalkpubliclibrary.org (which had been resold to an
+  // Indonesian gambling site), so an expired domain on a family events site is treated
+  // as a content-safety issue, not just a coverage gap. The real institution is at
+  // bealslibrary.org, whose page titles itself "Winchendon's Public Library, Beals
+  // Memorial Library" and prints MA 01475 — matching the zipCode already in this entry
+  // exactly, which is the control that makes this evidence rather than a name guess.
+  // HONEST LIMIT: correcting the URL does not prove extraction works here; this entry
+  // has not yet been re-run against the new host.
+  { name: 'Beals Memorial Library', url: 'https://www.bealslibrary.org', eventsUrl: 'https://www.bealslibrary.org', city: 'Winchendon', state: 'MA', zipCode: '01475', county: 'Worcester'},
   { name: 'Winchester Public Library', url: 'https://www.winchesterlibrary.org', eventsUrl: 'https://www.winchesterlibrary.org/events', city: 'Winchester', state: 'MA', zipCode: '01890', county: 'Middlesex', urlCollision: 'winchesterlibrary.org is KS, not MA' },
   { name: 'Windsor Free Public Library', url: 'https://www.windsorlibrary.org', eventsUrl: 'https://www.windsorlibrary.org/events', city: 'Windsor', state: 'MA', zipCode: '01270', county: 'Berkshire', urlCollision: 'windsorlibrary.org is VT, not MA' },
   { name: 'Frances Perkins Branch Library At Greendale', url: 'https://www.worcesterlibrary.org', eventsUrl: 'https://www.worcesterlibrary.org/events', city: 'Worcester', state: 'MA', zipCode: '00000', county: 'Worcester County', urlCollision: 'worcesterlibrary.org is MD, not MA' },
