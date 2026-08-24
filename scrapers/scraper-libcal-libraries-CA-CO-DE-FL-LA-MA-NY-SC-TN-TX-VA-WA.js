@@ -617,8 +617,14 @@ const LIBRARY_SYSTEMS = [
     // itself "LibCal - Henrico County Public Library" and carries 50 event cards.
     // Note the instance subdomain carries a "-va" suffix, which is unusual and worth not
     // "correcting" to henricolibrary.libcal.com — that is a different host.
+    // 2026-08-24: URL corrected from the bare host to /calendar. Verified in the
+    // live DOM, not assumed: the bare host is Henrico's ROOM RESERVATIONS page and
+    // renders only a 5-item "upcoming" sidebar widget, while /calendar renders 20
+    // real event cards with per-event /event/<id> links. The 50 eventcard markers
+    // the 2026-08-23 relocation saw in raw HTML are present on both, which is why
+    // a plain-HTTP check could not tell the two pages apart.
     name: 'Henrico County Public Library',
-    url: 'https://henricolibrary-va.libcal.com',
+    url: 'https://henricolibrary-va.libcal.com/calendar',
     county: 'Henrico',
     state: 'VA',
     website: 'https://www.henricolibrary.org',
@@ -1749,6 +1755,16 @@ async function scrapeLibraryEvents(library, browser) {
             /\d{1,2}\/\d{1,2}\/\d{4}/,        // "11/7/2025"
             /\w{3}\s+\d{1,2},?\s+\d{4}/i,    // "Nov 7, 2025"
             /\b(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s+\d{1,2}\s+\d{4}\b/i,  // "JAN 22 2026" (librarycalendar.com)
+            // ORDINAL day forms — LibCal's DEFAULT /calendar view renders
+            // "Date: Mon Aug 24th 2026", and every pattern above fails on it:
+            // the weekday rule wants "Monday" not "Mon", the comma rules find no
+            // comma, and the loose "Aug 24" fallback below dies on the \b between
+            // "24" and "th". Henrico County Public Library returned 0 events from
+            // 20 real, correctly-rendered cards for exactly this reason.
+            // Anchored on real month names on purpose: a bare \w{3,9} would read
+            // the literal word "Date" in "Date: Mon Aug ..." as a month.
+            /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}(?:st|nd|rd|th),?\s+\d{4}\b/i,  // "Aug 24th 2026"
+            /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}(?:st|nd|rd|th)\b/i,            // "Aug 24th" (no year)
             /\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2}\b/i  // "Dec 22" (no year - LibCal card view)
           ];
 
@@ -1756,6 +1772,9 @@ async function scrapeLibraryEvents(library, browser) {
             const match = fullText.match(pattern);
             if (match) {
               eventDate = match[0];
+              // Strip the ordinal suffix ("Aug 24th 2026" -> "Aug 24 2026") so the
+              // downstream date parsers, which have no ordinal handling, can read it.
+              eventDate = eventDate.replace(/(\d{1,2})(?:st|nd|rd|th)\b/i, '$1');
               // If no year in the date, add current year
               if (!/\d{4}/.test(eventDate)) {
                 eventDate = eventDate + ', ' + currentYear;
