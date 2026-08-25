@@ -42,7 +42,17 @@ const LIBRARIES = [
   { name: 'Morristown-Hamblen Library', url: 'https://www.mhlibrary.org', eventsUrl: 'https://www.mhlibrary.org/events', city: 'Morristown', state: 'TN', zipCode: '37814', county: 'Hamblen'},
   { name: 'Smyrna Public Library', url: 'https://www.smyrnalibrary.org', eventsUrl: 'https://www.smyrnalibrary.org/events', city: 'Smyrna', state: 'TN', zipCode: '37167', county: 'Rutherford', urlCollision: 'smyrnalibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'Sevier County Public Library System', url: 'https://www.sevierlibrary.org/', eventsUrl: 'https://www.sevierlibrary.org/', city: 'Sevierville', state: 'TN', zipCode: '37862', county: 'Sevier'},
-  { name: 'Tullahoma Public Library', url: 'https://www.tullahoma-tn.com/library', eventsUrl: 'https://www.tullahoma-tn.com/library/events', city: 'Tullahoma', state: 'TN', zipCode: '37388', county: 'Coffee'},
+  // URL and name corrected 2026-08-25 (was 'Tullahoma Public Library' at
+  // tullahoma-tn.com/library, which now returns HTTP 404 — that domain is a
+  // community news publication, "Tullahoma Today", not the city or the library).
+  // The real institution is Coffee County Lannom Memorial Public Library, 312 N
+  // Collins St, Tullahoma TN 37388, ph 931-455-2460, site lannom.org. Same
+  // name-vs-institution correction already applied to Athens/E.G. Fisher below.
+  // lannom.org/events exists and is titled "Events Calendar" but rendered no dated
+  // events; the site is WordPress WITHOUT The Events Calendar (wp/v2/types has no
+  // tribe_events, and the TEC REST endpoint 404s), and the library publishes its
+  // programs on Facebook. Kept as an explained gap returning 0 rather than a 404.
+  { name: 'Coffee County Lannom Memorial Public Library', url: 'https://lannom.org', eventsUrl: 'https://lannom.org/events', city: 'Tullahoma', state: 'TN', zipCode: '37388', county: 'Coffee'},
   // URL corrected 2026-08-11 (was athenslibrary.org): 1289 Ingleside Ave Athens TN 37303, phone 423-745-7782. NOTE the real institution is E.G. Fisher Public Library - the configured NAME is als
   { name: 'Athens Public Library', url: 'https://fisherlibrary.org', eventsUrl: 'https://fisherlibrary.org', city: 'Athens', state: 'TN', zipCode: '37303', county: 'McMinn'},
   { name: 'Crossville-Cumberland County Public Library', url: 'https://www.cumberlandcountylibrary.org', eventsUrl: 'https://www.cumberlandcountylibrary.org/events', city: 'Crossville', state: 'TN', zipCode: '38555' },

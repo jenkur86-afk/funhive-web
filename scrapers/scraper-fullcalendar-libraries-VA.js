@@ -273,7 +273,10 @@ async function scrapeLibraryEvents(library, browser) {
           url: event.url || library.website,
           metadata: {
             source: 'FullCalendar Scraper',
-            scraperName: 'FullCalendar-VA',
+            // Was 'FullCalendar-VA', which matches no registry key — the entry in
+            // scraper-registry.js is 'FullCalendar-Libraries'. Corrected 2026-08-25.
+            // Single-config-entry scraper, so the bare registry key is the legal form.
+            scraperName: 'FullCalendar-Libraries',
             sourceName: library.name,
             county: library.county,
             addedDate: admin.firestore.FieldValue.serverTimestamp()

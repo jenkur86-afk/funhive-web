@@ -98,7 +98,17 @@ const LIBRARIES = [
   // institution, just nothing programmed this window.
   { name: 'Warren P. Sewell Memorial Library-Bremen', url: 'https://wgrls.org', eventsUrl: 'https://wgrls.org/events/list/?tribe_venues%5B%5D=75', city: 'Bremen', state: 'GA', zipCode: '30110', county: 'Haralson'},
   { name: 'Brunswick Glynn County Regional Library', url: 'https://www.brunswicklibrary.org', eventsUrl: 'https://www.brunswicklibrary.org/events', city: 'Brunswick', state: 'GA', zipCode: '00000', county: 'Glynn'},
-  { name: 'Marion County Library', url: 'https://www.buenavistalibrary.org', eventsUrl: 'https://www.buenavistalibrary.org/events', city: 'Buena Vista', state: 'GA', zipCode: '00000', county: 'Marion'},
+  // Defect A, confirmed live 2026-08-25: buenavistalibrary.org is Buena Vista PUBLIC
+  // LIBRARY, COLORADO — the Puppeteer verifier read Colorado addresses off the page
+  // and its title is "Buena Vista Public Library". The real institution is Marion
+  // County Public Library, 123 E 5th Ave, Buena Vista GA 31803, ph 229-649-6385, a
+  // branch of Chattahoochee Valley Libraries (cvlga.org). CVL's calendar is LibNet
+  // (cvl.libnet.info/events) and IS live under Communico-GA — 9-12 events per run —
+  // but verify-coverage.js returned INCONCLUSIVE for this branch specifically
+  // (source_url only 57% populated on GA events), so this is a RECORDED COVERAGE GAP,
+  // not a resolved one. Guarded rather than corrected because a WordPress DOM
+  // extractor pointed at a LibNet calendar is a platform mismatch, not a URL fix.
+  { name: 'Marion County Library', url: 'https://www.buenavistalibrary.org', eventsUrl: 'https://www.buenavistalibrary.org/events', city: 'Buena Vista', state: 'GA', zipCode: '00000', county: 'Marion', urlCollision: 'buenavistalibrary.org is Buena Vista Public Library CO, not GA - real site is a CVL LibNet branch'},
   { name: 'Butler Public Library', url: 'https://www.butlerlibrary.org', eventsUrl: 'https://www.butlerlibrary.org/events', city: 'Butler', state: 'GA', zipCode: '00000', county: 'Taylor', urlCollision: 'butlerlibrary.org is NJ, not GA' },
   { name: 'Byron Public Library', url: 'https://www.byronlibrary.org', eventsUrl: 'https://www.byronlibrary.org/events', city: 'Byron', state: 'GA', zipCode: '00000', county: 'Peach'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in NY, not GA. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
