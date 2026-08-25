@@ -885,8 +885,8 @@
   "population": "zero"
  },
  "WordPress-TN|||Tullahoma Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 390 chars of text — likely JS-gated or a shell",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-TN|||Lawrenceburg Public Library": {
@@ -2885,7 +2885,7 @@
  },
  "WordPress-CT|||Edith Wheeler Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 199 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-CT|||Essex Library Association": {
@@ -2915,7 +2915,7 @@
  },
  "WordPress-CT|||Hartford Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Site is Communico-powered and Communico-CT now covers it live 13 events 2026-08-22. BUT WordPress-CT is NOT dead here: 61 future-dated rows carry source_url host hplct.org under wordpress-CT, so todays 0 is transient not structural. Deliberately NOT relocated or removed - removing would risk losing that stream and the covered-elsewhere claim is not provable at branch level.",
+  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
   "population": "zero"
  },
  "WordPress-CT|||Hartland Public Library": {
@@ -2995,7 +2995,7 @@
  },
  "WordPress-CT|||Plainville Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 220 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-CT|||Pomfret Public Library": {
@@ -3130,7 +3130,7 @@
  },
  "WordPress-GA|||Gibbs Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation timeout after 35000ms",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.evanslibrary.org",
   "population": "zero"
  },
  "WordPress-GA|||Gordon Public Library": {
@@ -3225,7 +3225,7 @@
  },
  "WordPress-GA|||Rockmart Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.rockmartlibrary.org",
+  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell [redirects to chromewebdata]",
   "population": "zero"
  },
  "WordPress-GA|||Roddenbery Memorial Library System": {
@@ -3665,7 +3665,7 @@
  },
  "Venue-Events-ScienceArts|||Art Institute of Chicago": {
   "verdict": "UNVERIFIABLE",
-  "comment": "no URL in scraper config",
+  "comment": "bot-block: 403 even under the stealth browser the scrapers use",
   "population": "zero"
  },
  "Venue-Events-ScienceArts|||EcoTarium": {
@@ -3675,7 +3675,7 @@
  },
  "Venue-Events-ScienceArts|||Fernbank Museum of Natural History": {
   "verdict": "UNVERIFIABLE",
-  "comment": "no URL in scraper config",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
   "population": "zero"
  },
  "Venue-Events-ScienceArts|||Griffin Museum of Science and Industry": {
@@ -3695,12 +3695,12 @@
  },
  "Venue-Events-ScienceArts|||Kamin Science Center": {
   "verdict": "UNVERIFIABLE",
-  "comment": "no URL in scraper config",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
   "population": "zero"
  },
  "Venue-Events-ScienceArts|||National Building Museum": {
   "verdict": "UNVERIFIABLE",
-  "comment": "no URL in scraper config",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
   "population": "zero"
  },
  "WordPress-AL|||Athens-Limestone Public Library": {
@@ -4380,7 +4380,7 @@
  },
  "WordPress-GA|||Coolidge Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 397 chars of text — likely JS-gated or a shell",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to dot-book.org]",
   "population": "zero"
  },
  "WordPress-GA|||Dalton-Whitfield County Public Library": {
@@ -7736,6 +7736,21 @@
  "WordPress-WV|||Whitesville Public Library": {
   "verdict": "UNVERIFIABLE",
   "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "FullCalendar-VA|||Patrick County Library": {
+  "verdict": "MATCHES",
+  "comment": "adjudicated from the 68 rows scraped 2026-08-25: only 10 distinct All-Ages titles, and none carries an age signal - Chair Yoga, Gentle Yoga, Barre/Yoga, Walking Club, Sit & Stitch, Trivia Night, Book Bingo, Open Art Studio, DAR Finding Your Patriot, Lego Club. Detection is demonstrably working on this site: the one age-targeted title present, Preschool Story Time, correctly landed in Preschool 3-5. The 87% All-Ages share is the right answer, not a gap.",
+  "population": "allages"
+ },
+ "WordPress-GA|||Harlie Fulford Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-GA|||Marion County Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show CO not GA; title \"Buena Vista Public Library\"",
   "population": "zero"
  }
 }
