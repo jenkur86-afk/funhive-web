@@ -51,6 +51,18 @@ function normalizeDateString(dateString) {
   // the current day cell (e.g., "TodayTuesday, May 12...").
   cleaned = cleaned.replace(/^(?:Today|Tomorrow)\b\s*/i, '');
 
+  // Some sites put the date in the event TITLE and the scraper hands the whole
+  // title in as the date (Ridgefield Library, WordPress-CT: "8/14/26 – Games on
+  // Tap", "8/17/26: Mahjong Monday" — 3 of that scraper's 4 INVALID rows on the
+  // 2026-08-25 run). "8/14/26" alone already parses; only the trailing title
+  // defeated it. Deliberately anchored to ^ and to an explicit separator
+  // (dash/en-dash/colon/pipe) so it can only fire on a leading numeric date
+  // followed by prose — it will not touch a genuine range like "8/14 - 8/17".
+  cleaned = cleaned.replace(
+    /^(\d{1,2}\/\d{1,2}\/\d{2,4})\s*[–—\-:|]\s+\D.*$/,
+    '$1'
+  );
+
   // De-concatenate day number from a time pattern when the scraper grabbed a
   // textContent blob with no whitespace between them (Assabet calendar bug —
   // produces strings like "Monday, May 410:00—10:45 AM" or "May 1210:30—11:00 AM").

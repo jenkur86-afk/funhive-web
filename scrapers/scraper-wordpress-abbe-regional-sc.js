@@ -178,13 +178,31 @@ async function scrapeWordPressAbbeRegional() {
     for (let pageNum = 1; pageNum <= MAX_PAGES; pageNum++) {
       const pageUrl = pageNum === 1 ? LIBRARY.url : `${LIBRARY.url}page/${pageNum}/`;
 
-      try {
-        await page.goto(pageUrl, {
-          waitUntil: 'networkidle2',
-          timeout: 30000
-        });
-      } catch (err) {
-        console.log(`   Page ${pageNum}: navigation failed (${err.message}) — stopping`);
+      // Caught 2026-08-25: a single 30s networkidle2 timeout on page 1 broke out
+      // of the walk and the scraper reported Found 0 while abbe-lib.org was live
+      // and listing August/September events. One transient timeout must not zero
+      // the whole library — retry, and fall back to the laxer domcontentloaded
+      // wait, before giving up on a page.
+      let navigated = false;
+      let lastNavError;
+      for (let attempt = 1; attempt <= 3 && !navigated; attempt++) {
+        try {
+          await page.goto(pageUrl, {
+            waitUntil: attempt === 1 ? 'networkidle2' : 'domcontentloaded',
+            timeout: attempt === 1 ? 30000 : 45000
+          });
+          navigated = true;
+        } catch (err) {
+          lastNavError = err;
+          if (attempt < 3) {
+            console.log(`   Page ${pageNum}: navigation failed (${err.message}) — retry ${attempt}/2`);
+            await new Promise(resolve => setTimeout(resolve, 5000));
+          }
+        }
+      }
+
+      if (!navigated) {
+        console.log(`   Page ${pageNum}: navigation failed after 3 attempts (${lastNavError.message}) — stopping`);
         break;
       }
 

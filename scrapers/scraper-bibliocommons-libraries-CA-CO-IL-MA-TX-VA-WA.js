@@ -576,6 +576,39 @@ function parseAgeRange(audienceText) {
 // BiblioCommons exposes a gateway API at gateway.bibliocommons.com that returns
 // structured JSON with events, locations (with coordinates!), and audiences.
 // This is far more reliable than Puppeteer for their React SPA.
+// The gateway rate-limits by IP and answers 403 (not 429) when it does.
+// Caught 2026-08-25: BiblioCommons-KY went 409 events -> 1 because page 1 of the
+// API returned a single 403 and the whole API path bailed to Puppeteer, which
+// cannot render their React SPA reliably. BiblioCommons-NJ and -VA hit the same
+// endpoint minutes later on the same run and both returned 479/500 events, so
+// the 403 was a transient throttle, not a block. Retry transient statuses with
+// backoff before conceding — one retry would have saved all 409 rows.
+const TRANSIENT_API_STATUSES = new Set([403, 429, 500, 502, 503, 504]);
+
+async function fetchApiPageWithRetry(apiUrl, maxAttempts = 3) {
+  let lastError;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await axios.get(apiUrl, {
+        timeout: 15000,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+          'Accept': 'application/json'
+        }
+      });
+    } catch (error) {
+      lastError = error;
+      const status = error.response ? error.response.status : null;
+      const retryable = status === null || TRANSIENT_API_STATUSES.has(status);
+      if (!retryable || attempt === maxAttempts) break;
+      const waitMs = 4000 * attempt; // 4s, then 8s
+      console.log(`   ⏳ API ${status || error.code || 'network error'} — retry ${attempt}/${maxAttempts - 1} in ${waitMs / 1000}s`);
+      await new Promise(r => setTimeout(r, waitMs));
+    }
+  }
+  throw lastError;
+}
+
 async function tryApiScrape(library) {
   // Extract library slug from URL: https://{slug}.bibliocommons.com/v2/events
   const slugMatch = library.url.match(/https?:\/\/([^.]+)\.bibliocommons\.com/);
@@ -590,13 +623,7 @@ async function tryApiScrape(library) {
 
     while (page <= totalPages && page <= 10) { // Cap at 10 pages (500 events)
       const apiUrl = `https://gateway.bibliocommons.com/v2/libraries/${slug}/events?page=${page}&limit=${limit}`;
-      const response = await axios.get(apiUrl, {
-        timeout: 15000,
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-          'Accept': 'application/json'
-        }
-      });
+      const response = await fetchApiPageWithRetry(apiUrl);
 
       const data = response.data;
       if (!data || !data.events || !data.events.items || data.events.items.length === 0) break;
