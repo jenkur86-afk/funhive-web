@@ -1,65 +1,107 @@
 #!/usr/bin/env node
-
 /**
- * Remove cancelled/closed/postponed events from the database.
+ * Remove cancelled / closed / postponed events from the database.
  *
  * Usage:
- *   node fix-cancelled-events.js           # Dry run
- *   node fix-cancelled-events.js --save    # Delete from DB
+ *   node scripts/fix-cancelled-events.js            # dry run (default)
+ *   node scripts/fix-cancelled-events.js --save
+ *   node scripts/fix-cancelled-events.js --save --ceiling=600
+ *
+ * REWRITTEN 2026-08-25. It now calls the SHARED isCancelledEvent() from
+ * supabase-adapter.js — the same predicate that runs at save time for all 185+
+ * scrapers — instead of its own keyword scan.
+ *
+ * WHY THAT MATTERED, measured rather than assumed
+ * -----------------------------------------------
+ * The previous version never called isCancelledEvent(). It ILIKE'd five bare
+ * keywords — cancelled, canceled, postponed, closed, suspended — across BOTH name
+ * and description, and applied its not-cancelled/rain-or-shine rescue to the NAME
+ * only, so a description saying "rain or shine, not cancelled" could not rescue
+ * anything. That is the same predicate-fork defect recorded on 2026-08-22 for
+ * fix-event-quality.js STEP 1b.
+ *
+ * The shared predicate deliberately does NOT match a bare "closed" in a
+ * description, with an in-code comment explaining why: gates close, roads close,
+ * registration closes. The forked scan did, and a title-by-title audit
+ * (scripts/audit-cancelled-backlog.js) showed the damage:
+ *
+ *   753 rows the old script would have deleted
+ *   470 of them matched ONLY on the description — and 463 of those 470 were
+ *       driven by the single word "closed"
+ *   worst offenders: "Oconaluftee Indian Village - Fall Tours" (42 rows),
+ *       "Gifford Aquatic Center" (38), "Kennedy Park Hike" (20),
+ *       "Sprig Coffee Co. Pop-Up" (14) — all ordinary family events
+ *
+ * So running the old script with --save would have destroyed roughly 480 real
+ * events to remove ~270 genuine closure notices. It was a loaded gun, and the
+ * 714-row "backlog" it reported was ~64% false positives.
+ *
+ * A ceiling aborts the run rather than deleting an unexpected volume, and ids are
+ * collected read-only BEFORE any delete, per CLAUDE.md's paginator rule.
  */
-
-const { supabase } = require('../scrapers/helpers/supabase-adapter');
+const { supabase, isCancelledEvent } = require('../scrapers/helpers/supabase-adapter');
 
 const SAVE = process.argv.includes('--save');
+const ceilArg = process.argv.find(a => a.startsWith('--ceiling='));
+const CEILING = ceilArg ? parseInt(ceilArg.split('=')[1], 10) : 600;
 
 async function main() {
-  console.log(`\n  FIX CANCELLED EVENTS — ${SAVE ? 'SAVE' : 'DRY RUN'}\n`);
+  console.log(`\n  FIX CANCELLED EVENTS — ${SAVE ? 'SAVE' : 'DRY RUN'}  ceiling=${CEILING}\n`);
 
-  const keywords = ['cancelled', 'canceled', 'postponed', 'closed', 'suspended'];
-  let toDelete = [];
+  const victims = [];
+  const byTitle = new Map();
+  let scanned = 0, from = 0;
+  const PAGE = 1000;
 
-  for (const keyword of keywords) {
-    // Search in name
-    const { data: nameMatches } = await supabase
+  while (true) {
+    const { data, error } = await supabase
       .from('events')
-      .select('id, name')
-      .ilike('name', `%${keyword}%`)
-      .limit(500);
+      .select('id, name, description, venue, scraper_name')
+      .order('id', { ascending: true })
+      .range(from, from + PAGE - 1);
+    if (error) throw new Error(`page ${from}: ${error.message}`);
+    if (!data || !data.length) break;
+    scanned += data.length;
 
-    // Search in description
-    const { data: descMatches } = await supabase
-      .from('events')
-      .select('id, name')
-      .ilike('description', `%${keyword}%`)
-      .limit(500);
-
-    const combined = [...(nameMatches || []), ...(descMatches || [])];
-    for (const event of combined) {
-      // Exclude false positives
-      const name = event.name?.toLowerCase() || '';
-      if (/\b(not\s+cancelled|not\s+canceled|rain\s+or\s+shine|unless\s+cancelled)\b/i.test(name)) continue;
-      toDelete.push(event);
+    for (const e of data) {
+      if (!isCancelledEvent(e.name || '', e.description || '')) continue;
+      victims.push(e);
+      byTitle.set(e.name, (byTitle.get(e.name) || 0) + 1);
     }
+
+    if (data.length < PAGE) break;
+    from += PAGE;
   }
 
-  // Deduplicate
-  const seen = new Set();
-  toDelete = toDelete.filter(e => { if (seen.has(e.id)) return false; seen.add(e.id); return true; });
+  console.log(`  rows scanned          : ${scanned}`);
+  console.log(`  cancelled/closed rows : ${victims.length}  (${byTitle.size} distinct titles)\n`);
 
-  console.log(`  Found ${toDelete.length} cancelled/closed events`);
-  toDelete.slice(0, 10).forEach(e => console.log(`  - "${e.name}"`));
-  if (toDelete.length > 10) console.log(`  ... and ${toDelete.length - 10} more`);
+  if (!victims.length) { console.log('  Nothing to delete.\n'); return; }
 
-  if (SAVE && toDelete.length > 0) {
-    const ids = toDelete.map(e => e.id);
-    for (let i = 0; i < ids.length; i += 100) {
-      const batch = ids.slice(i, i + 100);
-      await supabase.from('events').delete().in('id', batch);
-    }
-    console.log(`\n  Deleted ${toDelete.length} events`);
-  } else if (!SAVE) {
-    console.log(`\n  Run with --save to delete`);
+  console.log('  BY DISTINCT TITLE (top 30):');
+  [...byTitle.entries()].sort((a, b) => b[1] - a[1]).slice(0, 30)
+    .forEach(([t, c]) => console.log(`    ${String(c).padStart(4)} x ${JSON.stringify(String(t).slice(0, 74))}`));
+  if (byTitle.size > 30) console.log(`    ...and ${byTitle.size - 30} more distinct titles`);
+  console.log('');
+
+  if (victims.length > CEILING) {
+    console.error(`  ABORT: ${victims.length} exceeds the ceiling of ${CEILING}. Read the ` +
+      `title list above before raising --ceiling; a sudden jump means a rule got broader, ` +
+      `and this step DELETES.`);
+    process.exit(1);
   }
+
+  if (!SAVE) { console.log('  Run with --save to delete.\n'); return; }
+
+  const ids = victims.map(v => v.id);
+  let deleted = 0;
+  for (let i = 0; i < ids.length; i += 100) {
+    const chunk = ids.slice(i, i + 100);
+    const { error } = await supabase.from('events').delete().in('id', chunk);
+    if (error) throw new Error(`delete chunk ${i}: ${error.message}`);
+    deleted += chunk.length;
+  }
+  console.log(`  ✅ Deleted ${deleted} cancelled/closed events.\n`);
 }
 
-main().then(() => process.exit(0)).catch(err => { console.error(err); process.exit(1); });
+main().then(() => process.exit(0)).catch(err => { console.error(err.message); process.exit(1); });

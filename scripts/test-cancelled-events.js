@@ -44,7 +44,43 @@ const CASES = [
   ['Closed Federal Holiday Observed', '', true, 'the "Observed" variant'],
   ['PA Room Closed 9/24', '', true, 'room closure — "room" added to the facility list'],
 
+  // --- generalised facility closures, added 2026-08-25 -----------------------
+  // Every one of these is a REAL title from the 753-row backlog audit. The old
+  // rule only matched a fixed noun list immediately before "closed", so any other
+  // subject escaped it entirely.
+  ['CLOSED SUNDAYS', '', true, 'title begins with CLOSED'],
+  ['Utility Office Closed', '', true, 'title ends with Closed — subject not in the old noun list'],
+  ['[GCRL] CLOSED', '', true, 'bracketed prefix then CLOSED'],
+  ['DPL CLOSED', '', true, 'initialism then CLOSED'],
+  ['***CLOSED*** (City of Aiken Public Pool)', '', true, 'punctuation-wrapped CLOSED'],
+  ['Museum Closed', '', true, 'ends with Closed'],
+  ['Spartanburg County Public Libraries Closed', '', true, 'PLURAL libraries — the old rule was singular only'],
+  ['Courthouse Closed - Veterans\' Day', '', true, 'closed + holiday name'],
+  ['Andrews Municipal Building Closed for the Holiday', '', true, 'closed + generic holiday'],
+  ['Museum Closed For Construction', '', true, 'closed for <reason>'],
+  ['Closed for Staff Development', '', true, 'closed for <reason>'],
+  ['Please be aware: We will be closed August 10-18 and open at our new site on August 19', '', true, 'will be closed'],
+  // Concatenated-date artifact — the glued date removes the word boundary that
+  // \blibrary\s+closed\b depends on, which is why these 32 rows escaped.
+  ['Sunday, August 30Library Closed', '', true, 'concatenated date + Library Closed'],
+  ['Sunday, August 30Closed', '', true, 'concatenated date + Closed'],
+  ['Ukulele Story JamCanceled', '', true, 'concatenated title + Canceled'],
+
   // --- NEGATIVE CONTROLS: real events that must survive. Do not delete. -------
+  // The first six are REAL rows the audit found in the same pool. "closed to the
+  // public" marks an event happening behind closed doors — fair set-up, a seller
+  // preview, a swim meet — not a venue being shut. 10 such rows exist.
+  ['Chattahoochee Mountain Fair - Fair set up- closed to the public', '', false,
+    'closed to the public is a REAL event, not a closure'],
+  ['Kids Consignment Sale - Set up and seller preview day only, closed to the public', '', false,
+    'seller preview is a real event'],
+  ['Cumming Waves Swim Meet - Closed to the public at 11am for the day for Swim Meet', '', false,
+    'the swim meet is the event'],
+  ['Summer Reading Closing Festival', '', false, 'a closing festival IS the event'],
+  ['Closely Knit', '', false, '"clos" inside an unrelated word'],
+  ['Clothing & Food Giveaway - Our Closet In Your Neighborhood', '', false, 'Closet is not closed'],
+  ['Animals Up Close with Ijams Nature Center', '', false, '"Up Close" is not a closure'],
+  ['Closed Captioning Movie Night', '', false, 'closed captioning is content, not status'],
   ['Closing Reception for the Youth Art Show', '', false, 'a closing reception IS the event'],
   ['Closing Night Gala', '', false, 'closing night IS the event'],
   ['Holiday Craft Party', '', false, 'holiday + party is real programming'],

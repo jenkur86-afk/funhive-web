@@ -1309,6 +1309,61 @@ function isCancelledEvent(name, description) {
   if (/^\s*holiday\s+closure\b/i.test(nameStr)) return true;
   if (/^\s*closed\s+(for\s+)?federal\s+holiday\b/i.test(nameStr)) return true;
 
+  // ---- Facility-closure notices, generalised 2026-08-25 ---------------------
+  // From a title-by-title audit of the 753-row "cancelled backlog": 261 rows over
+  // 135 distinct titles are closure notices that no existing rule reached —
+  // "CLOSED SUNDAYS", "Utility Office Closed", "[GCRL] CLOSED", "DPL CLOSED",
+  // "Museum Closed", "Libraries Closed-Holiday", "Courthouse Closed - Veterans' Day".
+  // The old rule only matched a fixed noun list (library|branch|location|center|room)
+  // immediately before "closed", so any other subject escaped.
+  //
+  // TWO VETOES RUN FIRST, and they are the reason this is safe to generalise:
+  //
+  //  1. "closed to the public" marks a REAL event happening behind closed doors —
+  //     fair set-up and tear-down, a consignment seller preview, a swim meet. The
+  //     audit found 10 such rows across 6 titles. Deleting them would remove real
+  //     programming, so this veto must stay ahead of every rule below.
+  //  2. Words where "clos" is content, not status: closed captioning, a closing
+  //     reception / night / ceremony / party / festival, close reading. Measured
+  //     against 128,332 live rows, these spare "Summer Reading Closing Festival",
+  //     "Closely Knit", "Clothing & Food Giveaway - Our Closet In Your
+  //     Neighborhood" and "Animals Up Close with Ijams Nature Center".
+  //
+  // Early-closing notices ("Early Closing at 3:00 PM", "CLOSING EARLY - Christmas
+  // Eve") are DELIBERATELY still not matched: they sit one word away from
+  // "Closing Reception", and the audit counted only a handful of them.
+  if (!/closed\s+to\s+the\s+public/i.test(nameStr) &&
+      !/\bclosed\s*caption|closing\s+(reception|night|ceremon|party|festival)|\bclose\s+reading\b/i.test(nameStr)) {
+    // Title begins with "closed", allowing wrapping punctuation: "***CLOSED***",
+    // "[GCRL] CLOSED", "CLOSED - Spruce Up Week", "CLOSED: Labor Day".
+    if (/^[\s*\[\]()\-–—:|]*closed\b/i.test(nameStr)) return true;
+    // Title ends with "closed": "Utility Office Closed", "Museum Closed", "DPL CLOSED".
+    if (/\bclosed\s*[.!*)\]]*\s*$/i.test(nameStr)) return true;
+    // "closed" anywhere alongside a holiday name: "Andrews Municipal Building
+    // Closed for the Holiday", "Columbus Day - County Offices Closed".
+    if (/\bclosed\b/i.test(nameStr) &&
+        /\b(labor\s+day|columbus\s+day|veterans?'?s?\s+day|thanksgiving|christmas|new\s+year|memorial\s+day|indigenous\s+peoples|election\s+day|juneteenth|independence\s+day|patriot\s+day|martin\s+luther\s+king|mlk|town\s+holiday|federal\s+holiday|holiday)\b/i.test(nameStr)) return true;
+    // "closed for <reason>" / "will be closed": "Museum Closed For Construction",
+    // "Closed for Staff Development", "We will be closed August 10-18".
+    if (/\bclosed\s+for\b/i.test(nameStr)) return true;
+    if (/\bwill\s+be\s+closed\b/i.test(nameStr)) return true;
+    // CONCATENATED-DATE ARTIFACT — 32 rows over 6 titles, all from Assabet:
+    // "Sunday, August 30Library Closed". The date is glued to the title with no
+    // separator, and that missing word boundary is precisely why \blibrary\s+closed\b
+    // could never match them ("30Library" has no boundary before "Library").
+    // Worth fixing at the extraction end too; matching here stops the bleeding.
+    // Deliberately CASE-SENSITIVE: the signature is a digit or lowercase letter
+    // running straight into a capitalised status word with no separator
+    // ("August 30Closed", "Story JamCanceled"). Normal titles always have a space
+    // there, so this cannot fire on "Museum Closed" or "Story Jam Canceled".
+    // NO optional whitespace between the two halves — that is the whole point.
+    // An earlier cut allowed \s* and promptly matched "Road Closed Fun Run"
+    // ("d" + space + "Closed"), which is a real race, not a closure.
+    if (/[\da-z]Closed\b/.test(nameStr)) return true;              // "August 30Closed"
+    if (/[\da-z][A-Z][a-z]+\s+Closed\b/.test(nameStr)) return true; // "August 30Library Closed"
+    if (/[\da-z]Cancell?ed\b/.test(nameStr)) return true;           // "Story JamCanceled"
+  }
+
   // Strong signals in the DESCRIPTION — only cancelled/postponed/suspended (NOT "closed")
   // "closed" in descriptions causes too many false positives (gates close, road closed, registration closed, etc.)
   if (/\b(cancelled|canceled|postponed|suspended)\b/i.test(descStr)) {
