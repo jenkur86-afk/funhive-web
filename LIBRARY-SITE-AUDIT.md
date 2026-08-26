@@ -8331,3 +8331,15 @@ Group 1 rotation, run start 2026-08-25T07:00:01Z. 596 per-site rows from 34 scra
 | Windham Town | VT | WordPress-VT | 2 |
 | Windsor Public | VT | WordPress-VT | 0 |
 | Woodbury Community | VT | WordPress-VT | 1 |
+
+### Note — 2026-08-26 (no library rows; deliberately NOT a dated section)
+
+This is a subsection rather than a `## 2026-08-26` heading on purpose. A dated section is a DATA section: `loadSites()` parses the newest one to project the report, so a dated heading with no table underneath yields 0 rows and makes the whole section invisible to `generate-site-report.js`. `preflight-diagnosis.js` fails on exactly that shape, and it did when this note was first written as a dated section. The newest parseable dated section therefore stays `## 2026-08-25`.
+
+**No new library-website rows today, and this is a rotation fact rather than a gap in the audit.** The only scrapers that completed in today's window were the nine MacaroniKid Group 1 state scrapers (PA, NC, MA, TN, AL, KY, RI, DC, WV), which finished at 09:04Z after running 15.5h. MacaroniKid is not one of the library families this step inventories, so it contributes no rows here; its per-site data is in `AGE-RANGE-AUDIT.md` under the same date.
+
+Every library scraper from the 2026-08-25 Group 1 rotation was already recorded in the `## 2026-08-25` section above, including the two post-fix corrections (`BiblioCommons-KY` 407, `WordPress-Abbe-Regional` 19).
+
+**Today's scheduled rotation did not run at all.** The 2026-08-25 Group 1 run occupied 26 hours (03:00 on 08-25 to 09:04 on 08-26), so when `FunHive-Scrapers` fired at 03:00 today, Task Scheduler's `MultipleInstances: IgnoreNew` policy discarded the new instance silently — `LastTaskResult` still reads 0. Group 2 therefore contributed nothing to this cycle today. This is the third occurrence of the pattern (2026-08-14 and 2026-08-17 have no run log for the same reason), and it is the condition `scrapers/helpers/group-catchup.js` exists to recover from: Group 2 is now 5.0 days starved, past the 4-day threshold, so tomorrow's run will select Group 2 instead of the calendar's Group 3. Verified directly against `selectGroup()` — see today's diagnosis report.
+
+**Cycle-completion check: not complete.** No new library scrapers were added today, so the cycle stands exactly where the `## 2026-08-25` section left it, and no `Cycle complete` marker is added. The Group 2 library scrapers remain the outstanding block; they are expected to land on 2026-08-27 via the catch-up path above.

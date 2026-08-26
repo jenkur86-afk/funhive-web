@@ -47,6 +47,60 @@ function normalizeDateString(dateString) {
   // Normalize newlines and tabs to spaces (handles "Wed\n\n29" from DOM extraction)
   cleaned = cleaned.replace(/[\n\r\t]+/g, ' ');
 
+  // === Weekday + bare day-of-month, with no month anywhere in the field ===
+  // Milwaukee Art Museum (Venue-Events-ScienceArts, 10 of its 14 INVALID rows on
+  // the 2026-08-25 run) and Alliance Theatre (ChildrensTheater-Eastern, 2 of its
+  // 5) render each calendar cell as a weekday abbreviation stacked above the day
+  // number, so a textContent grab yields "Thu\t\t\n\t\t\n\t\t\t27". The collapse
+  // immediately above reduces that to "Thu 27" — a real date whose month sits in
+  // a header element the selector never reached.
+  //
+  // MUST RUN HERE, not with the other fallbacks at the bottom. The weekday strip
+  // further down (`\b(Monday|...|Thu|Fri|Sat|Sun)\b`, global) deletes the only
+  // signal this rule depends on, leaving a bare "27" that the `length < 3` guard
+  // then rejects. That is precisely how these 12 rows were being lost, and it is
+  // why the first attempt at this fix — placed after the month-name fallbacks —
+  // never fired at all.
+  //
+  // The weekday is what makes this resolvable rather than a guess: it has to
+  // agree with the day-of-month, so we scan forward for the first date
+  // satisfying BOTH. Verified against the 2026-08-25 run — all five distinct
+  // pairs observed (Thu 27, Fri 28, Sat 29, Sun 30, Thu 3) resolve to Aug 27-30
+  // and Sep 3 2026, each matching its stated weekday exactly.
+  //
+  // HORIZON IS DELIBERATELY SHORT, and this is the load-bearing safety choice.
+  // A weekday/day-of-month pair recurs only about once a year — measured, not
+  // assumed: the first Friday-the-10th on or after 2026-08-23 is 2027-09-10,
+  // thirteen months out. An unbounded scan therefore always "succeeds", and
+  // would have silently written dates a year away for cells that plainly meant
+  // the current month. Capping the scan at one quarter is what converts the
+  // weekday from a rubber stamp into a real checksum: if no date within the
+  // next ~92 days satisfies both constraints, we fall through and the row stays
+  // an explained INVALID rather than becoming a confidently wrong date. On a
+  // family-events site a wrong date is worse than a missing one.
+  //
+  // Anchored ^...$ against the whole trimmed field, so it fires only when the
+  // ENTIRE value is weekday + 1-2 digits. Every genuine date format carries a
+  // month, so this cannot pre-empt a correct parse.
+  const weekdayDayOnly = cleaned.trim().match(/^(sun|mon|tue|wed|thu|fri|sat)[a-z]*\.?\s+(\d{1,2})$/i);
+  if (weekdayDayOnly) {
+    const weekdayIndex = { sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6 };
+    const wantDow = weekdayIndex[weekdayDayOnly[1].toLowerCase()];
+    const wantDay = parseInt(weekdayDayOnly[2], 10);
+    if (wantDow !== undefined && wantDay >= 1 && wantDay <= 31) {
+      const today = new Date();
+      // Start 3 days back so an event from earlier this week still resolves,
+      // then scan one quarter forward. See the horizon note above.
+      const scanStart = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 3);
+      for (let offset = 0; offset < 92; offset++) {
+        const candidate = new Date(scanStart.getFullYear(), scanStart.getMonth(), scanStart.getDate() + offset);
+        if (candidate.getDate() === wantDay && candidate.getDay() === wantDow) {
+          return `${monthNamesArray[candidate.getMonth()]} ${candidate.getDate()}, ${candidate.getFullYear()}`;
+        }
+      }
+    }
+  }
+
   // Strip Assabet-style "Today"/"Tomorrow" prefix that the calendar prepends to
   // the current day cell (e.g., "TodayTuesday, May 12...").
   cleaned = cleaned.replace(/^(?:Today|Tomorrow)\b\s*/i, '');

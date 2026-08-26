@@ -4145,7 +4145,7 @@
  },
  "MacaroniKid-NC-hickory|||Caldwell County Public Library - Southern Branch": {
   "verdict": "MATCHES",
-  "comment": "50 rows / 10 distinct are passive take-and-make library crafts (Paper Backpack Craft, Monster Bookmarks, Mini Tent Craft, Papel Picado Garland) described as open to anyone who drops in. Genuinely all-ages; the flag is a false positive.",
+  "comment": "All 11 distinct All-Ages titles are drop-in craft activities with no stated age: Papel Picado Garland, Monster Bookmarks, Fox Puppet, Paper Plate Toadstool, Roll a Monster, Fidget Zipper Pull. Nothing in the source carries an age bracket to detect.",
   "population": "allages"
  },
  "MacaroniKid-NC-cary|||Bumble Brews Play Cafe": {
@@ -4169,8 +4169,8 @@
   "population": "allages"
  },
  "MacaroniKid-MA-burlingtonma|||Wilmington Memorial Library": {
-  "verdict": "MISMATCH",
-  "comment": "ROOT CAUSE FOUND AND FIXED 2026-08-23. 80 of 107 in All Ages. Bilingual Story Hour resolved to All Ages only because its blurb names the Community Teamwork Family Resource Network - the not-family guards on the teen/kids/tots/storytime rules in detectAgeRange() were evaluated over title plus description combined, so an organisation name in a description cancelled an explicit audience keyword in the title. Guard is now field-scoped. Re-measure after this site is next scraped.",
+  "verdict": "MATCHES",
+  "comment": "CLOSES THE 2026-08-23 MISMATCH, re-measured on the first post-fix scrape as that verdict asked. The field-scoping fix to detectAgeRange works: Bilingual Story Hour now resolves to Preschool 3-5 rather than All Ages, alongside Preschool Storytime 3-5 and Drop-In Storytime 0-2, and the site now populates all five child brackets (7/8/7/2/4). All Ages fell 80/107 to 77/105. The residual 73% is correct content, not a gap: Tech Help Drop-in x34, Tech Help One-on-One x16, Connect with a Social Worker x8, plus Friends-of-library and Board of Trustees meetings.",
   "population": "allages"
  },
  "MacaroniKid-KY-louisvillesw|||Churchill Downs": {
@@ -4245,7 +4245,7 @@
  },
  "MacaroniKid-PA-springfieldpa|||Swarthmore Public Library": {
   "verdict": "MATCHES",
-  "comment": "18 rows collapse to a single recurring title, Family Storytime, whose own description reads 'Storytime for all ages!'. Correctly classified - flagged only because one recurring event dominates a small sample.",
+  "comment": "The 88% is a single recurring programme, Family Storytime x21, and All Ages is the DELIBERATE answer for it. Verified against detectAgeRange directly: bare Storytime resolves to 3-5, Toddler Storytime to 1-3, Baby Storytime to 0-2, but Family Storytime resolves to All Ages because the word Family explicitly opens the session to mixed ages. Working as designed, not a storytime-detection regression.",
   "population": "allages"
  },
  "MacaroniKid-RI-washingtonri|||South Kingstown Parks and Recreation": {
@@ -6260,12 +6260,12 @@
  },
  "MacaroniKid-MA-bridgewater|||East Bridgewater Public Library": {
   "verdict": "MATCHES",
-  "comment": "27 of 38 in All Ages, and the live titles justify it: Lego Kit Fridays, Monthly Scavenger Hunt, Halloween Costume Exchange and Friends of the Library book sale carry no age signal, and Diaper Drive is a donation collection rather than a programme. Only Messy Thursdays and Homeschool Draw and Discover are arguably age-targeted, which is under the flag threshold on its own.",
+  "comment": "All-Ages rows are recurring open-craft and club programmes carrying no age target in the MacaroniKid listing: Lego Kit Fridays x9, Homeschool Draw and Discover x7, Messy Thursdays x7, Yoga at the library, Hockomock Photography Club. Child-oriented but with no extractable age signal, so All Ages is the honest answer rather than a detection gap.",
   "population": "allages"
  },
  "MacaroniKid-PA-southyork|||York County Libraries - Paul Smith Library of Southern York County": {
   "verdict": "MATCHES",
-  "comment": "23 of 24 in All Ages across just four distinct programmes - American Mah Jongg, Crochet Meetup, Chess Club, Bookmark Club. All four are genuinely open-audience library clubs with no stated bracket. Correct as All Ages.",
+  "comment": "All-Ages rows are adult and all-ages hobby groups: Crochet Meetup x12, American Mah Jongg x4, Chess Club x4, Bookmark Club x2. No child-targeted programming was misfiled.",
   "population": "allages"
  },
  "MacaroniKid-PA-kennettsquare|||Longwood Gardens": {
