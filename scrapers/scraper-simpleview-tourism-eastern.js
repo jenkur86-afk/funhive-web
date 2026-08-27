@@ -138,6 +138,54 @@ function detectCategory(text) {
 }
 
 // ==========================================
+// DAY-GRID DATE RECOVERY
+// ==========================================
+//
+// Some Simpleview calendars group events under a day heading — "Friday August 28"
+// — and give the card's own date cell nothing but the bare day number. Strategy 2's
+// [class*="date"] selector then returns "28", which no parser can resolve, while
+// Strategy 3's link text swallows the heading into the title:
+// "Friday August 28 Ultra Nate's Deep Sugar".
+//
+// Measured on the 2026-08-27 run: 37 of this scraper's 39 InvalidDate rows were this
+// one shape, and baltimore.org/events/ had ZERO rows in the database because of it —
+// every event Visit Baltimore publishes was dropped at the date check, on every run,
+// since at least 2026-07-14 (InvalidDate ran 42/46/47/49/32/38/39 across that span).
+// Confirmed against the live page, which renders "Friday August 28 <title> <address>".
+//
+// The recovery reads the date off the title prefix and strips it. It is anchored two
+// ways so it cannot fire on a title that merely opens with a month name:
+//   - the prefix must carry an explicit WEEKDAY, which real event titles do not; and
+//   - if the card did yield a bare day number, that number must EQUAL the day in the
+//     prefix. That equality is a real checksum, in the same spirit as the 92-day
+//     horizon guarding the weekday-cell rule in date-normalization-helper.js.
+// A card that already captured a usable date string is never touched. Anything that
+// fails either anchor is left alone and stays an explained InvalidDate.
+const DAY_HEADING_PREFIX_RE = new RegExp(
+  '^(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tues?|weds?|thur?s?|fri|sat|sun)\\.?,?\\s+' +
+  '((?:january|february|march|april|may|june|july|august|september|october|november|december|' +
+  'jan|feb|mar|apr|jun|jul|aug|sept?|oct|nov|dec)\\.?\\s+(\\d{1,2})(?:,?\\s+(\\d{4}))?)\\s+(?=\\S)',
+  'i'
+);
+
+function recoverDayGridDate(title, dateText) {
+  const m = DAY_HEADING_PREFIX_RE.exec(title || '');
+  if (!m) return null;
+
+  const trimmed = (dateText || '').trim();
+  const bareDay = /^\d{1,2}$/.test(trimmed);
+  // A card that already has a real date string is authoritative — leave it alone.
+  if (trimmed && !bareDay) return null;
+  // Checksum: the grid's day number must agree with the heading's.
+  if (bareDay && parseInt(trimmed, 10) !== parseInt(m[2], 10)) return null;
+
+  const cleanedTitle = title.slice(m[0].length).trim();
+  if (cleanedTitle.length < 4) return null;
+
+  return { title: cleanedTitle, dateText: m[1] };
+}
+
+// ==========================================
 // SCRAPE A SINGLE CVB SITE
 // ==========================================
 
@@ -179,6 +227,10 @@ async function scrapeCVBSite(site, browser) {
 
       // Helper: clean whitespace
       const clean = (str) => (str || '').replace(/\s+/g, ' ').trim();
+
+      // "Aug 28" / "August 28, 2026" — used to tell a real date element apart
+      // from a day-grid's bare day number.
+      const MONTH_DAY_RE = /\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}\b/i;
 
       // Strategy 1: JSON-LD structured data (most reliable)
       const scripts = document.querySelectorAll('script[type="application/ld+json"]');
@@ -231,6 +283,18 @@ async function scrapeCVBSite(site, browser) {
         '.results-list .result',
         '.event-results .event',
         '[data-type="event"]',
+        // Simpleview "this weekend" day-grid layout (baltimore.org and siblings).
+        // Verified live 2026-08-27: 39 cards on baltimore.org/events/ matched
+        // a.this-weekend__event-container.event-container, and NONE of the
+        // selectors above matched a single node on that page — which is why
+        // Strategy 3's link-text fallback was running and swallowing the day
+        // heading, venue and street address into the title.
+        // Scoped to an anchor deliberately. A bare [class*="event-container"] would
+        // also match a WRAPPER div holding every event on some other CVB site, and
+        // Strategy 2 would then emit one giant "event" and suppress Strategy 3
+        // (which only runs when nothing was found) — quietly worse than before.
+        // The real card is an <a>, so requiring one keeps the fix additive.
+        'a[class*="event-container"]',
       ];
 
       // Patterns for titles that are clearly nav links, social-share buttons, or
@@ -255,16 +319,55 @@ async function scrapeCVBSite(site, browser) {
             if (seen.has(key)) return;
             seen.add(key);
 
-            const dateEl = card.querySelector(
-              '.date, .event-date, time, [class*="date"], [datetime], .when'
+            // Date: scan ALL date-ish candidates and prefer one that actually
+            // carries a month, rather than taking the first match. Day-grid
+            // layouts put the day number in a class like "big-number-date" —
+            // which [class*="date"] matches — while the real date sits in an
+            // unrelated class ("weekend-nav-button" on baltimore.org). Taking
+            // the first match yielded a bare "28" that no parser can resolve.
+            let dateText = '';
+            let bareDay = '';
+            const dateCands = card.querySelectorAll(
+              '.date, .event-date, time, [class*="date"], [datetime], .when, [class*="nav-button"]'
             );
-            const dateText = dateEl?.getAttribute('datetime') ||
-                             clean(dateEl?.textContent) || '';
+            for (const el of dateCands) {
+              const attr = (el.getAttribute('datetime') || '').trim();
+              if (attr) { dateText = attr; break; }
+              const t = clean(el.textContent);
+              if (!t) continue;
+              if (MONTH_DAY_RE.test(t)) { dateText = t; break; }
+              if (!bareDay && /^\d{1,2}$/.test(t)) bareDay = t;
+            }
+            if (!dateText) dateText = bareDay;
 
             const venueEl = card.querySelector(
               '.venue, .location, [class*="venue"], [class*="location"], .where, .address'
             );
-            const venue = clean(venueEl?.textContent) || '';
+            let venue = clean(venueEl?.textContent) || '';
+            let address = '';
+
+            // Venue/address fallback for layouts that render "<Venue Name>
+            // <street address>" as one unclassed block beside the title, with
+            // the street in a nested element. Splitting on that nested text is
+            // what keeps the venue name from carrying the address along —
+            // without it, baltimore.org produced venues like
+            // "Port Discovery Children's Museum 35 Market Place".
+            // Bounded on purpose: only a short block sitting beside the title is
+            // treated as venue/address. Without the length cap this happily
+            // adopted a description paragraph as the venue name on other CVB sites.
+            if (!venue) {
+              const infoEl = titleEl?.parentElement?.querySelector('div, p, address');
+              const full = clean(infoEl?.textContent);
+              const nested = clean(infoEl?.querySelector('span, a, em')?.textContent);
+              if (full && full.length <= 120 && full !== title) {
+                if (nested && full !== nested && full.endsWith(nested)) {
+                  venue = full.slice(0, full.length - nested.length).trim();
+                  address = nested;
+                } else {
+                  venue = full;
+                }
+              }
+            }
 
             const descEl = card.querySelector(
               '.description, .summary, .excerpt, p, [class*="desc"], [class*="summary"], [class*="excerpt"]'
@@ -282,7 +385,7 @@ async function scrapeCVBSite(site, browser) {
               dateText,
               endDate: '',
               venue,
-              address: '',
+              address,
               city: siteData.city,
               description,
               imageUrl,
@@ -337,8 +440,18 @@ async function scrapeCVBSite(site, browser) {
 
     // Filter and build event objects
     let skippedNonFamily = 0;
+    let dayGridRecovered = 0;
 
     for (const raw of rawEvents) {
+      // Day-grid sites put the date in a heading above the title and only the bare
+      // day number in the card. Recover it before anything else reads title/dateText.
+      const recovered = recoverDayGridDate(raw.title, raw.dateText);
+      if (recovered) {
+        raw.title = recovered.title;
+        raw.dateText = recovered.dateText;
+        dayGridRecovered++;
+      }
+
       const combined = `${raw.title} ${raw.description}`;
 
       // Skip non-family events
@@ -411,6 +524,9 @@ async function scrapeCVBSite(site, browser) {
       console.log(`     🚫 Skipped ${skippedNonFamily} non-family events`);
     }
     console.log(`     ✅ ${events.length} family-friendly events extracted`);
+    if (dayGridRecovered > 0) {
+      console.log(`     🗓️  ${dayGridRecovered} day-grid dates recovered from the title heading`);
+    }
 
     await page.close();
   } catch (err) {
@@ -462,10 +578,17 @@ async function scrapeSimpleviewTourism(filterStates = null) {
           console.log(`\n💾 Saving batch of ${allEvents.length} events...`);
 
           // One venue entry per UNIQUE (venueName, city, state) so events don't all land at the source centroid.
+          // An event with neither a venue name nor an address used to `continue`
+          // here, contributing no venue entry at all. When EVERY event on a site
+          // lacked both — which is exactly what the link-text fallback produced —
+          // the venues array came back empty, and findLibraryForEvent() in
+          // event-save-helper.js returns null only in that case, so all of them
+          // were dropped as "no venue match". Proven on 2026-08-27: a Maryland-only
+          // run reported "0 saved, 62 skipped ... 62 no venue match". Fall back to
+          // a city-level entry instead, so the event saves with city geocoding.
           const venueMap = new Map();
           for (const e of allEvents) {
             const name = (e.venueName || '').trim();
-            if (!name && !e.address) continue;
             const key = `${name}|${e.city || ''}|${e.state || ''}`;
             if (!venueMap.has(key)) {
               venueMap.set(key, {

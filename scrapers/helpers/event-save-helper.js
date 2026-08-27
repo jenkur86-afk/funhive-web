@@ -842,7 +842,23 @@ function findLibraryForEvent(event, libraries) {
   if (!libraries || libraries.length === 0) return null;
 
   // Try to match by venue name or location
-  const eventVenue = (event.venueName || event.location || event.venue || '').toLowerCase();
+  const eventVenue = (event.venueName || event.location || event.venue || '').toLowerCase().trim();
+
+  // An EMPTY venue name matched every library, because both ''.includes(x) checks
+  // below are trivially true against '' — so the event silently took libraries[0].
+  // For a single-state scraper that is harmless, but multi-state scrapers batch
+  // events from several states into one save call (Simpleview-Tourism-Eastern
+  // spans 51 CVB sites across 28 states), and libraries[0] is then some other
+  // state's venue — the event gets that venue's coordinates, city and state.
+  // Narrow to the event's own city/state before falling back, so a missing venue
+  // costs precision rather than putting the row in the wrong state.
+  if (!eventVenue) {
+    const city = (event.city || '').toLowerCase();
+    const st = (event.state || '').toLowerCase();
+    return libraries.find(l => (l.city || '').toLowerCase() === city && (l.state || '').toLowerCase() === st)
+        || libraries.find(l => (l.state || '').toLowerCase() === st)
+        || libraries[0];
+  }
 
   for (const lib of libraries) {
     if (lib.name.toLowerCase().includes(eventVenue) ||
