@@ -61,7 +61,7 @@ const LIBRARIES = [
 
 ];
 
-const SCRAPER_NAME = 'wordpress-WV';
+const SCRAPER_NAME = 'WordPress-WV';
 
 async function scrapeGenericEvents() {
   const browser = await launchBrowser();

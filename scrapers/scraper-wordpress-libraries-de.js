@@ -67,7 +67,7 @@ const LIBRARIES = [
   // Library above. Relocated to LibCal-DE (delawarelibraries.libcal.com/calendar/appoquinimink).
 ];
 
-const SCRAPER_NAME = 'wordpress-DE';
+const SCRAPER_NAME = 'WordPress-DE';
 
 async function scrapeGenericEvents() {
   const browser = await launchBrowser();

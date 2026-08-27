@@ -59,7 +59,7 @@ const LIBRARIES = [
   }
 ];
 
-const SCRAPER_NAME = 'librarymarket-CT';
+const SCRAPER_NAME = 'LibraryMarket-CT';
 
 async function scrapeGenericEvents() {
   const browser = await launchBrowser();

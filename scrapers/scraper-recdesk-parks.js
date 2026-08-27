@@ -46,7 +46,7 @@
 const axios = require('axios');
 const { saveEventsWithGeocoding } = require('./helpers/event-save-helper');
 
-const SCRAPER_NAME = 'RecDeskParks';
+const SCRAPER_NAME = 'RecDesk-Parks';
 
 // ──────────────────────────────────────────────────────────────────────
 // Site configurations

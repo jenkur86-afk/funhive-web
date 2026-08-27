@@ -39,7 +39,7 @@ const LIBRARIES = [
   // Communico-DC-VA, LibraryCalendar-VA, FullCalendar-VA, and LibraryMarket.
 ];
 
-const SCRAPER_NAME = 'wordpress-VA';
+const SCRAPER_NAME = 'WordPress-VA';
 
 /**
  * Validates that text looks like a real event date (not just a time, weekday, or number).

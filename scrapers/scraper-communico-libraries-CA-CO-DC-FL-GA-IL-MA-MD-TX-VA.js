@@ -832,6 +832,65 @@ const LIBRARY_SYSTEMS = [
   },
 
   // NEW YORK (3 libraries)
+  // --- Added 2026-08-27 from the Step 3d platform=communico backlog. Each host was read
+  // from the library OWN site, never guessed, and each instance then verified by a page
+  // title plus a ZIP that matches the config entry exactly.
+  // Mid-York is a CONSORTIUM instance: Dolgeville-Manheim, Holland Patent Free and New
+  // Woodstock Free all link to this one host, so three WordPress-NY entries collapse into
+  // this single row rather than three duplicates of the same calendar.
+  {
+    name: 'Mid-York Library System',
+    url: 'https://midyork.libnet.info/events',
+    county: 'Oneida',
+    state: 'NY',
+    website: 'https://midyorklib.org',
+    city: 'Utica',
+    zipCode: '13502'
+  },
+  {
+    name: 'Hauppauge Public Library',
+    url: 'https://hauppaugelibrary.libnet.info/events',
+    county: 'Suffolk',
+    state: 'NY',
+    website: 'https://www.hauppaugelibrary.org',
+    city: 'Hauppauge',
+    zipCode: '11788'
+  },
+  // Added 2026-08-27. Host read from the library own site; the home page exposed only the
+  // shared static.libnet.info CDN, so the instance was found by probing the library own
+  // domain slug and confirmed by title: batavialibrary.libnet.info titles itself
+  // "Events - Richmond Memorial Library".
+  {
+    name: 'Richmond Memorial Library',
+    url: 'https://batavialibrary.libnet.info/events',
+    county: 'Genesee',
+    state: 'NY',
+    website: 'https://www.batavialibrary.org',
+    city: 'Batavia',
+    zipCode: '14020'
+  },
+  // Added 2026-08-27. Its own site sits behind Cloudflare and returned 403 to the probe,
+  // so the instance was confirmed directly: princetonlibrary.libnet.info titles itself
+  // "Events - Princeton Public Library". The Step 3d hint had said bibliocommons, but
+  // princeton.bibliocommons.com 403s and is not where the events are.
+  {
+    name: 'Princeton Public Library',
+    url: 'https://princetonlibrary.libnet.info/events',
+    county: 'Mercer',
+    state: 'NJ',
+    website: 'https://www.princetonlibrary.org',
+    city: 'Princeton',
+    zipCode: '08542'
+  },
+  {
+    name: 'West Islip Public Library',
+    url: 'https://westisliplibrary.libnet.info/events',
+    county: 'Suffolk',
+    state: 'NY',
+    website: 'https://westisliplibrary.org',
+    city: 'West Islip',
+    zipCode: '11795'
+  },
   {
     name: 'Huntington Public Library',
     url: 'https://myhpl.libnet.info/events',
@@ -1184,6 +1243,11 @@ const LIBRARY_SYSTEMS = [
   //   zipCode: '39201'
   // }
   // CONNECTICUT
+  // 2026-08-27: Hartford was ALSO carried by LibCal-CT at hplct.libcal.com, which returned
+  // "Found 0 events" on the 2026-08-27 run, and by WordPress-CT. Both are now retired/guarded
+  // and this Communico entry — which predates them and cites the /eeventcaldata payload — is
+  // the single source. A duplicate Hartford row was briefly added here the same day and
+  // removed once a Communico-CT run printed the library twice; do not re-add one.
   // Added 2026-08-18. Hartford was previously configured ONLY in the BiblioCommons file,
   // where it was orphaned (no wrapper, no registry key, so it never ran once) AND its
   // hartfordlibrary.bibliocommons.com URL now 404s — the library migrated to Communico.

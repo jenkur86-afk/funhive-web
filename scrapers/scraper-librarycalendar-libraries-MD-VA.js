@@ -158,6 +158,45 @@ function scraperNameFor(library) {
 
 // LibraryCalendar Library Systems
 const LIBRARY_SYSTEMS = [
+  // --- Added 2026-08-27 from the Step 3d backlog, where both were mislabelled
+  // platform=bibliocommons. THAT LABEL WAS A RED HERRING and is worth recording: scraping a
+  // library home page finds its CATALOG host as readily as its EVENTS host, and for both of
+  // these the bibliocommons hit was the catalog (acl.bibliocommons.com is the Allegheny
+  // County Library Association catalog). Their events are on LibraryCalendar. Wiring them to
+  // BiblioCommons on the strength of the hint would have produced two more zero-event sites.
+  // Both instances confirmed live, with notarealsite-xyz.librarycalendar.com as a negative
+  // control (ENOTFOUND): grantcounty -> "Upcoming Events | Grant County Public Library",
+  // wilkinsburg -> "Upcoming Events | Wilkinsburg Public Library".
+  {
+    name: 'Grant County Public Library',
+    url: 'https://grantcounty.librarycalendar.com/events/upcoming',
+    county: 'Grant',
+    state: 'KY',
+    website: 'https://www.grantlib.org',
+    city: 'Williamstown',
+    zipCode: '41097'
+  },
+  {
+    name: 'Wilkinsburg Public Library',
+    url: 'https://wilkinsburg.librarycalendar.com/events/upcoming',
+    county: 'Allegheny',
+    state: 'PA',
+    website: 'https://wilkinsburglibrary.org',
+    city: 'Wilkinsburg',
+    zipCode: '15221'
+  },
+  // Added 2026-08-27. Its own /events path 404s, which is why the first probe found no
+  // platform host; the instance is monroeville.librarycalendar.com, titled "Upcoming
+  // Events | Monroeville Public Library". Second Allegheny County library in this family.
+  {
+    name: 'Monroeville Public Library',
+    url: 'https://monroeville.librarycalendar.com/events/upcoming',
+    county: 'Allegheny',
+    state: 'PA',
+    website: 'https://www.monroevillelibrary.org',
+    city: 'Monroeville',
+    zipCode: '15146'
+  },
   // MARYLAND
   {
     name: 'Howard County Library System',

@@ -34,7 +34,7 @@
 const axios = require('axios');
 const { saveEventsWithGeocoding } = require('./helpers/event-save-helper');
 
-const SCRAPER_NAME = 'NashvilleLibrary-TN';
+const SCRAPER_NAME = 'Nashville-Library-TN';
 const STATE = 'TN';
 const CITY = 'Nashville';
 

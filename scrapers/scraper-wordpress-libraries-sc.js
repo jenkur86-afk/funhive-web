@@ -62,7 +62,7 @@ const LIBRARIES = [
   { name: 'York Public Library', url: 'https://yorklibrary.org/', eventsUrl: 'https://yorklibrary.org/', city: 'York', state: 'SC', zipCode: '29745', county: 'York County', urlCollision: 'yorklibrary.org is NE, not SC' }
 ];
 
-const SCRAPER_NAME = 'wordpress-SC';
+const SCRAPER_NAME = 'WordPress-SC';
 
 async function scrapeGenericEvents() {
   const browser = await launchBrowser();

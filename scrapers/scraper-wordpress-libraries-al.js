@@ -131,7 +131,7 @@ const LIBRARIES = [
   // Documented as a coverage gap in reports/fix-notes.json.
 ];
 
-const SCRAPER_NAME = 'wordpress-AL';
+const SCRAPER_NAME = 'WordPress-AL';
 
 async function scrapeGenericEvents() {
   const browser = await launchBrowser();

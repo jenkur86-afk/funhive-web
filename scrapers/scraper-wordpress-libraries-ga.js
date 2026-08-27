@@ -215,7 +215,7 @@ const LIBRARIES = [
   { name: 'Harlie Fulford Memorial Library', url: 'https://www.wrightsvillelibrary.org', eventsUrl: 'https://www.wrightsvillelibrary.org/events', city: 'Wrightsville', state: 'GA', zipCode: '00000', county: 'Johnson'},
 ];
 
-const SCRAPER_NAME = 'wordpress-GA';
+const SCRAPER_NAME = 'WordPress-GA';
 
 async function scrapeGenericEvents() {
   const browser = await launchBrowser();

@@ -137,7 +137,9 @@ const LIBRARIES = [
   { name: 'Plainfield Free Public Library', url: 'https://plainfieldlibrarynj.org', eventsUrl: 'https://plainfieldnj.librarycalendar.com/events/month', city: 'Plainfield', state: 'NJ', zipCode: '07060', county: 'Union'},
   { name: 'Plainsboro Free Public Library', url: 'https://www.plainsborolibrary.org', eventsUrl: 'https://www.plainsborolibrary.org/events', city: 'Plainsboro', state: 'NJ', zipCode: '08536', county: 'Middlesex'},
   { name: 'Pompton Lakes Borough Free Public Library', url: 'https://www.pomptonlakeslibrary.org/', eventsUrl: 'https://www.pomptonlakeslibrary.org/', city: 'Pompton Lakes', state: 'NJ', zipCode: '07442', county: 'Passaic'},
-  { name: 'Princeton Public Library', url: 'https://www.princetonlibrary.org', eventsUrl: 'https://www.princetonlibrary.org/events', city: 'Princeton', state: 'NJ', zipCode: '08542', county: 'Mercer'},
+  // 2026-08-27: PLATFORM MISMATCH. The Step 3d hint said bibliocommons, but princeton.bibliocommons.com 403s and is not where the events are; princetonlibrary.libnet.info titles itself "Events - Princeton Public Library". The library own site is behind Cloudflare and 403s to probes, which is why the first pass could not read a host from it.
+  // Guarded rather than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Princeton Public Library', url: 'https://www.princetonlibrary.org', eventsUrl: 'https://www.princetonlibrary.org/events', city: 'Princeton', state: 'NJ', zipCode: '08542', county: 'Mercer', urlCollision: 'platform mismatch - publishes on princetonlibrary.libnet.info; relocated to Communico 2026-08-27' },
   { name: 'Rahway Public Library', url: 'https://www.rahwaylibrary.org/', eventsUrl: 'https://www.rahwaylibrary.org/', city: 'Rahway', state: 'NJ', zipCode: '07065', county: 'Union'},
   { name: 'Ramsey Free Public Library', url: 'https://www.ramseylibrary.org', eventsUrl: 'https://www.ramseylibrary.org/events', city: 'Ramsey', state: 'NJ', zipCode: '07446', county: 'Bergen', urlCollision: 'publishes on bccls.libcal.com/calendar/ramsey - relocated to LibCal-NJ on 2026-08-27'},
   { name: 'Red Bank Public Library', url: 'https://www.redbanklibrary.org/', eventsUrl: 'https://www.redbanklibrary.org/calendar', city: 'Red Bank', state: 'NJ', zipCode: '07701', county: 'Monmouth'},
@@ -188,7 +190,7 @@ const LIBRARIES = [
   { name: 'Wyckoff Free Public Library', url: 'https://www.wyckofflibrary.org', eventsUrl: 'https://www.wyckofflibrary.org/events', city: 'Wyckoff', state: 'NJ', zipCode: '07481', county: 'Bergen'}
 ];
 
-const SCRAPER_NAME = 'wordpress-NJ';
+const SCRAPER_NAME = 'WordPress-NJ';
 
 async function scrapeGenericEvents() {
   const browser = await launchBrowser();

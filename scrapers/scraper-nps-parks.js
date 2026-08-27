@@ -22,7 +22,7 @@
 const axios = require('axios');
 const { saveEventsWithGeocoding } = require('./helpers/event-save-helper');
 
-const SCRAPER_NAME = 'NpsParks';
+const SCRAPER_NAME = 'NPS-Parks';
 const NPS_API_KEY = process.env.NPS_API_KEY || 'DEMO_KEY';
 
 // ──────────────────────────────────────────────────────────────────────

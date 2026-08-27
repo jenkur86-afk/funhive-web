@@ -97,7 +97,7 @@ const LIBRARIES = [
   { name: "Pelham Public Library", url: "https://pelhampubliclibrary.libcal.com", platform: "libcal", eventsUrl: "https://pelhampubliclibrary.libcal.com/calendar/events", city: "Pelham", state: "NH", zipCode: "03076", county: "Hillsborough" }
 ];
 
-const SCRAPER_NAME = 'libcal-NH';
+const SCRAPER_NAME = 'LibCal-NH';
 
 async function scrapeLibCalEvents() {
   const browser = await launchBrowser();

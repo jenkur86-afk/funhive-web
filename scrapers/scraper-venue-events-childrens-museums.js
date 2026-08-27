@@ -26,7 +26,7 @@ const { ScraperLogger, logScraperResult } = require('./scraper-logger');
 const { saveEventsWithGeocoding } = require('./event-save-helper');
 const axios = require('axios');
 
-const SCRAPER_NAME = 'ChildrensMuseums-Events-Eastern';
+const SCRAPER_NAME = 'Venue-Events-ChildrensMuseums';
 
 // ==========================================
 // VENUE CONFIGURATION ARRAY

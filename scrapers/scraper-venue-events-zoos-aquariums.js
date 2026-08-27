@@ -47,7 +47,7 @@ const { saveEventsWithGeocoding } = require('./event-save-helper');
 const { ScraperLogger, logScraperResult } = require('./scraper-logger');
 const { extractJsonLdEvents } = require('./helpers/jsonld-events-helper');
 
-const SCRAPER_NAME = 'ZooAquariums-Eastern';
+const SCRAPER_NAME = 'Venue-Events-ZoosAquariums';
 const BATCH_SIZE = 3000; // Events batch size for DB writes
 
 // ==========================================

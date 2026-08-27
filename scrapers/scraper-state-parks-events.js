@@ -31,7 +31,7 @@
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { saveEventsWithGeocoding } = require('./helpers/event-save-helper');
 
-const SCRAPER_NAME = 'StateParksEvents';
+const SCRAPER_NAME = 'State-Parks-Events';
 
 // ──────────────────────────────────────────────────────────────────────
 // State configurations

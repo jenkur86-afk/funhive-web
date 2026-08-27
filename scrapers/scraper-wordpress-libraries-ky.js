@@ -54,7 +54,9 @@ const LIBRARIES = [
   { name: 'Woodford County Library', url: 'https://www.woodfordlibrary.org', eventsUrl: 'https://www.woodfordlibrary.org/events', city: 'Versailles', state: 'KY', zipCode: '40383', county: 'Woodford'},
   { name: 'Rowan County Public Library', url: 'https://www.rowancountylibrary.org', eventsUrl: 'https://www.rowancountylibrary.org/events', city: 'Morehead', state: 'KY', zipCode: '40351' },
   { name: 'Montgomery County Public Library', url: 'https://www.mcplib.org', eventsUrl: 'https://www.mcplib.org/events', city: 'Mount Sterling', state: 'KY', zipCode: '40353', county: 'Montgomery'},
-  { name: 'Grant County Public Library', url: 'https://www.grantlibrary.net/', eventsUrl: 'https://www.grantlibrary.net/', city: 'Williamstown', state: 'KY', zipCode: '41097', county: 'Grant'},
+  // 2026-08-27: WRONG-STATE URL, a new instance of Defect A. grantlibrary.net is Grant Area District Library, 122 S. Elder Ave, Grant, MI 49327, ph 231-834-5713 - Michigan, under a Kentucky entry. NOTE GATE 2 COULD NEVER SEE THIS: only one state claims the host, so it is a wrong-state URL rather than a collision, and it surfaced only because the platform probe read the page title. The real library is Grant County Public Library, 201 Barnes Rd, Williamstown KY 41097, whose events are on grantcounty.librarycalendar.com.
+  // Guarded rather than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Grant County Public Library', url: 'https://www.grantlibrary.net/', eventsUrl: 'https://www.grantlibrary.net/', city: 'Williamstown', state: 'KY', zipCode: '41097', county: 'Grant', urlCollision: 'grantlibrary.net is MICHIGAN not KY (Grant Area District Library, 122 S Elder Ave, Grant MI 49327); real library relocated to LibraryCalendar-Libraries 2026-08-27' },
   { name: 'Whitley County Public Library', url: 'https://www.whitleylibrary.org', eventsUrl: 'https://www.whitleylibrary.org/events', city: 'Williamsburg', state: 'KY', zipCode: '40769', county: 'Whitley'},
   { name: 'Floyd County Public Library', url: 'https://floydlibrary.org/', eventsUrl: 'https://floydlibrary.org/indiana-history-room/events/', city: 'Prestonsburg', state: 'KY', zipCode: '41653', county: 'Floyd'},
   // Additional libraries from spreadsheet coverage expansion
@@ -99,7 +101,7 @@ const LIBRARIES = [
 
 ];
 
-const SCRAPER_NAME = 'wordpress-KY';
+const SCRAPER_NAME = 'WordPress-KY';
 
 async function scrapeGenericEvents() {
   const browser = await launchBrowser();

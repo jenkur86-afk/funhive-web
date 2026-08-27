@@ -149,7 +149,7 @@ const LIBRARIES = [
   { name: 'Lawrence Memorial Library', url: 'https://www.windsorlibrary.org', eventsUrl: 'https://www.windsorlibrary.org/events', city: 'Windsor', state: 'NC', zipCode: '00000', county: 'Bertie', urlCollision: 'windsorlibrary.org is VT, not NC' },
 ];
 
-const SCRAPER_NAME = 'wordpress-NC';
+const SCRAPER_NAME = 'WordPress-NC';
 
 async function scrapeGenericEvents() {
   const browser = await launchBrowser();

@@ -27,7 +27,7 @@ const { generateEventId } = require('./event-id-helper');
 const { logScraperResult } = require('./scraper-logger');
 const { linkEventToVenue } = require('./venue-matcher');
 
-const SCRAPER_NAME = 'FairfaxParks-VA';
+const SCRAPER_NAME = 'Fairfax-Parks';
 const BASE_URL = 'https://www.fairfaxcounty.gov';
 const CALENDAR_URL = `${BASE_URL}/parks/events-calendar`;
 
@@ -486,7 +486,7 @@ async function scrapeFairfaxParks(options = {}) {
   }
 
   // Log scraper stats to database (standard format)
-  await logScraperResult('FairfaxParks-VA', {
+  await logScraperResult(SCRAPER_NAME, {
     found: rawEvents.length,
     new: saved,
     duplicates: rawEvents.length - saved - failed

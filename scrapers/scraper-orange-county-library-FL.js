@@ -21,7 +21,7 @@ const puppeteer = require('puppeteer');
 const { saveEventsWithGeocoding } = require('./helpers/event-save-helper');
 const ngeohash = require('ngeohash');
 
-const SCRAPER_NAME = 'OrangeCountyLibrary-FL';
+const SCRAPER_NAME = 'Orange-County-Library-FL';
 const CALENDAR_URL = 'https://ocls.org/calendar/';
 const STATE = 'FL';
 const CITY = 'Orlando';

@@ -723,7 +723,7 @@ const SCRAPERS = {
     type: 'puppeteer',
     group: 1,
     state: 'Multi',
-    sites: 22
+    sites: 25
   },
   'CustomDrupal-Libraries': {
     file: './scraper-custom-drupal-libraries-GA-NC-SC-WV.js',

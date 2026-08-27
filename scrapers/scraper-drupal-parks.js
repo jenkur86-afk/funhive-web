@@ -27,7 +27,7 @@
 const axios = require('axios');
 const { saveEventsWithGeocoding } = require('./helpers/event-save-helper');
 
-const SCRAPER_NAME = 'DrupalParks';
+const SCRAPER_NAME = 'Drupal-Parks';
 
 // ──────────────────────────────────────────────────────────────────────
 // State configurations with field mappings

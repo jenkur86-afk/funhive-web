@@ -120,7 +120,7 @@ const LIBRARIES = [
 
 ];
 
-const SCRAPER_NAME = 'wordpress-TN';
+const SCRAPER_NAME = 'WordPress-TN';
 
 async function scrapeGenericEvents() {
   const browser = await launchBrowser();

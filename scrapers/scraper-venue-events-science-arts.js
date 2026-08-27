@@ -47,7 +47,7 @@ const { categorizeEvent } = require('./event-categorization-helper');
 const { normalizeDateString } = require('./date-normalization-helper');
 const { logScraperResult } = require('./scraper-logger');
 
-const SCRAPER_NAME = 'ScienceArtsVenues';
+const SCRAPER_NAME = 'Venue-Events-ScienceArts';
 
 const VENUES = [
   // Connecticut

@@ -119,7 +119,9 @@ const LIBRARIES = [
   { name: 'Huntington Public Library', url: 'https://www.huntingtonlibrary.org', eventsUrl: 'https://www.huntingtonlibrary.org/events', city: 'Huntington', state: 'MA', zipCode: '01050', county: 'Hampshire', urlCollision: 'huntingtonlibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'Hyannis Public Library Assoc.', url: 'https://www.hyannislibrary.org', eventsUrl: 'https://www.hyannislibrary.org/events', city: 'Hyannis', state: 'MA', zipCode: '02601', county: 'Barnstable'},
   // URL corrected 2026-08-11 (was hydeparklibrary.org): Boston Public Library Hyde Park branch, 35 Harvard Ave Hyde Park MA 02136, ph 617-361-2524
-  { name: 'Hyde Park Branch Library', url: 'https://www.bpl.org/locations/hyde-park/', eventsUrl: 'https://bpl.bibliocommons.com/events/', city: 'Hyde Park', state: 'MA', zipCode: '00000', county: 'Suffolk'},
+  // 2026-08-27: ALREADY COVERED, and this row was a live duplicate. Its own eventsUrl was already bpl.bibliocommons.com/events/, and Boston Public Library is in the BiblioCommons config, so the WordPress extractor was pointed at a BiblioCommons SPA it cannot read and could only ever return 0. It also carried a placeholder zipCode of 00000.
+  // Guarded rather than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Hyde Park Branch Library', url: 'https://www.bpl.org/locations/hyde-park/', eventsUrl: 'https://bpl.bibliocommons.com/events/', city: 'Hyde Park', state: 'MA', zipCode: '00000', county: 'Suffolk', urlCollision: 'already covered - this row already pointed at bpl.bibliocommons.com, which BiblioCommons-MA scrapes as Boston Public Library; unguarded duplicate' },
   { name: 'Ipswich Public Library', url: 'https://www.ipswichlibrary.org', eventsUrl: 'https://www.ipswichlibrary.org/events', city: 'Ipswich', state: 'MA', zipCode: '01938', county: 'Essex'},
   { name: 'Kingston Public Library', url: 'https://www.kingstonlibrary.org', eventsUrl: 'https://www.kingstonlibrary.org/events', city: 'Kingston', state: 'MA', zipCode: '02364', county: 'Plymouth', urlCollision: 'kingstonlibrary.org is NY, not MA' },
   { name: 'Lakeville Free Public Library', url: 'https://lakevillelibrary.org/', eventsUrl: 'https://lakevillelibrary.org/', city: 'Lakeville', state: 'MA', zipCode: '02347', county: 'Plymouth'},
@@ -271,7 +273,7 @@ const LIBRARIES = [
   { name: 'Frances Perkins Branch Library At Greendale', url: 'https://www.worcesterlibrary.org', eventsUrl: 'https://www.worcesterlibrary.org/events', city: 'Worcester', state: 'MA', zipCode: '00000', county: 'Worcester County', urlCollision: 'worcesterlibrary.org is MD, not MA' },
 ];
 
-const SCRAPER_NAME = 'wordpress-MA';
+const SCRAPER_NAME = 'WordPress-MA';
 
 async function scrapeGenericEvents() {
   const browser = await launchBrowser();

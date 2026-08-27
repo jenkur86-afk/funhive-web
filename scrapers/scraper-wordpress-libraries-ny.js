@@ -73,7 +73,9 @@ const LIBRARIES = [
   { name: 'Bainbridge Free Library', url: 'https://www.bainbridgelibrary.org', eventsUrl: 'https://www.bainbridgelibrary.org/events', city: 'Bainbridge', state: 'NY', zipCode: '13733', county: 'Chenango'},
   { name: 'Barker Free Library', url: 'https://www.barkerlibrary.org', eventsUrl: 'https://www.barkerlibrary.org/events', city: 'Barker', state: 'NY', zipCode: '14012', county: 'Niagara'},
   { name: 'Barneveld Free Library Association', url: 'https://www.barneveldlibrary.org/', eventsUrl: 'https://www.barneveldlibrary.org/', city: 'Barneveld', state: 'NY', zipCode: '13304', county: 'Oneida'},
-  { name: 'Richmond Memorial Library', url: 'https://www.batavialibrary.org', eventsUrl: 'https://www.batavialibrary.org/events', city: 'Batavia', state: 'NY', zipCode: '14020', county: 'Genesee'},
+  // 2026-08-27: PLATFORM MISMATCH. batavialibrary.libnet.info titles itself "Events - Richmond Memorial Library". The home page exposed only the shared static.libnet.info CDN host, so the instance was found by probing the library own domain slug rather than read directly.
+  // Guarded rather than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Richmond Memorial Library', url: 'https://www.batavialibrary.org', eventsUrl: 'https://www.batavialibrary.org/events', city: 'Batavia', state: 'NY', zipCode: '14020', county: 'Genesee', urlCollision: 'platform mismatch - publishes on batavialibrary.libnet.info; relocated to Communico 2026-08-27' },
   { name: 'Dormann Library', url: 'https://www.bathlibrary.org', eventsUrl: 'https://www.bathlibrary.org/events', city: 'Bath', state: 'NY', zipCode: '14810', county: 'Steuben', urlCollision: 'bathlibrary.org is KY, not NY' },
   { name: 'Howland Public Library', url: 'https://beaconlibrary.org/', eventsUrl: 'https://beaconlibrary.org/calendar', city: 'Beacon', state: 'NY', zipCode: '12508', county: 'Dutchess'},
   { name: 'Beaver Falls Library', url: 'https://www.beaverfallslibrary.org', eventsUrl: 'https://www.beaverfallslibrary.org/events', city: 'Beaver Falls', state: 'NY', zipCode: '13305', county: 'Lewis'},
@@ -470,7 +472,7 @@ const LIBRARIES = [
 
 ];
 
-const SCRAPER_NAME = 'wordpress-NY';
+const SCRAPER_NAME = 'WordPress-NY';
 
 async function scrapeGenericEvents() {
   const browser = await launchBrowser();

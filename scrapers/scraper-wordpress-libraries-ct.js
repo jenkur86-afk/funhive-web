@@ -17,7 +17,9 @@ const ngeohash = require('ngeohash');
  */
 const LIBRARIES = [
   // Major Metro Libraries
-  { name: 'Hartford Public Library', url: 'https://www.hplct.org/', eventsUrl: 'https://www.hplct.org/', city: 'Hartford', state: 'CT', zipCode: '06103', county: 'Hartford County'},
+  // 2026-08-27: PLATFORM MISMATCH, and it was wrong in TWO families at once: this WordPress row, plus a LibCal-CT row at hplct.libcal.com that returned Found 0 events on the 2026-08-27 run. Hartford actually publishes on hplct.libnet.info, titled "Events - Hartford Public Library", printing CT 06103.
+  // Guarded rather than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Hartford Public Library', url: 'https://www.hplct.org/', eventsUrl: 'https://www.hplct.org/', city: 'Hartford', state: 'CT', zipCode: '06103', county: 'Hartford County', urlCollision: 'platform mismatch - publishes on hplct.libnet.info; relocated to Communico 2026-08-27 (the LibCal-CT entry was also wrong and returned 0)' },
   { name: 'New Haven Free Public Library', url: 'https://www.nhfpl.org', eventsUrl: 'https://www.nhfpl.org/events', city: 'New Haven', state: 'CT', zipCode: '06510', county: 'New Haven County'},
   // 2026-08-27: PLATFORM MISMATCH. ALREADY relocated: LibCal-CT has carried bportlibrary.libcal.com for some time, but this WordPress row was never guarded, so both were active and this one could only ever return 0. Its stale UNVERIFIABLE verdict was the only thing still implying a gap.
   // Guarded rather than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
@@ -163,7 +165,7 @@ const LIBRARIES = [
 
 ];
 
-const SCRAPER_NAME = 'wordpress-CT';
+const SCRAPER_NAME = 'WordPress-CT';
 
 async function scrapeGenericEvents() {
   const browser = await launchBrowser();

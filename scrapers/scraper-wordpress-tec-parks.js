@@ -23,7 +23,7 @@
 const axios = require('axios');
 const { saveEventsWithGeocoding } = require('./helpers/event-save-helper');
 
-const SCRAPER_NAME = 'WordPressTecParks';
+const SCRAPER_NAME = 'WordPressTec-Parks';
 
 // ──────────────────────────────────────────────────────────────────────
 // State configurations
