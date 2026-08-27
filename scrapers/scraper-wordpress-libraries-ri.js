@@ -15,7 +15,9 @@ const ngeohash = require('ngeohash');
  * Rhode Island Public Libraries Scraper - Coverage: All Rhode Island public libraries
  */
 const LIBRARIES = [
-  { name: 'Rogers Free Library', url: 'https://rogersfreelibrary.org/', platform: 'wordpress', eventsUrl: 'https://rogersfreelibrary.org/', city: 'Bristol', state: 'RI', zipCode: '02809', county: '' },
+  // 2026-08-26: PLATFORM MISMATCH - relocated to LibCal-RI. Bristol publishes on
+  // rogersfreelibrary.libcal.com, confirmed by that page titling itself "LibCal - Rogers Free Library".
+  { name: 'Rogers Free Library', url: 'https://rogersfreelibrary.org/', platform: 'wordpress', eventsUrl: 'https://rogersfreelibrary.org/', city: 'Bristol', state: 'RI', zipCode: '02809', county: 'Bristol', urlCollision: 'platform mismatch - publishes on rogersfreelibrary.libcal.com; relocated to LibCal-RI 2026-08-26' },
   { name: 'Central Falls Free Public Library', url: 'https://www.centralfallslibrary.org', platform: 'wordpress', eventsUrl: 'https://www.centralfallslibrary.org/events', city: 'Central Falls', state: 'RI', zipCode: '02863', county: '' },
   // 2026-08-26: PLATFORM MISMATCH, not a selector problem - this entry had produced ZERO database rows, ever.
   // Coventry publishes its calendar on LibCal (coventrylibrary.libcal.com), which a WordPress DOM extractor
@@ -52,7 +54,14 @@ const LIBRARIES = [
   { name: 'South Providence Library', url: 'https://provlib.org/', platform: 'wordpress', eventsUrl: 'https://provlib.org/', city: 'Providence', state: 'RI', zipCode: '02905', county: '' },
   { name: 'Wanskuck Library', url: 'https://provlib.org/', platform: 'wordpress', eventsUrl: 'https://provlib.org/', city: 'Providence', state: 'RI', zipCode: '02904', county: '' },
   { name: 'Washington Park Library', url: 'https://provlib.org/', platform: 'wordpress', eventsUrl: 'https://provlib.org/', city: 'Providence', state: 'RI', zipCode: '02905', county: '' },
-  { name: 'Rumford Branch', url: 'https://eastprovidencelibrary.org/', platform: 'wordpress', eventsUrl: 'https://eastprovidencelibrary.org/', city: 'Rumford', state: 'RI', zipCode: '02916', county: '' },
+  // 2026-08-26: PLATFORM MISMATCH, and a branch with no calendar of its own. East Providence
+  // publishes on eplib.libcal.com, already covered by the East Providence entry in LibCal-RI.
+  // Rumford has NO separate LibCal calendar - eplib.libcal.com/calendar/rumford returns 404 - so
+  // its events, if any, post under the system calendar. HONEST LIMIT: the LibCal-RI-eplib rows
+  // currently carry only Weaver Library, Weaver Library - Lawn and Fuller Creative Learning Center
+  // as venues, so no Rumford-specific row has actually been observed. Recorded as covered at
+  // SYSTEM level and as an unproven gap at BRANCH level, rather than claimed as resolved.
+  { name: 'Rumford Branch', url: 'https://eastprovidencelibrary.org/', platform: 'wordpress', eventsUrl: 'https://eastprovidencelibrary.org/', city: 'Rumford', state: 'RI', zipCode: '02916', county: 'Providence', urlCollision: 'platform mismatch - East Providence publishes on eplib.libcal.com (covered by LibCal-RI); Rumford has no separate calendar, 404 on /calendar/rumford' },
   { name: 'North Smithfield Public Library', url: 'https://www.northsmithfieldlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.northsmithfieldlibrary.org/events', city: 'Slatersville', state: 'RI', zipCode: '02876', county: '' },
   { name: 'Greenville Public Library', url: 'https://www.greenvillelibrary.org', platform: 'wordpress', eventsUrl: 'https://www.greenvillelibrary.org/events', city: 'Smithfield', state: 'RI', zipCode: '02828', county: '' , urlCollision: 'greenvillelibrary.org is SC, not RI' },
   { name: 'Essex Public Library', url: 'https://www.tivertonlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.tivertonlibrary.org/events', city: 'Tiverton', state: 'RI', zipCode: '02878', county: '' },

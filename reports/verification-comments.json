@@ -7624,13 +7624,13 @@
   "population": "zero"
  },
  "WordPress-RI|||Rogers Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-26 by relocation to LibCal-RI. Bristol publishes on rogersfreelibrary.libcal.com. NAME-COLLISION HAZARD avoided: a search also surfaces rogerspubliclibrary.libcal.com, a different Rogers in another state; the instance was confirmed by its own page title rather than by name similarity. Run: Found 20 events, 11 rows saved under LibCal-RI-rogersfreelibrary with strong age bracketing - Teen Writing Club and Teen Advisory Board to Teens 13-18, Mrs. Katz and Her Hats Storytime to Preschool 3-5.",
   "population": "zero"
  },
  "WordPress-RI|||Rumford Branch": {
   "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "comment": "PARTIALLY settled 2026-08-26 and deliberately NOT closed. East Providence publishes on eplib.libcal.com, already covered by the East Providence entry in LibCal-RI, so this is covered at SYSTEM level. But Rumford has no calendar of its own - eplib.libcal.com/calendar/rumford returns 404 - and the LibCal-RI-eplib rows currently carry only Weaver Library, Weaver Library - Lawn and Fuller Creative Learning Center as venues. No Rumford-specific row has been observed, so branch-level coverage is unproven and this stays open rather than being claimed as resolved.",
   "population": "zero"
  },
  "WordPress-SC|||Edgefield County Public Library - Johnston Branch (Mobley Library)": {

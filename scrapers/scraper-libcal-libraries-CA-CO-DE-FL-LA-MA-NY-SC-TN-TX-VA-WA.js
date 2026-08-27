@@ -1397,6 +1397,21 @@ const LIBRARY_SYSTEMS = [
     city: 'Coventry',
     zipCode: '02816'
   },
+  // Added 2026-08-26. RELOCATED FROM WordPress-RI on the same platform=libcal evidence as
+  // the Delaware cluster. NAME-COLLISION HAZARD, called out because it nearly bit: a search
+  // for this library also surfaces rogerspubliclibrary.libcal.com, which is a DIFFERENT
+  // Rogers in another state. The instance below was confirmed by its own page title,
+  // "LibCal - Rogers Free Library", not by name similarity - the whole reason Defect A
+  // exists is that library names are mostly geography and every state has a Rogers.
+  {
+    name: 'Rogers Free Library',
+    url: 'https://rogersfreelibrary.libcal.com/calendar?cid=-1&t=d',
+    county: 'Bristol',
+    state: 'RI',
+    website: 'https://rogersfreelibrary.org',
+    city: 'Bristol',
+    zipCode: '02809'
+  },
   {
     name: 'Newport Public Library',
     url: 'https://newportlibraryri.libcal.com/calendar/NPL-events/',
