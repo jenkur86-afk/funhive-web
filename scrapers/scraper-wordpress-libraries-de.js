@@ -17,21 +17,39 @@ const ngeohash = require('ngeohash');
 const LIBRARIES = [
   // New Castle County Libraries
   { name: 'Wilmington Public Library', url: 'https://www.wilmingtonde.gov/library', eventsUrl: 'https://www.wilmingtonde.gov/library/events', city: 'Wilmington', state: 'DE', zipCode: '19801', county: 'New Castle'},
-  { name: 'Newark Free Library', url: 'https://www.nccde.org/newark', eventsUrl: 'https://www.nccde.org/newark/events', city: 'Newark', state: 'DE', zipCode: '19711', county: 'New Castle'},
+  // 2026-08-26: PLATFORM MISMATCH - relocated to LibCal-DE. Delaware libraries publish on the shared
+  // delawarelibraries.libcal.com instance, which a WordPress DOM extractor cannot read. Guarded rather
+  // than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Newark Free Library', url: 'https://www.nccde.org/newark', eventsUrl: 'https://www.nccde.org/newark/events', city: 'Newark', state: 'DE', zipCode: '19711', county: 'New Castle', urlCollision: 'platform mismatch - publishes on delawarelibraries.libcal.com; relocated to LibCal-DE 2026-08-26' },
   // Bear Library REMOVED 2026-08-18: nccde.org/bear/events 404s (county rebranded to
   // newcastlede.gov and dropped native library event pages). Relocated to LibCal-DE
   // (delawarelibraries.libcal.com/calendar/bear) -- see the shared LibCal scraper file.
-  { name: 'Kirkwood Library', url: 'https://www.nccde.org/kirkwood', eventsUrl: 'https://www.nccde.org/kirkwood/events', city: 'Wilmington', state: 'DE', zipCode: '19808', county: 'New Castle'},
+  // 2026-08-26: PLATFORM MISMATCH - relocated to LibCal-DE. Delaware libraries publish on the shared
+  // delawarelibraries.libcal.com instance, which a WordPress DOM extractor cannot read. Guarded rather
+  // than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Kirkwood Library', url: 'https://www.nccde.org/kirkwood', eventsUrl: 'https://www.nccde.org/kirkwood/events', city: 'Wilmington', state: 'DE', zipCode: '19808', county: 'New Castle', urlCollision: 'platform mismatch - publishes on delawarelibraries.libcal.com; relocated to LibCal-DE 2026-08-26' },
   // Claymont Library REMOVED 2026-08-18: same dead-endpoint reason as Bear Library above.
   // Relocated to LibCal-DE (delawarelibraries.libcal.com/calendar/claymont).
-  { name: 'Elsmere Library', url: 'https://www.nccde.org/elsmere', eventsUrl: 'https://www.nccde.org/elsmere/events', city: 'Elsmere', state: 'DE', zipCode: '19805', county: 'New Castle'},
-  { name: 'Hockessin Library', url: 'https://www.nccde.org/hockessin', eventsUrl: 'https://www.nccde.org/hockessin/events', city: 'Hockessin', state: 'DE', zipCode: '19707', county: 'New Castle'},
+  // 2026-08-26: PLATFORM MISMATCH - relocated to LibCal-DE. Delaware libraries publish on the shared
+  // delawarelibraries.libcal.com instance, which a WordPress DOM extractor cannot read. Guarded rather
+  // than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Elsmere Library', url: 'https://www.nccde.org/elsmere', eventsUrl: 'https://www.nccde.org/elsmere/events', city: 'Elsmere', state: 'DE', zipCode: '19805', county: 'New Castle', urlCollision: 'platform mismatch - publishes on delawarelibraries.libcal.com; relocated to LibCal-DE 2026-08-26' },
+  // 2026-08-26: PLATFORM MISMATCH - relocated to LibCal-DE. Delaware libraries publish on the shared
+  // delawarelibraries.libcal.com instance, which a WordPress DOM extractor cannot read. Guarded rather
+  // than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Hockessin Library', url: 'https://www.nccde.org/hockessin', eventsUrl: 'https://www.nccde.org/hockessin/events', city: 'Hockessin', state: 'DE', zipCode: '19707', county: 'New Castle', urlCollision: 'platform mismatch - publishes on delawarelibraries.libcal.com; relocated to LibCal-DE 2026-08-26' },
   { name: 'Garfield Park Library', url: 'https://www.nccde.org/garfield', eventsUrl: 'https://www.nccde.org/garfield/events', city: 'New Castle', state: 'DE', zipCode: '19720', county: 'New Castle County'},
   // Brandywine Hundred Library REMOVED 2026-08-18: same dead-endpoint reason as Bear Library
   // above. Relocated to LibCal-DE (delawarelibraries.libcal.com/calendar/brandywine).
-  { name: 'Woodlawn Library', url: 'https://www.nccde.org/woodlawn', eventsUrl: 'https://www.nccde.org/woodlawn/events', city: 'Wilmington', state: 'DE', zipCode: '19805', county: 'New Castle'},
+  // 2026-08-26: PLATFORM MISMATCH - relocated to LibCal-DE. Delaware libraries publish on the shared
+  // delawarelibraries.libcal.com instance, which a WordPress DOM extractor cannot read. Guarded rather
+  // than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Woodlawn Library', url: 'https://www.nccde.org/woodlawn', eventsUrl: 'https://www.nccde.org/woodlawn/events', city: 'Wilmington', state: 'DE', zipCode: '19805', county: 'New Castle', urlCollision: 'platform mismatch - publishes on delawarelibraries.libcal.com; relocated to LibCal-DE 2026-08-26' },
   // Kent County Libraries
-  { name: 'Dover Public Library', url: 'https://www.doverpubliclibrary.org', eventsUrl: 'https://www.doverpubliclibrary.org/events', city: 'Dover', state: 'DE', zipCode: '19901', county: 'Kent'},
+  // 2026-08-26: PLATFORM MISMATCH - relocated to LibCal-DE. Delaware libraries publish on the shared
+  // delawarelibraries.libcal.com instance, which a WordPress DOM extractor cannot read. Guarded rather
+  // than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Dover Public Library', url: 'https://www.doverpubliclibrary.org', eventsUrl: 'https://www.doverpubliclibrary.org/events', city: 'Dover', state: 'DE', zipCode: '19901', county: 'Kent', urlCollision: 'platform mismatch - publishes on delawarelibraries.libcal.com; relocated to LibCal-DE 2026-08-26' },
   { name: 'Kent County Library', url: 'https://www.kentcountyde.gov/library', eventsUrl: 'https://www.kentcountyde.gov/library/events', city: 'Dover', state: 'DE', zipCode: '19904' },
   // Sussex County Libraries
   { name: 'Georgetown Public Library', url: 'https://www.georgetownpubliclibrary.org', eventsUrl: 'https://www.georgetownpubliclibrary.org/events', city: 'Georgetown', state: 'DE', zipCode: '19947', county: 'Sussex'},

@@ -510,6 +510,69 @@ const LIBRARY_SYSTEMS = [
     city: 'Bridgeville',
     zipCode: '19933'
   },
+  // Added 2026-08-26. RELOCATED FROM WordPress-DE, which is a platform mismatch: every
+  // Delaware public library publishes through the shared Delaware Libraries LibCal
+  // instance, not through its own WordPress calendar. All six were sitting in the
+  // UNVERIFIABLE backlog with platform=libcal already detected against them, which is a
+  // known-platform finding rather than an unknown - re-running the verifier on them
+  // forever would never have resolved it. Same defect and same fix as Coventry RI on this
+  // date. Each slug was validated live before wiring: HTTP 200 with a <title> naming the
+  // exact branch, against a control where the invented slugs newarkfree and dovepublic
+  // both 404ed, so the 200s are evidence and not a guess.
+  {
+    name: 'Dover Public Library',
+    url: 'https://delawarelibraries.libcal.com/calendar/dover',
+    county: 'Kent',
+    state: 'DE',
+    website: 'https://www.doverpubliclibrary.org',
+    city: 'Dover',
+    zipCode: '19901'
+  },
+  {
+    name: 'Newark Free Library',
+    url: 'https://delawarelibraries.libcal.com/calendar/newark',
+    county: 'New Castle',
+    state: 'DE',
+    website: 'https://www.nccde.org/newark',
+    city: 'Newark',
+    zipCode: '19711'
+  },
+  {
+    name: 'Kirkwood Library',
+    url: 'https://delawarelibraries.libcal.com/calendar/kirkwood',
+    county: 'New Castle',
+    state: 'DE',
+    website: 'https://www.nccde.org/kirkwood',
+    city: 'Wilmington',
+    zipCode: '19808'
+  },
+  {
+    name: 'Hockessin Library',
+    url: 'https://delawarelibraries.libcal.com/calendar/hockessin',
+    county: 'New Castle',
+    state: 'DE',
+    website: 'https://www.nccde.org/hockessin',
+    city: 'Hockessin',
+    zipCode: '19707'
+  },
+  {
+    name: 'Woodlawn Library',
+    url: 'https://delawarelibraries.libcal.com/calendar/woodlawn',
+    county: 'New Castle',
+    state: 'DE',
+    website: 'https://www.nccde.org/woodlawn',
+    city: 'Wilmington',
+    zipCode: '19805'
+  },
+  {
+    name: 'Elsmere Library',
+    url: 'https://delawarelibraries.libcal.com/calendar/elsmere',
+    county: 'New Castle',
+    state: 'DE',
+    website: 'https://www.nccde.org/elsmere',
+    city: 'Elsmere',
+    zipCode: '19805'
+  },
 
   // FLORIDA
   {

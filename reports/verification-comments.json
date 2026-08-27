@@ -3954,8 +3954,8 @@
   "population": "zero"
  },
  "WordPress-DE|||Bridgeville Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED - no work needed. Already covered by LibCal-DE (delawarelibraries.libcal.com/calendar/bridgeville, Found 68 events on the 2026-08-26 run), and its WordPress-DE entry had already been removed on 2026-08-18. The stale UNVERIFIABLE verdict was the only thing still implying a gap.",
   "population": "zero"
  },
  "WordPress-DE|||Claymont Library": {
@@ -6409,13 +6409,13 @@
   "population": "zero"
  },
  "WordPress-DE|||Elsmere Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper [redirects to newcastlede.gov]",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-26 by relocation to LibCal-DE. Run: Found 11 events, 11 rows saved under LibCal-DE-delawarelibraries-elsmere.",
   "population": "zero"
  },
  "WordPress-DE|||Dover Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper [redirects to dover.lib.de.us]",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-26 by relocation, not by re-verification. The platform=libcal hint on the old UNVERIFIABLE verdict was the actionable finding: Delaware libraries publish on the shared delawarelibraries.libcal.com instance, unreadable by a WordPress extractor. Wired into LibCal-DE and run: Found 38 events, 34 rows saved under LibCal-DE-delawarelibraries-dover.",
   "population": "zero"
  },
  "WordPress-DE|||Frankford Public Library": {
@@ -6434,8 +6434,8 @@
   "population": "zero"
  },
  "WordPress-DE|||Hockessin Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper [redirects to newcastlede.gov]",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-26 by relocation to LibCal-DE. Run: Found 23 events, 17 rows saved under LibCal-DE-delawarelibraries-hockessin, including Book Babies correctly bracketed Babies and Toddlers 0-2.",
   "population": "zero"
  },
  "WordPress-DE|||Kent County Library": {
@@ -6444,8 +6444,8 @@
   "population": "zero"
  },
  "WordPress-DE|||Kirkwood Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper [redirects to newcastlede.gov]",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-26 by relocation to LibCal-DE. Run: Found 63 events, 7 rows saved under LibCal-DE-delawarelibraries-kirkwood.",
   "population": "zero"
  },
  "WordPress-DE|||Lewes Public Library": {
@@ -6454,8 +6454,8 @@
   "population": "zero"
  },
  "WordPress-DE|||Newark Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper [redirects to newcastlede.gov]",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-26 by relocation to LibCal-DE. Slug validated live (HTTP 200, title Newark Free Library) against a control where invented slugs 404ed. Run: Found 29 events, 4 rows saved under LibCal-DE-delawarelibraries-newark.",
   "population": "zero"
  },
  "WordPress-DE|||Wilmington Public Library": {
@@ -6464,8 +6464,8 @@
   "population": "zero"
  },
  "WordPress-DE|||Woodlawn Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper [redirects to newcastlede.gov]",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-26 by relocation to LibCal-DE. Run: Found 13 events, 12 rows saved under LibCal-DE-delawarelibraries-woodlawn, including PAWS for People Read to a Therapy Dog.",
   "population": "zero"
  },
  "WordPress-KY|||Cynthiana-Harrison County Public Library": {
@@ -7751,6 +7751,11 @@
  "WordPress-GA|||Marion County Library": {
   "verdict": "MISMATCH",
   "comment": "url-collision: page addresses show CO not GA; title \"Buena Vista Public Library\"",
+  "population": "zero"
+ },
+ "WordPress-RI|||Coventry Public Library": {
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-26 by relocation to LibCal-RI. Had produced ZERO database rows ever from the WordPress family because Coventry publishes on LibCal. Run: Found 20 events, 7 rows saved under LibCal-RI-coventrylibrary, four of them at the Greene Branch venue.",
   "population": "zero"
  }
 }
