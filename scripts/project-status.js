@@ -25,6 +25,9 @@
 
 const fs = require('fs');
 const path = require('path');
+// Single source of truth for "is this host a multi-state platform rather than one
+// institution?" — see the gate 2 comment below for why this is imported, not copied.
+const { classify: classifyHost } = require('./list-url-collisions');
 
 const ROOT = path.join(__dirname, '..');
 const LIB_MD = path.join(ROOT, 'LIBRARY-SITE-AUDIT.md');
@@ -266,7 +269,16 @@ function computeGates() {
     if (!byHost.has(h)) byHost.set(h, new Set());
     byHost.get(h).add((s.state || '').toUpperCase());
   });
-  const collidingHosts = [...byHost.entries()].filter(([, states]) => states.size > 1);
+  // 2026-08-26: aggregator hosts are EXCLUDED. macaronikid.com, libcal.com, libnet.info,
+  // bibliocommons.com and the rest are multi-state platforms BY DESIGN — many states
+  // legitimately share them — so counting them as collisions made this gate's target of 0
+  // mathematically unreachable and kept it permanently red. The rule comes from
+  // list-url-collisions.js rather than a second copy here, because a forked predicate is
+  // exactly how fix-cancelled-events.js and fix-event-quality.js STEP 1b drifted from
+  // their shared helpers.
+  const collidingHostsAll = [...byHost.entries()].filter(([, states]) => states.size > 1);
+  const collidingHosts = collidingHostsAll.filter(([h]) => classifyHost(h) !== 'AGGREGATOR');
+  const aggregatorHosts = collidingHostsAll.length - collidingHosts.length;
   const collidingHostSet = new Set(collidingHosts.map(([h]) => h));
   const collidingEntries = sites.filter(s => collidingHostSet.has(hostOf(s.url))).length;
   // 2026-08-18: gates 1-2 dropped (gate 2: 536 -> 504) because loadConfiguredSites was
@@ -274,8 +286,17 @@ function computeGates() {
   // resolved. Any comparison against a STATUS.md entry dated on or before 2026-08-18 is
   // across a methodology change and is not a like-for-like trend.
   g.urlCollisions = { now: collidingEntries, unit: '', target: 0,
-    detail: `${collidingEntries} entries on ${collidingHosts.length} hosts claimed by 2+ states` +
+    detail: `${collidingEntries} entries on ${collidingHosts.length} single-institution hosts claimed by 2+ states` +
+      (aggregatorHosts ? `; ${aggregatorHosts} multi-state platform host(s) excluded by design` : '') +
       (disabledByCollision ? `; a further ${disabledByCollision} disabled via urlCollision and excluded` : '') };
+  notes.push('METHODOLOGY CHANGE 2026-08-26: gate 2 now excludes multi-state platform hosts ' +
+    '(macaronikid.com, libcal.com, libnet.info, bibliocommons.com and the rest of AGGREGATOR_DOMAINS, ' +
+    'imported from list-url-collisions.js rather than re-listed here). Those hosts are shared across states ' +
+    'BY DESIGN, so counting them made the target of 0 unreachable and left the gate permanently red while ' +
+    'the real seed-data defect was being worked. Gate 2 fell 9 -> 0 the moment this landed. THAT DROP IS A ' +
+    'DEFINITION CHANGE, NOT WORK DONE — the nine true single-institution collisions were separately resolved ' +
+    'the same day (see SCRAPER-FIX-LOG.jsonl 2026-08-26), and it is that fix, not this exclusion, that is the ' +
+    'progress. Any comparison with a STATUS.md entry dated on or before 2026-08-25 crosses this change.');
   if (disabledByCollision) {
     notes.push(`METHODOLOGY CHANGE 2026-08-21: ${disabledByCollision} entries proven to point at another state's ` +
       'library were flagged urlCollision and are skipped at run time, so they are excluded from gate 2. ' +
@@ -397,7 +418,13 @@ function renderTable(gates, prev) {
         delta = `${d > 0 ? '+' : ''}${d}${improving ? ' ✅' : ' ⚠️'}`;
       }
     }
-    lines.push(`| ${label} | ${fmt(g)} | ${delta} | ${fmtTarget(g)} | ${blocking} |`);
+    // Gate 3's "mostly blocked on gate 2" is only true while gate 2 is open. Leaving it
+    // there once the collisions are cleared parks the largest actionable backlog on the
+    // project behind work that is already done.
+    const blockingNow = (key === 'confirmedBugs' && gates.urlCollisions && gates.urlCollisions.now === 0)
+      ? 'unblocked — gate 2 is clear; these are now the main body of work'
+      : blocking;
+    lines.push(`| ${label} | ${fmt(g)} | ${delta} | ${fmtTarget(g)} | ${blockingNow} |`);
   });
   return lines.join('\n');
 }
@@ -418,8 +445,13 @@ function renderBroken(gates, fixNotes) {
       gates.urlCollisions.detail, 'per-file live verification; the main body of MASTER-PLAN Phase 2');
   }
   if (gates.confirmedBugs.now > 0) {
-    push('🟠', 'Confirmed open bugs (MISMATCH verdicts)',
-      `${gates.confirmedBugs.now} sites`, 'most blocked on the URL work above');
+    // The "blocked on the URL work" reason was true only while gate 2 was open. Once the
+    // true collisions are cleared these become directly actionable, and saying otherwise
+    // would park 563 fixable sites behind work that is already finished.
+    push('🟠', 'Confirmed open bugs (MISMATCH verdicts)', `${gates.confirmedBugs.now} sites`,
+      gates.urlCollisions.now > 0
+        ? 'most blocked on the URL work above'
+        : 'NOT blocked any more — gate 2 is clear, so these are directly actionable; dead-endpoint and extraction-failure buckets first');
   }
   if (gates.unknownSites.now > 0) {
     push('🟠', 'Unknown sites (UNVERIFIABLE verdicts)',

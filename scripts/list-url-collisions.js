@@ -10,10 +10,17 @@
  * actually dangerous. This script is the missing half — it turns the gate into a
  * worklist, worst first.
  *
- * It deliberately shares NOTHING with project-status.js except behaviour: the site
- * loader is reimplemented here rather than imported, because project-status.js has no
- * exports and adding some would change a file whose output is a trend ledger. The
- * two loaders are asserted to agree via --check, so a silent divergence is detectable.
+ * The site LOADER is still reimplemented here rather than imported, because
+ * project-status.js has no exports and adding some would change a file whose output is a
+ * trend ledger. The two loaders are asserted to agree via --check, so a silent divergence
+ * is detectable.
+ *
+ * The CLASSIFIER, however, is now shared in the other direction: as of 2026-08-26 this
+ * file exports AGGREGATOR_DOMAINS and classify(), and project-status.js imports them for
+ * gate 2. That is deliberate. Letting the gate keep its own copy of "is this host a
+ * platform or an institution?" is the predicate-fork defect that has already bitten
+ * fix-cancelled-events.js, fix-event-quality.js STEP 1b and the junk-title backfill —
+ * each drifted from its shared helper and disagreed silently.
  *
  * WHAT A "COLLISION" IS, AND THE THREE KINDS
  * ------------------------------------------
@@ -30,8 +37,12 @@
  *                    the seed-data bug: spartalibrary.org under three states, Pelham
  *                    MA/GA pointing at Pelham NY. These are the ones to fix.
  *
- * The gate's own number stays as it is — this script does not redefine it. It only
- * separates the worklist so a human is not handed 504 undifferentiated rows.
+ * UPDATED 2026-08-26: the gate no longer counts kind 1. For most of this script's life it
+ * did, and the separation here was purely presentational. But once the TRUE collisions
+ * reached zero, the aggregators were all that remained, and a gate whose target is 0 while
+ * ~9 by-design entries can never be removed is permanently red for no reason — it kept
+ * naming Defect A as the next action after Defect A was finished. Gate 2 now measures
+ * kind 3 only, using the classifier exported from this file.
  *
  * Usage:
  *   node scripts/list-url-collisions.js                 # summary + TRUE collisions
@@ -169,9 +180,13 @@ function main() {
   const trueEntries = trueCollisions.reduce((n, c) => n + c.entries.length, 0);
 
   if (CHECK) {
-    console.log(`gate 2 parity: ${gate2Entries} entries on ${colliding.length} hosts claimed by 2+ states`);
+    // Gate 2 counts TRUE single-institution collisions only, as of 2026-08-26 — aggregator
+    // hosts are excluded there using the AGGREGATOR_DOMAINS exported from this file, so
+    // parity is asserted against trueEntries, not against every colliding host.
+    console.log(`gate 2 parity: ${trueEntries} entries on ${trueCollisions.length} single-institution hosts claimed by 2+ states`);
+    console.log(`  plus ${aggregators.length} multi-state platform host(s) excluded by design (${gate2Entries - trueEntries} entries)`);
     console.log(`  plus ${disabled} entries disabled via urlCollision and therefore excluded`);
-    console.log(`  (project-status.js should print the same two numbers)`);
+    console.log(`  (project-status.js gate 2 should print ${trueEntries})`);
     process.exit(0);
   }
 
@@ -188,7 +203,7 @@ function main() {
   }
 
   console.log(`configured active sites with a parseable URL : ${sites.length}`);
-  console.log(`hosts claimed by 2+ states                    : ${colliding.length}  (gate 2 counts ${gate2Entries} entries on them)`);
+  console.log(`hosts claimed by 2+ states                    : ${colliding.length}  (${gate2Entries} entries; gate 2 counts only the true ones below)`);
   console.log(`entries DISABLED via urlCollision (excluded)  : ${disabled}  — guarded at run time, not corrected`);
   console.log(`  of which multi-state platforms by design    : ${aggregators.length}  — not seed-data bugs`);
   console.log(`  of which TRUE single-institution collisions : ${trueCollisions.length}  (${trueEntries} entries)  <-- the worklist`);
@@ -207,4 +222,11 @@ function main() {
   }
 }
 
-main();
+// Exported so project-status.js gate 2 can apply the SAME aggregator rule instead of
+// keeping its own copy. A second hand-rolled predicate is the defect class that has
+// already bitten this project three times — fix-cancelled-events.js, fix-event-quality.js
+// STEP 1b, and the junk-title backfill all forked from their shared helper and silently
+// disagreed with it. `--check` asserts the two stay in step.
+module.exports = { AGGREGATOR_DOMAINS, hostOf, domainOf, classify };
+
+if (require.main === module) main();
