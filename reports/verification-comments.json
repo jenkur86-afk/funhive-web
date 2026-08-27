@@ -2834,8 +2834,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Bridgeport Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper [redirects to bportlibrary.libcal.com]",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 - no relocation needed, the verdict was stale. LibCal-CT has carried bportlibrary.libcal.com for some time and returned 10 events on this run. The real defect was that this WordPress row had never been guarded, so both entries were live and this one could only ever return 0 - a duplicate masquerading as a broken site. Now guarded.",
   "population": "zero"
  },
  "WordPress-CT|||Canterbury Public Library": {
@@ -2945,7 +2945,7 @@
  },
  "WordPress-CT|||Killingworth Library": {
   "verdict": "MATCHES",
-  "comment": "Correct Killingworth CT library; Library Events section is empty, calendar is hosted externally on LibCal",
+  "comment": "RESOLVED 2026-08-27 by relocation to LibCal-CT. Publishes on killingworthlibrary.libcal.com, titled LibCal - Killingworth Library Association. Run and proven: Found 48 events, 14 rows saved under LibCal-CT-killingworthlibrary.",
   "population": "zero"
  },
  "WordPress-CT|||Levi E.Coe Library": {
@@ -3050,7 +3050,7 @@
  },
  "WordPress-CT|||Trumbull Library": {
   "verdict": "MATCHES",
-  "comment": "Correct Trumbull CT library page on trumbull-ct.gov; no dated events shown, only Summer 2026 program brochure links",
+  "comment": "RESOLVED 2026-08-27 by relocation to LibCal-CT. Trumbull publishes on trumbull.libcal.com, confirmed by that page titling itself Library Calendar - Trumbull Library. Run and proven: Found 48 events, 9 rows saved under LibCal-CT-trumbull.",
   "population": "zero"
  },
  "WordPress-CT|||Vernon Public Library": {
@@ -6619,8 +6619,8 @@
   "population": "zero"
  },
  "WordPress-MA|||Brookline Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 - no relocation needed, the verdict was stale. LibCal-MA has carried brooklinelibrary.libcal.com for some time and returned 20 events on this run. As with Bridgeport, the real defect was an unguarded WordPress duplicate that could only ever return 0. Now guarded.",
   "population": "zero"
  },
  "WordPress-MA|||Cary Memorial Library": {
@@ -6649,8 +6649,8 @@
   "population": "zero"
  },
  "WordPress-MA|||Dighton Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 by relocation to LibCal-MA. Publishes on dightonlibrary.libcal.com, titled LibCal - Dighton Public Library. Run and proven: Found 48 events, 7 rows saved under LibCal-MA-dightonlibrary.",
   "population": "zero"
  },
  "WordPress-MA|||Dover Town Library": {
@@ -6659,13 +6659,13 @@
   "population": "zero"
  },
  "WordPress-MA|||East Bridgewater Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 by relocation to LibCal-MA. Publishes on eastbridgewaterlibrary.libcal.com, titled LibCal - East Bridgewater Public Library. Run and proven: Found 48 events, 2 rows saved under LibCal-MA-eastbridgewaterlibrary. Note this venue also appears in the MacaroniKid all-ages adjudication of 2026-08-26 as a separate aggregator listing; the library now has direct coverage as well.",
   "population": "zero"
  },
  "WordPress-MA|||East Milton Branch Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 by relocation to LibCal-MA at SYSTEM level. Milton publishes on miltonlibrary.libcal.com, titled LibCal - Milton Public Library, which covers this branch. Run and proven: Found 20 events, 9 rows saved under LibCal-MA-miltonlibrary. The old WordPress row also carried a placeholder zipCode of 00000.",
   "population": "zero"
  },
  "WordPress-MA|||Edgartown Free Public Library": {
@@ -6929,8 +6929,8 @@
   "population": "zero"
  },
  "WordPress-MA|||Richard Salter Storrs Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 by relocation to LibCal-MA. Longmeadow publishes on longmeadowlibrary.libcal.com, which titles itself LibCal - Richard Salter Storrs Library, an exact match to the entry name. Run and proven: Found 48 events, 8 rows saved under LibCal-MA-longmeadowlibrary.",
   "population": "zero"
  },
  "WordPress-MA|||Salisbury Public Library": {
@@ -7010,7 +7010,7 @@
  },
  "WordPress-MA|||Ventress Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "comment": "WIRED BUT NOT YET OBSERVED, deliberately. Ventress runs Assabet, not LibCal, and is now in Assabet-NH-MA. NOT run on 2026-08-27 because the Group 2 catch-up rotation was live and that scraper covers 41 sites - concurrent heavy Chrome is the recorded suspect for a past 37-scraper launch failure. THE TRAP AVOIDED: marshfieldlibrary.libcal.com resolves and returns 200 but titles itself Everett Roehl Marshfield Public Library, Marshfield WISCONSIN - the same collision already recorded against marshfieldlibrary.org on this entry - so the obvious LibCal relocation would have re-created Defect A by hand. Instance itself is not in doubt: ventresslibrary.assabetinteractive.com/calendar/ 301s to /calendar/2026-august/, titled August 2026 Events | Ventress Memorial Library, 453 event nodes. Stays UNVERIFIABLE until an Assabet-NH-MA run shows rows.",
   "population": "zero"
  },
  "WordPress-MA|||Wayland Free Public Library": {

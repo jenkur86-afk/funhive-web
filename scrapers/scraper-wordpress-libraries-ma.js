@@ -46,7 +46,9 @@ const LIBRARIES = [
   { name: 'Brewster Ladies Library Assoc.', url: 'https://brewsterlibrary.libcal.com/', eventsUrl: 'https://brewsterlibrary.libcal.com/', city: 'Brewster', state: 'MA', zipCode: '02631', county: 'Barnstable'},
   { name: 'Brighton Branch Library', url: 'https://www.brightonlibrary.org', eventsUrl: 'https://www.brightonlibrary.org/events', city: 'Brighton', state: 'MA', zipCode: '00000', county: 'Suffolk', urlCollision: 'brightonlibrary.org is NY, not MA' },
   { name: 'Brimfield Public Library', url: 'https://www.brimfieldlibrary.org', eventsUrl: 'https://www.brimfieldlibrary.org/events', city: 'Brimfield', state: 'MA', zipCode: '01010', county: 'Hampden'},
-  { name: 'Brookline Public Library', url: 'https://www.brooklinelibrary.org', eventsUrl: 'https://www.brooklinelibrary.org/events', city: 'Brookline', state: 'MA', zipCode: '02445', county: 'Norfolk'},
+  // 2026-08-27: PLATFORM MISMATCH. ALREADY relocated: LibCal-MA has carried brooklinelibrary.libcal.com for some time, but this WordPress row was never guarded, so both were active and this one could only ever return 0.
+  // Guarded rather than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Brookline Public Library', url: 'https://www.brooklinelibrary.org', eventsUrl: 'https://www.brooklinelibrary.org/events', city: 'Brookline', state: 'MA', zipCode: '02445', county: 'Norfolk', urlCollision: 'platform mismatch - already covered by LibCal-MA at brooklinelibrary.libcal.com; this entry was a live duplicate' },
   { name: 'Cambridge Public Library', url: 'https://www.cambridgelibrary.org', eventsUrl: 'https://www.cambridgelibrary.org/events', city: 'Cambridge', state: 'MA', zipCode: '02139', county: 'Middlesex'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in PA, not MA. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Canton Public Library', url: 'https://www.cantonlibrary.org', eventsUrl: 'https://www.cantonlibrary.org/events', city: 'Canton', state: 'MA', zipCode: '02021', county: 'Norfolk'},
@@ -70,13 +72,17 @@ const LIBRARIES = [
   { name: 'Cotuit Library', url: 'https://www.cotuitlibrary.org/', eventsUrl: 'https://www.cotuitlibrary.org/', city: 'Cotuit', state: 'MA', zipCode: '02635', county: 'Barnstable'},
   { name: 'Dalton Free Public Library', url: 'https://www.daltonlibrary.org', eventsUrl: 'https://www.daltonlibrary.org/events', city: 'Dalton', state: 'MA', zipCode: '01226', county: 'Berkshire'},
   { name: 'Peabody Institute Library', url: 'https://www.danverslibrary.org', eventsUrl: 'https://www.danverslibrary.org/events', city: 'Danvers', state: 'MA', zipCode: '01923', county: 'Essex'},
-  { name: 'Dighton Public Library', url: 'https://dightonlibrary.org/', eventsUrl: 'https://dightonlibrary.org/', city: 'Dighton', state: 'MA', zipCode: '02715', county: 'Bristol'},
+  // 2026-08-27: PLATFORM MISMATCH. Dighton publishes on dightonlibrary.libcal.com, titled "LibCal - Dighton Public Library".
+  // Guarded rather than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Dighton Public Library', url: 'https://dightonlibrary.org/', eventsUrl: 'https://dightonlibrary.org/', city: 'Dighton', state: 'MA', zipCode: '02715', county: 'Bristol', urlCollision: 'platform mismatch - publishes on dightonlibrary.libcal.com; relocated to LibCal-MA 2026-08-27' },
   // URL corrected 2026-08-11 (was douglaslibrary.org): Contact page shows 290 Main Street PO Box 607, Douglas MA 01516, phone 508-476-2695; calendar is a CWMARS Google embed
   { name: 'Simon Fairfield Public Library', url: 'https://mysfpl.org/', eventsUrl: 'https://mysfpl.org/', city: 'Douglas', state: 'MA', zipCode: '01516', county: 'Worcester'},
   // URL corrected 2026-08-11 (was doverlibrary.org): Site shows 56 Dedham Street, Dover MA 02030, phone 508-785-8113; Minuteman Library Network member
   { name: 'Dover Town Library', url: 'https://dovertownlibrary.org', eventsUrl: 'https://dovertownlibrary.org/programs-events/calendar/', city: 'Dover', state: 'MA', zipCode: '02030', county: 'Norfolk'},
   { name: 'Moses Greeley Parker Memorial Lib.', url: 'https://www.dracutlibrary.org', eventsUrl: 'https://www.dracutlibrary.org/events', city: 'Dracut', state: 'MA', zipCode: '01826', county: 'Middlesex'},
-  { name: 'East Bridgewater Public Library', url: 'https://www.eastbridgewaterlibrary.org', eventsUrl: 'https://www.eastbridgewaterlibrary.org/events', city: 'East Bridgewater', state: 'MA', zipCode: '02333', county: 'Plymouth'},
+  // 2026-08-27: PLATFORM MISMATCH. East Bridgewater publishes on eastbridgewaterlibrary.libcal.com, titled "LibCal - East Bridgewater Public Library".
+  // Guarded rather than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'East Bridgewater Public Library', url: 'https://www.eastbridgewaterlibrary.org', eventsUrl: 'https://www.eastbridgewaterlibrary.org/events', city: 'East Bridgewater', state: 'MA', zipCode: '02333', county: 'Plymouth', urlCollision: 'platform mismatch - publishes on eastbridgewaterlibrary.libcal.com; relocated to LibCal-MA 2026-08-27' },
   { name: 'Eastham Public Library', url: 'https://easthamlibrary.org/', eventsUrl: 'https://easthamlibrary.org/', city: 'Eastham', state: 'MA', zipCode: '02642', county: 'Barnstable'},
   { name: 'Emily Williston Memorial Library', url: 'https://www.easthamptonlibrary.org', eventsUrl: 'https://www.easthamptonlibrary.org/events', city: 'Easthampton', state: 'MA', zipCode: '01027', county: 'Hampshire', urlCollision: 'easthamptonlibrary.org is NY, not MA' },
   { name: 'Five Corners Library', url: 'https://www.eastonlibrary.org/', eventsUrl: 'https://www.eastonlibrary.org/library-events', city: 'Easton', state: 'MA', zipCode: '00000', county: 'Bristol', urlCollision: 'eastonlibrary.org is CT, not MA' },
@@ -124,12 +130,21 @@ const LIBRARIES = [
   { name: 'Leverett Library', url: 'https://www.leverettlibrary.org', eventsUrl: 'https://www.leverettlibrary.org/events', city: 'Leverett', state: 'MA', zipCode: '01054', county: 'Franklin'},
   { name: 'Cary Memorial Library', url: 'https://www.lexingtonlibrary.org', eventsUrl: 'https://www.lexingtonlibrary.org/events', city: 'Lexington', state: 'MA', zipCode: '02420', county: 'Middlesex', urlCollision: 'lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'Reuben Hoar Library', url: 'https://www.littletonlibrary.org', eventsUrl: 'https://www.littletonlibrary.org/events', city: 'Littleton', state: 'MA', zipCode: '01460', county: 'Middlesex'},
-  { name: 'Richard Salter Storrs Library', url: 'https://longmeadowlibrary.org/', eventsUrl: 'https://longmeadowlibrary.org/', city: 'Longmeadow', state: 'MA', zipCode: '01106', county: 'Hampden'},
+  // 2026-08-27: PLATFORM MISMATCH. Longmeadow publishes on longmeadowlibrary.libcal.com, which titles itself "LibCal - Richard Salter Storrs Library" - an exact name match to this entry.
+  // Guarded rather than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Richard Salter Storrs Library', url: 'https://longmeadowlibrary.org/', eventsUrl: 'https://longmeadowlibrary.org/', city: 'Longmeadow', state: 'MA', zipCode: '01106', county: 'Hampden', urlCollision: 'platform mismatch - publishes on longmeadowlibrary.libcal.com; relocated to LibCal-MA 2026-08-27' },
   { name: 'Pollard Memorial Library', url: 'https://www.lowelllibrary.org', eventsUrl: 'https://www.lowelllibrary.org/events', city: 'Lowell', state: 'MA', zipCode: '01852', county: 'Middlesex'},
   { name: 'Lunenburg Public Library', url: 'https://lunenburglibrary.org/', eventsUrl: 'https://lunenburglibrary.org/', city: 'Lunenburg', state: 'MA', zipCode: '01462', county: 'Worcester'},
   { name: 'Lynnfield Public Library', url: 'https://lynnfieldlibrary.org/', eventsUrl: 'https://lynnfieldlibrary.org/', city: 'Lynnfield', state: 'MA', zipCode: '01940', county: 'Essex'},
   { name: 'Elizabeth Taber Memorial Library', url: 'https://www.marionlibrary.org/', eventsUrl: 'https://www.marionlibrary.org/', city: 'Marion', state: 'MA', zipCode: '02738', county: 'Plymouth', urlCollision: 'marionlibrary.org is OH, not MA' },
-  { name: 'Ventress Memorial Library', url: 'https://marshfieldlibrary.org/', eventsUrl: 'https://marshfieldlibrary.org/', city: 'Marshfield', state: 'MA', zipCode: '02050', county: 'Plymouth', urlCollision: 'marshfieldlibrary.org is WI, not MA' },
+  // 2026-08-27: GAP CLOSED — relocated to Assabet-NH-MA. The existing guard was correct but
+  // left this library with no coverage at all. Worth recording that the collision repeats on
+  // a SECOND host: marshfieldlibrary.libcal.com also resolves, returns 200, and titles itself
+  // "LibCal - Everett Roehl Marshfield Public Library" — Marshfield WISCONSIN again. So the
+  // obvious LibCal relocation would have re-created Defect A by hand. Ventress actually runs
+  // Assabet; its slug was read from ventresslibrary.org/event-calendar/, which embeds an
+  // iframe pointing at ventresslibrary.assabetinteractive.com/calendar/.
+  { name: 'Ventress Memorial Library', url: 'https://marshfieldlibrary.org/', eventsUrl: 'https://marshfieldlibrary.org/', city: 'Marshfield', state: 'MA', zipCode: '02050', county: 'Plymouth', urlCollision: 'marshfieldlibrary.org is WI, not MA (and marshfieldlibrary.libcal.com is WI too); relocated to Assabet-NH-MA 2026-08-27' },
   { name: 'Mashpee Public Library', url: 'https://mashpeepubliclibrary.org/', eventsUrl: 'https://mashpeepubliclibrary.org/', city: 'Mashpee', state: 'MA', zipCode: '02649', county: 'Barnstable'},
   { name: 'Mattapoisett Public Library', url: 'https://mattapoisettlibrary.org/', eventsUrl: 'https://mattapoisettlibrary.org/', city: 'Mattapoisett', state: 'MA', zipCode: '02739', county: 'Plymouth'},
   { name: 'Medfield Memorial Library', url: 'https://www.medfieldlibrary.org', eventsUrl: 'https://www.medfieldlibrary.org/events', city: 'Medfield', state: 'MA', zipCode: '02052', county: 'Norfolk'},
@@ -141,7 +156,9 @@ const LIBRARIES = [
   { name: 'Millbury Public Library', url: 'https://www.millburylibrary.org/', eventsUrl: 'https://www.millburylibrary.org/', city: 'Millbury', state: 'MA', zipCode: '01527', county: 'Worcester'},
   { name: 'Millis Public Library', url: 'https://www.millislibrary.org/', eventsUrl: 'https://www.millislibrary.org/calendar/', city: 'Millis', state: 'MA', zipCode: '02054', county: 'Norfolk'},
   { name: 'Millville Free Public Library', url: 'https://www.millvillelibrary.org', eventsUrl: 'https://www.millvillelibrary.org/events', city: 'Millville', state: 'MA', zipCode: '01529', county: 'Worcester'},
-  { name: 'East Milton Branch Library', url: 'https://www.miltonlibrary.org', eventsUrl: 'https://www.miltonlibrary.org/events', city: 'Milton', state: 'MA', zipCode: '00000', county: 'Norfolk'},
+  // 2026-08-27: PLATFORM MISMATCH. Milton publishes on miltonlibrary.libcal.com, titled "LibCal - Milton Public Library". Entered in LibCal-MA at SYSTEM level rather than as this branch, and note this row carried a placeholder zipCode of 00000.
+  // Guarded rather than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'East Milton Branch Library', url: 'https://www.miltonlibrary.org', eventsUrl: 'https://www.miltonlibrary.org/events', city: 'Milton', state: 'MA', zipCode: '00000', county: 'Norfolk', urlCollision: 'platform mismatch - Milton publishes on miltonlibrary.libcal.com; relocated to LibCal-MA 2026-08-27 at system level' },
   { name: 'Monterey Public Library', url: 'https://www.montereylibrary.org', eventsUrl: 'https://www.montereylibrary.org/events', city: 'Monterey', state: 'MA', zipCode: '01245', county: 'Berkshire', urlCollision: 'montereylibrary.org is CA, not MA' },
   // 2026-08-26: montgomerylibrary.org is DEAD - it resolves to 64.26.98.132 but refuses both 443 and 80 - and was shared with PA/NY/WV, all three of which are now repointed at their real sites. Grace Hall Memorial Library, 161 Main Road, Montgomery MA, ph (413) 862-3894, has NO website of its own: only a Facebook page and state-directory records (MBLC 646). Guarded rather than repointed because there is no URL to point at. This is a REAL, EXPLAINED COVERAGE GAP, not a resolved entry.
   { name: 'Grace Hall Memorial Library', url: 'https://www.montgomerylibrary.org', eventsUrl: 'https://www.montgomerylibrary.org/events', city: 'Montgomery', state: 'MA', zipCode: '01085', county: 'Hampden', urlCollision: 'montgomerylibrary.org is dead and was shared with PA/NY/WV; this library has no website of its own, Facebook only' },

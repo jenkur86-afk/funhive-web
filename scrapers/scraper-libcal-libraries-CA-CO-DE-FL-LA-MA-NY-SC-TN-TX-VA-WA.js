@@ -447,6 +447,28 @@ const LIBRARY_SYSTEMS = [
     city: 'Hamden',
     zipCode: '06518'
   },
+  // Added 2026-08-27, relocated from WordPress-CT on platform=libcal evidence from the
+  // Step 3d backlog. Both instances were confirmed by their OWN PAGE TITLE before wiring,
+  // never by name similarity — see the Marshfield note in the MA block below for what
+  // that discipline caught on this same pass.
+  {
+    name: 'Trumbull Library',
+    url: 'https://trumbull.libcal.com/calendar',
+    county: 'Fairfield',
+    state: 'CT',
+    website: 'https://www.trumbull-ct.gov/1104/Library',
+    city: 'Trumbull',
+    zipCode: '06611'
+  },
+  {
+    name: 'Killingworth Library Association',
+    url: 'https://killingworthlibrary.libcal.com/calendar',
+    county: 'Middlesex',
+    state: 'CT',
+    website: 'https://www.killingworthlibrary.org',
+    city: 'Killingworth',
+    zipCode: '06419'
+  },
 
   // DELAWARE - All Counties (unfiltered)
   {
@@ -755,6 +777,56 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.brooklinelibrary.org',
     city: 'Brookline',
     zipCode: '02445'
+  },
+  // Added 2026-08-27, relocated from WordPress-MA on platform=libcal evidence from the
+  // Step 3d backlog. Each subdomain was probed and accepted only on a title naming the
+  // right institution, with a deliberate negative control (notarealibraryxyz.libcal.com
+  // -> ENOTFOUND) so a 200 means something.
+  //
+  // WHAT THAT CAUGHT: marshfieldlibrary.libcal.com resolves and returns 200, but titles
+  // itself "LibCal - Everett Roehl Marshfield Public Library" — Marshfield WISCONSIN, not
+  // Marshfield MA. Wiring it for Ventress Memorial would have re-created Defect A by hand,
+  // and it is the SAME collision already recorded against marshfieldlibrary.org on the
+  // WordPress-MA entry. Ventress runs Assabet and went to that scraper instead.
+  //
+  // Milton is entered at SYSTEM level: the WordPress-MA row was "East Milton Branch
+  // Library" with a placeholder zipCode of 00000, and the LibCal instance is Milton Public
+  // Library, which covers the branch.
+  {
+    name: 'Dighton Public Library',
+    url: 'https://dightonlibrary.libcal.com/calendar',
+    county: 'Bristol',
+    state: 'MA',
+    website: 'https://dightonlibrary.org',
+    city: 'Dighton',
+    zipCode: '02715'
+  },
+  {
+    name: 'East Bridgewater Public Library',
+    url: 'https://eastbridgewaterlibrary.libcal.com/calendar',
+    county: 'Plymouth',
+    state: 'MA',
+    website: 'https://www.eastbridgewaterlibrary.org',
+    city: 'East Bridgewater',
+    zipCode: '02333'
+  },
+  {
+    name: 'Milton Public Library',
+    url: 'https://miltonlibrary.libcal.com/calendar',
+    county: 'Norfolk',
+    state: 'MA',
+    website: 'https://www.miltonlibrary.org',
+    city: 'Milton',
+    zipCode: '02186'
+  },
+  {
+    name: 'Richard Salter Storrs Library',
+    url: 'https://longmeadowlibrary.libcal.com/calendar',
+    county: 'Hampden',
+    state: 'MA',
+    website: 'https://longmeadowlibrary.org',
+    city: 'Longmeadow',
+    zipCode: '01106'
   },
 
   // Worcester Public Library: catalog is SirsiDynix LibNet (mywpl.libnet.info).

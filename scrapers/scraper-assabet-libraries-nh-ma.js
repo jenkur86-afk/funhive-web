@@ -38,6 +38,15 @@ const LIBRARIES = [
   { name: 'Weymouth Public Libraries', slug: 'weymouth', eventsUrl: 'https://weymouth.assabetinteractive.com/calendar/', city: 'Weymouth', state: 'MA', zipCode: '02188' },
   { name: 'Chicopee Public Library', slug: 'chicopeepubliclibrary', eventsUrl: 'https://chicopeepubliclibrary.assabetinteractive.com/calendar/', city: 'Chicopee', state: 'MA', zipCode: '01013' },
   { name: 'Pollard Memorial Library', slug: 'pollardml', eventsUrl: 'https://pollardml.assabetinteractive.com/calendar/', city: 'Lowell', state: 'MA', zipCode: '01852' },
+  // Added 2026-08-27. Relocated from WordPress-MA, where it carried a urlCollision guard
+  // saying marshfieldlibrary.org is WI not MA — correct, but that left the library with no
+  // coverage at all. It is NOT a LibCal site either: marshfieldlibrary.libcal.com is also
+  // Marshfield WISCONSIN. Ventress runs Assabet, and the slug was READ FROM THE LIBRARY OWN
+  // PAGE as this file requires — ventresslibrary.org/event-calendar/ embeds an iframe
+  // pointing at ventresslibrary.assabetinteractive.com/calendar/. Confirmed live: that URL
+  // 301s to /calendar/2026-august/ and titles itself "August 2026 Events | Ventress Memorial
+  // Library" with 453 event nodes.
+  { name: 'Ventress Memorial Library', slug: 'ventresslibrary', eventsUrl: 'https://ventresslibrary.assabetinteractive.com/calendar/', city: 'Marshfield', state: 'MA', zipCode: '02050' },
 
   // --- Added 2026-08-24 from the Step 3d zero-event verification -------------
   // All 23 were configured under WordPress-{MA,NH,RI}, where they returned 0
