@@ -47,7 +47,7 @@ const LIBRARIES = [
   { name: 'Dixon Homestead Library', url: 'https://www.dumontlibrary.org/', eventsUrl: 'https://www.dumontlibrary.org/', city: 'Dumont', state: 'NJ', zipCode: '07628', county: 'Bergen'},
   { name: 'Dunellen Free Public Library', url: 'https://www.dunellenlibrary.org', eventsUrl: 'https://www.dunellenlibrary.org/events', city: 'Dunellen', state: 'NJ', zipCode: '08812', county: 'Middlesex'},
   { name: 'Edgewater Free Public Library', url: 'https://www.edgewaterlibrary.org', eventsUrl: 'https://www.edgewaterlibrary.org/events', city: 'Edgewater', state: 'NJ', zipCode: '07020', county: 'Bergen', urlCollision: 'edgewaterlibrary.org is dead or serves an unrelated site — no state entry is correct' },
-  { name: 'Elmwood Park Free Public Library', url: 'https://www.elmwoodparklibrary.org', eventsUrl: 'https://www.elmwoodparklibrary.org/events', city: 'Elmwood Park', state: 'NJ', zipCode: '07407', county: 'Bergen'},
+  { name: 'Elmwood Park Free Public Library', url: 'https://www.elmwoodparklibrary.org', eventsUrl: 'https://www.elmwoodparklibrary.org/events', city: 'Elmwood Park', state: 'NJ', zipCode: '07407', county: 'Bergen', urlCollision: 'live page addresses show IL not NJ - Elmwood Park Public Library, Illinois'},
   { name: 'Emerson Public Library', url: 'https://www.emersonlibrary.com/', eventsUrl: 'https://www.emersonlibrary.com/', city: 'Emerson', state: 'NJ', zipCode: '07630', county: 'Bergen'},
   { name: 'Englewood Free Public Library', url: 'https://www.englewoodlibrary.org', eventsUrl: 'https://www.englewoodlibrary.org/events', city: 'Englewood', state: 'NJ', zipCode: '07631', county: 'Bergen'},
   // URL corrected 2026-08-11 (was fairhavenlibrary.org): Site shows 748 River Road, Borough Hall, Fair Haven NJ, phone 732-747-0241; Monmouth County Library member
@@ -58,7 +58,7 @@ const LIBRARIES = [
   { name: 'Fanwood Memorial Library', url: 'https://fanwoodlibrary.org/', eventsUrl: 'https://fanwoodlibrary.org/', city: 'Fanwood', state: 'NJ', zipCode: '07023', county: 'Union'},
   { name: 'Flemington Free Public Library', url: 'https://www.flemingtonlibrary.org', eventsUrl: 'https://www.flemingtonlibrary.org/events', city: 'Flemington', state: 'NJ', zipCode: '08822', county: 'Hunterdon'},
   { name: 'Fort Lee Free Public Library', url: 'https://www.fortleelibrary.org', eventsUrl: 'https://www.fortleelibrary.org/events', city: 'Fort Lee', state: 'NJ', zipCode: '07024', county: 'Bergen'},
-  { name: 'Franklin Lakes Free Public Library', url: 'https://www.franklinlakeslibrary.org', eventsUrl: 'https://www.franklinlakeslibrary.org/events', city: 'Franklin Lakes', state: 'NJ', zipCode: '07417', county: 'Bergen'},
+  { name: 'Franklin Lakes Free Public Library', url: 'https://www.franklinlakeslibrary.org', eventsUrl: 'https://www.franklinlakeslibrary.org/events', city: 'Franklin Lakes', state: 'NJ', zipCode: '07417', county: 'Bergen', urlCollision: 'publishes on bccls.libcal.com/calendar/franklinlakes - relocated to LibCal-NJ on 2026-08-27'},
   // URL corrected 2026-08-11 (was franklinvillelibrary.org): Site blocks bots; directories and Franklin Twp Gloucester County municipal brochure quote 1584 Coles Mill Road, Franklinville NJ 08322, phon
   { name: 'Franklin Twp Public Library-Gloucester', url: 'https://ftlnj.org', eventsUrl: 'https://ftlnj.org/calendar/', city: 'Franklinville', state: 'NJ', zipCode: '08322', county: 'Gloucester'},
   { name: 'Glen Ridge Free Public Library', url: 'https://www.glenridgelibrary.org/', eventsUrl: 'https://www.glenridgelibrary.org/', city: 'Glen Ridge', state: 'NJ', zipCode: '07028', county: 'Essex'},
@@ -101,7 +101,7 @@ const LIBRARIES = [
   { name: 'Millville Public Library', url: 'https://millvillepubliclibrary.org/en/', eventsUrl: 'https://www.millvillepubliclibrary.org/en/mpl-calendar', city: 'Millville', state: 'NJ', zipCode: '08332', county: 'Cumberland'},
   { name: 'Monmouth Beach Public Library', url: 'https://monmouthbeachlibrary.org/', eventsUrl: 'https://monmouthbeachlibrary.org/', city: 'Monmouth Beach', state: 'NJ', zipCode: '07750', county: 'Monmouth'},
   { name: 'Monroe Twp Public Library-Middlesex', url: 'http://monroetpl.org/', eventsUrl: 'http://monroetpl.org/', city: 'Monroe Township', state: 'NJ', zipCode: '08831', county: 'Middlesex'},
-  { name: 'Montclair Public Library', url: 'https://www.montclairlibrary.org', eventsUrl: 'https://www.montclairlibrary.org/events', city: 'Montclair', state: 'NJ', zipCode: '07042', county: 'Essex'},
+  { name: 'Montclair Public Library', url: 'https://www.montclairlibrary.org', eventsUrl: 'https://www.montclairlibrary.org/events', city: 'Montclair', state: 'NJ', zipCode: '07042', county: 'Essex', urlCollision: 'publishes on the shared BCCLS LibCal instance at bccls.libcal.com/calendar/montclair - a WordPress DOM extractor cannot read it. Covered by LibCal-NJ, proven by a database row under LibCal-NJ-bccls-montclair'},
   { name: 'Montville Township Public Library', url: 'https://montvillelibrary.org/', eventsUrl: 'https://montvillelibrary.org/', city: 'Montville', state: 'NJ', zipCode: '07045', county: 'Morris'},
   { name: 'Moorestown Library', url: 'https://www.moorestownlibrary.org', eventsUrl: 'https://www.moorestownlibrary.org/events', city: 'Moorestown', state: 'NJ', zipCode: '08057', county: 'Burlington'},
   { name: 'Morris Plains Library', url: 'https://morrisplainslibrary.org/', eventsUrl: 'https://morrisplainslibrary.org/', city: 'Morris Plains', state: 'NJ', zipCode: '07950', county: 'Morris'},
@@ -139,7 +139,7 @@ const LIBRARIES = [
   { name: 'Pompton Lakes Borough Free Public Library', url: 'https://www.pomptonlakeslibrary.org/', eventsUrl: 'https://www.pomptonlakeslibrary.org/', city: 'Pompton Lakes', state: 'NJ', zipCode: '07442', county: 'Passaic'},
   { name: 'Princeton Public Library', url: 'https://www.princetonlibrary.org', eventsUrl: 'https://www.princetonlibrary.org/events', city: 'Princeton', state: 'NJ', zipCode: '08542', county: 'Mercer'},
   { name: 'Rahway Public Library', url: 'https://www.rahwaylibrary.org/', eventsUrl: 'https://www.rahwaylibrary.org/', city: 'Rahway', state: 'NJ', zipCode: '07065', county: 'Union'},
-  { name: 'Ramsey Free Public Library', url: 'https://www.ramseylibrary.org', eventsUrl: 'https://www.ramseylibrary.org/events', city: 'Ramsey', state: 'NJ', zipCode: '07446', county: 'Bergen'},
+  { name: 'Ramsey Free Public Library', url: 'https://www.ramseylibrary.org', eventsUrl: 'https://www.ramseylibrary.org/events', city: 'Ramsey', state: 'NJ', zipCode: '07446', county: 'Bergen', urlCollision: 'publishes on bccls.libcal.com/calendar/ramsey - relocated to LibCal-NJ on 2026-08-27'},
   { name: 'Red Bank Public Library', url: 'https://www.redbanklibrary.org/', eventsUrl: 'https://www.redbanklibrary.org/calendar', city: 'Red Bank', state: 'NJ', zipCode: '07701', county: 'Monmouth'},
   // URL corrected 2026-08-11 (was ridgefieldlibrary.org): 527 Morse Ave Ridgefield NJ 07657, phone 201-941-0192, BCCLS member
   { name: 'Ridgefield Free Public Library', url: 'https://www.ridgefieldpubliclibrary.com', eventsUrl: 'https://www.ridgefieldpubliclibrary.com', city: 'Ridgefield', state: 'NJ', zipCode: '07657', county: 'Bergen'},
@@ -147,7 +147,7 @@ const LIBRARIES = [
   { name: 'Ringwood Public Library', url: 'https://www.ringwoodlibrary.org', eventsUrl: 'https://www.ringwoodlibrary.org/events', city: 'Ringwood', state: 'NJ', zipCode: '07456', county: 'Passaic'},
   { name: 'River Vale Public Library', url: 'https://www.rivervalelibrary.org/', eventsUrl: 'https://www.rivervalelibrary.org/calendar', city: 'River Vale', state: 'NJ', zipCode: '07675', county: 'Bergen'},
   { name: 'Riverdale Public Library', url: 'https://www.riverdalelibrary.org', eventsUrl: 'https://www.riverdalelibrary.org/events', city: 'Riverdale', state: 'NJ', zipCode: '07457', county: 'Morris'},
-  { name: 'Riverside Public Library', url: 'https://www.riversidelibrary.org', eventsUrl: 'https://www.riversidelibrary.org/events', city: 'Riverside', state: 'NJ', zipCode: '08075', county: 'Burlington'},
+  { name: 'Riverside Public Library', url: 'https://www.riversidelibrary.org', eventsUrl: 'https://www.riversidelibrary.org/events', city: 'Riverside', state: 'NJ', zipCode: '08075', county: 'Burlington', urlCollision: 'live page addresses show IL not NJ - Riverside Public Library, Illinois'},
   { name: 'Roseland Free Public Library', url: 'https://www.roselandlibrary.org', eventsUrl: 'https://www.roselandlibrary.org/events', city: 'Roseland', state: 'NJ', zipCode: '07068', county: 'Essex'},
   { name: 'Roselle Free Public Library', url: 'https://www.rosellelibrary.org', eventsUrl: 'https://www.rosellelibrary.org/events', city: 'Roselle', state: 'NJ', zipCode: '07203', county: 'Union'},
   { name: 'Roselle Park Veterans Memorial Library', url: 'https://www.roselleparklibrary.org', eventsUrl: 'https://www.roselleparklibrary.org/events', city: 'Roselle Park', state: 'NJ', zipCode: '07204', county: 'Union'},
@@ -305,6 +305,36 @@ async function scrapeGenericEvents() {
               if (attr && /\d{4}-\d{1,2}-\d{1,2}/.test(attr)) return attr;
               const header = node.querySelector && node.querySelector('.calendar__day-header, [class*="day-header"]');
               if (header && header.textContent.trim()) return header.textContent.trim();
+              // Month-grid calendars (YUI3 / Weebly "yui3-calendar-grid", live on
+              // drevartslibrary.org and weedsportlibrary.org) carry NEITHER a
+              // data-date attribute NOR a day-header element. The day number is
+              // bare text at the top of the <td>, usually behind a weekday
+              // abbreviation ("Tue 4 ..."), and the month/year lives in a
+              // .yui3-calendar-header-label OUTSIDE the grid table entirely, so
+              // neither check above can reach it. Without this branch every event
+              // on such a page arrives at the date parser as a bare clock time
+              // ("5:00 PM - 6:00 PM") and is dropped: 27 of WordPress-NY's 56
+              // INVALID rows on 2026-08-27 were three such libraries, losing real
+              // programming like Library Littles Playgroup and Stuffed Animal
+              // Sleepover. Padding cells for the previous/next month are excluded
+              // so they are never dated into the month being displayed.
+              const gridCls = (node.className || '').toString();
+              if (node.tagName === 'TD' && /calendar[-_]?day|calendar_col/i.test(gridCls)
+                  && !/prevmonth|nextmonth|othermonth/i.test(gridCls)) {
+                const cellText = (node.textContent || '').replace(/\s+/g, ' ').trim();
+                const dayM = /^(?:(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*\.?\s+)?(\d{1,2})\b/i.exec(cellText);
+                if (dayM) {
+                  let hdr = null, scope = node;
+                  for (let j = 0; j < 6 && scope && !hdr; j++) {
+                    hdr = scope.querySelector && scope.querySelector('[class*="calendar-header-label"], [class*="calendar-header"], caption');
+                    scope = scope.parentElement;
+                  }
+                  if (!hdr) hdr = document.querySelector('[class*="calendar-header-label"]');
+                  const hdrText = hdr ? (hdr.textContent || '').replace(/\s+/g, ' ').trim() : '';
+                  const hM = /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})\b/i.exec(hdrText);
+                  if (hM) return hM[1] + ' ' + dayM[1] + ', ' + hM[2];
+                }
+              }
             }
             node = node.parentElement;
           }

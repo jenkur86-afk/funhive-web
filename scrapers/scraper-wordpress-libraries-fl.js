@@ -276,6 +276,36 @@ async function scrapeGenericEvents() {
               if (attr && /\d{4}-\d{1,2}-\d{1,2}/.test(attr)) return attr;
               const header = node.querySelector && node.querySelector('.calendar__day-header, [class*="day-header"]');
               if (header && header.textContent.trim()) return header.textContent.trim();
+              // Month-grid calendars (YUI3 / Weebly "yui3-calendar-grid", live on
+              // drevartslibrary.org and weedsportlibrary.org) carry NEITHER a
+              // data-date attribute NOR a day-header element. The day number is
+              // bare text at the top of the <td>, usually behind a weekday
+              // abbreviation ("Tue 4 ..."), and the month/year lives in a
+              // .yui3-calendar-header-label OUTSIDE the grid table entirely, so
+              // neither check above can reach it. Without this branch every event
+              // on such a page arrives at the date parser as a bare clock time
+              // ("5:00 PM - 6:00 PM") and is dropped: 27 of WordPress-NY's 56
+              // INVALID rows on 2026-08-27 were three such libraries, losing real
+              // programming like Library Littles Playgroup and Stuffed Animal
+              // Sleepover. Padding cells for the previous/next month are excluded
+              // so they are never dated into the month being displayed.
+              const gridCls = (node.className || '').toString();
+              if (node.tagName === 'TD' && /calendar[-_]?day|calendar_col/i.test(gridCls)
+                  && !/prevmonth|nextmonth|othermonth/i.test(gridCls)) {
+                const cellText = (node.textContent || '').replace(/\s+/g, ' ').trim();
+                const dayM = /^(?:(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*\.?\s+)?(\d{1,2})\b/i.exec(cellText);
+                if (dayM) {
+                  let hdr = null, scope = node;
+                  for (let j = 0; j < 6 && scope && !hdr; j++) {
+                    hdr = scope.querySelector && scope.querySelector('[class*="calendar-header-label"], [class*="calendar-header"], caption');
+                    scope = scope.parentElement;
+                  }
+                  if (!hdr) hdr = document.querySelector('[class*="calendar-header-label"]');
+                  const hdrText = hdr ? (hdr.textContent || '').replace(/\s+/g, ' ').trim() : '';
+                  const hM = /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})\b/i.exec(hdrText);
+                  if (hM) return hM[1] + ' ' + dayM[1] + ', ' + hM[2];
+                }
+              }
             }
             node = node.parentElement;
           }

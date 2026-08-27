@@ -1065,6 +1065,35 @@ const LIBRARY_SYSTEMS = [
     zipCode: '07042'
   },
   {
+    // Relocated from WordPress-NJ 2026-08-27, same platform-mismatch class as
+    // Montclair above. Both libraries publish on this shared BCCLS LibCal
+    // instance, which a WordPress DOM extractor cannot read: on the 2026-08-27
+    // run Ramsey contributed 39 and Franklin Lakes 37 of WordPress-NJ's 259
+    // InvalidDate rows, every one of them a bare clock time, and neither had a
+    // single row in the database.
+    // Slugs were NOT guessed. Each was probed live and accepted only because the
+    // page titles itself with the right institution, with an invented slug
+    // (notarealbcclslibraryxyz) returning 404 as a negative control so a 200
+    // means something. The per-library cid was read off each page the same way,
+    // and the method was validated by re-deriving Montclair's 10306 above.
+    name: 'Ramsey Free Public Library',
+    url: 'https://bccls.libcal.com/calendar/ramsey?cid=10323&t=d&d=0000-00-00&cal=10323&inc=0',
+    county: 'Bergen',
+    state: 'NJ',
+    website: 'https://www.ramseylibrary.org',
+    city: 'Ramsey',
+    zipCode: '07446'
+  },
+  {
+    name: 'Franklin Lakes Public Library',
+    url: 'https://bccls.libcal.com/calendar/franklinlakes?cid=10284&t=d&d=0000-00-00&cal=10284&inc=0',
+    county: 'Bergen',
+    state: 'NJ',
+    website: 'https://www.franklinlakeslibrary.org',
+    city: 'Franklin Lakes',
+    zipCode: '07417'
+  },
+  {
     name: 'Jersey City Free Public Library',
     url: 'https://jclibrary.libcal.com/calendar?cid=-1&t=d',
     county: 'Hudson',

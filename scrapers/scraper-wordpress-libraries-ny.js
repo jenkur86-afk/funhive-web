@@ -117,7 +117,7 @@ const LIBRARIES = [
   { name: 'Hawn Memorial Library', url: 'https://hawnmemoriallibrary.org', eventsUrl: 'https://hawnmemoriallibrary.org', city: 'Clayton', state: 'NY', zipCode: '13624', county: 'Jefferson'},
   { name: 'Kirkland Town Library', url: 'https://www.clintonlibrary.org', eventsUrl: 'https://www.clintonlibrary.org/events', city: 'Clinton', state: 'NY', zipCode: '13323', county: 'Clinton County', urlCollision: 'clintonlibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'Clyde-Savannah Public Library', url: 'https://www.clydelibrary.org/', eventsUrl: 'https://www.clydelibrary.org/', city: 'Clyde', state: 'NY', zipCode: '14433', county: 'Wayne'},
-  { name: 'Clymer-French Creek Free Library', url: 'https://www.clymerlibrary.org/', eventsUrl: 'https://www.clymerlibrary.org/', city: 'Clymer', state: 'NY', zipCode: '14724', county: 'Chautauqua'},
+  { name: 'Clymer-French Creek Free Library', url: 'https://www.clymerlibrary.org/', eventsUrl: 'https://www.clymerlibrary.org/', city: 'Clymer', state: 'NY', zipCode: '14724', county: 'Chautauqua', urlCollision: 'live page addresses show PA not NY and it titles itself Clymer Library'},
   { name: 'Cohocton Public Library', url: 'https://cohoctonlibrary.org/', eventsUrl: 'https://cohoctonlibrary.org/calendar/', city: 'Cohocton', state: 'NY', zipCode: '14826', county: 'Steuben'},
   { name: 'Cohoes Public Library', url: 'https://www.cohoeslibrary.org', eventsUrl: 'https://www.cohoeslibrary.org/events', city: 'Cohoes', state: 'NY', zipCode: '12047', county: 'Albany'},
   { name: 'Village Library Of Cooperstown', url: 'https://www.cooperstownlibrary.org', eventsUrl: 'https://www.cooperstownlibrary.org/events', city: 'Cooperstown', state: 'NY', zipCode: '13326', county: 'Otsego', urlCollision: 'cooperstownlibrary.org is dead or serves an unrelated site — no state entry is correct' },
@@ -224,7 +224,7 @@ const LIBRARIES = [
   { name: 'Hurley Library District', url: 'https://hurleylibrary.org/', eventsUrl: 'https://hurleylibrary.org/', city: 'Hurley', state: 'NY', zipCode: '12443', county: 'Ulster'},
   { name: 'Hyde Park Free Library', url: 'https://www.hydeparklibrary.org', eventsUrl: 'https://www.hydeparklibrary.org/events', city: 'Hyde Park', state: 'NY', zipCode: '12538', county: 'Dutchess'},
   { name: 'Ilion Free Public Library', url: 'https://www.ilionlibrary.org/', eventsUrl: 'https://www.ilionlibrary.org/', city: 'Ilion', state: 'NY', zipCode: '13357', county: 'Herkimer'},
-  { name: 'Seneca Nation Of Indians Library Cattaraugus Territory', url: 'https://www.irvinglibrary.org', eventsUrl: 'https://www.irvinglibrary.org/events', city: 'Irving', state: 'NY', zipCode: '14081', county: 'Chautauqua'},
+  { name: 'Seneca Nation Of Indians Library Cattaraugus Territory', url: 'https://www.irvinglibrary.org', eventsUrl: 'https://www.irvinglibrary.org/events', city: 'Irving', state: 'NY', zipCode: '14081', county: 'Chautauqua', urlCollision: 'redirects to irvingtx.gov - live page addresses show TX not NY'},
   { name: 'Irvington Pub Lib Guiteau Foundation', url: 'https://irvingtonlibrary.org/', eventsUrl: 'https://irvingtonlibrary.org/', city: 'Irvington', state: 'NY', zipCode: '10533', county: 'Westchester'},
   { name: 'Island Park Public Library', url: 'https://islandparklibrary.org/', eventsUrl: 'https://islandparklibrary.org/', city: 'Island Park', state: 'NY', zipCode: '11558', county: 'Nassau'},
   { name: 'Islip Public Library', url: 'https://isliplibrary.org/', eventsUrl: 'https://isliplibrary.org/', city: 'Islip', state: 'NY', zipCode: '11751', county: 'Suffolk'},
@@ -244,11 +244,11 @@ const LIBRARIES = [
   { name: 'Lansing Community Library', url: 'https://www.lansinglibrary.org', eventsUrl: 'https://www.lansinglibrary.org/events', city: 'Lansing', state: 'NY', zipCode: '14882', county: 'Tompkins'},
   { name: 'Larchmont Public Library', url: 'https://www.larchmontlibrary.org', eventsUrl: 'https://www.larchmontlibrary.org/events', city: 'Larchmont', state: 'NY', zipCode: '10538', county: 'Westchester'},
   { name: 'Woodward Memorial Library', url: 'https://www.leroylibrary.org/', eventsUrl: 'https://www.leroylibrary.org/', city: 'Leroy', state: 'NY', zipCode: '14482', county: 'Genesee County'},
-  { name: 'Lewiston Public Library', url: 'https://www.lewistonlibrary.org/', eventsUrl: 'https://www.lewistonlibrary.org/', city: 'Lewiston', state: 'NY', zipCode: '14092', county: 'Niagara'},
+  { name: 'Lewiston Public Library', url: 'https://www.lewistonlibrary.org/', eventsUrl: 'https://www.lewistonlibrary.org/', city: 'Lewiston', state: 'NY', zipCode: '14092', county: 'Niagara', urlCollision: 'live page addresses show ID not NY - Library, Lewiston ID'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in TX (not a library — Liberty Library Project, a political nonprofit in Conroe TX), not NY. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Liberty Public Library', url: 'https://libertylibrary.org/', eventsUrl: 'https://libertylibrary.org/', city: 'Liberty', state: 'NY', zipCode: '12754', county: 'Sullivan'},
   { name: 'Lindenhurst Memorial Library', url: 'https://www.lindenhurstlibrary.org', eventsUrl: 'https://www.lindenhurstlibrary.org/events', city: 'Lindenhurst', state: 'NY', zipCode: '11757', county: 'Suffolk'},
-  { name: 'Lisle Free Library', url: 'https://www.lislelibrary.org/', eventsUrl: 'https://www.lislelibrary.org/', city: 'Lisle', state: 'NY', zipCode: '13797', county: 'Broome'},
+  { name: 'Lisle Free Library', url: 'https://www.lislelibrary.org/', eventsUrl: 'https://www.lislelibrary.org/', city: 'Lisle', state: 'NY', zipCode: '13797', county: 'Broome', urlCollision: 'live page addresses show IL not NY and it titles itself Lisle Library District'},
   { name: 'Little Falls Public Library', url: 'https://www.littlefallslibrary.org', eventsUrl: 'https://www.littlefallslibrary.org/events', city: 'Little Falls', state: 'NY', zipCode: '13365', county: 'Herkimer', urlCollision: 'littlefallslibrary.org is NJ, not NY' },
   { name: 'Memorial Library Of Little Valley', url: 'https://littlevalleylibrary.org/', eventsUrl: 'https://littlevalleylibrary.org/', city: 'Little Valley', state: 'NY', zipCode: '14755', county: 'Cattaraugus'},
   { name: 'Livingston Free Library', url: 'https://www.livingstonlibrary.org', eventsUrl: 'https://www.livingstonlibrary.org/events', city: 'Livingston', state: 'NY', zipCode: '12541', county: 'Livingston County', urlCollision: 'livingstonlibrary.org is NJ, not NY' },
@@ -273,7 +273,7 @@ const LIBRARIES = [
   { name: 'Marlboro Free Library', url: 'https://www.marlborolibrary.org', eventsUrl: 'https://www.marlborolibrary.org/events', city: 'Marlboro', state: 'NY', zipCode: '12542', county: 'Ulster'},
   { name: 'William H. Bush Memorial Library', url: 'https://www.martinsburglibrary.org', eventsUrl: 'https://www.martinsburglibrary.org/events', city: 'Martinsburg', state: 'NY', zipCode: '13404', county: 'Lewis'},
   { name: 'Plainedge Public Library', url: 'https://massapequalibrary.org/', eventsUrl: 'https://massapequalibrary.org/', city: 'Massapequa', state: 'NY', zipCode: '11758', county: 'Nassau'},
-  { name: 'Mayville Library', url: 'https://www.mayvillelibrary.org/', eventsUrl: 'https://www.mayvillelibrary.org/calendar', city: 'Mayville', state: 'NY', zipCode: '14757', county: 'Chautauqua'},
+  { name: 'Mayville Library', url: 'https://www.mayvillelibrary.org/', eventsUrl: 'https://www.mayvillelibrary.org/calendar', city: 'Mayville', state: 'NY', zipCode: '14757', county: 'Chautauqua', urlCollision: 'live page addresses show MI not NY and it titles itself Mayville District Library'},
   { name: 'Menands Public Library', url: 'https://www.menandslibrary.org', eventsUrl: 'https://www.menandslibrary.org/events', city: 'Menands', state: 'NY', zipCode: '12204', county: 'Albany'},
   { name: 'Merrick Library', url: 'https://www.merricklibrary.org', eventsUrl: 'https://www.merricklibrary.org/events', city: 'Merrick', state: 'NY', zipCode: '11566', county: 'Nassau'},
   { name: 'Middleburgh Library', url: 'https://www.middleburghlibrary.org/', eventsUrl: 'https://www.middleburghlibrary.org/', city: 'Middleburgh', state: 'NY', zipCode: '12122', county: 'Schoharie'},
@@ -303,7 +303,7 @@ const LIBRARIES = [
   { name: 'Newfane Free Library', url: 'https://www.newfanelibrary.org', eventsUrl: 'https://www.newfanelibrary.org/events', city: 'Newfane', state: 'NY', zipCode: '14108', county: 'Niagara', urlCollision: 'newfanelibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'North Bellmore Public Library', url: 'https://www.northbellmorelibrary.org', eventsUrl: 'https://www.northbellmorelibrary.org/events', city: 'North Bellmore', state: 'NY', zipCode: '11710', county: 'Nassau'},
   { name: 'North Chatham Free Library', url: 'https://www.northchathamlibrary.org', eventsUrl: 'https://www.northchathamlibrary.org/events', city: 'North Chatham', state: 'NY', zipCode: '12132', county: 'Columbia'},
-  { name: 'Northville Public Library', url: 'https://www.northvillelibrary.org', eventsUrl: 'https://www.northvillelibrary.org/events', city: 'Northville', state: 'NY', zipCode: '12134', county: 'Suffolk'},
+  { name: 'Northville Public Library', url: 'https://www.northvillelibrary.org', eventsUrl: 'https://www.northvillelibrary.org/events', city: 'Northville', state: 'NY', zipCode: '12134', county: 'Suffolk', urlCollision: 'live page addresses show MI not NY and it titles itself Northville District Library'},
   // URL corrected 2026-08-11 (was norwichlibrary.org): 3 Court St Norwich NY 13815, phone 607-334-4034. norwichlibrary.org is Norwich VERMONT public library
   { name: 'Guernsey Memorial Library Of Norwich', url: 'https://guernseymemoriallibrary.org', eventsUrl: 'https://guernseymemoriallibrary.org', city: 'Norwich', state: 'NY', zipCode: '13815', county: 'Chenango'},
   { name: 'Norwood Library', url: 'https://norwoodlibrary.org/', eventsUrl: 'https://norwoodlibrary.org/', city: 'Norwood', state: 'NY', zipCode: '13668', county: 'St. Lawrence', urlCollision: 'norwoodlibrary.org is MA, not NY' },
@@ -315,7 +315,7 @@ const LIBRARIES = [
   { name: 'Oriskany Public Library', url: 'https://oriskanylibrary.org/', eventsUrl: 'https://oriskanylibrary.org/', city: 'Oriskany', state: 'NY', zipCode: '13424', county: 'Oneida'},
   { name: 'C. W. Clark Memorial Library', url: 'https://oriskanyfallslibrary.org/', eventsUrl: 'https://oriskanyfallslibrary.org/', city: 'Oriskany Falls', state: 'NY', zipCode: '13425', county: 'Oneida'},
   { name: 'Ossining Public Library', url: 'https://ossininglibrary.org/', eventsUrl: 'https://ossininglibrary.org/', city: 'Ossining', state: 'NY', zipCode: '10562', county: 'Westchester'},
-  { name: 'Oswego School District Public Library', url: 'https://oswego.mykansaslibrary.org/', eventsUrl: 'https://oswego.mykansaslibrary.org/', city: 'Oswego', state: 'NY', zipCode: '13126', county: 'Oswego County'},
+  { name: 'Oswego School District Public Library', url: 'https://oswego.mykansaslibrary.org/', eventsUrl: 'https://oswego.mykansaslibrary.org/', city: 'Oswego', state: 'NY', zipCode: '13126', county: 'Oswego County', urlCollision: 'live page addresses show KS not NY and it titles itself Oswego Public Library'},
   { name: 'Edith B. Ford Memorial Library', url: 'https://www.ovidlibrary.org', eventsUrl: 'https://www.ovidlibrary.org/events', city: 'Ovid', state: 'NY', zipCode: '14521', county: 'Seneca'},
   // URL corrected 2026-08-11 (was oxfordlibrary.org): 8 Fort Hill Park Oxford NY 13830, phone 607-843-6146
   { name: 'Oxford Memorial Library', url: 'https://oxfordmemoriallibrary.org', eventsUrl: 'https://oxfordmemoriallibrary.org', city: 'Oxford', state: 'NY', zipCode: '13830', county: 'Chenango'},
@@ -407,7 +407,7 @@ const LIBRARIES = [
   { name: 'Syosset Public Library', url: 'https://www.syossetlibrary.org', eventsUrl: 'https://www.syossetlibrary.org/events', city: 'Syosset', state: 'NY', zipCode: '11791', county: 'Nassau'},
   { name: 'Tappan Library', url: 'https://tappanlibrary.org/', eventsUrl: 'https://tappanlibrary.org/', city: 'Tappan', state: 'NY', zipCode: '10983', county: 'Rockland'},
   { name: 'Warner Library', url: 'https://www.tarrytownlibrary.org', eventsUrl: 'https://www.tarrytownlibrary.org/events', city: 'Tarrytown', state: 'NY', zipCode: '10591', county: 'Westchester'},
-  { name: 'Tivoli Free Library', url: 'https://engagedpatrons.org/', eventsUrl: 'https://engagedpatrons.org/EventsCalendar.cfm?SiteID=6141', city: 'Tivoli', state: 'NY', zipCode: '12583', county: 'Dutchess'},
+  { name: 'Tivoli Free Library', url: 'https://engagedpatrons.org/', eventsUrl: 'https://engagedpatrons.org/EventsCalendar.cfm?SiteID=6141', city: 'Tivoli', state: 'NY', zipCode: '12583', county: 'Dutchess', urlCollision: 'live page addresses show NC not NY and it serves an EngagedPatrons.org placeholder'},
   { name: 'Tomkins Cove Public Library', url: 'https://www.tomkinscovelibrary.org/', eventsUrl: 'https://www.tomkinscovelibrary.org/', city: 'Tomkins Cove', state: 'NY', zipCode: '10986', county: 'Rockland'},
   { name: 'Ulysses Philomathic Library', url: 'https://www.trumansburglibrary.org/', eventsUrl: 'https://www.trumansburglibrary.org/', city: 'Trumansburg', state: 'NY', zipCode: '14886', county: 'Tompkins'},
   { name: 'Tuckahoe Public Library', url: 'https://www.tuckahoelibrary.org', eventsUrl: 'https://www.tuckahoelibrary.org/events', city: 'Tuckahoe', state: 'NY', zipCode: '10707', county: 'Westchester'},
@@ -432,7 +432,7 @@ const LIBRARIES = [
   { name: 'Wayland Free Library', url: 'https://www.waylandlibrary.org', eventsUrl: 'https://www.waylandlibrary.org/events', city: 'Wayland', state: 'NY', zipCode: '14572', county: 'Steuben', urlCollision: 'waylandlibrary.org is MA, not NY' },
   { name: 'Webster Public Library', url: 'https://www.websterlibrary.org', eventsUrl: 'https://www.websterlibrary.org/events', city: 'Webster', state: 'NY', zipCode: '14580', county: 'Monroe'},
   { name: 'Weedsport Free Library', url: 'https://www.weedsportlibrary.org/', eventsUrl: 'https://www.weedsportlibrary.org/calendar', city: 'Weedsport', state: 'NY', zipCode: '13166', county: 'Cayuga'},
-  { name: 'David A Howe Public Library', url: 'https://www.wellsvillelibrary.org', eventsUrl: 'https://www.wellsvillelibrary.org/events', city: 'Wellsville', state: 'NY', zipCode: '14895', county: 'Montgomery'},
+  { name: 'David A Howe Public Library', url: 'https://www.wellsvillelibrary.org', eventsUrl: 'https://www.wellsvillelibrary.org/events', city: 'Wellsville', state: 'NY', zipCode: '14895', county: 'Montgomery', urlCollision: 'live page addresses show KS not NY and it titles itself Wellsville City Library'},
   { name: 'West Hurley Public Library', url: 'https://westhurleylibrary.org/', eventsUrl: 'https://westhurleylibrary.org/', city: 'West Hurley', state: 'NY', zipCode: '12491', county: 'Ulster'},
   { name: 'West Islip Public Library', url: 'https://westisliplibrary.org/', eventsUrl: 'https://westisliplibrary.org/', city: 'West Islip', state: 'NY', zipCode: '11795', county: 'Suffolk'},
   { name: 'West Nyack Free Library', url: 'https://www.westnyacklibrary.org/', eventsUrl: 'https://www.westnyacklibrary.org/', city: 'West Nyack', state: 'NY', zipCode: '10994', county: 'Rockland'},
@@ -566,6 +566,36 @@ async function scrapeGenericEvents() {
               if (attr && /\d{4}-\d{1,2}-\d{1,2}/.test(attr)) return attr;
               const header = node.querySelector && node.querySelector('.calendar__day-header, [class*="day-header"]');
               if (header && header.textContent.trim()) return header.textContent.trim();
+              // Month-grid calendars (YUI3 / Weebly "yui3-calendar-grid", live on
+              // drevartslibrary.org and weedsportlibrary.org) carry NEITHER a
+              // data-date attribute NOR a day-header element. The day number is
+              // bare text at the top of the <td>, usually behind a weekday
+              // abbreviation ("Tue 4 ..."), and the month/year lives in a
+              // .yui3-calendar-header-label OUTSIDE the grid table entirely, so
+              // neither check above can reach it. Without this branch every event
+              // on such a page arrives at the date parser as a bare clock time
+              // ("5:00 PM - 6:00 PM") and is dropped: 27 of WordPress-NY's 56
+              // INVALID rows on 2026-08-27 were three such libraries, losing real
+              // programming like Library Littles Playgroup and Stuffed Animal
+              // Sleepover. Padding cells for the previous/next month are excluded
+              // so they are never dated into the month being displayed.
+              const gridCls = (node.className || '').toString();
+              if (node.tagName === 'TD' && /calendar[-_]?day|calendar_col/i.test(gridCls)
+                  && !/prevmonth|nextmonth|othermonth/i.test(gridCls)) {
+                const cellText = (node.textContent || '').replace(/\s+/g, ' ').trim();
+                const dayM = /^(?:(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*\.?\s+)?(\d{1,2})\b/i.exec(cellText);
+                if (dayM) {
+                  let hdr = null, scope = node;
+                  for (let j = 0; j < 6 && scope && !hdr; j++) {
+                    hdr = scope.querySelector && scope.querySelector('[class*="calendar-header-label"], [class*="calendar-header"], caption');
+                    scope = scope.parentElement;
+                  }
+                  if (!hdr) hdr = document.querySelector('[class*="calendar-header-label"]');
+                  const hdrText = hdr ? (hdr.textContent || '').replace(/\s+/g, ' ').trim() : '';
+                  const hM = /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})\b/i.exec(hdrText);
+                  if (hM) return hM[1] + ' ' + dayM[1] + ', ' + hM[2];
+                }
+              }
             }
             node = node.parentElement;
           }

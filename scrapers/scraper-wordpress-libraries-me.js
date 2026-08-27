@@ -50,7 +50,7 @@ const LIBRARIES = [
   { name: 'Parsons Memorial Library', url: 'https://www.alfredlibrary.org', eventsUrl: 'https://www.alfredlibrary.org/events', city: 'Alfred', state: 'ME', zipCode: '04002', county: 'York', urlCollision: 'alfredlibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'Andover Public Library', url: 'https://www.andoverlibrary.org', eventsUrl: 'https://www.andoverlibrary.org/events', city: 'Andover', state: 'ME', zipCode: '04216', county: 'Oxford', urlCollision: 'andoverlibrary.org is KS, not ME' },
   { name: 'Patten Free Library', url: 'https://www.bathlibrary.org', eventsUrl: 'https://www.bathlibrary.org/events', city: 'Bath', state: 'ME', zipCode: '04530', county: 'Sagadahoc', urlCollision: 'bathlibrary.org is KY, not ME' },
-  { name: 'Belgrade Public Library', url: 'https://www.belgrademt.gov/', eventsUrl: 'https://www.belgrademt.gov/544/Library', city: 'Belgrade', state: 'ME', zipCode: '04917', county: 'Kennebec'},
+  { name: 'Belgrade Public Library', url: 'https://www.belgrademt.gov/', eventsUrl: 'https://www.belgrademt.gov/544/Library', city: 'Belgrade', state: 'ME', zipCode: '04917', county: 'Kennebec', urlCollision: 'live page addresses show MT not ME and it titles itself Belgrade MT Official Website'},
   { name: 'Bethel Library Assn', url: 'https://www.bethellibrary.org', eventsUrl: 'https://www.bethellibrary.org/events', city: 'Bethel', state: 'ME', zipCode: '04217', county: 'Oxford', urlCollision: 'bethellibrary.org is CT, not ME' },
   { name: 'Blue Hill Library', url: 'https://www.bluehilllibrary.org', eventsUrl: 'https://www.bluehilllibrary.org/events', city: 'Blue Hill', state: 'ME', zipCode: '00000', county: 'Hancock'},
   { name: 'Boothbay Harbor Memorial Library', url: 'https://www.boothbayharborlibrary.org', eventsUrl: 'https://www.boothbayharborlibrary.org/events', city: 'Boothbay Harbor', state: 'ME', zipCode: '04538', county: 'Lincoln'},
@@ -108,7 +108,7 @@ const LIBRARIES = [
   { name: 'Ogunquit Memorial Library', url: 'https://www.ogunquitlibrary.org', eventsUrl: 'https://www.ogunquitlibrary.org/events', city: 'Ogunquit', state: 'ME', zipCode: '03907', county: 'York'},
   { name: 'Orrs Island Library', url: 'https://www.orrsislandlibrary.org', eventsUrl: 'https://www.orrsislandlibrary.org/events', city: 'Orrs Island', state: 'ME', zipCode: '04066', county: 'Cumberland'},
   { name: 'Owls Head Village Library', url: 'https://www.owlsheadlibrary.org', eventsUrl: 'https://www.owlsheadlibrary.org/events', city: 'Owls Head', state: 'ME', zipCode: '04854', county: 'Knox'},
-  { name: 'Freeland Holmes Library', url: 'https://oxfordlibrary.org/', eventsUrl: 'https://oxfordlibrary.org/', city: 'Oxford', state: 'ME', zipCode: '04270', county: 'Oxford County'},
+  { name: 'Freeland Holmes Library', url: 'https://oxfordlibrary.org/', eventsUrl: 'https://oxfordlibrary.org/', city: 'Oxford', state: 'ME', zipCode: '04270', county: 'Oxford County', urlCollision: 'live page addresses show WI not ME and it titles itself Oxford Public Library'},
   { name: 'Pembroke Library', url: 'https://www.pembrokelibrary.org/', eventsUrl: 'https://www.pembrokelibrary.org/upcoming-events', city: 'Pembroke', state: 'ME', zipCode: '04666', county: 'Washington'},
   // URL corrected 2026-08-11 (was pittsfieldlibrary.org): Site shows 110 Library Street, Pittsfield ME 04967, phone 207-487-5880, Carnegie library serving Pittsfield/Burnham/Detroit
   { name: 'Pittsfield Public Library', url: 'https://www.pittsfield.lib.me.us/', eventsUrl: 'https://www.pittsfield.lib.me.us/events/', city: 'Pittsfield', state: 'ME', zipCode: '04967', county: 'Somerset'},
@@ -132,7 +132,7 @@ const LIBRARIES = [
   { name: 'Thomaston Public Library', url: 'https://thomastonlibrary.org/', eventsUrl: 'https://thomastonlibrary.org/', city: 'Thomaston', state: 'ME', zipCode: '04861', county: 'Knox', urlCollision: 'thomastonlibrary.org is CT, not ME' },
   { name: 'Topsham Public Library', url: 'https://www.topshamlibrary.org', eventsUrl: 'https://www.topshamlibrary.org/events', city: 'Topsham', state: 'ME', zipCode: '04086', county: 'Sagadahoc'},
   { name: 'Vose Library', url: 'https://www.unionlibrary.org', eventsUrl: 'https://www.unionlibrary.org/events', city: 'Union', state: 'ME', zipCode: '04862', county: 'Knox', urlCollision: 'unionlibrary.org is SC, not ME' },
-  { name: 'Abel J.Morneault Memorial Library', url: 'https://www.vbdl.org/', eventsUrl: 'https://www.vbdl.org/events/', city: 'Van Buren', state: 'ME', zipCode: '04785', county: 'Aroostook'},
+  { name: 'Abel J.Morneault Memorial Library', url: 'https://www.vbdl.org/', eventsUrl: 'https://www.vbdl.org/events/', city: 'Van Buren', state: 'ME', zipCode: '04785', county: 'Aroostook', urlCollision: 'live page addresses show MI not ME and it titles itself Van Buren District Library, Van Buren County MI'},
   { name: 'Waldoboro Public Library', url: 'https://www.waldoborolibrary.org', eventsUrl: 'https://www.waldoborolibrary.org/events', city: 'Waldoboro', state: 'ME', zipCode: '04572', county: 'Lincoln'},
   { name: 'Warren Free Public Library', url: 'https://www.warrenlibrary.org', eventsUrl: 'https://www.warrenlibrary.org/events', city: 'Warren', state: 'ME', zipCode: '04864', county: 'Knox', urlCollision: 'warrenlibrary.org is PA, not ME' },
   // URL corrected 2026-08-11 (was washburnlibrary.org): Site shows 1290 Main Street, Washburn ME 04786, phone 207-455-2016, Aroostook County
@@ -253,6 +253,36 @@ async function scrapeGenericEvents() {
               if (attr && /\d{4}-\d{1,2}-\d{1,2}/.test(attr)) return attr;
               const header = node.querySelector && node.querySelector('.calendar__day-header, [class*="day-header"]');
               if (header && header.textContent.trim()) return header.textContent.trim();
+              // Month-grid calendars (YUI3 / Weebly "yui3-calendar-grid", live on
+              // drevartslibrary.org and weedsportlibrary.org) carry NEITHER a
+              // data-date attribute NOR a day-header element. The day number is
+              // bare text at the top of the <td>, usually behind a weekday
+              // abbreviation ("Tue 4 ..."), and the month/year lives in a
+              // .yui3-calendar-header-label OUTSIDE the grid table entirely, so
+              // neither check above can reach it. Without this branch every event
+              // on such a page arrives at the date parser as a bare clock time
+              // ("5:00 PM - 6:00 PM") and is dropped: 27 of WordPress-NY's 56
+              // INVALID rows on 2026-08-27 were three such libraries, losing real
+              // programming like Library Littles Playgroup and Stuffed Animal
+              // Sleepover. Padding cells for the previous/next month are excluded
+              // so they are never dated into the month being displayed.
+              const gridCls = (node.className || '').toString();
+              if (node.tagName === 'TD' && /calendar[-_]?day|calendar_col/i.test(gridCls)
+                  && !/prevmonth|nextmonth|othermonth/i.test(gridCls)) {
+                const cellText = (node.textContent || '').replace(/\s+/g, ' ').trim();
+                const dayM = /^(?:(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*\.?\s+)?(\d{1,2})\b/i.exec(cellText);
+                if (dayM) {
+                  let hdr = null, scope = node;
+                  for (let j = 0; j < 6 && scope && !hdr; j++) {
+                    hdr = scope.querySelector && scope.querySelector('[class*="calendar-header-label"], [class*="calendar-header"], caption');
+                    scope = scope.parentElement;
+                  }
+                  if (!hdr) hdr = document.querySelector('[class*="calendar-header-label"]');
+                  const hdrText = hdr ? (hdr.textContent || '').replace(/\s+/g, ' ').trim() : '';
+                  const hM = /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})\b/i.exec(hdrText);
+                  if (hM) return hM[1] + ' ' + dayM[1] + ', ' + hM[2];
+                }
+              }
             }
             node = node.parentElement;
           }
