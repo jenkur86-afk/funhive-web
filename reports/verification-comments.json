@@ -2150,7 +2150,7 @@
  },
  "WordPress-NY|||Brooklyn Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to discover.bklynlibrary.org]",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
   "population": "zero"
  },
  "WordPress-ME|||Shaw Public Library - Greenville": {
@@ -7756,6 +7756,1601 @@
  "WordPress-RI|||Coventry Public Library": {
   "verdict": "MATCHES",
   "comment": "RESOLVED 2026-08-26 by relocation to LibCal-RI. Had produced ZERO database rows ever from the WordPress family because Coventry publishes on LibCal. Run: Found 20 events, 7 rows saved under LibCal-RI-coventrylibrary, four of them at the Greene Branch venue.",
+  "population": "zero"
+ },
+ "wordpress-ME|||Belfast Free Library": {
+  "verdict": "MISMATCH",
+  "comment": "Live site is the right institution - 106 High Street, Belfast ME, area code 207 - and lists Early Literacy Connections and Teen Writing Table. The 99% All-Ages figure is mostly RECURRENCE INFLATION, not a detection failure: only 5 distinct titles account for all 140 All-Ages rows, and the detector is demonstrably working here (3 Teens, 4 Preschool, 4 Babies rows). The real gap is narrow but real - Lego Club and Music Together are age-targeted programs carrying no age word the anchored detector can key on.",
+  "population": "allages"
+ },
+ "wordpress-NY|||Williston Park Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Right institution - Williston Park NY 11596, area code 516. The All-Ages rows are genuinely general or adult programming: Yoga with Swati, Reiki Circle, Chair Yoga, Defensive Driving, and a run of ceramics classes. The site does segment Children/Teen/Adult events and the age-targeted ones are in the 6 bracketed rows, so the 85% here is the correct answer, not a miss.",
+  "population": "allages"
+ },
+ "wordpress-NY|||Williamstown Library": {
+  "verdict": "MATCHES",
+  "comment": "Right institution and right state - 2877 County Route 17, Williamstown NY 13493, area code 315, so this is NOT the Williamstown MA/VT collision recorded elsewhere in this file. Detector is working on this venue: 18 Kids, 7 Teens and 3 Preschool rows alongside the All-Ages ones. NOTE FOR LATER, not part of this verdict: the public page surfaces little more than Facebook fundraiser posts, so 124 events in one run is worth a look at what the extractor is picking up.",
+  "population": "allages"
+ },
+ "Simpleview-Tourism-Eastern|||Moonshine Alley": {
+  "verdict": "MISMATCH",
+  "comment": "NOT an age-detection problem and the site name is not real coverage. This venue is an artefact of the empty-venue matcher bug fixed 2026-08-27: 96 of 258 Simpleview rows collapsed onto this one Providence RI bar because findLibraryForEvent matched an empty venue name against every library and took libraries[0]. The titles prove it - Nashville Predators vs Montreal Canadiens and an Author Event with Yotam Ottolenghi are not Providence bar events. Root cause bucket is venue-collapse; the All-Ages percentage here is meaningless until the rows re-scrape.",
+  "population": "allages"
+ },
+ "Simpleview-Tourism-Eastern|||Paramount Theatre – Aurora": {
+  "verdict": "MATCHES",
+  "comment": "Genuinely all-ages on the age question - this is a Broadway-series theatre in Aurora IL and its programming carries no age brackets, so 100% All Ages is the correct answer. SEPARATE DEFECT worth recording though: the stored city reads Aurora, IL with state IL, giving the doubled Aurora, IL, IL seen in the activity log, because the city field already carries the state. That is a formatting bug in the same scraper, not an age issue.",
+  "population": "allages"
+ },
+ "CustomDrupal-Libraries|||Anderson County Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no URL in scraper config",
+  "population": "zero"
+ },
+ "LibCal-GA|||Banks County Public Library": {
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"No events are scheduled\")",
+  "population": "zero"
+ },
+ "Communico-NJ|||Camden County Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-FL|||Bartow Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-FL|||Celebration Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 374 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-FL|||East Lake Community Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-FL|||Freeport Branch Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.freeportlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-FL|||Alachua Branch Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.alachualibrary.org",
+  "population": "zero"
+ },
+ "WordPress-FL|||Fruitland Park Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "population": "zero"
+ },
+ "WordPress-FL|||Homestead Branch Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to carnegieofhomestead.com]",
+  "population": "zero"
+ },
+ "WordPress-FL|||Jefferson County R. J. Bailar Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: 3 future-dated events visible under Puppeteer, e.g. Sep92026 2026-09-09; Oct142026 2026-10-14. [redirects to allertonpubliclibrary.org]",
+  "population": "zero"
+ },
+ "WordPress-FL|||Jacaranda Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.venicelibrary.org",
+  "population": "zero"
+ },
+ "WordPress-FL|||Lake County Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper [redirects to tavaresfl.gov]",
+  "population": "zero"
+ },
+ "WordPress-FL|||Lakeland Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to llcoop.org]",
+  "population": "zero"
+ },
+ "WordPress-FL|||Levy County Public Library System": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show CT not FL; title \"Silas Bronson Library - Home\"",
+  "population": "zero"
+ },
+ "WordPress-FL|||Largo Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.largolibrary.org",
+  "population": "zero"
+ },
+ "WordPress-FL|||Palm Beach County Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=bibliocommons detected — belongs in a BiblioCommons-* scraper",
+  "population": "zero"
+ },
+ "WordPress-FL|||Newberry Branch Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.newberrylibrary.org",
+  "population": "zero"
+ },
+ "WordPress-FL|||Reddick Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-FL|||Sunrise Dan Pearl Branch": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.sunriselibrary.org",
+  "population": "zero"
+ },
+ "WordPress-FL|||Parker Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation timeout after 35000ms",
+  "population": "zero"
+ },
+ "WordPress-FL|||Umatilla Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-FL|||Wildwood Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: DNS does not resolve (stealth browser, 35000ms)",
+  "population": "zero"
+ },
+ "WordPress-FL|||Tampa-Hillsborough County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=bibliocommons detected — belongs in a BiblioCommons-* scraper",
+  "population": "zero"
+ },
+ "WordPress-ME|||Acton Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Abel J.Morneault Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show MI not ME; title \"Van Buren District Library   Van Buren County, MI\"",
+  "population": "zero"
+ },
+ "WordPress-ME|||Andover Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.andoverlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-ME|||Belgrade Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show MT not ME; title \"Belgrade, MT   Official Website\"",
+  "population": "zero"
+ },
+ "WordPress-ME|||Albion Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Bethel Library Assn": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 357 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-ME|||Blue Hill Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper [redirects to bhpl.net]",
+  "population": "zero"
+ },
+ "WordPress-ME|||Boothbay Harbor Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "population": "zero"
+ },
+ "WordPress-ME|||Bremen Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Chase Emerson Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Fort Fairfield Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Freeland Holmes Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show WI not ME; title \"Home   Oxford Public Library\"",
+  "population": "zero"
+ },
+ "WordPress-ME|||Freeport Community Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.freeportlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-ME|||Brown Memorial Library - Clinton": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-ME|||Hollis Center Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Julia Adams Morse Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Katahdin Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 109 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-ME|||Henry D. Moore Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.steubenlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-ME|||Kennebunk Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Lawrence Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Limerick Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Lewiston Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Louise Clements Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Milbridge Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.milbridgelibrary.org",
+  "population": "zero"
+ },
+ "WordPress-ME|||Madawaska Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Monroe Community Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 199 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-ME|||New Gloucester Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||New Vineyard Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 374 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-ME|||Ogunquit Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.ogunquitlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-ME|||Owls Head Village Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.owlsheadlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-ME|||North Haven Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Parsons Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "population": "zero"
+ },
+ "WordPress-ME|||Pembroke Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Parsonsfield Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Portland Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Rockland Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to rocklandmaine.gov]",
+  "population": "zero"
+ },
+ "WordPress-ME|||Simpson Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Southport Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||South Berwick Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 13 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-ME|||Springvale Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Stockton Springs Community Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Stonington Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 82 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-ME|||Swans Island Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Steep Falls Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.steepfallslibrary.org",
+  "population": "zero"
+ },
+ "WordPress-ME|||Thomas Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 83 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-ME|||Thomaston Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Waldoboro Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.waldoborolibrary.org",
+  "population": "zero"
+ },
+ "WordPress-ME|||Topsham Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Washburn Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Wells Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||West Paris Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-ME|||Westbrook Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to westbrookmaine.gov]",
+  "population": "zero"
+ },
+ "WordPress-ME|||Windham Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MS|||Central Mississippi Regional Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MS|||Columbus-Lowndes Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MS|||Crosby Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MS|||A. E. Wood Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-MS|||Dixie Regional Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MS|||Enterprise Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MS|||Evelyn Taylor Majure Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MS|||Field Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MS|||First Regional Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 363 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-MS|||Hamilton Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MS|||Itawamba County-Pratt Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MS|||Houston Carnegie Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MS|||Lafayette County-Oxford Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: DNS does not resolve (stealth browser, 35000ms)",
+  "population": "zero"
+ },
+ "WordPress-MS|||Lexington Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.lexingtonlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-MS|||J. Elliott Mcmullan Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-MS|||Magnolia Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MS|||Morton Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "population": "zero"
+ },
+ "WordPress-MS|||Northeast Regional Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MS|||Ripley Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-MS|||William And Dolores Mauldin Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=librarycalendar detected — belongs in LibraryCalendar-Libraries",
+  "population": "zero"
+ },
+ "WordPress-MS|||William Estes Powell Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to beaumonttexas.gov]",
+  "population": "zero"
+ },
+ "WordPress-MS|||Woodville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Asbury Park Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Atlantic City Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Bloomingdale Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Bergenfield Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Bradley Beach Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Boonton Holmes Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Bridgeton Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Butler Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Cedar Grove Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "bot-block: 403 even under the stealth browser the scrapers use",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Carteret Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Cresskill Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 256 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Clark Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Demarest Public Library Association": {
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"Check back later\")",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Dowdell Library Of South Amboy": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.southamboylibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Dwight D. Eisenhower Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Elmwood Park Free Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show IL not NJ; title \"Home - Elmwood Park Public Library\"",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Delanco Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Englewood Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Glen Ridge Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Fair Haven Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Haddonfield Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Hamilton Township Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Keyport Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Haworth Municipal Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Lincoln Park Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Lambertville Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Linwood Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 88 chars of text — likely JS-gated or a shell [redirects to wordpress2.nekls.org]",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Little Silver Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Maurice M. Pine Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Middletown Township Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.middletownlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Maywood Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Milltown Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Millville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Monmouth Beach Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Morristown-Morris Twp Joint Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js [redirects to mmtlibrary.org]",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Mount Arlington Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||New Providence Memorial Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 502 on the configured URL",
+  "population": "zero"
+ },
+ "WordPress-NJ|||North Arlington Public Library": {
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"no upcoming events\")",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Old Bridge Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Old Tappan Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Parsippany-Troy Hills Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Passaic Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Pennsville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 80 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Plainsboro Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Princeton Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=bibliocommons detected — belongs in a BiblioCommons-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Ridgefield Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Ridgewood Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||River Vale Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Roseland Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "bot-block: 403 even under the stealth browser the scrapers use",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Riverside Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show IL not NJ; title \"Riverside Public Library\"",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Sally Stretch Keen Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Secaucus Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Summit Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NJ|||South River Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Sussex County Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Tenafly Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Waldwick Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Vineland Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Wharton Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.whartonlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NJ|||West Orange Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Woodstown-Pilesgrove Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 262 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-NY|||Addison Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Wyckoff Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Alden Ewell Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Alfred Box Of Books Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "population": "zero"
+ },
+ "WordPress-NY|||Amagansett Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Amenia Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Amherst Public Library Clearfield Branch": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Andover Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.andoverlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Andes Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 176 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-NY|||Arcade Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.arcadelibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Ardsley Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.ardsleylibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Apalachin Library Association": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "population": "zero"
+ },
+ "WordPress-NY|||B. Elizabeth Strong Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Baldwin Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Barneveld Free Library Association": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Bainbridge Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.bainbridgelibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Beaver Falls Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Belden Noble Memorial Library Of Essex": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "population": "zero"
+ },
+ "WordPress-NY|||Blodgett Memorial Library District Of Fishkill": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.fishkilllibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Bemus Point Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: 2 future-dated events visible under Puppeteer, e.g. NSAA Art Trail Hub #13 2026-09-05; NSAA Art Trail Hub #13 2026-09-05.",
+  "population": "zero"
+ },
+ "WordPress-NY|||Brownville-Glen Park Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "population": "zero"
+ },
+ "WordPress-NY|||Bryant Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||C. W. Clark Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Canajoharie Library And Art Gallery": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 353 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-NY|||Canastota Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Central Islip Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "population": "zero"
+ },
+ "WordPress-NY|||Cattaraugus Free Library": {
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"no upcoming events\")",
+  "population": "zero"
+ },
+ "WordPress-NY|||Clymer-French Creek Free Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show PA not NY; title \"Home   Clymer Library\"",
+  "population": "zero"
+ },
+ "WordPress-NY|||Chester Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Corfu Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Cutchogue New Suffolk Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Dansville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NY|||Cohoes Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.cohoeslibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Deer Park Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||David A Howe Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show KS not NY; title \"Wellsville Homepage   Wellsville City Library\"",
+  "population": "zero"
+ },
+ "WordPress-NY|||Didymus Thomas Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Delevan-Yorkshire Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Dolgeville-Manheim Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NY|||Dunham Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||East Islip Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=librarycalendar detected — belongs in LibraryCalendar-Libraries [redirects to eipl.org]",
+  "population": "zero"
+ },
+ "WordPress-NY|||Edith B. Ford Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Elbridge Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||East Rochester Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.eastrochesterlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Erwin Library Institute": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Fulton Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Gardiner Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NY|||Glen Cove Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Goshen Public Library And Historical Society": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Galway Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.galwaylibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Hammond Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Hamilton Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Hauppauge Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NY|||Haverstraw Kings Daughters Public Library - Village Branch": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=librarycalendar detected — belongs in LibraryCalendar-Libraries",
+  "population": "zero"
+ },
+ "WordPress-NY|||Highland Falls Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Hannibal Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.hanniballibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Highland Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NY|||Holland Patent Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NY|||Ilion Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Islip Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||John Jermain Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.sagharborlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Jordan Bramley Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Jordanville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Keene Valley Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||John C. Hart Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.shruboaklibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Lafayette Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Lakewood Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Lewiston Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show ID not NY; title \"Library   Lewiston, ID\"",
+  "population": "zero"
+ },
+ "WordPress-NY|||Kirkland Town Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Lisle Free Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show IL not NY; title \"Home   Lisle Library District\"",
+  "population": "zero"
+ },
+ "WordPress-NY|||Locust Valley Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Marcellus Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NY|||Mary E. Seymour Memorial Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Mayville Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show MI not NY; title \"Library Programs & Resources   Mayville District Library   M\"",
+  "population": "zero"
+ },
+ "WordPress-NY|||Menands Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Middleburgh Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-NY|||Middleville Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Minoa Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.minoalibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Millbrook Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Mooers Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.mooerslibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Monroe Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Mount Morris Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.mountmorrislibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Moore Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Naples Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Nassau Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "bot-block: 403 even under the stealth browser the scrapers use",
+  "population": "zero"
+ },
+ "WordPress-NY|||New Rochelle Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||New Woodstock Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NY|||New York Mills Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Newfane Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Northville Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show MI not NY; title \"NORTHVILLE DISTRICT LIBRARY – Enriching Lives, Inspiring Dis\"",
+  "population": "zero"
+ },
+ "WordPress-NY|||Oriskany Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Oswego School District Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show KS not NY; title \"Oswego Public Library – Oswego Public Library Website\"",
+  "population": "zero"
+ },
+ "WordPress-NY|||Orleans Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "population": "zero"
+ },
+ "WordPress-NY|||Parish Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 319 chars of text — likely JS-gated or a shell [redirects to accounts.google.com]",
+  "population": "zero"
+ },
+ "WordPress-NY|||Oxford Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "population": "zero"
+ },
+ "WordPress-NY|||Penfield Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to penfieldny.gov]",
+  "population": "zero"
+ },
+ "WordPress-NY|||Pawling Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.pawlinglibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Port Jervis Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Pike Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.pikelibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Port Leyden Community Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "population": "zero"
+ },
+ "WordPress-NY|||Portville Free Library": {
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"no upcoming events\")",
+  "population": "zero"
+ },
+ "WordPress-NY|||Pound Ridge Library District": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "population": "zero"
+ },
+ "WordPress-NY|||Prospect Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Queens Borough Public Library - Elmhurst": {
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "population": "zero"
+ },
+ "WordPress-NY|||Queens Borough Public Library - Astoria": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Queens Borough Public Library - Glendale": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-NY|||Ramapo Catskill Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.middletownlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Quogue Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Ransomville Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Reading Room Association Of Gouverneur": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Richmond Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NY|||Rensselaerville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=librarycalendar detected — belongs in LibraryCalendar-Libraries",
+  "population": "zero"
+ },
+ "WordPress-NY|||Rodman Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: 6 future-dated events visible under Puppeteer, e.g. 11:00 am 2026-08-27; 3:30 pm 2026-09-01. platform=libcal (belongs in a LibCal-* scraper) [redirects to rodmanlibrary.com]",
+  "population": "zero"
+ },
+ "WordPress-NY|||Roosevelt Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Rose Free Library": {
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"check back later\")",
+  "population": "zero"
+ },
+ "WordPress-NY|||Schoharie Free Library Assn.": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Schenectady County Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=librarycalendar detected — belongs in LibraryCalendar-Libraries",
+  "population": "zero"
+ },
+ "WordPress-NY|||Scio Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "population": "zero"
+ },
+ "WordPress-NY|||Seaford Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Seneca Nation Of Indians Library Cattaraugus Territory": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show TX not NY; title \"Library   Irving, TX Official Website\" [redirects to irvingtx.gov]",
+  "population": "zero"
+ },
+ "WordPress-NY|||Shelter Island Public Library Society": {
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 503 on the configured URL",
+  "population": "zero"
+ },
+ "WordPress-NY|||Sidney Memorial Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "population": "zero"
+ },
+ "WordPress-NY|||Seneca Falls Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Smyrna Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Sodus Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.soduslibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Solvay Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.solvaylibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Southold Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Stone Ridge Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Swan Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Syosset Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Tappan Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||The Jervis Public Library Association, Inc.": {
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to fightbackvenice.org]",
+  "population": "zero"
+ },
+ "WordPress-NY|||Tivoli Free Library": {
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show NC not NY; title \"EngagedPatrons.org   Home\"",
+  "population": "zero"
+ },
+ "WordPress-NY|||Tuckahoe Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to tuckahoe.gov]",
+  "population": "zero"
+ },
+ "WordPress-NY|||Tuxedo Park Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Voorheesville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Valley Cottage Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Walworth-Seely Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Wadsworth Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 292 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-NY|||Wantagh Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NY|||Waterloo Library And Historical Society": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Warner Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.tarrytownlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||West Islip Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NY|||West Nyack Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||West Winfield Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Westchester Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NY|||White Plains Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Whitesville Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "population": "zero"
+ },
+ "WordPress-NY|||Wide Awake Club Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||William H. Bush Memorial Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "population": "zero"
+ },
+ "WordPress-NY|||Williamson Free Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NY|||Woodgate Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NY|||Wyandanch Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=librarycalendar detected — belongs in LibraryCalendar-Libraries",
+  "population": "zero"
+ },
+ "WordPress-NY|||Your Home Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "page rendered only 372 chars of text — likely JS-gated or a shell",
+  "population": "zero"
+ },
+ "WordPress-NY|||Wilson Free Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.wilsonlibrary.org",
   "population": "zero"
  }
 }

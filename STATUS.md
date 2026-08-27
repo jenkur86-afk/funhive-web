@@ -7,7 +7,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 ---
 ## 2026-08-27
 
-<!-- STATUS-DATA {"date":"2026-08-27","countiesResolve":100,"urlCollisions":0,"confirmedBugs":563,"unknownSites":601,"specificAgeShare":35.9,"nameConformance":60.8,"sourceUrlCoverage":62,"countyCoverage":0} -->
+<!-- STATUS-DATA {"date":"2026-08-27","countiesResolve":100,"urlCollisions":0,"confirmedBugs":594,"unknownSites":874,"specificAgeShare":36.7,"nameConformance":60.8,"sourceUrlCoverage":62,"countyCoverage":0} -->
 
 ### Distance to 100%
 
@@ -15,9 +15,9 @@ the command is in each gate's detail line and the value is dated, never guessed.
 |---|---|---|---|---|
 | 1. Counties resolve | 100% | · | 100% | blocks nothing — mechanical once a city→county dataset is chosen |
 | 2. URLs unique per state | 0 | · | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
-| 3. Zero confirmed bugs | 563 | · | 0 | unblocked — gate 2 is clear; these are now the main body of work |
-| 4. Zero unknown sites | 601 | -1 ✅ | 0 | independent — re-checking is its own pass |
-| 5. Age brackets resolved | 35.9% | · | max (best 40.6%) | no fixed target — maximise; ratchets vs best ever |
+| 3. Zero confirmed bugs | 594 | +31 ⚠️ | 0 | unblocked — gate 2 is clear; these are now the main body of work |
+| 4. Zero unknown sites | 874 | +279 ⚠️ | 0 | independent — re-checking is its own pass |
+| 5. Age brackets resolved | 36.7% | +0.8 ✅ | max (best 40.6%) | no fixed target — maximise; ratchets vs best ever |
 | 6. Names join to registry | 60.8% ⚠stale | · | 100% | planned migration, not daily work |
 | 7. Provenance (source_url) | 62% ⚠stale | · | 90% | partly blocked on rotation |
 | 8. Coverage known per county | 0 | · | 1 | FINAL — blocked on all of the above |
@@ -26,9 +26,9 @@ the command is in each gate's detail line and the value is dated, never guessed.
 
 | | Broken | Scale | Why not fixed now |
 |---|---|---|---|
-| 🟠 | Confirmed open bugs (MISMATCH verdicts) | 563 sites | NOT blocked any more — gate 2 is clear, so these are directly actionable; dead-endpoint and extraction-failure buckets first |
-| 🟠 | Unknown sites (UNVERIFIABLE verdicts) | 601 sites | bot-blocks / JS-only calendars / TLS failures — never re-checked |
-| 🟠 | Age detection REGRESSED below best-ever specificity | 35.9% resolved (best ever 40.6% on 2026-08-10) | MASTER-PLAN Phase 5, not started |
+| 🟠 | Confirmed open bugs (MISMATCH verdicts) | 594 sites | NOT blocked any more — gate 2 is clear, so these are directly actionable; dead-endpoint and extraction-failure buckets first |
+| 🟠 | Unknown sites (UNVERIFIABLE verdicts) | 874 sites | bot-blocks / JS-only calendars / TLS failures — never re-checked |
+| 🟠 | Age detection REGRESSED below best-ever specificity | 36.7% resolved (best ever 40.6% on 2026-08-10) | MASTER-PLAN Phase 5, not started |
 | 🟡 | scraper_name drift — rows cannot join back to the registry | 60.8% conform (as of 2026-08-23) | deliberate migration, explicitly not daily work |
 | 🟡 | County-level coverage unknown | no libraries audited against what exists | MASTER-PLAN Phase 10 — correctly last |
 
@@ -36,7 +36,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 
 **Data notes:**
 - METHODOLOGY CHANGE 2026-08-26: gate 2 now excludes multi-state platform hosts (macaronikid.com, libcal.com, libnet.info, bibliocommons.com and the rest of AGGREGATOR_DOMAINS, imported from list-url-collisions.js rather than re-listed here). Those hosts are shared across states BY DESIGN, so counting them made the target of 0 unreachable and left the gate permanently red while the real seed-data defect was being worked. Gate 2 fell 9 -> 0 the moment this landed. THAT DROP IS A DEFINITION CHANGE, NOT WORK DONE — the nine true single-institution collisions were separately resolved the same day (see SCRAPER-FIX-LOG.jsonl 2026-08-26), and it is that fix, not this exclusion, that is the progress. Any comparison with a STATUS.md entry dated on or before 2026-08-25 crosses this change.
-- METHODOLOGY CHANGE 2026-08-21: 429 entries proven to point at another state's library were flagged urlCollision and are skipped at run time, so they are excluded from gate 2. Gate 2 fell 504 -> 448 as a result. That is a real reduction in RISK — those entries can no longer import another state's events — but it is NOT a URL being corrected: the wrong host is still in the config and each of those libraries is now an explicit, uncovered gap. Do not read the drop as coverage improving. Worklist: node scripts/list-url-collisions.js
+- METHODOLOGY CHANGE 2026-08-21: 454 entries proven to point at another state's library were flagged urlCollision and are skipped at run time, so they are excluded from gate 2. Gate 2 fell 504 -> 448 as a result. That is a real reduction in RISK — those entries can no longer import another state's events — but it is NOT a URL being corrected: the wrong host is still in the config and each of those libraries is now an explicit, uncovered gap. Do not read the drop as coverage improving. Worklist: node scripts/list-url-collisions.js
 - 1283 config entries have no literal url string and are excluded from gates 1-2 (usually a variable reference — see loadConfiguredSites' header comment).
 
 ## 2026-08-26
