@@ -1317,6 +1317,23 @@ const LIBRARY_SYSTEMS = [
     city: 'Pawtucket',
     zipCode: '02860'
   },
+  // Added 2026-08-26. RELOCATED FROM WordPress-RI, which is a platform mismatch:
+  // Coventry runs LibCal, and coventrylibrary.libcal.com names "Coventry Public
+  // Library Greene branch" among its own calendar filters. That mismatch is why
+  // the WordPress-RI Coventry entry has produced ZERO rows in the database - it
+  // was never a selector problem. Found while repointing the greenelibrary.org
+  // collision, when the Puppeteer verifier reported platform=libcal for the
+  // Greene branch URL. Instance confirmed live before wiring: the calendar
+  // titles itself "LibCal - Coventry Library" and exposes a Greene branch filter.
+  {
+    name: 'Coventry Public Library',
+    url: 'https://coventrylibrary.libcal.com/calendar?cid=-1&t=d',
+    county: 'Kent',
+    state: 'RI',
+    website: 'https://www.coventrylibrary.org',
+    city: 'Coventry',
+    zipCode: '02816'
+  },
   {
     name: 'Newport Public Library',
     url: 'https://newportlibraryri.libcal.com/calendar/NPL-events/',

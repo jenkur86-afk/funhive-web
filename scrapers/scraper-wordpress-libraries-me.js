@@ -74,7 +74,8 @@ const LIBRARIES = [
   { name: 'Fort Fairfield Public Library', url: 'https://www.fortfairfieldlibrary.org/', eventsUrl: 'https://www.fortfairfieldlibrary.org/', city: 'Fort Fairfield', state: 'ME', zipCode: '04742', county: 'Aroostook'},
   { name: 'Freeport Community Library', url: 'https://www.freeportlibrary.org', eventsUrl: 'https://www.freeportlibrary.org/events', city: 'Freeport', state: 'ME', zipCode: '04032', county: 'Cumberland', urlCollision: 'freeportlibrary.org is PA, not ME' },
   { name: 'Gardiner Public Library', url: 'https://www.gardinerlibrary.org/', eventsUrl: 'https://www.gardinerlibrary.org/', city: 'Gardiner', state: 'ME', zipCode: '04345', county: 'Kennebec', urlCollision: 'gardinerlibrary.org is NY, not ME' },
-  { name: 'Julia Adams Morse Memorial Library', url: 'https://www.greenelibrary.org', eventsUrl: 'https://www.greenelibrary.org/events', city: 'Greene', state: 'ME', zipCode: '04236', county: 'Androscoggin County'},
+  // URL corrected 2026-08-26 (was greenelibrary.org, a dead host shared with NY/RI). jammlibrary.org prints "Julia Adams Morse Memorial Library, 105 Main St, Greene ME 04236" and (207) 946-5544, matching this zipCode. HONEST LIMIT: no dedicated events page was found, so this is an EXPLAINED ZERO rather than coverage.
+  { name: 'Julia Adams Morse Memorial Library', url: 'https://www.jammlibrary.org', eventsUrl: 'https://www.jammlibrary.org', city: 'Greene', state: 'ME', zipCode: '04236', county: 'Androscoggin County'},
   // URL collision fixed 2026-08-05. Same greenvillelibrary.org collision that
   // hit WordPress-NY: that domain is the Greenville County Library System in
   // SOUTH CAROLINA, and this entry was ingesting 25 of its events under a Maine

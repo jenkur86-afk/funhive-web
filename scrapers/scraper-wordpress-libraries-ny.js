@@ -181,7 +181,8 @@ const LIBRARIES = [
   { name: 'Reading Room Association Of Gouverneur', url: 'https://www.gouverneurlibrary.org', eventsUrl: 'https://www.gouverneurlibrary.org/events', city: 'Gouverneur', state: 'NY', zipCode: '13642', county: 'St. Lawrence'},
   { name: 'Gowanda Free Library', url: 'https://gowandalibrary.org/', eventsUrl: 'https://gowandalibrary.org/', city: 'Gowanda', state: 'NY', zipCode: '14070', county: 'Cattaraugus'},
   { name: 'Pember Library Museum', url: 'https://www.granvillelibrary.org/', eventsUrl: 'https://www.granvillelibrary.org/', city: 'Granville', state: 'NY', zipCode: '12832', county: 'Washington', urlCollision: 'granvillelibrary.org is OH, not NY' },
-  { name: 'Moore Memorial Library', url: 'https://www.greenelibrary.org', eventsUrl: 'https://www.greenelibrary.org/events', city: 'Greene', state: 'NY', zipCode: '13778', county: 'Greene County'},
+  // URL corrected 2026-08-26 (was greenelibrary.org, a dead host shared with ME/RI). greenenylibrary.org prints "59 Genesee Street, Greene, NY 13778" and (607)656-9349, matching this zipCode. HONEST LIMIT: no dedicated events page was found on that site, so this converts a dead domain into an EXPLAINED ZERO, not into coverage. county corrected: Greene NY 13778 is in CHENANGO county, not Greene county.
+  { name: 'Moore Memorial Library', url: 'http://greenenylibrary.org', eventsUrl: 'http://greenenylibrary.org', city: 'Greene', state: 'NY', zipCode: '13778', county: 'Chenango'},
   // URL collision fixed 2026-08-05. This entry pointed at greenvillelibrary.org,
   // which is the Greenville COUNTY Library System in SOUTH CAROLINA — a domain
   // claimed by 10 active states at once. It was not merely returning nothing: it
@@ -282,7 +283,8 @@ const LIBRARIES = [
   { name: 'Minoa Library', url: 'https://www.minoalibrary.org', eventsUrl: 'https://www.minoalibrary.org/events', city: 'Minoa', state: 'NY', zipCode: '13116', county: 'Onondaga'},
   { name: 'Monroe Free Library', url: 'https://www.monroelibrary.org', eventsUrl: 'https://www.monroelibrary.org/events', city: 'Monroe', state: 'NY', zipCode: '10950', county: 'Monroe County', urlCollision: 'monroelibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'Montauk Library', url: 'https://www.montauklibrary.org', eventsUrl: 'https://www.montauklibrary.org/events', city: 'Montauk', state: 'NY', zipCode: '11954', county: 'Suffolk'},
-  { name: 'Montgomery Free Library', url: 'https://www.montgomerylibrary.org', eventsUrl: 'https://www.montgomerylibrary.org/events', city: 'Montgomery', state: 'NY', zipCode: '12549', county: 'Montgomery County'},
+  // URL corrected 2026-08-26 (was montgomerylibrary.org, a dead host shared with PA/MA/WV). montgomerynylib.org prints "133 Clinton St, Montgomery, NY 12549-1195" and (845) 457-5616, matching this zipCode, and carries a REAL events page at /events/. county corrected: Montgomery NY 12549 is in ORANGE county, not Montgomery county.
+  { name: 'Montgomery Free Library', url: 'https://montgomerynylib.org', eventsUrl: 'https://montgomerynylib.org/events/', city: 'Montgomery', state: 'NY', zipCode: '12549', county: 'Orange'},
   { name: 'Ethelbert B. Crawford Public Library', url: 'https://www.allertonpubliclibrary.org/', eventsUrl: 'https://www.allertonpubliclibrary.org/calendar', city: 'Monticello', state: 'NY', zipCode: '12701', county: 'Sullivan', urlCollision: 'allertonpubliclibrary.org is IL, not NY' },
   { name: 'Montour Falls Memorial Library', url: 'https://www.montourfallslibrary.org', eventsUrl: 'https://www.montourfallslibrary.org/events', city: 'Montour Falls', state: 'NY', zipCode: '14865', county: 'Schuyler'},
   { name: 'Mooers Free Library', url: 'https://www.mooerslibrary.org', eventsUrl: 'https://www.mooerslibrary.org/events', city: 'Mooers', state: 'NY', zipCode: '12958', county: 'Clinton'},

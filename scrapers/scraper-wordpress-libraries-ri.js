@@ -17,11 +17,23 @@ const ngeohash = require('ngeohash');
 const LIBRARIES = [
   { name: 'Rogers Free Library', url: 'https://rogersfreelibrary.org/', platform: 'wordpress', eventsUrl: 'https://rogersfreelibrary.org/', city: 'Bristol', state: 'RI', zipCode: '02809', county: '' },
   { name: 'Central Falls Free Public Library', url: 'https://www.centralfallslibrary.org', platform: 'wordpress', eventsUrl: 'https://www.centralfallslibrary.org/events', city: 'Central Falls', state: 'RI', zipCode: '02863', county: '' },
-  { name: 'Coventry Public Library', url: 'https://www.coventrylibrary.org/', platform: 'wordpress', eventsUrl: 'https://www.coventrylibrary.org/', city: 'Coventry', state: 'RI', zipCode: '02816', county: '' },
+  // 2026-08-26: PLATFORM MISMATCH, not a selector problem - this entry had produced ZERO database rows, ever.
+  // Coventry publishes its calendar on LibCal (coventrylibrary.libcal.com), which a WordPress DOM extractor
+  // cannot read. Relocated to LibCal-RI and PROVEN LIVE the same day: 20 events found, 7 rows saved under
+  // LibCal-RI-coventrylibrary, including its Greene branch. Guarded here rather than deleted so the library keeps
+  // an explained row in LIBRARY-SITE-AUDIT.md instead of silently vanishing from the audit.
+  { name: 'Coventry Public Library', url: 'https://www.coventrylibrary.org/', platform: 'wordpress', eventsUrl: 'https://www.coventrylibrary.org/', city: 'Coventry', state: 'RI', zipCode: '02816', county: 'Kent', urlCollision: 'platform mismatch - Coventry runs LibCal; relocated to LibCal-RI and proven live with 20 events' },
   { name: 'East Greenwich Free Library', url: 'https://www.eastgreenwichlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.eastgreenwichlibrary.org/events', city: 'East Greenwich', state: 'RI', zipCode: '02818', county: '' },
   { name: 'Exeter Public Library', url: 'https://www.exeterlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.exeterlibrary.org/events', city: 'Exeter', state: 'RI', zipCode: '02822', county: '' },
   { name: 'Harmony Library', url: 'https://www.harmonylibrary.org', platform: 'wordpress', eventsUrl: 'https://www.harmonylibrary.org/events', city: 'Glocester', state: 'RI', zipCode: '02829', county: '' , urlCollision: 'harmonylibrary.org is dead or serves an unrelated site — no state entry is correct' },
-  { name: 'Greene Public Library', url: 'https://www.greenelibrary.org', platform: 'wordpress', eventsUrl: 'https://www.greenelibrary.org/events', city: 'Greene', state: 'RI', zipCode: '02827', county: '' },
+  // 2026-08-26: NOW GENUINELY COVERED ELSEWHERE, AND PROVEN - retired from this family rather than repointed.
+  // Greene is a BRANCH of Coventry Public Library (179 Hopkins Hollow Rd, Greene RI 02827, ph 401-397-3873).
+  // Coventry runs LibCal, not WordPress, which is why this family could never read it. Coventry was added to
+  // LibCal-RI the same day and RUN: it returned 20 events, and 4 of the 7 rows saved carry venue "Greene Branch"
+  // - Tech Tuesdays @ GREENE, Children s Book Club @ GREENE, Farmer s Market @ GREENE - under scraper_name
+  // LibCal-RI-coventrylibrary. That is DATABASE-ROW evidence for this specific branch, which is the standard the
+  // Worcester rule demands; a name match or a config entry would not have been enough.
+  { name: 'Greene Public Library', url: 'https://www.greenelibrary.org', platform: 'wordpress', eventsUrl: 'https://www.greenelibrary.org/events', city: 'Greene', state: 'RI', zipCode: '02827', county: 'Kent', urlCollision: 'greenelibrary.org is dead and was shared with NY/ME; Greene is a Coventry branch now covered live by LibCal-RI-coventrylibrary, proven by 4 Greene Branch rows' },
   { name: 'Ashaway Free Library', url: 'https://www.ashawaylibrary.org', platform: 'wordpress', eventsUrl: 'https://www.ashawaylibrary.org/events', city: 'Hopkinton', state: 'RI', zipCode: '02804', county: '' },
   { name: 'Langworthy Public Library', url: 'https://www.langworthylibrary.org', platform: 'wordpress', eventsUrl: 'https://www.langworthylibrary.org/events', city: 'Hopkinton', state: 'RI', zipCode: '02832', county: '' },
   { name: 'Marian J. Mohr Memorial Library', url: 'https://www.mohrlibrary.org/', platform: 'wordpress', eventsUrl: 'https://www.mohrlibrary.org/', city: 'Johnston', state: 'RI', zipCode: '02919', county: '' },
