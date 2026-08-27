@@ -326,8 +326,25 @@ function computeGates() {
     detail: 'never re-checked; the true bug count sits between the MISMATCH count and MISMATCH+UNVERIFIABLE' };
 
   // --- Gate 5 — share of audited events that landed in a SPECIFIC age bracket rather
-  // than the All Ages catch-all. Computed from the age audit's own bracket columns, so
-  // it reflects the last completed audit cycle rather than the live DB — stated, not glossed.
+  // than the All Ages catch-all. Computed from the age audit's own bracket columns.
+  //
+  // SCOPE, CORRECTED 2026-08-27: this reads EVERY dated section in AGE-RANGE-AUDIT.md,
+  // not the newest one and not "the last completed audit cycle" as this comment used to
+  // claim. The code and the comment had disagreed since the gate was written. It is
+  // cumulative over all history, which is why it barely moves and why a day's work shows
+  // up as a fraction of a point.
+  //
+  // DO NOT "FIX" THIS BY SCOPING IT TO THE NEWEST SECTION. Measured the same day, the
+  // per-section values swing 13.3% -> 55.8% purely on which rotation GROUP ran:
+  //   08-19 13.3%   08-22 14.4%   08-25 17.8%      <- RecDeskParks-* heavy (Group 1)
+  //   08-23 55.1%   08-26 55.8%   08-27 49.8%      <- MacaroniKid/library heavy
+  // The low days are dominated by RecDeskParks-* sites running at 1-3% specific, because
+  // those calendars publish FIELD RESERVATIONS ("WRC softball - coordinating with soccer
+  // (Mayeski Field 3)"), which carry no age because they are not programs. Scoping the
+  // gate to one day would therefore make it oscillate on the rotation calendar and read
+  // as a regression every third day — the same trap gate 1 avoids by refusing to average.
+  // Cumulative is the lesser evil; the real fix is upstream (see the RECDESK-RESERVATIONS
+  // note in reports/fix-notes.json), not in this metric.
   //
   // Measured as specificity (higher = better) rather than All-Ages share (lower = better)
   // because the owner set the goal on 2026-08-09 as "as high as possible, no fixed target".
@@ -353,7 +370,12 @@ function computeGates() {
     detail: totalEvents
       ? `${specific} of ${totalEvents} audited events carry a specific bracket; ${allAges} are All Ages. ` +
         `No fixed target by owner decision — some sources are genuinely all-ages, so the goal is ` +
-        `"as high as possible" and the gate ratchets against the best value ever recorded`
+        `"as high as possible" and the gate ratchets against the best value ever recorded. ` +
+        `SCOPE: cumulative over EVERY dated section of AGE-RANGE-AUDIT.md, not just today's — ` +
+        `so a single day's work moves it by a fraction of a point, and a small negative delta ` +
+        `is NOT evidence of an age-detection regression. Per-section values swing 13.3%–55.8% ` +
+        `purely on which rotation group ran; the low days are RecDeskParks-* facility ` +
+        `reservations sitting at 1–3% specific, which have no age to detect`
       : 'no audit rows parsed' };
 
   // --- Gates 6 & 7 need a database read. Declared, dated, and marked — never guessed.
