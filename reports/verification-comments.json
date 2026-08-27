@@ -11,17 +11,17 @@
  },
  "LibCal-RI|||North Kingstown Free Library": {
   "verdict": "MISMATCH",
-  "comment": "url-collision - nklibrary.libcal.com 404s; real site nklibrary.org lists Tween Yoga Aug 19 and Inside Modern Iran Aug 20",
+  "comment": "platform mismatch, GUARDED 2026-08-27 - nklibrary.libcal.com 404s. The library is real and verified live at 100 Boone Street, North Kingstown RI 02852, phone 401-294-3306, publishing dated events on northkingstown-ri.whofi.com/calendar/. WhoFi is a platform NO scraper in this repo handles, so this needs a new extractor, not a URL fix. OPEN GAP - the only North Kingstown rows are 8 from MacaroniKid-RI, which is not the library.",
   "population": "zero"
  },
  "LibCal-KY|||Kenton County Public Library": {
   "verdict": "MISMATCH",
-  "comment": "url-collision - libcal calendar path 404s; real events on kentonlibrary.bibliocommons.com e.g. Madcap Puppets Aug 17 2026",
+  "comment": "platform mismatch, RESOLVED 2026-08-27 - kentonlibrary.libcal.com 404s; Kenton runs BiblioCommons. Coverage is PROVEN BY DATABASE ROWS, not by a config entry: 12 rows carry a Kenton venue under scraper_name BiblioCommons-KY. The duplicate LibCal entry is guarded.",
   "population": "zero"
  },
  "LibCal-KY|||Boone County Public Library": {
   "verdict": "MISMATCH",
-  "comment": "url-collision - bcpl.libcal.com 404s entirely; real calendar is boone.libnet.info (Library Market), not LibCal",
+  "comment": "platform mismatch, GUARDED 2026-08-27 - bcpl.libcal.com 404s. The real calendar is boone.libnet.info, which is LibraryMarket, verified live as the right institution by area code 859. NOT COVERED ELSEWHERE and explicitly not claimed to be: a database check found 10 rows mentioning Boone County and none from a library scraper. No LibraryMarket-KY scraper exists. OPEN GAP.",
   "population": "zero"
  },
  "LibCal-KY|||Warren County Public Library": {
@@ -1601,7 +1601,7 @@
  },
  "WordPress-AL|||Wilsonville - Vernice Stoudenmire Library": {
   "verdict": "MISMATCH",
-  "comment": "url-collision: page addresses show OR not AL; title \"Calendar   City of Wilsonville Oregon\"",
+  "comment": "url-collision, GUARDED 2026-08-27 - wilsonvillelibrary.org is the Wilsonville Public Library in OREGON: 29799 SW Town Center Loop E, Wilsonville OR 97070, area code 503. Open coverage gap for the Alabama library.",
   "population": "zero"
  },
  "RecDesk-Parks|||Hillsdale Community Center & Park": {
@@ -2410,7 +2410,7 @@
  },
  "WordPress-Events-Calendar|||Bristol Public Library": {
   "verdict": "MISMATCH",
-  "comment": "url-collision: page addresses show IN not VA; title \"Bristol Public Library: Home\" [redirects to in.gov]",
+  "comment": "url-collision, GUARDED 2026-08-27 - bristolpubliclibrary.org 307-redirects to www.in.gov/bristolpubliclibrary, which is Bristol INDIANA, not Bristol VA. Open coverage gap.",
   "population": "zero"
  },
  "WordPress-Events-Calendar|||Carnegie Library of Pittsburgh": {
@@ -3170,7 +3170,7 @@
  },
  "WordPress-GA|||Lake Sinclair Library": {
   "verdict": "MISMATCH",
-  "comment": "url-collision (resolves to Milledgeville Public Library, Milledgeville IL, not Milledgeville GA)",
+  "comment": "url-collision, GUARDED 2026-08-27 - milledgevillelibrary.org is Milledgeville Public Library in ILLINOIS: 18 W. Fifth St, Milledgeville IL 61051, area code 815. There are two Milledgevilles and this host serves the wrong one. Open coverage gap for the Georgia library.",
   "population": "zero"
  },
  "WordPress-GA|||Laurens County Library": {
@@ -3535,7 +3535,7 @@
  },
  "WordPress-VT|||Haskell Free Library": {
   "verdict": "MISMATCH",
-  "comment": "url-collision (haskellopera.com is a default empty WordPress blog with a Hello world post and no library, /library 404s)",
+  "comment": "dead-endpoint, GUARDED 2026-08-27 - haskellopera.com/library returns HTTP 404 and the domain serves a default empty WordPress blog. The institution is real - Haskell Free Library and Opera House, Derby Line VT - so this is a wrong URL and an open coverage gap, not a library that does not exist.",
   "population": "zero"
  },
  "WordPress-VT|||Huntington Public": {
@@ -4040,7 +4040,7 @@
  },
  "WordPress-PA|||Albright Memorial Library": {
   "verdict": "MISMATCH",
-  "comment": "url-collision: page addresses show CT not PA; title \"Events – Scranton Library\"",
+  "comment": "CORRECTED 2026-08-27 - the earlier url-collision verdict on this row was WRONG. lclshome.org/event/ is genuinely the Lackawanna County Library System in PENNSYLVANIA: 520 Vine Street and 1032 Green Ridge Street, Scranton PA 18509, area code 570, listing August 2026 storytimes, Lego Club and water play. The verifier had read a Scranton Library title and called it CT. This is an EXTRACTION-FAILURE - right site, real server-rendered events, scraper returns 0 - and it was deliberately NOT guarded, because guarding it would have destroyed real coverage.",
   "population": "zero"
  },
  "WordPress-RI|||Ashaway Free Library": {
@@ -8369,8 +8369,8 @@
   "population": "zero"
  },
  "WordPress-NJ|||Glen Ridge Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on bccls.libcal.com/calendar/glenridge cid 10286, taken from the library own page. NJ confirmed by NJ 07028 and area code 973. Relocated to LibCal-NJ; WordPress-NJ entry guarded.",
   "population": "zero"
  },
  "WordPress-NJ|||Fair Haven Public Library": {
@@ -8404,8 +8404,8 @@
   "population": "zero"
  },
  "WordPress-NJ|||Lambertville Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on lambertvillelibrary.libcal.com, taken from the library own page. NJ confirmed by area code 609. Relocated to LibCal-NJ; WordPress-NJ entry guarded.",
   "population": "zero"
  },
  "WordPress-NJ|||Linwood Public Library": {
@@ -8504,8 +8504,8 @@
   "population": "zero"
  },
  "WordPress-NJ|||Ridgefield Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on bccls.libcal.com cid 10324. Confirmed to be the NEW JERSEY Ridgefield and not Ridgefield CT, by 527 Morse Avenue Ridgefield NJ 07657 and area code 201 on its own page. Relocated to LibCal-NJ; WordPress-NJ entry guarded.",
   "population": "zero"
  },
  "WordPress-NJ|||Ridgewood Public Library": {
@@ -8539,8 +8539,8 @@
   "population": "zero"
  },
  "WordPress-NJ|||Summit Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on summitlibrary.libcal.com, taken from the library own page. NJ confirmed by 75 Maple Street Summit NJ 07901 and area code 908. Relocated to LibCal-NJ; WordPress-NJ entry guarded.",
   "population": "zero"
  },
  "WordPress-NJ|||South River Public Library": {
@@ -8574,8 +8574,8 @@
   "population": "zero"
  },
  "WordPress-NJ|||West Orange Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on bccls.libcal.com/calendar/westorange cid 10341, taken from the library own page. NJ confirmed by area code 973. Relocated to LibCal-NJ; WordPress-NJ entry guarded.",
   "population": "zero"
  },
  "WordPress-NJ|||Woodstown-Pilesgrove Library": {
@@ -8739,8 +8739,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Dansville Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on owwl.libcal.com/calendar/DansvillePublicLibrary cid 15151, taken from the library own page. NY confirmed by 200 Main St Dansville NY 14437 and area code 585. Relocated to LibCal-NY; WordPress-NY entry guarded.",
   "population": "zero"
  },
  "WordPress-NY|||Cohoes Public Library": {
@@ -8809,8 +8809,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Gardiner Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on gardinerlibrary.libcal.com cid 21138, taken from the library own page. NY confirmed by 133 Farmers Turnpike Gardiner NY 12525 and area code 845. Relocated to LibCal-NY; WordPress-NY entry guarded.",
   "population": "zero"
  },
  "WordPress-NY|||Glen Cove Public Library": {
@@ -8859,8 +8859,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Highland Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on highlandlibrary.libcal.com cid 12635, taken from the library own page. NY confirmed by 14 Elting Place Highland NY 12528 and area code 845. Relocated to LibCal-NY; WordPress-NY entry guarded.",
   "population": "zero"
  },
  "WordPress-NY|||Holland Patent Free Library": {
@@ -8934,8 +8934,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Marcellus Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on onlib-marcellus.libcal.com cid 19783. NY confirmed by 32 Maple Street Marcellus NY 13108 and area code 315. Relocated to LibCal-NY; WordPress-NY entry guarded. Note the configured host www.marcelluslibrary.org also has a TLS certificate that does not cover the www subdomain.",
   "population": "zero"
  },
  "WordPress-NY|||Mary E. Seymour Memorial Free Library": {
@@ -9140,7 +9140,7 @@
  },
  "WordPress-NY|||Rodman Public Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 6 future-dated events visible under Puppeteer, e.g. 11:00 am 2026-08-27; 3:30 pm 2026-09-01. platform=libcal (belongs in a LibCal-* scraper) [redirects to rodmanlibrary.com]",
+  "comment": "url-collision - rodmanlibrary.org redirects to rodmanlibrary.com, which is Rodman Public Library in ALLIANCE OHIO: 215 East Broadway Street, Alliance OH 44601, area code 330, no New York mention anywhere on the page. The verifier reported platform=libcal for this row; acting on that hint and wiring rodmanlibrary.libcal.com into LibCal-NY would have imported Ohio events under New York. GUARDED 2026-08-27. The correct URL for any NY Rodman library is unknown - open coverage gap.",
   "population": "zero"
  },
  "WordPress-NY|||Roosevelt Public Library": {

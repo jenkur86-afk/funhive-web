@@ -142,7 +142,11 @@ const LIBRARY_SYSTEMS = [
     state: 'VA',
     website: 'https://bristolpubliclibrary.org',
     city: 'Bristol',
-    zipCode: '24201'
+    zipCode: '24201',
+    // bristolpubliclibrary.org 307-redirects to www.in.gov/bristolpubliclibrary/
+    // - Bristol, INDIANA. Bristol VA/TN has its own library and this host is not
+    // it, so this is an open coverage gap rather than a dead institution.
+    urlCollision: 'bristolpubliclibrary.org redirects to www.in.gov/bristolpubliclibrary - Bristol INDIANA, not VA'
   },
   {
     name: 'Pittsylvania County Public Library',

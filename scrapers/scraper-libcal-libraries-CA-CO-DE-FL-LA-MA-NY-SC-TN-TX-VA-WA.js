@@ -402,15 +402,20 @@ const LIBRARY_SYSTEMS = [
     city: 'Stratford',
     zipCode: '06615'
   },
-  {
-    name: 'Hartford Public Library',
-    url: 'https://hplct.libcal.com/calendar?cid=-1&t=d',
-    county: 'Hartford',
-    state: 'CT',
-    website: 'https://hplct.org',
-    city: 'Hartford',
-    zipCode: '06103'
-  },
+  // RETIRED 2026-08-27 — WRONG FAMILY, kept commented rather than deleted so the reason
+  // survives. This entry returned "Found 0 events" on the 2026-08-27 run and hplct.libcal.com
+  // is not where Hartford publishes: its own site links to hplct.libnet.info, which titles
+  // itself "Events - Hartford Public Library" and prints CT 06103. Moved to the Communico
+  // family. Do not re-add here without evidence that a LibCal instance actually serves events.
+  // {
+  //   name: 'Hartford Public Library',
+  //   url: 'https://hplct.libcal.com/calendar?cid=-1&t=d',
+  //   county: 'Hartford',
+  //   state: 'CT',
+  //   website: 'https://hplct.org',
+  //   city: 'Hartford',
+  //   zipCode: '06103'
+  // },
   {
     name: 'East Hartford Public Library',
     url: 'https://easthartfordct.libcal.com/calendar?cid=-1&t=d',
@@ -1036,6 +1041,57 @@ const LIBRARY_SYSTEMS = [
     city: 'Plainview',
     zipCode: '11803'
   },
+  // Four NY libraries relocated out of WordPress-NY on 2026-08-27 from the
+  // platform-mismatch bucket. Each LibCal instance is the href the library
+  // publishes on its OWN site, with the state confirmed independently on that
+  // same page:
+  //   Dansville  200 Main St, Dansville NY 14437, area code 585 (OWWL system)
+  //   Gardiner   133 Farmer's Turnpike, Gardiner NY 12525, area code 845
+  //   Highland   14 Elting Place, Highland NY 12528, area code 845
+  //   Marcellus  32 Maple Street, Marcellus NY 13108, area code 315
+  // A FIFTH candidate from the same bucket was REJECTED, and it matters: the
+  // verifier also reported platform=libcal for Rodman Public Library, but
+  // rodmanlibrary.org redirects to rodmanlibrary.com — 215 East Broadway Street,
+  // Alliance, OHIO 44601, area code 330. Wiring its LibCal instance here would
+  // have imported Ohio events under New York, which is Defect A recreated by
+  // hand — the same trap already recorded for marshfieldlibrary.libcal.com
+  // (Wisconsin). It is guarded in the WordPress-NY config instead.
+  {
+    name: 'Dansville Public Library',
+    url: 'https://owwl.libcal.com/calendar/DansvillePublicLibrary?cid=15151&t=d&d=0000-00-00&cal=15151&inc=0',
+    county: 'Livingston',
+    state: 'NY',
+    website: 'https://dansvillelibrary.org',
+    city: 'Dansville',
+    zipCode: '14437'
+  },
+  {
+    name: 'Gardiner Library',
+    url: 'https://gardinerlibrary.libcal.com/calendar?cid=21138&t=d&d=0000-00-00&cal=21138&inc=0',
+    county: 'Ulster',
+    state: 'NY',
+    website: 'https://www.gardinerlibrary.org',
+    city: 'Gardiner',
+    zipCode: '12525'
+  },
+  {
+    name: 'Highland Public Library',
+    url: 'https://highlandlibrary.libcal.com/calendar?cid=12635&t=d&d=0000-00-00&cal=12635&inc=0',
+    county: 'Ulster',
+    state: 'NY',
+    website: 'https://highlandlibrary.org',
+    city: 'Highland',
+    zipCode: '12528'
+  },
+  {
+    name: 'Marcellus Free Library',
+    url: 'https://onlib-marcellus.libcal.com/calendar?cid=19783&t=d&d=0000-00-00&cal=19783&inc=0',
+    county: 'Onondaga',
+    state: 'NY',
+    website: 'https://marcelluslibrary.org',
+    city: 'Marcellus',
+    zipCode: '13108'
+  },
 
   // NEW JERSEY
   {
@@ -1092,6 +1148,65 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.franklinlakeslibrary.org',
     city: 'Franklin Lakes',
     zipCode: '07417'
+  },
+  // Five more NJ libraries relocated out of WordPress-NJ on 2026-08-27, found in
+  // the platform-mismatch bucket of the Step 3d verdict store (platform=libcal
+  // detected under a WordPress-* family). Each LibCal instance was taken FROM THE
+  // LIBRARY'S OWN PAGE - the href it publishes for its own calendar - which is
+  // stronger evidence than probing a guessed subdomain, and the per-library cid
+  // came from that same href or from the calendar page itself. A negative control
+  // (bccls.libcal.com/calendar/notarealnjlibraryxyz) returns 404, so a 200 means
+  // something. State identity was confirmed on each page independently:
+  //   Glen Ridge    NJ 07028, area code 973
+  //   Lambertville  NJ,       area code 609
+  //   Ridgefield    527 Morse Avenue, Ridgefield NJ 07657, area code 201
+  //                 - this is the NJ Ridgefield, NOT Ridgefield CT
+  //   Summit        75 Maple Street, Summit NJ 07901, area code 908
+  //   West Orange   NJ 07052, area code 973
+  {
+    name: 'Glen Ridge Public Library',
+    url: 'https://bccls.libcal.com/calendar/glenridge?cid=10286&t=d&d=0000-00-00&cal=10286&inc=0',
+    county: 'Essex',
+    state: 'NJ',
+    website: 'https://www.glenridgelibrary.org',
+    city: 'Glen Ridge',
+    zipCode: '07028'
+  },
+  {
+    name: 'Ridgefield Public Library',
+    url: 'https://bccls.libcal.com/calendar/ridgefield?cid=10324&t=d&d=0000-00-00&cal=10324&inc=0',
+    county: 'Bergen',
+    state: 'NJ',
+    website: 'https://www.ridgefieldpubliclibrary.com',
+    city: 'Ridgefield',
+    zipCode: '07657'
+  },
+  {
+    name: 'West Orange Public Library',
+    url: 'https://bccls.libcal.com/calendar/westorange?cid=10341&t=d&d=0000-00-00&cal=10341&inc=0',
+    county: 'Essex',
+    state: 'NJ',
+    website: 'https://www.westorangelibrary.org',
+    city: 'West Orange',
+    zipCode: '07052'
+  },
+  {
+    name: 'Lambertville Free Public Library',
+    url: 'https://lambertvillelibrary.libcal.com/calendar?cid=-1&t=d',
+    county: 'Hunterdon',
+    state: 'NJ',
+    website: 'https://www.lambertvillelibrary.org',
+    city: 'Lambertville',
+    zipCode: '08530'
+  },
+  {
+    name: 'Summit Public Library',
+    url: 'https://summitlibrary.libcal.com/calendar?cid=-1&t=d',
+    county: 'Union',
+    state: 'NJ',
+    website: 'https://www.summitlibrary.org',
+    city: 'Summit',
+    zipCode: '07901'
   },
   {
     name: 'Jersey City Free Public Library',
@@ -1529,7 +1644,15 @@ const LIBRARY_SYSTEMS = [
     state: 'RI',
     website: 'https://www.nklibrary.org',
     city: 'North Kingstown',
-    zipCode: '02852'
+    zipCode: '02852',
+    // nklibrary.libcal.com 404s. The institution is real and verified live -
+    // 100 Boone Street, North Kingstown RI 02852, phone 401-294-3306 - and it
+    // publishes real dated events, but on northkingstown-ri.whofi.com/calendar/.
+    // WhoFi is a platform NO scraper in this repo handles (grep for whofi returns
+    // nothing), so this needs a new extraction path, not a URL correction.
+    // OPEN COVERAGE GAP: the only rows mentioning North Kingstown are 8 from
+    // MacaroniKid-RI, which is not the library.
+    urlCollision: 'nklibrary.libcal.com 404s - the library publishes on northkingstown-ri.whofi.com, a platform no scraper here supports. OPEN GAP needing a WhoFi extractor'
   },
   {
     name: 'Cumberland Public Library',
@@ -1716,7 +1839,13 @@ const LIBRARY_SYSTEMS = [
     state: 'KY',
     website: 'https://www.kentonlibrary.org',
     city: 'Covington',
-    zipCode: '41011'
+    zipCode: '41011',
+    // The LibCal path 404s - Kenton does not publish on LibCal. It runs
+    // BiblioCommons, and coverage there is PROVEN BY DATABASE ROWS rather than
+    // by the existence of a config entry: 12 rows carry a Kenton venue under
+    // scraper_name BiblioCommons-KY. That is the Worcester rule satisfied, so
+    // this entry is a duplicate and is guarded rather than left to fail nightly.
+    urlCollision: 'kentonlibrary.libcal.com 404s - Kenton runs BiblioCommons and is covered by BiblioCommons-KY, proven by 12 database rows'
   },
   {
     name: 'Boone County Public Library',
@@ -1725,7 +1854,16 @@ const LIBRARY_SYSTEMS = [
     state: 'KY',
     website: 'https://www.bcpl.org',
     city: 'Burlington',
-    zipCode: '41005'
+    zipCode: '41005',
+    // bcpl.libcal.com 404s entirely. The real calendar is boone.libnet.info,
+    // which is LibraryMarket - verified live, right institution, phone area code
+    // 859 for Northern Kentucky. A LibCal scraper cannot read LibraryMarket, so
+    // this is a platform mismatch, not a URL typo.
+    // THIS IS AN OPEN COVERAGE GAP, and it is NOT covered elsewhere: a database
+    // check found 10 rows mentioning Boone County and not one is from a library
+    // scraper - they are FairsFestivals, LocalistParks-IN, Eventbrite and, oddly,
+    // MacaroniKid-SC. There is no LibraryMarket-KY scraper yet.
+    urlCollision: 'bcpl.libcal.com 404s - Boone County runs LibraryMarket at boone.libnet.info. No LibraryMarket-KY scraper exists yet, so this is an OPEN GAP, not covered elsewhere'
   },
   {
     name: 'Warren County Public Library',
