@@ -160,6 +160,13 @@
       "confirm": "Query events where scraper_name like LibCal-NJ-bccls-% and check for ramsey and franklinlakes names, or after the next Group 3 rotation grep the run stdout for Ramsey Free Public Library.",
       "added": "2026-08-27",
       "priority": "medium"
+    },
+    "GCAL-IFRAME-CLUSTER": {
+      "what": "The Step 3d verifier identified 20 rows - about 18 distinct sites across 10 states - whose events live entirely in a cross-origin Google Calendar iframe, so no DOM scraper can ever read them. A working scraper for exactly this already exists: scrapers/scraper-gcal-libraries.js reads the public ICS feed at calendar.google.com/calendar/ical/<CALENDAR_ID>/public/basic.ics and expands RRULEs, which matters because library storytimes are almost always recurring. It currently covers ONE library each in MD, MA, SC and VT. THE SITES: WordPress-GA Laurens County, Chattooga County, Thomson-McDuffie; WordPress-NC Catawba County and Claremont Branch; WordPress-CT Torrington; WordPress-VT Cobleigh and Hartland; WordPress-NY Phillips Free and Sidney Memorial; WordPress-PA Union Library Company of Hatborough and Mary S Biesecker; WordPress-MA Ashby Free and Leverett; WordPress-SC Berkeley County Sangaree; WordPress-NH Dublin Public; WordPress-WV Putnam County.",
+      "expect": "Not started. Each site needs its calendar IDs harvested from the events page iframe src - the file header documents the exact method - then a config entry, plus new registry keys GoogleCalendar-{GA,NC,CT,NY,PA,NH,WV}. READ THE FILE HEADER FIRST: it warns that the moment a state gains a SECOND library the scraper_name must become <key>-<siteSlug>, or the two sites collapse onto one name and violate the No aggregation rule. GA, NC, PA, MA and NY would each get two or three, so that change IS required here - it was implemented once on 2026-08-23 and reverted when both candidates failed identity checks.",
+      "confirm": "WebFetch is NOT sufficient for the harvest - it converts to markdown and drops iframe elements entirely, confirmed on cobleighlibrary.org. Use the browser/Puppeteer stack to read iframe src from the raw DOM. Note also that cobleighlibrary.org/events links onward to /events-calendar/events-calendar/, so some configured eventsUrl values are stale and worth correcting in the same pass.",
+      "added": "2026-08-27",
+      "priority": "medium"
     }
   },
   "LibCal-VA": {
