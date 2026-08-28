@@ -147,6 +147,13 @@ async function scrapeAssabetEvents() {
           '.event-item', '.cal-event', '.event-entry',
           '.event_card', '.eventCard', '.event-row',
           '[class*="event-card"]', '[class*="calendar-event"]', '[class*="event-list"]',
+          // Assabet's OWN card class. Put first, and note what its absence used to
+          // cost: none of the selectors below matched it, so every site fell through
+          // to Strategy 2, whose `li[class*="event"]` matches the sidebar filter
+          // checkboxes — classes like calendar-filters-option-all-ages-event. On
+          // dovernh 2026-08-28 that was 81 matched elements for 30 real events, the
+          // other 51 being filters and chrome.
+          '.listing-event',
           '[class*="event_item"]', '[class*="eventItem"]',
           '.fc-event', '.tribe-events-single', '.type-tribe_events'
         ];
@@ -178,14 +185,42 @@ async function scrapeAssabetEvents() {
         }
 
         eventElements.forEach(card => {
-          // Try to extract title
-          const titleEl = card.querySelector('h1, h2, h3, h4, h5, [class*="title"], [class*="name"]');
-          const title = titleEl ? titleEl.textContent.trim() : (card.tagName === 'A' ? card.textContent.trim() : '');
+          // Title. THE ORDER HERE IS THE WHOLE FIX for the concatenated titles logged
+          // as ASSABET-CONCAT-TITLES on 2026-08-25 ("Monday, August 30Library Closed").
+          // An Assabet card is:
+          //   <div class="listing-event">
+          //     <h2><a><span class="event-day">Monday, August 3</span>
+          //             <span class="event-time">6:00—8:00 PM</span>
+          //             <span class="event-location">…room…branch…address…</span></a></h2>
+          //     <h3><a>Teen Dungeons &amp; Dragons</a></h3>   <-- the actual title
+          // The generic 'h1, h2, h3…' selector matches the H2 FIRST in document order,
+          // so the stored title became the day, time, room, branch and street address
+          // run together with no separators. That missing word boundary is not merely
+          // ugly: \blibrary\s+closed\b cannot match "30Library Closed", which is why
+          // 32 such rows survived every closure rule until a backstop was added.
+          // Prefer Assabet's H3 explicitly, then fall back to the generic path for any
+          // site in this family that is not built this way.
+          let titleEl = card.querySelector('h3 a, h3');
+          if (!titleEl || !titleEl.textContent.trim()) {
+            titleEl = card.querySelector('h1, h2, h3, h4, h5, [class*="title"], [class*="name"]');
+          }
+          let title = titleEl ? titleEl.textContent.trim() : (card.tagName === 'A' ? card.textContent.trim() : '');
+
+          // Last-resort repair: if whatever we picked STILL opens with a date/time run,
+          // strip that prefix rather than storing it. Guards the generic branch above
+          // and any future Assabet template change.
+          title = title.replace(
+            /^(?:Today\s*)?(?:Mon|Tues?|Wednes|Thurs?|Fri|Satur|Sun)day,?\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}(?:\s*\d{1,2}:\d{2}\s*(?:—|-|–)\s*\d{1,2}:\d{2}\s*(?:AM|PM))?/i,
+            ''
+          ).trim();
 
           if (!title || title.length < 3) return;
 
           // Try to extract date
-          const dateEl = card.querySelector('[class*="date"], time, [class*="when"], [class*="time"], [datetime]');
+          // .event-day first: it holds a clean "Monday, August 3" on Assabet, whereas
+          // [class*="time"] matches .event-time ("6:00—8:00 PM") which carries no month
+          // and forces the whole-card text scan below.
+          const dateEl = card.querySelector('.event-day, [class*="date"], time, [class*="when"], [class*="time"], [datetime]');
           let dateText = '';
           if (dateEl) {
             dateText = dateEl.getAttribute('datetime') || dateEl.textContent.trim();

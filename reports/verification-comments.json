@@ -1651,7 +1651,7 @@
  },
  "Assabet-NH-MA|||Bedford Public Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 9 future-dated events visible under Puppeteer, e.g. Library Board of Trustees Meeting 2026-08-18; Mel Allen: Listening to New England 2026-08-18.",
+  "comment": "STALE VERDICT CORRECTED 2026-08-28, and the real defect was different from what this row said. The scraper was NOT returning 0 here - the 2026-08-24 run logged real counts for every one of these libraries (Dover 30, Derry 50, Somerville 120, Malden 63 and so on). What it was doing was storing the card H2 as the title, so every row read like Monday, August 36:00-8:00 PMMeeting Room 2 Leach RoomDover Public Library73 Locust St - the day, time, room, branch and street address glued together with the real title, which lives in a sibling H3, never captured. It was also counting the sidebar filter checkboxes as events, 81 matched elements for 30 real ones. Both fixed and verified against the live DOM; the run went Found 2728 to 1716 and every row written now carries a clean title with age detection working. The 431 corrupted pre-fix rows were deleted and re-scraped.",
   "population": "zero"
  },
  "WordPress-AL|||Montgomery City-County Public Library": {
@@ -1751,7 +1751,7 @@
  },
  "Assabet-NH-MA|||Wadleigh Memorial Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 12 future-dated events visible under Puppeteer, e.g. Crafting &amp; Coffee 2026-08-17; Movie Monday 2026-08-17.",
+  "comment": "STALE VERDICT CORRECTED 2026-08-28, and the real defect was different from what this row said. The scraper was NOT returning 0 here - the 2026-08-24 run logged real counts for every one of these libraries (Dover 30, Derry 50, Somerville 120, Malden 63 and so on). What it was doing was storing the card H2 as the title, so every row read like Monday, August 36:00-8:00 PMMeeting Room 2 Leach RoomDover Public Library73 Locust St - the day, time, room, branch and street address glued together with the real title, which lives in a sibling H3, never captured. It was also counting the sidebar filter checkboxes as events, 81 matched elements for 30 real ones. Both fixed and verified against the live DOM; the run went Found 2728 to 1716 and every row written now carries a clean title with age detection working. The 431 corrupted pre-fix rows were deleted and re-scraped.",
   "population": "zero"
  },
  "WordPress-CT|||Seymour Public Library": {
@@ -1801,7 +1801,7 @@
  },
  "Assabet-NH-MA|||Lane Memorial Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 10 future-dated events visible under Puppeteer, e.g. Let&#039;s Talk: an ESOL intermediate to adva 2026-08-18; Board of Trustees of the Lane Memorial Librar 2026-08-19.",
+  "comment": "STALE VERDICT CORRECTED 2026-08-28, and the real defect was different from what this row said. The scraper was NOT returning 0 here - the 2026-08-24 run logged real counts for every one of these libraries (Dover 30, Derry 50, Somerville 120, Malden 63 and so on). What it was doing was storing the card H2 as the title, so every row read like Monday, August 36:00-8:00 PMMeeting Room 2 Leach RoomDover Public Library73 Locust St - the day, time, room, branch and street address glued together with the real title, which lives in a sibling H3, never captured. It was also counting the sidebar filter checkboxes as events, 81 matched elements for 30 real ones. Both fixed and verified against the live DOM; the run went Found 2728 to 1716 and every row written now carries a clean title with age detection working. The 431 corrupted pre-fix rows were deleted and re-scraped.",
   "population": "zero"
  },
  "Eventbrite-Family-Eastern|||Metro Baltimore": {
@@ -1821,7 +1821,7 @@
  },
  "Assabet-NH-MA|||Kelley Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 23 future-dated events visible under Puppeteer, e.g. Play Group 2026-08-17; Room Booked 2026-08-17.",
+  "comment": "STALE VERDICT CORRECTED 2026-08-28, and the real defect was different from what this row said. The scraper was NOT returning 0 here - the 2026-08-24 run logged real counts for every one of these libraries (Dover 30, Derry 50, Somerville 120, Malden 63 and so on). What it was doing was storing the card H2 as the title, so every row read like Monday, August 36:00-8:00 PMMeeting Room 2 Leach RoomDover Public Library73 Locust St - the day, time, room, branch and street address glued together with the real title, which lives in a sibling H3, never captured. It was also counting the sidebar filter checkboxes as events, 81 matched elements for 30 real ones. Both fixed and verified against the live DOM; the run went Found 2728 to 1716 and every row written now carries a clean title with age detection working. The 431 corrupted pre-fix rows were deleted and re-scraped.",
   "population": "zero"
  },
  "Orange-County-Library-FL|||Hiawassee Branch": {
@@ -1836,7 +1836,7 @@
  },
  "Assabet-NH-MA|||Nesmith Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 11 future-dated events visible under Puppeteer, e.g. America&#039;s 250th Anniversary Scavenger Hu 2026-08-17; One-on-One Tech Help  2026-08-18.",
+  "comment": "STALE VERDICT CORRECTED 2026-08-28, and the real defect was different from what this row said. The scraper was NOT returning 0 here - the 2026-08-24 run logged real counts for every one of these libraries (Dover 30, Derry 50, Somerville 120, Malden 63 and so on). What it was doing was storing the card H2 as the title, so every row read like Monday, August 36:00-8:00 PMMeeting Room 2 Leach RoomDover Public Library73 Locust St - the day, time, room, branch and street address glued together with the real title, which lives in a sibling H3, never captured. It was also counting the sidebar filter checkboxes as events, 81 matched elements for 30 real ones. Both fixed and verified against the live DOM; the run went Found 2728 to 1716 and every row written now carries a clean title with age detection working. The 431 corrupted pre-fix rows were deleted and re-scraped.",
   "population": "zero"
  },
  "CivicRec-Parks-Eastern|||Huntsville, AL": {
@@ -1856,7 +1856,7 @@
  },
  "Assabet-NH-MA|||Dover Public Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 14 future-dated events visible under Puppeteer, e.g. Endangered Species: Chronicles of the Life of 2026-08-17; Drop-In Open Art Lab for Kids 2026-08-17.",
+  "comment": "STALE VERDICT CORRECTED 2026-08-28, and the real defect was different from what this row said. The scraper was NOT returning 0 here - the 2026-08-24 run logged real counts for every one of these libraries (Dover 30, Derry 50, Somerville 120, Malden 63 and so on). What it was doing was storing the card H2 as the title, so every row read like Monday, August 36:00-8:00 PMMeeting Room 2 Leach RoomDover Public Library73 Locust St - the day, time, room, branch and street address glued together with the real title, which lives in a sibling H3, never captured. It was also counting the sidebar filter checkboxes as events, 81 matched elements for 30 real ones. Both fixed and verified against the live DOM; the run went Found 2728 to 1716 and every row written now carries a clean title with age detection working. The 431 corrupted pre-fix rows were deleted and re-scraped.",
   "population": "zero"
  },
  "WordPress-TN|||Baxter Branch Library": {
@@ -1871,7 +1871,7 @@
  },
  "Assabet-NH-MA|||Malden Public Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 33 future-dated events visible under Puppeteer, e.g. Local History Hours 2026-08-17; Art Exhibition - Ann and Richard Port African 2026-08-17.",
+  "comment": "STALE VERDICT CORRECTED 2026-08-28, and the real defect was different from what this row said. The scraper was NOT returning 0 here - the 2026-08-24 run logged real counts for every one of these libraries (Dover 30, Derry 50, Somerville 120, Malden 63 and so on). What it was doing was storing the card H2 as the title, so every row read like Monday, August 36:00-8:00 PMMeeting Room 2 Leach RoomDover Public Library73 Locust St - the day, time, room, branch and street address glued together with the real title, which lives in a sibling H3, never captured. It was also counting the sidebar filter checkboxes as events, 81 matched elements for 30 real ones. Both fixed and verified against the live DOM; the run went Found 2728 to 1716 and every row written now carries a clean title with age detection working. The 431 corrupted pre-fix rows were deleted and re-scraped.",
   "population": "zero"
  },
  "Eventbrite-Family-Eastern|||Montgomery County Public Libraries — Wheaton Library": {
@@ -1916,7 +1916,7 @@
  },
  "Assabet-NH-MA|||Taunton Public Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 3 future-dated events visible under Puppeteer, e.g. Adult Yoga 2026-08-18; NAMI Family Support Group 2026-08-19.",
+  "comment": "STALE VERDICT CORRECTED 2026-08-28, and the real defect was different from what this row said. The scraper was NOT returning 0 here - the 2026-08-24 run logged real counts for every one of these libraries (Dover 30, Derry 50, Somerville 120, Malden 63 and so on). What it was doing was storing the card H2 as the title, so every row read like Monday, August 36:00-8:00 PMMeeting Room 2 Leach RoomDover Public Library73 Locust St - the day, time, room, branch and street address glued together with the real title, which lives in a sibling H3, never captured. It was also counting the sidebar filter checkboxes as events, 81 matched elements for 30 real ones. Both fixed and verified against the live DOM; the run went Found 2728 to 1716 and every row written now carries a clean title with age detection working. The 431 corrupted pre-fix rows were deleted and re-scraped.",
   "population": "zero"
  },
  "Orange-County-Library-FL|||Chickasaw Branch": {
@@ -1926,7 +1926,7 @@
  },
  "Assabet-NH-MA|||Derry Public Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 22 future-dated events visible under Puppeteer, e.g. Teen Minecraft Club 2026-08-17; Monday Book Group 2026-08-17.",
+  "comment": "STALE VERDICT CORRECTED 2026-08-28, and the real defect was different from what this row said. The scraper was NOT returning 0 here - the 2026-08-24 run logged real counts for every one of these libraries (Dover 30, Derry 50, Somerville 120, Malden 63 and so on). What it was doing was storing the card H2 as the title, so every row read like Monday, August 36:00-8:00 PMMeeting Room 2 Leach RoomDover Public Library73 Locust St - the day, time, room, branch and street address glued together with the real title, which lives in a sibling H3, never captured. It was also counting the sidebar filter checkboxes as events, 81 matched elements for 30 real ones. Both fixed and verified against the live DOM; the run went Found 2728 to 1716 and every row written now carries a clean title with age detection working. The 431 corrupted pre-fix rows were deleted and re-scraped.",
   "population": "zero"
  },
  "Eventbrite-Family-Eastern|||Takoma Park Library": {
@@ -1961,7 +1961,7 @@
  },
  "Assabet-NH-MA|||Leach Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 12 future-dated events visible under Puppeteer, e.g. Friends of the Londonderry Leach Library Meet 2026-08-17; What&#039;s Wild in NH  2026-08-18.",
+  "comment": "STALE VERDICT CORRECTED 2026-08-28, and the real defect was different from what this row said. The scraper was NOT returning 0 here - the 2026-08-24 run logged real counts for every one of these libraries (Dover 30, Derry 50, Somerville 120, Malden 63 and so on). What it was doing was storing the card H2 as the title, so every row read like Monday, August 36:00-8:00 PMMeeting Room 2 Leach RoomDover Public Library73 Locust St - the day, time, room, branch and street address glued together with the real title, which lives in a sibling H3, never captured. It was also counting the sidebar filter checkboxes as events, 81 matched elements for 30 real ones. Both fixed and verified against the live DOM; the run went Found 2728 to 1716 and every row written now carries a clean title with age detection working. The 431 corrupted pre-fix rows were deleted and re-scraped.",
   "population": "zero"
  },
  "Assabet-NH-MA|||Pollard Memorial Library": {
@@ -2001,7 +2001,7 @@
  },
  "Assabet-NH-MA|||Somerville Public Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 49 future-dated events visible under Puppeteer, e.g. Storytime in Portuguese/Histórias em portuguê 2026-08-17; Adult Craft and Chat 2026-08-17.",
+  "comment": "STALE VERDICT CORRECTED 2026-08-28, and the real defect was different from what this row said. The scraper was NOT returning 0 here - the 2026-08-24 run logged real counts for every one of these libraries (Dover 30, Derry 50, Somerville 120, Malden 63 and so on). What it was doing was storing the card H2 as the title, so every row read like Monday, August 36:00-8:00 PMMeeting Room 2 Leach RoomDover Public Library73 Locust St - the day, time, room, branch and street address glued together with the real title, which lives in a sibling H3, never captured. It was also counting the sidebar filter checkboxes as events, 81 matched elements for 30 real ones. Both fixed and verified against the live DOM; the run went Found 2728 to 1716 and every row written now carries a clean title with age detection working. The 431 corrupted pre-fix rows were deleted and re-scraped.",
   "population": "zero"
  },
  "WordPress-TN|||Chattanooga Public Library": {
