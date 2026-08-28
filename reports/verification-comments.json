@@ -2914,8 +2914,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Hartford Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27, and it was wrong in THREE places at once - this WordPress row, a LibCal-CT row at hplct.libcal.com that returned Found 0 events on the same day, and a correct Communico entry added 2026-08-18. The LibCal row is now commented out with its evidence and this one is guarded, leaving Communico as the single source. Run and proven: 22 events, 20 rows under Communico-CT-hplct. A duplicate Hartford row briefly added to Communico the same day was caught by the run printing the library twice, and removed.",
   "population": "zero"
  },
  "WordPress-CT|||Hartland Public Library": {
@@ -3829,9 +3829,9 @@
   "population": "allages"
  },
  "wordpress-KY|||Kenton County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=bibliocommons detected — belongs in a BiblioCommons-* scraper",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "RESOLVED - stale verdict, no work needed. Kenton is already in the BiblioCommons config at kentonlibrary.bibliocommons.com and returned 407 events on 2026-08-25 after the transient-403 retry fix. Note the scraper key on this verdict is the lowercase wordpress-KY, itself an instance of the CASE_MISMATCH naming drift.",
+  "population": "zero"
  },
  "MacaroniKid-VA-gainesville|||Historic Manassas": {
   "verdict": "MATCHES",
@@ -6479,8 +6479,8 @@
   "population": "zero"
  },
  "WordPress-KY|||Grant County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=bibliocommons detected — belongs in a BiblioCommons-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27, and it was a WRONG-STATE URL rather than a platform problem. grantlibrary.net is Grant Area District Library, 122 S. Elder Ave, Grant, MI 49327, ph 231-834-5713 - MICHIGAN under a Kentucky entry. Worth noting gate 2 could never have caught this: only one state claims that host, so it is a wrong-state URL and not a collision, and it surfaced only because the platform probe read the page title. The real library is at 201 Barnes Rd, Williamstown KY 41097 and publishes on grantcounty.librarycalendar.com. Run and proven: 13 events, 11 rows under LibraryCalendar-Libraries-grantcounty.",
   "population": "zero"
  },
  "WordPress-KY|||Graves County Public Library": {
@@ -6739,8 +6739,8 @@
   "population": "zero"
  },
  "WordPress-MA|||Hyde Park Branch Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=bibliocommons detected — belongs in a BiblioCommons-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 - no relocation needed, this row was an unguarded duplicate. Its own eventsUrl was ALREADY bpl.bibliocommons.com/events/, and Boston Public Library is in the BiblioCommons config, so the WordPress extractor was pointed at a BiblioCommons SPA it cannot read and could only ever return 0. It also carried a placeholder zipCode of 00000. Now guarded.",
   "population": "zero"
  },
  "WordPress-MA|||Ipswich Public Library": {
@@ -7354,8 +7354,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Monroeville Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=bibliocommons detected — belongs in a BiblioCommons-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 by relocation to LibraryCalendar-Libraries. Its own /events path 404s, which is why the first probe found no platform host; the instance is monroeville.librarycalendar.com, titled Upcoming Events | Monroeville Public Library. Run and proven: 15 events, 8 rows under LibraryCalendar-Libraries-monroeville.",
   "population": "zero"
  },
  "WordPress-PA|||Montgomery Area Public Library": {
@@ -7579,8 +7579,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Wilkinsburg Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=bibliocommons detected — belongs in a BiblioCommons-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 by relocation to LibraryCalendar-Libraries. The bibliocommons hint was a RED HERRING - acl.bibliocommons.com is the Allegheny County Library Association CATALOG, not the events host. Events are on wilkinsburg.librarycalendar.com. Run and proven: 9 events, 8 rows under LibraryCalendar-Libraries-wilkinsburg.",
   "population": "zero"
  },
  "WordPress-PA|||Windber Public Library Association": {
@@ -8499,8 +8499,8 @@
   "population": "zero"
  },
  "WordPress-NJ|||Princeton Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=bibliocommons detected — belongs in a BiblioCommons-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 by relocation to Communico. The Step 3d hint said bibliocommons, but princeton.bibliocommons.com 403s and is not where the events are; princetonlibrary.libnet.info titles itself Events - Princeton Public Library. The library own site sits behind Cloudflare and 403s to probes, which is why the first pass could read no host from it. Run and proven: 5 rows under Communico-NJ-princetonlibrary.",
   "population": "zero"
  },
  "WordPress-NJ|||Ridgefield Free Public Library": {
@@ -8769,8 +8769,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Dolgeville-Manheim Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 by relocation to Communico. Host read from the library own site: it links to midyork.libnet.info, the Mid-York Library System consortium calendar, titled Events - Mid York Library System and printing NY 13502. Added ONCE as the consortium rather than three times - Holland Patent and New Woodstock link to the same instance. Run and proven: Mid-York found 42 events, 30 rows under Communico-NY-midyork spanning Utica, Clayville, Earlville and Dunham among others.",
   "population": "zero"
  },
  "WordPress-NY|||Dunham Public Library": {
@@ -8839,8 +8839,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Hauppauge Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 by relocation to Communico. hauppaugelibrary.libnet.info titles itself Events - Hauppauge Public Library and prints NY 11788, matching the config zipCode exactly. Run and proven: 4 events, 4 rows under Communico-NY-hauppaugelibrary.",
   "population": "zero"
  },
  "WordPress-NY|||Haverstraw Kings Daughters Public Library - Village Branch": {
@@ -8864,8 +8864,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Holland Patent Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 - same Mid-York consortium instance as Dolgeville-Manheim, covered by the single Communico entry proven live with 42 events and 30 rows.",
   "population": "zero"
  },
  "WordPress-NY|||Ilion Free Public Library": {
@@ -9009,8 +9009,8 @@
   "population": "zero"
  },
  "WordPress-NY|||New Woodstock Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 - same Mid-York consortium instance, covered by the single Communico entry proven live with 42 events and 30 rows.",
   "population": "zero"
  },
  "WordPress-NY|||New York Mills Public Library": {
@@ -9129,8 +9129,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Richmond Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 by relocation to Communico. The home page exposed only the shared static.libnet.info CDN, so the instance was found by probing the library own domain slug: batavialibrary.libnet.info, titled Events - Richmond Memorial Library. Run and proven: 2 events, 1 row under Communico-NY-batavialibrary.",
   "population": "zero"
  },
  "WordPress-NY|||Rensselaerville Public Library": {
@@ -9289,8 +9289,8 @@
   "population": "zero"
  },
  "WordPress-NY|||West Islip Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 by relocation to Communico. westisliplibrary.libnet.info titles itself Events - West Islip Public Library and prints NY 11795, matching the config zipCode exactly. Run and proven: 3 events, 1 row under Communico-NY-westisliplibrary.",
   "population": "zero"
  },
  "WordPress-NY|||West Nyack Free Library": {
@@ -9351,6 +9351,31 @@
  "WordPress-NY|||Wilson Free Library": {
   "verdict": "UNVERIFIABLE",
   "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.wilsonlibrary.org",
+  "population": "zero"
+ },
+ "WordPress-NY|||Brewster Public Library": {
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27 - a collision AND a platform mismatch at once. brewsterlibrary.libcal.com was claimed by both Brewster NY and Brewster Ladies Library MA, and the NY entry was sitting in the WordPress family pointing at a LibCal URL. The host belongs to NEW YORK: brewsterlibrary.org is Brewster Public Library, 79 Main St, Brewster NY. Relocated to the LibCal family and run: Found 90 events, 17 rows under LibCal-NY-brewsterlibrary.",
+  "population": "zero"
+ },
+ "WordPress-MA|||Brewster Ladies Library Assoc.": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "WIRED BUT NOT YET OBSERVED. Its configured URL was brewsterlibrary.libcal.com, which belongs to Brewster NEW YORK - a wrong-state URL. Brewster Ladies Library is on Cape Cod and runs Assabet: brewsterladieslibrary.assabetinteractive.com/calendar/ returns 200 and titles itself August 2026 Events for that library. Added to Assabet-NH-MA but deliberately NOT run, for the same reason as Ventress - that scraper covers 42 sites and the Group 2 catch-up rotation was live. Assabet-NH-MA is Group 3.",
+  "population": "zero"
+ },
+ "Communico-DC|||Huntington Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "WRONG-STATE URL, confirmed and guarded 2026-08-27, and it is an OPEN GAP rather than a fix. The WV entry pointed at myhpl.libnet.info, which is Huntington Public Library in NEW YORK - myhpl.org prints 631-427-5165 (Suffolk County NY) and links to that exact calendar. The entry contradicted itself: its own website field already read cabell.lib.wv.us. Huntington WEST VIRGINIA is served by CABELL COUNTY PUBLIC LIBRARY, 455 9th St, Huntington WV 25701, ph 304-528-5700 - a different institution with a different name, so a name match would have confirmed the wrong entry. No Communico instance was found for it (cabell/cabellcountylib/cabellcountylibrary .libnet.info all 302 away), so it stays uncovered.",
+  "population": "zero"
+ },
+ "LibraryMarket|||Rochester Public Library": {
+  "verdict": "MATCHES",
+  "comment": "RESOLVED 2026-08-27. rochesterpubliclibrary.librarymarket.com is Rochester MINNESOTA - the page prints 507-328-2300 and the library is at 101 2nd St SE, Rochester MN 55904, rplmn.org - so both the NY and NH claims on it were wrong. Rochester NY itself IS covered, on database evidence: it is the central library of the Monroe County Library System, which runs at calendar.libraryweb.org in the LibCal config with live rows across Gates, Pittsford, Irondequoit, Chili and East Rochester. Wrong-host entry guarded.",
+  "population": "zero"
+ },
+ "LibraryMarket-ME-NH-MA|||Rochester Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "WRONG-STATE URL, guarded 2026-08-27, and an OPEN GAP. Same host as the NY claim, and it is Rochester MINNESOTA (507-328-2300, rplmn.org). Unlike Rochester NY, which is covered via the Monroe County Library System, Rochester NH has no scraper reading it.",
   "population": "zero"
  }
 }

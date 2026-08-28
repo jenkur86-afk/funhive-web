@@ -144,9 +144,32 @@ function loadConfiguredSites() {
   return sites;
 }
 
+/**
+ * NARROWED 2026-08-27, after the previous rule was found to be hiding real bugs.
+ *
+ * The old rule exempted a host whenever its REGISTRABLE DOMAIN was a known platform, so
+ * anything ending in libcal.com / libnet.info / librarymarket.com was waved through. That
+ * is wrong, and it hid three genuine single-institution collisions behind the "by design"
+ * label: brewsterlibrary.libcal.com claimed by Brewster NY and Brewster MA,
+ * myhpl.libnet.info claimed by Huntington NY and Huntington WV, and
+ * rochesterpubliclibrary.librarymarket.com claimed by Rochester NY and Rochester NH.
+ *
+ * The distinction that actually matters is BARE HOST vs SUBDOMAIN. A bare platform host
+ * (facebook.com, macaronikid.com) is genuinely shared by every library that uses it and
+ * identifies nobody. A DISTINCTIVE SUBDOMAIN of that same platform identifies exactly ONE
+ * institution, so two states claiming it is the same seed-data bug as any other collision
+ * — the platform it happens to run on is irrelevant.
+ *
+ * Callers group by FULL host, so anything reaching here with host !== registrable domain
+ * is a subdomain collision and must be treated as a real candidate.
+ */
 function classify(host) {
   const d = domainOf(host);
-  if (AGGREGATOR_DOMAINS.has(d) || /\.edu$/.test(host)) return 'AGGREGATOR';
+  const isPlatformDomain = AGGREGATOR_DOMAINS.has(d) || /\.edu$/.test(host);
+  if (!isPlatformDomain) return 'CANDIDATE';
+  // Bare platform host (or a www-stripped equivalent) — shared by design, identifies nobody.
+  if (host === d) return 'AGGREGATOR';
+  // A distinctive subdomain of a platform still names one institution.
   return 'CANDIDATE';
 }
 

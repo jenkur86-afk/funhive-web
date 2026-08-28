@@ -112,15 +112,24 @@ const LIBRARY_SYSTEMS = [
   },
 
   // NEW YORK
-  {
-    name: 'Rochester Public Library',
-    url: 'https://rochesterpubliclibrary.librarymarket.com/events/upcoming',
-    county: 'Monroe',
-    state: 'NY',
-    website: 'https://www.rpl.org',
-    city: 'Rochester',
-    zipCode: '14614'
-  },
+  // GUARDED 2026-08-27 - WRONG-STATE URL. rochesterpubliclibrary.librarymarket.com is
+  // Rochester, MINNESOTA: the page prints 507-328-2300 (507 is southern Minnesota) and the
+  // library is at 101 2nd St SE, Rochester MN 55904, rplmn.org. It was claimed here by NY and
+  // separately by NH, and NEITHER is correct - a third-state collision, the same shape as the
+  // Colorado-under-Georgia case.
+  // ROCHESTER NY IS ALREADY COVERED, on database evidence rather than assumption: Rochester
+  // Public Library is the central library of the Monroe County Library System, which runs at
+  // calendar.libraryweb.org in the LibCal config and has live rows across Gates, Pittsford,
+  // Irondequoit, Chili and East Rochester.
+  // {
+  //   name: 'Rochester Public Library',
+  //   url: 'https://rochesterpubliclibrary.librarymarket.com/events/upcoming',
+  //   county: 'Monroe',
+  //   state: 'NY',
+  //   website: 'https://www.rpl.org',
+  //   city: 'Rochester',
+  //   zipCode: '14614'
+  // },
 
   // TEXAS
   {

@@ -162,9 +162,9 @@
       "priority": "medium"
     },
     "LIBCAL-RELOCATIONS-UNRUN": {
-      "what": "Eleven libraries were relocated out of WordPress-* into the LibCal family on 2026-08-27, all from the Step 3d platform-mismatch bucket. NJ (7): Montclair, Ramsey, Franklin Lakes, Glen Ridge cid 10286, Ridgefield cid 10324, West Orange cid 10341, plus Lambertville and Summit on their own instances. NY (4): Dansville on owwl.libcal.com cid 15151, Gardiner cid 21138, Highland cid 12635, Marcellus on onlib-marcellus cid 19783. EVIDENCE STANDARD USED, and it is stronger than slug-probing: every LibCal URL except Ramsey and Franklin Lakes was read as the href the library PUBLISHES ON ITS OWN SITE, and each state was confirmed independently on that same page by street address, ZIP and phone area code. A negative control (bccls.libcal.com/calendar/notarealnjlibraryxyz) returns 404. All eleven WordPress entries are GUARDED, not deleted, so each library keeps an explained row in LIBRARY-SITE-AUDIT.md.",
-      "expect": "Rows should appear under per-site names LibCal-NJ-bccls-<slug>, LibCal-NJ-<own instance>, and LibCal-NY-<...>. NONE OF THIS IS PROVEN BY A RUN. A LibCal-NJ confirmation run was started and was still grinding through the BCCLS system-wide scrape - 3,005 events, cid=-1, covering the whole cooperative - when the session ended; it had processed under 500. Budget an hour or more for LibCal-NJ, or better, scrape the per-library entries without the system-wide BCCLS row. WordPress-NJ InvalidDate should also fall by roughly 191 from the Montclair/Ramsey/Franklin Lakes guards alone, separately from the month-grid fix that covers Red Bank.",
-      "confirm": "Query events where scraper_name like LibCal-NJ-% and like LibCal-NY-% and check for the eleven names above; or after the next Group 2/3 rotation grep the run stdout for Glen Ridge, Marcellus and Summit.",
+      "what": "Eleven libraries relocated out of WordPress-* into the LibCal family on 2026-08-27 from the Step 3d platform-mismatch bucket. NJ (8, incl. Montclair which was a pre-existing duplicate): Montclair, Ramsey, Franklin Lakes, Glen Ridge cid 10286, Ridgefield cid 10324, West Orange cid 10341, Lambertville and Summit on their own instances. NY (4): Dansville on owwl.libcal.com cid 15151, Gardiner cid 21138, Highland cid 12635, Marcellus on onlib-marcellus cid 19783. Every LibCal URL except Ramsey and Franklin Lakes was read as the href the library PUBLISHES ON ITS OWN SITE, with state confirmed independently on that page by address, ZIP and area code, and a 404 negative control. All eleven WordPress entries are GUARDED, not deleted.",
+      "expect": "NJ HALF IS PROVEN LIVE as of 2026-08-27. LibCal-NJ ran to completion - Found 555, New 144, Duplicates 411, 0 failed, 24.3 min - and all eight NJ libraries now hold database rows under conformant per-site names: bccls-glenridge 11, bccls-westorange 11, bccls-franklinlakes 11, lambertvillelibrary 10, bccls-ramsey 8, summitlibrary 7, bccls-montclair 5, bccls-ridgefield 1. Ridgefield at 1 is not a wiring fault - it found 20 and the rest were past or duplicate; its URL was verified 200 with the right title. NY HALF STILL UNPROVEN: the four NY entries sit in LibCal-NY2, NOT NY1 - the shared file splits NY at the midpoint of the state-filtered list and all four landed in the second half - so NY1 will never confirm them.",
+      "confirm": "For the NY four: npm run scraper -- --scraper LibCal-NY2, then query events where scraper_name like LibCal-NY-% for dansville, gardiner, highland and onlib-marcellus slugs.",
       "added": "2026-08-27",
       "priority": "medium"
     },
@@ -174,6 +174,13 @@
       "confirm": "Compare the MISMATCH count against the list of relocations in SCRAPER-FIX-LOG.jsonl for the same date before concluding a regression.",
       "added": "2026-08-27",
       "priority": "low"
+    },
+    "ASSABET-TWO-UNRUN": {
+      "what": "Two libraries were relocated into Assabet-NH-MA and neither has been observed: Ventress Memorial Library (Marshfield MA, added 2026-08-27) and Brewster Ladies Library (Brewster MA, added 2026-08-27). Both instances are confirmed live - ventresslibrary.assabetinteractive.com/calendar/ 301s to /calendar/2026-august/ with 453 event nodes, and brewsterladieslibrary.assabetinteractive.com/calendar/ returns 200 titled for August 2026 - but the scraper itself was NOT run either day because it covers 42 sites and the Group 2 catch-up rotation was live both times; reports/fix-notes.json records concurrent heavy Chrome as the leading suspect for a past 37-scraper launch failure.",
+      "expect": "Both should appear with nonzero counts on the next Assabet-NH-MA run. That scraper is GROUP 3, so it comes around without intervention. If either shows 0, the slug is wrong rather than the platform - both were read from the library own pages, not guessed.",
+      "confirm": "After the next Assabet-NH-MA run: grep -iE 'ventress|brewster ladies' scrapers/logs/scraper-stdout.log for nonzero Found lines, and query events for venue ilike %Ventress% and %Brewster Ladies%.",
+      "added": "2026-08-27",
+      "priority": "medium"
     }
   },
   "LibCal-VA": {

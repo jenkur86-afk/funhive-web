@@ -47,6 +47,12 @@ const LIBRARIES = [
   // 301s to /calendar/2026-august/ and titles itself "August 2026 Events | Ventress Memorial
   // Library" with 453 event nodes.
   { name: 'Ventress Memorial Library', slug: 'ventresslibrary', eventsUrl: 'https://ventresslibrary.assabetinteractive.com/calendar/', city: 'Marshfield', state: 'MA', zipCode: '02050' },
+  // Added 2026-08-27. Was in WordPress-MA pointing at brewsterlibrary.libcal.com, a URL that
+  // belongs to Brewster NEW YORK - a collision AND a platform mismatch at once. Brewster
+  // Ladies Library is on Cape Cod and runs Assabet; confirmed live before wiring:
+  // brewsterladieslibrary.assabetinteractive.com/calendar/ titles itself
+  // "August 2026 Events | Brewster Ladies' Library".
+  { name: 'Brewster Ladies Library', slug: 'brewsterladieslibrary', eventsUrl: 'https://brewsterladieslibrary.assabetinteractive.com/calendar/', city: 'Brewster', state: 'MA', zipCode: '02631' },
 
   // --- Added 2026-08-24 from the Step 3d zero-event verification -------------
   // All 23 were configured under WordPress-{MA,NH,RI}, where they returned 0

@@ -1144,15 +1144,24 @@ const LIBRARY_SYSTEMS = [
     city: 'Bridgeport',
     zipCode: '26330'
   },
-  {
-    name: 'Huntington Public Library',
-    url: 'https://myhpl.libnet.info/events',
-    county: 'Cabell',
-    state: 'WV',
-    website: 'https://www.cabell.lib.wv.us',
-    city: 'Huntington',
-    zipCode: '25701'
-  },
+  // GUARDED 2026-08-27 - WRONG-STATE URL, and the entry contradicted itself: its website
+  // field already said cabell.lib.wv.us while its url pointed at myhpl.libnet.info, which is
+  // Huntington Public Library in NEW YORK. Proven: myhpl.org prints phone 631-427-5165 (631
+  // is Suffolk County NY) and links to this exact calendar. Huntington WEST VIRGINIA is
+  // served by CABELL COUNTY PUBLIC LIBRARY, 455 9th St, Huntington WV 25701, ph 304-528-5700
+  // - a DIFFERENT INSTITUTION with a different name, which is why a name match would have
+  // "confirmed" the wrong entry. REAL, UNCOVERED GAP: cabell.libnet.info,
+  // cabellcountylib.libnet.info and cabellcountylibrary.libnet.info all 302 away, so no
+  // Communico instance was found and no scraper currently reads cabellcountylib.org.
+  // {
+  //   name: 'Huntington Public Library',
+  //   url: 'https://myhpl.libnet.info/events',
+  //   county: 'Cabell',
+  //   state: 'WV',
+  //   website: 'https://www.cabell.lib.wv.us',
+  //   city: 'Huntington',
+  //   zipCode: '25701'
+  // },
 
   // ALABAMA (2 libraries)
   {

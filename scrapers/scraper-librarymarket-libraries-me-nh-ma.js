@@ -32,13 +32,17 @@ const LIBRARIES = [
     state: 'ME',
     zipCode: '04210'
   },
-  {
-    name: 'Rochester Public Library',
-    eventsUrl: 'https://rochesterpubliclibrary.librarymarket.com/events/upcoming',
-    city: 'Rochester',
-    state: 'NH',
-    zipCode: '03867'
-  },
+  // GUARDED 2026-08-27 - WRONG-STATE URL. rochesterpubliclibrary.librarymarket.com is
+  // Rochester, MINNESOTA (507-328-2300, 101 2nd St SE, Rochester MN 55904, rplmn.org), not
+  // Rochester NH. Unlike the NY claim on the same host, this one is a REAL UNCOVERED GAP:
+  // Rochester NH has its own library and no scraper currently reads it.
+  // {
+  //   name: 'Rochester Public Library',
+  //   eventsUrl: 'https://rochesterpubliclibrary.librarymarket.com/events/upcoming',
+  //   city: 'Rochester',
+  //   state: 'NH',
+  //   zipCode: '03867'
+  // },
   {
     name: 'Springfield City Library',
     eventsUrl: 'https://springfield.librarycalendar.com/events/upcoming',

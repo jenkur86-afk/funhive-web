@@ -859,6 +859,21 @@ const LIBRARY_SYSTEMS = [
     city: 'Rochester',
     zipCode: '14614'
   },
+  // Added 2026-08-27. brewsterlibrary.libcal.com was claimed by BOTH Brewster NY and
+  // Brewster Ladies Library MA. It belongs to NEW YORK: brewsterlibrary.org is Brewster
+  // Public Library, 79 Main St, Brewster NY, while Brewster Ladies Library on Cape Cod
+  // publishes on brewsterladieslibrary.assabetinteractive.com (now in Assabet-NH-MA).
+  // The NY entry lived in WordPress-NY pointing at a LibCal URL - a platform mismatch on
+  // top of the collision - so it is relocated here rather than merely disambiguated.
+  {
+    name: 'Brewster Public Library',
+    url: 'https://brewsterlibrary.libcal.com/calendar',
+    county: 'Putnam',
+    state: 'NY',
+    website: 'https://brewsterlibrary.org',
+    city: 'Brewster',
+    zipCode: '10509'
+  },
 
   {
     name: 'Onondaga County Public Libraries',
