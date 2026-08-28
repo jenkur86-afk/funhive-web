@@ -46,6 +46,7 @@ const { saveEventsWithGeocoding } = require('./event-save-helper');
 const { categorizeEvent } = require('./event-categorization-helper');
 const { normalizeDateString } = require('./date-normalization-helper');
 const { logScraperResult } = require('./scraper-logger');
+const { tryFetchTecEvents } = require('./helpers/tec-rest-helper');
 
 const SCRAPER_NAME = 'Venue-Events-ScienceArts';
 
@@ -420,10 +421,12 @@ async function processAndSaveVenueEvents(venue, extractedEvents) {
         description: event.description || ''
       });
 
-      // Extract time if present
-      const timeMatch = event.eventDate.match(/(\d{1,2}):(\d{2})\s*(am|pm)/i);
-      let startTime = '';
-      if (timeMatch) {
+      // Extract time if present. The TEC REST path already supplies a formatted
+      // startTime/endTime, and its date reads "2026-08-28 11:00:00" — 24-hour, no
+      // am/pm — which this regex would never match, so prefer the supplied value.
+      const timeMatch = String(event.eventDate || '').match(/(\d{1,2}):(\d{2})\s*(am|pm)/i);
+      let startTime = event.startTime || '';
+      if (!startTime && timeMatch) {
         let h = parseInt(timeMatch[1]);
         const m = timeMatch[2];
         const ap = timeMatch[3].toUpperCase();
@@ -439,7 +442,7 @@ async function processAndSaveVenueEvents(venue, extractedEvents) {
         venueName: venue.name,
         eventDate: normalizedDate || event.eventDate,
         startTime: startTime,
-        endTime: '',
+        endTime: event.endTime || '',
         scheduleDescription: event.eventDate,
         description: event.description || `Family event at ${venue.name}`,
         address: '',
@@ -526,7 +529,40 @@ async function scrapeVenueEvents(options = {}) {
         console.log(`\n📍 Scraping: ${venue.name} (${venue.state})`);
         console.log(`   URL: ${venue.eventsUrl}`);
 
-        const events = await extractEventsFromPage(page, venue);
+        // TEC venues: ask the site's own REST API before touching the DOM.
+        // WHY, found 2026-08-28 by the Step 3d Puppeteer verifier: EcoTarium (Worcester
+        // MA) and Kamin Science Center (Pittsburgh PA) are both configured
+        // `platform: 'tec'` and both returned 0 events here every run, while the verifier
+        // saw 34 future-dated events on EcoTarium's page under the same browser stack.
+        // The generic DOM path cannot recover a full date from The Events Calendar's list
+        // view, which groups events under a bare day heading like "Tue 4" with the month
+        // shown only once at the top — the same defect already documented for the
+        // WordPress-{state} family, and the reason helpers/tec-rest-helper.js exists.
+        // Probed live before wiring: both sites return 150 structured events from
+        // /wp-json/tribe/events/v1/events. Falls through to the DOM path when the API is
+        // absent or 403s, so a non-TEC or API-blocked site behaves exactly as before.
+        let events = null;
+        if (venue.extraction && venue.extraction.platform === 'tec') {
+          try {
+            const tec = await tryFetchTecEvents(venue.eventsUrl, venue.name, null);
+            if (tec && tec.length) {
+              events = tec.map(e => ({
+                name: e.title,
+                eventDate: e.date,
+                url: e.url || '',
+                description: e.description || '',
+                startTime: e.startTime || '',
+                endTime: e.endTime || ''
+              }));
+              console.log(`   [tec-rest] ${events.length} events from the TEC REST API`);
+            } else {
+              console.log('   [tec-rest] no TEC REST data, falling back to DOM extraction');
+            }
+          } catch (e) {
+            console.log(`   [tec-rest] failed (${e.message}), falling back to DOM extraction`);
+          }
+        }
+        if (!events) events = await extractEventsFromPage(page, venue);
         console.log(`   Found: ${events.length} events`);
 
         if (events.length > 0) {

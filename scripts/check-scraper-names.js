@@ -102,6 +102,14 @@ function classify(name) {
   return { cls: 'UNRELATED', fix: null, why: 'no registry key matches; scraper may be unregistered or writing a site name' };
 }
 
+// Exported so other tooling can reuse the SAME classification instead of re-deriving it.
+// scripts/migrate-verification-keys.js needs it to repair verdict-store keys after a
+// scraper rename; a second copy of these rules would drift from this one immediately.
+module.exports = { classify, KEYS, KEYSET };
+
+// Only run the audit when invoked directly — requiring this file must not hit the DB.
+if (require.main !== module) return;
+
 (async () => {
   const rows = [];
   for (let from = 0; ; from += 1000) {

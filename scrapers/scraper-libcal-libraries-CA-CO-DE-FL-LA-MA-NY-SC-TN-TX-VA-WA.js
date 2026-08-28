@@ -647,6 +647,22 @@ const LIBRARY_SYSTEMS = [
     city: 'Ocala',
     zipCode: '34471'
   },
+  {
+    // RELOCATED FROM THE KENTUCKY SECTION 2026-08-28. claycountygov.libcal.com is
+    // Clay County FLORIDA, not Clay County Kentucky - a two-states-share-a-county-name
+    // collision. Proven live: the calendar's own branch list is Fleming Island,
+    // Green Cove Springs, Keystone Heights, Middleburg-Clay Hill and Orange Park,
+    // every one of them a Clay County FL town, and the page's contact address is
+    // @claycountygov.com. Under the KY entry it was geocoding all of them to the
+    // Manchester KY county centroid; 14 such rows were purged.
+    name: 'Clay County Public Library',
+    url: 'https://claycountygov.libcal.com/calendar/LibraryCalendar?cid=-1&t=d',
+    county: 'Clay',
+    state: 'FL',
+    website: 'https://www.claycountygov.com/library',
+    city: 'Green Cove Springs',
+    zipCode: '32043'
+  },
 
   // ILLINOIS
   {
@@ -1889,15 +1905,13 @@ const LIBRARY_SYSTEMS = [
     city: 'Bowling Green',
     zipCode: '42101'
   },
-  {
-    name: 'Clay County Public Library',
-    url: 'https://claycountygov.libcal.com/calendar/LibraryCalendar?cid=-1&t=d',
-    county: 'Clay',
-    state: 'KY',
-    website: 'https://www.claycountygov.com/library',
-    city: 'Manchester',
-    zipCode: '40962'
-  },
+  // Clay County Public Library was listed here under KY until 2026-08-28. The URL
+  // claycountygov.libcal.com is Clay County FLORIDA - confirmed from the calendar's
+  // own branch names and its claycountygov.com contact address - so the entry has
+  // been MOVED to the FLORIDA section rather than deleted, and the 14 Florida events
+  // it had written under Manchester KY were purged.
+  // Clay County KENTUCKY is therefore an OPEN COVERAGE GAP: no working calendar URL
+  // is known for it, and no other scraper has been shown to cover it.
 
   // MICHIGAN
   {
