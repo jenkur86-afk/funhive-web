@@ -5,6 +5,7 @@
 // once a real URL is verified. See scripts/fix-url-collisions.js for the evidence method.
 const { launchBrowser } = require('./helpers/puppeteer-config');
 const { extractJsonLdEvents } = require('./helpers/jsonld-events-helper');
+const { tryFetchTecEvents, tryDomScrapeTecEvents } = require('./helpers/tec-rest-helper');
 const { RESOLVER_SRC } = require('./helpers/dom-date-resolver');
 const { admin, db } = require('./helpers/supabase-adapter');
 
@@ -94,9 +95,38 @@ async function scrapeGenericEvents() {
         continue;
       }
     try {
+      // Try the site's TEC REST API before opening a page at all — same order as the
+      // other WordPress state files; see helpers/tec-rest-helper.js (2026-07-31).
+      // RI was the ONE active state this was never wired into: grep for
+      // tryFetchTecEvents across scraper-wordpress-libraries-*.js returned
+      // al ct fl ga me ms nc nj ny pa tn vt and no ri. Measured cost on 2026-08-27:
+      // islandfreelibrary.org's TEC endpoint returns 143 upcoming events - "Chess with
+      // Graham" and the like - while the DOM path below logged "Found 0 events" for it
+      // on the 2026-08-24 run. TEC's list view groups events under a bare day heading
+      // with no month or year, which is why DOM scraping this platform fails.
+      const tecEvents = await tryFetchTecEvents(library.url, library.name);
+      if (tecEvents) {
+        tecEvents.forEach(event => events.push({ ...event, metadata: { sourceName: library.name, sourceUrl: library.url, scrapedAt: new Date().toISOString(), scraperName: SCRAPER_NAME, category: 'library', state: 'RI', city: library.city, zipCode: library.zipCode }}));
+        // No "Found N" print here on purpose: the finally at the bottom of this loop
+        // already emits it, and `continue` still runs a finally. Printing again would
+        // emit TWO Found lines for one 📍 header and desynchronise build-library-site-audit.js,
+        // which pairs those lines positionally for every library after this one.
+        continue;
+      }
+
       const page = await browser.newPage();
       await page.goto(library.eventsUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
       await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // REST can be reachable-but-403 on a genuinely TEC-powered site, in which case
+      // tryFetchTecEvents() returned null above. Try TEC's own DOM shape before the
+      // generic selectors, which mistake TEC's day-heading badges for event cards.
+      const domTecEvents = await tryDomScrapeTecEvents(page, library.name);
+      if (domTecEvents && domTecEvents.length > 0) {
+        domTecEvents.forEach(event => events.push({ ...event, metadata: { sourceName: library.name, sourceUrl: library.url, scrapedAt: new Date().toISOString(), scraperName: SCRAPER_NAME, category: 'library', platform: 'wordpress-tec-dom', state: 'RI', city: library.city, zipCode: library.zipCode, needsReview: true }}));
+        await page.close();
+        continue;
+      }
       // Structured schema.org data beats any DOM guess, so try it before scraping markup.
       // Found 2026-08-09: 20 of the family's open MISMATCH bugs sit on pages that already
       // publish <script type="application/ld+json"> Event objects — 59 on Brownell, 107 on

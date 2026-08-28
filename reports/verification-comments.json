@@ -1590,8 +1590,8 @@
   "population": "allages"
  },
  "WordPress-CT|||Harwinton Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "verdict": "MATCHES",
+  "comment": "STALE VERDICT CORRECTED 2026-08-27. Not broken: the TEC REST endpoint returns 105 upcoming events and the 2026-08-25 WordPress-CT run logged Found 106 events for this library. TEC has been wired into the CT file since 2026-07-31; the old zero-event verdict predates that.",
   "population": "zero"
  },
  "WordPress-TN|||Hickman County Public Library": {
@@ -1655,8 +1655,8 @@
   "population": "zero"
  },
  "WordPress-AL|||Montgomery City-County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "verdict": "MATCHES",
+  "comment": "STALE VERDICT CORRECTED 2026-08-27. Not broken: the last WordPress-AL run logged the TEC path explicitly - TEC REST API: 17 events, Found 17 events - and the endpoint currently reports 42 upcoming.",
   "population": "zero"
  },
  "RecDesk-Parks|||Sheppard Chase Gym (RMC)": {
@@ -1895,8 +1895,8 @@
   "population": "allages"
  },
  "WordPress-PA|||Spalding Memorial Library": {
-  "verdict": "MISMATCH",
-  "comment": "extraction-failure: 10 future-dated events visible under Puppeteer, e.g. Aug 17 2026-08-17; 5:00 pm - 7:00 pm 2026-08-17. platform=tec-wordpress (TEC — use tec-rest-helper.js)",
+  "verdict": "UNVERIFIABLE",
+  "comment": "Re-checked 2026-08-27: spaldinglibrary.org is TEC but the REST endpoint timed out after 20s. Unknown, not fine - recheck next cycle.",
   "population": "zero"
  },
  "WordPress-VT|||Brooks Memorial Library": {
@@ -2399,8 +2399,8 @@
   "population": "zero"
  },
  "WordPress-Events-Calendar|||Washington County Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "extraction-failure: 38 future-dated events visible under Puppeteer, e.g. Now Now 2026-08-17; Mon 17 2026-08-17. platform=tec-wordpress (TEC — use tec-rest-helper.js)",
+  "verdict": "UNVERIFIABLE",
+  "comment": "Re-checked 2026-08-27: wcpl.net is TEC but the REST endpoint returns HTTP 403 behind a Cloudflare interstitial. Bot-blocked, so the scraper's Puppeteer stack may still reach it; unknown rather than broken.",
   "population": "zero"
  },
  "WordPress-Events-Calendar|||Heritage Public Library": {
@@ -4374,8 +4374,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Willimantic Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "verdict": "MATCHES",
+  "comment": "STALE VERDICT CORRECTED 2026-08-27. Not broken: TEC REST returns 20 upcoming events and the 2026-08-25 WordPress-CT run logged Found 19 events.",
   "population": "zero"
  },
  "WordPress-GA|||Coolidge Public Library": {
@@ -7594,8 +7594,8 @@
   "population": "zero"
  },
  "WordPress-RI|||Island Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, FIXED AND PROVEN LIVE 2026-08-27. Genuinely broken, not stale: islandfreelibrary.org runs The Events Calendar and its REST endpoint returns 143 upcoming events, but WordPress-RI was the ONE active state file tryFetchTecEvents was never wired into - a grep across scraper-wordpress-libraries-*.js returned al ct fl ga me ms nc nj ny pa tn vt and no ri - so the DOM path logged Found 0. TEC wired in; the run went Found 0 to Found 143 and the library now holds 87 database rows with age detection working, e.g. Preschool Storytime with Ms. Morgan to Preschool 3-5 and a weaving workshop to Teens 13-18. WordPress-RI overall went 99 found / 23 new to 235 found / 148 new.",
   "population": "zero"
  },
  "WordPress-RI|||Langworthy Public Library": {
@@ -8450,7 +8450,7 @@
  },
  "WordPress-NJ|||Morristown-Morris Twp Joint Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js [redirects to mmtlibrary.org]",
+  "comment": "Re-checked 2026-08-27: morristownlibrary.org TEC REST probe failed at the network layer. Unknown, not fine - recheck next cycle.",
   "population": "zero"
  },
  "WordPress-NJ|||Mount Arlington Public Library": {
@@ -8639,8 +8639,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Apalachin Library Association": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "verdict": "MATCHES",
+  "comment": "Verified 2026-08-27 by the site's OWN API rather than by a blank render: its TEC REST endpoint returns {total:0,events:[]}. That is an affirmative machine-readable statement that there are no upcoming events, not the silence the Lake Sinclair rule forbids treating as MATCHES. Nothing to extract; not a scraper bug.",
   "population": "zero"
  },
  "WordPress-NY|||B. Elizabeth Strong Memorial Library": {
@@ -8669,8 +8669,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Belden Noble Memorial Library Of Essex": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "verdict": "MATCHES",
+  "comment": "Verified 2026-08-27 by the site's own TEC REST endpoint returning total 0 upcoming events - an affirmative answer, not a blank render. Not a scraper bug.",
   "population": "zero"
  },
  "WordPress-NY|||Blodgett Memorial Library District Of Fishkill": {
@@ -8684,8 +8684,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Brownville-Glen Park Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "verdict": "MATCHES",
+  "comment": "Verified 2026-08-27 by the site's own TEC REST endpoint returning total 0 upcoming events. Not a scraper bug.",
   "population": "zero"
  },
  "WordPress-NY|||Bryant Library": {
@@ -9039,8 +9039,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Orleans Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "verdict": "MATCHES",
+  "comment": "Verified 2026-08-27 by the site's own TEC REST endpoint returning total 0 upcoming events. Not a scraper bug. NOTE for a later pass: this entry is configured at lafargevillelibrary.org, a host whose name does not match the entry name Orleans Public Library - worth an identity check even though it is not currently producing wrong rows.",
   "population": "zero"
  },
  "WordPress-NY|||Parish Public Library": {
@@ -9049,8 +9049,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Oxford Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "verdict": "MATCHES",
+  "comment": "Verified 2026-08-27 by the site's own TEC REST endpoint returning total 0 upcoming events. Not a scraper bug.",
   "population": "zero"
  },
  "WordPress-NY|||Penfield Public Library": {
@@ -9074,8 +9074,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Port Leyden Community Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "verdict": "MATCHES",
+  "comment": "Verified 2026-08-27 by the site's own TEC REST endpoint returning total 0 upcoming events. Not a scraper bug.",
   "population": "zero"
  },
  "WordPress-NY|||Portville Free Library": {
@@ -9084,8 +9084,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Pound Ridge Library District": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "verdict": "MATCHES",
+  "comment": "Verified 2026-08-27 by the site's own TEC REST endpoint returning total 0 upcoming events. Not a scraper bug.",
   "population": "zero"
  },
  "WordPress-NY|||Prospect Free Library": {
@@ -9164,8 +9164,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Scio Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "verdict": "MATCHES",
+  "comment": "Verified 2026-08-27 by the site's own TEC REST endpoint returning total 0 upcoming events. Not a scraper bug.",
   "population": "zero"
  },
  "WordPress-NY|||Seaford Public Library": {
@@ -9314,8 +9314,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Whitesville Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "verdict": "MATCHES",
+  "comment": "Verified 2026-08-27 by the site's own TEC REST endpoint returning total 0 upcoming events. Not a scraper bug.",
   "population": "zero"
  },
  "WordPress-NY|||Wide Awake Club Library": {
@@ -9324,8 +9324,8 @@
   "population": "zero"
  },
  "WordPress-NY|||William H. Bush Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "verdict": "MATCHES",
+  "comment": "Verified 2026-08-27 by the site's own TEC REST endpoint returning total 0 upcoming events. Not a scraper bug.",
   "population": "zero"
  },
  "WordPress-NY|||Williamson Free Public Library": {
