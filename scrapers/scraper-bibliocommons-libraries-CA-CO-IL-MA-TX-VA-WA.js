@@ -276,7 +276,7 @@ const LIBRARY_SYSTEMS = [
     zipCode: '46204'
   },
 
-  // KENTUCKY (1 library)
+  // KENTUCKY (2 libraries)
   {
     name: 'Kenton County Public Library',
     url: 'https://kentonlibrary.bibliocommons.com/v2/events',
@@ -285,6 +285,19 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.kentonlibrary.org',
     city: 'Covington',
     zipCode: '41011'
+  },
+  // Relocated out of WordPress-KY 2026-08-27. laurellibrary.org publishes this
+  // BiblioCommons instance itself; re-fetching it returns HTTP 200 titled
+  // "Events | Laurel County Public Library", against notarealsite-xyz.bibliocommons.com
+  // which 404s. KY confirmed on the library's own page by ZIP 40741 and area code 606.
+  {
+    name: 'Laurel County Public Library',
+    url: 'https://laurellibrary.bibliocommons.com/v2/events',
+    county: 'Laurel',
+    state: 'KY',
+    website: 'https://www.laurellibrary.org',
+    city: 'London',
+    zipCode: '40741'
   },
 
   // MASSACHUSETTS (2 libraries)

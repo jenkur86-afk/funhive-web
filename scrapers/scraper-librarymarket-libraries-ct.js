@@ -19,6 +19,18 @@ const { ScraperLogger } = require('./scraper-logger');
  */
 
 const LIBRARIES = [
+  // Relocated out of WordPress-CT 2026-08-27. fairfieldpubliclibrary.org publishes this
+  // LibraryMarket instance itself; re-fetching it returns HTTP 200 titled "Upcoming
+  // Events | Fairfield Public Library", against notarealsite-xyz.librarymarket.com which
+  // does not resolve. CT confirmed on the library's own page by ZIPs 06824/06825 and
+  // area code 203 — so this is Fairfield CONNECTICUT, not any of the other Fairfields.
+  {
+    name: 'Fairfield Public Library',
+    eventsUrl: 'https://fplct.librarymarket.com/events/upcoming',
+    city: 'Fairfield',
+    state: 'CT',
+    zipCode: '06824'
+  },
   {
     name: 'Ferguson Library',
     eventsUrl: 'https://www.fergusonlibrary.org/events/upcoming',

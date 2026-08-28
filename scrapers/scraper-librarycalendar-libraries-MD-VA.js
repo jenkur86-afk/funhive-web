@@ -197,6 +197,72 @@ const LIBRARY_SYSTEMS = [
     city: 'Monroeville',
     zipCode: '15146'
   },
+  // --- Five more added 2026-08-27 from the same Step 3d backlog. Each instance is the
+  // href the library PUBLISHES ON ITS OWN SITE, and each was then re-fetched directly:
+  // all five returned HTTP 200 titled "Upcoming Events | <the right institution>" with
+  // ~1,000+ event nodes, against notarealsite-xyz.librarycalendar.com which fails to
+  // resolve. McKeesport repeats the catalog red herring noted above — its page links
+  // acl.bibliocommons.com too, and that is the Allegheny County CATALOG, not its events.
+  //
+  // TWO CANDIDATES FROM THIS BATCH WERE REJECTED ON IDENTITY, both of which would have
+  // imported ILLINOIS events had the platform hint been trusted:
+  //   "Carnegie Library Of Mckeesport - White Oak" (WordPress-PA) is configured at
+  //   whiteoaklibrary.org, which is the White Oak Library District in ILLINOIS —
+  //   ZIPs 60403/60441/60446, area code 815 — and links whiteoak.librarycalendar.com.
+  //   Morton Public Library (WordPress-MS) is configured at mortonlibrary.org, which is
+  //   Morton, ILLINOIS — ZIP 61550, area code 309 — and links mortonlibrary.libcal.com.
+  // Both are guarded in their own config files instead.
+  {
+    name: 'Carnegie Library of McKeesport',
+    url: 'https://mckeesport.librarycalendar.com/events/upcoming',
+    county: 'Allegheny',
+    state: 'PA',
+    website: 'https://mckeesportlibrary.org',
+    city: 'McKeesport',
+    zipCode: '15132'
+  },
+  {
+    name: "Haverstraw King's Daughters Public Library",
+    url: 'https://haverstraw.librarycalendar.com/events/upcoming',
+    county: 'Rockland',
+    state: 'NY',
+    website: 'https://www.haverstrawlibrary.org',
+    city: 'Haverstraw',
+    zipCode: '10927'
+  },
+  {
+    // Branch-filtered on purpose. uhls.librarycalendar.com is the whole Upper Hudson
+    // Library System; ?branches[77]=88 is the filter Rensselaerville publishes for
+    // itself, so this entry stays one library rather than silently becoming a system.
+    // NOTE: scraperNameFor() slugs on the SUBDOMAIN, so this stores as
+    // LibraryCalendar-Libraries-uhls. If a second UHLS branch is ever added here the
+    // two would collapse onto that one name and need a per-branch slug instead.
+    name: 'Rensselaerville Public Library',
+    url: 'https://uhls.librarycalendar.com/events/month?branches[77]=88',
+    county: 'Albany',
+    state: 'NY',
+    website: 'https://www.rensselaervillelibrary.org',
+    city: 'Rensselaerville',
+    zipCode: '12147'
+  },
+  {
+    name: 'Schenectady County Public Library',
+    url: 'https://schenectady.librarycalendar.com/events/upcoming',
+    county: 'Schenectady',
+    state: 'NY',
+    website: 'https://www.scpl.org',
+    city: 'Schenectady',
+    zipCode: '12305'
+  },
+  {
+    name: 'Wyandanch Public Library',
+    url: 'https://wyandanch.librarycalendar.com/events/upcoming',
+    county: 'Suffolk',
+    state: 'NY',
+    website: 'https://wyandanchlibrary.org',
+    city: 'Wyandanch',
+    zipCode: '11798'
+  },
   // MARYLAND
   {
     name: 'Howard County Library System',

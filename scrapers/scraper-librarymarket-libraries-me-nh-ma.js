@@ -18,6 +18,18 @@ const { ScraperLogger } = require('./scraper-logger');
  */
 
 const LIBRARIES = [
+  // Relocated out of WordPress-MA 2026-08-27. paulprattlibrary.org publishes this
+  // LibraryMarket instance itself; re-fetching it returns HTTP 200 titled "Upcoming
+  // Events | Paul Pratt Memorial Library", against notarealsite-xyz.librarymarket.com
+  // which does not resolve. MA confirmed on the library's own page by ZIP 02025
+  // (Cohasset) and area code 781.
+  {
+    name: 'Paul Pratt Memorial Library',
+    eventsUrl: 'https://paulprattlibrary.librarymarket.com/events/upcoming',
+    city: 'Cohasset',
+    state: 'MA',
+    zipCode: '02025'
+  },
   {
     name: 'Portland Public Library',
     eventsUrl: 'https://portlandme.librarycalendar.com/events/upcoming',

@@ -723,7 +723,13 @@ const SCRAPERS = {
     type: 'puppeteer',
     group: 1,
     state: 'Multi',
-    sites: 25
+    // 25 -> 30 on 2026-08-27: three relocations by one session (Grant County,
+    // Wilkinsburg, Monroeville) and five by another (McKeesport, Haverstraw,
+    // Rensselaerville, Schenectady, Wyandanch). Counted from LIBRARY_SYSTEMS
+    // rather than incremented by hand — check-scraper-names.js compares this
+    // number against the distinct scraper_name count, so a stale value here is
+    // reported as a COLLAPSED multi-site scraper that is not actually collapsed.
+    sites: 30
   },
   'CustomDrupal-Libraries': {
     file: './scraper-custom-drupal-libraries-GA-NC-SC-WV.js',
