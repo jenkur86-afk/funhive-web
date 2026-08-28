@@ -37,8 +37,9 @@
  * IN (1 library):
  * - Indianapolis Public Library
  *
- * KY (1 library):
+ * KY (2 libraries):
  * - Kenton County Public Library
+ * - Laurel County Public Library (relocated from WordPress-KY 2026-08-27)
  *
  * MA (2 libraries):
  * - Boston Public Library
@@ -566,6 +567,46 @@ const LIBRARY_SYSTEMS = [
 // Note: geocodeAddress is now imported from geocoding-helper.js with fallback support
 
 // Parse age range from audience string
+/**
+ * Per-site scraper_name: `BiblioCommons-<ST>-<siteSlug>`.
+ *
+ * Until 2026-08-27 every row in this family was stored as the bare
+ * `BiblioCommons-<ST>`, which is only legal for a state holding ONE library.
+ * Ten states hold more than one — CA 8, WA 7, TX 4, IL/MN/OH 3, CO/KY/MA/WI 2 —
+ * so those systems were collapsed onto a single name and their branches became
+ * indistinguishable in the audits. Found while adding Laurel County to KY: its
+ * 205 events landed under `BiblioCommons-KY` beside Kenton's, with venue
+ * "Main Branch" on both, which is exactly the aggregation AGE-RANGE-AUDIT.md's
+ * "No aggregation, ever" rule forbids.
+ *
+ * The slug comes from the BiblioCommons instance SUBDOMAIN, per the rule that a
+ * siteSlug is derived from the site's own hostname and never from a display name.
+ * Falling back to the bare key is deliberate — a wrong slug is worse than an
+ * honestly generic one.
+ *
+ * SAFE TO CHANGE HERE, and that was checked rather than assumed: this scraper
+ * saves through its own `db.collection('events').add()` path rather than
+ * saveEventsWithGeocoding, so nothing overwrites the value, and its duplicate
+ * lookup keys on `metadata.sourceName` — NOT scraperName — so renaming cannot
+ * break dedup or reach any delete path. That distinction is why the 2026-08-06
+ * per-site attempt had to be reverted for scrapers on the shared save helper,
+ * where verifyAndCleanupEvents does look events up by scraperName.
+ * _stableEventId() ignores scraper_name, so no row can duplicate — but rows
+ * written before today keep the old bare name until they expire, so both forms
+ * will appear in the audits for a while.
+ */
+function bcScraperNameFor(library) {
+  const key = `BiblioCommons-${library.state}`;
+  try {
+    const host = new URL(library.url).host;             // kentonlibrary.bibliocommons.com
+    if (!/\.bibliocommons\.com$/i.test(host)) return key;
+    const slug = host.split('.')[0].toLowerCase().replace(/[^a-z0-9-]/g, '');
+    return slug ? `${key}-${slug}` : key;
+  } catch (e) {
+    return key;
+  }
+}
+
 function parseAgeRange(audienceText) {
   if (!audienceText) return 'All Ages';
 
@@ -843,7 +884,7 @@ async function scrapeLibraryEvents(library, browser) {
           url: event.url || library.website,
           metadata: {
             source: 'BiblioCommons Scraper',
-            scraperName: 'BiblioCommons-' + library.state,
+            scraperName: bcScraperNameFor(library),
             sourceName: library.name,
             // The library's own listing page — NOT the individual event's URL, per the
             // source_url rule in CLAUDE.md. Added 2026-08-18: this family never set it,
@@ -1279,7 +1320,7 @@ async function scrapeLibraryEvents(library, browser) {
           url: event.url || library.website,
           metadata: {
             source: 'BiblioCommons Scraper',
-            scraperName: 'BiblioCommons-' + library.state,
+            scraperName: bcScraperNameFor(library),
             sourceName: library.name,
             // The library's own listing page — NOT the individual event's URL, per the
             // source_url rule in CLAUDE.md. Added 2026-08-18: this family never set it,

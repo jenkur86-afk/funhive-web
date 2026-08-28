@@ -2894,8 +2894,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Fairfield Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=librarymarket detected — belongs in a LibraryMarket-* scraper [redirects to fplct.librarymarket.com]",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibraryMarket-CT on fplct.librarymarket.com, link taken from the library own page, CT confirmed by ZIPs 06824/06825 and area code 203 so this is Fairfield CONNECTICUT. Run confirms 13 database rows under LibraryMarket-CT, incl. downUNDER Afterschool Program to Teens 13-18 and Literacy Play Lab to Kids 6-8. LibraryMarket-CT went to 219 found / 54 new.",
   "population": "zero"
  },
  "WordPress-CT|||Goshen Public Library": {
@@ -6524,8 +6524,8 @@
   "population": "zero"
  },
  "WordPress-KY|||Laurel County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=bibliocommons detected — belongs in a BiblioCommons-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to BiblioCommons-KY on laurellibrary.bibliocommons.com. The run reached it and its API returned 205 events which saved - Babygarten, Storytime, Puzzle Palooza, Readers Are Leaders. CAVEAT ON ATTRIBUTION, stated rather than glossed: those rows landed under the BARE name BiblioCommons-KY beside Kenton's, because this family set scraperName per STATE. That was fixed the same day with a per-site slug helper, but the existing rows keep the bare name until they expire since the scraper's dedup skips events it already has.",
   "population": "zero"
  },
  "WordPress-KY|||Lents Branch": {
@@ -6894,8 +6894,8 @@
   "population": "zero"
  },
  "WordPress-MA|||Paul Pratt Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=librarymarket detected — belongs in a LibraryMarket-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibraryMarket-ME-NH-MA on paulprattlibrary.librarymarket.com, MA confirmed by ZIP 02025 Cohasset and area code 781. Run confirms 17 database rows, incl. Singalong and Dance Party with Miss Rebecca and Take and Make Craft Kits for Kids, both bracketed Kids 6-8.",
   "population": "zero"
  },
  "WordPress-MA|||Petersham Memorial Library": {
@@ -7144,8 +7144,8 @@
   "population": "zero"
  },
  "WordPress-NH|||Hollis Social Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "RESOLVED 2026-08-27 as a DUPLICATE, not a broken site - Hollis publishes on hollislibrary.libcal.com cid 8282 and was ALREADY in the LibCal-NH config, so this WordPress entry was live alongside it and could only ever return 0. Same shape as Bridgeville, Bridgeport and Brookline. Guarded; the stale zero-event verdict was the only thing implying a gap.",
   "population": "zero"
  },
  "WordPress-NH|||Josiah Carpenter Library": {
@@ -7249,13 +7249,13 @@
   "population": "zero"
  },
  "WordPress-PA|||Carnegie Library Of Mckeesport": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=librarycalendar detected — belongs in LibraryCalendar-Libraries",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibraryCalendar-Libraries on mckeesport.librarycalendar.com, link taken from the library own page, PA confirmed by ZIP 15132 and area code 412. Run confirms 10 database rows under LibraryCalendar-Libraries-mckeesport, incl. Story Time to Preschool 3-5 and National Play-Doh Day to Kids 6-8. The acl.bibliocommons.com link on that page is the Allegheny County CATALOG, not its events - trusting that hint would have produced another zero-event site.",
   "population": "zero"
  },
  "WordPress-PA|||Carnegie Library Of Mckeesport - White Oak": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=librarycalendar detected — belongs in LibraryCalendar-Libraries",
+  "verdict": "MISMATCH",
+  "comment": "url-collision, GUARDED 2026-08-27 - whiteoaklibrary.org is the White Oak Library District in ILLINOIS, not White Oak PA: live page shows ZIPs 60403, 60441 and 60446 with area code 815 and links whiteoak.librarycalendar.com. Had the platform hint been trusted this would have imported Illinois events under Pennsylvania. OPEN COVERAGE GAP - the correct URL for a White Oak PA branch is unknown.",
   "population": "zero"
  },
  "WordPress-PA|||Carnegie Library, Midland": {
@@ -8249,8 +8249,8 @@
   "population": "zero"
  },
  "WordPress-MS|||Morton Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "url-collision, GUARDED 2026-08-27 - mortonlibrary.org is Morton, ILLINOIS, not Morton MS: live page shows ZIP 61550 and area code 309 and links mortonlibrary.libcal.com. There are two Mortons and this host serves the wrong one; wiring the LibCal instance would have imported Illinois events under Mississippi. OPEN COVERAGE GAP.",
   "population": "zero"
  },
  "WordPress-MS|||Northeast Regional Library": {
@@ -8844,8 +8844,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Haverstraw Kings Daughters Public Library - Village Branch": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=librarycalendar detected — belongs in LibraryCalendar-Libraries",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibraryCalendar-Libraries at system level on haverstraw.librarycalendar.com, NY confirmed by ZIPs 10923/10927 and area code 845. Run confirms 16 database rows under LibraryCalendar-Libraries-haverstraw, incl. Zumbini with Miss Tina to Preschool 3-5.",
   "population": "zero"
  },
  "WordPress-NY|||Highland Falls Library": {
@@ -9134,8 +9134,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Rensselaerville Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=librarycalendar detected — belongs in LibraryCalendar-Libraries",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibraryCalendar-Libraries. Wired to the BRANCH-FILTERED URL uhls.librarycalendar.com/events/month?branches[77]=88 that the library publishes for itself, deliberately NOT the bare uhls instance, which is the whole Upper Hudson Library System. Run confirms 1 database row - Story Time - Medusa Branch, bracketed Kids 6-8. One row is consistent with a very small rural library, not a wiring fault.",
   "population": "zero"
  },
  "WordPress-NY|||Rodman Public Library": {
@@ -9159,8 +9159,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Schenectady County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=librarycalendar detected — belongs in LibraryCalendar-Libraries",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibraryCalendar-Libraries on schenectady.librarycalendar.com, NY confirmed by ZIP 12305 and area code 518. Run confirms 15 database rows, incl. Junior Writing Club to Kids 6-8.",
   "population": "zero"
  },
  "WordPress-NY|||Scio Memorial Library": {
@@ -9339,8 +9339,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Wyandanch Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=librarycalendar detected — belongs in LibraryCalendar-Libraries",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibraryCalendar-Libraries on wyandanch.librarycalendar.com, NY confirmed by ZIP 11798 and area code 631. Run confirms 16 database rows, incl. I CAN: Early Childhood Learning Series to Babies and Toddlers 0-2.",
   "population": "zero"
  },
  "WordPress-NY|||Your Home Public Library": {
