@@ -7,7 +7,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 ---
 ## 2026-08-28
 
-<!-- STATUS-DATA {"date":"2026-08-28","countiesResolve":100,"urlCollisions":0,"confirmedBugs":605,"unknownSites":853,"specificAgeShare":36.7,"nameConformance":60.8,"sourceUrlCoverage":62,"countyCoverage":0} -->
+<!-- STATUS-DATA {"date":"2026-08-28","countiesResolve":100,"urlCollisions":0,"confirmedBugs":607,"unknownSites":853,"specificAgeShare":36.7,"nameConformance":60.8,"sourceUrlCoverage":62,"countyCoverage":0} -->
 
 ### Distance to 100%
 
@@ -15,8 +15,8 @@ the command is in each gate's detail line and the value is dated, never guessed.
 |---|---|---|---|---|
 | 1. Counties resolve | 100% | · | 100% | blocks nothing — mechanical once a city→county dataset is chosen |
 | 2. URLs unique per state | 0 | · | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
-| 3. Zero confirmed bugs | 605 | +2 ⚠️ | 0 | unblocked — gate 2 is clear; these are now the main body of work |
-| 4. Zero unknown sites | 853 | -12 ✅ | 0 | independent — re-checking is its own pass |
+| 3. Zero confirmed bugs | 607 | +2 ⚠️ | 0 | unblocked — gate 2 is clear; these are now the main body of work |
+| 4. Zero unknown sites | 853 | · | 0 | independent — re-checking is its own pass |
 | 5. Age brackets resolved | 36.7% | · | max (best 40.6%) | no fixed target — maximise; ratchets vs best ever |
 | 6. Names join to registry | 60.8% ⚠stale | · | 100% | planned migration, not daily work |
 | 7. Provenance (source_url) | 62% ⚠stale | · | 90% | partly blocked on rotation |
@@ -26,7 +26,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 
 | | Broken | Scale | Why not fixed now |
 |---|---|---|---|
-| 🟠 | Confirmed open bugs (MISMATCH verdicts) | 605 sites | NOT blocked any more — gate 2 is clear, so these are directly actionable; dead-endpoint and extraction-failure buckets first |
+| 🟠 | Confirmed open bugs (MISMATCH verdicts) | 607 sites | NOT blocked any more — gate 2 is clear, so these are directly actionable; dead-endpoint and extraction-failure buckets first |
 | 🟠 | Unknown sites (UNVERIFIABLE verdicts) | 853 sites | bot-blocks / JS-only calendars / TLS failures — never re-checked |
 | 🟠 | Age detection REGRESSED below best-ever specificity | 36.7% resolved (best ever 40.6% on 2026-08-10) | MASTER-PLAN Phase 5, not started |
 | 🟡 | scraper_name drift — rows cannot join back to the registry | 60.8% conform (as of 2026-08-23) | deliberate migration, explicitly not daily work |

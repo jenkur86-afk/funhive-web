@@ -8370,7 +8370,7 @@
  },
  "WordPress-NJ|||Glen Ridge Free Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on bccls.libcal.com/calendar/glenridge cid 10286, taken from the library own page. NJ confirmed by NJ 07028 and area code 973. Relocated to LibCal-NJ; WordPress-NJ entry guarded.",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibCal-NJ on bccls.libcal.com/calendar/glenridge cid 10286. LibCal-NJ run confirms 11 database rows under LibCal-NJ-bccls-glenridge. WordPress-NJ entry guarded.",
   "population": "zero"
  },
  "WordPress-NJ|||Fair Haven Public Library": {
@@ -8405,7 +8405,7 @@
  },
  "WordPress-NJ|||Lambertville Free Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on lambertvillelibrary.libcal.com, taken from the library own page. NJ confirmed by area code 609. Relocated to LibCal-NJ; WordPress-NJ entry guarded.",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibCal-NJ on its own instance lambertvillelibrary.libcal.com. LibCal-NJ run confirms 10 database rows under LibCal-NJ-lambertvillelibrary. WordPress-NJ entry guarded.",
   "population": "zero"
  },
  "WordPress-NJ|||Linwood Public Library": {
@@ -8505,7 +8505,7 @@
  },
  "WordPress-NJ|||Ridgefield Free Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on bccls.libcal.com cid 10324. Confirmed to be the NEW JERSEY Ridgefield and not Ridgefield CT, by 527 Morse Avenue Ridgefield NJ 07657 and area code 201 on its own page. Relocated to LibCal-NJ; WordPress-NJ entry guarded.",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibCal-NJ on bccls.libcal.com cid 10324, confirmed to be the NEW JERSEY Ridgefield by 527 Morse Avenue Ridgefield NJ 07657 and area code 201. LibCal-NJ run confirms 1 database row under LibCal-NJ-bccls-ridgefield; it found 20 events and the rest were past or duplicate, so the low count is programming volume, not a wiring fault. WordPress-NJ entry guarded.",
   "population": "zero"
  },
  "WordPress-NJ|||Ridgewood Public Library": {
@@ -8540,7 +8540,7 @@
  },
  "WordPress-NJ|||Summit Free Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on summitlibrary.libcal.com, taken from the library own page. NJ confirmed by 75 Maple Street Summit NJ 07901 and area code 908. Relocated to LibCal-NJ; WordPress-NJ entry guarded.",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibCal-NJ on its own instance summitlibrary.libcal.com, confirmed by 75 Maple Street Summit NJ 07901. LibCal-NJ run confirms 7 database rows under LibCal-NJ-summitlibrary. WordPress-NJ entry guarded.",
   "population": "zero"
  },
  "WordPress-NJ|||South River Public Library": {
@@ -8575,7 +8575,7 @@
  },
  "WordPress-NJ|||West Orange Free Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on bccls.libcal.com/calendar/westorange cid 10341, taken from the library own page. NJ confirmed by area code 973. Relocated to LibCal-NJ; WordPress-NJ entry guarded.",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibCal-NJ on bccls.libcal.com/calendar/westorange cid 10341. LibCal-NJ run confirms 11 database rows under LibCal-NJ-bccls-westorange. WordPress-NJ entry guarded.",
   "population": "zero"
  },
  "WordPress-NJ|||Woodstown-Pilesgrove Library": {
@@ -8740,7 +8740,7 @@
  },
  "WordPress-NY|||Dansville Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on owwl.libcal.com/calendar/DansvillePublicLibrary cid 15151, taken from the library own page. NY confirmed by 200 Main St Dansville NY 14437 and area code 585. Relocated to LibCal-NY; WordPress-NY entry guarded.",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibCal-NY on owwl.libcal.com/calendar/DansvillePublicLibrary cid 15151, link taken from the library own page. LibCal-NY2 run confirms 9 database rows under LibCal-NY-owwl-dansvillepubliclibrary, all stamped Dansville NY 14437, including Storytime In-Person and a D&D night. WordPress-NY entry guarded.",
   "population": "zero"
  },
  "WordPress-NY|||Cohoes Public Library": {
@@ -8810,7 +8810,7 @@
  },
  "WordPress-NY|||Gardiner Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on gardinerlibrary.libcal.com cid 21138, taken from the library own page. NY confirmed by 133 Farmers Turnpike Gardiner NY 12525 and area code 845. Relocated to LibCal-NY; WordPress-NY entry guarded.",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibCal-NY on gardinerlibrary.libcal.com cid 21138. LibCal-NY2 run confirms 6 database rows under LibCal-NY-gardinerlibrary, all stamped Gardiner NY 12525 - Chess Club, Repair Cafe, Chair Yoga. A library-address helper false positive logged Community Room to 1 Lafayette Square Buffalo during the run, but it did NOT reach the stored rows; the configured city and ZIP won. WordPress-NY entry guarded.",
   "population": "zero"
  },
  "WordPress-NY|||Glen Cove Public Library": {
@@ -8860,7 +8860,7 @@
  },
  "WordPress-NY|||Highland Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on highlandlibrary.libcal.com cid 12635, taken from the library own page. NY confirmed by 14 Elting Place Highland NY 12528 and area code 845. Relocated to LibCal-NY; WordPress-NY entry guarded.",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibCal-NY on highlandlibrary.libcal.com cid 12635. LibCal-NY2 run confirms 10 database rows under LibCal-NY-highlandlibrary, all stamped Highland NY 12528, including Babytime Storytime and repeated Teen Hangout - real age-targeted programming that was previously invisible. WordPress-NY entry guarded.",
   "population": "zero"
  },
  "WordPress-NY|||Holland Patent Free Library": {
@@ -8935,7 +8935,7 @@
  },
  "WordPress-NY|||Marcellus Free Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch, RESOLVED 2026-08-27 - publishes on onlib-marcellus.libcal.com cid 19783. NY confirmed by 32 Maple Street Marcellus NY 13108 and area code 315. Relocated to LibCal-NY; WordPress-NY entry guarded. Note the configured host www.marcelluslibrary.org also has a TLS certificate that does not cover the www subdomain.",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibCal-NY on onlib-marcellus.libcal.com cid 19783. LibCal-NY2 run confirms 4 database rows under LibCal-NY-onlib-marcellus, all stamped Marcellus NY 13108. WordPress-NY entry guarded.",
   "population": "zero"
  },
  "WordPress-NY|||Mary E. Seymour Memorial Free Library": {
@@ -9376,6 +9376,16 @@
  "LibraryMarket-ME-NH-MA|||Rochester Public Library": {
   "verdict": "MISMATCH",
   "comment": "WRONG-STATE URL, guarded 2026-08-27, and an OPEN GAP. Same host as the NY claim, and it is Rochester MINNESOTA (507-328-2300, rplmn.org). Unlike Rochester NY, which is covered via the Monroe County Library System, Rochester NH has no scraper reading it.",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Ramsey Free Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibCal-NJ on bccls.libcal.com/calendar/ramsey cid 10323. LibCal-NJ run confirms 8 database rows under LibCal-NJ-bccls-ramsey, including Grab and Go Crafting for Kids and Youngin Fun Times. WordPress-NJ entry guarded.",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Franklin Lakes Free Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch, RESOLVED AND PROVEN LIVE 2026-08-27 - relocated to LibCal-NJ on bccls.libcal.com/calendar/franklinlakes cid 10284. LibCal-NJ run confirms 11 database rows under LibCal-NJ-bccls-franklinlakes. WordPress-NJ entry guarded.",
   "population": "zero"
  }
 }
