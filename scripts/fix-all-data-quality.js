@@ -65,18 +65,46 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
  * fix-all chain now reports the step as failed — loudly and for the right
  * reason — instead of silently doing nothing.
  */
+//
+// 2026-08-29: the guard above fired for real, and the underlying read needed fixing
+// rather than the guard weakening. STEP 1 aborted on three consecutive statement
+// timeouts at offset 0 over the 24h window holding the whole MacaroniKid Group 1
+// output, so the day's age-range, adult-event, past-event and date-backfill passes
+// did not run at all.
+//
+// The cause was the query shape, not the data volume: the recent-only filter is on
+// created_at while the sort was on id, so Postgres had to filter and then sort a
+// large result with no single index able to serve both — every page paid for a full
+// scan plus a sort. Ordering by the SAME column that is filtered lets the planner do
+// an index range scan and return rows already in order.
+//
+// id stays in the ORDER BY as a tiebreak, which is what keeps pagination
+// deterministic per CLAUDE.md's rule (created_at alone is not unique; ties could
+// straddle a page boundary and repeat or drop rows — the 2026-05-15 failure mode).
+// The unfiltered full-scan path still orders by id alone, which is its primary key
+// and already the cheapest total order.
+//
+// Page size also backs off on retry. A timeout is a statement that was too big, so
+// retrying it identically three times mostly just waits three times.
+const PAGE_SIZES = [1000, 500, 250];
+
 async function fetchAll(table, select) {
   let all = [];
   let from = 0;
   while (true) {
-    let data, error;
+    let data, error, pageSize = PAGE_SIZES[0];
     for (let attempt = 1; attempt <= 3; attempt++) {
+      pageSize = PAGE_SIZES[Math.min(attempt - 1, PAGE_SIZES.length - 1)];
       let q = supabase.from(table).select(select);
       if (RECENT_THRESHOLD_ISO) q = q.gte('created_at', RECENT_THRESHOLD_ISO);
-      // .order('id') required for stable pagination — see 2026-05-15 incident.
-      ({ data, error } = await q.order('id', { ascending: true }).range(from, from + 999));
+      // Order on the filtered column so an index can serve both, with id as the
+      // uniqueness tiebreak that makes the page boundaries stable.
+      q = RECENT_THRESHOLD_ISO
+        ? q.order('created_at', { ascending: true }).order('id', { ascending: true })
+        : q.order('id', { ascending: true });
+      ({ data, error } = await q.range(from, from + pageSize - 1));
       if (!error) break;
-      console.log(`  ⚠️ Retry ${attempt}/3 reading ${table} at offset ${from}: ${error.message}`);
+      console.log(`  ⚠️ Retry ${attempt}/3 reading ${table} at offset ${from} (page ${pageSize}): ${error.message}`);
       await sleep(2000 * attempt);
     }
     if (error) {
@@ -87,8 +115,8 @@ async function fetchAll(table, select) {
     }
     if (!data || data.length === 0) break;
     all = all.concat(data);
-    if (data.length < 1000) break;
-    from += 1000;
+    if (data.length < pageSize) break;
+    from += data.length;
   }
   return all;
 }

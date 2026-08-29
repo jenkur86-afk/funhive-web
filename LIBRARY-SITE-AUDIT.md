@@ -9862,3 +9862,36 @@ Group 1 rotation, started 07:00:01Z. 616 per-site rows from 34 library scrapers 
 | Windham Town | VT | WordPress-VT | 2 |
 | Windsor Public | VT | WordPress-VT | 0 |
 | Woodbury Community | VT | WordPress-VT | 1 |
+
+## 2026-08-29
+
+Tail of the Group 1 rotation that started 2026-08-28T10:59:22Z and finished 08-29T08:43:31Z, plus five hand-run recoveries. **The rotation's own per-site output for this window was never captured**: `scraper-stdout.log` stops at 08:43 because that is where `run-scrapers.bat`'s redirection ends, and the four scrapers re-run by hand this morning (LibCal-CT, Communico-VA, LibraryCalendar-Libraries, LibCal-TN) printed to their own consoles. That is the documented `--log` gap in `build-library-site-audit.js`, and it is why a `--since` build over this window returns zero rows rather than an error.
+
+Rather than fall back to aggregates, **LibCal-CT and LibCal-TN were re-run with output captured** and contribute real per-site rows below. Communico-VA and LibraryCalendar-Libraries already have rows earlier in this cycle and are skipped per the one-inventory-per-cycle rule — except for Knox County, which is a genuinely new site (see below).
+
+**Knox County Public Library recovered and relocated.** The LibCal-TN re-run logged `ERR_NAME_NOT_RESOLVED` for `knoxlib.libcal.com`; that host has no DNS record, and the entry's own `website` field (`knoxlibrary.org`) times out. The library is not gone — `knoxlib.org` 301s to `knoxcountylibrary.org`, whose `/events` renders 45 `.lc-event` cards titled "Upcoming Events | Knox County Public Library". That is LibraryCalendar, not LibCal. The entry was **moved** to `scraper-librarycalendar-libraries-MD-VA.js` and the replacement was run before this was written: **16 events, in real age brackets** (Baby Bookworms, Ready Set K Storytime, Toddler Storytime). Note the URL is the library's own domain, not a `{slug}.librarycalendar.com` subdomain — it is a self-hosted instance and must not be "normalized" to the neighbours' pattern.
+
+**Four single-system scrapers still get aggregate rows, not per-site rows.** Assabet-NH-MA, Pratt-Library, FreeLibrary-Philadelphia and Westmoreland-Library ran in this rotation but emit neither the `📍 name … Found N events` nor the `📚 Scraping name…` shape the builder recognises. Assabet is the worst of these: it declares **41 sites** and reports one number for all of them, which is also why `check-scraper-names.js` lists it as COLLAPSED. Their rows below are labelled as scraper aggregates and are **not** per-site counts.
+
+| Library Website | State | Scraper | Events Found |
+|---|---|---|---|
+| Bridgeport Public Library | CT | LibCal-CT | 10 |
+| C.H. Booth Library | CT | LibCal-CT | 20 |
+| East Hartford Public Library | CT | LibCal-CT | 20 |
+| Greenwich Library | CT | LibCal-CT | 48 |
+| Hamden Public Library | CT | LibCal-CT | 48 |
+| Killingworth Library Association | CT | LibCal-CT | 48 |
+| New Haven Free Public Library | CT | LibCal-CT | 20 |
+| Silas Bronson Library | CT | LibCal-CT | 0 |
+| Stratford Library | CT | LibCal-CT | 20 |
+| Trumbull Library | CT | LibCal-CT | 48 |
+| Wethersfield Public Library | CT | LibCal-CT | 17 |
+| Clarksville-Montgomery County Public Library | TN | LibCal-TN | 48 |
+| Rutherford County Library System | TN | LibCal-TN | 20 |
+| Knox County Public Library | TN | LibraryCalendar-Libraries | 16 |
+| Assabet Interactive libraries (scraper aggregate, 41 sites) | NH/MA | Assabet-NH-MA | 1716 |
+| Enoch Pratt Free Library (scraper aggregate) | MD | Pratt-Library | 2310 |
+| Free Library of Philadelphia (scraper aggregate) | PA | FreeLibrary-Philadelphia | 1000 |
+| Westmoreland County Libraries (scraper aggregate) | PA | Westmoreland-Library | 24 |
+
+**Zero-event sites this run:** 1 — Silas Bronson Library (CT). Verified: its live LibCal page states no events are scheduled, so the 0 is correct and not an extraction failure.

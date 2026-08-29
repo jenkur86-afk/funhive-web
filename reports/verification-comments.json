@@ -2288,7 +2288,7 @@
  },
  "LibCal-CT|||Silas Bronson Library": {
   "verdict": "MATCHES",
-  "comment": "live page states no upcoming events (\"No events are scheduled\")",
+  "comment": "live bronsonlibrary.libcal.com states no upcoming events (\"No events are scheduled\") - the 0 count is correct, not an extraction failure",
   "population": "zero"
  },
  "LibCal-TN|||Memphis Public Libraries": {
@@ -10929,5 +10929,35 @@
   "verdict": "UNVERIFIABLE",
   "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
   "population": "zero"
+ },
+ "LibCal-TN|||Knox County Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: knoxlib.libcal.com has no DNS record and the entry's website knoxlibrary.org times out. Library is live at knoxcountylibrary.org running LibraryCalendar (45 lc-event cards). FIXED 2026-08-29: moved to LibraryCalendar-Libraries, first run returned 16 events in real age brackets",
+  "population": "zero"
+ },
+ "MacaroniKid-PA-lancaster|||Library System of Lancaster County — Lancaster": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "only a yodel event-detail link is stored for this venue, which cannot show the programming mix; no library-owned calendar URL is in any config to check against",
+  "population": "allages"
+ },
+ "MacaroniKid-MA-capecod|||Nantucket Historical Association": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "only a yodel event-detail link is stored for this venue; a museum is plausibly broad-audience but that was not confirmed against a live calendar",
+  "population": "allages"
+ },
+ "MacaroniKid-NC-durham|||Durham County Library — North Regional Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "durhamcountylibrary.org redirects to durhamcountylibrary.libcal.com, which rendered no dated events to Puppeteer. Not a coverage gap - LibCal-NC already configures this library at that exact URL; these MacaroniKid rows are a syndicated second copy",
+  "population": "allages"
+ },
+ "MacaroniKid-PA-southhills|||Baldwin Borough Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "only a yodel event-detail link is stored; no library-owned calendar URL in any config, and a guessed baldwinboroughlibrary.org does not resolve",
+  "population": "allages"
+ },
+ "MacaroniKid-PA-harrisburg|||Pennsylvania Department of Conservation and Natural Resources": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "dcnr.pa.gov redirects to pa.gov and renders no event containers. A state parks agency is plausibly genuinely all-ages but that was not confirmed",
+  "population": "allages"
  }
 }

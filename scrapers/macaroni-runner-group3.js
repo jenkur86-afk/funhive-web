@@ -104,7 +104,43 @@ function log(message, level = 'info') {
 // SCRAPER EXECUTION
 // ============================================================================
 
-async function runScraper(name, config) {
+// ----------------------------------------------------------------------------
+// Transient-network retry.
+//
+// 2026-08-29: the host machine's internet dropped for roughly five minutes at
+// 06:40-06:45 UTC mid-rotation. MacaroniKid-MA, -TN and -AL all threw
+// "TypeError: fetch failed" (the undici error surfaced when the Supabase save
+// call has no network) and each burned its entire slot in the 3-day cycle —
+// TN after 0.1m and AL after 0.7m, i.e. they had barely started. KY, launched
+// three minutes later, ran fine for 66m, so the outage was over almost
+// immediately. One bounded retry recovers a whole state's coverage here.
+//
+// Deliberately narrow: only errors that name a network condition retry, only
+// once, and only after a delay long enough for a flapping link to settle. A
+// site that is genuinely down still fails on the second attempt and reports
+// normally.
+// ----------------------------------------------------------------------------
+const TRANSIENT_NETWORK_PATTERNS = [
+  /fetch failed/i,
+  /ERR_INTERNET_DISCONNECTED/i,
+  /ERR_NETWORK_CHANGED/i,
+  /ERR_NAME_NOT_RESOLVED/i,
+  /ERR_CONNECTION_RESET/i,
+  /ENOTFOUND/i,
+  /EAI_AGAIN/i,
+  /ECONNRESET/i,
+  /ETIMEDOUT/i,
+  /socket hang up/i,
+  /network ?error/i,
+];
+const RETRY_DELAY_MS = 120000;
+
+function isTransientNetworkError(err) {
+  const msg = (err && (err.message || String(err))) || '';
+  return TRANSIENT_NETWORK_PATTERNS.some((p) => p.test(msg));
+}
+
+async function runScraper(name, config, attempt = 1) {
   const startTime = Date.now();
   const stateName = config.state;
   const siteCount = config.sites || 0;
@@ -199,6 +235,16 @@ async function runScraper(name, config) {
   } catch (error) {
     const duration = ((Date.now() - startTime) / 1000).toFixed(1);
     const durationMinutes = (duration / 60).toFixed(1);
+
+    // One retry for a transient network condition — see TRANSIENT_NETWORK_PATTERNS above.
+    // Nothing is written to scraper-summary.log or scraper_logs for the abandoned attempt,
+    // so a recovered state reports as a single clean row rather than a failure plus a success.
+    if (attempt === 1 && isTransientNetworkError(error)) {
+      log(`🔁 ${stateName} hit a transient network error after ${durationMinutes}m (${error.message}) — waiting ${Math.round(RETRY_DELAY_MS / 1000)}s and retrying once`, 'warn');
+      await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+      return runScraper(name, config, attempt + 1);
+    }
+
     log(`❌ ${stateName} failed after ${durationMinutes}m: ${error.message}`, 'error');
     logSummary(formatSummaryRow({ success: false, name, error: error.message, duration: parseFloat(duration) }));
 

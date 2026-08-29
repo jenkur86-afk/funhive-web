@@ -336,12 +336,111 @@ function normalizeCategory(cat) {
   return CATEGORY_SLUG_MAP[cat.toLowerCase().trim()] || cat;
 }
 
+// ============================================================================
+// MOJIBAKE REPAIR
+// ============================================================================
+//
+// UTF-8 bytes decoded as Latin-1/CP-1252 produce the classic "Ã©" / "â€™" garble.
+// Found 2026-08-29 on 93 rows: MacaroniKid-PA-york stored every event's venue as
+// "Flinchbaughâ€™s Orchard & Farm Market" — a right single quote (U+2019) whose
+// three UTF-8 bytes were each rendered as their Latin-1 character. It is
+// user-visible on the event card and the venue detail page.
+//
+// Repair is the inverse round-trip: reinterpret the characters as Latin-1 bytes
+// and decode those bytes as UTF-8. That transform is destructive when applied to
+// text that was never mis-decoded, so it is gated on three checks, ALL of which
+// must pass or the original is returned unchanged:
+//
+//   1. A mojibake signature is present ("Ã"/"Â" followed by a continuation-range
+//      character, or the "â€" trigraph). No signature, no attempt.
+//   2. Every character is representable as a Latin-1 byte (<= 0xFF). A string
+//      already containing real multi-byte characters is mixed and is left alone.
+//   3. The decode round-trips: re-encoding the result as UTF-8 and reading those
+//      bytes back as Latin-1 reproduces the input exactly, and the result holds
+//      no U+FFFD replacement character.
+//
+// Check 3 is the load-bearing one — it makes the repair provably lossless, so a
+// legitimate name that merely happens to contain "Ã" survives untouched.
+// The mis-decode is almost always CP-1252, not pure Latin-1: bytes 0x80-0x9F are
+// undefined in Latin-1 but map to punctuation in CP-1252, which is why the garble
+// reads "â€™" (0xE2 0x80 0x99 -> â, €, ™) rather than three accented letters. A
+// plain Latin-1 round-trip therefore cannot repair the commonest case — the one
+// actually found in the data — so both directions of the CP-1252 high range are
+// spelled out here.
+const CP1252_HIGH = {
+  0x80: 0x20ac, 0x82: 0x201a, 0x83: 0x0192, 0x84: 0x201e, 0x85: 0x2026,
+  0x86: 0x2020, 0x87: 0x2021, 0x88: 0x02c6, 0x89: 0x2030, 0x8a: 0x0160,
+  0x8b: 0x2039, 0x8c: 0x0152, 0x8e: 0x017d, 0x91: 0x2018, 0x92: 0x2019,
+  0x93: 0x201c, 0x94: 0x201d, 0x95: 0x2022, 0x96: 0x2013, 0x97: 0x2014,
+  0x98: 0x02dc, 0x99: 0x2122, 0x9a: 0x0161, 0x9b: 0x203a, 0x9c: 0x0153,
+  0x9e: 0x017e, 0x9f: 0x0178,
+};
+const CP1252_CHAR_TO_BYTE = new Map(
+  Object.entries(CP1252_HIGH).map(([byte, cp]) => [cp, Number(byte)])
+);
+
+const MOJIBAKE_SIGNATURE = /[ÃÂ][-¿]|â€|â€™|Ã[–—‘-„†-…‰‹›€™]/;
+
+// Characters -> the CP-1252 bytes they were rendered from. Returns null if any
+// character has no single-byte CP-1252 representation, which means the string is
+// not a pure mis-decode and must be left alone.
+function toCp1252Bytes(text) {
+  const bytes = Buffer.alloc(text.length);
+  for (let i = 0; i < text.length; i++) {
+    const code = text.charCodeAt(i);
+    if (code <= 0xff) {
+      bytes[i] = code;
+    } else {
+      const mapped = CP1252_CHAR_TO_BYTE.get(code);
+      if (mapped === undefined) return null;
+      bytes[i] = mapped;
+    }
+  }
+  return bytes;
+}
+
+// The inverse, used only to prove the repair is lossless.
+function fromCp1252Bytes(bytes) {
+  let out = '';
+  for (const b of bytes) {
+    out += String.fromCharCode(b >= 0x80 && b <= 0x9f ? (CP1252_HIGH[b] ?? b) : b);
+  }
+  return out;
+}
+
+function repairMojibake(text) {
+  if (!text || typeof text !== 'string') return text;
+
+  let current = text;
+  // Double-encoded text needs the round-trip twice; more than that has never been
+  // observed and the loop bound keeps a pathological input from spinning.
+  for (let pass = 0; pass < 2; pass++) {
+    if (!MOJIBAKE_SIGNATURE.test(current)) break;
+
+    const bytes = toCp1252Bytes(current);
+    if (!bytes) break;
+
+    const decoded = bytes.toString('utf8');
+    if (decoded.includes('�')) break;
+
+    // Load-bearing check: re-encoding the result must reproduce the input exactly.
+    // This is what makes the transform provably lossless and protects a legitimate
+    // name that merely happens to contain "Ã".
+    const reencoded = toCp1252Bytes(decoded);
+    if (!reencoded || fromCp1252Bytes(Buffer.from(decoded, 'utf8')) !== current) break;
+
+    current = decoded;
+  }
+
+  return current;
+}
+
 function cleanVenueName(venue) {
   if (!venue || typeof venue !== 'string') return venue;
   // Decode first, so the room-suffix rules below see a real dash. "Osterhout Free Library
   // &#8211; Central Branch" is a dash-separated branch name that the entity hid from the
   // `\s+[-–—]\s+` search entirely, which is how it kept its suffix.
-  let cleaned = decodeHtmlEntities(venue).trim();
+  let cleaned = decodeHtmlEntities(repairMojibake(venue)).trim();
 
   // If venue contains " - " and anything after the first " - " has a room keyword,
   // keep only the part before the first " - "
@@ -1654,7 +1753,7 @@ async function saveEvent(id, data) {
 
   const row = {
     id,
-    name: truncate(normalizeShoutedTitle(collapseDoubledTitle(stripPromoBracketCruft(decodeHtmlEntities(data.name)))), 300),
+    name: truncate(normalizeShoutedTitle(collapseDoubledTitle(stripPromoBracketCruft(decodeHtmlEntities(repairMojibake(data.name))))), 300),
     event_date: truncate(evtDateStr, 100),
     date: data.date instanceof Date ? data.date.toISOString()
       : (typeof data.date?.toDate === 'function') ? data.date.toDate().toISOString()
@@ -2387,7 +2486,7 @@ function flattenEvent(data) {
   const trunc = (str, maxLen) => str && str.length > maxLen ? str.substring(0, maxLen) : str;
 
   const row = {};
-  row.name = trunc(normalizeShoutedTitle(collapseDoubledTitle(stripPromoBracketCruft(decodeHtmlEntities(data.name.trim())))), 300);
+  row.name = trunc(normalizeShoutedTitle(collapseDoubledTitle(stripPromoBracketCruft(decodeHtmlEntities(repairMojibake(data.name.trim()))))), 300);
   if (data.eventDate) row.event_date = trunc(data.eventDate, 100);
   if (data.date) {
     if (data.date instanceof Date) row.date = data.date.toISOString();
@@ -2651,6 +2750,7 @@ module.exports = {
   collapseDoubledTitle,
   decodeHtmlEntities,
   normalizeShoutedTitle,
+  repairMojibake,
   isJunkTitle,
   // Exported 2026-08-24 so scripts/test-cancelled-events.js can drive the real
   // predicate instead of re-implementing it. This function DELETES — an event it

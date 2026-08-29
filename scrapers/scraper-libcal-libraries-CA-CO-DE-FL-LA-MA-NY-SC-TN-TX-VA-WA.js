@@ -1800,15 +1800,13 @@ const LIBRARY_SYSTEMS = [
   // real database rows under LibraryCalendar-Libraries-memphis on 2026-08-29, which is the
   // evidence bar the Worcester incident set. Removed here to stop the same library being
   // scraped twice under two different scraper names.
-  {
-    name: 'Knox County Public Library',
-    url: 'https://knoxlib.libcal.com/calendar?cid=-1&t=d',
-    county: 'Knox',
-    state: 'TN',
-    website: 'https://www.knoxlibrary.org',
-    city: 'Knoxville',
-    zipCode: '37902'
-  },
+  // Knox County Public Library was here until 2026-08-29 and returned ERR_NAME_NOT_RESOLVED
+  // on every run - knoxlib.libcal.com has no DNS record, and the entry's own website field
+  // (knoxlibrary.org) times out. NOT DELETED ON AN ASSUMPTION: the library was located live
+  // at knoxcountylibrary.org, confirmed to run LibraryCalendar (45 .lc-event cards under
+  // "Upcoming Events | Knox County Public Library"), and MOVED to
+  // scraper-librarycalendar-libraries-MD-VA.js, where the platform is actually parsed.
+  // Do not re-add it here; it is not a LibCal site.
 
   // TEXAS
   {

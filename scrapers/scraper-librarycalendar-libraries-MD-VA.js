@@ -151,7 +151,19 @@ function scraperNameFor(library) {
   let slug = '';
   try {
     const host = new URL(library.url).host;              // jessamine.librarycalendar.com
-    slug = host.split('.')[0].toLowerCase().replace(/[^a-z0-9-]/g, '');
+    const labels = host.toLowerCase().split('.').filter(Boolean);
+
+    // "www" is not a site identity. Every entry here used to be a
+    // {slug}.librarycalendar.com subdomain, so the first label was always meaningful;
+    // Knox County (added 2026-08-29) is the first SELF-HOSTED instance, on
+    // www.knoxcountylibrary.org, and it slugged to "LibraryCalendar-Libraries-www" —
+    // a name that identifies nothing and that every future self-hosted entry would
+    // collide with. Skip leading "www"/"www2" and take the registrable domain label
+    // instead, which for that host is "knoxcountylibrary".
+    while (labels.length > 2 && /^wwwd*$/.test(labels[0])) labels.shift();
+    const label = /^wwwd*$/.test(labels[0]) ? (labels[labels.length - 2] || labels[0]) : labels[0];
+
+    slug = (label || '').replace(/[^a-z0-9-]/g, '');
   } catch (e) { /* fall through to the bare key */ }
   return slug ? `${REGISTRY_KEY}-${slug}` : REGISTRY_KEY;
 }
@@ -180,6 +192,30 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.memphislibrary.org',
     city: 'Memphis',
     zipCode: '38104'
+  },
+  {
+    // Added 2026-08-29, same class as Memphis directly above and found the same way: it sat
+    // in LibCal-TN pointing at knoxlib.libcal.com, which does not resolve at all (the LibCal-TN
+    // run this morning logged ERR_NAME_NOT_RESOLVED for it), and its configured website
+    // knoxlibrary.org times out. The library is very much alive - knoxlib.org 301s to
+    // knoxcountylibrary.org, whose /events redirects to /events/upcoming and renders 45
+    // .lc-event cards titled "Upcoming Events | Knox County Public Library".
+    //
+    // Note the URL is the library's OWN domain, not a {slug}.librarycalendar.com subdomain:
+    // this is a self-hosted LibraryCalendar instance (assets served from a Pantheon
+    // live-knoxlib bucket). knoxcountylibrary.librarycalendar.com does NOT resolve, so do not
+    // "normalize" this entry to the subdomain pattern the neighbours use.
+    //
+    // Its markup carries explicit audience groups - "Babies and Toddlers", "Preschool",
+    // "Elementary Age", "Teens", "Adults" - so these rows should land in real age brackets
+    // rather than All Ages.
+    name: 'Knox County Public Library',
+    url: 'https://www.knoxcountylibrary.org/events/upcoming',
+    county: 'Knox',
+    state: 'TN',
+    website: 'https://www.knoxcountylibrary.org',
+    city: 'Knoxville',
+    zipCode: '37902'
   },
   {
     name: 'Grant County Public Library',
