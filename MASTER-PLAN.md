@@ -223,6 +223,13 @@ Found → stored is broken somewhere. Not part of the 63; its own investigation.
 *unknown*, not good. **The true bug count is between 63 and 394.** Re-checking them is separate
 work that no other phase covers.
 
+As of 2026-08-28 the backlog is 830, and its single largest slice — **439 sites that render fully
+but show no dated events** — is enumerated in `reports/renders-nothing-sites.md` and specified as
+a task in **§10a/§10b**, because that slice is also Phase 10's `CONFIGURED-ZERO` population.
+Work it there rather than duplicating the list here. The rest of the backlog splits roughly:
+network errors 149, JS-gated shells 71, platform-mismatch relocations 55, Google Calendar iframes
+20, dead endpoints 18.
+
 ### Phase 9 — Verify ⬜
 `node -c` everything. Re-run by rotation group. Compare FOUND/INVALID against baseline. Re-run
 Step 3d verification on fixed sites — a real fix flips `MISMATCH → MATCHES`. Merge verdicts with
@@ -276,6 +283,74 @@ badly, since most large systems are covered by a platform scraper rather than Wo
 
 **Output is a coverage number the project does not currently have:** libraries covered / libraries
 that exist, per county, per state — and a defensible list of the ones deliberately not covered.
+
+#### 10a. `CONFIGURED-ZERO` is already enumerated
+
+Step 4's `CONFIGURED-ZERO` bucket does not need to be discovered from scratch. The population is
+identified, written down, and regenerable:
+
+- **`reports/renders-nothing-sites.md`** — every site, grouped by scraper, with city, state, the
+  configured URL, and a status per row.
+- **`scripts/build-renders-nothing-list.js`** rebuilds it from
+  `reports/verification-comments.json`, which stays the source of truth. Do not hand-edit the
+  Markdown; re-run the script. `--json=<path>` also emits the machine-readable form.
+- Browsable equivalent with text/status/state filters: the **Silent Calendars** artifact,
+  <https://claude.ai/code/artifact/4b1846e1-0dd1-42ae-8846-06fc5919c5a3>.
+
+**The counts drift as verification proceeds, so treat any number here as a dated reading, not a
+constant** — it moved 434 → 439 overnight between 08-28 and 08-29 as the daily run added
+verdicts. As of **2026-08-29**:
+
+| | Count |
+|---|---|
+| Total | 439 |
+| **Open** — unguarded and present in config | **384** (379 with a URL recorded) |
+| Guarded — already carries `urlCollision`, skipped at run time | 23 |
+| Unresolved — audit name not matched to a config entry (`scraper_name` drift) | 32 |
+
+Concentration, open rows only: WordPress-NY 72, MA 62, PA 54, NJ 39, ME 29, NC 21, NH 19, MS 15,
+CT 12, KY 11, then a tail of fifteen scrapers at ≤8 each. Twenty states; NY/MA/PA/NJ/ME are ~68%
+of the list. **96% sits in the WordPress-\* family**, which is itself the signal — see the task
+below before treating any of it as a denominator.
+
+**These are `UNVERIFIABLE`, not `MATCHES`, and the distinction is load-bearing.** Each page loads
+cleanly under the scrapers' own Puppeteer stack — no timeout, no bot-block, no TLS error — and
+then shows no dated events and no event containers. A page that merely renders nothing has not
+*said* it has no upcoming events. Contrast the ten WordPress-NY libraries closed as MATCHES on
+2026-08-27: those were closed only because the site's own TEC REST endpoint returned a literal
+`total: 0`, which is an affirmative answer. None of these has given one.
+
+#### 10b. Task — classify these sites before using them as a denominator
+
+**Do not carry this list into the Phase 10 join as `CONFIGURED-ZERO` on its face.** A
+"renders nothing" verdict describes what a verifier saw, not what the scraper does, and those two
+have already diverged twice:
+
+- **Assabet-NH-MA, 2026-08-28.** Eleven of its sites were recorded as extraction failures
+  returning 0. The scraper was returning real counts the whole time — Dover 30, Derry 50,
+  Somerville 120. The actual defect was that it stored the card's `H2` (day + time + room +
+  branch + street address, glued) as the title while the real title sat in a sibling `H3`, and
+  that it counted the sidebar filter checkboxes as events. Both verdicts and reality were wrong,
+  in opposite directions.
+- **Harwinton, Willimantic, Montgomery City-County, 2026-08-27.** Recorded as zero-event; all
+  three were working, their verdicts simply predating the TEC helper landing in those state files.
+
+So the classification work is:
+
+1. **Sample before sweeping.** Take ~20 across the biggest families (NY/MA/PA/NJ/ME) and check
+   each against its scraper's *most recent run output*, not against the verdict. A site the
+   scraper reports a nonzero count for is a stale verdict, not a `CONFIGURED-ZERO`.
+2. **Ask the site's own API where one exists.** The TEC probe on 2026-08-27 settled ten NY
+   libraries in a single pass by reading `total` from `wp-json/tribe/events/v1/events`. Any site
+   that answers with a number has told you which bucket it belongs in; that beats re-rendering it.
+3. **Split the remainder into two buckets, and keep them separate.** `CONFIGURED-ZERO` means the
+   institution genuinely publishes nothing scrapeable right now. A site whose events are visible
+   but unread is an extraction bug and belongs in Phase 4, not in the coverage denominator.
+4. **Only then** feed the survivors into Step 4's classification.
+
+**Why this must not be skipped:** a mis-verdicted site entering Phase 10 as `CONFIGURED-ZERO`
+produces a confidently wrong coverage number — the precise failure mode §10's "why this is last"
+paragraph exists to prevent, arrived at from a different direction.
 
 ### Phase 11 — Record 🔄 ONGOING
 One `SCRAPER-FIX-LOG.jsonl` line per logical fix. Update `reports/fix-notes.json`. Commit
@@ -376,3 +451,5 @@ expanded as well as the names fixed. This widens Phase 2's county work beyond wh
 | 2026-08-06 | Phase 2 (NC) | Batch 2: 13 entries across 6 more verified systems. NC collisions 67 -> 54, fleet-wide 554 -> 550 |
 | 2026-08-06 | Phase 2 (NC) | Queue corrected: 9 non-colliding NC entries were never checked, so NC is 30 of 89 verified, not 30 of 79 |
 | 2026-08-06 | Phase 10 | County-level coverage completeness audit added as the final milestone, blocked on Phases 2-8 |
+| 2026-08-28 | Phase 10 | `CONFIGURED-ZERO` population enumerated ahead of time and folded into §10a: render-but-show-nothing sites listed in `reports/renders-nothing-sites.md`, regenerable via `scripts/build-renders-nothing-list.js`. 439 as of 08-29, 384 of them open, 96% WordPress-\* |
+| 2026-08-28 | Phase 10 | §10b added — classify those sites BEFORE using them as a denominator. Two precedents show verdict and reality diverging: Assabet-NH-MA (11 sites recorded as returning 0 were returning real counts; the defect was a glued `H2` title and filter checkboxes counted as events) and three TEC sites whose verdicts predated the helper landing |

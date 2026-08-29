@@ -1,27 +1,31 @@
 # Sites that render but show nothing
 
-Generated 2026-08-28 from `reports/verification-comments.json`.
+Generated 2026-08-29 by `scripts/build-renders-nothing-list.js` from
+`reports/verification-comments.json`. Do not hand-edit — re-run the script.
 
-These 434 sites load cleanly under the scrapers' own Puppeteer stack — no timeout, no
+These 439 sites load cleanly under the scrapers' own Puppeteer stack — no timeout, no
 bot-block, no TLS error — and then present **no dated events and no event containers**.
 
-They are recorded `UNVERIFIABLE`, not `MATCHES`, on purpose. The rule dates from the
-2026-08-10 Lake Sinclair re-check: a page that merely renders nothing has not *said* it has no
-upcoming events, and treating silence as confirmation is how a real extraction bug gets closed as
-working-as-intended. Compare the ten WordPress-NY libraries resolved on 2026-08-27, which WERE
-closed as MATCHES — but only because their own TEC REST endpoint returned a literal `total: 0`,
-which is an affirmative answer rather than silence.
+They are recorded `UNVERIFIABLE`, not `MATCHES`, on purpose (the 2026-08-10 Lake Sinclair
+rule): a page that merely renders nothing has not *said* it has no upcoming events, and treating
+silence as confirmation is how a real extraction bug gets closed as working-as-intended. Compare
+the ten WordPress-NY libraries closed as MATCHES on 2026-08-27 — closed only because their own
+TEC REST endpoint returned a literal `total: 0`, which is an affirmative answer.
+
+**This is MASTER-PLAN Phase 10's `CONFIGURED-ZERO` population. Read §10b before using it as a
+denominator** — a "renders nothing" verdict describes what a verifier saw, not what the scraper
+does, and those have already diverged twice (Assabet-NH-MA, and three TEC sites whose verdicts
+predated the helper landing).
 
 | | Count |
 |---|---|
-| Total | 434 |
-| **Open** — unguarded and present in config | **379** (374 with a URL recorded) |
+| Total | 439 |
+| **Open** — unguarded and present in config | **384** (379 with a URL recorded) |
 | Guarded — already carries `urlCollision`, skipped at run time | 23 |
-| Unresolved — audit name not matched to a config entry (usually `scraper_name` drift) | 32 |
+| Unresolved — audit name not matched to a config entry | 32 |
 | Scrapers | 42 |
 
-Browsable version with filters: see the Silent Calendars artifact.
-
+Open rows by scraper: WordPress-NY 72, WordPress-MA 62, WordPress-PA 54, WordPress-NJ 39, WordPress-ME 29, WordPress-NC 21, WordPress-NH 19, WordPress-MS 15, WordPress-CT 12, WordPress-KY 11, WordPress-GA 8, WordPress-VT 8, WordPress-FL 6, WordPress-WV 5, Venue-Events-ScienceArts 4, WordPress-RI 4, WordPress-SC 4, WordPress-TN 3, WordPress-AL 2, WordPress-VA 1, CivicEngage-Libraries 1, GoogleCalendar-SC 1, LibCal-VA2 1, WordPress-DE 1, Communico-NJ 1.
 
 ## WordPress-NY — 76 sites (72 open)
 
@@ -313,16 +317,18 @@ Browsable version with filters: see the Silent Calendars artifact.
 | Westbrook Public Library | Westbrook | ME | <https://walkerlibrary.org> | open |
 | Windham Public Library | Windham | ME | <https://www.windham.lib.me.us/calendar> | open |
 
-## WordPress-NC — 21 sites (19 open)
+## WordPress-NC — 23 sites (21 open)
 
 | Library site | City | ST | Configured URL | Status |
 |---|---|---|---|---|
 | Boonville Community Public Library (Boonville, NC) | Boonville | NC | <https://nwrl.org/regional-library-events/> | open |
+| Craven-Pamlico-Carteret Regional Library | New Bern | NC | <https://mycprl.org/events/all-library-events> | open |
 | Danbury Public Library (Danbury, NC) | Danbury | NC | <https://nwrl.org/regional-library-events/> | open |
 | East Branch Library (Wilson, NC) | Wilson | NC | <https://www.wilsoncountypubliclibrary.org/events/library-calendar> | open |
 | Farmville Public Library (Farmville, NC) | Farmville | NC | <https://farmvillelibrary.libguides.com/home> | open |
 | Havelock-Craven County Public (Havelock, NC) | Havelock | NC | <https://citylibrary.com/public-libraries/havelock-public-library/> | open |
 | Hazel W. Guilford Memorial Library (Aurora, NC) | Aurora | NC | <https://bhmlib.org/> | open |
+| King Public Library | King | NC | <https://www.kinglibrary.org/events> | open |
 | King Public Library (King, NC) | King | NC | <https://www.kinglibrary.org/events> | open |
 | Lowell Branch Library (Lowell, NC) | Lowell | NC | <https://gastonlibrary.org/calendar.aspx> | open |
 | Macon County Public Library (Franklin, NC) | Franklin | NC | <https://www.franklinlibrary.org/events> | guarded |
@@ -403,7 +409,7 @@ Browsable version with filters: see the Silent Calendars artifact.
 | William Estes Powell Memorial Library | Beaumont | MS | <https://www.beaumontlibrary.org/events> | open |
 | Woodville Public Library | Woodville | MS | <https://www.wcplibrary.com/events> | open |
 
-## WordPress-VT — 12 sites (7 open)
+## WordPress-VT — 13 sites (8 open)
 
 | Library site | City | ST | Configured URL | Status |
 |---|---|---|---|---|
@@ -411,6 +417,7 @@ Browsable version with filters: see the Silent Calendars artifact.
 | Aldrich Public Library (Barre, VT) | Barre | VT | <https://www.aldrichpubliclibrary.org/events> | open |
 | Bradford Public (Bradford, VT) | Bradford | VT | <https://bradfordlibrary.org/> | guarded |
 | Chelsea Public (Chelsea, VT) | Chelsea | VT | <https://www.chelsealibrary.org/events> | guarded |
+| Fairfax Community | Fairfax | VT | <https://www.fairfaxlibrary.org/events> | open |
 | Fairfax Community (Fairfax, VT) | Fairfax | VT | <https://www.fairfaxlibrary.org/events> | open |
 | Gilman Public Library (Gilman, VT) | Gilman | VT | <https://gilmanlibrary.org/calendar> | open |
 | Moore Free (Newfane, VT) | Newfane | VT | <https://www.newfanelibrary.org/events> | guarded |
@@ -419,6 +426,23 @@ Browsable version with filters: see the Silent Calendars artifact.
 | Rochester Public (Rochester, VT) | Rochester | VT | <https://www.rochesterlibrary.org/> | guarded |
 | Westminster West Public (Westminster West, VT) | Westminster West | VT | <https://www.westminsterwestlibrary.org/events> | open |
 | Whiting (Chester, VT) | Chester | VT | <https://www.chesterlibrary.org/> | guarded |
+
+## WordPress-GA — 12 sites (8 open)
+
+| Library site | City | ST | Configured URL | Status |
+|---|---|---|---|---|
+| Clarkesville-Habersham Co. Lib. (Clarkesville, GA) | Clarkesville | GA | <https://clarkesvillelibrary.org/library-events> | open |
+| Clarkston Branch (Clarkston, GA) | Clarkston | GA | <https://www.clarkstonlibrary.org/events> | open |
+| Commerce Public Library (Commerce, GA) | Commerce | GA | <https://www.commercelibrary.org/> | open |
+| Coolidge Public Library | Coolidge | GA | <https://www.coolidgelibrary.org/events> | open |
+| Coolidge Public Library (Coolidge, GA) | Coolidge | GA | <https://www.coolidgelibrary.org/events> | open |
+| Cornelia-Habersham Co. Lib. | Cornelia | GA | <https://www.cornelialibrary.org/events> | open |
+| Harlie Fulford Memorial Library | Wrightsville | GA | <https://www.wrightsvillelibrary.org/events> | open |
+| Harlie Fulford Memorial Library (Wrightsville, GA) | Wrightsville | GA | <https://www.wrightsvillelibrary.org/events> | open |
+| Heard County Public Library (Franklin, GA) | Franklin | GA | <https://www.franklinlibrary.org/events> | guarded |
+| Hightower Memorial Library (Thomaston, GA) | Thomaston | GA | <https://thomastonlibrary.org/> | guarded |
+| Monroe-Walton County Library (Monroe, GA) | Monroe | GA | <https://www.monroelibrary.org/events> | guarded |
+| Scottdale-Tobie Grant Branch (Scottdale, GA) | Scottdale | GA | <https://www.scottdalelibrary.org/> | guarded |
 
 ## WordPress-KY — 12 sites (11 open)
 
@@ -436,22 +460,6 @@ Browsable version with filters: see the Silent Calendars artifact.
 | Madison County Public Library | Richmond | KY | <https://www.madisoncountylibrary.org/events> | open |
 | Mahan-Oldham County Library | Goshen | KY | <https://www.goshenlibrary.org/> | guarded |
 | Whitley County Public Library | Williamsburg | KY | <https://www.whitleylibrary.org/events> | open |
-
-## WordPress-GA — 11 sites (7 open)
-
-| Library site | City | ST | Configured URL | Status |
-|---|---|---|---|---|
-| Clarkesville-Habersham Co. Lib. (Clarkesville, GA) | Clarkesville | GA | <https://clarkesvillelibrary.org/library-events> | open |
-| Clarkston Branch (Clarkston, GA) | Clarkston | GA | <https://www.clarkstonlibrary.org/events> | open |
-| Commerce Public Library (Commerce, GA) | Commerce | GA | <https://www.commercelibrary.org/> | open |
-| Coolidge Public Library | Coolidge | GA | <https://www.coolidgelibrary.org/events> | open |
-| Coolidge Public Library (Coolidge, GA) | Coolidge | GA | <https://www.coolidgelibrary.org/events> | open |
-| Harlie Fulford Memorial Library | Wrightsville | GA | <https://www.wrightsvillelibrary.org/events> | open |
-| Harlie Fulford Memorial Library (Wrightsville, GA) | Wrightsville | GA | <https://www.wrightsvillelibrary.org/events> | open |
-| Heard County Public Library (Franklin, GA) | Franklin | GA | <https://www.franklinlibrary.org/events> | guarded |
-| Hightower Memorial Library (Thomaston, GA) | Thomaston | GA | <https://thomastonlibrary.org/> | guarded |
-| Monroe-Walton County Library (Monroe, GA) | Monroe | GA | <https://www.monroelibrary.org/events> | guarded |
-| Scottdale-Tobie Grant Branch (Scottdale, GA) | Scottdale | GA | <https://www.scottdalelibrary.org/> | guarded |
 
 ## MacaroniKid-FL — 6 sites (0 open)
 
@@ -521,6 +529,14 @@ Browsable version with filters: see the Silent Calendars artifact.
 | Horry County Memorial Library - Loris Library | Loris | SC | <https://www.lorislibrary.org/> | open |
 | Lexington County Library - Swansea | Swansea | SC | <https://lexcolibrary.libcal.com> | open |
 
+## WordPress-TN — 3 sites (3 open)
+
+| Library site | City | ST | Configured URL | Status |
+|---|---|---|---|---|
+| Coffee County Lannom Memorial Public Library | Tullahoma | TN | <https://lannom.org/events> | open |
+| Crockett County Library | Alamo | TN | <https://www.alamolibrary.org/events> | open |
+| Westmoreland Public Library | Westmoreland | TN | <https://www.westmorelandpubliclibrary.com/> | open |
+
 ## MacaroniKid-GA — 3 sites (0 open)
 
 | Library site | City | ST | Configured URL | Status |
@@ -529,7 +545,7 @@ Browsable version with filters: see the Silent Calendars artifact.
 | Macaroni Kid Franklin-Hart | — | — | — | no registry key (scraper_name drift) |
 | Macaroni Kid Stonecrest-Conyers-Covington | — | — | — | no registry key (scraper_name drift) |
 
-## LocalistParks-IN — 3 sites (0 open)
+## Localist-Parks-IN — 3 sites (0 open)
 
 | Library site | City | ST | Configured URL | Status |
 |---|---|---|---|---|
@@ -543,13 +559,6 @@ Browsable version with filters: see the Silent Calendars artifact.
 |---|---|---|---|---|
 | Henrico County Public Library | — | — | — | name not found in its own config |
 | Jefferson-Madison Regional Library | Charlottesville | VA | <https://jmrl.org/calendar> | open |
-
-## WordPress-TN — 2 sites (2 open)
-
-| Library site | City | ST | Configured URL | Status |
-|---|---|---|---|---|
-| Crockett County Library | Alamo | TN | <https://www.alamolibrary.org/events> | open |
-| Westmoreland Public Library | Westmoreland | TN | <https://www.westmorelandpubliclibrary.com/> | open |
 
 ## WordPress-AL — 2 sites (2 open)
 
