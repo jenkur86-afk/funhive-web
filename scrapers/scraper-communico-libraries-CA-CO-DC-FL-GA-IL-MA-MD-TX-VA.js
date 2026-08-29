@@ -1070,7 +1070,22 @@ const LIBRARY_SYSTEMS = [
   //     yet supported by any scraper (JS-rendered widget; Bedework exposes
   //     RSS/JSON/iCal export feeds that would need dedicated support).
 
-  // VIRGINIA (2 libraries)
+  // VIRGINIA
+  {
+    // RELOCATED FROM WordPress-VA 2026-08-29. That entry pointed at
+    // events.chesapeakelibrary.org and had been recorded as a dead endpoint; the host is
+    // very much alive, it just is not WordPress. It is Communico, proven from the page's
+    // own assets (static.libnet.info/frontend-images/editor/chesapeakelibrary/) and its
+    // title "Events - Chesapeake Public Library". The canonical libnet host below returns
+    // the same page, so it is used here to match the rest of this array.
+    name: 'Chesapeake Public Library',
+    url: 'https://chesapeakelibrary.libnet.info/events',
+    county: 'Chesapeake City',
+    state: 'VA',
+    website: 'https://www.chesapeakelibrary.org',
+    city: 'Chesapeake',
+    zipCode: '23320'
+  },
   {
     name: 'Loudoun County Public Library',
     url: 'https://loudoun.libnet.info/events',

@@ -320,10 +320,45 @@ function computeGates() {
   try { verdicts = JSON.parse(fs.readFileSync(COMMENTS, 'utf8')); } catch { notes.push('verification-comments.json unreadable — gates 3-4 unavailable.'); }
   const vals = Object.values(verdicts);
   const count = v => vals.filter(x => x && x.verdict === v).length;
-  g.confirmedBugs = { now: count('MISMATCH'), unit: '', target: 0,
-    detail: `${count('MATCHES')} MATCHES / ${count('MISMATCH')} MISMATCH / ${count('UNVERIFIABLE')} UNVERIFIABLE` };
+  // Gate 3 counts MISMATCHes that are STILL BLEEDING, not every MISMATCH ever recorded.
+  // A verdict describes the live page and stays MISMATCH forever once true; `status`
+  // (see scripts/mark-contained-mismatches.js) records what has been DONE about it. On
+  // 2026-08-29, 404 of 617 pointed at config entries already carrying a urlCollision
+  // guard — the scraper skips them, so they cannot import wrong data and have not been
+  // able to for days. Counting those as open bugs is what made this gate drift UPWARD on
+  // sessions that fixed things, exactly as the VERDICT-STORE-HAS-NO-RESOLVED-STATE note
+  // in reports/fix-notes.json predicted.
+  //
+  // Contained is NOT fixed, and is never folded into a success number: each contained
+  // entry is still an uncovered library, reported on its own row in STILL BROKEN below.
+  const contained = vals.filter(x => x && x.verdict === 'MISMATCH' && x.status === 'contained').length;
+  const fixedBugs = vals.filter(x => x && x.verdict === 'MISMATCH' && x.status === 'fixed').length;
+  const openBugs = count('MISMATCH') - contained - fixedBugs;
+  g.confirmedBugs = { now: openBugs, unit: '', target: 0, contained, fixedBugs,
+    detail: `${count('MATCHES')} MATCHES / ${count('MISMATCH')} MISMATCH / ${count('UNVERIFIABLE')} UNVERIFIABLE. ` +
+      `Of the MISMATCHes, ${openBugs} are OPEN (config entry still live), ${contained} are CONTAINED ` +
+      `(guarded — cannot import wrong data, but still an uncovered gap) and ${fixedBugs} are FIXED ` +
+      `(coverage restored and observed). Refresh: node scripts/mark-contained-mismatches.js --save` };
   g.unknownSites = { now: count('UNVERIFIABLE'), unit: '', target: 0,
     detail: 'never re-checked; the true bug count sits between the MISMATCH count and MISMATCH+UNVERIFIABLE' };
+
+  // Numbers interpolated from the live store rather than written in, so this note cannot
+  // drift from the gate it explains — the first draft of it hardcoded a count that was
+  // already wrong by the end of the same session.
+  if (TODAY <= '2026-09-05') {
+    const totalMismatch = g.confirmedBugs.now + g.confirmedBugs.contained + g.confirmedBugs.fixedBugs;
+    notes.push('METHODOLOGY CHANGE 2026-08-29: gate 3 now counts only MISMATCHes whose config entry is STILL ' +
+               `LIVE. Of ${totalMismatch} MISMATCH verdicts, ${g.confirmedBugs.contained} point at entries that are ` +
+               'already guarded with urlCollision or commented out — the scraper never visits them, so they cannot ' +
+               `import wrong data and had not been able to for days — and ${g.confirmedBugs.fixedBugs} have had coverage ` +
+               `restored and observed. Gate 3 therefore reads ${g.confirmedBugs.now}, not ${totalMismatch}. ` +
+               'THAT DROP IS A DEFINITION CHANGE, NOT WORK DONE. The contained ones are not gone: they get their own ' +
+               'row in STILL BROKEN, because a guarded entry gives the library no coverage and CLAUDE.md is explicit ' +
+               'that a disabled library is a real gap until someone finds its correct URL. Any comparison with a ' +
+               'STATUS.md entry dated on or before 2026-08-28 crosses this change. Containment is re-derived from the ' +
+               'live config on every run by node scripts/mark-contained-mismatches.js, so removing a guard re-opens ' +
+               'the bug automatically.');
+  }
 
   // --- Gate 5 — share of audited events that landed in a SPECIFIC age bracket rather
   // than the All Ages catch-all. Computed from the age audit's own bracket columns.
@@ -400,7 +435,7 @@ function computeGates() {
 const GATE_ORDER = [
   ['countiesResolve',    '1. Counties resolve',        'blocks nothing — mechanical once a city→county dataset is chosen'],
   ['urlCollisions',      '2. URLs unique per state',   'blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library'],
-  ['confirmedBugs',      '3. Zero confirmed bugs',     'mostly blocked on gate 2'],
+  ['confirmedBugs',      '3. Zero open bugs',          'mostly blocked on gate 2'],
   ['unknownSites',       '4. Zero unknown sites',      'independent — re-checking is its own pass'],
   ['specificAgeShare',   '5. Age brackets resolved',   'no fixed target — maximise; ratchets vs best ever'],
   ['nameConformance',    '6. Names join to registry',  'planned migration, not daily work'],
@@ -470,10 +505,19 @@ function renderBroken(gates, fixNotes) {
     // The "blocked on the URL work" reason was true only while gate 2 was open. Once the
     // true collisions are cleared these become directly actionable, and saying otherwise
     // would park 563 fixable sites behind work that is already finished.
-    push('🟠', 'Confirmed open bugs (MISMATCH verdicts)', `${gates.confirmedBugs.now} sites`,
+    push('🟠', 'Confirmed open bugs (MISMATCH, config entry still live)', `${gates.confirmedBugs.now} sites`,
       gates.urlCollisions.now > 0
         ? 'most blocked on the URL work above'
         : 'NOT blocked any more — gate 2 is clear, so these are directly actionable; dead-endpoint and extraction-failure buckets first');
+  }
+  // Reported as its own row, never folded into the gate-3 number and never presented as
+  // resolved. A guarded entry stops costing us bad data; it does NOT give the library
+  // coverage, and CLAUDE.md is explicit that a disabled library is a real gap until
+  // someone finds its correct URL.
+  if (gates.confirmedBugs.contained > 0) {
+    push('🟠', 'Contained bugs — guarded, so no bad data, but the library is uncovered',
+      `${gates.confirmedBugs.contained} sites`,
+      'each needs a correct URL or a relocation to the right scraper family before it is genuinely fixed');
   }
   if (gates.unknownSites.now > 0) {
     push('🟠', 'Unknown sites (UNVERIFIABLE verdicts)',

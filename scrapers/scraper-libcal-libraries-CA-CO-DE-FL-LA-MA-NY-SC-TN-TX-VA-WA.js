@@ -435,6 +435,21 @@ const LIBRARY_SYSTEMS = [
     zipCode: '06830'
   },
   {
+    // RELOCATED FROM WordPress-CT 2026-08-29. That entry pointed at newtownlibrary.org,
+    // which is Newtown Square PENNSYLVANIA - 201 Bishop Hollow Rd, PA 19073, phone area
+    // code 610 - not Newtown Connecticut. Read off the live page, not inferred from the
+    // name. The real C.H. Booth Library is chboothlibrary.org, 25 Main Street, Newtown
+    // CT 06470, and it publishes on LibCal, so a WordPress DOM scraper could never have
+    // read it even with the right host.
+    name: 'C.H. Booth Library',
+    url: 'https://chboothlibrary.libcal.com/calendar?cid=-1&t=d',
+    county: 'Fairfield',
+    state: 'CT',
+    website: 'https://chboothlibrary.org',
+    city: 'Newtown',
+    zipCode: '06470'
+  },
+  {
     name: 'Silas Bronson Library',
     url: 'https://bronsonlibrary.libcal.com/',
     county: 'New Haven',
@@ -1753,6 +1768,19 @@ const LIBRARY_SYSTEMS = [
 
   // TENNESSEE
   {
+    // RELOCATED FROM WordPress-TN 2026-08-29. rcls.org/events was a dead endpoint, but the
+    // host is fine - Rutherford County publishes on LibCal. rcls.libcal.com/calendar
+    // returns 200 and serves springSpace (LibCal's own JS namespace), so a WordPress DOM
+    // scraper could never have read it regardless of path.
+    name: 'Rutherford County Library System',
+    url: 'https://rcls.libcal.com/calendar?cid=-1&t=d',
+    county: 'Rutherford',
+    state: 'TN',
+    website: 'https://rcls.org',
+    city: 'Murfreesboro',
+    zipCode: '37130'
+  },
+  {
     name: 'Clarksville-Montgomery County Public Library',
     url: 'https://mcgtn.libcal.com/calendar?cid=14859',
     county: 'Montgomery',
@@ -1761,15 +1789,17 @@ const LIBRARY_SYSTEMS = [
     city: 'Clarksville',
     zipCode: '37040'
   },
-  {
-    name: 'Memphis Public Libraries',
-    url: 'https://memphis.librarycalendar.com/',
-    county: 'Shelby',
-    state: 'TN',
-    website: 'https://www.memphislibrary.org',
-    city: 'Memphis',
-    zipCode: '38103'
-  },
+  // Memphis Public Libraries MOVED to LibraryCalendar-Libraries 2026-08-29. Its URL here
+  // was already memphis.librarycalendar.com - a LibraryCalendar host sitting inside the
+  // LibCal family - and this scraper's generic selectors did pull events off it, so it was
+  // not silently broken. It was reading the wrong platform's page with the wrong parser:
+  // the rows it produced carry a date with no time ("September 4, 2026"), while the
+  // purpose-built LibraryCalendar scraper reads the same site as
+  // "Mon, Aug 31, 2026 10:30am-11:00am".
+  // NOT DELETED ON AN ASSUMPTION - the replacement was RUN FIRST and produced 24 events and
+  // real database rows under LibraryCalendar-Libraries-memphis on 2026-08-29, which is the
+  // evidence bar the Worcester incident set. Removed here to stop the same library being
+  // scraped twice under two different scraper names.
   {
     name: 'Knox County Public Library',
     url: 'https://knoxlib.libcal.com/calendar?cid=-1&t=d',

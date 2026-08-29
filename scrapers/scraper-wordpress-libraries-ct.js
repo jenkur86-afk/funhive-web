@@ -112,7 +112,15 @@ const LIBRARIES = [
   { name: 'New Fairfield Free Public Library', url: 'https://www.newfairfieldlibrary.org/', eventsUrl: 'https://www.newfairfieldlibrary.org/', city: 'New Fairfield', state: 'CT', zipCode: '06812', county: 'Western Connecticut Planning Region'},
   { name: 'Public Library Of New London', url: 'https://www.newlondonlibrary.org', eventsUrl: 'https://www.newlondonlibrary.org/events', city: 'New London', state: 'CT', zipCode: '06320', county: 'New London County', urlCollision: 'newlondonlibrary.org is WI, not CT' },
   { name: 'New Milford Public Library', url: 'https://newmilfordlibrary.org/', eventsUrl: 'https://newmilfordlibrary.org/', city: 'New Milford', state: 'CT', zipCode: '06776', county: 'Western Connecticut Planning Region'},
-  { name: 'Cyrenius H. Booth Library', url: 'https://newtownlibrary.org/', eventsUrl: 'https://newtownlibrary.org/', city: 'Newtown', state: 'CT', zipCode: '06470', county: 'Western Connecticut Planning Region'},
+  // 2026-08-29: URL COLLISION, and a platform mismatch behind it. newtownlibrary.org is
+  // Newtown Square PENNSYLVANIA - 201 Bishop Hollow Rd, PA 19073, phone area code 610 -
+  // read off the live page, not inferred from the name. Two states have a Newtown.
+  // RELOCATED, not merely guarded: the real C.H. Booth Library is chboothlibrary.org,
+  // 25 Main Street, Newtown CT 06470, and it publishes on LibCal, so this WordPress row
+  // could never have read it even with the correct host. Added to LibCal-CT and PROVEN
+  // LIVE the same day at Found 20 events. Guarded rather than deleted so the library
+  // keeps an explained row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Cyrenius H. Booth Library', url: 'https://newtownlibrary.org/', eventsUrl: 'https://newtownlibrary.org/', city: 'Newtown', state: 'CT', zipCode: '06470', county: 'Western Connecticut Planning Region', urlCollision: 'newtownlibrary.org is Newtown Square PA, not Newtown CT - relocated to LibCal-CT at chboothlibrary.libcal.com 2026-08-29, proven live at 20 events' },
   { name: 'Norfolk Library', url: 'https://www.norfolklibrary.org', eventsUrl: 'https://www.norfolklibrary.org/events', city: 'Norfolk', state: 'CT', zipCode: '06058', county: 'Northwest Hills Planning Region'},
   { name: 'North Haven Memorial Library', url: 'https://www.northhavenlibrary.org', eventsUrl: 'https://www.northhavenlibrary.org/events', city: 'North Haven', state: 'CT', zipCode: '06473', county: 'South Central Connecticut Planning Region', urlCollision: 'northhavenlibrary.org is ME, not CT' },
   // URL corrected 2026-08-11 (was norwichlibrary.org): 261 Main St Norwich CT 06360, phone 860-889-2365, listed in City of Norwich CT gov department directory

@@ -445,6 +445,14 @@ function buildFixQueue({ sites, ages, comments, roster, fixNotes }) {
     const e = get(scraper);
     if (c.verdict === 'UNVERIFIABLE') { e.unverifiable++; return; }
     if (c.verdict !== 'MISMATCH') return;
+    // A MISMATCH carrying a `status` has already been acted on — either the entry is
+    // guarded/commented out so it cannot import bad data (contained), or coverage was
+    // restored and observed (fixed). The verdict stays MISMATCH because it describes the
+    // live page, but the FIX QUEUE is a work list, and putting 472 already-handled sites
+    // on it wastes the time of whoever picks it up. They are counted separately so the
+    // queue still shows them rather than hiding them.
+    if (c.status === 'contained') { e.contained = (e.contained || 0) + 1; return; }
+    if (c.status === 'fixed') { e.fixed = (e.fixed || 0) + 1; return; }
     (c.population === 'allages' ? e.mismatchAges : e.mismatchZero).push(site);
     if (e.evidence.length < 3) e.evidence.push(`${site} — ${c.comment}`);
   });
@@ -1264,7 +1272,11 @@ function main() {
   const fixQueue = buildFixQueue({ sites, ages, comments, roster, fixNotes });
   const pinned = fixQueue.filter(r => r[11]).length;
   const bugs = fixQueue.reduce((s, r) => s + r[3], 0);
-  console.log(`  fix queue    : ${fixQueue.length} scrapers (${bugs} confirmed bugs, ${pinned} pinned note(s))`);
+  // Report what was set aside alongside what remains, so a shrinking queue is legible as
+  // work done rather than as rows going missing.
+  const handled = Object.values(comments).reduce((s, c) =>
+    s + (c && c.verdict === 'MISMATCH' && (c.status === 'contained' || c.status === 'fixed') ? 1 : 0), 0);
+  console.log(`  fix queue    : ${fixQueue.length} scrapers (${bugs} OPEN bugs, ${handled} already contained/fixed and excluded, ${pinned} pinned note(s))`);
 
   const runDate = new Date().toISOString().slice(0, 10);
   const html = buildHtml({ sites, ages, comments, roster, coverage, runDate, notes, fixQueue, globalNote, pending, libDate, ageDate });

@@ -168,6 +168,20 @@ const LIBRARY_SYSTEMS = [
   // control (ENOTFOUND): grantcounty -> "Upcoming Events | Grant County Public Library",
   // wilkinsburg -> "Upcoming Events | Wilkinsburg Public Library".
   {
+    // Added 2026-08-29 from the same backlog. It was in LibCal-TN, where it returned a dead
+    // endpoint every run: Memphis is on LibraryCalendar, not LibCal. Confirmed live -
+    // memphis.librarycalendar.com/events/upcoming returns 200 titled "Upcoming Events |
+    // Memphis Public Libraries". Same red herring as the two entries above, in reverse:
+    // a platform name in a config is worth nothing until the feed is checked.
+    name: 'Memphis Public Libraries',
+    url: 'https://memphis.librarycalendar.com/events/upcoming',
+    county: 'Shelby',
+    state: 'TN',
+    website: 'https://www.memphislibrary.org',
+    city: 'Memphis',
+    zipCode: '38104'
+  },
+  {
     name: 'Grant County Public Library',
     url: 'https://grantcounty.librarycalendar.com/events/upcoming',
     county: 'Grant',

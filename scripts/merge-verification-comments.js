@@ -31,6 +31,19 @@ const STORE = path.join(ROOT, 'reports', 'verification-comments.json');
 const VERDICTS = ['MATCHES', 'MISMATCH', 'UNVERIFIABLE'];
 const POPULATIONS = ['zero', 'allages'];
 
+// Remediation state, layered ON TOP of the verdict — never a replacement for it. The
+// verdict says what the LIVE PAGE shows and stays MISMATCH as long as that is true; the
+// status says what has been DONE about it. Added 2026-08-29 because gate 3 was counting
+// 404 already-guarded entries as open bugs, which is what the standing
+// VERDICT-STORE-HAS-NO-RESOLVED-STATE note in reports/fix-notes.json predicted.
+//   contained — the config entry now carries a urlCollision guard, so it can no longer
+//               import wrong data. NOT fixed: the library is still an uncovered gap, and
+//               it is reported as one. Derived from the live config by
+//               scripts/mark-contained-mismatches.js, never hand-set.
+//   fixed     — coverage actually restored and observed (a corrected URL or a relocation
+//               that produced real rows). Set only with run evidence in statusNote.
+const STATUSES = ['contained', 'fixed'];
+
 const args = process.argv.slice(2);
 const save = args.includes('--save');
 const validateOnly = args.includes('--validate');
@@ -62,6 +75,11 @@ function validateStore(store) {
     if (!VERDICTS.includes(v.verdict)) problems.push(`bad verdict ${JSON.stringify(v.verdict)}: ${k}`);
     if (typeof v.comment !== 'string' || !v.comment.trim()) problems.push(`empty comment: ${k}`);
     if (v.population && !POPULATIONS.includes(v.population)) problems.push(`bad population ${JSON.stringify(v.population)}: ${k}`);
+    if (v.status) {
+      if (!STATUSES.includes(v.status)) problems.push(`bad status ${JSON.stringify(v.status)}: ${k}`);
+      if (v.verdict !== 'MISMATCH') problems.push(`status set on a non-MISMATCH verdict: ${k}`);
+      if (typeof v.statusNote !== 'string' || !v.statusNote.trim()) problems.push(`status without a statusNote: ${k}`);
+    }
   });
   return problems;
 }
@@ -250,7 +268,15 @@ function main() {
         updated++;
         if (samples.length < 5) samples.push(`~ ${key} : ${prev.verdict} -> ${verdict}`);
       }
-      store[key] = { verdict, comment: String(comment).trim(), population: popArg };
+      // Carry `status` (see mark-contained-mismatches.js) across an update, but ONLY when
+      // the verdict itself is unchanged. "contained" describes a still-open MISMATCH whose
+      // config entry is guarded; the moment a re-verification changes the verdict, that
+      // description may no longer hold, and a stale status is worse than none — the marker
+      // script re-derives it from the live config on its next run either way.
+      const carry = prev && prev.status && prev.verdict === verdict
+        ? { status: prev.status, statusNote: prev.statusNote, statusAt: prev.statusAt }
+        : {};
+      store[key] = { verdict, comment: String(comment).trim(), population: popArg, ...carry };
     });
   });
 

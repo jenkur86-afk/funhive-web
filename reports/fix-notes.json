@@ -147,13 +147,6 @@
       "added": "2026-08-27",
       "priority": "medium"
     },
-    "VERDICT-STORE-HAS-NO-RESOLVED-STATE": {
-      "what": "Gate 3 counted UP today (594 -> 603) on a session that FIXED nine of the sites it counts. The verdict store is keyed \"<scraper>|||<site>\" and holds one of three verdicts about the live page; it has no notion of \"this was fixed\". When a library is relocated from WordPress-NY to LibCal-NY, the WordPress-NY|||<site> pair is still literally a MISMATCH - that scraper still cannot read that site - so the count does not fall even though coverage improved. Nine rows also moved UNVERIFIABLE -> MISMATCH because a platform mismatch is a confirmed bug once identified, which is why gate 4 fell by exactly the same nine.",
-      "expect": "Do not read a rising gate 3 as work going backwards without checking what moved. The pairs age out naturally as the audits regenerate under the NEW scraper key. If this keeps confusing the ledger, the fix is either a resolved flag on the store entry or having the relocation delete the stale pair - both are design changes, not daily work, and should be an owner decision.",
-      "confirm": "Compare the MISMATCH count against the list of relocations in SCRAPER-FIX-LOG.jsonl for the same date before concluding a regression.",
-      "added": "2026-08-27",
-      "priority": "low"
-    },
     "CLAY-COUNTY-RELOCATED-TO-FL": {
       "what": "LibCal listed Clay County Public Library in its KENTUCKY section pointed at claycountygov.libcal.com, which is Clay County FLORIDA. Proven live, not by name: the calendar's own branch list is Fleming Island, Green Cove Springs, Keystone Heights, Middleburg-Clay Hill and Orange Park - all Clay County FL towns - and its contact address is @claycountygov.com. Two states each have a Clay County. Under the KY entry every Florida event geocoded to the Manchester KY county centroid, so state, city, address, location GEOMETRY and geohash were all wrong at once. The config entry was MOVED to the FLORIDA section rather than deleted, and the 14 rows it had already written were purged by scripts/purge-clay-county-ky-collision.js.",
       "expect": "On the next GROUP 3 rotation, LibCal-FL should show Clay County Public Library with a nonzero count and rows stored under state FL with Green Cove Springs geography - not Manchester KY. If it instead shows 0, the query string on the moved URL is wrong, not the institution. Note this is a coverage MOVE, not a coverage gain: the same events were already being collected, just filed under the wrong state. Clay County KENTUCKY is now an explicit OPEN GAP with no known working calendar URL.",
@@ -165,6 +158,18 @@
       "expect": "Run the migration after ANY future scraper rename, in the same session as the rename. If a rename lands without it, the symptom is a sudden jump in 'never checked' sites for that family with no matching change on the sites themselves. The 3 collisions need a decision on which of the two verdicts is current - they are not resolved by this tooling.",
       "confirm": "node scripts/migrate-verification-keys.js  (expect 'to migrate: 0'), then node scripts/merge-verification-comments.js --validate.",
       "added": "2026-08-28"
+    },
+    "RELOCATIONS-2026-08-29-UNRUN-IN-ROTATION": {
+      "what": "Four libraries were moved out of scrapers that could never read them, and all four were run by hand the same day: C.H. Booth Library WordPress-CT -> LibCal-CT (20 events), Chesapeake Public Library WordPress-VA -> Communico-VA (4 events), Rutherford County Library System WordPress-TN -> LibCal-TN (20 events), Memphis Public Libraries LibCal-TN -> LibraryCalendar-Libraries (24 events, 21 rows). Memphis was additionally REMOVED from LibCal-TN, but only after the replacement had produced rows; a re-run confirmed LibCal-TN no longer visits it. Each origin WordPress row is guarded rather than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.",
+      "expect": "All four should now appear with nonzero counts on their NEW family's next scheduled rotation, without anyone intervening. Memphis should appear exactly once, under LibraryCalendar-Libraries-memphis, and NOT under LibCal-TN-memphis; old LibCal-TN-memphis rows keep their name until they expire, so both will show in the audits for a while - that is rename ageing, not a duplicate. Watch also that WordPress-TN still carries its own separate Memphis entry at memphislibrary.org which DOES produce rows (26 all-time); it was deliberately left alone because it works, and removing working coverage for tidiness is the Worcester mistake.",
+      "confirm": "After the next rotation of each family: grep -A2 -iE 'booth|chesapeake public|rutherford county|memphis public' scrapers/logs/scraper-stdout.log for nonzero Found lines, and query events grouped by scraper_name for those venues.",
+      "added": "2026-08-29"
+    },
+    "MORRISTOWN-KEEPANDSHARE-GAP": {
+      "what": "WordPress-TN's Morristown-Hamblen entry pointed at mhlibrary.org, which serves Mountain Home Public Library in Mountain Home IDAHO. The URL is corrected to morristownhamblenlibrary.org (confirmed by its 423 area code), so the wrong-state risk is gone. That is NOT coverage: checked live 2026-08-29, the library publishes nothing machine-readable on its own site - /library-events/ links out to a keepandshare.com calendar (show_month.php?i=1358503) and a monthly PDF, with no TEC, LibCal or Google Calendar anywhere on the page.",
+      "expect": "This entry will keep returning 0, and that is the accurate state, not a regression. It is deliberately left LIVE and unguarded because it now names the right institution and a urlCollision guard would assert a collision that no longer exists. Reaching these events needs a keepandshare extractor, which is a new platform for a single library - worth doing only if other libraries turn out to use it. Do not re-diagnose this as a selector bug.",
+      "confirm": "grep -c keepandshare across the scraper config files to see whether any other library uses it before considering building an extractor.",
+      "added": "2026-08-29"
     }
   },
   "LibCal-VA": {

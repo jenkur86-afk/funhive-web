@@ -22,7 +22,13 @@ const ngeohash = require('ngeohash');
  */
 const LIBRARIES = [
   { name: 'Alexandria Library', url: 'https://alexlibraryva.org', eventsUrl: 'https://alexlibraryva.org/events', city: 'Alexandria', state: 'VA', zipCode: '22314', county: 'Alexandria city' },
-  { name: 'Chesapeake Public Library', url: 'https://www.chesapeakepubliclibrary.org', eventsUrl: 'https://events.chesapeakelibrary.org/events', city: 'Chesapeake', state: 'VA', zipCode: '23320', county: 'Chesapeake city' },
+  // 2026-08-29: PLATFORM MISMATCH, relocated to Communico-VA. The endpoint was never dead -
+  // events.chesapeakelibrary.org returns 200 titled 'Events - Chesapeake Public Library' - it
+  // is Communico, proven from the page's own static.libnet.info/.../chesapeakelibrary assets,
+  // so a WordPress DOM scraper could not read it at any path. PROVEN LIVE at 4 events under
+  // Communico-VA the same day. Guarded rather than deleted so the library keeps an explained
+  // row in LIBRARY-SITE-AUDIT.md.
+  { name: 'Chesapeake Public Library', url: 'https://www.chesapeakepubliclibrary.org', eventsUrl: 'https://events.chesapeakelibrary.org/events', city: 'Chesapeake', state: 'VA', zipCode: '23320', county: 'Chesapeake city', urlCollision: 'platform mismatch - Chesapeake publishes on Communico; relocated to Communico-VA 2026-08-29, proven live at 4 events' },
   // Henrico County Public Library RELOCATED 2026-08-23 to LibCal-VA.
   // The site runs LibCal, so no DOM extractor here could ever read its programme.
   // Instance henricolibrary-va.libcal.com verified live before the move: HTTP 200,

@@ -62,7 +62,12 @@ const CONCURRENCY = Math.max(1, parseInt(argVal('concurrency', '3'), 10));
 const NAV_TIMEOUT = parseInt(argVal('timeout', '35000'), 10);
 const SETTLE_MS = parseInt(argVal('settle', '3500'), 10);   // let JS calendars hydrate
 
-if (!IN) { console.error('Missing --in=<file>  (lines: Site | Scraper | URL [| ST])'); process.exit(1); }
+// Only enforced when run directly — this file is also imported for its collectSignals /
+// classify rules, and an import has no --in to give.
+if (require.main === module && !IN) {
+  console.error('Missing --in=<file>  (lines: Site | Scraper | URL [| ST])');
+  process.exit(1);
+}
 
 // Platforms worth naming: each has a known, different remedy, so "which platform" is the
 // actionable half of the finding. All 7 extraction-failures in one 2026-08-16 batch were
@@ -280,6 +285,14 @@ async function verifyOne(browser, row) {
 
   return [row.site, row.scraper, verdict, comment.replace(/[|\r\n]+/g, ' ').trim()];
 }
+
+// Exported so recover-dead-endpoint-urls.js probes and judges pages with the SAME rules
+// this file uses. A second copy of collectSignals/classify would drift from this one the
+// first time either changed, and the two tools would then disagree about the same page.
+module.exports = { collectSignals, classify, verifyOne, PLATFORMS, EMPTY_RE, toDate };
+
+// Requiring this file must not start a verification run or read process.argv.
+if (require.main !== module) return;
 
 (async () => {
   let rows = parseInput(IN);

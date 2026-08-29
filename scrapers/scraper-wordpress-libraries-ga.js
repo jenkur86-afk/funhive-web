@@ -143,7 +143,12 @@ const LIBRARIES = [
   // URL corrected 2026-08-11 (was douglaslibrary.org): Satilla Regional Library System page gives 200 Madison Avenue S Suite D, Douglas GA 31533, phone 912-384-4667
   { name: 'Douglas-Coffee County Public Library', url: 'https://srlsys.org/douglas-coffee-county-public-library/', eventsUrl: 'https://srlsys.org/calendar/', city: 'Douglas', state: 'GA', zipCode: '00000', county: 'Douglas County'},
   { name: 'Laurens County Library', url: 'https://www.dublinlibrary.org/', eventsUrl: 'https://www.dublinlibrary.org/', city: 'Dublin', state: 'GA', zipCode: '00000', county: 'Laurens', urlCollision: 'dublinlibrary.org is TX, not GA' },
-  { name: 'Duluth', url: 'https://duluthlibrary.org/', eventsUrl: 'https://duluthlibrary.org/', city: 'Duluth', state: 'GA', zipCode: '00000', county: 'Gwinnett'},
+  // 2026-08-29: URL COLLISION. duluthlibrary.org is Duluth MINNESOTA - the live page's
+  // own title reads 'Duluth Public Library' and its addresses print MN. Two states have a
+  // Duluth. Guarded rather than deleted so the library keeps an explained row in
+  // LIBRARY-SITE-AUDIT.md. Duluth GA is served by Gwinnett County Public Library; no
+  // verified per-branch calendar URL has been established, so this stays an OPEN GAP.
+  { name: 'Duluth', url: 'https://duluthlibrary.org/', eventsUrl: 'https://duluthlibrary.org/', city: 'Duluth', state: 'GA', zipCode: '00000', county: 'Gwinnett', urlCollision: 'duluthlibrary.org is Duluth MN, not Duluth GA - page addresses print MN' },
   { name: 'Gibbs Memorial Library', url: 'https://www.evanslibrary.org', eventsUrl: 'https://www.evanslibrary.org/events', city: 'Evans', state: 'GA', zipCode: '00000', county: 'Evans County'},
   // REMOVED 2026-08-16 — fayettevillelibrary.org is HIJACKED. It now serves an
   // Indonesian gambling site ("OPUNG4D Toto 4D", assets from garisdua.click /
@@ -153,7 +158,10 @@ const LIBRARIES = [
   // Fayette County Public Library GA — do not re-add a guessed domain.
   { name: 'Monroe County Library', url: 'https://www.forsythlibrary.org', eventsUrl: 'https://www.forsythlibrary.org/events', city: 'Forsyth', state: 'GA', zipCode: '00000', county: 'Forsyth County'},
   { name: 'Heard County Public Library', url: 'https://www.franklinlibrary.org', eventsUrl: 'https://www.franklinlibrary.org/events', city: 'Franklin', state: 'GA', zipCode: '00000', county: 'Franklin County', urlCollision: 'franklinlibrary.org is dead or serves an unrelated site — no state entry is correct' },
-  { name: 'Gordon Public Library', url: 'https://gordonlibrary.org/', eventsUrl: 'https://gordonlibrary.org/', city: 'Gordon', state: 'GA', zipCode: '00000', county: 'Gordon County'},
+  // 2026-08-29: URL COLLISION. gordonlibrary.org titles itself 'Gordon Community Library
+  // and Museum' and its addresses print TX, not GA. Guarded rather than deleted; Gordon GA
+  // remains an OPEN GAP with no verified calendar URL.
+  { name: 'Gordon Public Library', url: 'https://gordonlibrary.org/', eventsUrl: 'https://gordonlibrary.org/', city: 'Gordon', state: 'GA', zipCode: '00000', county: 'Gordon County', urlCollision: 'gordonlibrary.org is in TX - page addresses print TX, not GA' },
   { name: 'Grantville Public Library', url: 'https://cowt.ent.sirsi.net/', eventsUrl: 'https://cowt.ent.sirsi.net/client/en_US/default/', city: 'Grantville', state: 'GA', zipCode: '00000', county: 'Coweta'},
   { name: 'Greene County Library', url: 'https://www.greensborolibrary.org', eventsUrl: 'https://www.greensborolibrary.org/events', city: 'Greensboro', state: 'GA', zipCode: '00000', county: 'Greene', urlCollision: 'greensborolibrary.org is NC, not GA' },
   { name: 'Greenville Area Public Library', url: 'https://www.greenvillelibrary.org', eventsUrl: 'https://www.greenvillelibrary.org/events', city: 'Greenville', state: 'GA', zipCode: '00000', county: 'Meriwether', urlCollision: 'greenvillelibrary.org is SC, not GA' },

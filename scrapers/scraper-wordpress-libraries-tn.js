@@ -32,14 +32,31 @@ const LIBRARIES = [
   // wcpltn.org is CivicPlus (.aspx), not WordPress, so this family could never
   // extract it — it returned 0 on every run. Verified live there before removal;
   // this is a move, not a dropped library.
-  { name: 'Rutherford County Library System', url: 'https://www.rcls.org', eventsUrl: 'https://www.rcls.org/events', city: 'Murfreesboro', state: 'TN', zipCode: '37130', county: 'Rutherford'},
+  // 2026-08-29: PLATFORM MISMATCH, relocated to LibCal-TN. rcls.org/events is a dead path
+  // but the host is fine - Rutherford County publishes on LibCal at rcls.libcal.com, which
+  // serves springSpace, LibCal's own JS namespace. PROVEN LIVE at 20 events under LibCal-TN
+  // the same day. Guarded rather than deleted so the library keeps an explained row in
+  // LIBRARY-SITE-AUDIT.md.
+  { name: 'Rutherford County Library System', url: 'https://www.rcls.org', eventsUrl: 'https://www.rcls.org/events', city: 'Murfreesboro', state: 'TN', zipCode: '37130', county: 'Rutherford', urlCollision: 'platform mismatch - Rutherford publishes on LibCal at rcls.libcal.com; relocated to LibCal-TN 2026-08-29, proven live at 20 events' },
   { name: 'Blount County Public Library', url: 'https://www.blountlibrary.org', eventsUrl: 'https://www.blountlibrary.org/events', city: 'Maryville', state: 'TN', zipCode: '37801', county: 'Blount'},
   { name: 'Cleveland-Bradley County Public Library', url: 'https://clevelandlibrary.org/', eventsUrl: 'https://clevelandlibrary.org/', city: 'Cleveland', state: 'TN', zipCode: '37311', county: 'Bradley'},
   { name: 'Germantown Community Library', url: 'https://www.germantownlibrary.org', eventsUrl: 'https://www.germantownlibrary.org/events', city: 'Germantown', state: 'TN', zipCode: '38138', county: 'Shelby', urlCollision: 'germantownlibrary.org is NY, not TN' },
   { name: 'Collierville Burch Library', url: 'https://www.colliervillelibrary.org', eventsUrl: 'https://www.colliervillelibrary.org/events', city: 'Collierville', state: 'TN', zipCode: '38017', county: 'Shelby'},
   { name: 'Bartlett Library', url: 'https://www.cityofbartlett.org/library', eventsUrl: 'https://www.cityofbartlett.org/calendar.aspx?CID=34', city: 'Bartlett', state: 'TN', zipCode: '38134', county: 'Shelby'},
   { name: 'Hendersonville Public Library', url: 'https://youseemore.com/', eventsUrl: 'https://youseemore.com/hendersonville/', city: 'Hendersonville', state: 'TN', zipCode: '37075', county: 'Sumner'},
-  { name: 'Morristown-Hamblen Library', url: 'https://www.mhlibrary.org', eventsUrl: 'https://www.mhlibrary.org/events', city: 'Morristown', state: 'TN', zipCode: '37814', county: 'Hamblen'},
+  // 2026-08-29: URL CORRECTED but this is NOT yet coverage. mhlibrary.org serves Mountain
+  // Home Public Library, 790 N 10th E, Mountain Home IDAHO - a different institution
+  // entirely. The real one is morristownhamblenlibrary.org, confirmed by its 423 area code
+  // and its own "Library Events" page. So the wrong-state risk is gone.
+  // WHAT IS STILL MISSING, stated rather than implied by a corrected URL: this library does
+  // not publish machine-readable events on its own site at all. /library-events/ carries a
+  // link to a keepandshare.com calendar (show_month.php?i=1358503) plus a monthly PDF, and
+  // nothing else - no TEC (its REST endpoint returns nothing), no LibCal, no Google
+  // Calendar. Checked live 2026-08-29. So this entry will keep returning 0 and that is an
+  // OPEN COVERAGE GAP, not a fix. It is left LIVE rather than guarded because the entry now
+  // names the right institution: an honest 0 from the correct library is the accurate state,
+  // and a urlCollision guard would assert a collision that no longer exists.
+  { name: 'Morristown-Hamblen Library', url: 'https://www.morristownhamblenlibrary.org', eventsUrl: 'https://www.morristownhamblenlibrary.org/library-events/', city: 'Morristown', state: 'TN', zipCode: '37814', county: 'Hamblen'},
   { name: 'Smyrna Public Library', url: 'https://www.smyrnalibrary.org', eventsUrl: 'https://www.smyrnalibrary.org/events', city: 'Smyrna', state: 'TN', zipCode: '37167', county: 'Rutherford', urlCollision: 'smyrnalibrary.org is dead or serves an unrelated site — no state entry is correct' },
   { name: 'Sevier County Public Library System', url: 'https://www.sevierlibrary.org/', eventsUrl: 'https://www.sevierlibrary.org/', city: 'Sevierville', state: 'TN', zipCode: '37862', county: 'Sevier'},
   // URL and name corrected 2026-08-25 (was 'Tullahoma Public Library' at
@@ -57,7 +74,11 @@ const LIBRARIES = [
   { name: 'Athens Public Library', url: 'https://fisherlibrary.org', eventsUrl: 'https://fisherlibrary.org', city: 'Athens', state: 'TN', zipCode: '37303', county: 'McMinn'},
   { name: 'Crossville-Cumberland County Public Library', url: 'https://www.cumberlandcountylibrary.org', eventsUrl: 'https://www.cumberlandcountylibrary.org/events', city: 'Crossville', state: 'TN', zipCode: '38555' },
   { name: 'Rogersville Public Library', url: 'https://www.rogersvillelibrary.org', eventsUrl: 'https://www.rogersvillelibrary.org/events', city: 'Rogersville', state: 'TN', zipCode: '37857', county: 'Hawkins'},
-  { name: 'Tipton County Public Library', url: 'https://www.tiptoncountylibrary.org/', eventsUrl: 'https://www.tiptoncountylibrary.org/', city: 'Covington', state: 'TN', zipCode: '38019' },
+  // 2026-08-29: URL COLLISION. tiptoncountylibrary.org serves Tipton County Public
+  // Library in Tipton INDIANA - it was listing Aug 11-13 2026 events at the time of
+  // verification. Two states have a Tipton County. Tennessee's is in Covington and has no
+  // verified calendar URL, so this stays an OPEN GAP.
+  { name: 'Tipton County Public Library', url: 'https://www.tiptoncountylibrary.org/', eventsUrl: 'https://www.tiptoncountylibrary.org/', city: 'Covington', state: 'TN', zipCode: '38019', urlCollision: 'tiptoncountylibrary.org is Tipton County INDIANA, not TN' },
   { name: 'Savannah-Hardin County Library', url: 'https://www.hardincountylibrary.org', eventsUrl: 'https://www.hardincountylibrary.org/events', city: 'Savannah', state: 'TN', zipCode: '38372' },
   // Additional libraries from spreadsheet coverage expansion
   { name: 'Crockett County Library', url: 'https://www.alamolibrary.org', eventsUrl: 'https://www.alamolibrary.org/events', city: 'Alamo', state: 'TN', zipCode: '38001', county: 'Crockett'},
@@ -79,7 +100,10 @@ const LIBRARIES = [
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in OH, not TN. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Stewart County Public Library', url: 'https://www.doverlibrary.org', eventsUrl: 'https://www.doverlibrary.org/events', city: 'Dover', state: 'TN', zipCode: '37058', county: 'Stewart'},
   { name: 'Sequatchie County Public Library', url: 'https://www.dunlaplibrary.org', eventsUrl: 'https://www.dunlaplibrary.org/events', city: 'Dunlap', state: 'TN', zipCode: '37327', county: 'Sequatchie', urlCollision: 'dunlaplibrary.org is IL, not TN' },
-  { name: 'Gleason Memorial Library', url: 'https://www.gleasonlibrary.org', eventsUrl: 'https://www.gleasonlibrary.org/events', city: 'Gleason', state: 'TN', zipCode: '38229', county: 'Weakley'},
+  // 2026-08-29: URL COLLISION. gleasonlibrary.org serves Gleason Public Library, 1 River
+  // Road, Carlisle MASSACHUSETTS - a different institution that merely shares a surname.
+  // Guarded; Gleason TN remains an OPEN GAP with no verified calendar URL.
+  { name: 'Gleason Memorial Library', url: 'https://www.gleasonlibrary.org', eventsUrl: 'https://www.gleasonlibrary.org/events', city: 'Gleason', state: 'TN', zipCode: '38229', county: 'Weakley', urlCollision: 'gleasonlibrary.org is Gleason Public Library in Carlisle MA, not Gleason TN' },
   { name: 'Harriman Public Library', url: 'https://www.harrimanlibrary.org/', eventsUrl: 'https://www.harrimanlibrary.org/', city: 'Harriman', state: 'TN', zipCode: '37748', county: 'Roane'},
   { name: 'Carroll County Library', url: 'https://www.huntingdonlibrary.org', eventsUrl: 'https://www.huntingdonlibrary.org/events', city: 'Huntingdon', state: 'TN', zipCode: '38344', county: 'Carroll', urlCollision: 'huntingdonlibrary.org is PA, not TN' },
   { name: 'Kingston Public Library', url: 'https://www.kingstonlibrary.org', eventsUrl: 'https://www.kingstonlibrary.org/events', city: 'Kingston', state: 'TN', zipCode: '37763', county: 'Roane', urlCollision: 'kingstonlibrary.org is NY, not TN' },
