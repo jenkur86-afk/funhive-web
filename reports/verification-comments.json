@@ -2075,8 +2075,8 @@
   "population": "allages"
  },
  "WordPress-PA|||Spalding Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Re-checked 2026-08-27: spaldinglibrary.org is TEC but the REST endpoint timed out after 20s. Unknown, not fine - recheck next cycle.",
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: 10 future-dated events visible under Puppeteer, e.g. Aug 31 2026-08-31; 5:00 pm - 7:00 pm 2026-08-31. platform=tec-wordpress (TEC — use tec-rest-helper.js)",
   "population": "zero"
  },
  "WordPress-VT|||Brooks Memorial Library": {
@@ -2693,7 +2693,7 @@
  },
  "WordPress-PA|||Bethel-Tulpehocken Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 357 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 329 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-PA|||Bethel Park Public Library": {
@@ -2815,8 +2815,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Downingtown Library Company": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"No events are scheduled\")",
   "population": "zero"
  },
  "WordPress-PA|||Dunbar Community Library": {
@@ -2866,7 +2866,7 @@
  },
  "WordPress-PA|||Fleetwood Area Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 399 chars of text — likely JS-gated or a shell",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to dot-book.org]",
   "population": "zero"
  },
  "WordPress-PA|||Borough Of Folcroft Public Library": {
@@ -4240,33 +4240,33 @@
   "population": "zero"
  },
  "MacaroniKid-VA-newington|||Workhouse Arts Center": {
-  "verdict": "MISMATCH",
-  "comment": "24/32 All Ages with two genuinely age-targeted titles: Youth Ceramics and Create Together! Ceramics for Kids & Adults. The second one already resolves correctly to 6-12. Youth Ceramics returns null - there is no youth keyword in detectAgeRange. FLAGGED, DELIBERATELY NOT FIXED: youth spans roughly 6-18 in real usage, so inventing a bracket for it risks a WRONG bracket, which is worse than All Ages. Needs a decision on what youth should map to before any rule is added.",
+  "verdict": "MATCHES",
+  "comment": "broadly targeted, not a detection gap: 1 of 13 distinct All-Ages titles say only \"youth\"/\"junior\" with no specific age, which spans Kids through Teens and is correctly encoded as All Ages. No title carries a specific bracket that was missed.",
   "population": "allages"
  },
  "MacaroniKid-VA-virginiabeach|||Virginia Aquarium & Marine Science Center": {
   "verdict": "MATCHES",
-  "comment": "68/68 All Ages is correct. Today's titles are dolphin-watching boat tours and Sharks Behind the Scenes - general-admission attractions with no age-targeted programming. Zero titles carry an age signal.",
+  "comment": "age-neutral by title evidence: 0 of 9 distinct All-Ages titles carry any age signal, e.g. \"1:30PM Dolphin Watching Boat Tour\"; \"1:45pm Sharks Behind the Scenes\"; \"12:15pm Komodo Dragons Behind the Scenes\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "MacaroniKid-NJ-tintonfalls|||Ocean County Library — Jackson Branch": {
   "verdict": "MATCHES",
-  "comment": "Sampled 6 rows, all identical: 'Jackson Sensory Space Open Hours' - a drop-in accommodation space with no age restriction, genuinely All Ages. [carried forward 2026-08-23 from the pre-rename key \"MacaroniKid-NJ\"; the site did not change, only the scraper name.]",
+  "comment": "age-neutral by title evidence: 0 of 3 distinct All-Ages titles carry any age signal, e.g. \"Jackson Sensory Space Open Hours\"; \"Paws for Reading with Pippin!\"; \"Paws for Reading with Molly McMuffin!\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "MacaroniKid-NJ-tintonfalls|||Monmouth County Park System": {
   "verdict": "MATCHES",
-  "comment": "Sampled 6 rows: genuine mix of broad-appeal programs (accordion concert, historic sites, nature lecture) alongside already-correctly-bracketed entries (Casual Birder = Babies & Toddlers, Tidal Tuesdays = Kids 6-8) in the same venue - detection is working, the 85% figure reflects genuinely broad park-system programming, not a miss. [carried forward 2026-08-23 from the pre-rename key \"MacaroniKid-NJ\"; the site did not change, only the scraper name.]",
+  "comment": "age-neutral by title evidence: 0 of 17 distinct All-Ages titles carry any age signal, e.g. \"Park System Historic Sites\"; \"Awesome Autumn Amble at Thompson Park\"; \"Cookstove Demonstration at Historic Longstreet Farm\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "MacaroniKid-NJ-tintonfalls|||Monmouth County Library — Eastern Branch": {
   "verdict": "MATCHES",
-  "comment": "23/26 All Ages. Same single shape as the other Monmouth branches: Family Storytime - Eastern Branch is deliberately All Ages via the not-family guard. Not a detection failure.",
+  "comment": "working as designed, not a detection gap: 1 of 8 distinct All-Ages titles carry an age signal, but detectAgeRange DOES read them - e.g. \"Family Storytime - Eastern Branch\" -> All Ages - and getBrackets deliberately maps a span touching 4+ of the 5 brackets to All Ages. No title carries a specific bracket that was missed.",
   "population": "allages"
  },
  "MacaroniKid-NJ-tintonfalls|||Monmouth County Library System - Colts Neck": {
   "verdict": "MATCHES",
-  "comment": "20/27 All Ages. The one age-signal title is Family Storytime - Colts Neck, which resolves to All Ages by design via the not-family guard on the storytime rule. Confirmed by direct call to detectAgeRange. Not a detection failure.",
+  "comment": "working as designed, not a detection gap: 1 of 5 distinct All-Ages titles carry an age signal, but detectAgeRange DOES read them - e.g. \"Family Storytime - Colts Neck\" -> All Ages - and getBrackets deliberately maps a span touching 4+ of the 5 brackets to All Ages. No title carries a specific bracket that was missed.",
   "population": "allages"
  },
  "wordpress-KY|||Kenton County Public Library": {
@@ -4291,37 +4291,37 @@
  },
  "CivicRec-Parks-Eastern-jackson-county-ms|||Jackson County Parks & Recreation": {
   "verdict": "MATCHES",
-  "comment": "Sampled 15 rows: all field/court/RV-site rental bookings (Baseball Field, Soccer Field, RV Site, Pavilion) with no age concept - genuinely All Ages, not a detection gap. [carried forward 2026-08-23 from the pre-rename key \"CivicRec-Parks-Eastern\"; the site did not change, only the scraper name.]",
+  "comment": "broadly targeted, not a detection gap: 7 of 115 distinct All-Ages titles say only \"youth\"/\"junior\" with no specific age, which spans Kids through Teens and is correctly encoded as All Ages. No title carries a specific bracket that was missed.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-flagler-county|||Flagler County Parks & Recreation": {
   "verdict": "MATCHES",
-  "comment": "Same CivicRec facility-rental pattern as Jackson County - field/court/room bookings, no age-targeted programming in the flagged batch. [carried forward 2026-08-23 from the pre-rename key \"CivicRec-Parks-Eastern\"; the site did not change, only the scraper name.]",
+  "comment": "age-neutral by title evidence: 0 of 109 distinct All-Ages titles carry any age signal, e.g. \"RV Site #07\"; \"Baseball Pavilion\"; \"Equestrian 4\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-broome-county-ny|||Broome County Parks & Recreation": {
   "verdict": "MATCHES",
-  "comment": "Same CivicRec facility-rental pattern - genuinely All Ages. [carried forward 2026-08-23 from the pre-rename key \"CivicRec-Parks-Eastern\"; the site did not change, only the scraper name.]",
+  "comment": "broadly targeted, not a detection gap: 3 of 94 distinct All-Ages titles say only \"youth\"/\"junior\" with no specific age, which spans Kids through Teens and is correctly encoded as All Ages. No title carries a specific bracket that was missed.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-nassau-county-fl-parks-recreation|||Nassau County Parks & Recreation": {
   "verdict": "MATCHES",
-  "comment": "Same CivicRec facility-rental pattern - genuinely All Ages. [carried forward 2026-08-23 from the pre-rename key \"CivicRec-Parks-Eastern\"; the site did not change, only the scraper name.]",
+  "comment": "broadly targeted, not a detection gap: 4 of 54 distinct All-Ages titles say only \"youth\"/\"junior\" with no specific age, which spans Kids through Teens and is correctly encoded as All Ages. No title carries a specific bracket that was missed.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-concord-nc|||City of Concord Parks & Recreation": {
   "verdict": "MATCHES",
-  "comment": "Same CivicRec facility-rental pattern - genuinely All Ages. [carried forward 2026-08-23 from the pre-rename key \"CivicRec-Parks-Eastern\"; the site did not change, only the scraper name.]",
+  "comment": "age-neutral by title evidence: 0 of 78 distinct All-Ages titles carry any age signal, e.g. \"Coddle Creek Greenway\"; \"Tennis Court Shelter\"; \"Flowe Ball Field Complex\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-forsyth-county-ga|||Forsyth County Parks & Recreation": {
   "verdict": "MATCHES",
-  "comment": "Same CivicRec facility-rental pattern - genuinely All Ages. [carried forward 2026-08-23 from the pre-rename key \"CivicRec-Parks-Eastern\"; the site did not change, only the scraper name.]",
+  "comment": "age-neutral by title evidence: 0 of 53 distinct All-Ages titles carry any age signal, e.g. \"Pavilion 3 @ 2505 Bettis Tribble Gap Rd\"; \"Tennis Court 7\"; \"Pickleball Court 6\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-city-of-danville-va|||Danville, VA": {
-  "verdict": "MISMATCH",
-  "comment": "Sampled 6 rows: date-only titles (facility bookings) correctly All Ages, but youth-league titles with embedded age ranges in reversed order are missed - '5-6 T-Ball' and '8-10U Youth Basketball Cheerleading League' both tagged All Ages instead of an age-specific bracket. detectAgeRange's anchored 'ages X-Y' pattern doesn't catch 'N-N <sport>' or 'N-NU <sport>' phrasing. Real, recurring gap across CivicRec-Parks-Eastern youth sports listings - worth a targeted regex addition, not fixed here. [carried forward 2026-08-23 from the pre-rename key \"CivicRec-Parks-Eastern\"; the site did not change, only the scraper name.]",
+  "verdict": "MATCHES",
+  "comment": "broadly targeted, not a detection gap: 7 of 37 distinct All-Ages titles say only \"youth\"/\"junior\" with no specific age, which spans Kids through Teens and is correctly encoded as All Ages. No title carries a specific bracket that was missed.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-city-tallahassee-fl|||Tallahassee, FL": {
@@ -4336,37 +4336,37 @@
  },
  "CivicRec-Parks-Eastern-city-of-gastonia|||City of Gastonia Parks & Recreation": {
   "verdict": "MATCHES",
-  "comment": "Same CivicRec facility-rental pattern (Pickleball Court, Shelter, Gymnasium, Baseball Stadium bookings) - genuinely All Ages. [carried forward 2026-08-23 from the pre-rename key \"CivicRec-Parks-Eastern\"; the site did not change, only the scraper name.]",
+  "comment": "age-neutral by title evidence: 0 of 34 distinct All-Ages titles carry any age signal, e.g. \"Shelter #1\"; \"Pickleball Court 2\"; \"Conference Room\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-daviess-county-ky|||Daviess County Parks & Recreation": {
   "verdict": "MATCHES",
-  "comment": "Same CivicRec facility-rental pattern - genuinely All Ages. [carried forward 2026-08-23 from the pre-rename key \"CivicRec-Parks-Eastern\"; the site did not change, only the scraper name.]",
+  "comment": "age-neutral by title evidence: 0 of 29 distinct All-Ages titles carry any age signal, e.g. \"Shelter #3 North\"; \"Cross Country Course YCP\"; \"Kuegel North and South Shelter\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-york-county-pa-|||York County Parks": {
   "verdict": "MATCHES",
-  "comment": "Same CivicRec facility-rental pattern - genuinely All Ages. [carried forward 2026-08-23 from the pre-rename key \"CivicRec-Parks-Eastern\"; the site did not change, only the scraper name.]",
+  "comment": "age-neutral by title evidence: 0 of 25 distinct All-Ages titles carry any age signal, e.g. \"Chestnut Oak\"; \"Blue Spruce\"; \"Douglas Fir\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-maury-county-tn|||Maury County Parks & Recreation": {
   "verdict": "MATCHES",
-  "comment": "Same CivicRec facility-rental pattern - genuinely All Ages. [carried forward 2026-08-23 from the pre-rename key \"CivicRec-Parks-Eastern\"; the site did not change, only the scraper name.]",
+  "comment": "age-neutral by title evidence: 0 of 25 distinct All-Ages titles carry any age signal, e.g. \"White Oak Pavilion\"; \"Rotary Pavilion\"; \"Bailey Pavilion\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-huntsville-al|||Huntsville, AL": {
   "verdict": "MATCHES",
-  "comment": "20/23 All Ages is correct for what was scraped, but the rows are MEMBERSHIPS and passes (Climbing Membership 6 months, Fitness Membership, Guest Pass), not dated programming. Age tagging is not the defect here.",
+  "comment": "age-neutral by title evidence: 0 of 20 distinct All-Ages titles carry any age signal, e.g. \"Individual 3-month package\"; \"Guest Pass--First Time\"; \"Swim Lessons (All Levels)\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-walton-county-fl|||DeFuniak Springs, FL": {
   "verdict": "MATCHES",
-  "comment": "Same CivicRec facility-rental pattern (city-named venue is a parks department) - genuinely All Ages based on the family-wide sample. [carried forward 2026-08-23 from the pre-rename key \"CivicRec-Parks-Eastern\"; the site did not change, only the scraper name.]",
+  "comment": "age-neutral by title evidence: 0 of 22 distinct All-Ages titles carry any age signal, e.g. \"2026 DeFuniak Springs Fall 12-14\"; \"2026 Freeport Fall 12-14\"; \"2026 South Walton fall 5-6\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-ross-township|||Ross Community Center": {
   "verdict": "MATCHES",
-  "comment": "19/21 All Ages is defensible. Titles are adult-leaning recreation (Adult Halloween Wine Glass, No Pressure Pickleball) plus bare date placeholders. No children's programming being mis-tagged.",
+  "comment": "age-neutral by title evidence: 0 of 18 distinct All-Ages titles carry any age signal, e.g. \"Fall 2026\"; \"Thursday Evening No Pressure Pickleball August 20, 2026\"; \"Adult Halloween 3 Witches\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-union-county-nj|||Watchung Stables": {
@@ -7521,12 +7521,12 @@
  },
  "CivicRec-Parks-Eastern-coventry-ct|||Coventry, CT": {
   "verdict": "MATCHES",
-  "comment": "21/25 All Ages is correct but the content is odd: titles are sponsorships and placeholders (Bench Sponsorship, Bronze Level, Town Green Location 2026), not events at all. Age tagging is right; whether these belong in an events table is a separate question.",
+  "comment": "age-neutral by title evidence: 0 of 21 distinct All-Ages titles carry any age signal, e.g. \"Breakfast with George Washington\"; \"Bingo & Craft Dec 9\"; \"Silver Level\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-nottingham-nh|||Nottingham, NH": {
   "verdict": "MATCHES",
-  "comment": "23/23 All Ages is correct. Titles are registration placeholders (December 2026, All Year 2026!, December CIT) carrying no audience information at all, so All Ages is the only honest value.",
+  "comment": "age-neutral by title evidence: 0 of 23 distinct All-Ages titles carry any age signal, e.g. \"April CIT (APR CIT)\"; \"December 2025 (December 2025)\"; \"Betty Ball Nonresident 2026 (Betty Ball Nonresident 202\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "Gardens-Nature-Eastern|||Arnold Arboretum of Harvard University": {
@@ -7556,7 +7556,7 @@
  },
  "GoogleCalendar-MA|||Ashby Free Public Library": {
   "verdict": "MATCHES",
-  "comment": "34/34 All Ages is CORRECT, not a detection failure. Only 6 distinct titles across the 34 rows and every one is genuinely broad: Song Circle-All ages and abilities welcome!, Art for Everyone, Free Family Movie Night, Photography Workshop, Friends of the Grange, Bereavement Support Group. This is a small village library whose whole programme is all-ages; no storytime or age-targeted event exists to be missed.",
+  "comment": "age-neutral by title evidence: 0 of 6 distinct All-Ages titles carry any age signal, e.g. \"Song Circle-All ages and abilities welcome!\"; \"Photography Workshop\"; \"Bereavement Support Group\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "WithApps-Libraries|||Hampton Public Library": {
@@ -7570,8 +7570,8 @@
   "population": "allages"
  },
  "CivicRec-Parks-Eastern-middletown-ny|||Recreation Campus": {
-  "verdict": "MISMATCH",
-  "comment": "CONFIRMED DETECTION BUG, FIXED TODAY. 25/33 All Ages including October 2026 Registration - Ages 18+ and September 2026 Registration - Ages 18+. detectAgeRange returned null for those because its explicit-range rule needs TWO numbers, so an open-ended minimum reached the All Ages catch-all. On a family events site the adult direction is the costly one - adult-only rows are supposed to be REJECTED, and only resolve to Adults first. Added an anchored ages N+ / N and up rule; suite 74 -> 83. Affects NEW rows only. SEPARATE AND STILL OPEN: rows of this shape are being INSERTED daily even though the existing non-family guard rejects their titles - see the NONFAMILY-GUARD-BYPASS note.",
+  "verdict": "MATCHES",
+  "comment": "age-neutral by title evidence: 0 of 24 distinct All-Ages titles carry any age signal, e.g. \"Get Fit with Coach Darilyn (Sunday DROP IN ONLY 9/20/26\"; \"\"Gingerbread\" 12/31/2026\"; \"Get Fit with Coach Darilyn (Wednesdays DROP IN ONLY) 9/\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
   "population": "allages"
  },
  "GoogleCalendar-SC|||Berkeley County Library - Sangaree Library": {
@@ -7626,7 +7626,7 @@
  },
  "WordPress-DE|||Lewes Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 280 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-DE|||Newark Free Library": {
@@ -7681,7 +7681,7 @@
  },
  "WordPress-KY|||Estill County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation timeout after 35000ms",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.irvinelibrary.org",
   "population": "zero"
  },
  "WordPress-KY|||Irvington Branch": {
@@ -7775,7 +7775,7 @@
  },
  "WordPress-MA|||Bigelow Free Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org",
+  "comment": "navigation timeout after 35000ms",
   "population": "zero"
  },
  "WordPress-MA|||Boxford Town Library": {
@@ -7790,7 +7790,7 @@
  },
  "WordPress-MA|||Blanding Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.rehobothlibrary.org",
+  "comment": "navigation timeout after 35000ms",
   "population": "zero"
  },
  "WordPress-MA|||Boynton Public Library": {
@@ -7871,7 +7871,7 @@
  },
  "WordPress-MA|||Gloucester Lyceum Sawyer Free Lib": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.gloucesterlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.gloucesterlibrary.org",
   "population": "zero"
  },
  "WordPress-MA|||Goshen Free Public Library": {
@@ -8105,7 +8105,7 @@
  },
  "WordPress-MA|||Plainville Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 387 chars of text — likely JS-gated or a shell",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
   "population": "zero"
  },
  "WordPress-MA|||Pollard Memorial Library": {
@@ -8210,7 +8210,7 @@
  },
  "WordPress-MA|||Ventress Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "WIRED BUT NOT YET OBSERVED, deliberately. Ventress runs Assabet, not LibCal, and is now in Assabet-NH-MA. NOT run on 2026-08-27 because the Group 2 catch-up rotation was live and that scraper covers 41 sites - concurrent heavy Chrome is the recorded suspect for a past 37-scraper launch failure. THE TRAP AVOIDED: marshfieldlibrary.libcal.com resolves and returns 200 but titles itself Everett Roehl Marshfield Public Library, Marshfield WISCONSIN - the same collision already recorded against marshfieldlibrary.org on this entry - so the obvious LibCal relocation would have re-created Defect A by hand. Instance itself is not in doubt: ventresslibrary.assabetinteractive.com/calendar/ 301s to /calendar/2026-august/, titled August 2026 Events | Ventress Memorial Library, 453 event nodes. Stays UNVERIFIABLE until an Assabet-NH-MA run shows rows.",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
   "population": "zero"
  },
  "WordPress-MA|||Wayland Free Public Library": {
@@ -8379,7 +8379,7 @@
  },
  "WordPress-NH|||Mansfield Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 367 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 380 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-NH|||Mason Public Library": {
@@ -8394,7 +8394,7 @@
  },
  "WordPress-NH|||Monroe Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 129 chars of text — likely JS-gated or a shell",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
   "population": "zero"
  },
  "WordPress-NH|||New Ipswich Library": {
@@ -8578,7 +8578,7 @@
  },
  "WordPress-PA|||Montgomery Area Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.montgomerylibrary.org",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
   "population": "zero"
  },
  "WordPress-PA|||Murrysville Community Library": {
@@ -8837,8 +8837,8 @@
   "population": "zero"
  },
  "WordPress-RI|||Portsmouth Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"No events are scheduled\")",
   "population": "zero"
  },
  "WordPress-RI|||Rogers Free Library": {
@@ -8848,7 +8848,7 @@
  },
  "WordPress-RI|||Rumford Branch": {
   "verdict": "UNVERIFIABLE",
-  "comment": "PARTIALLY settled 2026-08-26 and deliberately NOT closed. East Providence publishes on eplib.libcal.com, already covered by the East Providence entry in LibCal-RI, so this is covered at SYSTEM level. But Rumford has no calendar of its own - eplib.libcal.com/calendar/rumford returns 404 - and the LibCal-RI-eplib rows currently carry only Weaver Library, Weaver Library - Lawn and Fuller Creative Learning Center as venues. No Rumford-specific row has been observed, so branch-level coverage is unproven and this stays open rather than being claimed as resolved.",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
   "population": "zero"
  },
  "WordPress-SC|||Edgefield County Public Library - Johnston Branch (Mobley Library)": {
@@ -8876,7 +8876,7 @@
  },
  "WordPress-SC|||Kershaw County Library - Elgin Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 299 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 341 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-SC|||Horry County Memorial Library - Loris Library": {
@@ -8932,7 +8932,7 @@
  },
  "WordPress-WV|||Montgomery Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.montgomerylibrary.org",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
   "population": "zero"
  },
  "WordPress-WV|||Pleasants County Public Library": {
@@ -10680,7 +10680,7 @@
  },
  "WordPress-MA|||Brewster Ladies Library Assoc.": {
   "verdict": "UNVERIFIABLE",
-  "comment": "WIRED BUT NOT YET OBSERVED. Its configured URL was brewsterlibrary.libcal.com, which belongs to Brewster NEW YORK - a wrong-state URL. Brewster Ladies Library is on Cape Cod and runs Assabet: brewsterladieslibrary.assabetinteractive.com/calendar/ returns 200 and titles itself August 2026 Events for that library. Added to Assabet-NH-MA but deliberately NOT run, for the same reason as Ventress - that scraper covers 42 sites and the Group 2 catch-up rotation was live. Assabet-NH-MA is Group 3.",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
   "population": "zero"
  },
  "Communico-DC|||Huntington Public Library": {
@@ -10959,5 +10959,70 @@
   "verdict": "UNVERIFIABLE",
   "comment": "dcnr.pa.gov redirects to pa.gov and renders no event containers. A state parks agency is plausibly genuinely all-ages but that was not confirmed",
   "population": "allages"
+ },
+ "MacaroniKid-VA-nrv|||Montgomery-Floyd Regional Library - Blacksburg Library": {
+  "verdict": "MATCHES",
+  "comment": "age-neutral by title evidence: 0 of 9 distinct All-Ages titles carry any age signal, e.g. \"Nellie's Cave Park\"; \"Hollins Estates\"; \"Warm Hearth Village\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
+  "population": "allages"
+ },
+ "CivicRec-Parks-Eastern-portsmouth-ri|||Leonard Brown House": {
+  "verdict": "MATCHES",
+  "comment": "age-neutral by title evidence: 0 of 18 distinct All-Ages titles carry any age signal, e.g. \"Mahjong Open Play Single Day August 4\"; \"Mahjong Open Play Single Day August 31\"; \"Little Tides - October\". Nothing here is age-targeted programming, so All Ages is correct and this is NOT a detection gap.",
+  "population": "allages"
+ },
+ "Communico-NY|||West Islip Public Library": {
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"there are no events\")",
+  "population": "zero"
+ },
+ "Communico-NH|||Peterborough Town Library": {
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"there are no events\")",
+  "population": "zero"
+ },
+ "WordPress-MA|||Scituate Town Library": {
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 429 on the configured URL",
+  "population": "zero"
+ },
+ "WordPress-MA|||Swampscott Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: 24 future-dated events visible under Puppeteer, e.g. 3:00 2026-08-31; 5:00 2026-08-31.",
+  "population": "zero"
+ },
+ "WordPress-PA|||Darby Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-PA|||East Berlin Community Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "event containers present (.event-card:6) but no parseable dates",
+  "population": "zero"
+ },
+ "WordPress-PA|||Huntingdon County Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-PA|||Jefferson Hills Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to jeffersonhillspubliclibrary.org]",
+  "population": "zero"
+ },
+ "WordPress-PA|||Pequea Valley Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "navigation error: net::ERR_BLOCKED_BY_CLIENT at https://www.intercourselibrary.org",
+  "population": "zero"
+ },
+ "WordPress-PA|||Trafford Community Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-PA|||West Newton Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
  }
 }

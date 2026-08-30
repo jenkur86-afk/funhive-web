@@ -37573,3 +37573,1662 @@ Tail of the Group 1 rotation (window opens 2026-08-28T18:02:02Z, where `## 2026-
 | Pittsburgh Cultural Trust | MacaroniKid-PA-southhills | 21 | 21 | 100% |
 | Nantucket Historical Association | MacaroniKid-MA-capecod | 20 | 20 | 100% |
 | Durham County Library — North Regional Library | MacaroniKid-NC-durham | 15 | 20 | 75% |
+
+## 2026-08-30
+
+Group 3 rotation, run window opens 2026-08-30T07:00:01Z. 10,061 fresh rows across **1,615 individual sites** from 225 scraper identities; **26 sites cross the >=70% All-Ages flag**, against 32 in the previous section. As with `## 2026-08-28` -> `## 2026-08-29`, the composition changed completely and the number is not comparable: this window is parks-heavy (CivicRec Group 3) plus the first two MacaroniKid Group 3 states, where the previous one was MacaroniKid-only. **Do not read 32 -> 26 as improvement.** Third day of the cycle opened by `## 2026-08-28`; no scraper in today's table already had a row this cycle. MacaroniKid Group 3 was still running when this section was built (NJ and VA complete), so the remaining states land in the next section.
+
+**Root cause found for the parks family's All-Ages dominance, and fixed at save time.** 17 of today's 26 flags are `CivicRec-Parks-Eastern-*` sites sitting at or near 100% All Ages. Adjudicating them against the titles actually stored — the method established 2026-08-24 — shows the detector is not the problem. Where a title carries a signal it is read correctly (`MultiSport Tots Ages 3-4` -> Preschool, `Teen 13-19 Years-Inner Acting` -> Teens, `Girls 10U Volleyball` -> Kids, `Beginner Volleyball Ages 11-14` -> Tweens). The problem is **what CivicRec calls an event**: its Rec1 catalog publishes reservable facilities and purchasable memberships in the same feed as its programmes, and the scraper has no way to tell them apart, so `RV Site #07`, `Tennis Court 6`, `Soccer Field - 1`, `Gymnasium`, `Pool Membership - Annual (Family)` and `Program Punch Card: 5 Visits` were all stored as events. A ballfield has no age, so every one of them lands in All Ages and inflates the percentage.
+
+Measured across the full corpus (126,840 rows): **924 facility rows over 246 distinct titles, and 193 membership rows over 52 distinct titles** — 23.6% of today's CivicRec output. Two anchored rules were added to `isJunkTitle()` in `supabase-adapter.js` so these are rejected at save time, and because `fix-event-quality.js` STEP 1b delegates to that same function the existing rows are removed by the next data-quality pass without a bespoke script. Both rules are whole-title and deliberately narrow: `Open Gym`, `Open Swim`, `Little Gym`, `Basketball Prep Clinic 10/3 MS`, `Callahan Baseball #6`, `White Oak Pavilion`, `1-2-3 Play with Me`, `Membership Swap: Virginia Museum of Contemporary Art` and `Adult Boxing (CRPD Adult Boxing Membership Required)` were all found in the live corpus during validation and all survive — they are negative controls in `scripts/test-junk-titles.js`, which now runs 76 cases.
+
+**Expect the CivicRec All-Ages percentages to fall on the next Group 3 rotation, not before.** Today's rows were written before the fix existed.
+
+| Site | Scraper | All Ages | Babies 0-2 | Preschool 3-5 | Kids 6-8 | Tweens 9-12 | Teens 13-18 | Total | Link |
+|---|---|---|---|---|---|---|---|---|---|
+| Anne Arundel County Recreation | AARecParks-MD | 16 | 0 | 0 | 0 | 0 | 1 | 17 | [cal](https://anc.apm.activecommunities.com/aarecparks) |
+| South County Rec Ctr | AARecParks-MD | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://anc.apm.activecommunities.com/aarecparks) |
+| Ruth P. Eason Special School | AARecParks-MD | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://anc.apm.activecommunities.com/aarecparks) |
+| Belle Grove ES | AARecParks-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://anc.apm.activecommunities.com/aarecparks) |
+| Lake Waterford Park | AARecParks-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://anc.apm.activecommunities.com/aarecparks) |
+| Four Seasons ES | AARecParks-MD | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://anc.apm.activecommunities.com/aarecparks) |
+| Annapolis MS | AARecParks-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://anc.apm.activecommunities.com/aarecparks) |
+| Severna Park MS | AARecParks-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://anc.apm.activecommunities.com/aarecparks) |
+| Brooklyn Heights Park | AARecParks-MD | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://anc.apm.activecommunities.com/aarecparks) |
+| Mattapan | BiblioCommons-MA-bpl | 0 | 0 | 0 | 7 | 0 | 0 | 7 | [cal](https://bpl.bibliocommons.com/v2/events) |
+| Central Library in Copley Square | BiblioCommons-MA-bpl | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://bpl.bibliocommons.com/v2/events) |
+| Codman Square | BiblioCommons-MA-bpl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://bpl.bibliocommons.com/v2/events) |
+| Roslindale | BiblioCommons-MA-bpl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://bpl.bibliocommons.com/v2/events) |
+| Jamaica Plain | BiblioCommons-MA-bpl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://bpl.bibliocommons.com/v2/events) |
+| Lawrence Public Library | BiblioCommons-MA-lawrence | 3 | 1 | 0 | 0 | 0 | 0 | 4 | [cal](https://lawrence.bibliocommons.com/v2/events) |
+| Franklin | Blackwater Regional Library | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Courtland | Blackwater Regional Library | 0 | 0 | 1 | 1 | 0 | 0 | 2 | — |
+| Claremont | Blackwater Regional Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Carrollton | Blackwater Regional Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Smithfield | Blackwater Regional Library | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Waverly | Blackwater Regional Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wakefield | Blackwater Regional Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Camden County Library System | Camden County Library System | 7 | 1 | 0 | 1 | 0 | 0 | 9 | — |
+| Carnegie Library of Pittsburgh | Carnegie Library of Pittsburgh | 3 | 0 | 0 | 3 | 0 | 1 | 7 | — |
+| Charlotte Court House Library | Charlotte County Library | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Wylliesburg Library | Charlotte County Library | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Ardsley Park | CivicRec-Parks-Eastern-abington-township-pa | 0 | 3 | 3 | 2 | 2 | 0 | 10 | — |
+| Alverthorpe Park | CivicRec-Parks-Eastern-abington-township-pa | 5 | 0 | 2 | 2 | 0 | 0 | 9 | — |
+| Abington, PA | CivicRec-Parks-Eastern-abington-township-pa | 8 | 0 | 0 | 0 | 0 | 0 | 8 | — |
+| Alverthorpe Manor | CivicRec-Parks-Eastern-abington-township-pa | 1 | 0 | 1 | 1 | 0 | 0 | 3 | — |
+| Crestmont Clubhouse | CivicRec-Parks-Eastern-abington-township-pa | 1 | 0 | 0 | 2 | 0 | 0 | 3 | — |
+| Ardsley Community Center | CivicRec-Parks-Eastern-abington-township-pa | 1 | 0 | 1 | 1 | 0 | 0 | 3 | — |
+| Roslyn Park | CivicRec-Parks-Eastern-abington-township-pa | 1 | 0 | 0 | 1 | 0 | 0 | 2 | — |
+| Create Me Pottery Studio | CivicRec-Parks-Eastern-abington-township-pa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Roychester Park | CivicRec-Parks-Eastern-abington-township-pa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Penbryn Park | CivicRec-Parks-Eastern-abington-township-pa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Pip Moyer Recreation Center | CivicRec-Parks-Eastern-annapolis-md | 7 | 0 | 0 | 0 | 0 | 0 | 7 | — |
+| Swan Creek Park | CivicRec-Parks-Eastern-athens-al | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Athens, AL | CivicRec-Parks-Eastern-athens-al | 1 | 0 | 1 | 0 | 2 | 0 | 4 | — |
+| Ella Bailey Recreation Center | CivicRec-Parks-Eastern-baltimore-md | 1 | 0 | 0 | 1 | 0 | 0 | 2 | — |
+| Roosevelt Recreation Center | CivicRec-Parks-Eastern-baltimore-md | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Cahill Fitness & Wellness Center | CivicRec-Parks-Eastern-baltimore-md | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Locust Point Recreation Center | CivicRec-Parks-Eastern-baltimore-md | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Beach | CivicRec-Parks-Eastern-barrington-ri | 13 | 0 | 0 | 0 | 0 | 0 | 13 | — |
+| Barrington Park & Ride | CivicRec-Parks-Eastern-barrington-ri | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Peck Center | CivicRec-Parks-Eastern-barrington-ri | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Town Hall | CivicRec-Parks-Eastern-barrington-ri | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Barrington Middle School | CivicRec-Parks-Eastern-barrington-ri | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Barrington, RI | CivicRec-Parks-Eastern-barrington-ri | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Beckley, WV | CivicRec-Parks-Eastern-beckley-wv | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bluefield, WV | CivicRec-Parks-Eastern-bluefield-wv | 5 | 0 | 0 | 0 | 0 | 3 | 8 | — |
+| Fitness and Recreation Center | CivicRec-Parks-Eastern-bluefield-wv | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Boyd Convention & Arts Center | CivicRec-Parks-Eastern-boyd-county-ky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Briarcliff Todd School | CivicRec-Parks-Eastern-briarcliff-manor-ny | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Brooksville, FL | CivicRec-Parks-Eastern-brooksville-fl | 7 | 0 | 0 | 0 | 0 | 0 | 7 | — |
+| Jerome Brown Community Center | CivicRec-Parks-Eastern-brooksville-fl | 3 | 0 | 1 | 0 | 1 | 0 | 5 | — |
+| Tom Varn Park | CivicRec-Parks-Eastern-brooksville-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hernando Park | CivicRec-Parks-Eastern-brooksville-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Broome County Parks & Recreation | CivicRec-Parks-Eastern-broome-county-ny | 94 | 0 | 0 | 0 | 0 | 0 | 94 | — |
+| Brunswick, ME | CivicRec-Parks-Eastern-brunswick-me | 12 | 0 | 0 | 0 | 0 | 0 | 12 | — |
+| Doylestown, PA | CivicRec-Parks-Eastern-bucks-county-pa-parks-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Burlington, NC | CivicRec-Parks-Eastern-burlington-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mount Pleasant Library and Active Living Center | CivicRec-Parks-Eastern-cabarrus-county | 11 | 0 | 0 | 0 | 0 | 0 | 11 | — |
+| AFTON LIBRARY AND ACTIVE LIVING CENTER | CivicRec-Parks-Eastern-cabarrus-county | 11 | 0 | 0 | 0 | 0 | 0 | 11 | — |
+| Concord Active Living Center | CivicRec-Parks-Eastern-cabarrus-county | 8 | 0 | 0 | 0 | 0 | 0 | 8 | — |
+| Cabarrus Arena & Events Center | CivicRec-Parks-Eastern-cabarrus-county | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Parks Department | CivicRec-Parks-Eastern-camden-county-nj | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Cooper River Park | CivicRec-Parks-Eastern-camden-county-nj | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Lotus Academy | CivicRec-Parks-Eastern-caroline-county-va | 0 | 0 | 1 | 2 | 0 | 0 | 3 | — |
+| Caroline County Community Services Center | CivicRec-Parks-Eastern-caroline-county-va | 1 | 0 | 0 | 0 | 1 | 0 | 2 | — |
+| Danville, VA | CivicRec-Parks-Eastern-city-of-danville-va | 37 | 0 | 0 | 3 | 0 | 0 | 40 | — |
+| Coates Recreation Center | CivicRec-Parks-Eastern-city-of-danville-va | 0 | 0 | 2 | 0 | 0 | 0 | 2 | — |
+| City of Gastonia Parks & Recreation | CivicRec-Parks-Eastern-city-of-gastonia | 34 | 0 | 0 | 0 | 0 | 0 | 34 | — |
+| F. Scott Fitzgerald Theatre & Social Hall | CivicRec-Parks-Eastern-city-of-rockville-md | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Thomas Farm CC | CivicRec-Parks-Eastern-city-of-rockville-md | 0 | 2 | 0 | 0 | 0 | 0 | 2 | — |
+| Glenview Mansion | CivicRec-Parks-Eastern-city-of-rockville-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Elwood Smith Park | CivicRec-Parks-Eastern-city-of-rockville-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Twinbrook CRC | CivicRec-Parks-Eastern-city-of-rockville-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lawrence Gregory Community Center | CivicRec-Parks-Eastern-city-tallahassee-fl | 0 | 0 | 5 | 0 | 0 | 0 | 5 | — |
+| Walker Ford | CivicRec-Parks-Eastern-city-tallahassee-fl | 0 | 0 | 5 | 0 | 0 | 0 | 5 | — |
+| Jake Gaither Community Center | CivicRec-Parks-Eastern-city-tallahassee-fl | 0 | 0 | 5 | 0 | 0 | 0 | 5 | — |
+| Jack McLean Center | CivicRec-Parks-Eastern-city-tallahassee-fl | 0 | 0 | 5 | 0 | 0 | 0 | 5 | — |
+| LeVerne Payne Community Center | CivicRec-Parks-Eastern-city-tallahassee-fl | 0 | 0 | 5 | 0 | 0 | 0 | 5 | — |
+| Tallahassee, FL | CivicRec-Parks-Eastern-city-tallahassee-fl | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Wade Wehunt Pool | CivicRec-Parks-Eastern-city-tallahassee-fl | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Trousdell Gymnastics Center | CivicRec-Parks-Eastern-city-tallahassee-fl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Clarksville, TN | CivicRec-Parks-Eastern-clarksville-tn | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Michael Zone NRRC | CivicRec-Parks-Eastern-cleveland-oh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Gunning NRRC | CivicRec-Parks-Eastern-cleveland-oh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Alexander Hamilton NRRC | CivicRec-Parks-Eastern-cleveland-oh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cleveland, OH | CivicRec-Parks-Eastern-cleveland-oh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sterling NRRC | CivicRec-Parks-Eastern-cleveland-oh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Colchester, VT | CivicRec-Parks-Eastern-colchester-vt | 12 | 0 | 5 | 1 | 0 | 0 | 18 | — |
+| Studio 3 Dance & Fitness | CivicRec-Parks-Eastern-colchester-vt | 0 | 0 | 1 | 2 | 0 | 0 | 3 | — |
+| Malletts Bay School | CivicRec-Parks-Eastern-colchester-vt | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| City of Columbia Parks & Recreation | CivicRec-Parks-Eastern-columbia-tn | 13 | 0 | 0 | 0 | 0 | 0 | 13 | — |
+| Commerce Parks & Recreation | CivicRec-Parks-Eastern-commerce-ga | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| City of Concord Parks & Recreation | CivicRec-Parks-Eastern-concord-nc | 78 | 0 | 0 | 0 | 0 | 0 | 78 | — |
+| Robbins Park | CivicRec-Parks-Eastern-cornelius-parks-and-recreation | 5 | 0 | 0 | 1 | 1 | 0 | 7 | — |
+| Cornelius Town Hall | CivicRec-Parks-Eastern-cornelius-parks-and-recreation | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| James Hoyt Wilhelm Park | CivicRec-Parks-Eastern-cornelius-parks-and-recreation | 0 | 0 | 1 | 0 | 1 | 0 | 2 | — |
+| Blythe Landing | CivicRec-Parks-Eastern-cornelius-parks-and-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bailey Road Park | CivicRec-Parks-Eastern-cornelius-parks-and-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cain Center for the Arts | CivicRec-Parks-Eastern-cornelius-parks-and-recreation | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Cornelius, NC | CivicRec-Parks-Eastern-cornelius-parks-and-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Coventry, CT | CivicRec-Parks-Eastern-coventry-ct | 21 | 0 | 0 | 0 | 0 | 0 | 21 | — |
+| Patriots Park | CivicRec-Parks-Eastern-coventry-ct | 6 | 0 | 0 | 0 | 0 | 0 | 6 | — |
+| G.H. ROBERTSON SCHOOL | CivicRec-Parks-Eastern-coventry-ct | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Mill Brook Place | CivicRec-Parks-Eastern-coventry-ct | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Danville, KY | CivicRec-Parks-Eastern-danvilleboyle-county-parks-recreation-department | 18 | 0 | 0 | 1 | 0 | 0 | 19 | — |
+| Jennie Rogers Community Center | CivicRec-Parks-Eastern-danvilleboyle-county-parks-recreation-department | 5 | 0 | 1 | 1 | 0 | 0 | 7 | — |
+| Daviess County Parks & Recreation | CivicRec-Parks-Eastern-daviess-county-ky | 29 | 0 | 0 | 0 | 0 | 0 | 29 | — |
+| Dawsonville, GA | CivicRec-Parks-Eastern-dawson-county-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Yvonne Scarlett-Golden Center | CivicRec-Parks-Eastern-daytona-beach-leisure-services | 0 | 0 | 0 | 1 | 0 | 1 | 2 | — |
+| Dickerson Community Center | CivicRec-Parks-Eastern-daytona-beach-leisure-services | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Daytona Beach, FL | CivicRec-Parks-Eastern-daytona-beach-leisure-services | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Westgate Park | CivicRec-Parks-Eastern-dothan-al | 0 | 0 | 1 | 2 | 0 | 0 | 3 | — |
+| Walton Park | CivicRec-Parks-Eastern-dothan-al | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Wiregrass Park | CivicRec-Parks-Eastern-dothan-al | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Fayetteville, GA | CivicRec-Parks-Eastern-fayette-county-ga | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Kiwanis Park | CivicRec-Parks-Eastern-fayette-county-ga | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Nickel Plate District Amphitheater | CivicRec-Parks-Eastern-fishers-in | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Flagler County Parks & Recreation | CivicRec-Parks-Eastern-flagler-county | 109 | 0 | 0 | 0 | 0 | 0 | 109 | — |
+| Forsyth County Parks & Recreation | CivicRec-Parks-Eastern-forsyth-county-ga | 53 | 0 | 0 | 0 | 0 | 0 | 53 | — |
+| Fort Mill, SC | CivicRec-Parks-Eastern-fort-mill-sc | 5 | 0 | 0 | 10 | 6 | 1 | 22 | — |
+| Fort Mill YMCA Complex | CivicRec-Parks-Eastern-fort-mill-sc | 3 | 0 | 0 | 1 | 11 | 6 | 21 | — |
+| Winchester, VA | CivicRec-Parks-Eastern-frederick-county-va | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Collins Hill Park Aquatic Center | CivicRec-Parks-Eastern-gwinnett-county-parks-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Gwinnett Historic Courthouse | CivicRec-Parks-Eastern-gwinnett-county-parks-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Therapeutic Recreation Center | CivicRec-Parks-Eastern-hampton-va | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Montpelier Recreation Center and Library | CivicRec-Parks-Eastern-hanover-county-va | 0 | 0 | 0 | 4 | 0 | 0 | 4 | — |
+| Hanover, NH | CivicRec-Parks-Eastern-hanover-nh | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Anita C. Leight Estuary Center | CivicRec-Parks-Eastern-harford-county-md | 0 | 0 | 0 | 0 | 0 | 10 | 10 | — |
+| Recreation Division Office | CivicRec-Parks-Eastern-harford-county-md | 6 | 0 | 0 | 0 | 0 | 0 | 6 | — |
+| Eden Mill Nature Center | CivicRec-Parks-Eastern-harford-county-md | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Veronica 'Roni' Chenowith Activity Center | CivicRec-Parks-Eastern-harford-county-md | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Edgewood Recreation & Community Center | CivicRec-Parks-Eastern-harford-county-md | 3 | 0 | 0 | 1 | 0 | 0 | 4 | — |
+| Norrisville Library & Recreation Center | CivicRec-Parks-Eastern-harford-county-md | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Churchville Recreation Center | CivicRec-Parks-Eastern-harford-county-md | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Friends Community Park | CivicRec-Parks-Eastern-harford-county-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Belcamp Park | CivicRec-Parks-Eastern-harford-county-md | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Hartford, CT | CivicRec-Parks-Eastern-hartford-sports-recreation-ct | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hartland Community Center | CivicRec-Parks-Eastern-hartland-wi | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Conway, SC | CivicRec-Parks-Eastern-horry-county-sc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Flemington, NJ | CivicRec-Parks-Eastern-hunterdon-county-nj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Veterans Park | CivicRec-Parks-Eastern-huntersville-nc- | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Huntersville Athletic Park | CivicRec-Parks-Eastern-huntersville-nc- | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Huntsville, AL | CivicRec-Parks-Eastern-huntsville-al | 20 | 0 | 0 | 2 | 0 | 1 | 23 | — |
+| Optimist Recreation Center & Field | CivicRec-Parks-Eastern-huntsville-al | 2 | 0 | 0 | 0 | 1 | 0 | 3 | — |
+| Johnson Legacy Center | CivicRec-Parks-Eastern-huntsville-al | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Dr. Richard Showers Recreation Center | CivicRec-Parks-Eastern-huntsville-al | 1 | 0 | 0 | 1 | 0 | 0 | 2 | — |
+| Dr. Robert Shurney Legacy Center | CivicRec-Parks-Eastern-huntsville-al | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cavalry Hill Community Center | CivicRec-Parks-Eastern-huntsville-al | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fern Bell Recreation Center | CivicRec-Parks-Eastern-huntsville-al | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Max Luther Community Center | CivicRec-Parks-Eastern-huntsville-al | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Jackson County Parks & Recreation | CivicRec-Parks-Eastern-jackson-county-ms | 115 | 0 | 0 | 0 | 0 | 0 | 115 | — |
+| Jackson, NJ | CivicRec-Parks-Eastern-jackson-township-nj | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| Middleton-Mills Park | CivicRec-Parks-Eastern-kenton-county-ky | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Doe Run Lake | CivicRec-Parks-Eastern-kenton-county-ky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kenton County Fairgrounds | CivicRec-Parks-Eastern-kenton-county-ky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kingsport, TN | CivicRec-Parks-Eastern-kingsport-tn | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lakeland, TN | CivicRec-Parks-Eastern-lakeland-tn | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Multiple | CivicRec-Parks-Eastern-lauderhill-fl | 6 | 0 | 0 | 2 | 0 | 0 | 8 | — |
+| Lauderhill Golf Course | CivicRec-Parks-Eastern-lauderhill-fl | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| West Ken Lark Park | CivicRec-Parks-Eastern-lauderhill-fl | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Ken Thurston Inverrary Community Center & Public Service Facility | CivicRec-Parks-Eastern-lauderhill-fl | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Lauderhill, FL | CivicRec-Parks-Eastern-lauderhill-fl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| St. George Park | CivicRec-Parks-Eastern-lauderhill-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wolk Park | CivicRec-Parks-Eastern-lauderhill-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Veterans Park | CivicRec-Parks-Eastern-lauderhill-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lincoln County Parks & Recreation | CivicRec-Parks-Eastern-lincoln-county-nc | 6 | 0 | 0 | 0 | 0 | 0 | 6 | — |
+| Macon, GA | CivicRec-Parks-Eastern-macon-bibb-ga | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| Rosa Jackson Recreation Center | CivicRec-Parks-Eastern-macon-bibb-ga | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Frank Johnson Recreation Center | CivicRec-Parks-Eastern-macon-bibb-ga | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| LH Williams | CivicRec-Parks-Eastern-macon-bibb-ga | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Memorial Park Recreation Center | CivicRec-Parks-Eastern-macon-bibb-ga | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bloomfield Park Recreation Center/Gilead | CivicRec-Parks-Eastern-macon-bibb-ga | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| South Bibb Recreation Center | CivicRec-Parks-Eastern-macon-bibb-ga | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Delores A. Brooks Recreation Center | CivicRec-Parks-Eastern-macon-bibb-ga | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Maury County Parks & Recreation | CivicRec-Parks-Eastern-maury-county-tn | 25 | 0 | 0 | 0 | 0 | 0 | 25 | — |
+| Melrose, MA | CivicRec-Parks-Eastern-melrose-ma | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Roosevelt Elementary School | CivicRec-Parks-Eastern-melrose-ma | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Mentor Community  Recreation Center | CivicRec-Parks-Eastern-mentor-oh | 0 | 0 | 1 | 11 | 0 | 0 | 12 | — |
+| Mentor Ice Arena | CivicRec-Parks-Eastern-mentor-oh | 8 | 0 | 0 | 0 | 0 | 0 | 8 | — |
+| Wildwood Cultural Center and Park | CivicRec-Parks-Eastern-mentor-oh | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Marina Lagoons | CivicRec-Parks-Eastern-mentor-oh | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Middlebury, CT | CivicRec-Parks-Eastern-middlebury-ct-parks-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Recreation Campus | CivicRec-Parks-Eastern-middletown-ny | 24 | 0 | 3 | 3 | 2 | 0 | 32 | — |
+| Fancher Davidge Park | CivicRec-Parks-Eastern-middletown-ny | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Middletown, NY | CivicRec-Parks-Eastern-middletown-ny | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Colquitt, GA | CivicRec-Parks-Eastern-miller-county-parks-and-recreation-ga | 5 | 0 | 5 | 3 | 3 | 1 | 17 | — |
+| Milton, MA | CivicRec-Parks-Eastern-milton-ma-parks-recreation | 1 | 0 | 0 | 2 | 2 | 0 | 5 | — |
+| Kelly Field | CivicRec-Parks-Eastern-milton-ma-parks-recreation | 1 | 0 | 0 | 1 | 1 | 0 | 3 | — |
+| Gile Road Sports Complex | CivicRec-Parks-Eastern-milton-ma-parks-recreation | 0 | 0 | 1 | 1 | 0 | 0 | 2 | — |
+| Maywood School | CivicRec-Parks-Eastern-monona-wi | 6 | 0 | 10 | 0 | 0 | 0 | 16 | — |
+| Winnequah Park | CivicRec-Parks-Eastern-monona-wi | 2 | 0 | 0 | 0 | 0 | 1 | 3 | — |
+| Grand Crossing | CivicRec-Parks-Eastern-monona-wi | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Monona, WI | CivicRec-Parks-Eastern-monona-wi | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Clarksville, TN | CivicRec-Parks-Eastern-montgomery-county-parks-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Church Street Rec Center | CivicRec-Parks-Eastern-moorestown-nj | 7 | 2 | 1 | 7 | 4 | 3 | 24 | — |
+| John Pryor Park | CivicRec-Parks-Eastern-moorestown-nj | 1 | 0 | 0 | 0 | 1 | 0 | 2 | — |
+| Moorestown, NJ | CivicRec-Parks-Eastern-moorestown-nj | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Multiple | CivicRec-Parks-Eastern-moorestown-nj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wesley Bishop | CivicRec-Parks-Eastern-moorestown-nj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Selma Burke Center | CivicRec-Parks-Eastern-mooresville-recreation-parks-department | 5 | 0 | 0 | 4 | 0 | 0 | 9 | — |
+| War Memorial Center | CivicRec-Parks-Eastern-mooresville-recreation-parks-department | 1 | 0 | 7 | 0 | 0 | 0 | 8 | — |
+| Morganton, NC | CivicRec-Parks-Eastern-morganton-parks-recreation-nc | 15 | 0 | 0 | 1 | 1 | 1 | 18 | — |
+| Collett St. Recreation Center | CivicRec-Parks-Eastern-morganton-parks-recreation-nc | 3 | 0 | 0 | 2 | 0 | 0 | 5 | — |
+| Catawba Meadows Park | CivicRec-Parks-Eastern-morganton-parks-recreation-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mountain View Recreation Center | CivicRec-Parks-Eastern-morganton-parks-recreation-nc | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Nassau County Parks & Recreation | CivicRec-Parks-Eastern-nassau-county-fl-parks-recreation | 54 | 0 | 0 | 0 | 0 | 0 | 54 | — |
+| Chappaqua, NY | CivicRec-Parks-Eastern-new-castle-ny | 16 | 4 | 9 | 0 | 0 | 0 | 29 | — |
+| Community Center | CivicRec-Parks-Eastern-new-castle-ny | 6 | 0 | 1 | 10 | 0 | 1 | 18 | — |
+| Art Center | CivicRec-Parks-Eastern-new-castle-ny | 7 | 2 | 1 | 0 | 0 | 0 | 10 | — |
+| Town Hall Outdoor Basketball Court | CivicRec-Parks-Eastern-new-castle-ny | 0 | 2 | 2 | 2 | 2 | 0 | 8 | — |
+| Riverview Gymnastics Center | CivicRec-Parks-Eastern-newport-news-va | 9 | 0 | 8 | 0 | 0 | 3 | 20 | — |
+| Courthouse Way Community Center | CivicRec-Parks-Eastern-newport-news-va | 6 | 0 | 8 | 3 | 3 | 0 | 20 | — |
+| Brittingham-Midtown Community Center | CivicRec-Parks-Eastern-newport-news-va | 10 | 0 | 0 | 0 | 0 | 0 | 10 | — |
+| Denbigh Community Center | CivicRec-Parks-Eastern-newport-news-va | 6 | 0 | 1 | 2 | 1 | 0 | 10 | — |
+| Covington, GA | CivicRec-Parks-Eastern-newton-recreation-commission | 1 | 0 | 1 | 3 | 5 | 4 | 14 | — |
+| Nottingham, NH | CivicRec-Parks-Eastern-nottingham-nh | 23 | 0 | 0 | 0 | 0 | 0 | 23 | — |
+| Maine Bound | CivicRec-Parks-Eastern-orono-me | 8 | 0 | 0 | 0 | 0 | 0 | 8 | — |
+| UMaine New Balance Rec Center | CivicRec-Parks-Eastern-orono-me | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Multiple | CivicRec-Parks-Eastern-orono-me | 1 | 0 | 0 | 1 | 1 | 0 | 3 | — |
+| Asa Adams Elementary School | CivicRec-Parks-Eastern-orono-me | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Orono, ME | CivicRec-Parks-Eastern-orono-me | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Christopher Columbus Park | CivicRec-Parks-Eastern-passaic-nj | 0 | 1 | 3 | 1 | 0 | 0 | 5 | — |
+| Passaic Gifted and Talented Academy | CivicRec-Parks-Eastern-passaic-nj | 0 | 0 | 0 | 1 | 1 | 0 | 2 | — |
+| Martin Luther King Jr School No. 6 | CivicRec-Parks-Eastern-passaic-nj | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Veteran's Memorial Third Ward Park | CivicRec-Parks-Eastern-passaic-nj | 0 | 0 | 1 | 1 | 0 | 0 | 2 | — |
+| Passaic, NJ | CivicRec-Parks-Eastern-passaic-nj | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Ellen Ochoa School No. 22 | CivicRec-Parks-Eastern-passaic-nj | 0 | 0 | 0 | 1 | 0 | 1 | 2 | — |
+| Pembroke Pines Parks & Recreation | CivicRec-Parks-Eastern-pembroke-pines-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Forbes Recreation Center | CivicRec-Parks-Eastern-pinellas-park-fl | 10 | 0 | 0 | 0 | 0 | 0 | 10 | — |
+| Library | CivicRec-Parks-Eastern-pinellas-park-fl | 2 | 0 | 2 | 0 | 1 | 0 | 5 | — |
+| Patti Johnson Farm | CivicRec-Parks-Eastern-pinellas-park-fl | 0 | 0 | 4 | 0 | 0 | 0 | 4 | — |
+| Pinellas Park, FL | CivicRec-Parks-Eastern-pinellas-park-fl | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Broderick Recreation Center | CivicRec-Parks-Eastern-pinellas-park-fl | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Teen Center | CivicRec-Parks-Eastern-pinellas-park-fl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Public Works Operations Center | CivicRec-Parks-Eastern-pinellas-park-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pomfret Recreation Park | CivicRec-Parks-Eastern-pomfret-ct | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Pomfret Community Center | CivicRec-Parks-Eastern-pomfret-ct | 1 | 0 | 0 | 0 | 0 | 1 | 2 | — |
+| Lapsley Orchard | CivicRec-Parks-Eastern-pomfret-ct | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Watercure Farm Distillery | CivicRec-Parks-Eastern-pomfret-ct | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pomfret Community School | CivicRec-Parks-Eastern-pomfret-ct | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Leonard Brown House | CivicRec-Parks-Eastern-portsmouth-ri | 18 | 0 | 0 | 0 | 2 | 0 | 20 | — |
+| Portsmouth High School | CivicRec-Parks-Eastern-portsmouth-ri | 2 | 0 | 0 | 2 | 2 | 0 | 6 | — |
+| Rail Explorers | CivicRec-Parks-Eastern-portsmouth-ri | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Rockland, MA | CivicRec-Parks-Eastern-rockland-ma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ross Community Center | CivicRec-Parks-Eastern-ross-township | 18 | 0 | 2 | 0 | 0 | 0 | 20 | — |
+| Larry A. Dale Aquatic Center | CivicRec-Parks-Eastern-sanford-fl | 8 | 0 | 2 | 0 | 0 | 0 | 10 | — |
+| Jeff Triplett Community Center | CivicRec-Parks-Eastern-sanford-fl | 1 | 0 | 2 | 3 | 1 | 0 | 7 | — |
+| Chase Park | CivicRec-Parks-Eastern-sanford-fl | 1 | 0 | 1 | 1 | 2 | 0 | 5 | — |
+| Senior Center | CivicRec-Parks-Eastern-sanford-fl | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| Multiple | CivicRec-Parks-Eastern-sanford-fl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Downtown Sanford | CivicRec-Parks-Eastern-sanford-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Peter Muhlenberg Middle School | CivicRec-Parks-Eastern-shenandoah-county-va | 4 | 0 | 0 | 1 | 0 | 0 | 5 | — |
+| North Fork Middle School | CivicRec-Parks-Eastern-shenandoah-county-va | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Signal Knob Middle School | CivicRec-Parks-Eastern-shenandoah-county-va | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Central High School | CivicRec-Parks-Eastern-shenandoah-county-va | 1 | 0 | 0 | 1 | 0 | 0 | 2 | — |
+| Charterhouse School | CivicRec-Parks-Eastern-shenandoah-county-va | 0 | 0 | 1 | 0 | 1 | 0 | 2 | — |
+| Wellness & Activity Center | CivicRec-Parks-Eastern-shenandoah-county-va | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Sandy Hook Elementary | CivicRec-Parks-Eastern-shenandoah-county-va | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Stonewall Jackson High School | CivicRec-Parks-Eastern-shenandoah-county-va | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Strasburg High School | CivicRec-Parks-Eastern-shenandoah-county-va | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Shepherdsville Parks & Recreation | CivicRec-Parks-Eastern-shepherdsville-ky | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Veterans Memorial Park | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| South Burlington, VT | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 2 | 0 | 0 | 1 | 0 | 0 | 3 | — |
+| Senior Center | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 2 | 0 | 0 | 1 | 0 | 0 | 3 | — |
+| Szymanski Park | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Rick Marcotte Central School | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Burlington International Airport | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Jaycee Park | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Overlook at Underwood Park | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Orchard School | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bay Crest Park | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Downtown Park | CivicRec-Parks-Eastern-southern-pines-nc | 3 | 0 | 0 | 1 | 0 | 0 | 4 | — |
+| Train Station | CivicRec-Parks-Eastern-southern-pines-nc | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Multiple | CivicRec-Parks-Eastern-southern-pines-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Whitehall | CivicRec-Parks-Eastern-southern-pines-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Martin Park - Off Leash Dog Park | CivicRec-Parks-Eastern-southern-pines-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Southern Pines, NC | CivicRec-Parks-Eastern-southern-pines-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Memorial Park | CivicRec-Parks-Eastern-southern-pines-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Griffin, GA | CivicRec-Parks-Eastern-spalding-county-parks-and-recreation | 4 | 0 | 1 | 1 | 0 | 0 | 6 | — |
+| Senior Center | CivicRec-Parks-Eastern-spalding-county-parks-and-recreation | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Fairmont Park | CivicRec-Parks-Eastern-spalding-county-parks-and-recreation | 1 | 0 | 0 | 1 | 0 | 0 | 2 | — |
+| Multiple | CivicRec-Parks-Eastern-spalding-county-parks-and-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Spartanburg, SC | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 2 | 0 | 4 | 0 | 0 | 0 | 6 | — |
+| Chesnee Community Center | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Timken Community Center - Cowpens | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 1 | 0 | 0 | 0 | 0 | 2 | 3 | — |
+| TW Edwards Community Center - Pacolet | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Boiling Springs Community Park | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cleveland Park | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Room Rentals | CivicRec-Parks-Eastern-springettsbury-township-pa | 15 | 1 | 1 | 0 | 0 | 0 | 17 | — |
+| York, PA | CivicRec-Parks-Eastern-springettsbury-township-pa | 8 | 0 | 0 | 0 | 0 | 0 | 8 | — |
+| Springettsbury Township Park | CivicRec-Parks-Eastern-springettsbury-township-pa | 5 | 0 | 0 | 1 | 0 | 0 | 6 | — |
+| White Rose Senior Center | CivicRec-Parks-Eastern-springettsbury-township-pa | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| Hoss’s Steak & Sea House | CivicRec-Parks-Eastern-springettsbury-township-pa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Springfield, TN | CivicRec-Parks-Eastern-springfield-tn | 8 | 0 | 0 | 0 | 2 | 1 | 11 | — |
+| Martin Luther King Jr. Park | CivicRec-Parks-Eastern-springfield-tn | 0 | 0 | 1 | 1 | 1 | 0 | 3 | — |
+| Robertson County Fairgrounds | CivicRec-Parks-Eastern-springfield-tn | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| J. Travis Price Park | CivicRec-Parks-Eastern-springfield-tn | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Leonardtown, MD | CivicRec-Parks-Eastern-st-marys-county-md | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| St. Mary's County Fairgrounds | CivicRec-Parks-Eastern-st-marys-county-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lexington Manor Passive Park | CivicRec-Parks-Eastern-st-marys-county-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Starkville, MS | CivicRec-Parks-Eastern-starkville-parks-recreation | 7 | 0 | 2 | 2 | 4 | 1 | 16 | — |
+| Sportsplex Complex | CivicRec-Parks-Eastern-starkville-parks-recreation | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Stowe, VT | CivicRec-Parks-Eastern-stowe-vt | 6 | 0 | 0 | 0 | 0 | 0 | 6 | — |
+| Stowe Arena | CivicRec-Parks-Eastern-stowe-vt | 3 | 0 | 1 | 1 | 1 | 0 | 6 | — |
+| David Gale Rec Center | CivicRec-Parks-Eastern-stowe-vt | 4 | 0 | 1 | 0 | 0 | 0 | 5 | — |
+| Memorial Park | CivicRec-Parks-Eastern-stowe-vt | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Polo Field | CivicRec-Parks-Eastern-stowe-vt | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Brighton Community Center | CivicRec-Parks-Eastern-Town-Brighton-Parks-Recreation | 11 | 0 | 0 | 0 | 0 | 0 | 11 | — |
+| Council Rock Primary School | CivicRec-Parks-Eastern-Town-Brighton-Parks-Recreation | 11 | 0 | 0 | 0 | 0 | 0 | 11 | — |
+| Rochester, NY | CivicRec-Parks-Eastern-Town-Brighton-Parks-Recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Milton, VT | CivicRec-Parks-Eastern-town-of-milton-vt | 5 | 0 | 0 | 1 | 0 | 1 | 7 | — |
+| Town Beach | CivicRec-Parks-Eastern-town-of-south-kingstown-ri | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Village Green | CivicRec-Parks-Eastern-town-of-south-kingstown-ri | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| LP Wilson Community Center | CivicRec-Parks-Eastern-town-windsor | 7 | 0 | 0 | 0 | 0 | 1 | 8 | — |
+| 330 Windsor Ave. Community Center | CivicRec-Parks-Eastern-town-windsor | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| Windsor High School | CivicRec-Parks-Eastern-town-windsor | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Windsor, CT | CivicRec-Parks-Eastern-town-windsor | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Windsor Public Library | CivicRec-Parks-Eastern-town-windsor | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wilson Gateway Park | CivicRec-Parks-Eastern-town-windsor | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| LaGrange, GA | CivicRec-Parks-Eastern-troup-county-parks-and-recreation | 4 | 0 | 0 | 0 | 0 | 1 | 5 | — |
+| Tullahoma Parks & Recreation | CivicRec-Parks-Eastern-tullahoma-parks-and-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Watchung Stables | CivicRec-Parks-Eastern-union-county-nj | 13 | 0 | 0 | 0 | 0 | 0 | 13 | — |
+| Wheeler Spray Park | CivicRec-Parks-Eastern-union-county-nj | 9 | 0 | 0 | 0 | 0 | 0 | 9 | — |
+| Walter E. Ulrich Pool | CivicRec-Parks-Eastern-union-county-nj | 9 | 0 | 0 | 0 | 0 | 0 | 9 | — |
+| Oak Ridge Park Archery | CivicRec-Parks-Eastern-union-county-nj | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Trailside Nature & Science Center | CivicRec-Parks-Eastern-union-county-nj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Valdosta, GA | CivicRec-Parks-Eastern-valdosta-lowndes | 2 | 0 | 9 | 0 | 0 | 0 | 11 | — |
+| Victor, NY | CivicRec-Parks-Eastern-victor-parks-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| DeFuniak Springs, FL | CivicRec-Parks-Eastern-walton-county-fl | 22 | 0 | 0 | 0 | 0 | 0 | 22 | — |
+| Warren County Recreation Complex | CivicRec-Parks-Eastern-warren-county-nc | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Claude A Stokes Swimming Pool | CivicRec-Parks-Eastern-warren-county-va | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fairgrounds | CivicRec-Parks-Eastern-watertown-ny | 2 | 0 | 0 | 1 | 0 | 0 | 3 | — |
+| Watertown, NY | CivicRec-Parks-Eastern-watertown-ny | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Thompson Park | CivicRec-Parks-Eastern-watertown-ny | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Municipal Tennis Courts | CivicRec-Parks-Eastern-wayne-township-nj | 2 | 0 | 2 | 1 | 2 | 0 | 7 | — |
+| WAYNE COMMUNITY CENTER | CivicRec-Parks-Eastern-wayne-township-nj | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Multiple | CivicRec-Parks-Eastern-wayne-township-nj | 0 | 0 | 3 | 0 | 0 | 0 | 3 | — |
+| Wayne, NJ | CivicRec-Parks-Eastern-wayne-township-nj | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| BROADWAY | CivicRec-Parks-Eastern-wayne-township-nj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Captain Kilroy Park | CivicRec-Parks-Eastern-wayne-township-nj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wildwood, FL | CivicRec-Parks-Eastern-wildwood-fl | 0 | 0 | 2 | 0 | 0 | 0 | 2 | — |
+| Warfield Auditorium | CivicRec-Parks-Eastern-wildwood-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wildwood Community Center | CivicRec-Parks-Eastern-wildwood-fl | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Veteran's Memorial Stadium | CivicRec-Parks-Eastern-wilton-parks-and-recreation-ct | 2 | 0 | 0 | 0 | 2 | 2 | 6 | — |
+| York County Parks | CivicRec-Parks-Eastern-york-county-pa- | 25 | 0 | 0 | 0 | 0 | 0 | 25 | — |
+| Headquarters Library | Communico-FL-aclib | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://attend.aclib.us/events) |
+| Millhopper Branch | Communico-FL-aclib | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://attend.aclib.us/events) |
+| West Regional Library | Communico-FL-broward | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://broward.libnet.info/events) |
+| Southwest Regional Library | Communico-FL-broward | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [cal](https://broward.libnet.info/events) |
+| South Regional/Broward College Library | Communico-FL-broward | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://broward.libnet.info/events) |
+| Marta-Beth Friedman Stirling Road Branch | Communico-FL-broward | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://broward.libnet.info/events) |
+| Fort Lauderdale, FL | Communico-FL-broward | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://broward.libnet.info/events) |
+| South Regional Broward College Library | Communico-FL-broward | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://broward.libnet.info/events) |
+| Blake Library | Communico-FL-mcls | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://mcls.libnet.info/events) |
+| West Kendall Regional | Communico-FL-mdpls | 4 | 0 | 1 | 2 | 0 | 1 | 8 | [cal](https://mdpls.org/events) |
+| Kendale Lakes Branch | Communico-FL-mdpls | 5 | 0 | 1 | 0 | 0 | 1 | 7 | [cal](https://mdpls.org/events) |
+| Westchester Regional | Communico-FL-mdpls | 4 | 1 | 0 | 2 | 0 | 0 | 7 | [cal](https://mdpls.org/events) |
+| Westchester Library Health and Wellness Information Center | Communico-FL-mdpls | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://mdpls.org/events) |
+| North Dade Regional | Communico-FL-mdpls | 2 | 0 | 2 | 0 | 1 | 0 | 5 | [cal](https://mdpls.org/events) |
+| Coral Reef Branch | Communico-FL-mdpls | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://mdpls.org/events) |
+| Concord Branch | Communico-FL-mdpls | 0 | 0 | 0 | 3 | 0 | 0 | 3 | [cal](https://mdpls.org/events) |
+| Northeast Dade-Aventura Branch | Communico-FL-mdpls | 2 | 0 | 1 | 0 | 0 | 0 | 3 | [cal](https://mdpls.org/events) |
+| Miami Beach Regional | Communico-FL-mdpls | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://mdpls.org/events) |
+| Shenandoah Branch | Communico-FL-mdpls | 0 | 0 | 1 | 0 | 1 | 0 | 2 | [cal](https://mdpls.org/events) |
+| Lemon City Branch | Communico-FL-mdpls | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://mdpls.org/events) |
+| North Dade Regional - YOUmedia | Communico-FL-mdpls | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://mdpls.org/events) |
+| Kendall Branch | Communico-FL-mdpls | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://mdpls.org/events) |
+| West Kendall Regional - Coworking Center | Communico-FL-mdpls | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://mdpls.org/events) |
+| West Flagler Branch | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [cal](https://mdpls.org/events) |
+| Palmetto Bay Branch | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [cal](https://mdpls.org/events) |
+| Virtual Library | Communico-FL-mdpls | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://mdpls.org/events) |
+| Virrick Park Branch | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Hispanic Branch | Communico-FL-mdpls | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Country Walk Branch | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Fairlawn Branch | Communico-FL-mdpls | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://mdpls.org/events) |
+| Opa-locka Branch | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Miami Springs Branch | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Coconut Grove Branch | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Main Library | Communico-FL-mdpls | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://mdpls.org/events) |
+| West Kendall Regional - YOUmake | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Arcola Lakes Branch | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Allapattah Branch (Temporary Location) | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Sunny Isles Beach Branch | Communico-FL-mdpls | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Hialeah Gardens Branch | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Naranja Branch | Communico-FL-mdpls | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://mdpls.org/events) |
+| North Central Branch | Communico-FL-mdpls | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Doral Branch | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Sunset Branch | Communico-FL-mdpls | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Coral Gables Branch | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Culmer/Overtown Branch | Communico-FL-mdpls | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Golden Glades Branch | Communico-FL-mdpls | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Pinecrest Branch | Communico-FL-mdpls | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Palm Springs North Branch | Communico-FL-mdpls | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Hialeah Gardens Branch - YOUmedia | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Severna Park Library | Communico-MD-aacpl | 0 | 0 | 1 | 2 | 0 | 0 | 3 | [cal](https://www.aacpl.net/events) |
+| Glen Burnie Library | Communico-MD-aacpl | 1 | 0 | 1 | 0 | 0 | 1 | 3 | [cal](https://www.aacpl.net/events) |
+| Eastport-Annapolis Neck Library | Communico-MD-aacpl | 0 | 0 | 1 | 0 | 0 | 2 | 3 | [cal](https://www.aacpl.net/events) |
+| Busch Annapolis Library | Communico-MD-aacpl | 1 | 0 | 1 | 0 | 0 | 1 | 3 | [cal](https://www.aacpl.net/events) |
+| Linthicum Library | Communico-MD-aacpl | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [cal](https://www.aacpl.net/events) |
+| Crofton Library | Communico-MD-aacpl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://www.aacpl.net/events) |
+| Brooklyn Park Library | Communico-MD-aacpl | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://www.aacpl.net/events) |
+| Mountain Road Library | Communico-MD-aacpl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://www.aacpl.net/events) |
+| Bel Air Library | Communico-MD-hcplonline | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://programs.hcplonline.org/events) |
+| Olney Library | Communico-MD-mcpl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mcpl.libnet.info/events) |
+| White Oak Library | Communico-MD-mcpl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://mcpl.libnet.info/events) |
+| Brigadier General Charles E. McGee Library | Communico-MD-mcpl | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://mcpl.libnet.info/events) |
+| Gaithersburg Library | Communico-MD-mcpl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://mcpl.libnet.info/events) |
+| Germantown Library | Communico-MD-mcpl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://mcpl.libnet.info/events) |
+| Leonardtown Library | Communico-MD-stmalib | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://stmalib.libnet.info/events) |
+| Richmond Memorial Library | Communico-NY-batavialibrary | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://batavialibrary.libnet.info/events) |
+| Hauppauge Library | Communico-NY-hauppaugelibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://hauppaugelibrary.libnet.info/events) |
+| Hauppauge Library - Classroom C | Communico-NY-hauppaugelibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://hauppaugelibrary.libnet.info/events) |
+| Hauppauge Library - Classrooms A & B | Communico-NY-hauppaugelibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://hauppaugelibrary.libnet.info/events) |
+| Utica Public Library | Communico-NY-midyork | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://midyork.libnet.info/events) |
+| Huntington Public Library Station Branch | Communico-NY-myhpl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://myhpl.libnet.info/events) |
+| Marcotte Computer Lab (Main Floor) at Adriance Memorial Library | Communico-NY-poughkeepsie | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| Rover at Rover: The Roaming Library Bookmobile | Communico-NY-poughkeepsie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| Teen Computer Area at Boardman Road Branch Library | Communico-NY-poughkeepsie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| Greene Rooms at Boardman Road Branch Library | Communico-NY-poughkeepsie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| Greene Rooms 2 & 3 at Boardman Road Branch Library | Communico-NY-poughkeepsie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| Greene Room 1 at Boardman Road Branch Library | Communico-NY-poughkeepsie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| Charwat Room (Ground Floor) at Adriance Memorial Library | Communico-NY-poughkeepsie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| Springside Historic Park at Offsite | Communico-NY-poughkeepsie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| JLP Pre-Schooler Learning Center (Second Floor) at Adriance Memorial Library | Communico-NY-poughkeepsie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| Reading Public Library | Communico-PA-readingpl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://readingpl.libnet.info/events) |
+| Lucius E. & Elsie C. Burch, Jr. Library | Communico-TN-collierville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://collierville.libnet.info/events) |
+| Fifer Orchards | Farms-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.fiferorchards.com) |
+| Carroll County Public Library | Galax-Carroll Regional Library | 3 | 0 | 3 | 0 | 0 | 1 | 7 | — |
+| Galax Public Library | Galax-Carroll Regional Library | 2 | 0 | 4 | 0 | 0 | 1 | 7 | — |
+| Schlitz Audubon Nature Center | Gardens-Nature-Eastern | 15 | 1 | 0 | 0 | 0 | 0 | 16 | — |
+| North Branch Nature Center | Gardens-Nature-Eastern | 11 | 0 | 0 | 1 | 0 | 0 | 12 | — |
+| Mass Audubon Drumlin Farm | Gardens-Nature-Eastern | 9 | 0 | 0 | 0 | 0 | 0 | 9 | — |
+| Delaware Nature Society | Gardens-Nature-Eastern | 4 | 1 | 2 | 1 | 0 | 0 | 8 | — |
+| Coastal Maine Botanical Gardens | Gardens-Nature-Eastern | 7 | 0 | 0 | 0 | 0 | 0 | 7 | — |
+| North Carolina Arboretum | Gardens-Nature-Eastern | 6 | 0 | 0 | 0 | 0 | 0 | 6 | — |
+| Indian Creek Nature Center | Gardens-Nature-Eastern | 4 | 0 | 1 | 1 | 0 | 0 | 6 | — |
+| Lewis Ginter Botanical Garden | Gardens-Nature-Eastern | 5 | 1 | 0 | 0 | 0 | 0 | 6 | — |
+| Naples Botanical Garden | Gardens-Nature-Eastern | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| Cape Fear Botanical Garden | Gardens-Nature-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Irvine Nature Center | Gardens-Nature-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| New Jersey Botanical Garden | Gardens-Nature-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Birmingham Botanical Gardens | Gardens-Nature-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Reeves-Reed Arboretum | Gardens-Nature-Eastern | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Marie Selby Botanical Gardens | Gardens-Nature-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Minnesota Landscape Arboretum | Gardens-Nature-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mobile Botanical Gardens | Gardens-Nature-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Arnold Arboretum of Harvard University | Gardens-Nature-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Garden in the Woods | Gardens-Nature-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Winterthur Museum & Garden | Gardens-Nature-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cylburn Arboretum | Gardens-Nature-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| State Botanical Garden of Georgia | Gardens-Nature-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ashby Free Public Library | GoogleCalendar-MA | 32 | 0 | 0 | 0 | 0 | 0 | 32 | [cal](https://www.ashbylibrary.org/calendar/) |
+| Princess Anne Library | GoogleCalendar-MD | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://somelibrary.org/events.php) |
+| Somerset County Library | GoogleCalendar-MD | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://somelibrary.org/events.php) |
+| Roger Clark Memorial Library | GoogleCalendar-VT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](http://www.pittsfieldlibrary.com) |
+| Handley Regional Library | Handley Regional Library | 2 | 4 | 4 | 7 | 0 | 4 | 21 | — |
+| Bowman Library | Handley Regional Library | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Fleming Island | LibCal-FL-claycountygov-librarycalendar | 0 | 1 | 1 | 3 | 0 | 1 | 6 | — |
+| Orange Park | LibCal-FL-claycountygov-librarycalendar | 1 | 1 | 1 | 0 | 0 | 0 | 3 | — |
+| Middleburg-Clay Hill | LibCal-FL-claycountygov-librarycalendar | 0 | 1 | 0 | 1 | 0 | 0 | 2 | — |
+| Green Cove Springs | LibCal-FL-claycountygov-librarycalendar | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Keystone Heights - General | LibCal-FL-claycountygov-librarycalendar | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Main Library Meeting Room | LibCal-FL-lakelandpl | 0 | 1 | 0 | 1 | 0 | 1 | 3 | — |
+| Lakeland Public Library | LibCal-FL-lakelandpl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| The Commons | LibCal-FL-lakelandpl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Bookmobile | LibCal-FL-mcpls | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Book Sale Building - Mannington | LibCal-FL-mcpls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Exhibit Room - MCPL | LibCal-FL-mcpls | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Teen Lounge | LibCal-ME-bangorpubliclibrary | 0 | 0 | 0 | 0 | 0 | 2 | 2 | — |
+| Board Room | LibCal-ME-bangorpubliclibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Rezvani Meeting Room | LibCal-NJ-bccls-franklinlakes | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Franklin Lakes Public Library | LibCal-NJ-bccls-franklinlakes | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Franklin Lakes | LibCal-NJ-bccls-franklinlakes | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Glen Ridge Free Public Library | LibCal-NJ-bccls-glenridge | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Glen Ridge | LibCal-NJ-bccls-glenridge | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Montclair Main | LibCal-NJ-bccls-montclair | 1 | 0 | 0 | 1 | 0 | 1 | 3 | — |
+| Ramsey | LibCal-NJ-bccls-ramsey | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| West Orange | LibCal-NJ-bccls-westorange | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Literacy Room | LibCal-NJ-bccls-westorange | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hunterdon County Library | LibCal-NJ-hclibrary | 0 | 0 | 1 | 1 | 0 | 3 | 5 | — |
+| Jersey City Free Public Library | LibCal-NJ-jclibrary | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| Pavonia Branch | LibCal-NJ-jclibrary | 2 | 1 | 0 | 0 | 0 | 1 | 4 | — |
+| PGML-Biblioteca Criolla | LibCal-NJ-jclibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| PGML- Bonetti Room | LibCal-NJ-jclibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Heights Branch | LibCal-NJ-jclibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Miller Branch | LibCal-NJ-jclibrary | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| The Gallery | LibCal-NJ-lambertvillelibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Hopewell Activity Room | LibCal-NJ-mcl | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Lawrence Activity Room | LibCal-NJ-mcl | 0 | 1 | 0 | 1 | 0 | 0 | 2 | — |
+| West Windsor Room 2/3 | LibCal-NJ-mcl | 0 | 1 | 1 | 0 | 0 | 0 | 2 | — |
+| Ewing Children's Activity Room | LibCal-NJ-mcl | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Twin Rivers Meeting Room A | LibCal-NJ-mcl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Hopewell Branch | LibCal-NJ-mcl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Hickory Corner Children's Activity Room | LibCal-NJ-mcl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Twin Rivers Youth Services Program Room | LibCal-NJ-mcl | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| West Windsor Activity Room | LibCal-NJ-mcl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Hazlet Township Branch | LibCal-NJ-monmouthcountylib | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Weequahic Branch | LibCal-NJ-npl | 1 | 0 | 0 | 2 | 0 | 0 | 3 | — |
+| Branch Brook Branch | LibCal-NJ-npl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Main Library | LibCal-NJ-npl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Main Library: 4th Floor Auditorium | LibCal-NJ-npl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Newark Public Library | LibCal-NJ-npl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Main Library: "Made@NPL Makerspace" | LibCal-NJ-npl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Community Room | LibCal-NJ-sussexcountylibrary | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Mobile Library | LibCal-NJ-sussexcountylibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kids' Area | LibCal-NJ-sussexcountylibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Herr Memorial Library | LibCal-NJ-unioncountylibraries-uclsprograms | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Activity Room | LibCal-SC-berkeleylibrarysc | 2 | 0 | 0 | 1 | 0 | 0 | 3 | — |
+| John's Island | LibCal-SC-ccplsc | 0 | 1 | 0 | 1 | 0 | 0 | 2 | — |
+| Charleston County Public Library | LibCal-SC-ccplsc | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Otranto Road | LibCal-SC-ccplsc | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Baxter-Patrick James Island - Combined Community Rooms | LibCal-SC-ccplsc | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| West Ashley | LibCal-SC-ccplsc | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Wando Mount Pleasant | LibCal-SC-ccplsc | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Bees Ferry West Ashley - Combined Community Rooms | LibCal-SC-ccplsc | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Village | LibCal-SC-ccplsc | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Folly Beach | LibCal-SC-ccplsc | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Ashley River Branch - 2824 Bacons Bridge Rd | LibCal-SC-dorchesterlibrarysc | 0 | 1 | 0 | 1 | 0 | 1 | 3 | — |
+| Chapin Branch Library | LibCal-SC-lexcolibrary | 0 | 0 | 1 | 0 | 0 | 1 | 2 | — |
+| Lexington Main Library | LibCal-SC-lexcolibrary | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Irmo Branch Library | LibCal-SC-lexcolibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Gaston Branch Library | LibCal-SC-lexcolibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| South Carolina State Library | LibCal-SC-statelibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Children's Area | LibCal-VA-arlingtonva | 0 | 0 | 2 | 0 | 0 | 0 | 2 | — |
+| Quincy Room | LibCal-VA-arlingtonva | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| 2nd Floor | LibCal-VA-arlingtonva | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Campbell Room | LibCal-VA-arlingtonva | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Arlington County Public Library | LibCal-VA-arlingtonva | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| LM Storytime Room | LibCal-VA-henricolibrary-va | 0 | 3 | 0 | 0 | 0 | 0 | 3 | — |
+| TW Children's Program Room | LibCal-VA-henricolibrary-va | 0 | 2 | 0 | 0 | 0 | 0 | 2 | — |
+| FA Children's Storytime Room | LibCal-VA-henricolibrary-va | 0 | 2 | 0 | 0 | 0 | 0 | 2 | — |
+| TU Children's Program Room | LibCal-VA-henricolibrary-va | 0 | 2 | 0 | 0 | 0 | 0 | 2 | — |
+| NP Meeting Room | LibCal-VA-henricolibrary-va | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| GL Children's Program Room | LibCal-VA-henricolibrary-va | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Pohick Meeting Room 1 | LibCal-VA-librarycalendar | 0 | 0 | 0 | 1 | 0 | 1 | 2 | — |
+| Centreville Regional Library | LibCal-VA-librarycalendar | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Pohick Lobby | LibCal-VA-librarycalendar | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Central Library (Youth Programs Room) | LibCal-VA-mrlib | 0 | 0 | 2 | 3 | 0 | 1 | 6 | — |
+| Page Public Library | LibCal-VA-mrlib | 2 | 0 | 0 | 1 | 0 | 0 | 3 | — |
+| Village Library | LibCal-VA-mrlib | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Elkton Community Library | LibCal-VA-mrlib | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Grottoes Branch Library | LibCal-VA-mrlib | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Shenandoah Community Library | LibCal-VA-mrlib | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| North River Library | LibCal-VA-mrlib | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Norfolk Public Library | LibCal-VA2 | 7 | 7 | 8 | 4 | 0 | 9 | 35 | [cal](https://www.norfolkpubliclibrary.org) |
+| Suffolk Public Library | LibCal-VA2 | 6 | 0 | 0 | 7 | 0 | 6 | 19 | [cal](https://www.suffolkpubliclibrary.com) |
+| Roanoke Public Libraries | LibCal-VA2 | 13 | 0 | 0 | 0 | 0 | 5 | 18 | [cal](https://www.roanokeva.gov/library) |
+| Arlington Public Library | LibCal-VA2 | 11 | 1 | 1 | 1 | 0 | 0 | 14 | [cal](https://library.arlingtonva.us) |
+| Library of Virginia | LibCal-VA2 | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [cal](https://www.lva.virginia.gov) |
+| Richmond Public Library | LibCal-VA2 | 4 | 0 | 0 | 0 | 0 | 4 | 8 | [cal](https://rvalibrary.org) |
+| Fairfax County Public Library | LibCal-VA2 | 5 | 0 | 0 | 1 | 0 | 0 | 6 | [cal](https://www.fairfaxcounty.gov/library) |
+| Buncombe County Libraries | LibraryMarket-NC | 1 | 2 | 0 | 0 | 1 | 0 | 4 | — |
+| Hickory Public Library | LibraryMarket-NC | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Lancaster Public Library | LibraryMarket-PA | 10 | 4 | 0 | 1 | 1 | 3 | 19 | — |
+| York County Libraries | LibraryMarket-PA | 8 | 0 | 0 | 0 | 0 | 4 | 12 | — |
+| Bethlehem Area Public Library | LibraryMarket-PA | 9 | 0 | 2 | 0 | 0 | 0 | 11 | — |
+| Markeim Arts Center | MacaroniKid-NJ-cherryhill | 0 | 1 | 1 | 3 | 3 | 5 | 13 | [cal](https://cherryhill.macaronikid.com) |
+| Animal Welfare Association | MacaroniKid-NJ-cherryhill | 2 | 0 | 0 | 0 | 0 | 2 | 4 | [cal](https://cherryhill.macaronikid.com) |
+| Cherry Hill Public Library | MacaroniKid-NJ-cherryhill | 2 | 0 | 0 | 0 | 0 | 1 | 3 | [cal](https://cherryhill.macaronikid.com) |
+| Millennium Skate World | MacaroniKid-NJ-cherryhill | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://cherryhill.macaronikid.com) |
+| St. Andrews United Methodist Church of Cherry Hill | MacaroniKid-NJ-cherryhill | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://cherryhill.macaronikid.com) |
+| Lakeshore Learning | MacaroniKid-NJ-cherryhill | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cherryhill.macaronikid.com) |
+| American Legion Cherry Hill NJ | MacaroniKid-NJ-cherryhill | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cherryhill.macaronikid.com) |
+| Resurrection Catholic School and Preschool | MacaroniKid-NJ-cherryhill | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://cherryhill.macaronikid.com) |
+| Wild Birds Unlimited (Cherry Hill, NJ) | MacaroniKid-NJ-cherryhill | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cherryhill.macaronikid.com) |
+| Cherry Hill Township | MacaroniKid-NJ-cherryhill | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cherryhill.macaronikid.com) |
+| Westfield Memorial Library | MacaroniKid-NJ-clark | 2 | 40 | 6 | 9 | 4 | 2 | 63 | [cal](https://clark.macaronikid.com) |
+| Mountainside Public Library | MacaroniKid-NJ-clark | 12 | 16 | 8 | 9 | 0 | 0 | 45 | [cal](https://clark.macaronikid.com) |
+| Springfield Free Public Library | MacaroniKid-NJ-clark | 1 | 21 | 12 | 0 | 3 | 2 | 39 | [cal](https://clark.macaronikid.com) |
+| Barnes & Noble - Clark Commons | MacaroniKid-NJ-clark | 0 | 9 | 1 | 8 | 0 | 0 | 18 | [cal](https://clark.macaronikid.com) |
+| Barnes & Noble - Union Plaza | MacaroniKid-NJ-clark | 0 | 17 | 0 | 0 | 0 | 0 | 17 | [cal](https://clark.macaronikid.com) |
+| Somerset County Library System - North Plainfield Branch | MacaroniKid-NJ-clark | 14 | 0 | 0 | 0 | 0 | 0 | 14 | [cal](https://clark.macaronikid.com) |
+| Clark-Cranford-Scotch Plains | MacaroniKid-NJ-clark | 4 | 1 | 0 | 7 | 0 | 0 | 12 | [cal](https://clark.macaronikid.com) |
+| Downtown Cranford | MacaroniKid-NJ-clark | 7 | 0 | 0 | 1 | 0 | 0 | 8 | [cal](https://clark.macaronikid.com) |
+| Clark Public Library | MacaroniKid-NJ-clark | 1 | 5 | 0 | 0 | 0 | 0 | 6 | [cal](https://clark.macaronikid.com) |
+| Temple Sholom of Scotch Plains | MacaroniKid-NJ-clark | 4 | 0 | 0 | 2 | 0 | 0 | 6 | [cal](https://clark.macaronikid.com) |
+| Crossroads | MacaroniKid-NJ-clark | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://clark.macaronikid.com) |
+| City of Elizabeth NJ - City Hall | MacaroniKid-NJ-clark | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://clark.macaronikid.com) |
+| El Nachos Cantina | MacaroniKid-NJ-clark | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://clark.macaronikid.com) |
+| Liberty Hall Museum | MacaroniKid-NJ-clark | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://clark.macaronikid.com) |
+| StreetFairs | MacaroniKid-NJ-clark | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clark.macaronikid.com) |
+| The Borough of Roselle Park | MacaroniKid-NJ-clark | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clark.macaronikid.com) |
+| Fire Me Up Studio | MacaroniKid-NJ-clark | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://clark.macaronikid.com) |
+| BCCLS | MacaroniKid-NJ-clifton | 17 | 17 | 2 | 18 | 1 | 0 | 55 | [cal](https://clifton.macaronikid.com) |
+| Clifton - Montclair | MacaroniKid-NJ-clifton | 17 | 22 | 4 | 4 | 1 | 0 | 48 | [cal](https://clifton.macaronikid.com) |
+| Bloomfield Library | MacaroniKid-NJ-clifton | 1 | 0 | 0 | 24 | 0 | 0 | 25 | [cal](https://clifton.macaronikid.com) |
+| Little Falls Library | MacaroniKid-NJ-clifton | 8 | 2 | 9 | 0 | 0 | 0 | 19 | [cal](https://clifton.macaronikid.com) |
+| Watchung Booksellers | MacaroniKid-NJ-clifton | 2 | 6 | 0 | 2 | 0 | 0 | 10 | [cal](https://clifton.macaronikid.com) |
+| Uno Pizzeria & Grill (Clifton, NJ) | MacaroniKid-NJ-clifton | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://clifton.macaronikid.com) |
+| Montclair History Center | MacaroniKid-NJ-clifton | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://clifton.macaronikid.com) |
+| Cedar Grove Free Public Library | MacaroniKid-NJ-clifton | 1 | 0 | 0 | 4 | 0 | 0 | 5 | [cal](https://clifton.macaronikid.com) |
+| Circle of Care for Families and Children of Passaic County, Inc. | MacaroniKid-NJ-clifton | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://clifton.macaronikid.com) |
+| Township of Verona | MacaroniKid-NJ-clifton | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://clifton.macaronikid.com) |
+| Montclair BABY | MacaroniKid-NJ-clifton | 0 | 2 | 0 | 0 | 0 | 0 | 2 | [cal](https://clifton.macaronikid.com) |
+| Unitarian Universalist Congregation at Montclair | MacaroniKid-NJ-clifton | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://clifton.macaronikid.com) |
+| Borough of Lodi, New Jersey | MacaroniKid-NJ-clifton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clifton.macaronikid.com) |
+| Beyond The Boogie Dance Company | MacaroniKid-NJ-clifton | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://clifton.macaronikid.com) |
+| Cedar Bean's Coffee Joint | MacaroniKid-NJ-clifton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clifton.macaronikid.com) |
+| Borough of Woodland Park | MacaroniKid-NJ-clifton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clifton.macaronikid.com) |
+| The Wellmont Theater | MacaroniKid-NJ-clifton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clifton.macaronikid.com) |
+| Jay Daniels Music | MacaroniKid-NJ-clifton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clifton.macaronikid.com) |
+| The Montclair Foundation/Van Vleck House & Gardens | MacaroniKid-NJ-clifton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clifton.macaronikid.com) |
+| City Green, Inc. | MacaroniKid-NJ-clifton | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://clifton.macaronikid.com) |
+| Montclair State University Ice Arena | MacaroniKid-NJ-clifton | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://clifton.macaronikid.com) |
+| Dingbatz | MacaroniKid-NJ-clifton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clifton.macaronikid.com) |
+| Keystone Cheese | MacaroniKid-NJ-clifton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clifton.macaronikid.com) |
+| Neshanic Valley Beekeepers, LLC | MacaroniKid-NJ-clifton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clifton.macaronikid.com) |
+| Wednesday 13 | MacaroniKid-NJ-clifton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clifton.macaronikid.com) |
+| Latinos of Montclair | MacaroniKid-NJ-clifton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clifton.macaronikid.com) |
+| Morristown Library | MacaroniKid-NJ-eastmorris | 5 | 24 | 5 | 11 | 1 | 28 | 74 | [cal](https://eastmorris.macaronikid.com) |
+| Randolph Township Free Public Library | MacaroniKid-NJ-eastmorris | 18 | 14 | 12 | 8 | 1 | 0 | 53 | [cal](https://eastmorris.macaronikid.com) |
+| Dover Library | MacaroniKid-NJ-eastmorris | 7 | 10 | 3 | 6 | 0 | 0 | 26 | [cal](https://eastmorris.macaronikid.com) |
+| Montville Library | MacaroniKid-NJ-eastmorris | 1 | 3 | 16 | 4 | 0 | 1 | 25 | [cal](https://eastmorris.macaronikid.com) |
+| Parsippany Library- Main Branch | MacaroniKid-NJ-eastmorris | 11 | 0 | 0 | 3 | 3 | 1 | 18 | [cal](https://eastmorris.macaronikid.com) |
+| Lake Hiawatha Library | MacaroniKid-NJ-eastmorris | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://eastmorris.macaronikid.com) |
+| Mount Tabor Library | MacaroniKid-NJ-eastmorris | 2 | 0 | 0 | 7 | 0 | 0 | 9 | [cal](https://eastmorris.macaronikid.com) |
+| Randolph Recreation | MacaroniKid-NJ-eastmorris | 7 | 0 | 0 | 1 | 0 | 0 | 8 | [cal](https://eastmorris.macaronikid.com) |
+| Envy Sports Club Parsippany | MacaroniKid-NJ-eastmorris | 0 | 0 | 0 | 8 | 0 | 0 | 8 | [cal](https://eastmorris.macaronikid.com) |
+| Adath Shalom | MacaroniKid-NJ-eastmorris | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://eastmorris.macaronikid.com) |
+| Rockaway Borough Public Library | MacaroniKid-NJ-eastmorris | 0 | 1 | 3 | 2 | 0 | 0 | 6 | [cal](https://eastmorris.macaronikid.com) |
+| Child & Family Resources | MacaroniKid-NJ-eastmorris | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://eastmorris.macaronikid.com) |
+| East Morris | MacaroniKid-NJ-eastmorris | 3 | 1 | 0 | 1 | 0 | 0 | 5 | [cal](https://eastmorris.macaronikid.com) |
+| Whippanong Library | MacaroniKid-NJ-eastmorris | 0 | 1 | 3 | 1 | 0 | 0 | 5 | [cal](https://eastmorris.macaronikid.com) |
+| MacCulloch Hall | MacaroniKid-NJ-eastmorris | 4 | 0 | 0 | 1 | 0 | 0 | 5 | [cal](https://eastmorris.macaronikid.com) |
+| Morris County Library | MacaroniKid-NJ-eastmorris | 1 | 0 | 2 | 0 | 0 | 1 | 4 | [cal](https://eastmorris.macaronikid.com) |
+| Rockaway Township | MacaroniKid-NJ-eastmorris | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://eastmorris.macaronikid.com) |
+| Museum of Early Trades and Crafts | MacaroniKid-NJ-eastmorris | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://eastmorris.macaronikid.com) |
+| Borough of Lincoln Park | MacaroniKid-NJ-eastmorris | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://eastmorris.macaronikid.com) |
+| Township of Parsippany-Troy Hills | MacaroniKid-NJ-eastmorris | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://eastmorris.macaronikid.com) |
+| Experience Madison NJ | MacaroniKid-NJ-eastmorris | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://eastmorris.macaronikid.com) |
+| Pequannock Parks & Recreation | MacaroniKid-NJ-eastmorris | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://eastmorris.macaronikid.com) |
+| Borough of Wharton | MacaroniKid-NJ-eastmorris | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://eastmorris.macaronikid.com) |
+| Wharton Public Library | MacaroniKid-NJ-eastmorris | 0 | 0 | 0 | 0 | 2 | 0 | 2 | [cal](https://eastmorris.macaronikid.com) |
+| NJ Trail Series | MacaroniKid-NJ-eastmorris | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastmorris.macaronikid.com) |
+| Montville Township Recreation Department | MacaroniKid-NJ-eastmorris | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastmorris.macaronikid.com) |
+| East Coast Research and Discovery Association (E.C.R.D.A.) | MacaroniKid-NJ-eastmorris | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://eastmorris.macaronikid.com) |
+| Alice's Restaurant | MacaroniKid-NJ-eastmorris | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastmorris.macaronikid.com) |
+| Denville Public Library | MacaroniKid-NJ-eastmorris | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastmorris.macaronikid.com) |
+| American Legion NJ Post 249 Parsippany | MacaroniKid-NJ-eastmorris | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://eastmorris.macaronikid.com) |
+| 200 Club of Morris | MacaroniKid-NJ-eastmorris | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastmorris.macaronikid.com) |
+| Morristown Recreation Division | MacaroniKid-NJ-eastmorris | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastmorris.macaronikid.com) |
+| Mayo Performing Arts Center | MacaroniKid-NJ-eastmorris | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastmorris.macaronikid.com) |
+| Community FoodBank Of New Jersey | MacaroniKid-NJ-eastmorris | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastmorris.macaronikid.com) |
+| Morris County Park Commission | MacaroniKid-NJ-eastmorris | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastmorris.macaronikid.com) |
+| Two Girls Media | MacaroniKid-NJ-eastmorris | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastmorris.macaronikid.com) |
+| Morristown Festival of Books | MacaroniKid-NJ-eastmorris | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastmorris.macaronikid.com) |
+| Edison Public Library: Main Library | MacaroniKid-NJ-edison | 8 | 27 | 1 | 1 | 0 | 0 | 37 | [cal](https://edison.macaronikid.com) |
+| Metuchen Arts Council | MacaroniKid-NJ-edison | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://edison.macaronikid.com) |
+| Ramona Town Hall | MacaroniKid-NJ-edison | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://edison.macaronikid.com) |
+| Ocean County Library - Barnegat Branch | MacaroniKid-NJ-littleeggharbor | 2 | 9 | 5 | 1 | 1 | 0 | 18 | [cal](https://littleeggharbor.macaronikid.com) |
+| Ocean County Library - Tuckerton Branch | MacaroniKid-NJ-littleeggharbor | 1 | 3 | 2 | 1 | 3 | 3 | 13 | [cal](https://littleeggharbor.macaronikid.com) |
+| Ocean County Library - Waretown Branch | MacaroniKid-NJ-littleeggharbor | 2 | 4 | 6 | 0 | 0 | 0 | 12 | [cal](https://littleeggharbor.macaronikid.com) |
+| Ocean County Library - Little Egg Harbor Branch | MacaroniKid-NJ-littleeggharbor | 2 | 2 | 2 | 4 | 0 | 1 | 11 | [cal](https://littleeggharbor.macaronikid.com) |
+| Ocean County Library - Long Beach Island Branch | MacaroniKid-NJ-littleeggharbor | 4 | 0 | 0 | 5 | 0 | 1 | 10 | [cal](https://littleeggharbor.macaronikid.com) |
+| Atlantic County Library System | MacaroniKid-NJ-littleeggharbor | 2 | 1 | 0 | 0 | 1 | 1 | 5 | [cal](https://littleeggharbor.macaronikid.com) |
+| Historical Society of Hammonton | MacaroniKid-NJ-littleeggharbor | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://littleeggharbor.macaronikid.com) |
+| Ocean County Library — Long Beach Island Branch | MacaroniKid-NJ-littleeggharbor | 0 | 3 | 0 | 0 | 0 | 0 | 3 | [cal](https://littleeggharbor.macaronikid.com) |
+| Saint Stephen's Episcopal Church, Waretown, New Jersey | MacaroniKid-NJ-littleeggharbor | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://littleeggharbor.macaronikid.com) |
+| Stranger Things Rock | MacaroniKid-NJ-littleeggharbor | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://littleeggharbor.macaronikid.com) |
+| Associated Humane Societies South | MacaroniKid-NJ-littleeggharbor | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://littleeggharbor.macaronikid.com) |
+| Rescue Ridge Animal Shelter | MacaroniKid-NJ-littleeggharbor | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://littleeggharbor.macaronikid.com) |
+| Tuckerton Seaport & Baymen's Museum | MacaroniKid-NJ-littleeggharbor | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://littleeggharbor.macaronikid.com) |
+| Ocean County Library — Little Egg Harbor Branch | MacaroniKid-NJ-littleeggharbor | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://littleeggharbor.macaronikid.com) |
+| Billy Penn and the Inside Drivers | MacaroniKid-NJ-littleeggharbor | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://littleeggharbor.macaronikid.com) |
+| Mercer County Library System - Hickory Corner Branch | MacaroniKid-NJ-marlboro-manalapan | 1 | 18 | 17 | 9 | 2 | 0 | 47 | [cal](https://marlboro-manalapan.macaronikid.com) |
+| Monmouth County Library — Headquarters | MacaroniKid-NJ-marlboro-manalapan | 1 | 10 | 3 | 11 | 3 | 0 | 28 | [cal](https://marlboro-manalapan.macaronikid.com) |
+| Monmouth County Library System - Marlboro | MacaroniKid-NJ-marlboro-manalapan | 16 | 4 | 4 | 0 | 0 | 1 | 25 | [cal](https://marlboro-manalapan.macaronikid.com) |
+| Mercer County Library System - Twin Rivers Branch | MacaroniKid-NJ-marlboro-manalapan | 10 | 10 | 2 | 1 | 1 | 0 | 24 | [cal](https://marlboro-manalapan.macaronikid.com) |
+| Mercer County Library System - Hightstown Memorial Library Branch | MacaroniKid-NJ-marlboro-manalapan | 2 | 13 | 5 | 1 | 0 | 0 | 21 | [cal](https://marlboro-manalapan.macaronikid.com) |
+| Monmouth County Library System -  Headquarters, Manalapan | MacaroniKid-NJ-marlboro-manalapan | 8 | 0 | 0 | 0 | 0 | 1 | 9 | [cal](https://marlboro-manalapan.macaronikid.com) |
+| Western Monmouth | MacaroniKid-NJ-marlboro-manalapan | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://marlboro-manalapan.macaronikid.com) |
+| Sticky Fingers Cooking - Colorado Springs | MacaroniKid-NJ-marlboro-manalapan | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [cal](https://marlboro-manalapan.macaronikid.com) |
+| Chill Act | MacaroniKid-NJ-marlboro-manalapan | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://marlboro-manalapan.macaronikid.com) |
+| NAMI New Jersey | MacaroniKid-NJ-marlboro-manalapan | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://marlboro-manalapan.macaronikid.com) |
+| Monmouth County Library — West Long Branch | MacaroniKid-NJ-marlboro-manalapan | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://marlboro-manalapan.macaronikid.com) |
+| Calgo Gardens | MacaroniKid-NJ-marlboro-manalapan | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://marlboro-manalapan.macaronikid.com) |
+| Middlesex County Culture | MacaroniKid-NJ-newbrunswick | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://newbrunswick.macaronikid.com) |
+| New Brunswick City Government | MacaroniKid-NJ-newbrunswick | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://newbrunswick.macaronikid.com) |
+| Sticky Fingers Cooking - Colorado Springs | MacaroniKid-NJ-newbrunswick | 0 | 0 | 3 | 0 | 0 | 0 | 3 | [cal](https://newbrunswick.macaronikid.com) |
+| State Theatre New Jersey | MacaroniKid-NJ-newbrunswick | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://newbrunswick.macaronikid.com) |
+| Native Plant Society of New Jersey | MacaroniKid-NJ-newbrunswick | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://newbrunswick.macaronikid.com) |
+| Rutgers University Alumni Association | MacaroniKid-NJ-newbrunswick | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newbrunswick.macaronikid.com) |
+| coLAB Arts | MacaroniKid-NJ-newbrunswick | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://newbrunswick.macaronikid.com) |
+| WHO on EARTH | MacaroniKid-NJ-newbrunswick | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newbrunswick.macaronikid.com) |
+| Hub City Jazz Festival | MacaroniKid-NJ-newbrunswick | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newbrunswick.macaronikid.com) |
+| Luna Ticketing | MacaroniKid-NJ-newbrunswick | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newbrunswick.macaronikid.com) |
+| New Brunswick Performing Arts Center | MacaroniKid-NJ-newbrunswick | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newbrunswick.macaronikid.com) |
+| Franklin Township Public Library, DeMott Lane Branch | MacaroniKid-NJ-newbrunswick | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://newbrunswick.macaronikid.com) |
+| Monmouth County Library System - Wall Township Branch | MacaroniKid-NJ-pointpleasantnj | 18 | 13 | 0 | 7 | 1 | 0 | 39 | [cal](https://pointpleasantnj.macaronikid.com) |
+| Monmouth County Library System - Ocean Township | MacaroniKid-NJ-pointpleasantnj | 10 | 21 | 0 | 1 | 2 | 1 | 35 | [cal](https://pointpleasantnj.macaronikid.com) |
+| Monmouth County Library — West Long Branch | MacaroniKid-NJ-pointpleasantnj | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://pointpleasantnj.macaronikid.com) |
+| Monmouth County Library System - Oceanport | MacaroniKid-NJ-pointpleasantnj | 10 | 3 | 0 | 0 | 0 | 0 | 13 | [cal](https://pointpleasantnj.macaronikid.com) |
+| Stone Pony Summer Stage | MacaroniKid-NJ-pointpleasantnj | 10 | 0 | 0 | 1 | 0 | 0 | 11 | [cal](https://pointpleasantnj.macaronikid.com) |
+| Jenkinson's Boardwalk | MacaroniKid-NJ-pointpleasantnj | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://pointpleasantnj.macaronikid.com) |
+| Point Pleasant School District | MacaroniKid-NJ-pointpleasantnj | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://pointpleasantnj.macaronikid.com) |
+| River Rock Restaurant & Marina Bar | MacaroniKid-NJ-pointpleasantnj | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://pointpleasantnj.macaronikid.com) |
+| The City of Long Branch, NJ | MacaroniKid-NJ-pointpleasantnj | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://pointpleasantnj.macaronikid.com) |
+| Exit 102 BAND | MacaroniKid-NJ-pointpleasantnj | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://pointpleasantnj.macaronikid.com) |
+| Long Branch Free Public Library | MacaroniKid-NJ-pointpleasantnj | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://pointpleasantnj.macaronikid.com) |
+| Fleur de Mer Flower Bar & Boutique | MacaroniKid-NJ-pointpleasantnj | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://pointpleasantnj.macaronikid.com) |
+| Market Street Mission | MacaroniKid-NJ-pointpleasantnj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pointpleasantnj.macaronikid.com) |
+| Manasquan Bank | MacaroniKid-NJ-pointpleasantnj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pointpleasantnj.macaronikid.com) |
+| ElmThree Productions | MacaroniKid-NJ-pointpleasantnj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pointpleasantnj.macaronikid.com) |
+| Rescue Ridge Animal Shelter | MacaroniKid-NJ-pointpleasantnj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pointpleasantnj.macaronikid.com) |
+| The Front Bottoms | MacaroniKid-NJ-pointpleasantnj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pointpleasantnj.macaronikid.com) |
+| Live Run Give LLC | MacaroniKid-NJ-pointpleasantnj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pointpleasantnj.macaronikid.com) |
+| New Jersey Audubon - Lorrimer Sanctuary | MacaroniKid-NJ-ramsey | 9 | 5 | 0 | 1 | 0 | 0 | 15 | [cal](https://ramsey.macaronikid.com) |
+| Northwest Bergen | MacaroniKid-NJ-ramsey | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://ramsey.macaronikid.com) |
+| Dana Anello | MacaroniKid-NJ-ramsey | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ramsey.macaronikid.com) |
+| Mahwah Public Library | MacaroniKid-NJ-ramsey | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ramsey.macaronikid.com) |
+| West Side Presbyterian Church Ridgewood, NJ | MacaroniKid-NJ-ramsey | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ramsey.macaronikid.com) |
+| Eli Lev | MacaroniKid-NJ-ramsey | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ramsey.macaronikid.com) |
+| Sussex County Library - Sussex-Wantage Branch | MacaroniKid-NJ-sussexnj | 4 | 9 | 14 | 13 | 0 | 1 | 41 | [cal](https://sussexnj.macaronikid.com) |
+| Sussex County Library - Franklin Branch | MacaroniKid-NJ-sussexnj | 1 | 5 | 16 | 4 | 0 | 7 | 33 | [cal](https://sussexnj.macaronikid.com) |
+| Sparta Public Library | MacaroniKid-NJ-sussexnj | 11 | 11 | 3 | 5 | 1 | 0 | 31 | [cal](https://sussexnj.macaronikid.com) |
+| Wantage Recreation | MacaroniKid-NJ-sussexnj | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://sussexnj.macaronikid.com) |
+| Shepherd of the Hills | MacaroniKid-NJ-sussexnj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://sussexnj.macaronikid.com) |
+| Space Farms: Zoo & Museum | MacaroniKid-NJ-sussexnj | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://sussexnj.macaronikid.com) |
+| Middletown Township Public Library | MacaroniKid-NJ-tintonfalls | 4 | 41 | 2 | 3 | 3 | 4 | 57 | [cal](https://tintonfalls.macaronikid.com) |
+| Ocean County Library — Jackson Branch | MacaroniKid-NJ-tintonfalls | 41 | 0 | 0 | 0 | 0 | 0 | 41 | [cal](https://tintonfalls.macaronikid.com) |
+| Monmouth County Library System - Holmdel | MacaroniKid-NJ-tintonfalls | 14 | 9 | 7 | 0 | 4 | 0 | 34 | [cal](https://tintonfalls.macaronikid.com) |
+| Monmouth County Library System - Howell | MacaroniKid-NJ-tintonfalls | 7 | 23 | 0 | 0 | 0 | 1 | 31 | [cal](https://tintonfalls.macaronikid.com) |
+| Monmouth County Park System | MacaroniKid-NJ-tintonfalls | 22 | 4 | 0 | 3 | 0 | 1 | 30 | [cal](https://tintonfalls.macaronikid.com) |
+| Ocean County Library, Jackson Branch | MacaroniKid-NJ-tintonfalls | 3 | 5 | 2 | 14 | 1 | 2 | 27 | [cal](https://tintonfalls.macaronikid.com) |
+| Monmouth County Library System - Atlantic Highlands | MacaroniKid-NJ-tintonfalls | 6 | 9 | 8 | 1 | 0 | 0 | 24 | [cal](https://tintonfalls.macaronikid.com) |
+| Monmouth County Library System - Colts Neck | MacaroniKid-NJ-tintonfalls | 16 | 0 | 0 | 2 | 4 | 0 | 22 | [cal](https://tintonfalls.macaronikid.com) |
+| Monmouth County Library — Eastern Branch | MacaroniKid-NJ-tintonfalls | 18 | 1 | 0 | 0 | 2 | 0 | 21 | [cal](https://tintonfalls.macaronikid.com) |
+| Shore Gamers | MacaroniKid-NJ-tintonfalls | 15 | 0 | 0 | 0 | 0 | 0 | 15 | [cal](https://tintonfalls.macaronikid.com) |
+| RWJBarnabas Health Jersey City Medical Center | MacaroniKid-NJ-tintonfalls | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://tintonfalls.macaronikid.com) |
+| Monmouth Museum | MacaroniKid-NJ-tintonfalls | 2 | 0 | 1 | 0 | 0 | 0 | 3 | [cal](https://tintonfalls.macaronikid.com) |
+| Monmouth County Library System - Eastern Branch, Shrewsbury | MacaroniKid-NJ-tintonfalls | 2 | 0 | 0 | 0 | 0 | 1 | 3 | [cal](https://tintonfalls.macaronikid.com) |
+| Two River Theatre | MacaroniKid-NJ-tintonfalls | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://tintonfalls.macaronikid.com) |
+| Crazy Story Books | MacaroniKid-NJ-tintonfalls | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://tintonfalls.macaronikid.com) |
+| Lincroft-Holmdel-Tinton Falls | MacaroniKid-NJ-tintonfalls | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://tintonfalls.macaronikid.com) |
+| New Jersey Audubon - All Things Birds | MacaroniKid-NJ-tintonfalls | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://tintonfalls.macaronikid.com) |
+| Wonder Wing at Monmouth Museum | MacaroniKid-NJ-tintonfalls | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://tintonfalls.macaronikid.com) |
+| River Road Books | MacaroniKid-NJ-tintonfalls | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://tintonfalls.macaronikid.com) |
+| Alex's Paw Park | MacaroniKid-NJ-tintonfalls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tintonfalls.macaronikid.com) |
+| Red Bank RiverCenter | MacaroniKid-NJ-tintonfalls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tintonfalls.macaronikid.com) |
+| StreetFairs | MacaroniKid-NJ-tintonfalls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tintonfalls.macaronikid.com) |
+| Pitties And Pals Rescue NJ | MacaroniKid-NJ-tintonfalls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tintonfalls.macaronikid.com) |
+| PNC Bank Arts Center | MacaroniKid-NJ-tintonfalls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tintonfalls.macaronikid.com) |
+| The Colts Neck Trail Riders Club | MacaroniKid-NJ-tintonfalls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tintonfalls.macaronikid.com) |
+| Middletown Arts Center | MacaroniKid-NJ-tintonfalls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tintonfalls.macaronikid.com) |
+| Six Flags Great Adventure | MacaroniKid-NJ-tintonfalls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tintonfalls.macaronikid.com) |
+| Ocean County Library - Toms River Branch | MacaroniKid-NJ-tomsriver | 36 | 8 | 15 | 10 | 6 | 11 | 86 | [cal](https://tomsriver.macaronikid.com) |
+| Ocean County Library, Brick Branch | MacaroniKid-NJ-tomsriver | 1 | 6 | 13 | 5 | 15 | 2 | 42 | [cal](https://tomsriver.macaronikid.com) |
+| Ocean County Library - Manchester | MacaroniKid-NJ-tomsriver | 8 | 11 | 4 | 9 | 5 | 3 | 40 | [cal](https://tomsriver.macaronikid.com) |
+| Ocean County Library - Lacey Branch | MacaroniKid-NJ-tomsriver | 13 | 7 | 5 | 2 | 1 | 4 | 32 | [cal](https://tomsriver.macaronikid.com) |
+| Upper Shores Library | MacaroniKid-NJ-tomsriver | 0 | 15 | 3 | 0 | 2 | 0 | 20 | [cal](https://tomsriver.macaronikid.com) |
+| TRAC Gallery | MacaroniKid-NJ-tomsriver | 2 | 0 | 2 | 0 | 2 | 0 | 6 | [cal](https://tomsriver.macaronikid.com) |
+| PURE TOMS RIVER YOGA | MacaroniKid-NJ-tomsriver | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://tomsriver.macaronikid.com) |
+| Our Lady of Guadalupe Parish Lakewood | MacaroniKid-NJ-tomsriver | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [cal](https://tomsriver.macaronikid.com) |
+| New Jersey Audubon - All Things Birds | MacaroniKid-NJ-tomsriver | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://tomsriver.macaronikid.com) |
+| Silverton Volunteer Fire Company | MacaroniKid-NJ-tomsriver | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://tomsriver.macaronikid.com) |
+| Yoga del Soul | MacaroniKid-NJ-tomsriver | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tomsriver.macaronikid.com) |
+| RWJBarnabas Field of Dreams | MacaroniKid-NJ-tomsriver | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tomsriver.macaronikid.com) |
+| Sanctuary Yoga and Meditation | MacaroniKid-NJ-tomsriver | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tomsriver.macaronikid.com) |
+| K’s Kitten Rescue | MacaroniKid-NJ-tomsriver | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tomsriver.macaronikid.com) |
+| Ocean of Love Inc | MacaroniKid-NJ-tomsriver | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tomsriver.macaronikid.com) |
+| JBJ Soul Kitchen Toms River | MacaroniKid-NJ-tomsriver | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tomsriver.macaronikid.com) |
+| Mathis House | MacaroniKid-NJ-tomsriver | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tomsriver.macaronikid.com) |
+| Grunin Center for the Arts | MacaroniKid-NJ-tomsriver | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://tomsriver.macaronikid.com) |
+| Bernards Township Library | MacaroniKid-NJ-warren | 5 | 23 | 3 | 9 | 0 | 15 | 55 | [cal](https://warren.macaronikid.com) |
+| Warren- Bernards | MacaroniKid-NJ-warren | 9 | 0 | 0 | 0 | 0 | 6 | 15 | [cal](https://warren.macaronikid.com) |
+| Watchung Boro | MacaroniKid-NJ-warren | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://warren.macaronikid.com) |
+| Berkeley Heights Public Library | MacaroniKid-NJ-warren | 1 | 1 | 0 | 3 | 2 | 0 | 7 | [cal](https://warren.macaronikid.com) |
+| Friends of Great Swamp NWR | MacaroniKid-NJ-warren | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://warren.macaronikid.com) |
+| New Jersey Audubon - Scherman Hoffman Wildlife Sanctuary | MacaroniKid-NJ-warren | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://warren.macaronikid.com) |
+| Mayo Performing Arts Center | MacaroniKid-NJ-warren | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://warren.macaronikid.com) |
+| New Jersey Audubon's Scherman Hoffman Wildlife Sanctuary | MacaroniKid-NJ-warren | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://warren.macaronikid.com) |
+| Sticky Fingers Cooking - Colorado Springs | MacaroniKid-NJ-warren | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [cal](https://warren.macaronikid.com) |
+| WarrenNJRec | MacaroniKid-NJ-warren | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://warren.macaronikid.com) |
+| Historical Society of the Somerset Hills | MacaroniKid-NJ-warren | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://warren.macaronikid.com) |
+| The Somerset Hills Education Foundation | MacaroniKid-NJ-warren | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://warren.macaronikid.com) |
+| Township of Warren | MacaroniKid-NJ-warren | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://warren.macaronikid.com) |
+| Borough of New Providence | MacaroniKid-NJ-warren | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://warren.macaronikid.com) |
+| Wagner Farm Arboretum | MacaroniKid-NJ-warren | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://warren.macaronikid.com) |
+| New Jersey Audubon - All Things Birds | MacaroniKid-NJ-warren | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://warren.macaronikid.com) |
+| Washington Township Public Library | MacaroniKid-NJ-westmorris | 17 | 20 | 3 | 8 | 8 | 1 | 57 | [cal](https://westmorris.macaronikid.com) |
+| Roxbury Public Library | MacaroniKid-NJ-westmorris | 14 | 10 | 7 | 2 | 0 | 4 | 37 | [cal](https://westmorris.macaronikid.com) |
+| Warren County Library - Catherine Dickson Hofman Branch | MacaroniKid-NJ-westmorris | 2 | 5 | 13 | 3 | 0 | 0 | 23 | [cal](https://westmorris.macaronikid.com) |
+| Chester Library | MacaroniKid-NJ-westmorris | 0 | 10 | 2 | 1 | 2 | 1 | 16 | [cal](https://westmorris.macaronikid.com) |
+| Mount Olive Public Library | MacaroniKid-NJ-westmorris | 1 | 7 | 4 | 1 | 0 | 0 | 13 | [cal](https://westmorris.macaronikid.com) |
+| The Little Gym of Roxbury | MacaroniKid-NJ-westmorris | 4 | 0 | 2 | 0 | 0 | 0 | 6 | [cal](https://westmorris.macaronikid.com) |
+| Riamede Farm | MacaroniKid-NJ-westmorris | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://westmorris.macaronikid.com) |
+| Roxbury Township Public Library | MacaroniKid-NJ-westmorris | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://westmorris.macaronikid.com) |
+| Divided Sky - Phish Tribute Band | MacaroniKid-NJ-westmorris | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westmorris.macaronikid.com) |
+| Ort Farms | MacaroniKid-NJ-westmorris | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westmorris.macaronikid.com) |
+| YogaSix (Chester) | MacaroniKid-NJ-westmorris | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westmorris.macaronikid.com) |
+| Main Library - Anderson County Library System | MacaroniKid-SC-anderson-williamston | 20 | 4 | 8 | 2 | 6 | 1 | 41 | [cal](https://anderson-williamston.macaronikid.com) |
+| Lander Memorial Branch Library - Anderson County Library System | MacaroniKid-SC-anderson-williamston | 13 | 0 | 0 | 9 | 1 | 0 | 23 | [cal](https://anderson-williamston.macaronikid.com) |
+| Belton Branch Library - Anderson County Library System | MacaroniKid-SC-anderson-williamston | 3 | 16 | 0 | 0 | 0 | 0 | 19 | [cal](https://anderson-williamston.macaronikid.com) |
+| Anderson County Museum | MacaroniKid-SC-anderson-williamston | 4 | 4 | 0 | 3 | 0 | 0 | 11 | [cal](https://anderson-williamston.macaronikid.com) |
+| Casey Certain | MacaroniKid-SC-anderson-williamston | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://anderson-williamston.macaronikid.com) |
+| Jennie Erwin Branch Library - Anderson County Library System | MacaroniKid-SC-anderson-williamston | 1 | 7 | 0 | 0 | 0 | 0 | 8 | [cal](https://anderson-williamston.macaronikid.com) |
+| Iva Branch Library - Anderson County Library System | MacaroniKid-SC-anderson-williamston | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://anderson-williamston.macaronikid.com) |
+| Belton Area Museum Association | MacaroniKid-SC-anderson-williamston | 4 | 0 | 0 | 1 | 0 | 0 | 5 | [cal](https://anderson-williamston.macaronikid.com) |
+| Calvary Home for Children (Anderson, SC) | MacaroniKid-SC-anderson-williamston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://anderson-williamston.macaronikid.com) |
+| Emerge Church | MacaroniKid-SC-anderson-williamston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://anderson-williamston.macaronikid.com) |
+| City of Anderson | MacaroniKid-SC-anderson-williamston | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://anderson-williamston.macaronikid.com) |
+| Girl Scouts of South Carolina - Mountains to Midlands | MacaroniKid-SC-anderson-williamston | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://anderson-williamston.macaronikid.com) |
+| Music Farm | MacaroniKid-SC-charleston | 0 | 0 | 0 | 21 | 0 | 0 | 21 | [cal](https://charleston.macaronikid.com) |
+| Kiawah Island Golf Resort | MacaroniKid-SC-charleston | 15 | 0 | 2 | 2 | 0 | 0 | 19 | [cal](https://charleston.macaronikid.com) |
+| Charleston Stage Company | MacaroniKid-SC-charleston | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://charleston.macaronikid.com) |
+| Sky Zone Charleston, SC | MacaroniKid-SC-charleston | 0 | 0 | 0 | 8 | 0 | 0 | 8 | [cal](https://charleston.macaronikid.com) |
+| South Carolina Aquarium | MacaroniKid-SC-charleston | 2 | 2 | 0 | 2 | 0 | 0 | 6 | [cal](https://charleston.macaronikid.com) |
+| Charleston County Parks | MacaroniKid-SC-charleston | 3 | 0 | 0 | 2 | 1 | 0 | 6 | [cal](https://charleston.macaronikid.com) |
+| HappyFeet Legends Charleston | MacaroniKid-SC-charleston | 0 | 4 | 1 | 0 | 0 | 0 | 5 | [cal](https://charleston.macaronikid.com) |
+| Freshfields Village | MacaroniKid-SC-charleston | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://charleston.macaronikid.com) |
+| Two Blokes Brewing | MacaroniKid-SC-charleston | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://charleston.macaronikid.com) |
+| Charleston Pour House | MacaroniKid-SC-charleston | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://charleston.macaronikid.com) |
+| Charleston | MacaroniKid-SC-charleston | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://charleston.macaronikid.com) |
+| Jessica Neumann | MacaroniKid-SC-charleston | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://charleston.macaronikid.com) |
+| Augusta GreenJackets | MacaroniKid-SC-charleston | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://charleston.macaronikid.com) |
+| Mt. Pleasant Towne Centre | MacaroniKid-SC-charleston | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://charleston.macaronikid.com) |
+| Mount Pleasant Culture, Arts & Pride Commission | MacaroniKid-SC-charleston | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| Shrimp City Slim | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| Morris Street Baptist Church | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| Eddiebcomedy | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| Pluff Mud Mercantile | MacaroniKid-SC-charleston | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| Charleston Folk Contra Dance | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| The Fab Four | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| Historic Charleston Foundation | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| Joe Riley Stadium | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| St. James Presbyterian Church | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| Gaillard Center | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| Roadside Blooms Shop | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| Footlight Players | MacaroniKid-SC-charleston | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://charleston.macaronikid.com) |
+| The Charleston Music Hall | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| Holy Spirit Lutheran Church | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| Garden & Gun Magazine | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| FPC Live | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| Experience Mount Pleasant | MacaroniKid-SC-charleston | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| The Black Jacket Symphony | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| MLW | MacaroniKid-SC-charleston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| SE Punk Flea Market | MacaroniKid-SC-charleston | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://charleston.macaronikid.com) |
+| Speckled Frog Toys & Books | MacaroniKid-SC-columbia | 1 | 9 | 9 | 23 | 0 | 0 | 42 | [cal](https://columbia.macaronikid.com) |
+| Regulation CoMo | MacaroniKid-SC-columbia | 15 | 0 | 0 | 0 | 0 | 0 | 15 | [cal](https://columbia.macaronikid.com) |
+| Cafe Berlin (Columbia, MO) | MacaroniKid-SC-columbia | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://columbia.macaronikid.com) |
+| Columbia Entertainment Company | MacaroniKid-SC-columbia | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://columbia.macaronikid.com) |
+| All Star Cpr - CPR Training Center | MacaroniKid-SC-columbia | 0 | 5 | 0 | 0 | 0 | 0 | 5 | [cal](https://columbia.macaronikid.com) |
+| Daniel Boone Regional Library | MacaroniKid-SC-columbia | 2 | 1 | 0 | 1 | 0 | 0 | 4 | [cal](https://columbia.macaronikid.com) |
+| Great Rivers Council,  Scouting America | MacaroniKid-SC-columbia | 1 | 0 | 0 | 2 | 1 | 0 | 4 | [cal](https://columbia.macaronikid.com) |
+| Lakeside Ashland | MacaroniKid-SC-columbia | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://columbia.macaronikid.com) |
+| First Chance for Children | MacaroniKid-SC-columbia | 0 | 1 | 0 | 2 | 0 | 0 | 3 | [cal](https://columbia.macaronikid.com) |
+| Battlefield Lavender | MacaroniKid-SC-columbia | 0 | 0 | 0 | 0 | 2 | 0 | 2 | [cal](https://columbia.macaronikid.com) |
+| The Kitchen Grill & Games | MacaroniKid-SC-columbia | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://columbia.macaronikid.com) |
+| Boone County History & Culture Center | MacaroniKid-SC-columbia | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://columbia.macaronikid.com) |
+| Rose Music Hall | MacaroniKid-SC-columbia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Museum of Art & Archaeology | MacaroniKid-SC-columbia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Bricks & Minifigs Columbia | MacaroniKid-SC-columbia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| University Concert Series | MacaroniKid-SC-columbia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Just Between Friends of Columbia, MO | MacaroniKid-SC-columbia | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Columbia Farmers Market | MacaroniKid-SC-columbia | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Mizzou College of Agriculture, Food and Natural Resources | MacaroniKid-SC-columbia | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| FPC Live | MacaroniKid-SC-columbia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Tiny Play Café | MacaroniKid-SC-columbia | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Ragtag Cinema | MacaroniKid-SC-columbia | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Odyssey Chamber Music Series | MacaroniKid-SC-columbia | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Pecos & the Rooftops | MacaroniKid-SC-columbia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Mizzou College of Arts & Science | MacaroniKid-SC-columbia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| MU Central Missouri Research, Extension and Education Center | MacaroniKid-SC-columbia | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| All American Circus | MacaroniKid-SC-columbia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Columbia Center for Urban Agriculture | MacaroniKid-SC-columbia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Clovers Natural Market | MacaroniKid-SC-columbia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Katy Trail State Park | MacaroniKid-SC-columbia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Silex R-1 School District | MacaroniKid-SC-columbia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Boone County VFW Post 280 Events | MacaroniKid-SC-columbia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| The Missouri Symphony | MacaroniKid-SC-columbia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Skylark Bookshop | MacaroniKid-SC-columbia | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Talking Horse Productions | MacaroniKid-SC-columbia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://columbia.macaronikid.com) |
+| Anne Springs Close Greenway | MacaroniKid-SC-fortmill | 15 | 15 | 0 | 0 | 0 | 0 | 30 | [cal](https://fortmill.macaronikid.com) |
+| Model A Brewing | MacaroniKid-SC-fortmill | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://fortmill.macaronikid.com) |
+| Fort Mill History Museum | MacaroniKid-SC-fortmill | 2 | 0 | 0 | 3 | 0 | 0 | 5 | [cal](https://fortmill.macaronikid.com) |
+| Beatz: A Rhythmic Expression | MacaroniKid-SC-fortmill | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://fortmill.macaronikid.com) |
+| Pleasant Knoll Elementary School PTO | MacaroniKid-SC-fortmill | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://fortmill.macaronikid.com) |
+| Culture & History Museums | MacaroniKid-SC-fortmill | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://fortmill.macaronikid.com) |
+| Rock Hill Parks and Recreation | MacaroniKid-SC-fortmill | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://fortmill.macaronikid.com) |
+| Friends of York County Animal Shelter | MacaroniKid-SC-fortmill | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://fortmill.macaronikid.com) |
+| NarroWay Productions | MacaroniKid-SC-fortmill | 0 | 1 | 1 | 0 | 0 | 0 | 2 | [cal](https://fortmill.macaronikid.com) |
+| Frios Gourmet Pops Fort Mill (Fort Mill) | MacaroniKid-SC-fortmill | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://fortmill.macaronikid.com) |
+| Rock Hill | MacaroniKid-SC-fortmill | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://fortmill.macaronikid.com) |
+| The Learning Experience - Fort Mill (Fort Mill) | MacaroniKid-SC-fortmill | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fortmill.macaronikid.com) |
+| City of Tega Cay | MacaroniKid-SC-fortmill | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fortmill.macaronikid.com) |
+| School of Rock Fort Mill | MacaroniKid-SC-fortmill | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fortmill.macaronikid.com) |
+| Sisk Memorial Baptist Church | MacaroniKid-SC-fortmill | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fortmill.macaronikid.com) |
+| Town of Fort Mill | MacaroniKid-SC-fortmill | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fortmill.macaronikid.com) |
+| Olive's Mud Puddle | MacaroniKid-SC-fortmill | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fortmill.macaronikid.com) |
+| Old Town Rock Hill, SC | MacaroniKid-SC-fortmill | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fortmill.macaronikid.com) |
+| Fort Mill School District | MacaroniKid-SC-fortmill | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fortmill.macaronikid.com) |
+| Lake Wylie Lutheran Church | MacaroniKid-SC-fortmill | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://fortmill.macaronikid.com) |
+| Main Street Children's Museum | MacaroniKid-SC-fortmill | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://fortmill.macaronikid.com) |
+| Riley Emery Art | MacaroniKid-SC-fortmill | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fortmill.macaronikid.com) |
+| The Children’s Museum of the Upstate - Spartanburg | MacaroniKid-SC-greenville | 29 | 23 | 21 | 0 | 0 | 0 | 73 | [cal](https://greenville.macaronikid.com) |
+| Greenville County Library System - Hughes Main Library | MacaroniKid-SC-greenville | 2 | 11 | 4 | 15 | 3 | 1 | 36 | [cal](https://greenville.macaronikid.com) |
+| Pelham Road Library / F.W. Symmes Branch | MacaroniKid-SC-greenville | 2 | 10 | 0 | 10 | 0 | 0 | 22 | [cal](https://greenville.macaronikid.com) |
+| Taylors Library / Burdette Branch | MacaroniKid-SC-greenville | 1 | 4 | 0 | 4 | 1 | 0 | 10 | [cal](https://greenville.macaronikid.com) |
+| Southern Weaving | MacaroniKid-SC-greenville | 4 | 0 | 0 | 6 | 0 | 0 | 10 | [cal](https://greenville.macaronikid.com) |
+| Berea Library / Sarah Dobey Jones Branch | MacaroniKid-SC-greenville | 2 | 2 | 0 | 5 | 0 | 0 | 9 | [cal](https://greenville.macaronikid.com) |
+| South Carolina Children's Theatre | MacaroniKid-SC-greenville | 0 | 0 | 0 | 8 | 0 | 0 | 8 | [cal](https://greenville.macaronikid.com) |
+| Prisma Health | MacaroniKid-SC-greenville | 5 | 2 | 0 | 0 | 0 | 0 | 7 | [cal](https://greenville.macaronikid.com) |
+| Augusta Road Library / Ramsey Family Branch | MacaroniKid-SC-greenville | 1 | 0 | 1 | 4 | 0 | 0 | 6 | [cal](https://greenville.macaronikid.com) |
+| Greenville Events & Cultural Arts | MacaroniKid-SC-greenville | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://greenville.macaronikid.com) |
+| PKL Park GVL | MacaroniKid-SC-greenville | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://greenville.macaronikid.com) |
+| Parkside Pediatrics | MacaroniKid-SC-greenville | 1 | 2 | 0 | 0 | 0 | 0 | 3 | [cal](https://greenville.macaronikid.com) |
+| City of Travelers Rest | MacaroniKid-SC-greenville | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://greenville.macaronikid.com) |
+| Artistic Edge Art Studio | MacaroniKid-SC-greenville | 0 | 0 | 0 | 0 | 3 | 0 | 3 | [cal](https://greenville.macaronikid.com) |
+| Travelers Rest Farmers Market | MacaroniKid-SC-greenville | 0 | 0 | 0 | 3 | 0 | 0 | 3 | [cal](https://greenville.macaronikid.com) |
+| Upcountry History Museum | MacaroniKid-SC-greenville | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://greenville.macaronikid.com) |
+| Sapphire and Sky | MacaroniKid-SC-greenville | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://greenville.macaronikid.com) |
+| Greenville Zoo | MacaroniKid-SC-greenville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://greenville.macaronikid.com) |
+| Adjacent Hays | MacaroniKid-SC-greenville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://greenville.macaronikid.com) |
+| City of Greenville, South Carolina Government | MacaroniKid-SC-greenville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://greenville.macaronikid.com) |
+| City of Greenville, SC, Parks Recreation and Tourism | MacaroniKid-SC-greenville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://greenville.macaronikid.com) |
+| Bob Jones University | MacaroniKid-SC-greenville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://greenville.macaronikid.com) |
+| CertifiKid | MacaroniKid-SC-greenville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://greenville.macaronikid.com) |
+| Anderson Road Library / West Branch | MacaroniKid-SC-greenville | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://greenville.macaronikid.com) |
+| Corey Stevenson Band | MacaroniKid-SC-greenville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://greenville.macaronikid.com) |
+| Conestee Nature Preserve | MacaroniKid-SC-greenville | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://greenville.macaronikid.com) |
+| Palmetto Care & Share Institute | MacaroniKid-SC-greenville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://greenville.macaronikid.com) |
+| Arlington Public Library - Central Library | MacaroniKid-VA-arlington | 33 | 18 | 9 | 4 | 5 | 8 | 77 | [cal](https://arlington.macaronikid.com) |
+| Arlington Public Library - Glencarlyn Library | MacaroniKid-VA-arlington | 28 | 0 | 0 | 9 | 0 | 8 | 45 | [cal](https://arlington.macaronikid.com) |
+| Arlington Public Library - Westover Library | MacaroniKid-VA-arlington | 11 | 16 | 8 | 5 | 1 | 0 | 41 | [cal](https://arlington.macaronikid.com) |
+| Arlington Public Library - Shirlington Library | MacaroniKid-VA-arlington | 15 | 16 | 0 | 0 | 8 | 0 | 39 | [cal](https://arlington.macaronikid.com) |
+| Arlington Public Library - Courthouse Library | MacaroniKid-VA-arlington | 7 | 8 | 13 | 2 | 3 | 0 | 33 | [cal](https://arlington.macaronikid.com) |
+| Arlington Public Library - Columbia Pike Library | MacaroniKid-VA-arlington | 14 | 9 | 0 | 4 | 2 | 4 | 33 | [cal](https://arlington.macaronikid.com) |
+| Museum of Contemporary Art Arlington | MacaroniKid-VA-arlington | 8 | 0 | 0 | 9 | 0 | 0 | 17 | [cal](https://arlington.macaronikid.com) |
+| Venzara Entertainment | MacaroniKid-VA-arlington | 14 | 0 | 0 | 0 | 0 | 0 | 14 | [cal](https://arlington.macaronikid.com) |
+| Old Town Books Jr. | MacaroniKid-VA-arlington | 0 | 2 | 2 | 6 | 0 | 1 | 11 | [cal](https://arlington.macaronikid.com) |
+| Courthouse Library | MacaroniKid-VA-arlington | 2 | 0 | 4 | 0 | 1 | 0 | 7 | [cal](https://arlington.macaronikid.com) |
+| Encore Stage & Studio | MacaroniKid-VA-arlington | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://arlington.macaronikid.com) |
+| The Zebra Press | MacaroniKid-VA-arlington | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://arlington.macaronikid.com) |
+| Sticky Fingers Cooking - Colorado Springs | MacaroniKid-VA-arlington | 1 | 0 | 0 | 4 | 0 | 0 | 5 | [cal](https://arlington.macaronikid.com) |
+| The Nature Conservancy | MacaroniKid-VA-arlington | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://arlington.macaronikid.com) |
+| Old Town Books | MacaroniKid-VA-arlington | 1 | 0 | 0 | 2 | 1 | 0 | 4 | [cal](https://arlington.macaronikid.com) |
+| Arlington Public Library - Aurora Hills Library | MacaroniKid-VA-arlington | 1 | 0 | 0 | 0 | 2 | 0 | 3 | [cal](https://arlington.macaronikid.com) |
+| Northern Virginia Country-Western Dance Association (NVCWDA) | MacaroniKid-VA-arlington | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://arlington.macaronikid.com) |
+| Frolick Dogs | MacaroniKid-VA-arlington | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://arlington.macaronikid.com) |
+| Northern Virginia Bird Alliance | MacaroniKid-VA-arlington | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://arlington.macaronikid.com) |
+| Glencarlyn Library | MacaroniKid-VA-arlington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://arlington.macaronikid.com) |
+| Freddie's Beach Bar | MacaroniKid-VA-arlington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://arlington.macaronikid.com) |
+| Bishop's Events | MacaroniKid-VA-arlington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://arlington.macaronikid.com) |
+| Friends of Dyke Marsh | MacaroniKid-VA-arlington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://arlington.macaronikid.com) |
+| The Carlyle | MacaroniKid-VA-arlington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://arlington.macaronikid.com) |
+| Aurora Hill Library | MacaroniKid-VA-arlington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://arlington.macaronikid.com) |
+| The Silver Belles: vocal trio of the Silver Tones Swing Band | MacaroniKid-VA-arlington | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://arlington.macaronikid.com) |
+| AR Workshop Alexandria | MacaroniKid-VA-arlington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://arlington.macaronikid.com) |
+| Grace At Ballston Quarter | MacaroniKid-VA-arlington | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://arlington.macaronikid.com) |
+| Shop Made in VA | MacaroniKid-VA-arlington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://arlington.macaronikid.com) |
+| City of Fairfax Regional Library | MacaroniKid-VA-fairfax | 19 | 6 | 12 | 8 | 3 | 2 | 50 | [cal](https://fairfax.macaronikid.com) |
+| Burke Centre Library | MacaroniKid-VA-fairfax | 5 | 22 | 13 | 4 | 0 | 1 | 45 | [cal](https://fairfax.macaronikid.com) |
+| Oakton Library | MacaroniKid-VA-fairfax | 2 | 8 | 9 | 5 | 0 | 1 | 25 | [cal](https://fairfax.macaronikid.com) |
+| Fairfax County Public Library - Chantilly Regional Library | MacaroniKid-VA-fairfax | 2 | 10 | 4 | 0 | 1 | 2 | 19 | [cal](https://fairfax.macaronikid.com) |
+| Sticky Fingers Cooking - Colorado Springs | MacaroniKid-VA-fairfax | 1 | 0 | 1 | 9 | 0 | 0 | 11 | [cal](https://fairfax.macaronikid.com) |
+| Mode on Main by Mara | MacaroniKid-VA-fairfax | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://fairfax.macaronikid.com) |
+| Growing Jewish Families in Northern Virginia | MacaroniKid-VA-fairfax | 5 | 3 | 0 | 0 | 0 | 0 | 8 | [cal](https://fairfax.macaronikid.com) |
+| EagleBank Arena | MacaroniKid-VA-fairfax | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://fairfax.macaronikid.com) |
+| Grace Covenant Church | MacaroniKid-VA-fairfax | 0 | 0 | 0 | 0 | 4 | 0 | 4 | [cal](https://fairfax.macaronikid.com) |
+| Venzara Entertainment | MacaroniKid-VA-fairfax | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://fairfax.macaronikid.com) |
+| Fairfax-Burke-Oakton-Chantilly | MacaroniKid-VA-fairfax | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://fairfax.macaronikid.com) |
+| Brahma Kumaris - Virginia, Maryland, Washington DC | MacaroniKid-VA-fairfax | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [cal](https://fairfax.macaronikid.com) |
+| Fran's Cake and Candy Supplies | MacaroniKid-VA-fairfax | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://fairfax.macaronikid.com) |
+| Mosaic District | MacaroniKid-VA-fairfax | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://fairfax.macaronikid.com) |
+| Rhea Lana's of Falls Church | MacaroniKid-VA-fairfax | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| Steven F. Udvar-Hazy Center | MacaroniKid-VA-fairfax | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| The Auld Shebeen | MacaroniKid-VA-fairfax | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| Fair Oaks Mall | MacaroniKid-VA-fairfax | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| Center for the Arts at George Mason University | MacaroniKid-VA-fairfax | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| Mosby Woods Pool | MacaroniKid-VA-fairfax | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| Chabad Lubavitch of Northern Virginia | MacaroniKid-VA-fairfax | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| Northern Virginia Country-Western Dance Association (NVCWDA) | MacaroniKid-VA-fairfax | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| UUCF-Unitarian Universalist Congregation of Fairfax | MacaroniKid-VA-fairfax | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| The Learning Experience (Fairfax)  (Fairfax) | MacaroniKid-VA-fairfax | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| JCPenney - Kids Zone | MacaroniKid-VA-fairfax | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| Fairfax City Parks and Recreation | MacaroniKid-VA-fairfax | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| Northern Virginia Bird Alliance | MacaroniKid-VA-fairfax | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| Highview Christian Fellowship - Fairfax | MacaroniKid-VA-fairfax | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| Jennifer Rothschild | MacaroniKid-VA-fairfax | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| Pozez JCC of Northern Virginia | MacaroniKid-VA-fairfax | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://fairfax.macaronikid.com) |
+| Central Rappahannock Regional Library | MacaroniKid-VA-fredericksburg | 72 | 26 | 32 | 60 | 0 | 4 | 194 | [cal](https://fredericksburg.macaronikid.com) |
+| Fredericksburg-Spotsylvania-Stafford | MacaroniKid-VA-fredericksburg | 20 | 0 | 0 | 5 | 1 | 5 | 31 | [cal](https://fredericksburg.macaronikid.com) |
+| Central Rappahannock Regional Library — Snow | MacaroniKid-VA-fredericksburg | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://fredericksburg.macaronikid.com) |
+| Wine & Design - Fredericksburg | MacaroniKid-VA-fredericksburg | 2 | 0 | 0 | 0 | 4 | 2 | 8 | [cal](https://fredericksburg.macaronikid.com) |
+| Central Rappahannock Regional Library — Salem Church | MacaroniKid-VA-fredericksburg | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://fredericksburg.macaronikid.com) |
+| Visit Spotsy | MacaroniKid-VA-fredericksburg | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://fredericksburg.macaronikid.com) |
+| Central Rappahannock Regional Library — Porter | MacaroniKid-VA-fredericksburg | 0 | 0 | 0 | 5 | 0 | 0 | 5 | [cal](https://fredericksburg.macaronikid.com) |
+| Central Rappahannock Regional Library — Howell | MacaroniKid-VA-fredericksburg | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://fredericksburg.macaronikid.com) |
+| Fredericksburg Parks and Rec | MacaroniKid-VA-fredericksburg | 2 | 0 | 0 | 2 | 0 | 0 | 4 | [cal](https://fredericksburg.macaronikid.com) |
+| Visit FXBG | MacaroniKid-VA-fredericksburg | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://fredericksburg.macaronikid.com) |
+| Gari Melchers Home and Studio | MacaroniKid-VA-fredericksburg | 1 | 0 | 3 | 0 | 0 | 0 | 4 | [cal](https://fredericksburg.macaronikid.com) |
+| Downtown Greens | MacaroniKid-VA-fredericksburg | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://fredericksburg.macaronikid.com) |
+| Fredericksburg Convention Center | MacaroniKid-VA-fredericksburg | 2 | 1 | 0 | 0 | 0 | 0 | 3 | [cal](https://fredericksburg.macaronikid.com) |
+| Historic Kenmore | MacaroniKid-VA-fredericksburg | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://fredericksburg.macaronikid.com) |
+| Fredericksburg Agricultural Fair | MacaroniKid-VA-fredericksburg | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://fredericksburg.macaronikid.com) |
+| VA Woodworks, LLC | MacaroniKid-VA-fredericksburg | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://fredericksburg.macaronikid.com) |
+| Spotsylvania Towne Centre | MacaroniKid-VA-fredericksburg | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://fredericksburg.macaronikid.com) |
+| Rappahannock Model Railroaders, Inc. | MacaroniKid-VA-fredericksburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fredericksburg.macaronikid.com) |
+| Go Local FXBG | MacaroniKid-VA-fredericksburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fredericksburg.macaronikid.com) |
+| Karen’s  Line Dancing-BOOM Fitness | MacaroniKid-VA-fredericksburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fredericksburg.macaronikid.com) |
+| Lioness Defense | MacaroniKid-VA-fredericksburg | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://fredericksburg.macaronikid.com) |
+| Sticky Fingers Cooking - Colorado Springs | MacaroniKid-VA-fredericksburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://fredericksburg.macaronikid.com) |
+| Stafford County Parks and Rec | MacaroniKid-VA-fredericksburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fredericksburg.macaronikid.com) |
+| Wilderness Presidential Resort | MacaroniKid-VA-fredericksburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://fredericksburg.macaronikid.com) |
+| Rappahannock Area YMCA | MacaroniKid-VA-fredericksburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fredericksburg.macaronikid.com) |
+| George Washington's Ferry Farm | MacaroniKid-VA-fredericksburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://fredericksburg.macaronikid.com) |
+| Beth Sholom Temple | MacaroniKid-VA-fredericksburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fredericksburg.macaronikid.com) |
+| Prince William Public Libraries - Haymarket Gainesville Library | MacaroniKid-VA-gainesville | 7 | 8 | 8 | 2 | 1 | 1 | 27 | [cal](https://gainesville.macaronikid.com) |
+| Barnes & Noble - Shops at Stonewall | MacaroniKid-VA-gainesville | 0 | 0 | 0 | 24 | 0 | 0 | 24 | [cal](https://gainesville.macaronikid.com) |
+| The Clifton Institute | MacaroniKid-VA-gainesville | 11 | 2 | 0 | 6 | 3 | 0 | 22 | [cal](https://gainesville.macaronikid.com) |
+| Prince William Public Libraries - Central Library | MacaroniKid-VA-gainesville | 8 | 5 | 3 | 1 | 0 | 2 | 19 | [cal](https://gainesville.macaronikid.com) |
+| Prince William Public Libraries - Bull Run Library | MacaroniKid-VA-gainesville | 8 | 4 | 3 | 1 | 0 | 0 | 16 | [cal](https://gainesville.macaronikid.com) |
+| Prince William County | MacaroniKid-VA-gainesville | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [cal](https://gainesville.macaronikid.com) |
+| Historic Manassas | MacaroniKid-VA-gainesville | 15 | 0 | 0 | 0 | 0 | 0 | 15 | [cal](https://gainesville.macaronikid.com) |
+| Prince William Public Libraries - Nokesville Library | MacaroniKid-VA-gainesville | 7 | 1 | 0 | 1 | 1 | 1 | 11 | [cal](https://gainesville.macaronikid.com) |
+| Prince William Public Libraries - Manassas City Library | MacaroniKid-VA-gainesville | 7 | 2 | 0 | 0 | 0 | 2 | 11 | [cal](https://gainesville.macaronikid.com) |
+| Heroic Axe | MacaroniKid-VA-gainesville | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://gainesville.macaronikid.com) |
+| Prince William County Office of Historic Preservation | MacaroniKid-VA-gainesville | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://gainesville.macaronikid.com) |
+| Warrenton Parks and Recreation | MacaroniKid-VA-gainesville | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://gainesville.macaronikid.com) |
+| Blackstone Honey Bee Farms | MacaroniKid-VA-gainesville | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://gainesville.macaronikid.com) |
+| Skate N' Fun Zone | MacaroniKid-VA-gainesville | 4 | 0 | 0 | 1 | 0 | 0 | 5 | [cal](https://gainesville.macaronikid.com) |
+| Park Valley Church | MacaroniKid-VA-gainesville | 0 | 0 | 0 | 4 | 0 | 0 | 4 | [cal](https://gainesville.macaronikid.com) |
+| Prince William County Parks & Recreation | MacaroniKid-VA-gainesville | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://gainesville.macaronikid.com) |
+| Manassas | MacaroniKid-VA-gainesville | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://gainesville.macaronikid.com) |
+| Harris Pavilion | MacaroniKid-VA-gainesville | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://gainesville.macaronikid.com) |
+| Erin's Elderberries | MacaroniKid-VA-gainesville | 1 | 0 | 2 | 0 | 0 | 0 | 3 | [cal](https://gainesville.macaronikid.com) |
+| Celebree School of Bristow | MacaroniKid-VA-gainesville | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://gainesville.macaronikid.com) |
+| Sticky Fingers Cooking - Colorado Springs | MacaroniKid-VA-gainesville | 0 | 0 | 0 | 3 | 0 | 0 | 3 | [cal](https://gainesville.macaronikid.com) |
+| Hylton Performing Arts Center | MacaroniKid-VA-gainesville | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://gainesville.macaronikid.com) |
+| The Silver Belles: vocal trio of the Silver Tones Swing Band | MacaroniKid-VA-gainesville | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://gainesville.macaronikid.com) |
+| Laborers Local Union 572 - LIUNA | MacaroniKid-VA-gainesville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| 2 Silos Brewing | MacaroniKid-VA-gainesville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| Chic Events DC | MacaroniKid-VA-gainesville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| Barnes & Noble - Manassas | MacaroniKid-VA-gainesville | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| Mountain Stage | MacaroniKid-VA-gainesville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| Family Legacy Fitness | MacaroniKid-VA-gainesville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| Gainesville | MacaroniKid-VA-gainesville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| Historic Manassas, Inc. | MacaroniKid-VA-gainesville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| Prince William Archers | MacaroniKid-VA-gainesville | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| Cedar Point PTO | MacaroniKid-VA-gainesville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| Buckland Farm Market | MacaroniKid-VA-gainesville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| ARTfactory | MacaroniKid-VA-gainesville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| City of Manassas Virginia Parks, Culture & Recreation | MacaroniKid-VA-gainesville | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| Virginia Women and Family Support Center | MacaroniKid-VA-gainesville | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| KC Dance Center | MacaroniKid-VA-gainesville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| Bishop's Events | MacaroniKid-VA-gainesville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gainesville.macaronikid.com) |
+| Campbell County Public Library System | MacaroniKid-VA-lynchburg | 1 | 40 | 31 | 0 | 0 | 0 | 72 | [cal](https://lynchburg.macaronikid.com) |
+| Bedford Public Library System - Bedford Central Library | MacaroniKid-VA-lynchburg | 15 | 16 | 0 | 0 | 2 | 1 | 34 | [cal](https://lynchburg.macaronikid.com) |
+| Lynchburg Public Library | MacaroniKid-VA-lynchburg | 13 | 10 | 2 | 2 | 0 | 6 | 33 | [cal](https://lynchburg.macaronikid.com) |
+| Forest Library | MacaroniKid-VA-lynchburg | 5 | 11 | 0 | 6 | 3 | 1 | 26 | [cal](https://lynchburg.macaronikid.com) |
+| J Robert Jamerson Memorial Library | MacaroniKid-VA-lynchburg | 5 | 1 | 11 | 1 | 0 | 0 | 18 | [cal](https://lynchburg.macaronikid.com) |
+| Smith Mountain Lake State Park | MacaroniKid-VA-lynchburg | 16 | 0 | 0 | 1 | 0 | 0 | 17 | [cal](https://lynchburg.macaronikid.com) |
+| Lynchburg Public Library Downtown Branch | MacaroniKid-VA-lynchburg | 14 | 0 | 0 | 0 | 0 | 0 | 14 | [cal](https://lynchburg.macaronikid.com) |
+| Holliday Lake State Park | MacaroniKid-VA-lynchburg | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://lynchburg.macaronikid.com) |
+| Lynchburg | MacaroniKid-VA-lynchburg | 6 | 0 | 0 | 2 | 0 | 0 | 8 | [cal](https://lynchburg.macaronikid.com) |
+| James River State Park | MacaroniKid-VA-lynchburg | 7 | 0 | 0 | 0 | 1 | 0 | 8 | [cal](https://lynchburg.macaronikid.com) |
+| Roanoke Outside | MacaroniKid-VA-lynchburg | 1 | 2 | 0 | 1 | 0 | 3 | 7 | [cal](https://lynchburg.macaronikid.com) |
+| Sweet Briar College | MacaroniKid-VA-lynchburg | 6 | 0 | 0 | 1 | 0 | 0 | 7 | [cal](https://lynchburg.macaronikid.com) |
+| Big Island Library | MacaroniKid-VA-lynchburg | 0 | 5 | 0 | 1 | 0 | 0 | 6 | [cal](https://lynchburg.macaronikid.com) |
+| River Ridge Lynchburg | MacaroniKid-VA-lynchburg | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://lynchburg.macaronikid.com) |
+| Bedford Public Library System | MacaroniKid-VA-lynchburg | 3 | 2 | 0 | 0 | 0 | 0 | 5 | [cal](https://lynchburg.macaronikid.com) |
+| National D-Day Memorial | MacaroniKid-VA-lynchburg | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://lynchburg.macaronikid.com) |
+| Liberty University Campus Recreation | MacaroniKid-VA-lynchburg | 2 | 0 | 0 | 2 | 0 | 0 | 4 | [cal](https://lynchburg.macaronikid.com) |
+| University of Lynchburg | MacaroniKid-VA-lynchburg | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://lynchburg.macaronikid.com) |
+| Academy Center of the Arts | MacaroniKid-VA-lynchburg | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://lynchburg.macaronikid.com) |
+| Lynchburg Humane Society | MacaroniKid-VA-lynchburg | 0 | 4 | 0 | 0 | 0 | 0 | 4 | [cal](https://lynchburg.macaronikid.com) |
+| Bedford Public Library System - Big Island Library | MacaroniKid-VA-lynchburg | 0 | 1 | 2 | 1 | 0 | 0 | 4 | [cal](https://lynchburg.macaronikid.com) |
+| Bedford Public Library System - Forest Library | MacaroniKid-VA-lynchburg | 1 | 0 | 3 | 0 | 0 | 0 | 4 | [cal](https://lynchburg.macaronikid.com) |
+| Frontier Culture Museum | MacaroniKid-VA-lynchburg | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://lynchburg.macaronikid.com) |
+| Natural Bridge State Park | MacaroniKid-VA-lynchburg | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://lynchburg.macaronikid.com) |
+| Drumheller's Orchard | MacaroniKid-VA-lynchburg | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://lynchburg.macaronikid.com) |
+| Vector Space | MacaroniKid-VA-lynchburg | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lynchburg.macaronikid.com) |
+| Halifax County Chamber of Commerce | MacaroniKid-VA-lynchburg | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lynchburg.macaronikid.com) |
+| Forest Friday Cheers | MacaroniKid-VA-lynchburg | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lynchburg.macaronikid.com) |
+| Downtown Lynchburg Association | MacaroniKid-VA-lynchburg | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lynchburg.macaronikid.com) |
+| Lynchburg Parks and Recreation Department | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| The Blue Ridge Music Center | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Twin J Ranch | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Thomas Jefferson's Poplar Forest | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Randolph College | MacaroniKid-VA-lynchburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Lynchburg Water Resources | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Virginia Moose Association | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Hill City Howlers | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Forest Alliance Church | MacaroniKid-VA-lynchburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Randolph Macon College Athletics | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Amherst Glebe Arts Response, Inc. (AGAR) | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Nelson County Tourism | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Lynchburg Museum System | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Avoca Museums & Historical Society | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Amherst County Public Library — Madison Heights | MacaroniKid-VA-lynchburg | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Friends of Bedford County Animal Shelter, Inc. | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Bedford County Parks & Recreation | MacaroniKid-VA-lynchburg | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Amazement Square | MacaroniKid-VA-lynchburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Bowyer’s Bees & Honey, LLC | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Local Colors | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Clifford Ruritan Club of Amherst | MacaroniKid-VA-lynchburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Bedford County Fair | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Patrick Henry's Red Hill | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Junior League of Lynchburg | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Rock Pike Baptist Church | MacaroniKid-VA-lynchburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| ThreadCycle | MacaroniKid-VA-lynchburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Bedford Public Library System — Forest | MacaroniKid-VA-lynchburg | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Second Stage Amherst | MacaroniKid-VA-lynchburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Saint Paul's Episcopal Church, Lynchburg, Va | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Super Rad | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Amherst County Public Library — Amherst | MacaroniKid-VA-lynchburg | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| James Monroe's Highland | MacaroniKid-VA-lynchburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Rivanna Trails Foundation | MacaroniKid-VA-lynchburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lynchburg.macaronikid.com) |
+| Thomas Jefferson Library | MacaroniKid-VA-mclean | 9 | 27 | 0 | 2 | 0 | 4 | 42 | [cal](https://mclean.macaronikid.com) |
+| Fairfax County Public Library - Dolley Madison Library | MacaroniKid-VA-mclean | 1 | 17 | 13 | 8 | 0 | 2 | 41 | [cal](https://mclean.macaronikid.com) |
+| Tysons-Pimmit Regional Library | MacaroniKid-VA-mclean | 12 | 9 | 2 | 6 | 0 | 2 | 31 | [cal](https://mclean.macaronikid.com) |
+| Arlington Public Library - Cherrydale Library | MacaroniKid-VA-mclean | 2 | 9 | 0 | 8 | 2 | 2 | 23 | [cal](https://mclean.macaronikid.com) |
+| Barnes & Noble - Seven Corners | MacaroniKid-VA-mclean | 0 | 0 | 0 | 14 | 0 | 0 | 14 | [cal](https://mclean.macaronikid.com) |
+| Sticky Fingers Cooking - Colorado Springs | MacaroniKid-VA-mclean | 0 | 0 | 0 | 9 | 0 | 0 | 9 | [cal](https://mclean.macaronikid.com) |
+| Capital One Hall | MacaroniKid-VA-mclean | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://mclean.macaronikid.com) |
+| City of Falls Church | MacaroniKid-VA-mclean | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://mclean.macaronikid.com) |
+| Encore Stage & Studio | MacaroniKid-VA-mclean | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://mclean.macaronikid.com) |
+| Macaroni KID McLean-Vienna-Falls Church VA | MacaroniKid-VA-mclean | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mclean.macaronikid.com) |
+| Tysons Corner Center | MacaroniKid-VA-mclean | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mclean.macaronikid.com) |
+| NF Walk | MacaroniKid-VA-mclean | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mclean.macaronikid.com) |
+| Fairfax City Parks and Recreation | MacaroniKid-VA-mclean | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://mclean.macaronikid.com) |
+| Good Beats | MacaroniKid-VA-mclean | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mclean.macaronikid.com) |
+| Arlington Arts | MacaroniKid-VA-mclean | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mclean.macaronikid.com) |
+| The Zebra Press | MacaroniKid-VA-mclean | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://mclean.macaronikid.com) |
+| Holy Transfiguration Melkite Greek-Catholic Church | MacaroniKid-VA-mclean | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mclean.macaronikid.com) |
+| Sherwood Regional Library | MacaroniKid-VA-newington | 4 | 17 | 9 | 5 | 2 | 6 | 43 | [cal](https://newington.macaronikid.com) |
+| Workhouse Arts Center | MacaroniKid-VA-newington | 28 | 0 | 0 | 2 | 2 | 4 | 36 | [cal](https://newington.macaronikid.com) |
+| Lorton Library | MacaroniKid-VA-newington | 1 | 9 | 6 | 2 | 0 | 2 | 20 | [cal](https://newington.macaronikid.com) |
+| Sticky Fingers Cooking - Colorado Springs | MacaroniKid-VA-newington | 0 | 0 | 0 | 5 | 0 | 0 | 5 | [cal](https://newington.macaronikid.com) |
+| Mount Vee Manor Homeowners | MacaroniKid-VA-newington | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://newington.macaronikid.com) |
+| The St. James - Bethesda | MacaroniKid-VA-newington | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://newington.macaronikid.com) |
+| The Zebra Press | MacaroniKid-VA-newington | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://newington.macaronikid.com) |
+| FIT4MOM - Southwest Nova | MacaroniKid-VA-newington | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://newington.macaronikid.com) |
+| Bishop's Events | MacaroniKid-VA-newington | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://newington.macaronikid.com) |
+| Howard Alan Events (HAE) | MacaroniKid-VA-newington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newington.macaronikid.com) |
+| Prince William Public Libraries - Montclair Library | MacaroniKid-VA-newington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newington.macaronikid.com) |
+| Torpedo Factory Art Center | MacaroniKid-VA-newington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newington.macaronikid.com) |
+| AR Workshop Alexandria | MacaroniKid-VA-newington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newington.macaronikid.com) |
+| Leaderboard Games | MacaroniKid-VA-newington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newington.macaronikid.com) |
+| Fit4Mom | MacaroniKid-VA-newington | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://newington.macaronikid.com) |
+| Kidstrong Woodbridge | MacaroniKid-VA-newington | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://newington.macaronikid.com) |
+| Shop Made in VA | MacaroniKid-VA-newington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newington.macaronikid.com) |
+| Northern Virginia Resource Center  (nvrc) | MacaroniKid-VA-newington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newington.macaronikid.com) |
+| Norfolk Botanical Garden | MacaroniKid-VA-norfolk | 9 | 0 | 1 | 0 | 0 | 0 | 10 | [cal](https://norfolk.macaronikid.com) |
+| Harbor Park | MacaroniKid-VA-norfolk | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://norfolk.macaronikid.com) |
+| Freddy's Frozen Custard & Steakburgers (Suffolk, VA) | MacaroniKid-VA-norfolk | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://norfolk.macaronikid.com) |
+| Nauticus | MacaroniKid-VA-norfolk | 0 | 3 | 0 | 0 | 0 | 0 | 3 | [cal](https://norfolk.macaronikid.com) |
+| Attucks Theatre | MacaroniKid-VA-norfolk | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://norfolk.macaronikid.com) |
+| OV Sea Hags | MacaroniKid-VA-norfolk | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://norfolk.macaronikid.com) |
+| The NorVA | MacaroniKid-VA-norfolk | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| Southern Culture on the Skids | MacaroniKid-VA-norfolk | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| Ronald McDonald House Charities of Norfolk VA | MacaroniKid-VA-norfolk | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| Hope House Foundation | MacaroniKid-VA-norfolk | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| Happy Hour Glass Works | MacaroniKid-VA-norfolk | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| WonderLand | MacaroniKid-VA-norfolk | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| Circus Golden Star | MacaroniKid-VA-norfolk | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| Friends of the Norfolk Public Library | MacaroniKid-VA-norfolk | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| Scope Arena | MacaroniKid-VA-norfolk | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| Suffolk Humane Society | MacaroniKid-VA-norfolk | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| Push Comedy Theater | MacaroniKid-VA-norfolk | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://norfolk.macaronikid.com) |
+| Suffolk Parks and Recreation | MacaroniKid-VA-norfolk | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| Norfolk Festevents | MacaroniKid-VA-norfolk | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| Mona Lisa Restaurant & Bar | MacaroniKid-VA-norfolk | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| City of Norfolk Government | MacaroniKid-VA-norfolk | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| The Norva | MacaroniKid-VA-norfolk | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| SHill Creations Studio | MacaroniKid-VA-norfolk | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://norfolk.macaronikid.com) |
+| Montgomery-Floyd Regional Library - Jessie Peterman Memorial Library | MacaroniKid-VA-nrv | 24 | 9 | 9 | 18 | 2 | 5 | 67 | [cal](https://nrv.macaronikid.com) |
+| Montgomery-Floyd Regional Library - Christiansburg Library | MacaroniKid-VA-nrv | 12 | 22 | 9 | 2 | 2 | 3 | 50 | [cal](https://nrv.macaronikid.com) |
+| Montgomery-Floyd Regional Library - Blacksburg Library | MacaroniKid-VA-nrv | 23 | 3 | 3 | 3 | 0 | 0 | 32 | [cal](https://nrv.macaronikid.com) |
+| Paint 'n Fun Ceramics | MacaroniKid-VA-nrv | 8 | 0 | 0 | 1 | 2 | 4 | 15 | [cal](https://nrv.macaronikid.com) |
+| Radford Public Library | MacaroniKid-VA-nrv | 4 | 1 | 0 | 4 | 0 | 2 | 11 | [cal](https://nrv.macaronikid.com) |
+| Pulaski County Library System | MacaroniKid-VA-nrv | 2 | 0 | 2 | 2 | 0 | 0 | 6 | [cal](https://nrv.macaronikid.com) |
+| Montgomery-Floyd Regional Library | MacaroniKid-VA-nrv | 5 | 0 | 1 | 0 | 0 | 0 | 6 | [cal](https://nrv.macaronikid.com) |
+| Claytor Lake State Park | MacaroniKid-VA-nrv | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://nrv.macaronikid.com) |
+| Pulaski Library - Pulaski County Library System | MacaroniKid-VA-nrv | 1 | 0 | 1 | 1 | 0 | 1 | 4 | [cal](https://nrv.macaronikid.com) |
+| New River Valley | MacaroniKid-VA-nrv | 0 | 0 | 0 | 3 | 0 | 0 | 3 | [cal](https://nrv.macaronikid.com) |
+| Town of Christiansburg, VA | MacaroniKid-VA-nrv | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://nrv.macaronikid.com) |
+| Downtown Blacksburg, Inc. | MacaroniKid-VA-nrv | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://nrv.macaronikid.com) |
+| Feeding Southwest Virginia | MacaroniKid-VA-nrv | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://nrv.macaronikid.com) |
+| Good News Chalk Talks | MacaroniKid-VA-nrv | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://nrv.macaronikid.com) |
+| Historic Smithfield | MacaroniKid-VA-nrv | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://nrv.macaronikid.com) |
+| Loudoun County Public Library - Cascades Library | MacaroniKid-VA-reston | 9 | 7 | 9 | 11 | 0 | 3 | 39 | [cal](https://reston.macaronikid.com) |
+| Loudoun County Public Library - Sterling Library | MacaroniKid-VA-reston | 8 | 9 | 7 | 1 | 0 | 2 | 27 | [cal](https://reston.macaronikid.com) |
+| Reston Regional Library | MacaroniKid-VA-reston | 2 | 14 | 4 | 4 | 1 | 0 | 25 | [cal](https://reston.macaronikid.com) |
+| St. Matthew's Episcopal Church, Sterling, Virginia | MacaroniKid-VA-reston | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://reston.macaronikid.com) |
+| Reston Association | MacaroniKid-VA-reston | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://reston.macaronikid.com) |
+| SMS Novel | MacaroniKid-VA-reston | 0 | 0 | 0 | 0 | 0 | 3 | 3 | [cal](https://reston.macaronikid.com) |
+| Reston Town Center | MacaroniKid-VA-reston | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://reston.macaronikid.com) |
+| 3D Herndon | MacaroniKid-VA-reston | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://reston.macaronikid.com) |
+| Calvary Temple | MacaroniKid-VA-reston | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://reston.macaronikid.com) |
+| Sterling Early Learning Academy | MacaroniKid-VA-reston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://reston.macaronikid.com) |
+| Canine Companions | MacaroniKid-VA-reston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://reston.macaronikid.com) |
+| Jimmy's Old Town Tavern | MacaroniKid-VA-reston | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://reston.macaronikid.com) |
+| Sticky Fingers Cooking - Colorado Springs | MacaroniKid-VA-reston | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://reston.macaronikid.com) |
+| BROOD  Basset Rescue of Old Dominion | MacaroniKid-VA-reston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://reston.macaronikid.com) |
+| Friends of Claude Moore Park | MacaroniKid-VA-reston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://reston.macaronikid.com) |
+| Henrico County Public Library | MacaroniKid-VA-richmond | 30 | 18 | 16 | 13 | 0 | 0 | 77 | [cal](https://richmond.macaronikid.com) |
+| Richmond Public Library - North Avenue Library | MacaroniKid-VA-richmond | 10 | 9 | 7 | 4 | 0 | 1 | 31 | [cal](https://richmond.macaronikid.com) |
+| Richmond Public Library - Broad Rock Library | MacaroniKid-VA-richmond | 1 | 6 | 3 | 0 | 1 | 12 | 23 | [cal](https://richmond.macaronikid.com) |
+| Pamunkey Regional Library - Mechanicsville Library | MacaroniKid-VA-richmond | 1 | 5 | 1 | 0 | 15 | 0 | 22 | [cal](https://richmond.macaronikid.com) |
+| Richmond Public Library - East End Library | MacaroniKid-VA-richmond | 6 | 7 | 4 | 1 | 0 | 2 | 20 | [cal](https://richmond.macaronikid.com) |
+| Pamunkey Regional Library - Atlee Library | MacaroniKid-VA-richmond | 6 | 6 | 3 | 1 | 2 | 1 | 19 | [cal](https://richmond.macaronikid.com) |
+| Chesterfield County Public Library - Bon Air Library | MacaroniKid-VA-richmond | 2 | 10 | 3 | 1 | 0 | 1 | 17 | [cal](https://richmond.macaronikid.com) |
+| Richmond Public Library | MacaroniKid-VA-richmond | 4 | 5 | 3 | 0 | 0 | 3 | 15 | [cal](https://richmond.macaronikid.com) |
+| Richmond Public Library - West End | MacaroniKid-VA-richmond | 3 | 7 | 4 | 1 | 0 | 0 | 15 | [cal](https://richmond.macaronikid.com) |
+| Henrico County Public Library - Libbie Mill | MacaroniKid-VA-richmond | 5 | 0 | 1 | 2 | 1 | 5 | 14 | [cal](https://richmond.macaronikid.com) |
+| Children's Museum of Richmond | MacaroniKid-VA-richmond | 4 | 4 | 0 | 6 | 0 | 0 | 14 | [cal](https://richmond.macaronikid.com) |
+| Richmond Public Library - Hull Street Library | MacaroniKid-VA-richmond | 2 | 6 | 5 | 1 | 0 | 0 | 14 | [cal](https://richmond.macaronikid.com) |
+| Richmond Public Library - Belmont Library | MacaroniKid-VA-richmond | 1 | 5 | 4 | 0 | 1 | 2 | 13 | [cal](https://richmond.macaronikid.com) |
+| Richmond Public Library - Westover Hills | MacaroniKid-VA-richmond | 5 | 3 | 3 | 0 | 0 | 0 | 11 | [cal](https://richmond.macaronikid.com) |
+| Henrico County Public Library - Fairfield | MacaroniKid-VA-richmond | 8 | 0 | 1 | 0 | 0 | 1 | 10 | [cal](https://richmond.macaronikid.com) |
+| Henrico County Public Library - Varina | MacaroniKid-VA-richmond | 5 | 0 | 0 | 0 | 0 | 4 | 9 | [cal](https://richmond.macaronikid.com) |
+| Ashland Branch - Pamunkey Regional Library | MacaroniKid-VA-richmond | 1 | 2 | 3 | 1 | 1 | 0 | 8 | [cal](https://richmond.macaronikid.com) |
+| Chesterfield County Public Library - Meadowdale Library | MacaroniKid-VA-richmond | 2 | 0 | 6 | 0 | 0 | 0 | 8 | [cal](https://richmond.macaronikid.com) |
+| Henrico Recreation & Parks | MacaroniKid-VA-richmond | 4 | 0 | 1 | 0 | 1 | 0 | 6 | [cal](https://richmond.macaronikid.com) |
+| Henrico County Recreation & Parks | MacaroniKid-VA-richmond | 3 | 0 | 0 | 1 | 1 | 0 | 5 | [cal](https://richmond.macaronikid.com) |
+| Henrico County Public Library - North Park Library | MacaroniKid-VA-richmond | 1 | 0 | 1 | 1 | 1 | 1 | 5 | [cal](https://richmond.macaronikid.com) |
+| Artisan Makers | MacaroniKid-VA-richmond | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://richmond.macaronikid.com) |
+| Lewis Ginter Botanical Garden | MacaroniKid-VA-richmond | 1 | 2 | 1 | 0 | 0 | 0 | 4 | [cal](https://richmond.macaronikid.com) |
+| Henrico County Public Library - Tuckahoe Library | MacaroniKid-VA-richmond | 1 | 0 | 1 | 1 | 1 | 0 | 4 | [cal](https://richmond.macaronikid.com) |
+| Richmond | MacaroniKid-VA-richmond | 2 | 0 | 0 | 0 | 1 | 0 | 3 | [cal](https://richmond.macaronikid.com) |
+| Virginia War Memorial | MacaroniKid-VA-richmond | 2 | 0 | 1 | 0 | 0 | 0 | 3 | [cal](https://richmond.macaronikid.com) |
+| Dominion Energy Center for the Performing Arts | MacaroniKid-VA-richmond | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://richmond.macaronikid.com) |
+| Tuna and The Rock Cats Rescue | MacaroniKid-VA-richmond | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://richmond.macaronikid.com) |
+| Maymont | MacaroniKid-VA-richmond | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://richmond.macaronikid.com) |
+| Virginia Museum of history & Culture | MacaroniKid-VA-richmond | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://richmond.macaronikid.com) |
+| Richmond Symphony | MacaroniKid-VA-richmond | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://richmond.macaronikid.com) |
+| Friendship Circle of Virginia | MacaroniKid-VA-richmond | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://richmond.macaronikid.com) |
+| Tracy Schneider | MacaroniKid-VA-richmond | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://richmond.macaronikid.com) |
+| Twisted Carrot Farm | MacaroniKid-VA-richmond | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://richmond.macaronikid.com) |
+| Senators Baseball | MacaroniKid-VA-richmond | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://richmond.macaronikid.com) |
+| Virginia Museum of Fine Arts | MacaroniKid-VA-richmond | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Révéler Experiences | MacaroniKid-VA-richmond | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://richmond.macaronikid.com) |
+| Ginter Park | MacaroniKid-VA-richmond | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| The Glass Ceiling RVA | MacaroniKid-VA-richmond | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| City of Richmond Parks, Recreation & Community Facilities | MacaroniKid-VA-richmond | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Repair Cafe RVA | MacaroniKid-VA-richmond | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Richmond VA Parks, Recreation and Community Facilities | MacaroniKid-VA-richmond | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Ashland Museum | MacaroniKid-VA-richmond | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Ashland Theatre | MacaroniKid-VA-richmond | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Crossroads Art Center | MacaroniKid-VA-richmond | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Richmond SPCA Humane Center | MacaroniKid-VA-richmond | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Coalition Theater | MacaroniKid-VA-richmond | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Reign Dance Project | MacaroniKid-VA-richmond | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| PlantHouse Richmond Workshops | MacaroniKid-VA-richmond | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Morgan Sharrett, Artisan Makers, scottsadditionmarker@gmail.com | MacaroniKid-VA-richmond | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Black Girls RUN! | MacaroniKid-VA-richmond | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Junior League of Richmond | MacaroniKid-VA-richmond | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| James River Association | MacaroniKid-VA-richmond | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Henrico Sports and Events Center | MacaroniKid-VA-richmond | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| bbgb books | MacaroniKid-VA-richmond | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Chesapeake Baysox | MacaroniKid-VA-richmond | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Main Line Brewery | MacaroniKid-VA-richmond | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Armenian Food Festival - Richmond, VA | MacaroniKid-VA-richmond | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://richmond.macaronikid.com) |
+| Roanoke Public Libraries | MacaroniKid-VA-roanoke | 29 | 10 | 32 | 8 | 1 | 9 | 89 | [cal](https://roanoke.macaronikid.com) |
+| Blue Ridge Library | MacaroniKid-VA-roanoke | 2 | 48 | 15 | 5 | 1 | 0 | 71 | [cal](https://roanoke.macaronikid.com) |
+| South County Library | MacaroniKid-VA-roanoke | 14 | 26 | 13 | 3 | 0 | 8 | 64 | [cal](https://roanoke.macaronikid.com) |
+| Glenvar Library | MacaroniKid-VA-roanoke | 15 | 12 | 7 | 0 | 2 | 4 | 40 | [cal](https://roanoke.macaronikid.com) |
+| Salem Public Library | MacaroniKid-VA-roanoke | 0 | 31 | 2 | 2 | 0 | 0 | 35 | [cal](https://roanoke.macaronikid.com) |
+| Vinton Library | MacaroniKid-VA-roanoke | 2 | 12 | 7 | 5 | 0 | 6 | 32 | [cal](https://roanoke.macaronikid.com) |
+| Bedford Public Library System - Stewartsville Library | MacaroniKid-VA-roanoke | 2 | 8 | 7 | 0 | 0 | 1 | 18 | [cal](https://roanoke.macaronikid.com) |
+| PLAY Roanoke Parks and Recreation | MacaroniKid-VA-roanoke | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [cal](https://roanoke.macaronikid.com) |
+| Mt Pleasant Library | MacaroniKid-VA-roanoke | 4 | 6 | 2 | 1 | 0 | 2 | 15 | [cal](https://roanoke.macaronikid.com) |
+| Hollins Library | MacaroniKid-VA-roanoke | 0 | 6 | 7 | 0 | 0 | 1 | 14 | [cal](https://roanoke.macaronikid.com) |
+| Roanoke Outside | MacaroniKid-VA-roanoke | 11 | 0 | 0 | 2 | 0 | 0 | 13 | [cal](https://roanoke.macaronikid.com) |
+| Bent Mountain Library | MacaroniKid-VA-roanoke | 8 | 2 | 0 | 2 | 0 | 0 | 12 | [cal](https://roanoke.macaronikid.com) |
+| PLAY Roanoke | MacaroniKid-VA-roanoke | 3 | 0 | 0 | 2 | 0 | 1 | 6 | [cal](https://roanoke.macaronikid.com) |
+| Downtown Roanoke | MacaroniKid-VA-roanoke | 0 | 0 | 0 | 1 | 0 | 4 | 5 | [cal](https://roanoke.macaronikid.com) |
+| Roanoke | MacaroniKid-VA-roanoke | 0 | 0 | 0 | 4 | 0 | 0 | 4 | [cal](https://roanoke.macaronikid.com) |
+| Taubman Museum of Art | MacaroniKid-VA-roanoke | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://roanoke.macaronikid.com) |
+| Black Dog Salvage | MacaroniKid-VA-roanoke | 0 | 0 | 0 | 3 | 0 | 0 | 3 | [cal](https://roanoke.macaronikid.com) |
+| Berglund Performing Arts Theatre | MacaroniKid-VA-roanoke | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://roanoke.macaronikid.com) |
+| 3rd Street Coffeehouse | MacaroniKid-VA-roanoke | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://roanoke.macaronikid.com) |
+| Healing Strides | MacaroniKid-VA-roanoke | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Southwest Virginia Pride,  Inc. | MacaroniKid-VA-roanoke | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Salem Civic Center | MacaroniKid-VA-roanoke | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Sun & Spruce Soap • Roanoke, VA | MacaroniKid-VA-roanoke | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Roanoke Valley Region AACA | MacaroniKid-VA-roanoke | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Dr Pepper Park at the Bridges | MacaroniKid-VA-roanoke | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Local Environmental Agriculture Project - LEAP | MacaroniKid-VA-roanoke | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Berglund Coliseum | MacaroniKid-VA-roanoke | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Berglund Center | MacaroniKid-VA-roanoke | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Hill City Howlers | MacaroniKid-VA-roanoke | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Salem Parks & Recreation | MacaroniKid-VA-roanoke | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Booker T. Washington National Monument | MacaroniKid-VA-roanoke | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| The Humble Hustle Company, Inc. | MacaroniKid-VA-roanoke | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| SupaFly Five | MacaroniKid-VA-roanoke | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Smith Mountain Lake State Park | MacaroniKid-VA-roanoke | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Volunteer Montgomery | MacaroniKid-VA-roanoke | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Freedom First Credit Union | MacaroniKid-VA-roanoke | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Kids Square | MacaroniKid-VA-roanoke | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://roanoke.macaronikid.com) |
+| Virginia Aquarium & Marine Science Center | MacaroniKid-VA-virginiabeach | 69 | 1 | 0 | 0 | 0 | 0 | 70 | [cal](https://virginiabeach.macaronikid.com) |
+| Oceanfront Area Library | MacaroniKid-VA-virginiabeach | 3 | 19 | 17 | 0 | 21 | 0 | 60 | [cal](https://virginiabeach.macaronikid.com) |
+| Kempsville Area Library | MacaroniKid-VA-virginiabeach | 0 | 8 | 18 | 6 | 17 | 4 | 53 | [cal](https://virginiabeach.macaronikid.com) |
+| Virginia Beach Public Library - Meyera E. Oberndorf Central Library | MacaroniKid-VA-virginiabeach | 1 | 2 | 12 | 1 | 10 | 1 | 27 | [cal](https://virginiabeach.macaronikid.com) |
+| Elevation27 | MacaroniKid-VA-virginiabeach | 15 | 0 | 0 | 0 | 0 | 0 | 15 | [cal](https://virginiabeach.macaronikid.com) |
+| Virginia Museum of Contemporary Art | MacaroniKid-VA-virginiabeach | 1 | 4 | 2 | 1 | 1 | 0 | 9 | [cal](https://virginiabeach.macaronikid.com) |
+| Virginia Beach SPCA | MacaroniKid-VA-virginiabeach | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://virginiabeach.macaronikid.com) |
+| Central Business District Association | MacaroniKid-VA-virginiabeach | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://virginiabeach.macaronikid.com) |
+| FIT4MOM - Southwest Chesapeake | MacaroniKid-VA-virginiabeach | 6 | 0 | 0 | 2 | 0 | 0 | 8 | [cal](https://virginiabeach.macaronikid.com) |
+| Famous Uncle Al's Dog House | MacaroniKid-VA-virginiabeach | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://virginiabeach.macaronikid.com) |
+| POV PTA | MacaroniKid-VA-virginiabeach | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://virginiabeach.macaronikid.com) |
+| Sandler Center For The Performing Arts | MacaroniKid-VA-virginiabeach | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://virginiabeach.macaronikid.com) |
+| WonderLand | MacaroniKid-VA-virginiabeach | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://virginiabeach.macaronikid.com) |
+| Car Club Council of Hampton Roads | MacaroniKid-VA-virginiabeach | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://virginiabeach.macaronikid.com) |
+| ViBe Creative District | MacaroniKid-VA-virginiabeach | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://virginiabeach.macaronikid.com) |
+| Ferry Plantation House | MacaroniKid-VA-virginiabeach | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| Chicho's Pizza Strawbridge | MacaroniKid-VA-virginiabeach | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| North Landing Beach Camping Resort | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| Lettuce | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| VB Handcrafted by Heather | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| The Thoroughgood House | MacaroniKid-VA-virginiabeach | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| The Amish Outlaws | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| Thewanderingmakers | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| CLUBWAKA (Hampton Roads) | MacaroniKid-VA-virginiabeach | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| A Taste of Your Town | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| Kids Markets | MacaroniKid-VA-virginiabeach | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| VA Vintage | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| Elevation 27 | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| Scouting America Troop 16 - Virginia Beach, VA | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| Town Center of Virginia Beach | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| Military Aviation Museum | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| Virginia Beach Parks & Recreation | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| Cutthroat Concerts & Events | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| Scandals Live | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| Crusader Alumni | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| Virginia Beach Arts | MacaroniKid-VA-virginiabeach | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| The Bunker Brewpub | MacaroniKid-VA-virginiabeach | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://virginiabeach.macaronikid.com) |
+| Williamsburg Regional Library - James City County Library | MacaroniKid-VA-williamsburg | 2 | 34 | 14 | 28 | 10 | 12 | 100 | [cal](https://williamsburg.macaronikid.com) |
+| Williamsburg Regional Library - Williamsburg Library | MacaroniKid-VA-williamsburg | 3 | 25 | 11 | 16 | 4 | 8 | 67 | [cal](https://williamsburg.macaronikid.com) |
+| Williamsburg | MacaroniKid-VA-williamsburg | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://williamsburg.macaronikid.com) |
+| James City County Parks & Recreation | MacaroniKid-VA-williamsburg | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://williamsburg.macaronikid.com) |
+| Logic Fitness Club | MacaroniKid-VA-williamsburg | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://williamsburg.macaronikid.com) |
+| Newport News Parks Division | MacaroniKid-VA-williamsburg | 3 | 0 | 0 | 2 | 1 | 0 | 6 | [cal](https://williamsburg.macaronikid.com) |
+| Catalillies Play Cafe | MacaroniKid-VA-williamsburg | 2 | 0 | 3 | 0 | 0 | 0 | 5 | [cal](https://williamsburg.macaronikid.com) |
+| Williamsburg Farmers Market | MacaroniKid-VA-williamsburg | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://williamsburg.macaronikid.com) |
+| Freddy's Frozen Custard & Steakburgers (Williamsburg, VA) | MacaroniKid-VA-williamsburg | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://williamsburg.macaronikid.com) |
+| Downing-Gross Cultural Arts Center | MacaroniKid-VA-williamsburg | 2 | 0 | 0 | 2 | 0 | 0 | 4 | [cal](https://williamsburg.macaronikid.com) |
+| Williamsburg Regional Library — Stryker Center | MacaroniKid-VA-williamsburg | 0 | 4 | 0 | 0 | 0 | 0 | 4 | [cal](https://williamsburg.macaronikid.com) |
+| Williamsburg Regional Library — Williamsburg | MacaroniKid-VA-williamsburg | 2 | 0 | 0 | 0 | 0 | 1 | 3 | [cal](https://williamsburg.macaronikid.com) |
+| Williamsburg Regional Library - Stryker Center | MacaroniKid-VA-williamsburg | 0 | 2 | 0 | 0 | 0 | 0 | 2 | [cal](https://williamsburg.macaronikid.com) |
+| Imperial Etiquette, LLC | MacaroniKid-VA-williamsburg | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://williamsburg.macaronikid.com) |
+| Uno Pizzeria & Grill (Tabb, VA) | MacaroniKid-VA-williamsburg | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://williamsburg.macaronikid.com) |
+| Victory Life Church | MacaroniKid-VA-williamsburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| Do Gooders of Hampton Roads- Public Page | MacaroniKid-VA-williamsburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| Mr B. | MacaroniKid-VA-williamsburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| Peninsula Track Club | MacaroniKid-VA-williamsburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| The Wagsters Magic Theatre | MacaroniKid-VA-williamsburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| Warwick Moose Lodge and Family Center 1711 | MacaroniKid-VA-williamsburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| Williamsburg School for the Arts & Innovation | MacaroniKid-VA-williamsburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| Fort Monroe at Old Point Comfort | MacaroniKid-VA-williamsburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| Horse & Hound | MacaroniKid-VA-williamsburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| Parklawn-Wood Funeral Home / Parklawn Memorial Park | MacaroniKid-VA-williamsburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| Spoke + Art Provisions Co. | MacaroniKid-VA-williamsburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| Oozlefinch Beers & Blending | MacaroniKid-VA-williamsburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| J&A Racing | MacaroniKid-VA-williamsburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| Savvy Events | MacaroniKid-VA-williamsburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| Hampton History Museum | MacaroniKid-VA-williamsburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| John Plashal Photo | MacaroniKid-VA-williamsburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| Anderson's | MacaroniKid-VA-williamsburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://williamsburg.macaronikid.com) |
+| Bellevue | Nashville-Library-TN | 6 | 1 | 3 | 1 | 0 | 5 | 16 | — |
+| Hermitage | Nashville-Library-TN | 6 | 1 | 2 | 4 | 0 | 1 | 14 | — |
+| Donelson | Nashville-Library-TN | 5 | 1 | 1 | 4 | 0 | 3 | 14 | — |
+| Madison | Nashville-Library-TN | 3 | 2 | 1 | 4 | 0 | 3 | 13 | — |
+| Southeast | Nashville-Library-TN | 0 | 1 | 1 | 2 | 0 | 7 | 11 | — |
+| Bordeaux | Nashville-Library-TN | 3 | 0 | 2 | 2 | 0 | 3 | 10 | — |
+| Edgehill | Nashville-Library-TN | 0 | 1 | 0 | 5 | 0 | 4 | 10 | — |
+| Goodlettsville | Nashville-Library-TN | 2 | 1 | 0 | 3 | 0 | 3 | 9 | — |
+| Hadley Park | Nashville-Library-TN | 3 | 0 | 0 | 3 | 0 | 1 | 7 | — |
+| Thompson Lane | Nashville-Library-TN | 3 | 0 | 0 | 3 | 0 | 0 | 6 | — |
+| Richland Park | Nashville-Library-TN | 3 | 0 | 1 | 1 | 0 | 0 | 5 | — |
+| North | Nashville-Library-TN | 1 | 1 | 1 | 1 | 0 | 1 | 5 | — |
+| East | Nashville-Library-TN | 0 | 0 | 0 | 0 | 0 | 4 | 4 | — |
+| Looby | Nashville-Library-TN | 1 | 0 | 0 | 3 | 0 | 0 | 4 | — |
+| Old Hickory | Nashville-Library-TN | 1 | 0 | 0 | 3 | 0 | 0 | 4 | — |
+| Main Library, Childrens Theatre | Nashville-Library-TN | 0 | 0 | 0 | 3 | 0 | 0 | 3 | — |
+| Main Library, Childrens Services | Nashville-Library-TN | 0 | 0 | 0 | 3 | 0 | 0 | 3 | — |
+| Main Library, Teen Services | Nashville-Library-TN | 0 | 0 | 0 | 0 | 0 | 3 | 3 | — |
+| Pruitt | Nashville-Library-TN | 1 | 0 | 0 | 2 | 0 | 0 | 3 | — |
+| NPL Church Street Library | Nashville-Library-TN | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Watkins Park | Nashville-Library-TN | 0 | 0 | 0 | 0 | 0 | 2 | 2 | — |
+| Inglewood | Nashville-Library-TN | 0 | 0 | 0 | 1 | 0 | 1 | 2 | — |
+| Church Street Park | Nashville-Library-TN | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Main Library, Special Collections Center | Nashville-Library-TN | 1 | 0 | 0 | 0 | 0 | 1 | 2 | — |
+| Main Library, The Commons | Nashville-Library-TN | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Main Library, Classroom | Nashville-Library-TN | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sevier Park Community Center | Nashville-Library-TN | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| off-site | Nashville-Library-TN | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| North Orange Branch | Orange-County-Library-FL | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Melrose Center | Orange-County-Library-FL | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hiawassee Branch | Orange-County-Library-FL | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Southeast Branch | Orange-County-Library-FL | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Osterhout Free Library | Osterhout Free Library | 1 | 0 | 0 | 0 | 1 | 0 | 2 | — |
+| Share | Patch-Community-Eastern | 14 | 0 | 0 | 0 | 0 | 0 | 14 | — |
+| Wonderland Books and Toys, 245 Maple St, Manchester | Patch-Community-Eastern | 1 | 0 | 7 | 0 | 0 | 0 | 8 | — |
+| Concord Public Library, 45 Green St, Concord | Patch-Community-Eastern | 3 | 0 | 1 | 1 | 1 | 0 | 6 | — |
+| The Grey Eagle Music Hall and Pub, 185 Clingman Ave, Asheville | Patch-Community-Eastern | 6 | 0 | 0 | 0 | 0 | 0 | 6 | — |
+| Capital Hilton, 1001 16th St NW, Washington | Patch-Community-Eastern | 6 | 0 | 0 | 0 | 0 | 0 | 6 | — |
+| Arts Alley, 20 S Main St, Concord | Patch-Community-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Saturn, 200 41st St S, Birmingham | Patch-Community-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| DC Improv Comedy Club, 1140 Connecticut Ave NW, Washington | Patch-Community-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Monona Terrace Community and Convention Center, 1 John Nolen Dr, Madison | Patch-Community-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| One More Page Books, 2200 N Westmoreland St, Arlington | Patch-Community-Eastern | 2 | 0 | 0 | 1 | 0 | 0 | 3 | — |
+| 3A Meetinghouse Rd, Bedford, NH, 03110 | Patch-Community-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Pawtuckaway State Park, 128 Mountain Rd, Nottingham | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Nashua Center for the Arts, 201 Main St, Nashua | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| The Glass Jug Beer Lab - RTP, 5410 NC-55, Durham | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| The Hampshire Dome, 34 Emerson Rd, Milford | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| The Theater At Innovation Square, 131 Chestnut St, Rochester | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| 1000 Northview Rd, Waukesha | Patch-Community-Eastern | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Heights Branch Library 14 Canterbury Road Concord, NH 03301 | Patch-Community-Eastern | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Madison Children's Museum, 100 N Hamilton St, Madison | Patch-Community-Eastern | 0 | 1 | 0 | 1 | 0 | 0 | 2 | — |
+| Salud Taqueria, 1931 2nd Ave N, Birmingham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| ArtSeen Gallery – Tri-Graphics Picture Framing, 12115 Parklawn Dr, Rockville | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Alexandria History Museum at the Lyceum, 201 S Washington St, Alexandria | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Main Street, Main St, Pinson | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Belk, 2100 Galleria Cir, Birmingham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Silver Spring | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 3 Meetinghouse Rd, Bedford | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Concord Public Library - Penacook Library & Activity Center, 76 Community Dr, Concord | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| South Mississippi Genealogical and Historical Society Genealogy Library, 307 2nd Ave, Hattiesburg | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Marymount University, 2807 N Glebe Rd, Arlington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 10145 Bush Lake Rd, Bloomington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Macy's, 100 Maine Mall Rd, South Portland | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fort Christina Park, 1110 E 7th St, Wilmington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| South Mississippi Genealogical & Historical Society | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| C1M Academy, LLC, 13 Columbia Dr, Amherst | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Saint Luke's Lutheran Church, 300 Carroll St, Waukesha | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Belk, 221 Summit Blvd, Birmingham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Concord NH Farmers Market, Capitol St, Concord | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ashley Mac's Kitchen, 1831 28th Ave S, Homewood | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sixth & I, 600 I St NW, Washington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Black Earth Children's Museum, 1131 Mills St, Black Earth | Patch-Community-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Maple Corner Community Center, 84 W County Rd, Calais | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kalmar Nyckel Foundation, 1124 E 7th St, Wilmington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Dillard's, 100 Columbiana Cir, Columbia | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pearl Street Warehouse, 33 Pearl St SW, Washington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Annandale Virginia Fire House Expo Hall 7128 Columbia Pike 22003 | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Granite State Baptist Church, 236 Sheep Davis Rd, Concord | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Planet Word Museum, 925 13th St NW, Washington, DC, 20005 | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Automatic Seafood and Oysters, 2824 5th Ave S, Birmingham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Belk, 670 Promenade Pl, Columbia | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Carver Theatre for the Performing Arts, 1631 4th Ave N, Birmingham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Dillard’s, 2600 Beach Blvd, Biloxi | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Belk, 700 Haywood Rd, Greenville | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Glass Jug Beer Lab - Downtown Durham, 545 Foster St, Durham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Moka Pot, 8 Hanover St, Manchester | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Lumbar, 212 29th Street South,  Birmingham, AL 35233 | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Old Hickory Golf Club LLC, 11921 Chanceford Dr, Woodbridge | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Belk, 100 Columbiana Cir, Columbia | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Belk, 5000 Pinnacle Sq, Birmingham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Essential, 2215 1st Ave N, Birmingham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Von Maur, 36 W Towne Mall, Madison | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Birmingham Museum of Art, 2000 Reverend Abraham Woods Jr Boulevard, Birmingham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| National Union Building, 918 F St NW, Washington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Glass Jug Beer Lab - RTP 5410 NC Hwy 55, Suite V Durham, NC 27713 | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kimball Jenkins School of Art, 266 N Main St, Concord | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Current Charcoal Grill, 1625 2nd Ave S, Birmingham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Flynn, 153 Main St, Burlington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sal's Pizza, 80 Storrs St, Concord | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Old Falls Village Park, N96W15791 County Line Rd, Menomonee Falls | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Aura 121 Center Street Portland, ME 04101 | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lubber Run Community Center, 300 N Park Dr, Arlington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Concord, NH | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Works Museum, 9740 Grand Ave S, Bloomington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Belk, 6910 Fayetteville Rd, Durham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Working Draft Beer Company, 1129 E Wilson St, Madison | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Main Street, Main St, Warrior | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Dillard's, 700 Haywood Rd, Greenville | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Milwaukee | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kimberly Truck Stop, 9178 US-31, Kimberly | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 9:30 Club 815 V St NW Washington, DC 20001 | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pittsylvania County Public Library | Pittsylvania County Public Library | 6 | 0 | 4 | 0 | 0 | 1 | 11 | — |
+| Rappahannock County Library | Rappahannock County Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Carthage, NC | SandhillRegional-NC | 5 | 2 | 1 | 0 | 0 | 0 | 8 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Robbins, NC | SandhillRegional-NC | 2 | 0 | 1 | 1 | 0 | 0 | 4 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Troy, NC | SandhillRegional-NC | 0 | 0 | 1 | 1 | 0 | 0 | 2 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Biscoe, NC | SandhillRegional-NC | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Aberdeen, NC | SandhillRegional-NC | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Vass, NC | SandhillRegional-NC | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Pinebluff, NC | SandhillRegional-NC | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Hoke | SandhillRegional-NC | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Rockingham, NC | SandhillRegional-NC | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Star, NC | SandhillRegional-NC | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Hamlet, NC | SandhillRegional-NC | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Alabama Gulf Coast Zoo | Venue-Events-ZoosAquariums | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Turtle Back Zoo | Venue-Events-ZoosAquariums | 1 | 0 | 0 | 2 | 0 | 0 | 3 | — |
+| Louisville Zoo | Venue-Events-ZoosAquariums | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Brevard Zoo | Venue-Events-ZoosAquariums | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Clearwater Marine Aquarium | Venue-Events-ZoosAquariums | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Roger Williams Park Zoo | Venue-Events-ZoosAquariums | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Brandywine Zoo | Venue-Events-ZoosAquariums | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fort Wayne Children's Zoo | Venue-Events-ZoosAquariums | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Washington County Public Library | Washington County Public Library | 5 | 0 | 1 | 6 | 0 | 0 | 12 | — |
+| Paul S. Sarbanes Library | Wicomico-Public | 0 | 0 | 2 | 3 | 0 | 0 | 5 | — |
+| Lewis R. Riley Library | Wicomico-Public | 0 | 0 | 1 | 1 | 0 | 0 | 2 | — |
+| Centre Library | Wicomico-Public | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Bandstand | WordPress-DE | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://www.wilmingtonde.gov/library) |
+| Grove Park | WordPress-DE | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.wilmingtonde.gov/library) |
+| Beach | WordPress-DE | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.rehobothbeachde.gov/library) |
+| Convention Center Parking Lot | WordPress-DE | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.wilmingtonde.gov/library) |
+| Rehoboth Beach Public Library | WordPress-DE | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.rehobothbeachde.gov/library) |
+| Convention Center | WordPress-DE | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.wilmingtonde.gov/library) |
+| Louisville Free Public Library | WordPress-KY | 9 | 6 | 0 | 3 | 0 | 5 | 23 | [cal](https://www.lfpl.org) |
+| 2020 Frederica Street, Owensboro, KY, 42301, US | WordPress-KY | 3 | 3 | 1 | 2 | 0 | 3 | 12 | [cal](https://www.dcplibrary.org) |
+| Warren County Public Library | WordPress-KY | 4 | 3 | 2 | 0 | 0 | 0 | 9 | [cal](https://www.warrenpl.org) |
+| Casey County Public Library | WordPress-KY | 4 | 1 | 0 | 2 | 0 | 0 | 7 | [cal](https://www.caseylibrary.org) |
+| Lexington Public Library | WordPress-KY | 4 | 1 | 1 | 0 | 0 | 0 | 6 | [cal](https://www.lexpublib.org) |
+| Henderson County Public Library | WordPress-KY | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://www.hcpl.org) |
+| Mason County Public Library | WordPress-KY | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://www.masoncountylibrary.com) |
+| Rowan County Public Library | WordPress-KY | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.rowancountylibrary.org) |
+| Boone County Public Library | WordPress-KY | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://www.bcpl.org) |
+| Louis T. Graves Memorial Public Library @ 18 Maine St, Kennebunkport, ME 04046, USA | WordPress-KY | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.lfpl.org) |
+| Mashpee Public Library | WordPress-MA | 10 | 0 | 1 | 0 | 0 | 1 | 12 | [cal](https://mashpeepubliclibrary.org/) |
+| Wellfleet Public Library | WordPress-MA | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://www.wellfleetlibrary.org) |
+| Cambridge Public Library | WordPress-MA | 7 | 1 | 0 | 2 | 0 | 0 | 10 | [cal](https://www.cambridgelibrary.org) |
+| Provincetown Public Library | WordPress-MA | 9 | 0 | 0 | 1 | 0 | 0 | 10 | [cal](https://www.provincetownlibrary.org) |
+| Norton Public Library | WordPress-MA | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://nortonlibrary.org/) |
+| Westfield Athenaeum | WordPress-MA | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://www.westath.org) |
+| Community Room | WordPress-MA | 4 | 0 | 0 | 1 | 0 | 0 | 5 | [cal](https://www.actonmemoriallibrary.org) |
+| Harvard Public Library | WordPress-MA | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://www.harvardlibrary.org) |
+| Jones Library, Inc. | WordPress-MA | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://www.joneslibrary.org/) |
+| Edwards Public Library | WordPress-MA | 3 | 0 | 1 | 0 | 0 | 0 | 4 | [cal](https://www.southamptonlibrary.org) |
+| Stockbridge Library Association | WordPress-MA | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://www.stockbridgelibrary.org) |
+| Dalton Free Public Library | WordPress-MA | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://www.daltonlibrary.org) |
+| Stockbridge Library | WordPress-MA | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://www.stockbridgelibrary.org) |
+| Lucius Beebe Memorial Library | WordPress-MA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://wakefieldlibrary.org/) |
+| Berkshire Athenaeum | WordPress-MA | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.pittsfieldlibrary.org/) |
+| Children's Room | WordPress-MA | 0 | 2 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.actonmemoriallibrary.org) |
+| Aldenville Branch Library | WordPress-MA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.chicopeelibrary.org) |
+| Hyannis Public Library Assoc. | WordPress-MA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.hyannislibrary.org) |
+| Media Nook | WordPress-MA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.actonmemoriallibrary.org) |
+| Agawam Public Library | WordPress-MA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.agawamlibrary.org/) |
+| Lower Level Meeting Room | WordPress-MA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.actonmemoriallibrary.org) |
+| Eastham, MA | WordPress-MA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://easthamlibrary.org/) |
+| Outdoors | WordPress-MA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.actonmemoriallibrary.org) |
+| Centerville Public Library | WordPress-MA | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://www.centervillelibrary.org) |
+| The Community Room | WordPress-MA | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://www.actonmemoriallibrary.org) |
+| Eldredge Public Library | WordPress-MA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eldredgelibrary.org) |
+| The 1st Floor Board Room | WordPress-MA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.actonmemoriallibrary.org) |
+| Joshua Hyde Public Library | WordPress-MA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.sturbridgelibrary.org) |
+| Chilmark Free Public Library | WordPress-MA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.chilmarklibrary.org) |
+| Olivia Rodham Memorial Library | WordPress-NH | 11 | 0 | 0 | 1 | 0 | 0 | 12 | [cal](https://www.nelsonlibrary.org) |
+| Paul Memorial Library | WordPress-NH | 5 | 2 | 0 | 3 | 0 | 0 | 10 | [cal](https://www.manchester.lib.nh.us) |
+| Canaan Town Library | WordPress-NH | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://www.canaanlibrary.org) |
+| Whitefield Library & Community Center | WordPress-NH | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://www.whitefieldlibrary.org) |
+| G. E.P. Dodge Library | WordPress-NH | 3 | 0 | 2 | 0 | 0 | 0 | 5 | [cal](https://www.benningtonlibrary.org) |
+| Griffin Free Public Library | WordPress-NH | 1 | 2 | 0 | 0 | 1 | 0 | 4 | [cal](https://griffinfree.org) |
+| Hampton Falls Free Library | WordPress-NH | 2 | 0 | 1 | 0 | 0 | 0 | 3 | [cal](https://www.hampton.lib.nh.us) |
+| Main Library | WordPress-NH | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://www.manchester.lib.nh.us) |
+| New Durham Public Library | WordPress-NH | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://newdurhamlibrary.org/) |
+| Bartlett Public Library | WordPress-NH | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.bartlettlibrary.org) |
+| Whitefield Firehouse Conference Room | WordPress-NH | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.whitefieldlibrary.org) |
+| EOC | WordPress-NH | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.manchester.lib.nh.us) |
+| Meetinghouse | WordPress-NH | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.manchester.lib.nh.us) |
+| Madbury Public Library | WordPress-NH | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://madburylibrary.org/) |
+| Manchester City Library | WordPress-NH | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.manchester.lib.nh.us) |
+| Albright Memorial Library | WordPress-PA | 36 | 8 | 6 | 6 | 2 | 4 | 62 | [cal](https://lclshome.org) |
+| Ligonier Valley Library | WordPress-PA | 0 | 0 | 0 | 0 | 0 | 9 | 9 | [cal](https://www.ligonierlibrary.org) |
+| Bellwood Antis Public Library | WordPress-PA | 6 | 1 | 0 | 0 | 0 | 2 | 9 | [cal](https://www.bellwoodlibrary.org) |
+| Taylor Community Library | WordPress-PA | 5 | 1 | 0 | 0 | 0 | 0 | 6 | [cal](https://www.taylorlibrary.org) |
+| Towanda Public Library | WordPress-PA | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://towandalibrary.org/) |
+| Pottsville Free Public Library | WordPress-PA | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://www.pottsvillelibrary.org) |
+| Wyalusing Public Library | WordPress-PA | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://www.wyalusinglibrary.org) |
+| Memorial Library Of Nazareth Vicinity | WordPress-PA | 1 | 2 | 2 | 0 | 0 | 0 | 5 | [cal](https://www.nazarethlibrary.org) |
+| CLP – Main (Oakland) | WordPress-PA | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://www.freelibrary.org) |
+| Lansdale Public Library | WordPress-PA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.lansdalelibrary.org) |
+| CLP – Brookline | WordPress-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.freelibrary.org) |
+| Narberth Community Library | WordPress-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.narberthlibrary.org) |
+| CLP – Beechview | WordPress-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.freelibrary.org) |
+| CLP – Homewood | WordPress-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.freelibrary.org) |
+| CLP – Mt. Washington | WordPress-PA | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.freelibrary.org) |
+| Parkesburg Free Library | WordPress-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.parkesburglibrary.org/) |
+| CLP – Squirrel Hill | WordPress-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.freelibrary.org) |
+| Lansdowne Public Library | WordPress-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lansdownelibrary.org/) |
+| Island Free Library | WordPress-RI | 53 | 9 | 11 | 1 | 0 | 4 | 78 | [cal](https://www.islandfreelibrary.org) |
+| Westerly Public Library | WordPress-RI | 2 | 0 | 0 | 0 | 0 | 1 | 3 | [cal](https://www.westerlylibrary.org/) |
+| Woonsocket Harris Public Library | WordPress-RI | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://www.woonsocketlibrary.org) |
+| Fairmount Branch | WordPress-RI | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://www.woonsocketlibrary.org) |
+| Langworthy Public Library | WordPress-RI | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://www.langworthylibrary.org) |
+| Wanskuck Library | WordPress-RI | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://provlib.org/) |
+| Mount Pleasant Library | WordPress-RI | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://provlib.org/) |
+| Olneyville Library | WordPress-RI | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://provlib.org/) |
+| Washington Park Library | WordPress-RI | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://provlib.org/) |
+| Fox Point Library | WordPress-RI | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://provlib.org/) |
+| Smith Hill Library | WordPress-RI | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://provlib.org/) |
+| Rochambeau Library | WordPress-RI | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://provlib.org/) |
+| South Providence Library | WordPress-RI | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://provlib.org/) |
+| Providence, RI | WordPress-RI | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://provlib.org/) |
+| Knight Memorial Library | WordPress-RI | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://provlib.org/) |
+| Anderson County Library | WordPress-SC | 9 | 0 | 0 | 0 | 0 | 1 | 10 | [cal](https://www.andersonlibrary.org) |
+| Cordingley Room | WordPress-SC | 3 | 1 | 1 | 1 | 0 | 0 | 6 | [cal](https://abbevillecounty.org) |
+| Florence County Library System | WordPress-SC | 2 | 0 | 1 | 0 | 0 | 0 | 3 | [cal](https://www.florencelibrary.org) |
+| Saluda County Library System | WordPress-SC | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.saludalibrary.org) |
+| Union County Library | WordPress-SC | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.unionlibrary.org) |
+| Great Falls Library | WordPress-SC | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.greatfallslibrary.org) |
+| Greenville County Library - Anderson Road (West) Branch | WordPress-SC | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.andersonlibrary.org) |
+| 1st Floor Display Area | WordPress-SC | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://abbevillecounty.org) |
+| Dillon County Library System | WordPress-SC | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.dillonlibrary.org/) |
+| Glasgow Branch Library | WordPress-WV | 8 | 10 | 0 | 0 | 0 | 1 | 19 | [cal](https://www.kcpls.org/hours-locations/glasgow-branch-library) |
+| Harrison County Public Library | WordPress-WV | 6 | 1 | 0 | 4 | 1 | 1 | 13 | [cal](https://www.clarksburglibrary.org) |
+| South Charleston Public Library | WordPress-WV | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://www.kcpls.org/) |
+| Center Point Public Library | WordPress-WV | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://www.centerpointlibrary.org) |
+| Kanawha County Public Library | WordPress-WV | 2 | 3 | 0 | 0 | 0 | 0 | 5 | [cal](https://www.kcpls.org/) |
+| Barrett-Wharton Public Library | WordPress-WV | 1 | 2 | 0 | 0 | 0 | 0 | 3 | [cal](https://www.barrettlibrary.org) |
+| Waverly Library | WordPress-WV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkwoodlib.com/waverly-library/) |
+| Blackwater Falls State Park | WordPressTec-Parks-WV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://wvstateparks.com) |
+| Lost River State Park | WordPressTec-Parks-WV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://wvstateparks.com) |
+| North Bend Rail Trail | WordPressTec-Parks-WV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://wvstateparks.com) |
+| Wythe-Grayson Regional Library | Wythe-Grayson Regional Library | 5 | 0 | 7 | 0 | 0 | 3 | 15 | — |
+
+### Flagged: All Ages >= 70% (total >= 20 events)
+
+| Site | Scraper | All Ages | Total | % |
+|---|---|---|---|---|
+| Jackson County Parks & Recreation | CivicRec-Parks-Eastern-jackson-county-ms | 115 | 115 | 100% |
+| Flagler County Parks & Recreation | CivicRec-Parks-Eastern-flagler-county | 109 | 109 | 100% |
+| Broome County Parks & Recreation | CivicRec-Parks-Eastern-broome-county-ny | 94 | 94 | 100% |
+| City of Concord Parks & Recreation | CivicRec-Parks-Eastern-concord-nc | 78 | 78 | 100% |
+| Virginia Aquarium & Marine Science Center | MacaroniKid-VA-virginiabeach | 69 | 70 | 99% |
+| Nassau County Parks & Recreation | CivicRec-Parks-Eastern-nassau-county-fl-parks-recreation | 54 | 54 | 100% |
+| Forsyth County Parks & Recreation | CivicRec-Parks-Eastern-forsyth-county-ga | 53 | 53 | 100% |
+| Ocean County Library — Jackson Branch | MacaroniKid-NJ-tintonfalls | 41 | 41 | 100% |
+| Danville, VA | CivicRec-Parks-Eastern-city-of-danville-va | 37 | 40 | 93% |
+| Workhouse Arts Center | MacaroniKid-VA-newington | 28 | 36 | 78% |
+| City of Gastonia Parks & Recreation | CivicRec-Parks-Eastern-city-of-gastonia | 34 | 34 | 100% |
+| Recreation Campus | CivicRec-Parks-Eastern-middletown-ny | 24 | 32 | 75% |
+| Ashby Free Public Library | GoogleCalendar-MA | 32 | 32 | 100% |
+| Montgomery-Floyd Regional Library - Blacksburg Library | MacaroniKid-VA-nrv | 23 | 32 | 72% |
+| Monmouth County Park System | MacaroniKid-NJ-tintonfalls | 22 | 30 | 73% |
+| Daviess County Parks & Recreation | CivicRec-Parks-Eastern-daviess-county-ky | 29 | 29 | 100% |
+| Maury County Parks & Recreation | CivicRec-Parks-Eastern-maury-county-tn | 25 | 25 | 100% |
+| York County Parks | CivicRec-Parks-Eastern-york-county-pa- | 25 | 25 | 100% |
+| Huntsville, AL | CivicRec-Parks-Eastern-huntsville-al | 20 | 23 | 87% |
+| Nottingham, NH | CivicRec-Parks-Eastern-nottingham-nh | 23 | 23 | 100% |
+| DeFuniak Springs, FL | CivicRec-Parks-Eastern-walton-county-fl | 22 | 22 | 100% |
+| Monmouth County Library System - Colts Neck | MacaroniKid-NJ-tintonfalls | 16 | 22 | 73% |
+| Coventry, CT | CivicRec-Parks-Eastern-coventry-ct | 21 | 21 | 100% |
+| Monmouth County Library — Eastern Branch | MacaroniKid-NJ-tintonfalls | 18 | 21 | 86% |
+| Leonard Brown House | CivicRec-Parks-Eastern-portsmouth-ri | 18 | 20 | 90% |
+| Ross Community Center | CivicRec-Parks-Eastern-ross-township | 18 | 20 | 90% |
