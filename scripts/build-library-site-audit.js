@@ -141,7 +141,12 @@ async function main() {
   console.log(`per-site rows: ${list.length}   scrapers with per-site output: ${scrapers.size}   zero-event sites: ${zero.length}`);
   console.log(`scrapers: ${[...scrapers].sort().join(', ')}`);
 
-  if (OUT) { fs.writeFileSync(OUT, body, 'utf8'); console.log(`wrote ${OUT}`); }
+  // Trailing newline is load-bearing: the documented workflow is to `cat` this
+  // fragment into LIBRARY-SITE-AUDIT.md between prose blocks, and without it the
+  // last table row fuses onto whatever line follows. That produced a malformed
+  // double row on 2026-08-30 which the cycle-completion check then read as a
+  // missing scraper.
+  if (OUT) { fs.writeFileSync(OUT, body + '\n', 'utf8'); console.log(`wrote ${OUT}`); }
   else console.log('\n' + body.split('\n').slice(0, 20).join('\n'));
 }
 

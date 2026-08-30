@@ -141,7 +141,9 @@ async function main() {
   console.log(`\nsites: ${list.length}   scrapers: ${scrapersSeen.size}   flagged: ${flagged.length}`);
 
   if (OUT) {
-    fs.writeFileSync(OUT, body, 'utf8');
+    // Trailing newline is load-bearing — see the same note in
+    // build-library-site-audit.js. The fragment is `cat`-ed into the audit file.
+    fs.writeFileSync(OUT, body + '\n', 'utf8');
     console.log(`wrote ${OUT}`);
   } else {
     console.log('\n' + body.split('\n').slice(0, 25).join('\n'));
