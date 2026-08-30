@@ -247,6 +247,14 @@ async function scrapeInterceptEvents(browser) {
           url: event.url || LIBRARY.website,
           metadata: {
             source: 'Intercept Scraper',
+            // scraperName MUST be set explicitly. Without it flattenEvent() falls
+            // back to metadata.sourceName, which stored the display name
+            // "Camden County Library System" — a value that joins to no registry
+            // key, so every audit that groups by scraper_name silently dropped
+            // this scraper. One site, so the bare registry key is the correct
+            // form per CLAUDE.md's "Scraper Naming".
+            scraperName: 'Intercept-Camden',
+            sourceUrl: LIBRARY.url,
             sourceName: LIBRARY.name,
             county: LIBRARY.county,
             state: LIBRARY.state,

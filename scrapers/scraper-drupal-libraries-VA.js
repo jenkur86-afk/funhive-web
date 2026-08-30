@@ -256,6 +256,14 @@ async function scrapeLibraryEvents(library, browser) {
           },
           url: event.url || library.website,
           metadata: {
+            // Same omission as Intercept-Camden: without scraperName the adapter
+            // fell back to the display name "Handley Regional Library", which
+            // joins to no registry key. LIBRARY_SYSTEMS holds one entry, so the
+            // bare registry key is the correct form. If a second system is ever
+            // added here, this MUST become `Drupal-Virginia-<siteSlug>` or the
+            // two collapse onto one name.
+            scraperName: 'Drupal-Virginia',
+            sourceUrl: library.url,
             source: 'Virginia Drupal Scraper',
             sourceName: library.name,
             county: library.county,

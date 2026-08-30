@@ -42,6 +42,18 @@ const { normalizeDateString } = require('./date-normalization-helper');
 const { linkEventToVenue } = require('./venue-matcher');
 const { tryGeocode: sharedTryGeocode } = require('./helpers/macaroni-geocoding-helper');
 
+/**
+ * Per-site slug for scraper_name, derived from the site's own hostname.
+ * Lowercase [a-z0-9-] only, and 'www' is skipped — a self-hosted site whose
+ * first hostname label is 'www' would otherwise give every such site the same
+ * slug, which is the bug found on LibraryCalendar-Libraries on 2026-08-29.
+ */
+function siteSlug(url) {
+  const host = String(url || '').replace(/^https?:\/\//, '').split('/')[0];
+  const labels = host.split('.').filter(l => l && l !== 'www');
+  return (labels[0] || 'unknown').toLowerCase().replace(/[^a-z0-9-]/g, '');
+}
+
 // Library Systems using The Events Calendar WordPress plugin
 const LIBRARY_SYSTEMS = [
   {
@@ -506,6 +518,15 @@ async function scrapeLibraryEvents(library, browser) {
           },
           url: event.url || library.website,
           metadata: {
+            // MULTI-SITE, so one distinct scraper_name PER SITE — never the bare
+            // registry key, which would collapse all 13 libraries onto one row and
+            // re-create the aggregation AGE-RANGE-AUDIT.md's "No aggregation, ever"
+            // rule forbids. Slug comes from the site's own hostname, not its display
+            // name. Until 2026-08-30 nothing was set here at all, so the adapter fell
+            // back to metadata.sourceName and stored display names like "Library
+            // System of Lancaster County" that join to no registry key.
+            scraperName: `WordPress-Events-Calendar-${siteSlug(library.url)}`,
+            sourceUrl: library.url,
             source: 'WordPress Events Calendar Scraper',
             sourceName: library.name,
             county: library.county,
