@@ -66,6 +66,15 @@ const LIBRARIES = [
   { name: 'North Smithfield Public Library', url: 'https://www.northsmithfieldlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.northsmithfieldlibrary.org/events', city: 'Slatersville', state: 'RI', zipCode: '02876', county: '' },
   { name: 'Greenville Public Library', url: 'https://www.greenvillelibrary.org', platform: 'wordpress', eventsUrl: 'https://www.greenvillelibrary.org/events', city: 'Smithfield', state: 'RI', zipCode: '02828', county: '' , urlCollision: 'greenvillelibrary.org is SC, not RI' },
   { name: 'Essex Public Library', url: 'https://www.tivertonlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.tivertonlibrary.org/events', city: 'Tiverton', state: 'RI', zipCode: '02878', county: '' },
+  // 2026-08-30: also configured in LibCal-RI at oslri.libcal.com/calendar/georgehail,
+  // proven the right institution by that page's own title. This WordPress entry has
+  // returned 0 every run and the library has zero rows in the database, because
+  // georgehail.org carries no event markup at all - the calendar is on LibCal.
+  // DELIBERATELY LEFT IN PLACE, not deleted: the LibCal replacement has not yet been
+  // observed returning events (its grid renders client-side, so a plain fetch cannot
+  // tell an empty calendar from a JS-gated one). Remove this entry only once a real
+  // LibCal-RI run has produced George Hail rows - deleting on an unproven replacement
+  // is the Worcester mistake.
   { name: 'George Hail Free Library', url: 'https://www.georgehail.org/', platform: 'wordpress', eventsUrl: 'https://www.georgehail.org/', city: 'Warren', state: 'RI', zipCode: '02885', county: '' },
   { name: 'Louttit Memorial Library', url: 'https://www.louttitlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.louttitlibrary.org/events', city: 'West Greenwich', state: 'RI', zipCode: '02817', county: '' },
   { name: 'Westerly Public Library', url: 'https://www.westerlylibrary.org/', platform: 'wordpress', eventsUrl: 'https://www.westerlylibrary.org/', city: 'Westerly', state: 'RI', zipCode: '02891', county: '' },

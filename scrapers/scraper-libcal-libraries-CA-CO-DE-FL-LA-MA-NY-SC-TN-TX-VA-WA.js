@@ -1718,6 +1718,35 @@ const LIBRARY_SYSTEMS = [
     city: 'Barrington',
     zipCode: '02806'
   },
+  // Added 2026-08-30. RELOCATED FROM WordPress-RI, same platform-mismatch class as
+  // Coventry and Rogers above, and taken from the libcal group of
+  // reports/platform-mismatches.md. georgehail.org is a plain WordPress site with no
+  // event markup, which is why its WordPress-RI entry returned 0 today and why the
+  // library has ZERO rows in the database, ever - a total coverage gap, not a
+  // selector problem.
+  //
+  // IDENTITY PROVEN BY THE PAGE'S OWN TITLE, NOT BY NAME: georgehail.org links to
+  // this exact URL, and the target renders as "George Hail Free Library - LibCal -
+  // Ocean State Libraries". Note the host is the OSLRI CONSORTIUM, shared by many RI
+  // libraries - the cal=18190 path scoping is what makes this George Hail's calendar
+  // and not the consortium's. Do not "simplify" the query string to the neighbours'
+  // cid=-1 form; that would pull in every OSLRI member under this library's name.
+  // buildScraperName() reads the path segment as well as the host, so this yields
+  // LibCal-RI-oslri-georgehail rather than colliding with any future OSLRI sibling.
+  //
+  // NOT YET OBSERVED RETURNING EVENTS: the LibCal grid renders client-side, so a
+  // plain fetch shows an empty result set and cannot distinguish "no events" from
+  // "JS-gated". The WordPress-RI entry is therefore left in place rather than
+  // deleted - see the note there.
+  {
+    name: 'George Hail Free Library',
+    url: 'https://oslri.libcal.com/calendar/georgehail?cid=18190&t=d&d=0000-00-00&cal=18190&inc=0',
+    county: 'Bristol',
+    state: 'RI',
+    website: 'https://www.georgehail.org',
+    city: 'Warren',
+    zipCode: '02885'
+  },
 
   // SOUTH CAROLINA
   {
