@@ -107,6 +107,17 @@ async function tryFetchTecEvents(baseUrl, libName, categorySlug) {
         validateStatus: null
       });
     } catch (e) {
+      // A THROW IS NOT THE SAME AS "not a TEC site", and until 2026-08-30 the
+      // caller could not tell them apart: both returned null, the DOM fallback
+      // then found nothing, and the library printed a bare "Found 0 events" with
+      // no trace anywhere of a failed request. Spalding Memorial Library (PA) sat
+      // at 0 across consecutive runs that way while its REST endpoint answered in
+      // ~2s with 75 events when called by hand — which is how the class was found,
+      // by Step 3d rather than by any log. A clean non-200 or non-JSON reply stays
+      // silent below, because that genuinely means "no TEC here".
+      if (page === 1) {
+        console.log(`   ⚠ TEC REST request failed for ${libName || origin}: ${(e && e.message) || e} — falling back to DOM`);
+      }
       return page === 1 ? null : allEvents;
     }
 

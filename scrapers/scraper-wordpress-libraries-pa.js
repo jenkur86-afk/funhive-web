@@ -55,7 +55,13 @@ const LIBRARIES = [
   { name: 'Altoona Area Public Library', url: 'https://www.altoonalibrary.org', eventsUrl: 'https://www.altoonalibrary.org/events', city: 'Altoona', state: 'PA', zipCode: '16602', county: 'Blair'},
   { name: 'Aston Public Library', url: 'https://www.astonlibrary.org', eventsUrl: 'https://www.astonlibrary.org/events', city: 'Aston', state: 'PA', zipCode: '19014', county: 'Delaware'},
   // URL corrected 2026-08-11 (was athenslibrary.org): 724 South Main Street Athens PA 18810, phone 570-888-7117
-  { name: 'Spalding Memorial Library', url: 'http://spaldinglibrary.org', eventsUrl: 'http://spaldinglibrary.org', city: 'Athens', state: 'PA', zipCode: '18810', county: 'Bradford'},
+  // 2026-08-30: url/eventsUrl moved http -> https. The site serves HTTPS and redirects,
+  // so every request paid an extra round trip against the helper's 8s budget. Identity
+  // re-confirmed from the live page before touching it, NOT from the name: "724 South
+  // Main Street Athens, PA 18810", phone 570-888-7117 — matches this entry exactly.
+  // Its TEC REST feed answers with 75 events including Storytime, yet the scraper stored
+  // 0 across consecutive runs; see the failure-logging change in helpers/tec-rest-helper.js.
+  { name: 'Spalding Memorial Library', url: 'https://spaldinglibrary.org', eventsUrl: 'https://spaldinglibrary.org', city: 'Athens', state: 'PA', zipCode: '18810', county: 'Bradford'},
   { name: 'Avalon Public Library', url: 'https://avalonlibrary.org/', eventsUrl: 'https://avalonlibrary.org/', city: 'Avalon', state: 'PA', zipCode: '15202', county: 'Allegheny'},
   { name: 'Avella Area Library Center', url: 'https://www.avellalibrary.org', eventsUrl: 'https://www.avellalibrary.org/events', city: 'Avella', state: 'PA', zipCode: '15312', county: 'Washington'},
   { name: 'Avonmore Public Library', url: 'https://www.avonmorelibrary.org', eventsUrl: 'https://www.avonmorelibrary.org/events', city: 'Avonmore', state: 'PA', zipCode: '15618', county: 'Westmoreland'},
