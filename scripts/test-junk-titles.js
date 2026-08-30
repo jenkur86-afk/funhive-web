@@ -93,6 +93,35 @@ const CASES = [
   // Ordinary titles that must never be junk.
   ['Board Meeting', false, 'bare "board" is not a governance match'],
   ['Family Storytime', false, 'ordinary program'],
+  // --- facility inventory / membership SKUs (added 2026-08-30) ---------------
+  // CivicRec publishes reservable facilities and purchasable memberships in the
+  // same catalog as its programmes. Measured over 126,840 live rows: 924 facility
+  // rows, 193 membership rows.
+  ['RV Site #07', true, 'campsite reservation, not an event'],
+  ['Tennis Court 6', true, 'court booking'],
+  ['Soccer Field - 1', true, 'field booking'],
+  ['Gymnasium', true, 'bare facility name'],
+  ['Shelter #3 North', true, 'shelter booking'],
+  ['Multi-Purpose Field #3', true, 'field booking'],
+  ['Pool Membership - Annual (Family) (PMAF)', true, 'membership SKU'],
+  ['Program Punch Card: 5 Visits', true, 'punch-card product'],
+  ['2026 TR Membership Dues', true, 'dues product'],
+  ['NON-Resident PRO Annual', true, 'non-resident membership term'],
+  ['Pickleball Non-Resident Season Pass 2026', true, 'season pass product'],
+  // MUST SURVIVE. Every one of these was found in the live corpus while
+  // validating the two rules above, and each would be real programming lost.
+  ['Open Gym', false, 'a real drop-in session, not a booking of the gym'],
+  ['Open Swim', false, 'real programmed session'],
+  ['Little Gym', false, 'The Little Gym is a real childrens gym brand'],
+  ['Basketball Prep Clinic 10/3 MS', false, 'real clinic that names a sport'],
+  ['Callahan Baseball #6', false, 'proper noun present, not pure facility filler'],
+  ['White Oak Pavilion', false, 'proper noun present, left alone on purpose'],
+  ['1-2-3 Play with Me', false, 'real toddler program, not a 3-play ticket'],
+  ['Membership Swap: Virginia Museum of Contemporary Art', false, 'real museum event'],
+  ['Adult Boxing (CRPD Adult Boxing Membership Required)', false, 'real class noting a prerequisite'],
+  ['Nonresident Summer Camp', false, 'pricing tier on a real camp'],
+  ['Family Fun Day at the Pavilion', false, 'real event held at a facility'],
+
   ['Kids Craft Club', false, 'ordinary program'],
   ['Fall Festival', false, 'ordinary program'],
   ['GLOW', false, 'short all-caps real MacaroniKid title'],

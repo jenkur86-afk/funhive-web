@@ -1490,6 +1490,58 @@ function isCancelledEvent(name, description) {
  *
  * Returns true if the title is junk and the event should be skipped.
  */
+// ── Facility inventory ──────────────────────────────────────────────────────
+// A title that is NOTHING BUT a facility name plus filler (a number, a compass
+// direction, a size, a sport that names the field) is a bookable place, never an
+// event. The whole-title requirement is what keeps this safe: every token must be
+// either a facility noun or an allowed filler, so "Basketball Prep Clinic 10/3",
+// "Callahan Baseball #6" and "White Oak Pavilion" all survive — anything carrying
+// a word this list does not know is left alone on purpose. Verified against the
+// full corpus: the rule matched 246 distinct titles and exactly one of them,
+// "Little Gym", was a real thing (The Little Gym is a children's gym brand), which
+// is why 'little' is deliberately NOT an allowed filler.
+const FACILITY_NOUN = /\b(pavilion|shelter|gazebo|campsite|cabin|court|courts|field|fields|diamond|rink|gym|gymnasium|ballfield|amphitheater|amphitheatre|ramada|clubhouse|bandshell|site)\b/i;
+// 'open' is NOT here: Open Gym, Open Swim, Open Play and Open Skate are real
+// programmed sessions and must survive. Somerset-County's "Open Gym" is the
+// negative control in test-junk-titles.js.
+const FACILITY_FILLER = /^(?:#?\d+[a-z]?|[a-z]|north|south|east|west|northeast|northwest|southeast|southwest|upper|lower|main|large|small|big|front|back|rear|side|multi|multipurpose|multi-?purpose|multi-?use|use|purpose|indoor|outdoor|rv|baseball|softball|soccer|basketball|tennis|pickleball|volleyball|football|lacrosse|hockey|bocce|horseshoe|sand|turf|grass|practice|rental|rentals|reservation|reservations)$/i;
+
+function isFacilityInventoryTitle(title) {
+  if (!title || !FACILITY_NOUN.test(title)) return false;
+  const tokens = title.split(/[\s\-–—_/,.()&@*]+/).filter(Boolean);
+  // A long title has room for real content; facility rows are terse by nature.
+  if (!tokens.length || tokens.length > 6) return false;
+  return tokens.every(tok => FACILITY_NOUN.test(tok) || FACILITY_FILLER.test(tok));
+}
+
+// ── Membership / pass / punch-card products ─────────────────────────────────
+// These are things you BUY, not things you attend. The rescue list is load-bearing:
+// "Membership Swap" at a museum, a "Membership Drive", and "Adult Boxing (CRPD
+// Adult Boxing Membership Required)" are all real events whose titles mention a
+// membership, and each was found in the live corpus while validating this rule.
+const PRODUCT_RESCUE = /\b(night|day|party|social|festival|fair|drive|open\s+house|appreciation|celebration|kickoff|meeting|orientation|tour|workshop|class|clinic|camp|league|game|show|concert|swap)\b|membership\s+(is\s+)?(required|needed)/i;
+const PRODUCT_PATTERNS = [
+  /\bmemberships?\b/i,
+  /\bpunch\s*card\b/i,
+  /\b(season|pool|annual|daily|guest|facility|fitness)\s+passes?\b/i,
+  /\b\d+\s*(visits?|punches)\b/i,
+  // "10 Play Ticket" is a product; "1-2-3 Play with Me" is a real toddler
+  // programme, which is why the ticket/pass/card word is required here.
+  /\b\d+\s*play\s+(ticket|pass|card)\b/i,
+  /\bdues\b/i,
+];
+const NONRESIDENT = /\bnon-?residents?\b/i;
+const NONRESIDENT_PRODUCT = /\b(membership|pass|annual|season|monthly|household|individual|dues|pro)\b/i;
+
+function isMembershipProductTitle(title) {
+  if (!title) return false;
+  if (PRODUCT_RESCUE.test(title)) return false;
+  if (PRODUCT_PATTERNS.some(p => p.test(title))) return true;
+  // "Non-Resident" alone is just pricing on a real programme ("Nonresident Summer
+  // Camp"); it only marks a product when paired with a membership/term word.
+  return NONRESIDENT.test(title) && NONRESIDENT_PRODUCT.test(title);
+}
+
 function isJunkTitle(name) {
   if (!name || typeof name !== 'string') return true;
   const trimmed = name.trim();
@@ -1606,6 +1658,17 @@ function isJunkTitle(name) {
       if (pattern.test(trimmed)) return true;
     }
   }
+
+  // FACILITY INVENTORY AND MEMBERSHIP SKUs. CivicRec/Rec1 publishes reservable
+  // facilities and purchasable memberships in the SAME catalog as its programmes,
+  // so the scraper cannot tell them apart at extraction time and both arrive as
+  // "events". Measured 2026-08-30 over 126,840 live rows: 924 rows across 246
+  // distinct facility titles and 193 rows across 52 membership titles. A parent
+  // browsing FunHive was being shown "RV Site #07", "Tennis Court 6" and
+  // "Pool Membership - Annual (Family)" as things to do. They are also why the
+  // parks family dominates the >=70% All-Ages flag list — a ballfield has no age.
+  if (isFacilityInventoryTitle(trimmed)) return true;
+  if (isMembershipProductTitle(trimmed)) return true;
 
   // Title with no letters (just numbers, punctuation, or whitespace)
   if (!/[a-zA-Z]/.test(trimmed)) return true;
