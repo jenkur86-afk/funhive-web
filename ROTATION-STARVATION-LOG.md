@@ -82,11 +82,32 @@ self-heals" overstated it.
   `SIMPLEVIEW-DAYGRID-PARTIAL`, `SIMPLEVIEW-VENUE-COLLAPSE-BACKLOG`) are blocked on a
   Group 2 rotation that keeps not arriving.
 
-**Prediction on record for 2026-09-01** (falsifiable — check it on the next run): today's
-Group 1 run entered its MacaroniKid tail at 18:25:55Z. At the measured 14.7–15.5h that
-finishes **09:07Z–09:56Z on 09-01**, past the 07:00Z trigger. **Group 2's 09-01 turn will
-be dropped**, making three consecutive lost turns and a ~9-day gap. If Group 2 *does* run
-on 09-01, this prediction was wrong and the duration model needs revisiting.
+**Prediction on record — corrected 2026-08-31.** An earlier draft of this line said
+"Group 2's 09-01 turn will be dropped". That was wrong: `getDayGroup(1)` is **Group 1**.
+Recording the correction rather than quietly editing it, because a prediction file whose
+predictions get silently rewritten is worthless.
+
+**The catch-up cannot start a run.** `selectGroup()` is called at
+`local-scraper-runner.js:645`, inside the runner — it only chooses which group an
+already-started run works on. And the task carries **`StartWhenAvailable = False`**, so a
+discarded trigger is never retried: it is gone permanently. Verified against the live
+registration 2026-08-31, along with `RestartCount = 0` and a single daily trigger
+(03:00, `DaysInterval=1`) with no repetition.
+
+So, falsifiably:
+
+- **2026-09-01** — the MacaroniKid tail (started 18:25:55Z, measured 14.7-15.5h) should still
+  be running at the 07:00Z trigger, which is therefore **discarded: no rotation at all that
+  day**. Note what is lost with it — `selectGroup(getDayGroup(1), 2026-09-01T07:00Z)` returns
+  `{group: 2, reason: "Group 2 has not completed in 4.1 days"}`, so the catch-up will be
+  **armed and will not fire**, purely because nothing starts to execute it.
+- **2026-09-02** — day 2 is Group 2's calendar turn, and with 09-01 dropped nothing is in
+  flight, so the trigger should fire cleanly and **Group 2 should run** — about 5 days after
+  its last completion, rescued by the calendar rather than by the catch-up.
+
+If a rotation *does* start on 09-01, the ~15h tail estimate is wrong and the duration model
+needs revisiting. If Group 2 does *not* run on 09-02, something beyond this mechanism is
+also broken.
 
 ---
 
@@ -104,12 +125,22 @@ on 09-01, this prediction was wrong and the duration model needs revisiting.
    dropped — it just stops a dropped one compounding. Risk: set too low and the calendar
    group's own ~3d age could trip it, shuffling the rotation; the existing
    `worst.group !== calendar` guard mitigates this but has not been tested at 3.5.
-3. **Set `MultipleInstances` to queue rather than `IgnoreNew`.** Superficially obvious, and
+3. **Set `StartWhenAvailable = True`** (currently `False`). Surfaced 2026-08-31 by the
+   question "will a scraper run automatically if the starvation day is hit?" — the answer
+   is no, and this setting is why. With it on, a trigger discarded at 07:00Z re-fires as
+   soon as the running instance finishes (~09:56Z), and `selectGroup()` would then pick the
+   starved group — so the armed-but-never-fired catch-up would actually execute. One
+   checkbox, no code change, and it makes the existing `group-catchup.js` work as its author
+   intended. **The cost is real though**: a 26h rotation restarting immediately on finishing
+   means rotations run effectively back-to-back forever, with no idle window, permanently
+   overlapping `FunHive-DataQuality` and leaving no gap for hand-runs. Cheaper than option 1
+   but it treats the recovery, not the 26h duration.
+4. **Set `MultipleInstances` to queue rather than `IgnoreNew`.** Superficially obvious, and
    probably wrong: it would start Group 2 immediately on top of a still-running Group 1,
    putting two Chrome-heavy rotations on the machine at once. `reports/fix-notes.json`
    already records concurrent heavy Chrome workloads as the leading suspect for a
    37-scraper launch failure. Not recommended without a concurrency guard.
-4. **Do nothing and accept a 5–6 day cadence for whichever group is unlucky.** Honest
+5. **Do nothing and accept a 5–6 day cadence for whichever group is unlucky.** Honest
    status quo. Worth stating explicitly so it is a decision rather than a drift.
 
 Raising `ExecutionTimeLimit` again is **not** an option — 26h already fits inside 36h.
