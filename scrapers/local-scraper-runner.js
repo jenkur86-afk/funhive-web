@@ -50,6 +50,9 @@ const { db, supabase, saveScraperLog } = require('./helpers/supabase-adapter');
 
 // Starvation-aware group selection (see helpers/group-catchup.js)
 const { selectGroup, recordGroupCompletion } = require('./helpers/group-catchup');
+// Full-group runs serialize on this mutex now that MacaroniKid is its own
+// scheduled task — see helpers/run-lock.js and ROTATION-STARVATION-LOG.md.
+const { acquireRunLock } = require('./helpers/run-lock');
 
 // Import scraper registry
 const {
@@ -124,33 +127,46 @@ const {
 // CHECKPOINT MANAGEMENT
 // ============================================================================
 
-function loadCheckpoint() {
-  try {
-    if (fs.existsSync(CONFIG.CHECKPOINT_FILE)) {
-      const data = JSON.parse(fs.readFileSync(CONFIG.CHECKPOINT_FILE, 'utf8'));
-      return data;
-    }
-  } catch (err) {
-    log(`Warning: Could not load checkpoint: ${err.message}`, 'warn');
-  }
+// Checkpoints are PER-GROUP files as of 2026-08-31 (rotation-starvation Layer 1,
+// see ROTATION-STARVATION-LOG.md). The old single scraper-checkpoint.json was a
+// shared mutable: with the MacaroniKid split introducing a second runner task,
+// two runs of different groups would clobber each other's crash-recovery state.
+// A per-group file has exactly one writer by construction. Writes go through
+// atomic-json (temp+rename) so a crash mid-write can't leave the checkpoint
+// unparseable — which the old code treated as "no checkpoint", silently losing
+// the resume point. The legacy single file is still READ as a fallback so a
+// --resume across this deploy keeps working; it is deleted on the next clear.
+const { readJsonSafe, writeJsonAtomic } = require('./helpers/atomic-json');
+
+function checkpointFileFor(group) {
+  return path.join(__dirname, 'logs', `scraper-checkpoint-group${group}.json`);
+}
+
+function loadCheckpoint(group) {
+  const perGroup = readJsonSafe(checkpointFileFor(group), null);
+  if (perGroup && perGroup.group === group) return perGroup;
+  // Legacy fallback: pre-split single checkpoint file, honored only if it
+  // belongs to this group (same guard the old code applied at the call site).
+  const legacy = readJsonSafe(CONFIG.CHECKPOINT_FILE, null);
+  if (legacy && legacy.group === group) return legacy;
   return null;
 }
 
 function saveCheckpoint(data) {
   try {
-    fs.writeFileSync(CONFIG.CHECKPOINT_FILE, JSON.stringify(data, null, 2));
+    writeJsonAtomic(checkpointFileFor(data.group), data);
   } catch (err) {
     log(`Warning: Could not save checkpoint: ${err.message}`, 'warn');
   }
 }
 
-function clearCheckpoint() {
-  try {
-    if (fs.existsSync(CONFIG.CHECKPOINT_FILE)) {
-      fs.unlinkSync(CONFIG.CHECKPOINT_FILE);
+function clearCheckpoint(group) {
+  for (const file of [checkpointFileFor(group), CONFIG.CHECKPOINT_FILE]) {
+    try {
+      if (fs.existsSync(file)) fs.unlinkSync(file);
+    } catch (err) {
+      // Ignore
     }
-  } catch (err) {
-    // Ignore
   }
 }
 
@@ -329,7 +345,7 @@ async function runScraperGroup(group, options = {}) {
 
   // Check for resume
   if (options.resume) {
-    const checkpoint = loadCheckpoint();
+    const checkpoint = loadCheckpoint(group);
     if (checkpoint && checkpoint.group === group) {
       startIndex = checkpoint.lastIndex + 1;
       log(`📌 Resuming from checkpoint: starting at index ${startIndex}`);
@@ -380,77 +396,52 @@ async function runScraperGroup(group, options = {}) {
   }
 
   // Clear checkpoint on successful completion
-  clearCheckpoint();
+  clearCheckpoint(group);
 
   return results;
 }
 
-// MacaroniKid scrapers were separated into their own standalone runners
-// (macaroni-runner-group1.js, macaroni-runner-group2.js, macaroni-runner-group3.js)
-// to avoid memory and timing issues when running alongside other scrapers.
-// This function spawns the correct group's runner as a child process rather
-// than requiring it in-process — each file calls process.exit() unconditionally
-// at the end of its main(), which would kill this parent process if imported
-// directly. stdio is inherited so the child's output flows into whatever this
-// process's own stdout/stderr are already redirected to (run-scrapers.bat
-// sends both to logs/scraper-stdout.log and logs/scraper-stderr.log).
-async function runMacaroniGroup(group, options = {}) {
-  const scriptPath = path.join(__dirname, `macaroni-runner-group${group}.js`);
+// MACARONIKID IS NO LONGER RUN FROM THE SCHEDULED ROTATION — 2026-08-31.
+//
+// Until 2026-08-31 this file spawned macaroni-runner-group{N}.js as the TAIL of
+// every scheduled group run. That welded a ~15h MacaroniKid pass onto an ~11h
+// Group 1 regular pass, pushing the task past its own 24h trigger interval —
+// and because FunHive-Scrapers is MultipleInstances=IgnoreNew with
+// StartWhenAvailable=False, every overrun silently DELETED the next day's
+// rotation (2026-08-26 and 2026-08-29 had no rotation at all; Group 2 was the
+// perpetual victim). Full history: ROTATION-STARVATION-LOG.md.
+//
+// MacaroniKid now runs as its own scheduled task (FunHive-Macaroni -> 
+// run-macaroni.bat -> macaroni-daily-runner.js), serialized against this
+// rotation via helpers/run-lock.js instead of via accidental single-task-ness.
+// If you ever see zero MacaroniKid-* activity in scraper-summary.log for an
+// extended period, check THAT task and macaroni-last-run.json — not this file.
+//
+// delegateMacaroniRun() remains only for the MANUAL paths (--all,
+// --macaroni). It spawns macaroni-daily-runner.js, which owns group
+// selection, its own completion ledger, and the results-file readback that
+// used to live here. --no-lock is passed because the caller already holds the
+// runner lock — without it, parent and child would deadlock on the mutex.
+async function delegateMacaroniRun(group, options = {}, { holdingLock = false } = {}) {
+  const scriptPath = path.join(__dirname, 'macaroni-daily-runner.js');
 
   if (options.dryRun) {
-    log(`[DRY RUN] Would run: macaroni-runner-group${group}.js`);
+    log(`[DRY RUN] Would run: macaroni-daily-runner.js --group ${group}`);
     return { success: [], failed: [], skipped: [] };
   }
 
-  if (!fs.existsSync(scriptPath)) {
-    log(`❌ MacaroniKid runner not found: ${scriptPath}`, 'error');
-    return { success: [], failed: [{ success: false, name: `MacaroniKid-Group${group}`, error: 'runner script not found' }], skipped: [] };
-  }
+  const argv = [scriptPath, '--group', String(group)];
+  if (holdingLock) argv.push('--no-lock');
 
-  log(`\n${'='.repeat(60)}`);
-  log(`🍝 Running MacaroniKid scrapers for Group ${group} (macaroni-runner-group${group}.js)`);
-  log(`${'='.repeat(60)}\n`);
-
-  const spawnStartedAt = Date.now();
-  const result = spawnSync(process.execPath, [scriptPath], {
-    cwd: __dirname,
-    stdio: 'inherit',
-  });
+  log(`🍝 Delegating MacaroniKid Group ${group} to macaroni-daily-runner.js`);
+  const result = spawnSync(process.execPath, argv, { cwd: __dirname, stdio: 'inherit' });
 
   if (result.error) {
-    log(`❌ Failed to launch macaroni-runner-group${group}.js: ${result.error.message}`, 'error');
     return { success: [], failed: [{ success: false, name: `MacaroniKid-Group${group}`, error: result.error.message }], skipped: [] };
   }
-
-  const ok = result.status === 0;
-  log(`${ok ? '✅' : '❌'} macaroni-runner-group${group}.js finished with exit code ${result.status}`);
-
-  // The child writes its real per-state results here right before exiting. Read them
-  // back so the end-of-run recap lists MacaroniKid-FL, MacaroniKid-NY, ... exactly like
-  // every other scraper. Before this existed the parent synthesised one stats-less
-  // `MacaroniKid-Group${group}` entry, which formatSummaryRow() rendered as
-  // "⚠️  MacaroniKid-GroupN  0  0  0  0  ?" — a warning marker on a group that had just
-  // scraped thousands of events. That false row appeared on all 10 runs between
-  // 2026-08-08 and 2026-08-22, so a genuinely dead group would have looked identical.
-  const resultsPath = path.join(__dirname, 'logs', `macaroni-group${group}-results.json`);
-  try {
-    const raw = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-    // Only trust a file this run actually produced — a stale one from a previous night
-    // would report yesterday's numbers as today's.
-    if (new Date(raw.finishedAt).getTime() >= spawnStartedAt) {
-      const success = Array.isArray(raw.success) ? raw.success : [];
-      const failed = Array.isArray(raw.failed) ? raw.failed : [];
-      log(`   Read back ${success.length} succeeded / ${failed.length} failed state(s) from ${path.basename(resultsPath)}`);
-      return { success, failed, skipped: Array.isArray(raw.skipped) ? raw.skipped : [] };
-    }
-    log(`⚠️  ${path.basename(resultsPath)} is stale (finishedAt ${raw.finishedAt}) — falling back to exit-code-only result`, 'error');
-  } catch (err) {
-    log(`⚠️  Could not read ${path.basename(resultsPath)}: ${err.message} — falling back to exit-code-only result`, 'error');
-  }
-
-  // Fallback: no readable results file (older child, crash before write). formatSummaryRow()
-  // branches on r.success, so the entry must set it explicitly.
-  return ok
+  // Per-state summary rows are written by the group runner child itself; the
+  // exit-code result here only feeds this parent's recap totals.
+  return result.status === 0
     ? { success: [{ success: true, name: `MacaroniKid-Group${group}` }], failed: [], skipped: [] }
     : { success: [], failed: [{ success: false, name: `MacaroniKid-Group${group}`, error: `exit code ${result.status}` }], skipped: [] };
 }
@@ -533,11 +524,11 @@ async function main() {
 FunHive Local Scraper Runner
 
 Usage:
-  node local-scraper-runner.js                     # Run today's group (including Macaroni Kid)
+  node local-scraper-runner.js                     # Run today's group (regular scrapers only)
   node local-scraper-runner.js --group 1           # Run specific group (1, 2, or 3)
   node local-scraper-runner.js --scraper LibCal-MD # Run specific scraper
-  node local-scraper-runner.js --macaroni          # Run only Macaroni Kid for today's group
-  node local-scraper-runner.js --no-macaroni       # Run today's group WITHOUT Macaroni Kid
+  node local-scraper-runner.js --macaroni          # Delegate to macaroni-daily-runner.js for today's group
+  node local-scraper-runner.js --no-macaroni       # (deprecated no-op: this is now the default; MacaroniKid is the FunHive-Macaroni task)
   node local-scraper-runner.js --all               # Run ALL scrapers (slow!)
   node local-scraper-runner.js --resume            # Resume from last checkpoint
   node local-scraper-runner.js --dry-run           # Preview without running
@@ -570,6 +561,7 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
   logSummary(SUMMARY_TABLE_DIVIDER);
 
   let results;
+  let releaseLock = null;
 
   try {
     if (options.scraper) {
@@ -577,15 +569,19 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
       results = await runSingleScraper(options.scraper, options);
 
     } else if (options.macaroniOnly) {
-      // Run only Macaroni Kid scrapers for today's group
+      // Delegate to macaroni-daily-runner.js, which owns MacaroniKid group
+      // selection, completion bookkeeping and the run lock (it acquires the
+      // lock itself — this parent must NOT also hold it, or they deadlock).
       const dayOfMonth = new Date().getDate();
       const todayGroup = options.group || getDayGroup(dayOfMonth);
-      log(`📅 Today is day ${dayOfMonth} → Group ${todayGroup} (Macaroni Kid only)`);
-      results = await runMacaroniGroup(todayGroup, options);
+      log(`📅 Today is day ${dayOfMonth} → Group ${todayGroup} (Macaroni Kid only — delegating)`);
+      results = await delegateMacaroniRun(todayGroup, options);
 
     } else if (options.all) {
       // Run all groups (regular + Macaroni Kid)
       log('⚠️  Running ALL scrapers (including Macaroni Kid) - this will take many hours!');
+      releaseLock = await acquireRunLock('local-scraper-runner --all', { log: (m) => log(m) });
+      process.on('exit', releaseLock);
       results = { success: [], failed: [], skipped: [] };
 
       for (let group = 1; group <= 3; group++) {
@@ -594,9 +590,12 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
         results.success.push(...groupResults.success);
         results.failed.push(...groupResults.failed);
         results.skipped.push(...groupResults.skipped);
+        // Completion = the regular list reached its end (2026-08-31 semantics,
+        // see group-catchup.js header). MacaroniKid records its own ledger.
+        if (!options.dryRun) recordGroupCompletion(group);
 
-        // Run Macaroni Kid scrapers
-        const mkResults = await runMacaroniGroup(group, options);
+        // Delegate Macaroni Kid; we hold the lock, so the child must skip it.
+        const mkResults = await delegateMacaroniRun(group, options, { holdingLock: true });
         results.success.push(...mkResults.success);
         results.failed.push(...mkResults.failed);
         results.skipped.push(...mkResults.skipped);
@@ -609,6 +608,8 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
         process.exit(1);
       }
       results = { success: [], failed: [], skipped: [] };
+      releaseLock = await acquireRunLock(`local-scraper-runner --group ${options.group}`, { log: (m) => log(m) });
+      process.on('exit', releaseLock);
 
       // Run regular scrapers for group
       const groupResults = await runScraperGroup(options.group, options);
@@ -616,32 +617,36 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
       results.failed.push(...groupResults.failed);
       results.skipped.push(...groupResults.skipped);
 
-      // Run Macaroni Kid for group (unless --no-macaroni)
-      if (!options.noMacaroni) {
-        const mkResults = await runMacaroniGroup(options.group, options);
-        results.success.push(...mkResults.success);
-        results.failed.push(...mkResults.failed);
-        results.skipped.push(...mkResults.skipped);
+      // An explicit --group run is how a starved group gets caught up by hand,
+      // so it MUST count as a completion. Since 2026-08-31 completion means
+      // "the REGULAR list reached its end" (see group-catchup.js header) —
+      // MacaroniKid is a separate task with its own ledger, so it no longer
+      // gates this. A run killed mid-list never reaches this line, which is
+      // the whole point of the mechanism.
+      if (!options.dryRun) recordGroupCompletion(options.group);
 
-        // An explicit --group run is how a starved group actually gets caught
-        // up by hand, so it MUST count as a completion — otherwise the group
-        // stays marked starved, and the next scheduled run helpfully repeats
-        // the ~30h of work that was just done instead of advancing to the
-        // group whose turn it really is. Recorded only when the MacaroniKid
-        // tail ran: with --no-macaroni the group is not actually complete, and
-        // a run killed before this line never reaches it, which is the whole
-        // point of the mechanism. Added 2026-08-20.
-        recordGroupCompletion(options.group);
+      if (options.noMacaroni) {
+        log('ℹ️  --no-macaroni is now the default: MacaroniKid runs as its own task (FunHive-Macaroni). Flag ignored.');
       }
 
     } else {
-      // Run today's group (default) - includes Macaroni Kid
+      // Run today's group (default). REGULAR SCRAPERS ONLY as of 2026-08-31 —
+      // MacaroniKid runs as its own scheduled task (FunHive-Macaroni), so this
+      // rotation stays well inside its 24h trigger interval and can never eat
+      // the next day's trigger again. See ROTATION-STARVATION-LOG.md.
+      //
+      // The lock is taken BEFORE the day/group is computed: a wait of a few
+      // hours behind an overrunning MacaroniKid run can cross midnight, and
+      // the group choice must reflect the day the run actually starts.
+      releaseLock = await acquireRunLock('local-scraper-runner rotation', { log: (m) => log(m) });
+      process.on('exit', releaseLock);
+
       const dayOfMonth = new Date().getDate();
       const calendarGroup = getDayGroup(dayOfMonth);
 
-      // A group whose run was dropped is never made up by the calendar alone,
-      // and a dropped run is invisible (MultipleInstances=IgnoreNew). Prefer a
-      // starved group so a missed rotation self-heals. See helpers/group-catchup.js.
+      // A group whose run was dropped is never made up by the calendar alone.
+      // Prefer a starved group so a missed rotation self-heals. See
+      // helpers/group-catchup.js.
       const selection = selectGroup(calendarGroup);
       const todayGroup = selection.group;
 
@@ -659,19 +664,15 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
       results.failed.push(...groupResults.failed);
       results.skipped.push(...groupResults.skipped);
 
-      // Run Macaroni Kid scrapers (unless --no-macaroni)
-      if (!options.noMacaroni) {
-        const mkResults = await runMacaroniGroup(todayGroup, options);
-        results.success.push(...mkResults.success);
-        results.failed.push(...mkResults.failed);
-        results.skipped.push(...mkResults.skipped);
-      }
+      // Only a run that reached the END of the group counts as completed — a
+      // killed run never gets here and stays marked starved. Completion means
+      // the REGULAR list finished (2026-08-31 semantics, group-catchup.js
+      // header); the MacaroniKid task keeps its own ledger.
+      if (!options.dryRun) recordGroupCompletion(todayGroup);
 
-      // Only a run that reached the END of the group counts as completed. The
-      // MacaroniKid block is the tail, so a run killed by the 12h execution
-      // limit never gets here — which is exactly what keeps the group marked
-      // starved and eligible for catch-up tomorrow.
-      recordGroupCompletion(todayGroup);
+      if (options.noMacaroni) {
+        log('ℹ️  --no-macaroni is now the default: MacaroniKid runs as its own task (FunHive-Macaroni). Flag ignored.');
+      }
     }
 
     // Print summary

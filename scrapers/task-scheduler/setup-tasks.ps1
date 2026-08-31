@@ -5,7 +5,7 @@
 #   .\scrapers\task-scheduler\setup-tasks.ps1
 #
 # To remove all tasks:
-#   Unregister-ScheduledTask -TaskName "FunHive-Scrapers","FunHive-Monitor","FunHive-DataQuality" -Confirm:$false
+#   Unregister-ScheduledTask -TaskName "FunHive-Scrapers","FunHive-Monitor","FunHive-DataQuality","FunHive-Macaroni" -Confirm:$false
 #
 # 2026-07-12: a bad -DisallowStartIfOnBatteries/-StopIfGoingOnBatteries
 # parameter name (New-ScheduledTaskSettingsSet doesn't have those - the real
@@ -250,6 +250,51 @@ Register-ScheduledTask `
     -ErrorAction Stop | Out-Null
 Write-Host "Registered: FunHive-DataQuality (daily 1:00 PM, fix-all --recent-only)"
 
+# ── Task 4: Daily MacaroniKid pass at 3:00 PM ────────────────────────────────
+# Added 2026-08-31 (ROTATION-STARVATION-LOG.md). This work used to be the TAIL
+# of run-scrapers.bat's rotation, and that is exactly why rotations were being
+# silently deleted: MacaroniKid Group 1 alone takes ~15h, welding it onto an
+# ~11h regular pass made the task ~26h against a 24h trigger, and with
+# MultipleInstances=IgnoreNew + StartWhenAvailable=False the next day's trigger
+# was discarded with no error anywhere (2026-08-26 and 2026-08-29 had no
+# rotation at all; Group 2 ran every 5-6 days instead of every 3).
+#
+# As its own task, MacaroniKid overrunning can delay the next rotation but can
+# never delete it - MultipleInstances is evaluated per task. The two runner
+# processes serialize on scrapers/helpers/run-lock.js: whichever starts second
+# waits (bounded, loud on timeout) instead of being dropped. The waiter runs
+# LATE, never never - the exact inverse of the failure being fixed.
+#
+# WHY 3:00 PM. The Group 1 regular pass (the longest) ends ~2:25 PM; Groups 2/3
+# end late morning. 3:00 PM starts MacaroniKid just after the rotation is
+# normally done, so the lock wait is minutes, not hours, on a typical day.
+#
+# WHY 30h. Longest healthy run is ~15.5h (Group 1) plus a worst-case 8h lock
+# wait = ~23.5h. 30h kills genuinely stuck jobs without terminating healthy
+# ones - the same reasoning as FunHive-Scrapers' 36h note above. If a run does
+# overrun its own next trigger, IgnoreNew drops one MacaroniKid day and the
+# starvation catch-up in macaroni-daily-runner.js (macaroni-last-run.json
+# ledger) repairs it on the following day.
+$action4  = New-ScheduledTaskAction `
+    -Execute "cmd.exe" `
+    -Argument "/c `"$scraperDir\run-macaroni.bat`"" `
+    -WorkingDirectory $scraperDir
+$trigger4 = New-ScheduledTaskTrigger -Daily -At "3:00PM"
+$settings4 = New-ScheduledTaskSettingsSet `
+    -ExecutionTimeLimit (New-TimeSpan -Hours 30) `
+    -Priority 7 `
+    -AllowStartIfOnBatteries `
+    -DontStopIfGoingOnBatteries
+Register-ScheduledTask `
+    -TaskName "FunHive-Macaroni" `
+    -Action $action4 `
+    -Trigger $trigger4 `
+    -Settings $settings4 `
+    -Principal $principal `
+    -Force `
+    -ErrorAction Stop | Out-Null
+Write-Host "Registered: FunHive-Macaroni (daily 3:00 PM, MacaroniKid via macaroni-daily-runner.js - 30h limit)"
+
 # ── Note: com.funhive.eventseries.plist ──────────────────────────────────────
 # local-create-event-series.js does not exist yet.
 # When it is created, add a task here running at 0:30, 6:30, 12:30, 18:30.
@@ -280,9 +325,10 @@ $expectedLimit = @{
     "FunHive-Scrapers"    = New-TimeSpan -Hours 36
     "FunHive-Monitor"     = New-TimeSpan -Hours 1
     "FunHive-DataQuality" = New-TimeSpan -Hours 4
+    "FunHive-Macaroni"    = New-TimeSpan -Hours 30
 }
 $bad = @()
-foreach ($name in @("FunHive-Scrapers", "FunHive-Monitor", "FunHive-DataQuality")) {
+foreach ($name in @("FunHive-Scrapers", "FunHive-Monitor", "FunHive-DataQuality", "FunHive-Macaroni")) {
     $t = Get-ScheduledTask -TaskName $name -ErrorAction Stop
     if ($t.Principal.LogonType -ne $expected.LogonType)                        { $bad += "$name LogonType=$($t.Principal.LogonType) (want $($expected.LogonType))" }
     if ($t.Settings.StopIfGoingOnBatteries -ne $expected.StopIfGoingOnBatteries)         { $bad += "$name StopIfGoingOnBatteries=$($t.Settings.StopIfGoingOnBatteries) (want $($expected.StopIfGoingOnBatteries))" }
@@ -299,15 +345,20 @@ if ($bad) {
     $bad | ForEach-Object { Write-Host "  $_" -ForegroundColor Red }
     throw "Scheduled task settings did not take. See above."
 }
-Write-Host "Verified: all three tasks are S4U, battery-kill disabled, time limits as intended."
+Write-Host "Verified: all four tasks are S4U, battery-kill disabled, time limits as intended."
 
 Write-Host ""
 Write-Host "Done. To verify: Get-ScheduledTask | Where-Object { `$_.TaskName -like 'FunHive*' }"
 Write-Host "Logs will be written to: $logDir"
 Write-Host ""
 Write-Host "NOTE: Task Scheduler itself does not capture stdout/stderr - the .bat files do."
-Write-Host "run-scrapers.bat redirects into logs\scraper-stdout.log and logs\scraper-stderr.log;"
+Write-Host "run-scrapers.bat and run-macaroni.bat both redirect into logs\scraper-stdout.log"
+Write-Host "and logs\scraper-stderr.log (the diagnosis parses per-site lines from there);"
 Write-Host "run-fix-all.bat redirects into logs\fix-all-recent.log."
+Write-Host "FunHive-Scrapers (3:00 AM) and FunHive-Macaroni (3:00 PM) serialize on"
+Write-Host "scrapers\logs\runner.lock - if one is still running when the other starts, the"
+Write-Host "second WAITS (up to 8h, logged) rather than being dropped. That wait is the"
+Write-Host "designed behavior, not a hang."
 Write-Host "FunHive-Monitor (8:00 AM) and FunHive-DataQuality (1:00 PM) both run while the"
 Write-Host "rotation is usually still in progress. That is expected: the monitor only reports"
 Write-Host "current state, and fix-all does DB + geocoding work with no Chrome, so it does not"

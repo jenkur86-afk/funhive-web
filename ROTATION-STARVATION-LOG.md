@@ -52,6 +52,7 @@ more days.
 | 2 | 2026-08-20 | `scripts/seed-group-last-run.js` — re-derives `group-last-run.json` from the runner's own completion lines, after it was found 3 days stale. | Stops a stale-old timestamp making the wrong group eligible. | No recurrence observed. | ✅ Held |
 | 3 | 2026-08-22 | `ExecutionTimeLimit` 12h → 36h; data-quality split into its own `FunHive-DataQuality` task. | Stops Task Scheduler killing the batch mid-run. | Held — no `267014` since. | ✅ Held, but **addressed a different symptom.** 26h fits inside 36h comfortably; the time limit was never the binding constraint. |
 | 4 | 2026-08-31 | `checkRotationStarted()` in `scripts/preflight-diagnosis.js` — parses each of the last 7 `scraper-run-<date>.log` files for a `Running Group N` line. | Surfaces a dropped rotation the day it happens, without inferring from log freshness. | On its first run, immediately reported `2026-08-29=NONE 2026-08-26=NONE`. | ✅ **Detection only — not a fix.** The rotations are still being dropped. |
+| 5 | 2026-08-31 | **The task split (Layers 1+2, the genuine fix).** Layer 1: `helpers/atomic-json.js` (temp+rename JSON state, re-read-before-modify), `helpers/run-lock.js` (bounded, loud, stale-breaking mutex for full-group runs), geocode cache merge-on-write, per-group checkpoint files, `group-catchup.js` completion redefined per pipeline. Layer 2: MacaroniKid removed from the rotation into its own task (`FunHive-Macaroni` 3:00 PM → `macaroni-daily-runner.js`, own `macaroni-last-run.json` ledger + catch-up + same-day guard). `STARVATION_DAYS` kept at 4, argued in `group-catchup.js`. 8/8 in `scripts/test-rotation-safety.js`. **Task registration still pending — needs elevated `setup-tasks.ps1`.** | With both tasks registered: the rotation task's own duration is ≤ regular-pass length (~11.4h max) + a bounded lock wait, always under 24h, so **no rotation trigger is ever discarded again**; MacaroniKid overrun delays the next rotation by hours instead of deleting it; every group advances on a ~3-day cadence; preflight shows no `NONE` days. | *(pending — fill in after a full 3-day cycle with `FunHive-Macaroni` registered)* | ⏳ code proven by unit suite; scheduling effect **unobserved** |
 
 ### Why #1 half-works, and why that matters
 
@@ -94,20 +95,32 @@ discarded trigger is never retried: it is gone permanently. Verified against the
 registration 2026-08-31, along with `RestartCount = 0` and a single daily trigger
 (03:00, `DaysInterval=1`) with no repetition.
 
-So, falsifiably:
+So, falsifiably (revised the same evening after intervention #5 landed — the code deployed
+2026-08-31 ~21:00Z changes what happens from 09-02 onward, but NOT 09-01, because the
+in-flight run executes pre-split code from memory):
 
-- **2026-09-01** — the MacaroniKid tail (started 18:25:55Z, measured 14.7-15.5h) should still
-  be running at the 07:00Z trigger, which is therefore **discarded: no rotation at all that
-  day**. Note what is lost with it — `selectGroup(getDayGroup(1), 2026-09-01T07:00Z)` returns
-  `{group: 2, reason: "Group 2 has not completed in 4.1 days"}`, so the catch-up will be
-  **armed and will not fire**, purely because nothing starts to execute it.
-- **2026-09-02** — day 2 is Group 2's calendar turn, and with 09-01 dropped nothing is in
-  flight, so the trigger should fire cleanly and **Group 2 should run** — about 5 days after
-  its last completion, rescued by the calendar rather than by the catch-up.
+- **2026-09-01** — the old-code MacaroniKid tail (started 18:25:55Z, measured 14.7-15.5h)
+  should still be running at the 07:00Z trigger, which is therefore **discarded: no rotation
+  at all that day**. Nothing deployed today can prevent this — the overrunning task instance
+  predates the deploy. The preflight will show `2026-09-01=NONE`.
+- **2026-09-02** — day 2 is Group 2's calendar turn, nothing is in flight, so the trigger
+  fires and **Group 2 runs under NEW code**: regular scrapers only, completing in ~7h
+  instead of ~22h, recording completion to `group-last-run.json` at the END OF THE REGULAR
+  LIST (new semantics). Its run log will carry a lock-acquisition line.
+- **From the first day `FunHive-Macaroni` is registered** (pending: needs elevated
+  `setup-tasks.ps1`): the 3:00 PM trigger selects a group against `macaroni-last-run.json`
+  — given the seeded ledger, the most-starved group wins, which is currently Group 2
+  (last MacaroniKid completion 2026-08-28T05:05Z). A transition shim in
+  `macaroni-daily-runner.js` (delete after 2026-09-02) stops it duplicating Group 1's
+  pass on 09-01, which the old-code run will have just finished that morning.
+- **Across the first full cycle with both tasks registered**: zero `NONE` days in the
+  preflight, all three groups ≤ ~3.5d in `group-last-run.json`, all three MacaroniKid
+  groups ≤ ~4d in `macaroni-last-run.json`, and the audit files reach `Cycle complete`.
 
-If a rotation *does* start on 09-01, the ~15h tail estimate is wrong and the duration model
-needs revisiting. If Group 2 does *not* run on 09-02, something beyond this mechanism is
-also broken.
+If a rotation starts on 09-01, the ~15h tail estimate was wrong and the duration model
+needs revisiting. If Group 2 does not run on 09-02, something beyond this mechanism is
+broken. If `NONE` days continue AFTER both tasks are registered, intervention #5 has
+failed and its ledger row must say so.
 
 ---
 
@@ -140,7 +153,30 @@ once must make all four concurrency-safe first.
 Note the corollary: **option 3 is serialized by construction** — a deferred trigger fires
 only after the running instance exits — so it sidesteps all four. That is its main virtue.
 
-## Options, in the order I would take them
+## DECIDED 2026-08-31 — option 1 implemented, with serialization replacing spreading
+
+Intervention #5 implements option 1's split, but **serializes on the run lock instead of
+re-partitioning MacaroniKid's states across the cycle**. This is a deliberate deviation
+from the spreading half, argued on the arithmetic:
+
+- Spreading MacaroniKid **evenly** (~14.5h/day) does not fit: Group 1 days would carry
+  11.4h + 14.5h = 25.9h — still over 24h. Only an ANTI-balanced partition (least
+  MacaroniKid on Group 1 days) fits, and it is fragile: measured MacaroniKid durations
+  swing 60% between runs (G3: 12.8h → 8.1h), so any static partition drifts back over
+  the line without anyone noticing — recreating this exact defect with extra steps.
+- Serialization is robust to arbitrary duration drift: the worst case is a run starting
+  hours late (visible as a logged lock wait), never a run being deleted. The rotation
+  task's own duration stays under 24h regardless of what MacaroniKid does, so its trigger
+  always fires; total cycle load (~66h of work per 72h) leaves slack for the backlog to
+  drain, and if load ever grows past capacity the symptom is growing lock waits in the
+  logs — detectable — rather than silent drops.
+- Single-writer on the shared files becomes guaranteed ALWAYS (mutex), not just "in
+  normal operation" (spreading) — strictly stronger on the integrity requirement.
+
+If future measurements show lock waits growing without bound, spreading (anti-balanced)
+is the follow-up lever; it layers cleanly on top of the split.
+
+## Options, in the order they were evaluated (pre-decision record)
 
 1. **Move the MacaroniKid tail to its own scheduled task, AND spread it across the cycle's
    three days.** Both halves are needed; the second is easy to miss.

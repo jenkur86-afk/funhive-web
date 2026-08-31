@@ -245,6 +245,58 @@ function checkRotationStarted() {
   } else {
     pass('rotation groups current', detail);
   }
+
+  checkMacaroniTask(logDir);
+}
+
+// MacaroniKid became its own scheduled task on 2026-08-31 (FunHive-Macaroni →
+// macaroni-daily-runner.js — see ROTATION-STARVATION-LOG.md), which means it
+// can now be dropped or stall INDEPENDENTLY of the rotation, and nothing else
+// watches it. Two artifacts prove a day's run: the per-day
+// macaroni-daily-<date>.log this runner writes, and macaroni-last-run.json's
+// per-group completion timestamps. Same design rule as checkRotationStarted:
+// read the artifact, never infer from the freshness of a shared log an
+// overrunning neighbour also writes to.
+//
+// Gated on first use: until the owner registers the task (setup-tasks.ps1,
+// elevated) no daily log can exist, and warning every day about a task that is
+// known-pending would train the reader to ignore the check. One explicit
+// "appears unregistered" WARN carries that state instead.
+function checkMacaroniTask(logDir) {
+  const anyDailyLog = fs.existsSync(logDir) &&
+    fs.readdirSync(logDir).some(f => /^macaroni-daily-\d{4}-\d{2}-\d{2}\.log$/.test(f));
+
+  if (!anyDailyLog) {
+    warn('macaroni task running',
+      'no macaroni-daily-<date>.log exists yet — the FunHive-Macaroni task appears unregistered. ' +
+      'Run scrapers\\task-scheduler\\setup-tasks.ps1 from an ELEVATED PowerShell to register it; ' +
+      'until then NO MacaroniKid scraping happens at all (the rotation no longer runs it).');
+    return;
+  }
+
+  const state = (() => {
+    try { return JSON.parse(fs.readFileSync(path.join(logDir, 'macaroni-last-run.json'), 'utf8')); }
+    catch (e) { return null; }
+  })();
+  if (!state) {
+    warn('macaroni task running', 'macaroni-last-run.json missing or unreadable — cannot tell which MacaroniKid group is starved');
+    return;
+  }
+  const ages = [1, 2, 3].map(g => {
+    const last = state[String(g)];
+    return { g, days: last ? (Date.now() - Date.parse(last)) / 86400000 : null };
+  });
+  const detail = ages.map(a => `G${a.g}=${a.days === null ? '?' : a.days.toFixed(1) + 'd'}`).join(' ');
+  // Same 4.5d line as the rotation check above: turns are 3 days apart and a
+  // run plus its bounded lock wait can push a completion ~1 day late.
+  const behind = ages.filter(a => a.days !== null && a.days > 4.5);
+  if (behind.length) {
+    warn('macaroni task running',
+      `MacaroniKid ${behind.map(a => `Group ${a.g} has not completed in ${a.days.toFixed(1)} days`).join('; ')} ` +
+      `(${detail}). Check FunHive-Macaroni's LastTaskResult and logs/macaroni-daily-<date>.log; see ROTATION-STARVATION-LOG.md.`);
+  } else {
+    pass('macaroni task running', detail);
+  }
 }
 
 // The data-quality pass is the one scheduled dependency with no other alarm on it.

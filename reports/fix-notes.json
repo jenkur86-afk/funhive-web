@@ -173,15 +173,21 @@
       "added": "2026-08-31"
     },
     "GROUP-2-ROTATION-STARVED": {
-      "what": "DIAGNOSED AND TRACKED, ROOT CAUSE NOT FIXED. Full history, mechanism, intervention ledger and standing prediction now live in ROTATION-STARVATION-LOG.md at repo root - read that before proposing another fix, and report against it every run (diagnosis report item 14). Summary: a rotation takes ~26h (11.4h regular + ~15h MacaroniKid tail) against a 24h trigger interval, and FunHive-Scrapers is MultipleInstances=IgnoreNew, so every overrunning run silently discards the next day trigger. Two of the last 7 days had no rotation at all (2026-08-26, 2026-08-29), both Group 2 turns.",
-      "expect": "STANDING PREDICTION for 2026-09-01: today Group 1 entered its MacaroniKid tail at 18:25:55Z; at the measured 14.7-15.5h that finishes 09:07Z-09:56Z, past the 07:00Z trigger, so Group 2 should be dropped a THIRD time. If Group 2 does run on 09-01 the prediction was wrong and the duration model needs revisiting. group-catchup.js will not rescue it: STARVATION_DAYS=4 against a 3-day rotation means it only fires after TWO consecutive missed turns (which is why it fired once, at 5.0 days, on 2026-08-27).",
-      "confirm": "node scripts/preflight-diagnosis.js   (read the \"rotation started today\" and \"recent rotations all started\" lines)",
+      "what": "ROOT CAUSE FIXED IN CODE 2026-08-31 (intervention #5, ROTATION-STARVATION-LOG.md): MacaroniKid split into its own FunHive-Macaroni task, full-group runs serialized on scrapers/logs/runner.lock, shared state files made atomic/merge-safe. ONE OWNER ACTION OUTSTANDING: run scrapers\\task-scheduler\\setup-tasks.ps1 from an ELEVATED PowerShell to register FunHive-Macaroni. Until then NO MacaroniKid scraping happens at all - the rotation no longer runs it.",
+      "expect": "STANDING PREDICTIONS (ledger, Current state section): 09-01 rotation trigger is still discarded (the overrunning task instance predates the deploy - nothing shipped today can save it); 09-02 Group 2 runs under new code in ~7h with a lock-acquisition line in its log; once FunHive-Macaroni is registered, zero NONE days in the preflight across a full 3-day cycle, all rotation groups <=3.5d and all MacaroniKid groups <=4d in their ledgers, and the audit files reach Cycle complete. If NONE days continue AFTER registration, intervention #5 has failed - say so in its ledger row.",
+      "confirm": "node scripts/preflight-diagnosis.js  (rotation lines + the new \"macaroni task running\" check); node scripts/test-rotation-safety.js  (8/8); Get-ScheduledTaskInfo -TaskName FunHive-Macaroni",
       "added": "2026-08-31"
     },
     "KIDSOUTANDABOUT-VENUE-NEWLINES": {
       "what": "OPEN DATA BUG, tooling side already fixed. Several KidsOutAndAbout-DMV rows store a multi-line venue ending \"\\n\\n            See map: Google Maps\" - page chrome plus embedded newlines, where venue should be a clean name. The audit builders now sanitize cells so this can no longer truncate a Markdown table, but the bad venue values are still in the database and still render as venue names.",
       "expect": "The scraper should stop capturing the 'See map: Google Maps' block into venue, and existing rows need their venue re-derived. Neither has been done.",
       "confirm": "Query events where scraper_name like 'KidsOutAndAbout-DMV%' and venue contains a newline or 'See map'",
+      "added": "2026-08-31"
+    },
+    "MACARONI-TASK-UNREGISTERED": {
+      "what": "BLOCKING OWNER ACTION from the 2026-08-31 rotation split: the FunHive-Macaroni scheduled task exists only in setup-tasks.ps1 and could not be registered from the non-elevated work session. MacaroniKid coverage (43 state sites) is fully stopped until it is registered - the rotation deliberately no longer runs it.",
+      "expect": "Owner runs, from an ELEVATED PowerShell: cd C:\\dev\\funhive-web\\scrapers\\task-scheduler; .\\setup-tasks.ps1 - it re-asserts all four tasks idempotently and verifies settings on read-back. First FunHive-Macaroni fire is the next 3:00 PM after registration; its transition shim prevents duplicating Group 1 on 09-01. Delete this entry once Get-ScheduledTaskInfo -TaskName FunHive-Macaroni shows a LastRunTime.",
+      "confirm": "Get-ScheduledTaskInfo -TaskName FunHive-Macaroni | Select LastRunTime,LastTaskResult",
       "added": "2026-08-31"
     }
   },

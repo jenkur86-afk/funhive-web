@@ -30,6 +30,26 @@ try {
   persistentCache = {};
 }
 
+// Write the cache MERGED with whatever is on disk right now, atomically.
+//
+// The old code wrote this process's in-memory object over the whole file.
+// With one runner process that was merely crash-unsafe; with the 2026-08-31
+// task split (rotation and MacaroniKid as separate tasks, plus hand-runs)
+// it is a lost-update bug: last writer wins and every geocode the OTHER
+// process paid rate-limited Nominatim calls for is silently discarded.
+// Geocode results never change for a given key, so a key-union merge is
+// always correct — disk entries this process never saw are kept, and this
+// process's entries win on any (harmless) overlap. The merged result is also
+// adopted in memory so later saves don't resurrect the pre-merge view, and
+// the write goes through temp+rename so a killed process can't leave a
+// truncated cache (see helpers/atomic-json.js).
+const { readJsonSafe, writeJsonAtomic } = require('./atomic-json');
+function mergeAndWriteCache() {
+  const onDisk = readJsonSafe(CACHE_FILE, {});
+  persistentCache = Object.assign(onDisk, persistentCache);
+  writeJsonAtomic(CACHE_FILE, persistentCache, { compact: true });
+}
+
 // Save persistent cache to disk (debounced)
 let savePending = false;
 function savePersistentCache() {
@@ -37,7 +57,7 @@ function savePersistentCache() {
   savePending = true;
   setTimeout(() => {
     try {
-      fs.writeFileSync(CACHE_FILE, JSON.stringify(persistentCache, null, 0));
+      mergeAndWriteCache();
     } catch (e) {
       console.warn('⚠️ Failed to save geocode cache:', e.message);
     }
@@ -48,7 +68,7 @@ function savePersistentCache() {
 // Force-save cache (call at end of scraper run)
 function flushGeocodeCache() {
   try {
-    fs.writeFileSync(CACHE_FILE, JSON.stringify(persistentCache, null, 0));
+    mergeAndWriteCache();
     console.log(`📍 Saved ${Object.keys(persistentCache).length} geocode results to cache`);
   } catch (e) {
     console.warn('⚠️ Failed to flush geocode cache:', e.message);
