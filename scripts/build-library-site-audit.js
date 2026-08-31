@@ -37,6 +37,19 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 
+/**
+ * Sanitize one value for a Markdown table cell. See the twin of this function in
+ * build-age-range-audit.js for the incident: a pipe ends the cell, but a NEWLINE
+ * ends the whole table, and every row after the first offender is silently
+ * dropped by the consumer with no error. Escaping pipes alone is not enough.
+ */
+function cell(value) {
+  return String(value == null ? '' : value)
+    .replace(/\s+/g, ' ')
+    .replace(/\|/g, '/')
+    .trim() || '—';
+}
+
 const args = process.argv.slice(2);
 const sinceArg = args.find(a => a.startsWith('--since='));
 const outArg = args.find(a => a.startsWith('--out='));
@@ -134,7 +147,7 @@ async function main() {
   out.push(`| Library Website | State | Scraper | Events Found |`);
   out.push(`|---|---|---|---|`);
   for (const r of list) {
-    out.push(`| ${r.name.replace(/\|/g, '/')} | ${r.state || '—'} | ${r.scraper} | ${r.count} |`);
+    out.push(`| ${cell(r.name)} | ${cell(r.state)} | ${cell(r.scraper)} | ${r.count} |`);
   }
 
   const body = out.join('\n');

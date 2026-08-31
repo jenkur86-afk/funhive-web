@@ -39232,3 +39232,2135 @@ Measured across the full corpus (126,840 rows): **924 facility rows over 246 dis
 | Monmouth County Library — Eastern Branch | MacaroniKid-NJ-tintonfalls | 18 | 21 | 86% |
 | Leonard Brown House | CivicRec-Parks-Eastern-portsmouth-ri | 18 | 20 | 90% |
 | Ross Community Center | CivicRec-Parks-Eastern-ross-township | 18 | 20 | 90% |
+
+## 2026-08-31
+
+Group 1 rotation, run window opens 2026-08-31T07:00:01Z. 12,559 fresh rows across **1,948 individual sites** from 120 scraper identities; **158 sites cross the >=70% All-Ages flag**, against 26 in the previous section. **That jump is composition, not regression** — this is the RecDesk-heavy Group 1 window (`RecDesk-Parks` alone found 22,038 events today), where `## 2026-08-30` was CivicRec plus two MacaroniKid states. 149 of the 158 flags are `RecDesk-Parks-*` sites. The rotation was still running when this section was built (50 of 51 scrapers done), so anything after it lands in the next section.
+
+**A third defect was in this audit's own tooling and is fixed too.** The first build of this section reported 1,913 sites and parsed back as **985** — 928 rows silently lost. Cause: several `KidsOutAndAbout-DMV` rows carry a multi-line venue ending `"\n\n            See map: Google Maps"`, and a newline inside a Markdown cell ends the whole table, so every row after the first offender was dropped by `loadAges()` and by the report generator with no error anywhere. Both builders escaped pipes but not whitespace. `build-age-range-audit.js` and `build-library-site-audit.js` now route every cell through a shared `cell()` that collapses whitespace as well as escaping pipes. This is the same silent producer/consumer class the diagnosis preflight was written to catch, arriving through a data value rather than a column-layout change. The library builder's output was unaffected (619 rows, no broken lines) — only the age audit carried a venue with a newline in it. **The underlying data bug is still open**: `KidsOutAndAbout-DMV` should not be storing page chrome and newlines in `venue`.
+
+### Two defects found and fixed at save time
+
+**1. The venue was being repeated inside the title, on 14.4% of the whole corpus.** RecDesk's calendar API returns `EventName` with the facility already appended — `"Lap Swim (Chris Wicker Aquatic Center)"` alongside a separate `FacilityName` of `"Chris Wicker Aquatic Center"` — confirmed by calling the live `marysvilleoh` tenant directly, so this is upstream data rather than a scraper bug. The scraper stored the whole string as the title and the facility again as the venue. Measured over 126,868 rows: **18,239 titles (14.4%) end in a parenthetical that is exactly their own venue**, 18,142 of them RecDesk (9,771 `RecDesk-Parks-*` + 8,371 `RecDeskParks-*`), plus 89 `LocalistParks-IN` and a handful elsewhere.
+
+Fixed centrally rather than in the RecDesk scraper, since several unrelated families show the same shape: `stripVenueSuffixFromTitle()` in `supabase-adapter.js`, wired into both `saveEvent()` and `flattenEvent()`. **The exact-match requirement is the whole safety argument** — only a byte-for-byte (whitespace- and case-insensitive) repeat of that row's own venue is removed, so nothing can be lost; the venue column already carries it. Nesting is handled by scanning back for the matching open paren rather than by regex, because real facility names contain parentheses: `"Fall Ball (I470 Complex-Field #3 (Lisa's Field))"` and `"CFC (LCAP - Multipurpose Field 8 (Natural Grass))"` both round-trip correctly where `/\(([^()]+)\)$/` would not. Backfilled via a new Step 1d in `scripts/fix-venue-title-quality.js`.
+
+**2. Youth-sport age notation (`10U` / `U12`) was invisible to the age detector.** `detectAgeRange()` returned `null` for every one of `10U`, `U12`, `8U`, `14U`, `18U`, `U10`. Measured over the corpus: **539 rows carry the notation and 422 of them sat in All Ages**, concentrated in `RecDesk-Parks-*`, `RecDeskParks-*` and `CivicRec-Parks-Eastern-*` — `"Mitts Fastpitch 10U"`, `"FALL RVYSA Youth Soccer 13U"`, `"U11 Girls Inter-County Soccer League"`, `"Queen Bee's 9U Practice"`.
+
+The new rule is title-only and clamps N to 4..19. Both constraints were measured, not assumed: scanning descriptions as well adds exactly **one** genuine hit corpus-wide while reopening the band-name reading, and the only real false positive in 126,866 rows is the band U2 (`"The Ultimate Tribute to U2"`, `"Unforgettable Fire U2 Tribute Band"`), every instance at N=2. Scanning for the first *in-range* token rather than the first token is also load-bearing — `"Danville Soccer Club Fall Recreational Soccer U2-U7"` is a real soccer title that must resolve on U7. It emits `${N-1}-${N}` rather than `0-${N}` because `normalizeAgeRange()` buckets by the **lower** bound, so `0-10` would file a 10-and-under baseball team under Babies & Toddlers; the upper bound caps at 18 because `normalizeAgeRange("18-18")` returns Adults and an 18U team is teens. `scripts/test-age-detection.js` grew from 83 to 94 cases, four of them negative controls; the suite passes.
+
+**Neither fix is claimed to clear the RecDesk flag list.** Most flagged RecDesk titles carry no age signal at all (`"Lap Swim"`, `"KPRD Afterschool!"`, `"Practice Justin"`), and a large share of the 100%-All-Ages venues are ballfield and gym *reservations* by named private teams rather than public family programming — the same class as the CivicRec facility-inventory finding in `## 2026-08-30`, but reaching the database through a different shape. That remains **open and unmeasured**.
+
+| Site | Scraper | All Ages | Babies 0-2 | Preschool 3-5 | Kids 6-8 | Tweens 9-12 | Teens 13-18 | Total | Link |
+|---|---|---|---|---|---|---|---|---|---|
+| Edgewater Library | AACPL | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Annapolis Library | AACPL | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Erlanger Branch | BiblioCommons-KY-kentonlibrary | 2 | 2 | 0 | 1 | 0 | 0 | 5 | [cal](https://kentonlibrary.bibliocommons.com/v2/events) |
+| Independence Branch | BiblioCommons-KY-kentonlibrary | 0 | 1 | 0 | 2 | 0 | 0 | 3 | [cal](https://kentonlibrary.bibliocommons.com/v2/events) |
+| Pemberton Library | BiblioCommons-NJ-bclsnj | 3 | 1 | 1 | 2 | 0 | 0 | 7 | [cal](https://bclsnj.bibliocommons.com/v2/events) |
+| Evesham Library | BiblioCommons-NJ-bclsnj | 2 | 2 | 0 | 0 | 0 | 2 | 6 | [cal](https://bclsnj.bibliocommons.com/v2/events) |
+| Burlington County Library | BiblioCommons-NJ-bclsnj | 0 | 0 | 0 | 4 | 0 | 0 | 4 | [cal](https://bclsnj.bibliocommons.com/v2/events) |
+| Howell Branch | BiblioCommons-VA-librarypoint | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://librarypoint.bibliocommons.com/v2/events) |
+| Salem Church Branch | BiblioCommons-VA-librarypoint | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://librarypoint.bibliocommons.com/v2/events) |
+| Cooper Branch | BiblioCommons-VA-librarypoint | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://librarypoint.bibliocommons.com/v2/events) |
+| Fredericksburg Branch | BiblioCommons-VA-librarypoint | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://librarypoint.bibliocommons.com/v2/events) |
+| Orlando Repertory Theatre | ChildrensTheater-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Palace Theatre | ChildrensTheater-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Main Library Franklin | CivicEngage-Libraries-wcpltn | 1 | 6 | 8 | 12 | 0 | 0 | 27 | [cal](https://www.wcpltn.org/calendar.aspx) |
+| Downtown | Communico-CT-hplct | 4 | 0 | 0 | 0 | 0 | 3 | 7 | [cal](https://programs.hplct.org/events) |
+| Albany Library | Communico-CT-hplct | 0 | 0 | 0 | 0 | 0 | 7 | 7 | [cal](https://programs.hplct.org/events) |
+| Hartford Public Library's Downtown Library | Communico-CT-hplct | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://programs.hplct.org/events) |
+| Barbour Library | Communico-CT-hplct | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://programs.hplct.org/events) |
+| Anacostia Neighborhood Library | Communico-DC-dclibrary | 4 | 0 | 0 | 0 | 0 | 1 | 5 | [cal](https://dclibrary.libnet.info/events) |
+| Northwest One Neighborhood Library | Communico-DC-dclibrary | 0 | 0 | 0 | 2 | 0 | 1 | 3 | [cal](https://dclibrary.libnet.info/events) |
+| Parklands-Turner Neighborhood Library | Communico-DC-dclibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://dclibrary.libnet.info/events) |
+| Martin Luther King Jr. Memorial Library - Central Library | Communico-DC-dclibrary | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://dclibrary.libnet.info/events) |
+| Capitol View Neighborhood Library | Communico-DC-dclibrary | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://dclibrary.libnet.info/events) |
+| Shepherd Park (Juanita E. Thornton) Neighborhood Library | Communico-DC-dclibrary | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [cal](https://dclibrary.libnet.info/events) |
+| Chevy Chase Neighborhood Library | Communico-DC-dclibrary | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Woodridge Neighborhood Library | Communico-DC-dclibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Northeast Neighborhood Library | Communico-DC-dclibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Cleveland Park Neighborhood Library | Communico-DC-dclibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Southwest Neighborhood Library | Communico-DC-dclibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Bellevue (William O. Lockridge) Neighborhood Library | Communico-DC-dclibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Sharon Forks Library | Communico-NC-forsyth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://forsyth.libnet.info/events) |
+| Denmark Library | Communico-NC-forsyth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://forsyth.libnet.info/events) |
+| Hampton Park Library | Communico-NC-forsyth | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://forsyth.libnet.info/events) |
+| Post Road Library | Communico-NC-forsyth | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://forsyth.libnet.info/events) |
+| Central Library | Communico-VA-chesapeakelibrary | 0 | 0 | 1 | 0 | 0 | 1 | 2 | [cal](https://chesapeakelibrary.libnet.info/events) |
+| Greenbrier Library | Communico-VA-chesapeakelibrary | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://chesapeakelibrary.libnet.info/events) |
+| Major Hillard Library | Communico-VA-chesapeakelibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://chesapeakelibrary.libnet.info/events) |
+| Brambleton Library | Communico-VA-loudoun | 0 | 0 | 0 | 1 | 0 | 3 | 4 | [cal](https://loudoun.libnet.info/events) |
+| Cascades Library | Communico-VA-loudoun | 1 | 1 | 0 | 1 | 0 | 1 | 4 | [cal](https://loudoun.libnet.info/events) |
+| Ashburn Library | Communico-VA-loudoun | 1 | 1 | 0 | 1 | 0 | 0 | 3 | [cal](https://loudoun.libnet.info/events) |
+| Gum Spring Library | Communico-VA-loudoun | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://loudoun.libnet.info/events) |
+| Middleburg Library | Communico-VA-loudoun | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://loudoun.libnet.info/events) |
+| Rust Library | Communico-VA-loudoun | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://loudoun.libnet.info/events) |
+| Online | Communico-VA-loudoun | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://loudoun.libnet.info/events) |
+| Purcellville Library | Communico-VA-loudoun | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://loudoun.libnet.info/events) |
+| Lovettsville Library | Communico-VA-loudoun | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://loudoun.libnet.info/events) |
+| Sterling Library | Communico-VA-loudoun | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://loudoun.libnet.info/events) |
+| Wisconsin State Parks | Drupal-Parks-WI | 8 | 0 | 1 | 0 | 2 | 0 | 11 | [cal](https://dnr.wisconsin.gov) |
+| Restaurant of the Week | Eventbrite-Family-Eastern | 77 | 0 | 0 | 0 | 0 | 0 | 77 | — |
+| The Church of Jesus Christ of Latter-day Saints | Eventbrite-Family-Eastern | 10 | 0 | 0 | 0 | 0 | 0 | 10 | — |
+| Restaurant of the Month | Eventbrite-Family-Eastern | 10 | 0 | 0 | 0 | 0 | 0 | 10 | — |
+| Featured Bar of the Month | Eventbrite-Family-Eastern | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| Event in Springfield | Eventbrite-Family-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Westview Farms Creamery | Eventbrite-Family-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| The Church of Jesus Christ of Latter-Day Saints | Eventbrite-Family-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Event in Madison | Eventbrite-Family-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Bolton Valley Resort | Eventbrite-Family-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Event in Des Moines | Eventbrite-Family-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Event in Hattiesburg | Eventbrite-Family-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Event in Milwaukee | Eventbrite-Family-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Event in Virginia Beach | Eventbrite-Family-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Albany County Historical Association | Eventbrite-Family-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| 276 Laber Rd | Eventbrite-Family-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Event in Huntington | Eventbrite-Family-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| 1200 S Birdneck Rd | Eventbrite-Family-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| ALOE Event Center / Wedding Venue Montgomery, AL | Eventbrite-Family-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| 97 Eddy Rd | Eventbrite-Family-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Event in Bangor | Eventbrite-Family-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Event in Greenville | Eventbrite-Family-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Event in Stamford | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Augusta | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Victor’s Seafood and Steak | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| 325 Chelmsford St | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Charleston | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Science of Spirituality International Meditation Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 1 | 0 | 0 | 2 | — |
+| Milwaukee County Zoo | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Montgomery | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Hamilton Elementary Middle School | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| First Calvary Baptist Church | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| East Harlem Neighborhood Health Action Center | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Hirundo Wildlife Refuge | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Portland | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Knoxville | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| American Mural Project | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Bard and Baker Board Game Cafe | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Bowling Green | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Courtyard by Marriott Bowie | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Essex Free Library | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Rochester | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Duluth Entertainment Convention Center | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Akron | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| WKU Innovation Campus | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| SPACE | Eventbrite-Family-Eastern | 1 | 0 | 0 | 1 | 0 | 0 | 2 | — |
+| Autism United of Wisconsin | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Huntsville Dragway | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Horseneck Beach | Eventbrite-Family-Eastern | 1 | 0 | 0 | 1 | 0 | 0 | 2 | — |
+| Wildwood Elementary/Middle School | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Phoenix Books Rutland | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Saint Paul | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Martin's West | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Arundel Elementary School | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Green Bay | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Charlotte | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Do Care Doula Foundation: Growth Family Resource Center | Eventbrite-Family-Eastern | 1 | 1 | 0 | 0 | 0 | 0 | 2 | — |
+| Cascade Skating Rink | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Dixwell Community House (Q House) | Eventbrite-Family-Eastern | 1 | 1 | 0 | 0 | 0 | 0 | 2 | — |
+| St Francis Children's Center | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| St. Croix Hospice | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Harrisburg | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Hula | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Raleigh | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Indianapolis | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Mechanics' Hall | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Northern Westchester Hospital | Eventbrite-Family-Eastern | 1 | 1 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Huntsville | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Woodlawn Cemetery | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Lewiston | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Annapolis | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Cross Insurance Center | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Fort Adams State Park | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Dover | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Rutland | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in New Haven | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Two Rivers Mansion | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Morgantown | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Birmingham | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Cafe of the Month | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Cincinnati | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Bangor Public Library | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Rockford | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Swansea Public Library | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Iowa City | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Warwick | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Burlington | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| First Parish Unitarian Universalist | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Norfolk | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Cafe of the Day | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Montpelier | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Event in Hartford | Eventbrite-Family-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Eight Sixty Station | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Allen County Public Library - Main | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Heritage Ballroom | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Huntington Bank Arena | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Studio 11 Yoga & Wellness | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Dighton Public Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Unitarian Universalist Society of Amherst | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Arlington's Catering & Historic Venue | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Anthology | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| UPMC Health Plan Neighborhood Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kora Temple | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Somerby Golf Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ronald McDonald House: Cincinnati | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 735 Mapleton Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Beloit Public Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 600 Suncrest Towne Centre Drive 3rd floor | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Durham | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Adam W. Herbert University Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Covenant Woods | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ruth Enlow Library of Garrett County | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Holiday Inn Boston | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mac Mahon Student Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kathleen Clay Edwards Family Branch | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Northwest Family Recreation | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 7679 Seasons Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| SWIRCA & More | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Little Amerricka Amusement Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| K'sone's Thai Dining & Lounge | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| East Orange Elmwood Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lexington Writer's Room | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| United Way of Greater Knoxville | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Alex Grant's Big Cat's Catering, Bartending & Event Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 701 Brickell Key Blvd suite cu1 | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mojo's BoneYard Sports Bar & Grille | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Smugglers' Notch Resort | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Community Support Advocates | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Washington Terrace Community Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Green | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 16819 New Hampshire Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kaara Modern Indian Restaurant | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Legislative Office Building | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Black Bear Inn, Ascend Hotel Collection | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lockwood Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Concord Conservatory of Music | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lux Life Chiropractic | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Huntington Mall | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 6969 Taft St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Macau Kitchen | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Holiday Inn Express & Suites Albany Airport Area - Latham by IHG | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 30 Northwest Ave building a | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Westport Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| RiverPark Place Marina Slip E | Eventbrite-Family-Eastern | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Youth Services Bureau of Illinois Valley Offices | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Jewel City Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kershaw YMCA | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Richmond Harley-Davidson | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2951 W Montrose Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bank of America Chicago Flagship | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hayes Field at Bear Brook State Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Osceola County Housing and Community Services | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Birmingham Zoo | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 3010 Farrow Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Dorset Field Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Miami Children's Museum | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| SOS Shelton | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| DE Turf Sports Complex | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Brea Lu Cafe | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Open Book | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 6110 Lakeside Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bedford Church of the Nazarene | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 3313 Memorial Pkwy SW suite 127 | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2105 Yanceyville St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Gorman Heritage Farm | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hilton Garden Inn Freeport Downtown | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Broad Street Market | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hooksett American Legion, Post 37 | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Subtext Books | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2246 Bennoch Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Park Lanes Bowl | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Peabody Apartments Community Room | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Stardust Ballroom | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Plant and People | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Woodlawn Theatre Bham LLC | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| University of Wisconsin–Madison Arboretum | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Vent Coffee Roasters | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Scandinavian Athletic Club / SAC Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Highland Lodge | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| HÜCK Food and Spirits | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Rid-All Farm & Otter Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Dundee Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| MAPS Air Museum | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kainos Microschool | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Hermon Meadow Golf Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hope Christian Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Deaconess Gateway Hospital -The Pavilion Conference Room | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Alpine Lake Resort | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Franciscan Alliance Farmers Market | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 60 Fir Ave | Eventbrite-Family-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Our Saviour's Lutheran Church - ELCA | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Goldfish Swim School - Manchester | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Dave & Buster's Manchester | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Goldfish Swim School - Richmond West End | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Piedmont Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Artisan's Asylum | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sunset Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 3033 41st St NW | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Burpee Museum of Natural History | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 5208 US-220 | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Regions Hospital - St. Paul | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Third Street Bethel AME Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| President Abraham Lincoln Springfield - a DoubleTree by Hilton Hotel | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bedford Community Wellness Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 13236 Mooresville Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 213 Silver Lake Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Freetown Farm | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Knoxville | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Winslow Memorial Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 600 Staples Dr | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Worcester | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Louisville | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Washington Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1 Dorrance St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 6 Morris St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Flint Street Theater | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| St. Luke Legacy Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Youghiogheny Western Baptist | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Princeton | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Celebration Tree Farm & Wellness Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hyatt Park Elementary School | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Malcolm X College Conference Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sunflower Farm Creamery | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 20 Rock Point Rd, Burlington, VT | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Tri-C Metropolitan Campus | Eventbrite-Family-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| West Indian Social Club of Hartford, Inc | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Farm Fresh Rhode Island | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hilton Garden Inn Cedar Rapids | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Clyde Theatre | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Harro East Ballroom | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2429 Perry St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Day Haus | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Halo at the Point | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Herbert D. Welte Hall - Central Connecticut State University | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Downing-Gross Cultural Arts Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 652 Albany Shaker Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Dupont Hospital Resource Center | Eventbrite-Family-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| The Center For Creative Arts And Play Therapy | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| The Venue on 35th | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Artsome | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Phillips Farms of Cary | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 8000 River Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Frontier Office and Event Space | Eventbrite-Family-Eastern | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Belltower Cultural Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Maat Gathering Place of Healing | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Brothers' Field | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Crowne Plaza Springfield - Convention Ctr by IHG | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Return to Baseline, LLC | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| University of New Haven | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Whitneyville Cultural Commons | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 900 Portsmouth Blvd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hampton University | Eventbrite-Family-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| South County Hospital | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 8902 E 38th St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Life Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| LitArts RI | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Nest Cowork + Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Alabama State University | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Massachusetts Institute of Technology Samberg Conference Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1 Daley Field Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Otter Creek Church - West End | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Outbound Stowe | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Featured of the Month | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1601 Greene St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Knoxville Museum of Art | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Reflection Riding Arboretum & Nature Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Global Family Support Foundation Campus | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Hattiesburg FamilySearch Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| St. Mary Orthodox Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 400 Chesterfield Pkwy | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Blue Cross Arena | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Easterseals Academy Machesney Park Campus | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Newark | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Portland | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Catholic Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Learning Experience - Worcester | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Crowne Plaza Providence-Warwick (Airport) | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 3885 S Perkins Rd ste 7 | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| All Peoples, a Unitarian Universalist Congregation | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Stax Museum of American Soul Music | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Davidson Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| USS ALABAMA Battleship Memorial Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fairhope Civic Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1401 Ballentine Blvd | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Bally's Dover Casino Resort | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| USC Aiken Convocation Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lambeau Field (Please Use the American Family Insurance Entrance) | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| North Liberty Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Swanson Stadium | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pelham Parks & Recreation | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Rockford | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lyman Community Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 16 Black Creek Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Courtland Grand Hotel | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 9620 Water St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Project Share of Carlisle - Food Pantry | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 411 Fountain Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Rural Health Services, Inc. - Clyburn Center for Primary Care | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Maydm Inc. | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Obama Presidential Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Concord | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Westin Baltimore Washington Airport - BWI | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Torrington Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sheraton LaGuardia East Hotel | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Akron Family Restaurant | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| National Peanut Festival Association | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Q Coffee Emporium - Waterbury | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hidden Treasures Mall and Antiques | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Samba Steak & Sushi | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1634 6th Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 494 Event Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Courtyard by Marriott -Jacksonville | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kenton School | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wilder | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The MidTown Tech Hive | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Boone County Fairgrounds | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 315 Clanton Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Homewood Field | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Little Theatre | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| City Market South End Store | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mercy Ecospirituality Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wonderland Books and Toys | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1800 Ave H | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pembroke Pines Country Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 4885 Bill Knight Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Goodyear Arts | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Chattery | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Living Room Memphis | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fresh Anointing Cathedral | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| BWI Airport Marriott | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Quaboag Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 80 Shell St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Food Project's Baker Bridge Farm | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| North Division High School | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| O.Henry Hotel | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| U.S. Space & Rocket Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Liberal Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Joan C. Edwards Stadium | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Northeast Indiana Innovation Community | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1580 Summit Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pineland Farms | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Pittsburgh | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| VyStar Credit Union | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Virginia Museum of Contemporary Art | Eventbrite-Family-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Shaker Heritage Society | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hazelwood Historic House | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cancer & Cardiovascular Research Building | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Holy Wisdom Monastery | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Rosa Parks Museum | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| John Hunt Park - Rocket City Fairgrounds | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 13 School St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| coworkHERS LLC | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 31 Park St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Innovation Barn | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Marksbury Family Branch Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Green Branch Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Indianapolis Baháʼí Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 821 E Washington Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 191 Allen St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| PNC Fairfax Connection | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Mobile | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Prime Produce | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Colchester Meeting House | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wando Mount Pleasant Branch of Charleston County Public Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hale Education, Inc. | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Farm Truck at Hein Farm | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Balance Arts Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mama Flowers Location | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Big E | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Wellness Way - Shrewsbury | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 299 Highland St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Token Springs Elementary School | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 4601 Market St 5th fl | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Randall House | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 30 Daniel Webster Hwy | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kroger Field | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| WORK_SPACE | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Educational Farm At Joppa Hill | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 10132 Harrisburg Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Dunkin' Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Peter Paul Development Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2810: a community gathering place | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Regions Field | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sovereign King Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bethel Wesley United Methodist Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lexington | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2643 N 3rd St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| ChildSavers | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Cedar Rapids | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Leominster Eagles #477 | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 483 Spring St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Yuengling Draft Haus & Kitchen | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 300 Strode Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hamilton Community Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 9950 Durant Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Community Health Center, Inc | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pediatric Associates - Main Street | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sargent's on 2nd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| DoubleTree by Hilton Hotel Pittsburgh - Green Tree | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 3733 S Main St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2301 Putty Hill Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 60 Ellsworth St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Independence Bank | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Boston | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Exeter Healthcare | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Univest Public Media Center, Sesame Street, Bethlehem, PA, USA | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Brook Kitchen + Bar | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Learning Experience - Billerica | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| New York - Manhattan | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Farmington Gardens | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wakeman Town Farm | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 750 S James St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2700 Herman Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Midwest Church of Christ, Family Life Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Thurgood Marshall Academy for Learning and Social Change | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fairgrown Farm | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Family Health Centers - East Broadway | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Church of the Epiphany | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Apple Creek Farm | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1203 Peabody Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Woodstock Bay | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Southington High School | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ivy Bookshop | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Second Wind Arboretum | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Orchard Street Shul | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Nell Grace Southern Cajun Food | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Weissbluth Pediatrics (Northwestern Location) | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 900 Jorie Blvd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| C2Adopt | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Heart And Home Collaborative | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Jackson | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Open Image Studio | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Old Alabama Town | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Naperville | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 701 Oakland Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 10 S Cypress St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fondren Public | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2340 E Magnolia Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Spanish Fort Public Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Memorial Episcopal Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Phanzone Sports Center | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Roxbury - Dorchester MA | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| ZenVida Yoga & Fitness Studio | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1820 County Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in New York | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Fort Lauderdale | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2002 William Kennerty Dr | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 3101 Bayard Park Dr | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 5200 Chestnut Ridge Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 208 Jefferson Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Ari Creative Event Studio | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Freire Charter School Wilmington | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| University Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| McNally Park- Perch Creek Boat Launch | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 109 E 31st St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 15871 City View Dr suite 302 | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 15 Farm View Dr | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Madison Concourse Hotel and Governor’s Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Middleton Public Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Valley Bible Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Jacobson Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| NOVEL South Capitol | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| West Edge | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Indian Lake County Park | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Meyera E. Oberndorf Central Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bon Secours Center for Healthy Living Sarah Garland Jones Center | Eventbrite-Family-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Lot A next to The Trolley Stop | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cannery Hall | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 5 Harmony Ln | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| FoodChain | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lawrence Memorial Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| College of Charleston | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 6417 Fairfield Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 5748 Carmichael Pkwy | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Vanderbilt University | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| iFLY Indoor Skydiving - Charlotte | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 320 Reber St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Annapolis Area Christian School | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Center Point Community Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 401 SE Riverside Dr | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The London Bridge Pub | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Anne's Haven | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| North Shelby Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Riverdale Free Public Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2713 S Hayner Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Schultz Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bookery Manchester | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 120 E Dixmont Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Hidden Temple | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Allentown | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Children's Board of Hillsborough County | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 10405 Main St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2330 62nd St | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Event in Buffalo | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Greg's U-Pick Farm Market and CSA | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Billings Farm & Museum | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sheraton Norfolk Waterside Hotel | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Community Room, Student Success Center - Greenville Technical College | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| 324 N Oak Park Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ben Brenman Park, Canopy | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Zacharys Red Barn | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Nashua | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mental Health Association of Rochester / Monroe County, Inc. | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 5375 Henneman Dr | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| NUBOXX Fitness | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| iFLY Indoor Skydiving - Orlando | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 35 Congress St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Forest Run MetroPark | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Gulf Coast Event Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| PLAY Sporting Lounge Hollywood | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Literary Lounge | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Action For Children | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Vanderbilt Birth Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Raymond | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| New Prospect Baptist Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Greenville Bahá'í Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Embassy Suites by Hilton Jacksonville Baymeadows | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 31 Capitol St | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Topgolf Huntsville | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Community of Hope Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| NewBo City Market | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Chattanooga | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| North Haven Fairgrounds | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Eastern Market Metro Plaza | Eventbrite-Family-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| SOS Bridgewater | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Marigold | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 217 E Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1910 Baden Powell Wy | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| True Divine Baptist Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Rhode Island College | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 917 N 49th St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Shawnee Park Sports Complex | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lighthouse Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Nekter Juice Bar | Eventbrite-Family-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Lexington Venue | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Family Focused Midwifery | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| East Regional Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Grand Resort Hotel - Mt Laurel - Philadelphia | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 157 Upper State St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1524 Linden St | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Elk Grove Village Fire Department Station 10 | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Philadelphia | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Savannah | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Madison College | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Turkey Thicket Recreation Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Norumbega Cidery | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Washington Park Playground Shelter | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Cazenovia Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 171 Oak St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Therapeutic Recreation Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Tundra Lodge | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Stoney Point Baptist Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 80/20 Eatery | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Empire Event Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Friedman Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hardin Valley Event Center - PAVILION | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 63 Winn Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| MindFit Counseling and Wellness Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Tipsy Teeze Bar, Grill and Music Hall | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Firefly/ Marble City Kitchen | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Alexandria Local History/Special Collections Branch Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Duluth | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Powerhouse Ministries Inc | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 615 Tremont St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1801 Fela Dr | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Urban Perinatal Education Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ladies Social Group | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 929 Ventures Way | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 7707 Allentown Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Van Ness Street | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Aloft Orlando Lake Nona | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 26Health | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 307 Cumberland Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Rockford University Blanche Walker Burpee Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Maury Elementary Parking Lot on 12th Pl NE | Eventbrite-Family-Eastern | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Fitler Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Honest Weight Food Co-op | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Triana Volunteer Fire Department | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| City of Praise Family Ministries | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Peace Plaza | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Huntsville Botanical Garden | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Negro Southern League Museum | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| PARK365 | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Blount County Public Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Louisville | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 535 Monroe St NW | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Birth Center | Eventbrite-Family-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Shelburne Vineyard | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Lower Macungie Community Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Thistle Farms | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1454 Florence St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bible Way Ministries International | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 23 W Maple St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kent Island Resort | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bishop Brady High School | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 9560 Garners Ferry Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Savannah | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Iowa State Capitol | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| DoubleTree by Hilton Burlington Vermont | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 8040 Cermak Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Punch Bowl Social | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Sugaw Creek Recreation Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Chester Village Drive | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| South Shore Cultural Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hamilton, OH | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| New England Botanic Garden at Tower Hill | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| CSCC, Mitchell Hall | Eventbrite-Family-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Friendship Circle-Pittsburgh | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2480 Biscayne Blvd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Akron Art Museum | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Infinite Growth Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Saint James Farm Forest Preserve | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Westgate Community Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Renew Birmingham | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fox Run Golf Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Unitarian Universalist Congregation of Danbury | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Grand Exteriors | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Divine Fellowship Christian Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| South Beach Biloxi Hotel & Suites | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Woman's Club of Wisconsin | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Stony Point Fashion Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pineville Tavern | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cahaba Brewing Company | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Keller Williams Realty Central Delaware | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Venue | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Virginia Beach Convention Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Highlandtown Elementary/Middle School #215 | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Italian Prime at Salvatore's | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ambrosia Taverna | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Events at Cross Creek Woods | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Smart Museum of Art | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Grandma Home House Retreat | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lake Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Cambridge | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Jumonville Christian Camp and Retreat Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Vestavia Hills Civic Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Condesa Restaurante Mexicano Warwick | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Battle House Renaissance Mobile Hotel & Spa | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Rollins Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Toyota Field | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Stoughton Public Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 256 Hamilton St., Worcester. MA, USA | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 717 N Homewood Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| AC Hotel Worcester | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Willow Haven Farm | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| South Hills Country Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Newport | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Birch & Bay | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 55 Catoonah St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 130 Arsenal Yards Blvd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Barber Motorsports Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1522 Baxter Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| NoDa Brewing Company | Eventbrite-Family-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| 5829 Augusta Hwy | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 95th Street Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Saint Mary's University of Minnesota | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| United Against Poverty | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Belvedere at Crooners | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Culture Center Theater | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Brooklyn | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Plantation FamilySearch Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Collection at Chevy Chase | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Goddard Memorial State Park | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Akron Children's Museum | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| sweetFrog Kent Island | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Harry L Cooper VFW Post 160 | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Live at The Shop | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Grandview Avenue & Shiloh Street | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2970 West Proctor Road, Proctor, VT, USA | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Union Congregational Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1235 E Division St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fairgrounds Trailhead | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| YMCA Bethesda-Chevy Chase | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Durham Central Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lula and Sadie’s | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Georgetown Waterfront Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Milford Senior Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| RiverPark Place Marina, Marinas Edge Way, Louisville, KY, USA | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| KiPS Family Gymnastics | Eventbrite-Family-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Jenkins Youth and Family Village | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Taylor Barn | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Breakthrough Community Services | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Natural Nest Play Cafe - Newark | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mint Hill Elementary School | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cincinnati Union Terminal | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 7101 MacCorkle Ave SW | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hotel Northland, Autograph Collection | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 34 Freedom Pkwy | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Renasant Bank | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Historic Cherry Hill Elementary/Middle School | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Muslim Center of Greater Princeton | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Templeton Landing Restaurant & Special Events | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lovestruck Books & Cafe | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Epigram Brew Co. | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Cube Cowork LLC | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Memphis | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Renaissance Pointe YMCA | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1100 S Grand Ave E | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 350 N Midland Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Bodega | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Grace Episcopal Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Somerville Museum | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| UPCI Maine District Campground | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1919 Spillway Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Earth 'n' Us Farm | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Partake | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wick-ed Wax Handcrafted Candles & Gifts | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Richmond | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Englert Theatre | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| American Legion Post 8 | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| New Haven | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Thomas E. Tidman Amphitheater at NARA Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Symmetry / The Aesthetics Studio | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Shelburne Farms | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Wishing Place powered by JTV | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Ultra Lounge | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Julian Smith Casino | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lilac Hedge Farm | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sandbar Jax Bch | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ashton United Methodist Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Knicely Conference Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ochre Court | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1020 W McDowell Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Andover Country Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Evansville | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Alabama State Capitol | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cannon Memorial Chapel | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Tom Triplett Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Children's Hospital at Erlanger - Kennedy Outpatient Center | Eventbrite-Family-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| American Indian Health Service of Chicago Inc | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| North Carolina Museum of Natural Sciences | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1301 E Victory Dr | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Harvest Academy | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| First United Methodist Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Greer Golf | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| AmeriHealth Caritas North Carolina | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hussey-Mayfield Memorial Public Library - Zionsville Branch | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cherish Family Chiropractic | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Baptist Grove Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ridgedale Library - Hennepin County Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| B’s Creative Studio | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Tennessee State Library and Archives | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Restoration Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Beale Street Landing | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Timucua Arts Foundation | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| University of Wisconsin-Green Bay | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mandala Midwifery Care | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Eataly Chicago | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Forum 301 | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| RCTC Heintz Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Boys & Girls Clubs of North Alabama - Frank J. Williams | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Rose | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| 11624 Kinsman Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mogadore Branch Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| BookSpace by The Briar Patch | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Out Door Country Club | Eventbrite-Family-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| 35 Ocean Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Santa’s Village Amusement & Water Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 917 W 18th St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Framingham State University | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pinson Bicentennial Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Stew Leonard's of Newington | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Grace | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Randolph School - Garth Campus | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Family Health Centers | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 221 Bull Hill Ln | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Central Bank Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kanawha Plaza | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hula Lakeside | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Callaghan's Irish Social Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Stony Creek Farm | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hilton Garden Inn Montgomery | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 713 River St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Castleton University Campus Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 730 3rd St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Brookfield Orchards | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Calvary Wolfeboro -- the Big Tent on Back Bay | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Learning Experience - Milford | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Stone Terrace by John Henry's | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ruoff Mortgage Stadium | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 210 Williams Ave SE | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Essex Resort & Spa | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bondville Fair | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Huntsville Marriott at the Space & Rocket Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Most Pure Heart of Mary Catholic Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Queen Anne Road | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cooper's Riverview | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mosaic Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Omni New Haven Hotel at Yale | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| AFRO TV | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| iFLY Indoor Skydiving - Chicago Naperville | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Farr's Field | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| American Flatbread / Worcester | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Daphne Civic Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Stars and Garters Theater | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Counting Stars | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Gioia Cafe and Bar | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 3501 Rombouts Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Stonebridge Country Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2820 N Meridian St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Matthews United Methodist Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1505 Burns Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 16366 Landon Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Boston Public Library | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 6208 S Orange Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bethesda Tabernacle | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Kent | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fayerweather | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Tampa | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mississippi Coast Coliseum and Convention Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2716 Atwood Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Killington Pico Area Association | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 5 Tranquility Base | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| NorthPointe Birth Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1 Main St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Harvey Wheeler Community Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 35 Thompson St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| ​PLANTED CAFE | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Paradise Motocross | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 485 Sunset Dr | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bethel Harvest Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| dish | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cafe of the Week | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 4122 Government Blvd Service Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Hoboken | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wilson Castle | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1964 Boston Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Margaret Maddox Family YMCA | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Northside Town Center | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| 2134 W 18th St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Columbia | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| McMillen Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 213 N 3rd St | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| SOS Lincoln | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| U Play Indoor Soccer | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Marshall University Medical Center/Cabell Huntington Hospital | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 3248 N Pulaski Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ansonia Nature & Recreation Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Hotel at Kirkwood Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Stowe Bowl | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ships of the Sea Maritime Museum | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mississippi Museum of Natural Science (The Den) | Eventbrite-Family-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Hope Child Development Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Electric Haze Llc | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ares Firearms Training Facility | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Locally Crafted Workshop | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Buschman Street Cafe | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Wellness Way - Green Bay | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 801 E Sangamon Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Brookline Booksmith | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Roam Buckhead - Piedmont | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hilton Boston/Dedham | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Brooklyn Society for Ethical Culture | Eventbrite-Family-Eastern | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Batavia Covenant Church | Eventbrite-Family-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| HAYVN | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 555 US-20 | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Cleveland | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Love Your Labels | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Hudson Library & Historical Society | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lyric Theatre & Cultural Arts Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Boyd Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 331Wedding & Event venue | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 60 Compo Beach Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Henry Vilas Zoo | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hometown Apostolic Church | Eventbrite-Family-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| 155 Portsmouth Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kidlavie Family Restaurant and Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Solomon Pond Mall | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pinelake Church Reservoir Campus | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bank Independent Rooftop (5th Floor) | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1 Vfw Way | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Boxwood Social Hall | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 63 Justin Merrill Rd | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Boston Park Plaza Hotel & Towers | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Churchill Downs | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Regina A. Quick Center for the Arts, Walsh Gallery and Lobby | Eventbrite-Family-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Peace Field Farm | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| MassMutual Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Flora Whiteley Preserve | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Poinsett Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Eastmont Baptist Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Crescent Bend House & Garden | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Forge | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Farm Barn at Shelburne Farms | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hixson First Baptist Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Our Savior’s Lutheran Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Irish Famine Memorial | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Madison Area Technical College | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Peggy F Murphy Community Grief Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Montgomery Marriott Prattville Hotel & Conference Center at Capitol Hill | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Mill Cafe | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Tubman Garret Riverfront Park | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 6787 Lee Hwy suite 101 | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lee Road Branch of Heights Libraries | Eventbrite-Family-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| The Symposium | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Brewster Uplands | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Minneapolis Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Comedy Zone | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 28th Place- Spirit of Women Conference Room | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 201 Owsley Ave | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sugar Ridge Family Farm | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 4601 Market St. PHMC Building. Multicultural Room | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| East Harrisburg Cemetery | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Hobby Corner | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Gleacher Conference Center / Lounge 500 / 5th Floor | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mississippi Museum of Natural Science | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Family Restaurant of the Week | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Personal Best Firearms Training Inc. | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Event in Minneapolis | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| House Of Entertainment | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 716 Hancock St suite c | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| New Mount Olive Baptist Church | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Enterprise Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Flight Club | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2708 Scottsville Rd suite a | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cherry Street Pier | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Rockford Housing Authority | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bridgeport Pride Center | Eventbrite-Family-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Riverbend Park | Fairfax-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.fairfaxcounty.gov) |
+| Wynnefield Library | Free Library of Philadelphia | 8 | 0 | 0 | 1 | 0 | 0 | 9 | — |
+| Thomas F. Donatucci, Sr. Library | Free Library of Philadelphia | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Kingsessing Library | Free Library of Philadelphia | 0 | 0 | 2 | 1 | 0 | 0 | 3 | — |
+| South Philadelphia Library | Free Library of Philadelphia | 0 | 0 | 1 | 0 | 0 | 1 | 2 | — |
+| Fishtown Community Library | Free Library of Philadelphia | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Music Department | Free Library of Philadelphia | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Independence Library | Free Library of Philadelphia | 0 | 0 | 0 | 1 | 0 | 1 | 2 | — |
+| Dwight Evans Library of West Oak Lane | Free Library of Philadelphia | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Joseph E. Coleman Northwest Regional Library | Free Library of Philadelphia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Northeast Regional Library | Free Library of Philadelphia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Nicetown-Tioga Library | Free Library of Philadelphia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Blanche A. Nixon/Cobbs Creek Library | Free Library of Philadelphia | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Roxborough Library | Free Library of Philadelphia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lucien E. Blackwell West Philadelphia Regional Library | Free Library of Philadelphia | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Charles Santore Library | Free Library of Philadelphia | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Field Teen Center | Free Library of Philadelphia | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Frankford Library | Free Library of Philadelphia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Martinsville Library | FullCalendar-Libraries | 0 | 0 | 5 | 0 | 0 | 0 | 5 | — |
+| Patrick County Library | FullCalendar-Libraries | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Bassett Library | FullCalendar-Libraries | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Ridgeway Library | FullCalendar-Libraries | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Burke Lake Park, 7315 Ox Road, Fairfax Station, VA 22039, USA See map: Google Maps | KidsOutAndAbout-DMV | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://dmv.kidsoutandabout.com) |
+| Frying Pan Farm Park | KidsOutAndAbout-DMV | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://dmv.kidsoutandabout.com) |
+| Third Space for Kids, 7801 Norfolk Avenue suite 200, Bethesda, MD 20814, United States See map: Google Maps | KidsOutAndAbout-DMV | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://dmv.kidsoutandabout.com) |
+| Multiple Hotels Available | KidsOutAndAbout-DMV | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://dmv.kidsoutandabout.com) |
+| Third Space for Kids | KidsOutAndAbout-DMV | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://dmv.kidsoutandabout.com) |
+| Silver Spring Civic Building at Veterans Plaza, 1 Veterans Pl, Silver Spring, MD 20910, United States See map: Google Maps | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| 2400 East Capitol Street Southeast, Washington, DC, USA See map: Google Maps | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| The Theatre Lab, 900 Massachusetts Ave NW, Washington D.C., DC 20001, United States See map: Google Maps | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| Clark's Elioak Farm | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| National Children's Museum | KidsOutAndAbout-DMV | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| FUNBOX BOWIE - Bounce & Party Center, 3861 Evergreen Parkway, Bowie, MD 20716, United States See map: Google Maps | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| 735 Water Street Southwest, Washington, DC 20024, United States See map: Google Maps | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| Funbox Bowie See map: Google Maps | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| A Willing Vessel Church See map: Google Maps | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| 3861 Evergreen Parkway Bowie Maryland 20716 See map: Google Maps | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| Smithsonian National Postal Museum, 2 Massachusetts Ave NE, Washington D.C., DC 20002, United States See map: Google Maps | KidsOutAndAbout-DMV | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| Barracks Row Main Street, 8th Street Southeast, Washington, DC, USA See map: Google Maps | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| Lerner Town Square at Tysons II | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| Maryland Renaissance Festival, 1821 Crownsville Rd, Annapolis, MD 21401, United States See map: Google Maps | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| National Law Enforcement Museum, 444 E St NW, Washington D.C., DC 20001, United States See map: Google Maps | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| . | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| City of Fairfax City Hall, 10455 Armstrong St, Fairfax, VA 22030, United States See map: Google Maps | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| The Puppet Co. | KidsOutAndAbout-DMV | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dmv.kidsoutandabout.com) |
+| See event page | KidsOutAndAbout-Eastern | 11 | 0 | 0 | 2 | 0 | 0 | 13 | — |
+| New York State Museum | KidsOutAndAbout-Eastern | 8 | 0 | 0 | 0 | 0 | 0 | 8 | — |
+| Lemon Squeezy Art Studio | KidsOutAndAbout-Eastern | 7 | 0 | 0 | 0 | 0 | 0 | 7 | — |
+| Burke Lake Park | KidsOutAndAbout-Eastern | 7 | 0 | 0 | 0 | 0 | 0 | 7 | — |
+| Seneca Park Zoo | KidsOutAndAbout-Eastern | 3 | 0 | 0 | 0 | 0 | 1 | 4 | — |
+| New England Air Museum | KidsOutAndAbout-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Putnam Valley Free Library | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 1 | 0 | 0 | 3 | — |
+| Rochester By Water | KidsOutAndAbout-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| The Warrior Factory Rochester | KidsOutAndAbout-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Urban Air Trampoline and Adventure Park | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Hometown Comics & Games | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Kazoodles Toys | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Florida Theatre, Inc. | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Mosaic Creative Studios | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Zoom | KidsOutAndAbout-Eastern | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Kilbourn Hall | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Victory Field | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 1 | 0 | 0 | 2 | — |
+| Third Space for Kids | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Isaías González-Soto Branch Library (formerly Niagara Branch) | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Double M Haunted Hayrides, New York 67 | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| The Academy of Film Television Stage and Performing Arts, Inc | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| 85 Northern Ave | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Garden City Center | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| St. John's Episcopal Church | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| For navigational purposes - the General Jackson Showboat is located at 577 Opry Mills Dr. | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| The Whaling Museum & Education Center of Cold Spring Harbor | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| The Theatre Lab | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Silver Spring Civic Building at Veterans Plaza | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Colonial Belle, Packetts Landing | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Walters Cultural Arts Center | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Seekonk Speedway | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Tennessee Aquarium | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Adventureland | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pawtuxet Village Farmers Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Saratoga Farmers' Market, High Rock Park | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1 Union St | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pleasant Hills Public Library | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mystic Seaport Museum | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Connecticut Renaissance Faire | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Rice Northwest Museum of Rocks & Minerals | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Gillette Stadium | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wenham Museum | KidsOutAndAbout-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| 1000 Ridge rd , Webster NY 14580 | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Genesee Brew House | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| St. Johns Farmers Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1844 Southwest Morrison Street | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Barton Orchards | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Melville, NY 11747 | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Penfield Public Library | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Casey Farm | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Northcenter Town Square | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 9200 Pigeon Roost Road | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Dynamic Elite Athletics - Rochester | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Nashville, TN (Exact location will be provided upon registration) | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| STUDIO A, THE MARTIN CENTER FOR NASHVILLE BALLET | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wonderwood Springs | KidsOutAndAbout-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Broad Street Farmers Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| MetLife Stadium Drive | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Burrillville Farmers Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Nashville Ballet | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Quincy Farmers Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Rensselaer Public Library | KidsOutAndAbout-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Stamford Palace Theatre | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| RocVentures Climbing | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 2400 East Capitol Street Southeast | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 303 Madison Station Boulevard, Nashville | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 600 New York 17A | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Genesee Country Village & Museum | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wilsonville Stein-Boozier Barn | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Goats To Go ® | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wiswall Park | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Geodis Park | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Penn Dixie Fossil Park & Nature Reserve | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fairfield Museum & History Center | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1271 U.S. 30 | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Heritage Discovery Center | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Amherst Town Hall | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Gateway Clipper Fleet | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| RMSC (Rochester Museum & Science Center) | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Connecticut Trolley Museum | KidsOutAndAbout-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| The Buffalo History Museum, Museum Court | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Company Theatre | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Boston Public Market | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| 3861 Evergreen Parkway Bowie Maryland 20716 | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Oregon Rail Heritage Center | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Plymouth Recreation | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1 River Road | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Nazareth University Arts Center | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| South Kingstown Farmers Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Kartrite Resort & Indoor Waterpark | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Elmwood-Bidwell Farmers' Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Providence Flea - 2026 MARKETS! | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Citi Field | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| South Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Gentle Barn | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Braintree Farmers Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Education Center on Pearson Field (Airway Science for Kids) | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bethlehem Central Middle School | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| August Wilson African American Cultural Center | KidsOutAndAbout-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Autumn's Gate | KidsOutAndAbout-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Brighton Memorial Library | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lippitt Memorial Park | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Truist Field | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Billy Graham Library | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 735 Water Street Southwest | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kenmore Farmer's Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hoyt Arboretum | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Boomerang Boat Tours | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Smithsonian National Postal Museum | KidsOutAndAbout-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| RMSC Eisenhart Auditorium | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Columbian Park Zoo | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Slater Memorial Park | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1741 Pub and Grill | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Prospect Park | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Adam W. Herbert University Center, Adam W. Herbert | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Memorial Art Gallery | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 117 Sandusky Street | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lake George Steamboat Company | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Garfield Park Sunken Garden | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| SoCo Art Labs | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Hope Street Saturday Farmers Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Carnegie Museum of Art | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| North York | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Salvation Army of Albany, NY | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Tiverton Farmers Market, Farm Recreation Area, Rhode Island 77 | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Menands Market Pavilion | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Crescent Park Looff Carousel | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| A Willing Vessel Church | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Knox School | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| New Bedford Art Museum | KidsOutAndAbout-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Multiple Locations - See Description | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Blue Hills Trailside Museum | KidsOutAndAbout-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| House of Cards | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Osamequin Farm | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Providence River Boat Company | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lackawanna Public Library | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Troy | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Schenectady City Hall | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1355 Boston Post Road | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 215 Niagara Street, Lockport | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Spirit Of Halloweentown | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Maryland Renaissance Festival | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Yankee Stadium | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Old Falls Village Historical Park | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Draper Center for Dance Education | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Catskill Mountain Railroad | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| West Chicago Park District, Park District | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sterling Nature Center | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Buffalo Fire Historical Soc | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pine Community Center | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Baldwin Borough Public Library | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Legacy Theatre | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Common Ground High School, Urban Farm and Environmental Education Center | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Riverlink Park | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mt Hope Farm | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Warming Hut | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Children's Museum of Pittsburgh | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Children's Room | LibCal-DE-delawarelibraries | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Lobby Art Exhibit | LibCal-DE-delawarelibraries | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Delmar Public Library | LibCal-DE-delawarelibraries | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Inspiration Space | LibCal-DE-delawarelibraries | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Kent County Public Library | LibCal-DE-delawarelibraries | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Alamance County Library | LibCal-NC-alamancelibraries | 0 | 0 | 1 | 1 | 0 | 0 | 2 | — |
+| SWB Meeting Room #127 | LibCal-NC-brunsco | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Brunswick County Public Library | LibCal-NC-brunsco | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Rourk Meeting Room (combined) | LibCal-NC-brunsco | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Rourk Meeting Room (front half) | LibCal-NC-brunsco | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Southwest Regional | LibCal-NC-durhamcountylibrary | 0 | 2 | 0 | 1 | 0 | 0 | 3 | — |
+| Southwest Meeting Room | LibCal-NC-durhamcountylibrary | 0 | 2 | 0 | 0 | 0 | 0 | 2 | — |
+| North Meeting Room | LibCal-NC-durhamcountylibrary | 0 | 0 | 0 | 0 | 0 | 2 | 2 | — |
+| Durham County Library | LibCal-NC-durhamcountylibrary | 0 | 0 | 0 | 1 | 0 | 1 | 2 | — |
+| East Regional Library (211 Lick Creek Lane) | LibCal-NC-durhamcountylibrary | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| East Meeting Room | LibCal-NC-durhamcountylibrary | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Virtual | LibCal-NC-durhamcountylibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| East Regional | LibCal-NC-durhamcountylibrary | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Branch Library | LibCal-NC-gastonlibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Etowah Branch | LibCal-NC-hendersonpl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Iredell County Public Library | LibCal-NC-iredell-lib-nc | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| MN Children's Room | LibCal-NC-libcal-nhcpl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Off-Site | LibCal-NC-union-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lebanon Public Libraries | LibCal-NH | 5 | 1 | 1 | 0 | 0 | 0 | 7 | [cal](https://leblibrary.libcal.com) |
+| Nashua Public Library | LibCal-NH | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://nashualibrary.libcal.com) |
+| Concord Public Library | LibCal-NH | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://concordnh-pl.libcal.com) |
+| Merrimack Public Library | LibCal-NH | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://merrimack.libcal.com) |
+| Hooksett Public Library | LibCal-NH | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://hooksettlibrary.libcal.com) |
+| Keene Public Library | LibCal-NH | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://keenenh.libcal.com) |
+| Community Room | LibCal-NY-gardinerlibrary | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Gardiner Library | LibCal-NY-gardinerlibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Teen Room | LibCal-NY-highlandlibrary | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Meeting Room | LibCal-NY-highlandlibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| North Merrick Community Room | LibCal-NY-nmerricklibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Children's Activity Room | LibCal-NY-northbellmorelibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Small Meeting Room | LibCal-NY-northbellmorelibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| North Bellmore Public Library | LibCal-NY-northbellmorelibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Oceanside Public Library | LibCal-NY-oceansidelibrary | 0 | 0 | 1 | 1 | 0 | 0 | 2 | — |
+| Children's Program Room | LibCal-NY-oceansidelibrary | 0 | 0 | 1 | 1 | 0 | 0 | 2 | — |
+| Offsite | LibCal-NY-oceansidelibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Shepard Room | LibCal-NY-owwl-dansvillepubliclibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Kim's Corner | LibCal-NY-rvcpl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wantagh Public Library | LibCal-NY-wantaghlibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Weaver Library | LibCal-RI-eplib | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| YA Area | LibCal-RI-newportlibraryri-npl-events | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Rotary Board Room | LibCal-RI-newportlibraryri-npl-events | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| George Hail Free Library | LibCal-RI-oslri-georgehail | 1 | 2 | 1 | 4 | 0 | 7 | 15 | — |
+| George Hail Free Library - Museum Antechamber | LibCal-RI-oslri-georgehail | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Campbell Auditorium | LibCal-RI-pawtucketlibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Teen Space | LibCal-RI-rogersfreelibrary | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Conimicut Branch | LibCal-RI-warwicklibrary | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Children's Library | LibCal-RI-warwicklibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Foyer | LibCal-RI-wwpl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Youth Department Program Room | LibCal-RI-wwpl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Nash Room | LibCal-RI-wwpl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Manheim Township | Library System of Lancaster County | 4 | 7 | 0 | 2 | 0 | 2 | 15 | — |
+| Lancaster | Library System of Lancaster County | 2 | 5 | 0 | 1 | 0 | 6 | 14 | — |
+| Lititz | Library System of Lancaster County | 4 | 6 | 0 | 2 | 0 | 0 | 12 | — |
+| Ephrata | Library System of Lancaster County | 3 | 2 | 0 | 1 | 2 | 2 | 10 | — |
+| Quarryville | Library System of Lancaster County | 2 | 2 | 0 | 4 | 0 | 0 | 8 | — |
+| Adamstown | Library System of Lancaster County | 2 | 4 | 0 | 0 | 0 | 1 | 7 | — |
+| Manheim Community | Library System of Lancaster County | 0 | 2 | 0 | 1 | 0 | 1 | 4 | — |
+| Mountville Branch | Library System of Lancaster County | 0 | 3 | 0 | 0 | 0 | 0 | 3 | — |
+| Eastern Lancaster County | Library System of Lancaster County | 0 | 2 | 0 | 0 | 0 | 0 | 2 | — |
+| Columbia | Library System of Lancaster County | 0 | 0 | 0 | 1 | 0 | 1 | 2 | — |
+| Strasburg-Heisler | Library System of Lancaster County | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Bookmobile | Library System of Lancaster County | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Moores Memorial | Library System of Lancaster County | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Milanof-Schock | Library System of Lancaster County | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Amherst County Public Library | LibraryCalendar-Libraries-amherstpl | 0 | 1 | 0 | 0 | 0 | 1 | 2 | [cal](https://amherstpl.librarycalendar.com/events/upcoming) |
+| Bedford Public Library System | LibraryCalendar-Libraries-bedford | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://bedford.librarycalendar.com/events/upcoming) |
+| Bloomingdale Public Library | LibraryCalendar-Libraries-bloomingdale | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://bloomingdale.librarycalendar.com/events/upcoming) |
+| Caroline County Public Library | LibraryCalendar-Libraries-carolinecounty | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://carolinecounty.librarycalendar.com/events/upcoming) |
+| Forsyth County Public Library | LibraryCalendar-Libraries-forsythcounty | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://forsythcounty.librarycalendar.com/events/upcoming) |
+| Frederick County Public Libraries | LibraryCalendar-Libraries-frederick | 0 | 1 | 2 | 0 | 0 | 0 | 3 | [cal](https://frederick.librarycalendar.com/events/upcoming) |
+| Gloucester County Library System | LibraryCalendar-Libraries-gcls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gcls.librarycalendar.com/events/upcoming) |
+| Haverstraw King's Daughters Public Library | LibraryCalendar-Libraries-haverstraw | 1 | 0 | 0 | 1 | 0 | 1 | 3 | [cal](https://haverstraw.librarycalendar.com/events/upcoming) |
+| Howard County Library System | LibraryCalendar-Libraries-howardcounty | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://howardcounty.librarycalendar.com/events/upcoming) |
+| Memphis Public Libraries | LibraryCalendar-Libraries-memphis | 3 | 0 | 0 | 1 | 0 | 2 | 6 | [cal](https://memphis.librarycalendar.com/events/upcoming) |
+| Portsmouth Public Library | LibraryCalendar-Libraries-portsmouthpl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://portsmouthpl.librarycalendar.com/events/upcoming) |
+| Schenectady County Public Library | LibraryCalendar-Libraries-schenectady | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://schenectady.librarycalendar.com/events/upcoming) |
+| Talbot County Free Library | LibraryCalendar-Libraries-talbot | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://talbot.librarycalendar.com/events/upcoming) |
+| York County Public Library | LibraryCalendar-Libraries-yorkcountyva | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://yorkcountyva.librarycalendar.com/events/upcoming) |
+| Ferguson Library | LibraryMarket-CT | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| New Britain Public Library | LibraryMarket-CT | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Meriden Public Library | LibraryMarket-CT | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Fairfield Public Library | LibraryMarket-CT | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| West Hartford Public Library | LibraryMarket-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Beaufort County Library | LibraryMarket-SC | 17 | 2 | 2 | 0 | 0 | 0 | 21 | — |
+| Sumter County Library | LibraryMarket-SC | 7 | 0 | 0 | 0 | 0 | 0 | 7 | — |
+| Lehigh Valley Sports Turf | MacaroniKid-PA-kutztown-to-allentown | 6 | 12 | 38 | 0 | 0 | 0 | 56 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Kutztown Community Library | MacaroniKid-PA-kutztown-to-allentown | 2 | 29 | 0 | 4 | 14 | 0 | 49 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Parkland Community Library | MacaroniKid-PA-kutztown-to-allentown | 5 | 2 | 3 | 3 | 1 | 3 | 17 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Allentown Art Museum | MacaroniKid-PA-kutztown-to-allentown | 16 | 0 | 0 | 1 | 0 | 0 | 17 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Menchie's Frozen Yogurt (Shops at Cedar Point) | MacaroniKid-PA-kutztown-to-allentown | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Smartivities Showcase | MacaroniKid-PA-kutztown-to-allentown | 0 | 0 | 0 | 6 | 0 | 0 | 6 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Da Vinci Science Center | MacaroniKid-PA-kutztown-to-allentown | 2 | 2 | 1 | 0 | 0 | 0 | 5 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Whitehall Township Public Libary | MacaroniKid-PA-kutztown-to-allentown | 0 | 2 | 0 | 1 | 1 | 0 | 4 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| JCC of the Lehigh Valley | MacaroniKid-PA-kutztown-to-allentown | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| The Great Allentown Fair | MacaroniKid-PA-kutztown-to-allentown | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| The End: a bookstore | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Allentown H.O.P.E Community Church | MacaroniKid-PA-kutztown-to-allentown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Lehigh Valley250 | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| St. Josaphat Ukrainian Catholic Church | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Concerts by Candlelight | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Little Lies: A Tribute to Fleetwood Mac | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| CertifiKid | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Together With Light Candles | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| The Kids Clothesline | MacaroniKid-PA-kutztown-to-allentown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Visit Historic Bethlehem | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Apraxia Kids | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Allentown Public Library | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Allentown Fairgrounds | MacaroniKid-PA-kutztown-to-allentown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Hangout for Art | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Lehigh Valley Grand Prix | MacaroniKid-PA-kutztown-to-allentown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Secondhand Arts & Craft Supplies | MacaroniKid-PA-kutztown-to-allentown | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| The Pink Lotus - Spiritual & Wellness Center | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Lehigh Valley Zoo | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Encounter Comics & Games | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Little Gym of Trexlertown | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Puertorrican Culture Preservation Inc | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| James Cooper | MacaroniKid-PA-kutztown-to-allentown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Kospia Farms | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Central Library | Pratt-Library | 73 | 3 | 4 | 17 | 3 | 13 | 113 | — |
+| Northwood Library | Pratt-Library | 27 | 0 | 1 | 2 | 0 | 0 | 30 | — |
+| Govans Library | Pratt-Library | 17 | 1 | 1 | 2 | 0 | 6 | 27 | — |
+| Southeast Anchor Library | Pratt-Library | 22 | 1 | 0 | 3 | 0 | 0 | 26 | — |
+| Orleans Library | Pratt-Library | 17 | 2 | 0 | 1 | 0 | 2 | 22 | — |
+| Brooklyn Library | Pratt-Library | 16 | 0 | 1 | 3 | 0 | 2 | 22 | — |
+| Patterson Park Library | Pratt-Library | 16 | 1 | 1 | 1 | 0 | 0 | 19 | — |
+| Waverly Library | Pratt-Library | 10 | 1 | 1 | 1 | 0 | 6 | 19 | — |
+| Light Street Library | Pratt-Library | 12 | 2 | 2 | 2 | 0 | 1 | 19 | — |
+| Hamilton Library | Pratt-Library | 10 | 1 | 0 | 7 | 0 | 1 | 19 | — |
+| Hampden Library | Pratt-Library | 8 | 3 | 0 | 1 | 0 | 5 | 17 | — |
+| Roland Park Library | Pratt-Library | 10 | 1 | 0 | 3 | 0 | 3 | 17 | — |
+| Edmondson Library | Pratt-Library | 13 | 0 | 2 | 1 | 0 | 0 | 16 | — |
+| Pennsylvania Library | Pratt-Library | 11 | 1 | 0 | 2 | 0 | 2 | 16 | — |
+| Cherry Hill Library | Pratt-Library | 9 | 0 | 1 | 0 | 0 | 4 | 14 | — |
+| Herring Run Library | Pratt-Library | 9 | 1 | 1 | 1 | 0 | 1 | 13 | — |
+| Walbrook Library | Pratt-Library | 8 | 0 | 0 | 1 | 0 | 3 | 12 | — |
+| Canton Library | Pratt-Library | 1 | 1 | 1 | 5 | 0 | 0 | 8 | — |
+| Northwest Dance Room | RecDesk-Parks-akron | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://akron.recdesk.com) |
+| Multi-Purpose Room | RecDesk-Parks-carolinabeach | 72 | 0 | 0 | 0 | 0 | 0 | 72 | [cal](https://carolinabeach.recdesk.com) |
+| Gymnasium | RecDesk-Parks-carolinabeach | 24 | 0 | 18 | 20 | 4 | 2 | 68 | [cal](https://carolinabeach.recdesk.com) |
+| Mike Chappell Multi-Purpose Field | RecDesk-Parks-carolinabeach | 48 | 0 | 0 | 0 | 0 | 0 | 48 | [cal](https://carolinabeach.recdesk.com) |
+| Carolina Beach Volleyball Court | RecDesk-Parks-carolinabeach | 45 | 0 | 0 | 0 | 0 | 0 | 45 | [cal](https://carolinabeach.recdesk.com) |
+| Mike Chappell Basketball Court | RecDesk-Parks-carolinabeach | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://carolinabeach.recdesk.com) |
+| -None Specified- | RecDesk-Parks-carrollcountyga | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://carrollcountyga.recdesk.com) |
+| Atlantic Beach Circle | RecDesk-Parks-ccpr | 0 | 0 | 0 | 0 | 24 | 12 | 36 | [cal](https://ccpr.recdesk.com) |
+| Western Park Community Center Large Room | RecDesk-Parks-ccpr | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [cal](https://ccpr.recdesk.com) |
+| Freedom Park | RecDesk-Parks-ccpr | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://ccpr.recdesk.com) |
+| Ft. Benjamin Rec.Center Exercise Room | RecDesk-Parks-ccpr | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://ccpr.recdesk.com) |
+| Fort Benjamin Recreation Center (252)222-5858 | RecDesk-Parks-ccpr | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://ccpr.recdesk.com) |
+| Fort Benjamin Field 3 (Football) | RecDesk-Parks-ccpr | 0 | 0 | 0 | 1 | 1 | 1 | 3 | [cal](https://ccpr.recdesk.com) |
+| Freedom Field 2 (Softball/Multi) | RecDesk-Parks-ccpr | 0 | 0 | 0 | 1 | 1 | 1 | 3 | [cal](https://ccpr.recdesk.com) |
+| Fort Benjamin Park | RecDesk-Parks-ccpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ccpr.recdesk.com) |
+| Mayeski Field 4 Baseball with MP overlay | RecDesk-Parks-ccrec | 107 | 0 | 0 | 0 | 0 | 0 | 107 | [cal](https://ccrec.recdesk.com) |
+| Mayeski Field 3 Softball with MP Overlay | RecDesk-Parks-ccrec | 107 | 0 | 0 | 0 | 0 | 0 | 107 | [cal](https://ccrec.recdesk.com) |
+| Mayeski Legore Memorial Softball Field | RecDesk-Parks-ccrec | 92 | 0 | 0 | 0 | 0 | 0 | 92 | [cal](https://ccrec.recdesk.com) |
+| Sandymount Field 1 | RecDesk-Parks-ccrec | 85 | 0 | 0 | 0 | 0 | 0 | 85 | [cal](https://ccrec.recdesk.com) |
+| Willow Springs Golf Course | RecDesk-Parks-ccrec | 84 | 0 | 0 | 0 | 0 | 0 | 84 | [cal](https://ccrec.recdesk.com) |
+| Deer Park Meadow Field | RecDesk-Parks-ccrec | 83 | 0 | 0 | 0 | 0 | 0 | 83 | [cal](https://ccrec.recdesk.com) |
+| Mayeski Field 2 Softball with MP overlay | RecDesk-Parks-ccrec | 76 | 0 | 0 | 0 | 0 | 0 | 76 | [cal](https://ccrec.recdesk.com) |
+| Deer Park Main Field | RecDesk-Parks-ccrec | 69 | 0 | 0 | 0 | 0 | 0 | 69 | [cal](https://ccrec.recdesk.com) |
+| Cape Horn Field 1 | RecDesk-Parks-ccrec | 58 | 0 | 0 | 0 | 0 | 0 | 58 | [cal](https://ccrec.recdesk.com) |
+| Cape Horn Field 2 | RecDesk-Parks-ccrec | 58 | 0 | 0 | 0 | 0 | 0 | 58 | [cal](https://ccrec.recdesk.com) |
+| Deer Park Memorial Field | RecDesk-Parks-ccrec | 51 | 0 | 0 | 0 | 0 | 0 | 51 | [cal](https://ccrec.recdesk.com) |
+| Sandymount Field 2 | RecDesk-Parks-ccrec | 50 | 0 | 0 | 0 | 0 | 0 | 50 | [cal](https://ccrec.recdesk.com) |
+| Deer Park Baker Field 2 | RecDesk-Parks-ccrec | 50 | 0 | 0 | 0 | 0 | 0 | 50 | [cal](https://ccrec.recdesk.com) |
+| Deer Park Baker Field 1 | RecDesk-Parks-ccrec | 50 | 0 | 0 | 0 | 0 | 0 | 50 | [cal](https://ccrec.recdesk.com) |
+| Bennett Cerf Baseball Field | RecDesk-Parks-ccrec | 42 | 0 | 0 | 0 | 0 | 0 | 42 | [cal](https://ccrec.recdesk.com) |
+| Cape Horn Field 3 | RecDesk-Parks-ccrec | 42 | 0 | 0 | 0 | 0 | 0 | 42 | [cal](https://ccrec.recdesk.com) |
+| Cherrytown Road Field 1 | RecDesk-Parks-ccrec | 42 | 0 | 0 | 0 | 0 | 0 | 42 | [cal](https://ccrec.recdesk.com) |
+| Cape Horn Field 5 Baseball | RecDesk-Parks-ccrec | 42 | 0 | 0 | 0 | 0 | 0 | 42 | [cal](https://ccrec.recdesk.com) |
+| Cape Horn Field 4 Softball | RecDesk-Parks-ccrec | 42 | 0 | 0 | 0 | 0 | 0 | 42 | [cal](https://ccrec.recdesk.com) |
+| Bark Hill Field 2 | RecDesk-Parks-ccrec | 42 | 0 | 0 | 0 | 0 | 0 | 42 | [cal](https://ccrec.recdesk.com) |
+| Bark Hill Field 1 | RecDesk-Parks-ccrec | 42 | 0 | 0 | 0 | 0 | 0 | 42 | [cal](https://ccrec.recdesk.com) |
+| Mayeski Field 6 Softball | RecDesk-Parks-ccrec | 41 | 0 | 0 | 0 | 0 | 0 | 41 | [cal](https://ccrec.recdesk.com) |
+| Mayeski Field 5 Softball with MP overlay | RecDesk-Parks-ccrec | 41 | 0 | 0 | 0 | 0 | 0 | 41 | [cal](https://ccrec.recdesk.com) |
+| Krimgold Park Field 10 | RecDesk-Parks-ccrec | 41 | 0 | 0 | 0 | 0 | 0 | 41 | [cal](https://ccrec.recdesk.com) |
+| Mayeski Field 7 Softball | RecDesk-Parks-ccrec | 41 | 0 | 0 | 0 | 0 | 0 | 41 | [cal](https://ccrec.recdesk.com) |
+| Krimgold Park Field 3 | RecDesk-Parks-ccrec | 41 | 0 | 0 | 0 | 0 | 0 | 41 | [cal](https://ccrec.recdesk.com) |
+| Winfield Park Field 1 | RecDesk-Parks-ccrec | 41 | 0 | 0 | 0 | 0 | 0 | 41 | [cal](https://ccrec.recdesk.com) |
+| Mayeski Field 1 Softball | RecDesk-Parks-ccrec | 41 | 0 | 0 | 0 | 0 | 0 | 41 | [cal](https://ccrec.recdesk.com) |
+| Sheppard Chase Gym (RMC) | RecDesk-Parks-ccrec | 40 | 0 | 0 | 0 | 0 | 0 | 40 | [cal](https://ccrec.recdesk.com) |
+| Mayeski Field 1 Football | RecDesk-Parks-ccrec | 35 | 0 | 0 | 0 | 0 | 0 | 35 | [cal](https://ccrec.recdesk.com) |
+| Mayeski Practice Area 2 | RecDesk-Parks-ccrec | 35 | 0 | 0 | 0 | 0 | 0 | 35 | [cal](https://ccrec.recdesk.com) |
+| Salt Box Field 2 | RecDesk-Parks-ccrec | 35 | 0 | 0 | 0 | 0 | 0 | 35 | [cal](https://ccrec.recdesk.com) |
+| Mayeski Practice Area 1 | RecDesk-Parks-ccrec | 35 | 0 | 0 | 0 | 0 | 0 | 35 | [cal](https://ccrec.recdesk.com) |
+| Oakmont Green Golf Course | RecDesk-Parks-ccrec | 35 | 0 | 0 | 0 | 0 | 0 | 35 | [cal](https://ccrec.recdesk.com) |
+| Salt Box Field 1 | RecDesk-Parks-ccrec | 35 | 0 | 0 | 0 | 0 | 0 | 35 | [cal](https://ccrec.recdesk.com) |
+| Leister Park Field 1 | RecDesk-Parks-ccrec | 35 | 0 | 0 | 0 | 0 | 0 | 35 | [cal](https://ccrec.recdesk.com) |
+| Charles Carroll | RecDesk-Parks-ccrec | 32 | 0 | 0 | 0 | 0 | 0 | 32 | [cal](https://ccrec.recdesk.com) |
+| Deer Park Magin Field | RecDesk-Parks-ccrec | 32 | 0 | 0 | 0 | 0 | 0 | 32 | [cal](https://ccrec.recdesk.com) |
+| Landon C. Burns Field 1 Lower | RecDesk-Parks-ccrec | 31 | 0 | 0 | 0 | 0 | 0 | 31 | [cal](https://ccrec.recdesk.com) |
+| Carroll Gymnastics, Inc. | RecDesk-Parks-ccrec | 24 | 3 | 3 | 0 | 0 | 0 | 30 | [cal](https://ccrec.recdesk.com) |
+| RMC Activity Room | RecDesk-Parks-ccrec | 23 | 0 | 6 | 0 | 0 | 0 | 29 | [cal](https://ccrec.recdesk.com) |
+| Kate Wagner Field 3 | RecDesk-Parks-ccrec | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [cal](https://ccrec.recdesk.com) |
+| Krimgold Park Field 1 | RecDesk-Parks-ccrec | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [cal](https://ccrec.recdesk.com) |
+| Kate Wagner Field 1 | RecDesk-Parks-ccrec | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [cal](https://ccrec.recdesk.com) |
+| Kate Wagner Field 6 | RecDesk-Parks-ccrec | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [cal](https://ccrec.recdesk.com) |
+| Kate Wagner Field 2 | RecDesk-Parks-ccrec | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [cal](https://ccrec.recdesk.com) |
+| Krimgold Park Field 2 | RecDesk-Parks-ccrec | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [cal](https://ccrec.recdesk.com) |
+| Landon C. Burns Field 2 upper | RecDesk-Parks-ccrec | 20 | 0 | 0 | 0 | 0 | 0 | 20 | [cal](https://ccrec.recdesk.com) |
+| Leister Park | RecDesk-Parks-ccrec | 1 | 0 | 5 | 5 | 5 | 0 | 16 | [cal](https://ccrec.recdesk.com) |
+| River Downs Golf Club | RecDesk-Parks-ccrec | 14 | 0 | 0 | 0 | 0 | 0 | 14 | [cal](https://ccrec.recdesk.com) |
+| Bear Branch Nature Center | RecDesk-Parks-ccrec | 14 | 0 | 0 | 0 | 0 | 0 | 14 | [cal](https://ccrec.recdesk.com) |
+| Carrolltown Elementary School | RecDesk-Parks-ccrec | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://ccrec.recdesk.com) |
+| Charles Carroll - Gym | RecDesk-Parks-ccrec | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://ccrec.recdesk.com) |
+| Mayeski Park Pavilion - Call Main Office | RecDesk-Parks-ccrec | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://ccrec.recdesk.com) |
+| Piney Run Park Nature Center | RecDesk-Parks-ccrec | 7 | 0 | 2 | 0 | 0 | 0 | 9 | [cal](https://ccrec.recdesk.com) |
+| Sandymount Park Pavilion - Call Main Office | RecDesk-Parks-ccrec | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://ccrec.recdesk.com) |
+| Sweet Rock Stables | RecDesk-Parks-ccrec | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://ccrec.recdesk.com) |
+| North Carroll Middle School | RecDesk-Parks-ccrec | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://ccrec.recdesk.com) |
+| Landon C. Burns Park | RecDesk-Parks-ccrec | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://ccrec.recdesk.com) |
+| Piney Run Equestrian Trail | RecDesk-Parks-ccrec | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://ccrec.recdesk.com) |
+| Landon C. Burns Pavilion | RecDesk-Parks-ccrec | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://ccrec.recdesk.com) |
+| -None Specified- | RecDesk-Parks-ccrec | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://ccrec.recdesk.com) |
+| Sandymount Field 4 | RecDesk-Parks-ccrec | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://ccrec.recdesk.com) |
+| Hap Baker Firearms Facility | RecDesk-Parks-ccrec | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://ccrec.recdesk.com) |
+| Piney Run Park | RecDesk-Parks-ccrec | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://ccrec.recdesk.com) |
+| Westminster High School | RecDesk-Parks-ccrec | 2 | 1 | 0 | 0 | 0 | 0 | 3 | [cal](https://ccrec.recdesk.com) |
+| Tristar Martial Arts of Westminster | RecDesk-Parks-ccrec | 0 | 0 | 1 | 1 | 0 | 1 | 3 | [cal](https://ccrec.recdesk.com) |
+| Charles Carroll Community Center | RecDesk-Parks-ccrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://ccrec.recdesk.com) |
+| Piney Run Park Boathouse | RecDesk-Parks-ccrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://ccrec.recdesk.com) |
+| Krimgold Park | RecDesk-Parks-ccrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://ccrec.recdesk.com) |
+| Robert Moton Elementary School | RecDesk-Parks-ccrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://ccrec.recdesk.com) |
+| Deer Park | RecDesk-Parks-ccrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://ccrec.recdesk.com) |
+| Robert Moton Center | RecDesk-Parks-ccrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://ccrec.recdesk.com) |
+| Westminster Veterans Memorial Park | RecDesk-Parks-ccrec | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ccrec.recdesk.com) |
+| Mt. Airy Elementary | RecDesk-Parks-ccrec | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ccrec.recdesk.com) |
+| Sandymount Park | RecDesk-Parks-ccrec | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ccrec.recdesk.com) |
+| Freedom Park Pavilion 2 | RecDesk-Parks-ccrec | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ccrec.recdesk.com) |
+| Freedom Elementary School | RecDesk-Parks-ccrec | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ccrec.recdesk.com) |
+| Freedom Park | RecDesk-Parks-ccrec | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ccrec.recdesk.com) |
+| Eldersburg Elementary School | RecDesk-Parks-ccrec | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ccrec.recdesk.com) |
+| Greenmount Bowl | RecDesk-Parks-ccrec | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ccrec.recdesk.com) |
+| PRP Pavilion #1 | RecDesk-Parks-ccrec | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ccrec.recdesk.com) |
+| New Windsor Community Room | RecDesk-Parks-ccrec | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ccrec.recdesk.com) |
+| Carl Sandburg School | RecDesk-Parks-charparksandrec | 111 | 0 | 0 | 0 | 0 | 0 | 111 | [cal](https://charparksandrec.recdesk.com) |
+| Jefferson School | RecDesk-Parks-charparksandrec | 36 | 0 | 0 | 0 | 0 | 0 | 36 | [cal](https://charparksandrec.recdesk.com) |
+| Sister City - Field 1 | RecDesk-Parks-charparksandrec | 28 | 0 | 0 | 0 | 0 | 0 | 28 | [cal](https://charparksandrec.recdesk.com) |
+| -None Specified- | RecDesk-Parks-charparksandrec | 14 | 0 | 0 | 0 | 3 | 1 | 18 | [cal](https://charparksandrec.recdesk.com) |
+| JFL Sports Complex | RecDesk-Parks-charparksandrec | 0 | 0 | 0 | 0 | 14 | 0 | 14 | [cal](https://charparksandrec.recdesk.com) |
+| City Hall Council Chambers | RecDesk-Parks-charparksandrec | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://charparksandrec.recdesk.com) |
+| City Hall Basement Conference Room | RecDesk-Parks-charparksandrec | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://charparksandrec.recdesk.com) |
+| Linder Field 5 | RecDesk-Parks-charparksandrec | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://charparksandrec.recdesk.com) |
+| Seaton Field - Trojan | RecDesk-Parks-charparksandrec | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://charparksandrec.recdesk.com) |
+| Linder Field 4 | RecDesk-Parks-charparksandrec | 5 | 0 | 0 | 0 | 1 | 0 | 6 | [cal](https://charparksandrec.recdesk.com) |
+| Dog Training Facility | RecDesk-Parks-charparksandrec | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://charparksandrec.recdesk.com) |
+| Kiwanis Park Amphitheater | RecDesk-Parks-charparksandrec | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://charparksandrec.recdesk.com) |
+| Lake Pavilion | RecDesk-Parks-charparksandrec | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://charparksandrec.recdesk.com) |
+| Linder Field 12 | RecDesk-Parks-charparksandrec | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://charparksandrec.recdesk.com) |
+| Linder Sports Complex | RecDesk-Parks-charparksandrec | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://charparksandrec.recdesk.com) |
+| Linder Field 8 | RecDesk-Parks-charparksandrec | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://charparksandrec.recdesk.com) |
+| Sister City Pavilion - Fireplace | RecDesk-Parks-charparksandrec | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://charparksandrec.recdesk.com) |
+| Linder Field 9 | RecDesk-Parks-charparksandrec | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://charparksandrec.recdesk.com) |
+| Linder Field 3 | RecDesk-Parks-charparksandrec | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://charparksandrec.recdesk.com) |
+| Kiwanis Pavilion | RecDesk-Parks-charparksandrec | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://charparksandrec.recdesk.com) |
+| Linder Pavilion | RecDesk-Parks-charparksandrec | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://charparksandrec.recdesk.com) |
+| Sister City Park | RecDesk-Parks-charparksandrec | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://charparksandrec.recdesk.com) |
+| Linder Field 6 | RecDesk-Parks-charparksandrec | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://charparksandrec.recdesk.com) |
+| Ne Co Red Softball Field | RecDesk-Parks-charparksandrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://charparksandrec.recdesk.com) |
+| City Hall 2nd Floor Board Room w/ Table | RecDesk-Parks-charparksandrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://charparksandrec.recdesk.com) |
+| Linder Field 7 | RecDesk-Parks-charparksandrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://charparksandrec.recdesk.com) |
+| Lanman Field | RecDesk-Parks-charparksandrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://charparksandrec.recdesk.com) |
+| Linder Field 10 | RecDesk-Parks-charparksandrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://charparksandrec.recdesk.com) |
+| Linder Field 11 | RecDesk-Parks-charparksandrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://charparksandrec.recdesk.com) |
+| Old Main EIU | RecDesk-Parks-charparksandrec | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://charparksandrec.recdesk.com) |
+| Computer Lab | RecDesk-Parks-cityofaikensc | 29 | 0 | 0 | 0 | 0 | 0 | 29 | [cal](https://cityofaikensc.recdesk.com) |
+| Teaching Courts | RecDesk-Parks-cityofaikensc | 23 | 0 | 0 | 0 | 0 | 0 | 23 | [cal](https://cityofaikensc.recdesk.com) |
+| Hansen Aerobics Room | RecDesk-Parks-cityofaikensc | 22 | 0 | 0 | 0 | 0 | 0 | 22 | [cal](https://cityofaikensc.recdesk.com) |
+| Smith-Hazel Gym | RecDesk-Parks-cityofaikensc | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://cityofaikensc.recdesk.com) |
+| Odell Weeks, Gym 2 | RecDesk-Parks-cityofaikensc | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://cityofaikensc.recdesk.com) |
+| Enrichment Classroom | RecDesk-Parks-cityofaikensc | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://cityofaikensc.recdesk.com) |
+| Tennis Court 05 | RecDesk-Parks-cityofaikensc | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://cityofaikensc.recdesk.com) |
+| Smith-Hazel, Meeting Room 1 | RecDesk-Parks-cityofaikensc | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://cityofaikensc.recdesk.com) |
+| Odell Weeks, Room 4 | RecDesk-Parks-cityofaikensc | 0 | 4 | 0 | 0 | 0 | 0 | 4 | [cal](https://cityofaikensc.recdesk.com) |
+| Banquet Rm Full Hall (ABC) | RecDesk-Parks-cityofaikensc | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://cityofaikensc.recdesk.com) |
+| Tennis Court 12 | RecDesk-Parks-cityofaikensc | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://cityofaikensc.recdesk.com) |
+| Banquet Rm BC | RecDesk-Parks-cityofaikensc | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://cityofaikensc.recdesk.com) |
+| -None Specified- | RecDesk-Parks-cityofaikensc | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://cityofaikensc.recdesk.com) |
+| Tennis Court 06 | RecDesk-Parks-cityofaikensc | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://cityofaikensc.recdesk.com) |
+| Tennis Court 02 | RecDesk-Parks-cityofaikensc | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://cityofaikensc.recdesk.com) |
+| CAAHAC Upstairs Rental | RecDesk-Parks-cityofaikensc | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://cityofaikensc.recdesk.com) |
+| Tennis Court 03 | RecDesk-Parks-cityofaikensc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://cityofaikensc.recdesk.com) |
+| Tennis Court 10 | RecDesk-Parks-cityofaikensc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://cityofaikensc.recdesk.com) |
+| Tennis Court 09 | RecDesk-Parks-cityofaikensc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://cityofaikensc.recdesk.com) |
+| Odell Weeks, Gym 2 - B | RecDesk-Parks-cityofaikensc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://cityofaikensc.recdesk.com) |
+| CP2 Field 9 | RecDesk-Parks-cityofaikensc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofaikensc.recdesk.com) |
+| Odell Weeks, Gym 1 | RecDesk-Parks-cityofaikensc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofaikensc.recdesk.com) |
+| Mini Bus 6324 (Handicap) | RecDesk-Parks-cityofaikensc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofaikensc.recdesk.com) |
+| Mini Bus 6228 | RecDesk-Parks-cityofaikensc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofaikensc.recdesk.com) |
+| Virginia Acres Park Price Avenue Shelter | RecDesk-Parks-cityofaikensc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofaikensc.recdesk.com) |
+| Odell Weeks, Gym 2 - A | RecDesk-Parks-cityofaikensc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofaikensc.recdesk.com) |
+| Outdoor PB Court 13 | RecDesk-Parks-cityofaikensc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofaikensc.recdesk.com) |
+| CP2 Field 7 | RecDesk-Parks-cityofaikensc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofaikensc.recdesk.com) |
+| CP2 Field 10 | RecDesk-Parks-cityofaikensc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofaikensc.recdesk.com) |
+| CP2 Field 6 | RecDesk-Parks-cityofaikensc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofaikensc.recdesk.com) |
+| Banquet Rm A | RecDesk-Parks-cityofaikensc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofaikensc.recdesk.com) |
+| Odell Weeks, Soccer Field | RecDesk-Parks-cityofaikensc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofaikensc.recdesk.com) |
+| First Ward Park | RecDesk-Parks-cityofbinghamton | 0 | 0 | 0 | 32 | 39 | 0 | 71 | [cal](https://cityofbinghamton.recdesk.com) |
+| Conlon Baseball Field (MacArthur) | RecDesk-Parks-cityofbinghamton | 10 | 0 | 0 | 10 | 0 | 0 | 20 | [cal](https://cityofbinghamton.recdesk.com) |
+| Recreation Park | RecDesk-Parks-cityofbinghamton | 14 | 0 | 0 | 0 | 0 | 0 | 14 | [cal](https://cityofbinghamton.recdesk.com) |
+| West End Park | RecDesk-Parks-cityofbinghamton | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://cityofbinghamton.recdesk.com) |
+| Sheehan Soccer Field (Rec Park) | RecDesk-Parks-cityofbinghamton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofbinghamton.recdesk.com) |
+| Multi-Purpose Room | RecDesk-Parks-cityofdover | 18 | 0 | 0 | 0 | 0 | 0 | 18 | [cal](https://cityofdover.recdesk.com) |
+| SP - Softball Field 4 | RecDesk-Parks-cityofdover | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://cityofdover.recdesk.com) |
+| SP - JWP Fields | RecDesk-Parks-cityofdover | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://cityofdover.recdesk.com) |
+| SP - Softball Field 2 | RecDesk-Parks-cityofdover | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://cityofdover.recdesk.com) |
+| John W. Pitts Recreation Center | RecDesk-Parks-cityofdover | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://cityofdover.recdesk.com) |
+| Gym | RecDesk-Parks-cityofdover | 0 | 0 | 0 | 1 | 1 | 0 | 2 | [cal](https://cityofdover.recdesk.com) |
+| Rec Center Gym | RecDesk-Parks-cityofoneida | 2 | 34 | 0 | 0 | 0 | 0 | 36 | [cal](https://cityofoneida.recdesk.com) |
+| Allen Park | RecDesk-Parks-cityofoneida | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofoneida.recdesk.com) |
+| Oneida Fall Fest | RecDesk-Parks-cityofoneida | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofoneida.recdesk.com) |
+| Allen Park Pavilion | RecDesk-Parks-cityofoneida | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofoneida.recdesk.com) |
+| Clinton Elementary School | RecDesk-Parks-clintonrec | 45 | 0 | 0 | 0 | 0 | 0 | 45 | [cal](https://clintonrec.recdesk.com) |
+| Central Park | RecDesk-Parks-clintonrec | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://clintonrec.recdesk.com) |
+| Town Hall | RecDesk-Parks-clintonrec | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://clintonrec.recdesk.com) |
+| Clinton Town Hall | RecDesk-Parks-clintonrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://clintonrec.recdesk.com) |
+| Savage Field | RecDesk-Parks-clintonrec | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clintonrec.recdesk.com) |
+| Parks and Recreation Building | RecDesk-Parks-clintonrec | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clintonrec.recdesk.com) |
+| West Community Room | RecDesk-Parks-collegedale | 24 | 0 | 1 | 0 | 0 | 0 | 25 | [cal](https://collegedale.recdesk.com) |
+| New Parking Lot | RecDesk-Parks-collegedale | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://collegedale.recdesk.com) |
+| Commons - Founders Hall | RecDesk-Parks-collegedale | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://collegedale.recdesk.com) |
+| -None Specified- | RecDesk-Parks-crpr | 168 | 30 | 0 | 0 | 0 | 0 | 198 | [cal](https://crpr.recdesk.com) |
+| SCASD Natatorium | RecDesk-Parks-crpr | 84 | 0 | 12 | 0 | 0 | 0 | 96 | [cal](https://crpr.recdesk.com) |
+| Puddle Jumpers Classroom | RecDesk-Parks-crpr | 36 | 0 | 0 | 0 | 0 | 0 | 36 | [cal](https://crpr.recdesk.com) |
+| Virtual Program (Zoom 4) | RecDesk-Parks-crpr | 22 | 0 | 0 | 0 | 0 | 0 | 22 | [cal](https://crpr.recdesk.com) |
+| Parks: Greenbriar Saybrook Park | RecDesk-Parks-crpr | 21 | 0 | 0 | 0 | 0 | 0 | 21 | [cal](https://crpr.recdesk.com) |
+| Millbrook Marsh Nature Center | RecDesk-Parks-crpr | 21 | 0 | 0 | 0 | 0 | 0 | 21 | [cal](https://crpr.recdesk.com) |
+| State College Community Theatre Space | RecDesk-Parks-crpr | 6 | 0 | 0 | 0 | 11 | 0 | 17 | [cal](https://crpr.recdesk.com) |
+| Whitehall Youth Football 1A | RecDesk-Parks-crpr | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://crpr.recdesk.com) |
+| Whitehall Youth Football 1B | RecDesk-Parks-crpr | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://crpr.recdesk.com) |
+| Whitehall Youth Football 2A | RecDesk-Parks-crpr | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://crpr.recdesk.com) |
+| Donald Hamer Community Room | RecDesk-Parks-crpr | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://crpr.recdesk.com) |
+| Young Scholars of Central PA Charter School | RecDesk-Parks-crpr | 14 | 0 | 0 | 0 | 0 | 0 | 14 | [cal](https://crpr.recdesk.com) |
+| Whitehall Field 1 | RecDesk-Parks-crpr | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://crpr.recdesk.com) |
+| Parks: Hess Softball Complex | RecDesk-Parks-crpr | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://crpr.recdesk.com) |
+| Tusseyview Park Basketball Court 1 | RecDesk-Parks-crpr | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://crpr.recdesk.com) |
+| Graysdale Park Athletic Field 1 | RecDesk-Parks-crpr | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://crpr.recdesk.com) |
+| Spring Creek Park Pavilion #1 | RecDesk-Parks-crpr | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://crpr.recdesk.com) |
+| Circleville Park Pavilion #2 | RecDesk-Parks-crpr | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://crpr.recdesk.com) |
+| Parks: Bernel Road Park | RecDesk-Parks-crpr | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://crpr.recdesk.com) |
+| Tom Tudek Memorial Park Pavilion #2 | RecDesk-Parks-crpr | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://crpr.recdesk.com) |
+| Sunset Park Pavilion #1 (Right) | RecDesk-Parks-crpr | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://crpr.recdesk.com) |
+| Tom Tudek Memorial Park Pavilion #1 | RecDesk-Parks-crpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://crpr.recdesk.com) |
+| Orchard Park Pavilion | RecDesk-Parks-crpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://crpr.recdesk.com) |
+| Spring Creek Park Pavilion #3 | RecDesk-Parks-crpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://crpr.recdesk.com) |
+| Oak Hall Regional Park Baseball/Softball Field 1 | RecDesk-Parks-crpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://crpr.recdesk.com) |
+| Bernel Road Park Tennis/Pickleball Court 1 | RecDesk-Parks-crpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://crpr.recdesk.com) |
+| State College Borough Bldg., Room 220 | RecDesk-Parks-crpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://crpr.recdesk.com) |
+| Circleville Park Pavilion #4 | RecDesk-Parks-crpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://crpr.recdesk.com) |
+| Blue Spring Pavilion | RecDesk-Parks-crpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://crpr.recdesk.com) |
+| Park Forest Community Pool | RecDesk-Parks-crpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://crpr.recdesk.com) |
+| -None Specified- | RecDesk-Parks-habershamga | 39 | 0 | 0 | 0 | 0 | 0 | 39 | [cal](https://habershamga.recdesk.com) |
+| Ruby Fulbright Natatorium - Lap Pool | RecDesk-Parks-habershamga | 24 | 0 | 0 | 0 | 0 | 0 | 24 | [cal](https://habershamga.recdesk.com) |
+| Ruby Fulbright Aquatic Center GRAY Gym | RecDesk-Parks-habershamga | 15 | 0 | 0 | 0 | 0 | 0 | 15 | [cal](https://habershamga.recdesk.com) |
+| Ruby Fulbright Aquatic Center BLUE Gym | RecDesk-Parks-habershamga | 14 | 0 | 0 | 0 | 0 | 0 | 14 | [cal](https://habershamga.recdesk.com) |
+| Ruby Fulbright AC Pickleball Courts | RecDesk-Parks-habershamga | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://habershamga.recdesk.com) |
+| Ruby Fulbright Natatorium - Rec Pool | RecDesk-Parks-habershamga | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://habershamga.recdesk.com) |
+| Dewey H. Tench Market Pavilion | RecDesk-Parks-habershamga | 5 | 0 | 0 | 4 | 0 | 0 | 9 | [cal](https://habershamga.recdesk.com) |
+| Habersham County Fairgrounds | RecDesk-Parks-habershamga | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://habershamga.recdesk.com) |
+| Ruby Fulbright Aquatic Center Large Meeting Room | RecDesk-Parks-habershamga | 3 | 1 | 0 | 0 | 0 | 0 | 4 | [cal](https://habershamga.recdesk.com) |
+| Aquatic Center Field 2 | RecDesk-Parks-habershamga | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://habershamga.recdesk.com) |
+| Aquatic Center Field 1 | RecDesk-Parks-habershamga | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://habershamga.recdesk.com) |
+| Private Pool Party | RecDesk-Parks-habershamga | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://habershamga.recdesk.com) |
+| Aquatic Center Field 4 | RecDesk-Parks-habershamga | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://habershamga.recdesk.com) |
+| Fairgrounds Upper Parking Lot | RecDesk-Parks-habershamga | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://habershamga.recdesk.com) |
+| McCloud Nature Park | RecDesk-Parks-hcparks | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://hcparks.recdesk.com) |
+| W.S. Gibbs Memorial Park | RecDesk-Parks-hcparks | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://hcparks.recdesk.com) |
+| Virginia Park | RecDesk-Parks-hpr | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://hpr.recdesk.com) |
+| Chief Ladiga Trail | RecDesk-Parks-jacksonvilleal | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://jacksonvilleal.recdesk.com) |
+| Martucci Field | RecDesk-Parks-jcrec | 58 | 0 | 5 | 21 | 26 | 8 | 118 | [cal](https://jcrec.recdesk.com) |
+| Lincoln Park Track | RecDesk-Parks-jcrec | 4 | 0 | 8 | 0 | 6 | 0 | 18 | [cal](https://jcrec.recdesk.com) |
+| MS #7 | RecDesk-Parks-jcrec | 0 | 0 | 0 | 5 | 6 | 6 | 17 | [cal](https://jcrec.recdesk.com) |
+| Franco Field | RecDesk-Parks-jcrec | 0 | 0 | 0 | 8 | 8 | 0 | 16 | [cal](https://jcrec.recdesk.com) |
+| -None Specified- | RecDesk-Parks-jcrec | 12 | 0 | 0 | 0 | 1 | 2 | 15 | [cal](https://jcrec.recdesk.com) |
+| Pershing Field Basketball Court | RecDesk-Parks-jcrec | 0 | 0 | 3 | 0 | 6 | 1 | 10 | [cal](https://jcrec.recdesk.com) |
+| Mary Benson Softball Field | RecDesk-Parks-jcrec | 0 | 0 | 4 | 0 | 4 | 0 | 8 | [cal](https://jcrec.recdesk.com) |
+| Caven Point Little League Field | RecDesk-Parks-jcrec | 0 | 0 | 0 | 4 | 4 | 0 | 8 | [cal](https://jcrec.recdesk.com) |
+| Lincoln Park Basketball Courts | RecDesk-Parks-jcrec | 0 | 0 | 2 | 1 | 5 | 0 | 8 | [cal](https://jcrec.recdesk.com) |
+| Pershing Field Community Ctr (not for rent/permit) | RecDesk-Parks-jcrec | 0 | 0 | 0 | 6 | 1 | 0 | 7 | [cal](https://jcrec.recdesk.com) |
+| Bayside Park Basketball Court | RecDesk-Parks-jcrec | 0 | 0 | 2 | 0 | 4 | 1 | 7 | [cal](https://jcrec.recdesk.com) |
+| Pershing Field Park | RecDesk-Parks-jcrec | 0 | 0 | 1 | 5 | 0 | 0 | 6 | [cal](https://jcrec.recdesk.com) |
+| College Little League Field | RecDesk-Parks-jcrec | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://jcrec.recdesk.com) |
+| Gateway Turf Soccer Field | RecDesk-Parks-jcrec | 0 | 0 | 0 | 3 | 0 | 0 | 3 | [cal](https://jcrec.recdesk.com) |
+| Audubon Park | RecDesk-Parks-jcrec | 0 | 0 | 0 | 0 | 2 | 0 | 2 | [cal](https://jcrec.recdesk.com) |
+| 16th Street Park Pickle-Ball Courts | RecDesk-Parks-jcrec | 0 | 0 | 0 | 1 | 1 | 0 | 2 | [cal](https://jcrec.recdesk.com) |
+| Gateway Turf | RecDesk-Parks-jcrec | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://jcrec.recdesk.com) |
+| Audubon Multipurpose Court | RecDesk-Parks-jcrec | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://jcrec.recdesk.com) |
+| Berry Lane Park Basketball Court | RecDesk-Parks-jcrec | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://jcrec.recdesk.com) |
+| Rec Room | RecDesk-Parks-keeneparks | 56 | 0 | 0 | 0 | 0 | 0 | 56 | [cal](https://keeneparks.recdesk.com) |
+| Multi Purpose Room | RecDesk-Parks-keeneparks | 34 | 8 | 0 | 0 | 0 | 0 | 42 | [cal](https://keeneparks.recdesk.com) |
+| Legion Fields | RecDesk-Parks-keeneparks | 0 | 0 | 0 | 12 | 11 | 0 | 23 | [cal](https://keeneparks.recdesk.com) |
+| Esports Room | RecDesk-Parks-keeneparks | 22 | 0 | 0 | 0 | 0 | 0 | 22 | [cal](https://keeneparks.recdesk.com) |
+| Tennis Courts | RecDesk-Parks-keeneparks | 8 | 0 | 0 | 12 | 0 | 0 | 20 | [cal](https://keeneparks.recdesk.com) |
+| Patricia T. Russell Park | RecDesk-Parks-keeneparks | 4 | 0 | 0 | 12 | 0 | 0 | 16 | [cal](https://keeneparks.recdesk.com) |
+| Fuller School - Field 2 | RecDesk-Parks-keeneparks | 0 | 0 | 0 | 0 | 12 | 0 | 12 | [cal](https://keeneparks.recdesk.com) |
+| Patricia T. Russell Park Field | RecDesk-Parks-keeneparks | 0 | 0 | 11 | 0 | 0 | 0 | 11 | [cal](https://keeneparks.recdesk.com) |
+| Fuller Park Green Space | RecDesk-Parks-keeneparks | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://keeneparks.recdesk.com) |
+| Durling | RecDesk-Parks-keeneparks | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://keeneparks.recdesk.com) |
+| O'Neal | RecDesk-Parks-keeneparks | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://keeneparks.recdesk.com) |
+| Gym | RecDesk-Parks-keeneparks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://keeneparks.recdesk.com) |
+| Game Room | RecDesk-Parks-keeneparks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://keeneparks.recdesk.com) |
+| Bill Fay Tennis Court #1 | RecDesk-Parks-klc | 0 | 0 | 6 | 6 | 0 | 3 | 15 | [cal](https://klc.recdesk.com) |
+| Barnet Field #2 300ft | RecDesk-Parks-klc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://klc.recdesk.com) |
+| Barnet Field #1 200ft | RecDesk-Parks-klc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://klc.recdesk.com) |
+| Barnet Picnic Shelter | RecDesk-Parks-klc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://klc.recdesk.com) |
+| Barnet Field #4 235ft | RecDesk-Parks-klc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://klc.recdesk.com) |
+| Bill Fay Field #1 | RecDesk-Parks-klc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://klc.recdesk.com) |
+| Barnet Field #3 185ft | RecDesk-Parks-klc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://klc.recdesk.com) |
+| Martin C Freeman Center | RecDesk-Parks-klc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://klc.recdesk.com) |
+| Southeast Park | RecDesk-Parks-klc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://klc.recdesk.com) |
+| Grainger Stadium | RecDesk-Parks-klc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://klc.recdesk.com) |
+| Pearson Park | RecDesk-Parks-klc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://klc.recdesk.com) |
+| Barnet Soccer Field #3 Large | RecDesk-Parks-klc | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://klc.recdesk.com) |
+| Bill Fay Par 3 Golf Course | RecDesk-Parks-klc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://klc.recdesk.com) |
+| Grainger Stadium Parking Lot | RecDesk-Parks-klc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://klc.recdesk.com) |
+| Gymnastics Building 2105 Nash St | RecDesk-Parks-lcncpr | 102 | 0 | 30 | 0 | 0 | 0 | 132 | [cal](https://lcncpr.recdesk.com) |
+| -None Specified- | RecDesk-Parks-lcncpr | 35 | 0 | 0 | 0 | 0 | 0 | 35 | [cal](https://lcncpr.recdesk.com) |
+| Tramway Road Park: Field 3 | RecDesk-Parks-lcncpr | 28 | 0 | 0 | 0 | 0 | 0 | 28 | [cal](https://lcncpr.recdesk.com) |
+| LCAP - Baseball/Softball Field 3 | RecDesk-Parks-lcncpr | 27 | 0 | 0 | 0 | 0 | 0 | 27 | [cal](https://lcncpr.recdesk.com) |
+| LCAP - Baseball Field 1 | RecDesk-Parks-lcncpr | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [cal](https://lcncpr.recdesk.com) |
+| LCAP - Multipurpose Field 7 (Natural Grass) | RecDesk-Parks-lcncpr | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [cal](https://lcncpr.recdesk.com) |
+| LCAP - Baseball/Softball Field 4 | RecDesk-Parks-lcncpr | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [cal](https://lcncpr.recdesk.com) |
+| LCAP - Baseball/Softball Field 2 | RecDesk-Parks-lcncpr | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [cal](https://lcncpr.recdesk.com) |
+| Ingram Center | RecDesk-Parks-lcncpr | 25 | 0 | 0 | 0 | 0 | 0 | 25 | [cal](https://lcncpr.recdesk.com) |
+| Tramway Road Park: Field 1 | RecDesk-Parks-lcncpr | 24 | 0 | 0 | 0 | 0 | 0 | 24 | [cal](https://lcncpr.recdesk.com) |
+| LCAP - Multipurpose Field 9 (Natural Grass) | RecDesk-Parks-lcncpr | 24 | 0 | 0 | 0 | 0 | 0 | 24 | [cal](https://lcncpr.recdesk.com) |
+| Bob Hales: Full Court | RecDesk-Parks-lcncpr | 24 | 0 | 0 | 0 | 0 | 0 | 24 | [cal](https://lcncpr.recdesk.com) |
+| Tramway Road Park: Field 4 | RecDesk-Parks-lcncpr | 22 | 0 | 0 | 0 | 0 | 0 | 22 | [cal](https://lcncpr.recdesk.com) |
+| Tramway Road Park: Field 2 | RecDesk-Parks-lcncpr | 22 | 0 | 0 | 0 | 0 | 0 | 22 | [cal](https://lcncpr.recdesk.com) |
+| LCAP - Multipurpose Field 10 (Natural Grass) | RecDesk-Parks-lcncpr | 21 | 0 | 0 | 0 | 0 | 0 | 21 | [cal](https://lcncpr.recdesk.com) |
+| Lett Family Park Center | RecDesk-Parks-lcncpr | 18 | 1 | 0 | 0 | 0 | 0 | 19 | [cal](https://lcncpr.recdesk.com) |
+| LCAP - Multipurpose Field 8 (Natural Grass) | RecDesk-Parks-lcncpr | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://lcncpr.recdesk.com) |
+| LCAP - Multipurpose Field 6 (Synthetic Turf) | RecDesk-Parks-lcncpr | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://lcncpr.recdesk.com) |
+| LCAP - Multipurpose Field 5 (Synthetic Turf) | RecDesk-Parks-lcncpr | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://lcncpr.recdesk.com) |
+| FT- SP#1 LCAP (Playground): 210 Champion Rd. | RecDesk-Parks-lcncpr | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://lcncpr.recdesk.com) |
+| FT- SP#2 LCAP (Diamond Fields): 210 Champion Rd. | RecDesk-Parks-lcncpr | 15 | 0 | 0 | 0 | 0 | 0 | 15 | [cal](https://lcncpr.recdesk.com) |
+| FT- SP#1 LCAP (Diamond Fields): 210 Champion Rd. | RecDesk-Parks-lcncpr | 15 | 0 | 0 | 0 | 0 | 0 | 15 | [cal](https://lcncpr.recdesk.com) |
+| Tramway Road Park | RecDesk-Parks-lcncpr | 14 | 0 | 0 | 0 | 0 | 0 | 14 | [cal](https://lcncpr.recdesk.com) |
+| Kiwanis Family Park Shelter | RecDesk-Parks-lcncpr | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [cal](https://lcncpr.recdesk.com) |
+| Lett Park: Field 1 | RecDesk-Parks-lcncpr | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://lcncpr.recdesk.com) |
+| FT- SP#2 LCAP (Playground): 210 Champion Rd. | RecDesk-Parks-lcncpr | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://lcncpr.recdesk.com) |
+| Tramway Road Park: Soccer Field | RecDesk-Parks-lcncpr | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://lcncpr.recdesk.com) |
+| FT- SP#1 Tramway Road Park:2303 Tramway Rd. | RecDesk-Parks-lcncpr | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://lcncpr.recdesk.com) |
+| FT- SP#2 Tramway Road Park:2303 Tramway Rd | RecDesk-Parks-lcncpr | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://lcncpr.recdesk.com) |
+| San-Lee Nature Center MPR | RecDesk-Parks-lcncpr | 6 | 2 | 0 | 0 | 0 | 0 | 8 | [cal](https://lcncpr.recdesk.com) |
+| San-Lee Park | RecDesk-Parks-lcncpr | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://lcncpr.recdesk.com) |
+| Kiwanis Children's Park Shelter | RecDesk-Parks-lcncpr | 1 | 0 | 0 | 3 | 0 | 0 | 4 | [cal](https://lcncpr.recdesk.com) |
+| FT- SP#1 LCAP (Synthetic Turf): 210 Champion Rd. | RecDesk-Parks-lcncpr | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://lcncpr.recdesk.com) |
+| T-Ball Field 4 | RecDesk-Parks-lcncpr | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://lcncpr.recdesk.com) |
+| T-Ball Field 2 | RecDesk-Parks-lcncpr | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://lcncpr.recdesk.com) |
+| T-Ball Field 3 | RecDesk-Parks-lcncpr | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://lcncpr.recdesk.com) |
+| T-Ball Field 1 | RecDesk-Parks-lcncpr | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://lcncpr.recdesk.com) |
+| O.T. Sloan Shelter (by the tennis courts) | RecDesk-Parks-lcncpr | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://lcncpr.recdesk.com) |
+| FT- SP#2 Kiwanis Children's Park:101 Park Ave. | RecDesk-Parks-lcncpr | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://lcncpr.recdesk.com) |
+| Dalrymple Park: Ballfield 1 | RecDesk-Parks-lcncpr | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lcncpr.recdesk.com) |
+| OT Pickle Ball Courts # 2 | RecDesk-Parks-lcncpr | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lcncpr.recdesk.com) |
+| San-Lee Park Shelter | RecDesk-Parks-lcncpr | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lcncpr.recdesk.com) |
+| OT Pickle Ball Courts # 1 | RecDesk-Parks-lcncpr | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lcncpr.recdesk.com) |
+| Tent Site # 6 | RecDesk-Parks-lcncpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lcncpr.recdesk.com) |
+| Kiwanis Family Park Gazebo | RecDesk-Parks-lcncpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lcncpr.recdesk.com) |
+| O.T. Sloan Picnic Shelter (across from the pool) | RecDesk-Parks-lcncpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lcncpr.recdesk.com) |
+| Tent Site # 5 | RecDesk-Parks-lcncpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lcncpr.recdesk.com) |
+| FT- SP#1 LCAP (Pod C): 210 Champion Rd. | RecDesk-Parks-lcncpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lcncpr.recdesk.com) |
+| Dalrymple Park: Ballfield 2 | RecDesk-Parks-lcncpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lcncpr.recdesk.com) |
+| FT- SP#2 Lett Fam Park 301 Gilbert Lett Dr. 27505 | RecDesk-Parks-lcncpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lcncpr.recdesk.com) |
+| FT- SP#2 LCAP (Synthetic Turf): 210 Champion Rd. | RecDesk-Parks-lcncpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lcncpr.recdesk.com) |
+| OT Pickle Ball Courts # 3 | RecDesk-Parks-lcncpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lcncpr.recdesk.com) |
+| Maitland Community Park Meeting Room - 40ppl MAX | RecDesk-Parks-maitland | 58 | 0 | 0 | 0 | 0 | 0 | 58 | [cal](https://maitland.recdesk.com) |
+| Lake Lily Yellow Cottage | RecDesk-Parks-maitland | 41 | 0 | 0 | 0 | 0 | 0 | 41 | [cal](https://maitland.recdesk.com) |
+| MH Pickleball Court 1 | RecDesk-Parks-maitland | 40 | 0 | 0 | 0 | 0 | 0 | 40 | [cal](https://maitland.recdesk.com) |
+| MCP Tennis Court 1 | RecDesk-Parks-maitland | 36 | 0 | 0 | 0 | 0 | 0 | 36 | [cal](https://maitland.recdesk.com) |
+| MCP Basketball Court | RecDesk-Parks-maitland | 34 | 0 | 0 | 0 | 0 | 0 | 34 | [cal](https://maitland.recdesk.com) |
+| Maitland Middle School | RecDesk-Parks-maitland | 0 | 0 | 14 | 14 | 0 | 0 | 28 | [cal](https://maitland.recdesk.com) |
+| City Hall Chamber Room | RecDesk-Parks-maitland | 18 | 0 | 0 | 0 | 0 | 0 | 18 | [cal](https://maitland.recdesk.com) |
+| Maitland Community Park | RecDesk-Parks-maitland | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://maitland.recdesk.com) |
+| Hill Tennis CT 1 | RecDesk-Parks-maitland | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://maitland.recdesk.com) |
+| Baseball Field B - Eljer Park | RecDesk-Parks-marysvilleoh | 61 | 0 | 0 | 0 | 0 | 0 | 61 | [cal](https://marysvilleoh.recdesk.com) |
+| Baseball Field A - Eljer Park | RecDesk-Parks-marysvilleoh | 61 | 0 | 0 | 0 | 0 | 0 | 61 | [cal](https://marysvilleoh.recdesk.com) |
+| Baseball City Field A | RecDesk-Parks-marysvilleoh | 53 | 0 | 0 | 0 | 0 | 0 | 53 | [cal](https://marysvilleoh.recdesk.com) |
+| Mill Valley South- Soccer Fields | RecDesk-Parks-marysvilleoh | 47 | 0 | 0 | 0 | 0 | 0 | 47 | [cal](https://marysvilleoh.recdesk.com) |
+| City Field 1 | RecDesk-Parks-marysvilleoh | 40 | 0 | 0 | 0 | 0 | 0 | 40 | [cal](https://marysvilleoh.recdesk.com) |
+| City Field 2 | RecDesk-Parks-marysvilleoh | 40 | 0 | 0 | 0 | 0 | 0 | 40 | [cal](https://marysvilleoh.recdesk.com) |
+| Mill Valley Central Soccer Field | RecDesk-Parks-marysvilleoh | 40 | 0 | 0 | 0 | 0 | 0 | 40 | [cal](https://marysvilleoh.recdesk.com) |
+| Baseball Field - Mill Valley Central | RecDesk-Parks-marysvilleoh | 40 | 0 | 0 | 0 | 0 | 0 | 40 | [cal](https://marysvilleoh.recdesk.com) |
+| Function Hall | RecDesk-Parks-merrimack | 11 | 0 | 19 | 0 | 0 | 0 | 30 | [cal](https://merrimack.recdesk.com) |
+| -None Specified- | RecDesk-Parks-merrimack | 3 | 0 | 0 | 19 | 0 | 0 | 22 | [cal](https://merrimack.recdesk.com) |
+| Archery Range | RecDesk-Parks-merrimack | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://merrimack.recdesk.com) |
+| Tennis Courts | RecDesk-Parks-merrimack | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://merrimack.recdesk.com) |
+| Wasserman Park | RecDesk-Parks-merrimack | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://merrimack.recdesk.com) |
+| Hillsdale Community Center & Park | RecDesk-Parks-mprd | 71 | 0 | 0 | 0 | 0 | 0 | 71 | [cal](https://mprd.recdesk.com) |
+| Joseph C. Dotch Community Center & Park | RecDesk-Parks-mprd | 66 | 0 | 0 | 0 | 0 | 0 | 66 | [cal](https://mprd.recdesk.com) |
+| Thomas Sullivan Community Center & Park | RecDesk-Parks-mprd | 56 | 0 | 0 | 0 | 0 | 0 | 56 | [cal](https://mprd.recdesk.com) |
+| Laun Community Center & Park | RecDesk-Parks-mprd | 47 | 0 | 0 | 0 | 0 | 0 | 47 | [cal](https://mprd.recdesk.com) |
+| Cottage Hill Gymnastics Center | RecDesk-Parks-mprd | 20 | 0 | 22 | 2 | 0 | 0 | 44 | [cal](https://mprd.recdesk.com) |
+| Harmon - Thomas Community Center & Park | RecDesk-Parks-mprd | 39 | 0 | 0 | 0 | 0 | 5 | 44 | [cal](https://mprd.recdesk.com) |
+| Michael A. Figures Community Center & Park | RecDesk-Parks-mprd | 38 | 0 | 0 | 0 | 0 | 0 | 38 | [cal](https://mprd.recdesk.com) |
+| Rickarby Community Center & Park | RecDesk-Parks-mprd | 37 | 0 | 0 | 0 | 0 | 0 | 37 | [cal](https://mprd.recdesk.com) |
+| James Seals Community Center & Park | RecDesk-Parks-mprd | 36 | 0 | 0 | 0 | 0 | 0 | 36 | [cal](https://mprd.recdesk.com) |
+| Springhill Fitness & Community Center | RecDesk-Parks-mprd | 35 | 0 | 0 | 0 | 0 | 0 | 35 | [cal](https://mprd.recdesk.com) |
+| Sage Turf Field A | RecDesk-Parks-mprd | 34 | 0 | 0 | 0 | 0 | 0 | 34 | [cal](https://mprd.recdesk.com) |
+| Stotts Community Center & Park | RecDesk-Parks-mprd | 31 | 0 | 0 | 0 | 0 | 0 | 31 | [cal](https://mprd.recdesk.com) |
+| Robert Hope Community Center | RecDesk-Parks-mprd | 28 | 0 | 0 | 0 | 0 | 0 | 28 | [cal](https://mprd.recdesk.com) |
+| Millers Park Field A (T-Ball) | RecDesk-Parks-mprd | 27 | 0 | 0 | 0 | 0 | 0 | 27 | [cal](https://mprd.recdesk.com) |
+| Millers Park Field B | RecDesk-Parks-mprd | 27 | 0 | 0 | 0 | 0 | 0 | 27 | [cal](https://mprd.recdesk.com) |
+| -None Specified- | RecDesk-Parks-mprd | 27 | 0 | 0 | 0 | 0 | 0 | 27 | [cal](https://mprd.recdesk.com) |
+| Millers Park Field C | RecDesk-Parks-mprd | 27 | 0 | 0 | 0 | 0 | 0 | 27 | [cal](https://mprd.recdesk.com) |
+| Lavretta Art and Culture Center & Park | RecDesk-Parks-mprd | 24 | 0 | 2 | 0 | 0 | 0 | 26 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Lobby - C | RecDesk-Parks-mprd | 22 | 0 | 0 | 0 | 0 | 0 | 22 | [cal](https://mprd.recdesk.com) |
+| Sage Turf Field C | RecDesk-Parks-mprd | 21 | 0 | 0 | 0 | 0 | 0 | 21 | [cal](https://mprd.recdesk.com) |
+| Sage Turf Field B | RecDesk-Parks-mprd | 18 | 0 | 0 | 0 | 0 | 0 | 18 | [cal](https://mprd.recdesk.com) |
+| Cottage Hill Softball Field A | RecDesk-Parks-mprd | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Lobby - D | RecDesk-Parks-mprd | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [cal](https://mprd.recdesk.com) |
+| Cottage Hill Multi-Use Field D (Gated with bleache | RecDesk-Parks-mprd | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Fitness Room | RecDesk-Parks-mprd | 14 | 0 | 0 | 0 | 0 | 0 | 14 | [cal](https://mprd.recdesk.com) |
+| Cottage Hill Softball Field B | RecDesk-Parks-mprd | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [cal](https://mprd.recdesk.com) |
+| Cottage Hill Baseball Field C | RecDesk-Parks-mprd | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [cal](https://mprd.recdesk.com) |
+| Cottage Hill Practice Field E | RecDesk-Parks-mprd | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://mprd.recdesk.com) |
+| Hillsdale Gymnasium | RecDesk-Parks-mprd | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://mprd.recdesk.com) |
+| Cottage Hill Multi-Use Field C | RecDesk-Parks-mprd | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Lobby - A | RecDesk-Parks-mprd | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Billiard | RecDesk-Parks-mprd | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Pool Room | RecDesk-Parks-mprd | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://mprd.recdesk.com) |
+| Cottage Hill Baseball Field D | RecDesk-Parks-mprd | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Computer Lab | RecDesk-Parks-mprd | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://mprd.recdesk.com) |
+| Cottage Hill Multi-Use Field A | RecDesk-Parks-mprd | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Gym | RecDesk-Parks-mprd | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://mprd.recdesk.com) |
+| Mims Park Multi-Use Field (T-ball) | RecDesk-Parks-mprd | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://mprd.recdesk.com) |
+| Mims Multi-Use Field B | RecDesk-Parks-mprd | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://mprd.recdesk.com) |
+| Trimmier Park | RecDesk-Parks-mprd | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://mprd.recdesk.com) |
+| Sullivan Football Field | RecDesk-Parks-mprd | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://mprd.recdesk.com) |
+| Trimmier Football Field | RecDesk-Parks-mprd | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://mprd.recdesk.com) |
+| Mims Park Multi-Use Softball Field | RecDesk-Parks-mprd | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://mprd.recdesk.com) |
+| Sage Grass Field D | RecDesk-Parks-mprd | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Art Room | RecDesk-Parks-mprd | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://mprd.recdesk.com) |
+| Cathedral Square | RecDesk-Parks-mprd | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://mprd.recdesk.com) |
+| Washington Square | RecDesk-Parks-mprd | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://mprd.recdesk.com) |
+| Langan Table #08 | RecDesk-Parks-mprd | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Multi-Purpose/B | RecDesk-Parks-mprd | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://mprd.recdesk.com) |
+| Mims Multi-Use Field A (High School Field) | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| Sage Softball Field A | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| Hillsdale Tennis Court 1 | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| Seals Multi-Purpose Room | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| Langan Performing Arts Pavilion | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| Newhouse Teen Center & Park | RecDesk-Parks-mprd | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://mprd.recdesk.com) |
+| Hackmeyer Park | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| 229 Orangeburg Recreation Complex (Press Box2) | RecDesk-Parks-orangeburg | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://orangeburg.recdesk.com) |
+| 224 Orangeburg Recreation Complex (Press Box 1) | RecDesk-Parks-orangeburg | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://orangeburg.recdesk.com) |
+| Canteen | RecDesk-Parks-orangeburg | 3 | 2 | 0 | 0 | 0 | 0 | 5 | [cal](https://orangeburg.recdesk.com) |
+| Arts Center Shelter | RecDesk-Parks-orangeburg | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://orangeburg.recdesk.com) |
+| Albergotti Shelter | RecDesk-Parks-orangeburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://orangeburg.recdesk.com) |
+| UWM Sports Complex | RecDesk-Parks-pontiacrecreation | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://pontiacrecreation.recdesk.com) |
+| Frost Recreation Center | RecDesk-Parks-pontiacrecreation | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://pontiacrecreation.recdesk.com) |
+| -None Specified- | RecDesk-Parks-pontiacrecreation | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://pontiacrecreation.recdesk.com) |
+| Beaudette Park- Pavilion | RecDesk-Parks-pontiacrecreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pontiacrecreation.recdesk.com) |
+| Brownstone Intermediate School | RecDesk-Parks-portland | 0 | 0 | 0 | 43 | 0 | 0 | 43 | [cal](https://portland.recdesk.com) |
+| Buck-Foreman Community Center | RecDesk-Parks-portland | 8 | 0 | 0 | 27 | 0 | 0 | 35 | [cal](https://portland.recdesk.com) |
+| Portland Riverfront Park | RecDesk-Parks-portland | 19 | 0 | 0 | 0 | 0 | 0 | 19 | [cal](https://portland.recdesk.com) |
+| Portland West Golf Course | RecDesk-Parks-portland | 5 | 0 | 4 | 4 | 4 | 0 | 17 | [cal](https://portland.recdesk.com) |
+| Portland High School- Tennis Courts | RecDesk-Parks-portland | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [cal](https://portland.recdesk.com) |
+| Kennedy Recreation Center | RecDesk-Parks-providenceri | 77 | 0 | 0 | 0 | 0 | 0 | 77 | [cal](https://providenceri.recdesk.com) |
+| John H. Rollins Recreation Center | RecDesk-Parks-providenceri | 41 | 0 | 0 | 0 | 0 | 0 | 41 | [cal](https://providenceri.recdesk.com) |
+| Vincent Brown Recreation Center | RecDesk-Parks-providenceri | 41 | 0 | 0 | 0 | 0 | 0 | 41 | [cal](https://providenceri.recdesk.com) |
+| Raymond Elementary School | RecDesk-Parks-raymond | 40 | 0 | 0 | 0 | 0 | 0 | 40 | [cal](https://raymond.recdesk.com) |
+| Camp Agawam Soccer Fields | RecDesk-Parks-raymond | 18 | 0 | 6 | 0 | 0 | 0 | 24 | [cal](https://raymond.recdesk.com) |
+| Tassel Top Park | RecDesk-Parks-raymond | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://raymond.recdesk.com) |
+| Arena Ice Surface | RecDesk-Parks-rochesterrec | 13 | 0 | 0 | 7 | 7 | 0 | 27 | [cal](https://rochesterrec.recdesk.com) |
+| Foley Center Gymnasium | RecDesk-Parks-rochesterrec | 13 | 0 | 0 | 8 | 4 | 0 | 25 | [cal](https://rochesterrec.recdesk.com) |
+| Gym Court 1 | RecDesk-Parks-rochesterrec | 2 | 7 | 0 | 0 | 0 | 0 | 9 | [cal](https://rochesterrec.recdesk.com) |
+| Gym Court 2 | RecDesk-Parks-rochesterrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://rochesterrec.recdesk.com) |
+| Rec Conference Room 1 | RecDesk-Parks-rochesterrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://rochesterrec.recdesk.com) |
+| Rec Community Room | RecDesk-Parks-rochesterrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://rochesterrec.recdesk.com) |
+| Gym Court 3 | RecDesk-Parks-rochesterrec | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://rochesterrec.recdesk.com) |
+| Rec Dojo | RecDesk-Parks-rochesterrec | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://rochesterrec.recdesk.com) |
+| Chris Wicker Aquatic Center | RecDesk-Parks-rrparksandrec | 177 | 7 | 0 | 0 | 0 | 0 | 184 | [cal](https://rrparksandrec.recdesk.com) |
+| Swim Lanes 1-3 | RecDesk-Parks-rrparksandrec | 36 | 0 | 0 | 0 | 0 | 0 | 36 | [cal](https://rrparksandrec.recdesk.com) |
+| TJ Davis Recreation Center | RecDesk-Parks-rrparksandrec | 0 | 0 | 0 | 6 | 6 | 0 | 12 | [cal](https://rrparksandrec.recdesk.com) |
+| King Field | RecDesk-Parks-rrparksandrec | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://rrparksandrec.recdesk.com) |
+| Jaycee Field | RecDesk-Parks-rrparksandrec | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://rrparksandrec.recdesk.com) |
+| Allen Field | RecDesk-Parks-rrparksandrec | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://rrparksandrec.recdesk.com) |
+| -None Specified- | RecDesk-Parks-rrparksandrec | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://rrparksandrec.recdesk.com) |
+| Ballfield 5 | RecDesk-Parks-shelby | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://shelby.recdesk.com) |
+| Ballfield 7 | RecDesk-Parks-shelby | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://shelby.recdesk.com) |
+| Stallings Municipal Park | RecDesk-Parks-stallings | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://stallings.recdesk.com) |
+| Shelter D/Heath Guion Shelter | RecDesk-Parks-stallings | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://stallings.recdesk.com) |
+| Bob Cecile Upstairs | RecDesk-Parks-syracuse | 19 | 0 | 0 | 0 | 0 | 0 | 19 | [cal](https://syracuse.recdesk.com) |
+| Thornden Park Carriage House | RecDesk-Parks-syracuse | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://syracuse.recdesk.com) |
+| Valley Pool | RecDesk-Parks-syracuse | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://syracuse.recdesk.com) |
+| Burnet Arts & Crafts | RecDesk-Parks-syracuse | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://syracuse.recdesk.com) |
+| Burnet Park Golf Course | RecDesk-Parks-syracuse | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://syracuse.recdesk.com) |
+| Onondaga Creekwalk.Armory Square Trailhead | RecDesk-Parks-syracuse | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://syracuse.recdesk.com) |
+| -None Specified- | RecDesk-Parks-syracuse | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://syracuse.recdesk.com) |
+| Sunnycrest Park | RecDesk-Parks-syracuse | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://syracuse.recdesk.com) |
+| Clinton Square | RecDesk-Parks-syracuse | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://syracuse.recdesk.com) |
+| Onondaga Park | RecDesk-Parks-syracuse | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://syracuse.recdesk.com) |
+| Syracuse Inner Harbor - Creekwalk | RecDesk-Parks-syracuse | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://syracuse.recdesk.com) |
+| Indoor Pool | RecDesk-Parks-watertownwi | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://watertownwi.recdesk.com) |
+| -None Specified- | RecDesk-Parks-westhartford | 125 | 0 | 0 | 0 | 0 | 0 | 125 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 24 | RecDesk-Parks-westhartford | 81 | 0 | 0 | 0 | 0 | 0 | 81 | [cal](https://westhartford.recdesk.com) |
+| Webster Hill Soccer 3 | RecDesk-Parks-westhartford | 70 | 0 | 0 | 0 | 0 | 0 | 70 | [cal](https://westhartford.recdesk.com) |
+| BCSC Main Room (Entire Room) | RecDesk-Parks-westhartford | 46 | 0 | 0 | 0 | 0 | 0 | 46 | [cal](https://westhartford.recdesk.com) |
+| Westmoor Park | RecDesk-Parks-westhartford | 43 | 0 | 0 | 0 | 0 | 0 | 43 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 21 | RecDesk-Parks-westhartford | 43 | 0 | 0 | 0 | 0 | 0 | 43 | [cal](https://westhartford.recdesk.com) |
+| Aerials Gymnastics | RecDesk-Parks-westhartford | 40 | 0 | 0 | 0 | 0 | 0 | 40 | [cal](https://westhartford.recdesk.com) |
+| ECC Gymnasium | RecDesk-Parks-westhartford | 39 | 0 | 0 | 0 | 0 | 0 | 39 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 212 | RecDesk-Parks-westhartford | 32 | 0 | 0 | 0 | 0 | 0 | 32 | [cal](https://westhartford.recdesk.com) |
+| Fernridge Park Hard Tennis Court 1 | RecDesk-Parks-westhartford | 9 | 0 | 0 | 13 | 9 | 0 | 31 | [cal](https://westhartford.recdesk.com) |
+| ECC Lower Level Dance Studio | RecDesk-Parks-westhartford | 29 | 0 | 0 | 0 | 0 | 0 | 29 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 22 | RecDesk-Parks-westhartford | 29 | 0 | 0 | 0 | 0 | 0 | 29 | [cal](https://westhartford.recdesk.com) |
+| BCSC TV Room | RecDesk-Parks-westhartford | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [cal](https://westhartford.recdesk.com) |
+| Fernridge Park | RecDesk-Parks-westhartford | 25 | 0 | 0 | 0 | 0 | 0 | 25 | [cal](https://westhartford.recdesk.com) |
+| VMSR Learn to Skate | RecDesk-Parks-westhartford | 23 | 0 | 0 | 0 | 0 | 0 | 23 | [cal](https://westhartford.recdesk.com) |
+| Beachland Park Soccer Field | RecDesk-Parks-westhartford | 21 | 0 | 0 | 0 | 0 | 0 | 21 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 15 | RecDesk-Parks-westhartford | 18 | 0 | 0 | 0 | 0 | 0 | 18 | [cal](https://westhartford.recdesk.com) |
+| BCSC Card Room | RecDesk-Parks-westhartford | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [cal](https://westhartford.recdesk.com) |
+| Fernridge Park Soccer Field 2 | RecDesk-Parks-westhartford | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [cal](https://westhartford.recdesk.com) |
+| BCSC Cardroom/ TV Room | RecDesk-Parks-westhartford | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [cal](https://westhartford.recdesk.com) |
+| BCSC Fitness Center | RecDesk-Parks-westhartford | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://westhartford.recdesk.com) |
+| ESC-Offsite Doty Aquatics Center | RecDesk-Parks-westhartford | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 211 | RecDesk-Parks-westhartford | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 29 | RecDesk-Parks-westhartford | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://westhartford.recdesk.com) |
+| ECC Auditorium | RecDesk-Parks-westhartford | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://westhartford.recdesk.com) |
+| King Philip Gymnasium 7/8 Grade | RecDesk-Parks-westhartford | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://westhartford.recdesk.com) |
+| Duffy Elementary School | RecDesk-Parks-westhartford | 0 | 0 | 6 | 3 | 0 | 0 | 9 | [cal](https://westhartford.recdesk.com) |
+| VIRTUAL ZOOM | RecDesk-Parks-westhartford | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 23 | RecDesk-Parks-westhartford | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://westhartford.recdesk.com) |
+| ECC Art Room | RecDesk-Parks-westhartford | 4 | 0 | 0 | 2 | 0 | 0 | 6 | [cal](https://westhartford.recdesk.com) |
+| ECC Computer Lab | RecDesk-Parks-westhartford | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://westhartford.recdesk.com) |
+| Rockledge Golf Club | RecDesk-Parks-westhartford | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://westhartford.recdesk.com) |
+| Offsite Trip | RecDesk-Parks-westhartford | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://westhartford.recdesk.com) |
+| BCSC Conference Room | RecDesk-Parks-westhartford | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://westhartford.recdesk.com) |
+| BCSC Lounge | RecDesk-Parks-westhartford | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://westhartford.recdesk.com) |
+| Norfeldt Elementary School | RecDesk-Parks-westhartford | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://westhartford.recdesk.com) |
+| Hall Gymnasium-Secondary | RecDesk-Parks-westhartford | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://westhartford.recdesk.com) |
+| King Philip Middle School | RecDesk-Parks-westhartford | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://westhartford.recdesk.com) |
+| ECC Gazebo | RecDesk-Parks-westhartford | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westhartford.recdesk.com) |
+| JB Chambers Memorial Rec. Turf Field-16th St | RecDesk-Parks-wheeling | 151 | 0 | 0 | 0 | 0 | 4 | 155 | [cal](https://wheeling.recdesk.com) |
+| I470 Complex-Field #3 (Lisa's Field) | RecDesk-Parks-wheeling | 61 | 0 | 0 | 0 | 0 | 0 | 61 | [cal](https://wheeling.recdesk.com) |
+| 35th Street Field | RecDesk-Parks-wheeling | 49 | 0 | 0 | 0 | 0 | 0 | 49 | [cal](https://wheeling.recdesk.com) |
+| I470 Complex-Field #1 | RecDesk-Parks-wheeling | 42 | 0 | 0 | 0 | 0 | 0 | 42 | [cal](https://wheeling.recdesk.com) |
+| I470 Complex-Field #2 | RecDesk-Parks-wheeling | 42 | 0 | 0 | 0 | 0 | 0 | 42 | [cal](https://wheeling.recdesk.com) |
+| I470 Complex-Field #4 (Ben's Field) | RecDesk-Parks-wheeling | 41 | 0 | 0 | 0 | 0 | 0 | 41 | [cal](https://wheeling.recdesk.com) |
+| Fulton Ballfield | RecDesk-Parks-wheeling | 31 | 0 | 0 | 0 | 0 | 0 | 31 | [cal](https://wheeling.recdesk.com) |
+| Bridge Park Ballfield (Big Field) | RecDesk-Parks-wheeling | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [cal](https://wheeling.recdesk.com) |
+| Patterson Complex-Field #2 (Middle Field) | RecDesk-Parks-wheeling | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [cal](https://wheeling.recdesk.com) |
+| Patterson Complex-Field #3 (Small Field) | RecDesk-Parks-wheeling | 24 | 0 | 0 | 0 | 0 | 0 | 24 | [cal](https://wheeling.recdesk.com) |
+| Elm Terrace Ballfield | RecDesk-Parks-wheeling | 19 | 0 | 0 | 0 | 0 | 0 | 19 | [cal](https://wheeling.recdesk.com) |
+| Tunnel Green Ballfield | RecDesk-Parks-wheeling | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://wheeling.recdesk.com) |
+| Pleasanton Ballfield | RecDesk-Parks-wheeling | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://wheeling.recdesk.com) |
+| Pulaski Ballfield | RecDesk-Parks-wheeling | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://wheeling.recdesk.com) |
+| Lock 12 Ballfield | RecDesk-Parks-wheeling | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://wheeling.recdesk.com) |
+| I470 Complex-Geno's Field | RecDesk-Parks-wheeling | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://wheeling.recdesk.com) |
+| Green Hill Farm | RecDesk-Parks-worcesterparksma | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://worcesterparksma.recdesk.com) |
+| Lakepoint State Park | State-Parks-Events-AL | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://www.alapark.com/events) |
+| Gulf State Park | State-Parks-Events-AL | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.alapark.com/events) |
+| Chewacla State Park | State-Parks-Events-AL | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.alapark.com/events) |
+| DeSoto State Park | State-Parks-Events-AL | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://www.alapark.com/events) |
+| Monte Sano State Park | State-Parks-Events-AL | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.alapark.com/events) |
+| Blue Springs State Park | State-Parks-Events-AL | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.alapark.com/events) |
+| Wind Creek State Park | State-Parks-Events-AL | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.alapark.com/events) |
+| Florida State Parks | State-Parks-Events-FL | 11 | 0 | 1 | 1 | 0 | 0 | 13 | [cal](https://www.floridastateparks.org/events) |
+| Maine State Parks | State-Parks-Events-ME | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://www.maine.gov/dacf/parks/discover_history_explore_nature/activities/index.shtml) |
+| Muskegon State Park | State-Parks-Events-MI | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.michigan.gov/dnr/things-to-do/calendar) |
+| Kellogg Community College | State-Parks-Events-MI | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.michigan.gov/dnr/things-to-do/calendar) |
+| Michigan State Parks | State-Parks-Events-MI | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.michigan.gov/dnr/things-to-do/calendar) |
+| Michigan History | State-Parks-Events-MI | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://www.michigan.gov/dnr/things-to-do/calendar) |
+| Hammocks Beach | State-Parks-Events-NC | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://events.dncr.nc.gov/department/north-carolina-state-parks-and-recreation/calendar) |
+| Fort Macon State Park | State-Parks-Events-NC | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://events.dncr.nc.gov/department/north-carolina-state-parks-and-recreation/calendar) |
+| Jockey's Ridge State Park | State-Parks-Events-NC | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://events.dncr.nc.gov/department/north-carolina-state-parks-and-recreation/calendar) |
+| Elk Knob State Park | State-Parks-Events-NC | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.dncr.nc.gov/department/north-carolina-state-parks-and-recreation/calendar) |
+| Morse Park | State-Parks-Events-NC | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.dncr.nc.gov/department/north-carolina-state-parks-and-recreation/calendar) |
+| Mount Mitchell State Park | State-Parks-Events-NC | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.dncr.nc.gov/department/north-carolina-state-parks-and-recreation/calendar) |
+| Gorges State Park | State-Parks-Events-NC | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.dncr.nc.gov/department/north-carolina-state-parks-and-recreation/calendar) |
+| Hanging Rock State Park | State-Parks-Events-NC | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.dncr.nc.gov/department/north-carolina-state-parks-and-recreation/calendar) |
+| Falls Lake State Recreation Area | State-Parks-Events-NC | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.dncr.nc.gov/department/north-carolina-state-parks-and-recreation/calendar) |
+| Weymouth Woods Sandhills Nature Preserve | State-Parks-Events-NC | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.dncr.nc.gov/department/north-carolina-state-parks-and-recreation/calendar) |
+| Mt Mitchell State Park | State-Parks-Events-NC | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.dncr.nc.gov/department/north-carolina-state-parks-and-recreation/calendar) |
+| Ohio State Parks | State-Parks-Events-OH | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ohiodnr.gov/home/news-and-events/all-events/parks-wc-events) |
+| Pickwick Landing State Park | State-Parks-Events-TN | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tnstateparks.com/happenings) |
+| Douthat State Park | State-Parks-Events-VA | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Fairy Stone State Park | State-Parks-Events-VA | 9 | 0 | 0 | 1 | 0 | 0 | 10 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Hungry Mother State Park | State-Parks-Events-VA | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Pocahontas State Park | State-Parks-Events-VA | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Twin Lakes State Park | State-Parks-Events-VA | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Kiptopeke State Park | State-Parks-Events-VA | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| New River Trail State Park | State-Parks-Events-VA | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Occoneechee State Park | State-Parks-Events-VA | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Chippokes State Park | State-Parks-Events-VA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Bear Creek Lake State Park | State-Parks-Events-VA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Natural Tunnel State Park | State-Parks-Events-VA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Sweet Run State Park | State-Parks-Events-VA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| York River State Park | State-Parks-Events-VA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Raymond R. "Andy" Guest, Jr. Shenandoah River State Park | State-Parks-Events-VA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Belle Isle State Park | State-Parks-Events-VA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Southwest Virginia Museum Victorian Parlor | State-Parks-Events-VA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Westmoreland State Park | State-Parks-Events-VA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| False Cape State Park | State-Parks-Events-VA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Lake Anna State Park | State-Parks-Events-VA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Seven Bends State Park | State-Parks-Events-VA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| Sky Meadows State Park | State-Parks-Events-VA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.dcr.virginia.gov/state-parks/events) |
+| EcoTarium | Venue-Events-ScienceArts | 30 | 0 | 7 | 0 | 38 | 0 | 75 | — |
+| Kamin Science Center | Venue-Events-ScienceArts | 43 | 0 | 0 | 1 | 0 | 0 | 44 | — |
+| Corning Museum of Glass | Venue-Events-ScienceArts | 20 | 0 | 0 | 0 | 0 | 0 | 20 | — |
+| Kennedy Space Center Visitor Complex | Venue-Events-ScienceArts | 14 | 0 | 0 | 0 | 0 | 0 | 14 | — |
+| NC Museum of Natural Sciences | Venue-Events-ScienceArts | 13 | 0 | 0 | 0 | 0 | 0 | 13 | — |
+| Smithsonian Natural History Museum | Venue-Events-ScienceArts | 11 | 0 | 0 | 0 | 0 | 0 | 11 | — |
+| Tellus Science Museum | Venue-Events-ScienceArts | 10 | 0 | 1 | 0 | 0 | 0 | 11 | — |
+| Frost Science Museum | Venue-Events-ScienceArts | 11 | 0 | 0 | 0 | 0 | 0 | 11 | — |
+| Indiana State Museum | Venue-Events-ScienceArts | 9 | 0 | 0 | 0 | 0 | 1 | 10 | — |
+| Academy of Natural Sciences | Venue-Events-ScienceArts | 8 | 0 | 0 | 1 | 0 | 0 | 9 | — |
+| American Museum of Natural History | Venue-Events-ScienceArts | 8 | 0 | 1 | 0 | 0 | 0 | 9 | — |
+| Maryland Science Center | Venue-Events-ScienceArts | 7 | 1 | 0 | 0 | 0 | 0 | 8 | — |
+| Science Museum of Virginia | Venue-Events-ScienceArts | 7 | 0 | 0 | 0 | 0 | 0 | 7 | — |
+| Milwaukee Art Museum | Venue-Events-ScienceArts | 5 | 0 | 1 | 0 | 0 | 0 | 6 | — |
+| Franklin Institute | Venue-Events-ScienceArts | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Smithsonian Air & Space Museum | Venue-Events-ScienceArts | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Yale Peabody Museum | Venue-Events-ScienceArts | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Delmont Public Library 75 School Rd, Delmont, PA, United States | Westmoreland Library Network | 1 | 0 | 0 | 1 | 0 | 0 | 2 | — |
+| Ligonier Valley Library 120 West Main Street, Ligonier, PA, United States | Westmoreland Library Network | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Mount Pleasant Public Library 120 S. Church Street, Mount Pleasant, PA, United States | Westmoreland Library Network | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| ABBE Regional Library System | WordPress-Abbe-Regional | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://www.abbe-lib.org/events/) |
+| at Aiken County Public Library | WordPress-Abbe-Regional | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.abbe-lib.org/events/) |
+| Fairhope Public Library | WordPress-AL | 24 | 4 | 3 | 9 | 0 | 7 | 47 | [cal](https://fairhopelibrary.org/) |
+| Montgomery City-County Public Library | WordPress-AL | 31 | 0 | 10 | 0 | 0 | 0 | 41 | [cal](https://www.mccpl.lib.al.us) |
+| Leighton Public Library | WordPress-AL | 14 | 0 | 2 | 1 | 1 | 1 | 19 | [cal](https://www.leightonlibrary.org/) |
+| Mobile Public Library | WordPress-AL | 0 | 2 | 0 | 1 | 0 | 1 | 4 | [cal](https://www.mplonline.org) |
+| Hoover Public Library | WordPress-AL | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.hooverlibrary.org) |
+| Dothan Houston County Library System | WordPress-AL | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.dhcls.org) |
+| Vestavia Hills Library | WordPress-AL | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.vestavialibrary.org) |
+| Bristol Public Library | WordPress-CT | 14 | 2 | 2 | 2 | 0 | 0 | 20 | [cal](https://www.bristollib.com) |
+| Community Room | WordPress-CT | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://www.hplct.org/) |
+| West Hartford Public Library | WordPress-CT | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://www.hplct.org/) |
+| Norfolk Library | WordPress-CT | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://www.norfolklibrary.org) |
+| Wallingford Public Library | WordPress-CT | 2 | 0 | 0 | 0 | 1 | 0 | 3 | [cal](https://www.wallingfordlibrary.org) |
+| New Fairfield Free Public Library | WordPress-CT | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://www.fairfieldpubliclibrary.org) |
+| Harwinton Public Library | WordPress-CT | 0 | 0 | 0 | 0 | 2 | 0 | 2 | [cal](https://www.harwintonlibrary.org) |
+| Café, The Westport Library | WordPress-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.westportlibrary.org) |
+| Darien Library | WordPress-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.darienlibrary.org) |
+| The Westport Library | WordPress-CT | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://www.westportlibrary.org) |
+| Cheshire Public Library | WordPress-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.cheshirelibrary.org) |
+| Westbrook Public Library | WordPress-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.westbrooklibrary.org) |
+| Enfield Public Library | WordPress-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.enfieldpubliclibrary.org/) |
+| Conference Room | WordPress-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.hplct.org/) |
+| Mary Nyman Story Hour Room | WordPress-CT | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.hplct.org/) |
+| Athens Regional Library System | WordPress-GA | 8 | 0 | 2 | 0 | 1 | 1 | 12 | [cal](https://www.athenslibrary.org) |
+| New Georgia Public Library | WordPress-GA | 0 | 2 | 0 | 3 | 2 | 0 | 7 | [cal](https://wgrls.org) |
+| Senoia Area Public Library | WordPress-GA | 3 | 1 | 0 | 0 | 0 | 0 | 4 | [cal](https://cowt.ent.sirsi.net/) |
+| Grantville Public Library | WordPress-GA | 3 | 1 | 0 | 0 | 0 | 0 | 4 | [cal](https://cowt.ent.sirsi.net/) |
+| Meigs Public Library | WordPress-GA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.meigslibrary.org/) |
+| Bowman Branch | WordPress-GA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.bowmanlibrary.org) |
+| Florence S. Shanklin Branch Library | WordPress-NC | 5 | 4 | 1 | 0 | 1 | 0 | 11 | [cal](https://www.denverlibrary.org) |
+| Dallas Branch Library | WordPress-NC | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://gastonlibrary.org/) |
+| Stanley Branch Library | WordPress-NC | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://gastonlibrary.org/) |
+| Lowell Branch Library | WordPress-NC | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://gastonlibrary.org/) |
+| Belmont Branch Library | WordPress-NC | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://gastonlibrary.org/) |
+| Franklin County Library | WordPress-NC | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.franklinlibrary.org) |
+| Knox County Public Library | WordPress-TN | 2 | 2 | 1 | 0 | 0 | 0 | 5 | [cal](https://www.knoxlib.org) |
+| Memphis Public Libraries | WordPress-TN | 2 | 2 | 0 | 0 | 0 | 0 | 4 | [cal](https://www.memphislibrary.org) |
+| Johnson City Public Library | WordPress-TN | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://www.jcpl.org) |
+| Culpeper County Library | WordPress-VA | 15 | 2 | 0 | 0 | 0 | 0 | 17 | [cal](https://www.cclva.org) |
+| Park Central Library | WordPress-VA | 4 | 1 | 3 | 0 | 0 | 1 | 9 | [cal](https://alexlibraryva.org) |
+| Pierson Library | WordPress-VT | 4 | 1 | 4 | 6 | 7 | 0 | 22 | [cal](https://www.piersonlibrary.org) |
+| Fletcher Free Library | WordPress-VT | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://fletcherfree.org/) |
+| Kellogg-Hubbard Library | WordPress-VT | 1 | 0 | 0 | 0 | 0 | 2 | 3 | [cal](https://kellogghubbard.org/) |
+| Deborah Rawson Memorial Library | WordPress-VT | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://www.drml.org/) |
+| Paul Smith - Shrewsbury | York County Libraries | 0 | 8 | 10 | 1 | 0 | 4 | 23 | — |
+| Martin - York | York County Libraries | 0 | 1 | 2 | 2 | 0 | 7 | 12 | — |
+| Offsite | York County Libraries | 6 | 0 | 2 | 0 | 0 | 3 | 11 | — |
+| Dillsburg | York County Libraries | 2 | 3 | 1 | 1 | 0 | 1 | 8 | — |
+| Dover | York County Libraries | 1 | 5 | 1 | 0 | 0 | 0 | 7 | — |
+| Guthrie - Hanover | York County Libraries | 3 | 1 | 1 | 2 | 0 | 0 | 7 | — |
+| Red Land - Etters | York County Libraries | 1 | 1 | 0 | 0 | 0 | 1 | 3 | — |
+| Village - Jacobus | York County Libraries | 2 | 0 | 1 | 0 | 0 | 0 | 3 | — |
+| Kaltreider-Benfer - Red Lion | York County Libraries | 0 | 2 | 1 | 0 | 0 | 0 | 3 | — |
+| Glatfelter - Spring Grove | York County Libraries | 1 | 1 | 0 | 0 | 0 | 0 | 2 | — |
+| Kreutz Creek - Hellam | York County Libraries | 1 | 1 | 0 | 0 | 0 | 0 | 2 | — |
+| Collinsville - Brogue | York County Libraries | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Mason-Dixon - Stewartstown | York County Libraries | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+
+### Flagged: All Ages >= 70% (total >= 20 events)
+
+| Site | Scraper | All Ages | Total | % |
+|---|---|---|---|---|
+| -None Specified- | RecDesk-Parks-crpr | 168 | 198 | 85% |
+| Chris Wicker Aquatic Center | RecDesk-Parks-rrparksandrec | 177 | 184 | 96% |
+| JB Chambers Memorial Rec. Turf Field-16th St | RecDesk-Parks-wheeling | 151 | 155 | 97% |
+| Gymnastics Building 2105 Nash St | RecDesk-Parks-lcncpr | 102 | 132 | 77% |
+| -None Specified- | RecDesk-Parks-westhartford | 125 | 125 | 100% |
+| Carl Sandburg School | RecDesk-Parks-charparksandrec | 111 | 111 | 100% |
+| Mayeski Field 4 Baseball with MP overlay | RecDesk-Parks-ccrec | 107 | 107 | 100% |
+| Mayeski Field 3 Softball with MP Overlay | RecDesk-Parks-ccrec | 107 | 107 | 100% |
+| SCASD Natatorium | RecDesk-Parks-crpr | 84 | 96 | 88% |
+| Mayeski Legore Memorial Softball Field | RecDesk-Parks-ccrec | 92 | 92 | 100% |
+| Sandymount Field 1 | RecDesk-Parks-ccrec | 85 | 85 | 100% |
+| Willow Springs Golf Course | RecDesk-Parks-ccrec | 84 | 84 | 100% |
+| Deer Park Meadow Field | RecDesk-Parks-ccrec | 83 | 83 | 100% |
+| ECC Room 24 | RecDesk-Parks-westhartford | 81 | 81 | 100% |
+| Kennedy Recreation Center | RecDesk-Parks-providenceri | 77 | 77 | 100% |
+| Mayeski Field 2 Softball with MP overlay | RecDesk-Parks-ccrec | 76 | 76 | 100% |
+| Multi-Purpose Room | RecDesk-Parks-carolinabeach | 72 | 72 | 100% |
+| Hillsdale Community Center & Park | RecDesk-Parks-mprd | 71 | 71 | 100% |
+| Webster Hill Soccer 3 | RecDesk-Parks-westhartford | 70 | 70 | 100% |
+| Deer Park Main Field | RecDesk-Parks-ccrec | 69 | 69 | 100% |
+| Joseph C. Dotch Community Center & Park | RecDesk-Parks-mprd | 66 | 66 | 100% |
+| Baseball Field B - Eljer Park | RecDesk-Parks-marysvilleoh | 61 | 61 | 100% |
+| Baseball Field A - Eljer Park | RecDesk-Parks-marysvilleoh | 61 | 61 | 100% |
+| I470 Complex-Field #3 (Lisa's Field) | RecDesk-Parks-wheeling | 61 | 61 | 100% |
+| Cape Horn Field 1 | RecDesk-Parks-ccrec | 58 | 58 | 100% |
+| Cape Horn Field 2 | RecDesk-Parks-ccrec | 58 | 58 | 100% |
+| Maitland Community Park Meeting Room - 40ppl MAX | RecDesk-Parks-maitland | 58 | 58 | 100% |
+| Rec Room | RecDesk-Parks-keeneparks | 56 | 56 | 100% |
+| Thomas Sullivan Community Center & Park | RecDesk-Parks-mprd | 56 | 56 | 100% |
+| Baseball City Field A | RecDesk-Parks-marysvilleoh | 53 | 53 | 100% |
+| Deer Park Memorial Field | RecDesk-Parks-ccrec | 51 | 51 | 100% |
+| Sandymount Field 2 | RecDesk-Parks-ccrec | 50 | 50 | 100% |
+| Deer Park Baker Field 2 | RecDesk-Parks-ccrec | 50 | 50 | 100% |
+| Deer Park Baker Field 1 | RecDesk-Parks-ccrec | 50 | 50 | 100% |
+| 35th Street Field | RecDesk-Parks-wheeling | 49 | 49 | 100% |
+| Mike Chappell Multi-Purpose Field | RecDesk-Parks-carolinabeach | 48 | 48 | 100% |
+| Mill Valley South- Soccer Fields | RecDesk-Parks-marysvilleoh | 47 | 47 | 100% |
+| Laun Community Center & Park | RecDesk-Parks-mprd | 47 | 47 | 100% |
+| BCSC Main Room (Entire Room) | RecDesk-Parks-westhartford | 46 | 46 | 100% |
+| Carolina Beach Volleyball Court | RecDesk-Parks-carolinabeach | 45 | 45 | 100% |
+| Clinton Elementary School | RecDesk-Parks-clintonrec | 45 | 45 | 100% |
+| Harmon - Thomas Community Center & Park | RecDesk-Parks-mprd | 39 | 44 | 89% |
+| Kamin Science Center | Venue-Events-ScienceArts | 43 | 44 | 98% |
+| Westmoor Park | RecDesk-Parks-westhartford | 43 | 43 | 100% |
+| ECC Room 21 | RecDesk-Parks-westhartford | 43 | 43 | 100% |
+| Bennett Cerf Baseball Field | RecDesk-Parks-ccrec | 42 | 42 | 100% |
+| Cape Horn Field 3 | RecDesk-Parks-ccrec | 42 | 42 | 100% |
+| Cherrytown Road Field 1 | RecDesk-Parks-ccrec | 42 | 42 | 100% |
+| Cape Horn Field 5 Baseball | RecDesk-Parks-ccrec | 42 | 42 | 100% |
+| Cape Horn Field 4 Softball | RecDesk-Parks-ccrec | 42 | 42 | 100% |
+| Bark Hill Field 2 | RecDesk-Parks-ccrec | 42 | 42 | 100% |
+| Bark Hill Field 1 | RecDesk-Parks-ccrec | 42 | 42 | 100% |
+| Multi Purpose Room | RecDesk-Parks-keeneparks | 34 | 42 | 81% |
+| I470 Complex-Field #1 | RecDesk-Parks-wheeling | 42 | 42 | 100% |
+| I470 Complex-Field #2 | RecDesk-Parks-wheeling | 42 | 42 | 100% |
+| Mayeski Field 6 Softball | RecDesk-Parks-ccrec | 41 | 41 | 100% |
+| Mayeski Field 5 Softball with MP overlay | RecDesk-Parks-ccrec | 41 | 41 | 100% |
+| Krimgold Park Field 10 | RecDesk-Parks-ccrec | 41 | 41 | 100% |
+| Mayeski Field 7 Softball | RecDesk-Parks-ccrec | 41 | 41 | 100% |
+| Krimgold Park Field 3 | RecDesk-Parks-ccrec | 41 | 41 | 100% |
+| Winfield Park Field 1 | RecDesk-Parks-ccrec | 41 | 41 | 100% |
+| Mayeski Field 1 Softball | RecDesk-Parks-ccrec | 41 | 41 | 100% |
+| Lake Lily Yellow Cottage | RecDesk-Parks-maitland | 41 | 41 | 100% |
+| John H. Rollins Recreation Center | RecDesk-Parks-providenceri | 41 | 41 | 100% |
+| Vincent Brown Recreation Center | RecDesk-Parks-providenceri | 41 | 41 | 100% |
+| I470 Complex-Field #4 (Ben's Field) | RecDesk-Parks-wheeling | 41 | 41 | 100% |
+| Montgomery City-County Public Library | WordPress-AL | 31 | 41 | 76% |
+| Sheppard Chase Gym (RMC) | RecDesk-Parks-ccrec | 40 | 40 | 100% |
+| MH Pickleball Court 1 | RecDesk-Parks-maitland | 40 | 40 | 100% |
+| City Field 1 | RecDesk-Parks-marysvilleoh | 40 | 40 | 100% |
+| City Field 2 | RecDesk-Parks-marysvilleoh | 40 | 40 | 100% |
+| Mill Valley Central Soccer Field | RecDesk-Parks-marysvilleoh | 40 | 40 | 100% |
+| Baseball Field - Mill Valley Central | RecDesk-Parks-marysvilleoh | 40 | 40 | 100% |
+| Raymond Elementary School | RecDesk-Parks-raymond | 40 | 40 | 100% |
+| Aerials Gymnastics | RecDesk-Parks-westhartford | 40 | 40 | 100% |
+| -None Specified- | RecDesk-Parks-habershamga | 39 | 39 | 100% |
+| ECC Gymnasium | RecDesk-Parks-westhartford | 39 | 39 | 100% |
+| Michael A. Figures Community Center & Park | RecDesk-Parks-mprd | 38 | 38 | 100% |
+| Rickarby Community Center & Park | RecDesk-Parks-mprd | 37 | 37 | 100% |
+| Jefferson School | RecDesk-Parks-charparksandrec | 36 | 36 | 100% |
+| Puddle Jumpers Classroom | RecDesk-Parks-crpr | 36 | 36 | 100% |
+| MCP Tennis Court 1 | RecDesk-Parks-maitland | 36 | 36 | 100% |
+| James Seals Community Center & Park | RecDesk-Parks-mprd | 36 | 36 | 100% |
+| Swim Lanes 1-3 | RecDesk-Parks-rrparksandrec | 36 | 36 | 100% |
+| Mayeski Field 1 Football | RecDesk-Parks-ccrec | 35 | 35 | 100% |
+| Mayeski Practice Area 2 | RecDesk-Parks-ccrec | 35 | 35 | 100% |
+| Salt Box Field 2 | RecDesk-Parks-ccrec | 35 | 35 | 100% |
+| Mayeski Practice Area 1 | RecDesk-Parks-ccrec | 35 | 35 | 100% |
+| Oakmont Green Golf Course | RecDesk-Parks-ccrec | 35 | 35 | 100% |
+| Salt Box Field 1 | RecDesk-Parks-ccrec | 35 | 35 | 100% |
+| Leister Park Field 1 | RecDesk-Parks-ccrec | 35 | 35 | 100% |
+| -None Specified- | RecDesk-Parks-lcncpr | 35 | 35 | 100% |
+| Springhill Fitness & Community Center | RecDesk-Parks-mprd | 35 | 35 | 100% |
+| MCP Basketball Court | RecDesk-Parks-maitland | 34 | 34 | 100% |
+| Sage Turf Field A | RecDesk-Parks-mprd | 34 | 34 | 100% |
+| Charles Carroll | RecDesk-Parks-ccrec | 32 | 32 | 100% |
+| Deer Park Magin Field | RecDesk-Parks-ccrec | 32 | 32 | 100% |
+| ECC Room 212 | RecDesk-Parks-westhartford | 32 | 32 | 100% |
+| Landon C. Burns Field 1 Lower | RecDesk-Parks-ccrec | 31 | 31 | 100% |
+| Stotts Community Center & Park | RecDesk-Parks-mprd | 31 | 31 | 100% |
+| Fulton Ballfield | RecDesk-Parks-wheeling | 31 | 31 | 100% |
+| Northwood Library | Pratt-Library | 27 | 30 | 90% |
+| Carroll Gymnastics, Inc. | RecDesk-Parks-ccrec | 24 | 30 | 80% |
+| RMC Activity Room | RecDesk-Parks-ccrec | 23 | 29 | 79% |
+| Computer Lab | RecDesk-Parks-cityofaikensc | 29 | 29 | 100% |
+| ECC Lower Level Dance Studio | RecDesk-Parks-westhartford | 29 | 29 | 100% |
+| ECC Room 22 | RecDesk-Parks-westhartford | 29 | 29 | 100% |
+| Sister City - Field 1 | RecDesk-Parks-charparksandrec | 28 | 28 | 100% |
+| Tramway Road Park: Field 3 | RecDesk-Parks-lcncpr | 28 | 28 | 100% |
+| Robert Hope Community Center | RecDesk-Parks-mprd | 28 | 28 | 100% |
+| LCAP - Baseball/Softball Field 3 | RecDesk-Parks-lcncpr | 27 | 27 | 100% |
+| Millers Park Field A (T-Ball) | RecDesk-Parks-mprd | 27 | 27 | 100% |
+| Millers Park Field B | RecDesk-Parks-mprd | 27 | 27 | 100% |
+| -None Specified- | RecDesk-Parks-mprd | 27 | 27 | 100% |
+| Millers Park Field C | RecDesk-Parks-mprd | 27 | 27 | 100% |
+| Southeast Anchor Library | Pratt-Library | 22 | 26 | 85% |
+| Kate Wagner Field 3 | RecDesk-Parks-ccrec | 26 | 26 | 100% |
+| Krimgold Park Field 1 | RecDesk-Parks-ccrec | 26 | 26 | 100% |
+| Kate Wagner Field 1 | RecDesk-Parks-ccrec | 26 | 26 | 100% |
+| Kate Wagner Field 6 | RecDesk-Parks-ccrec | 26 | 26 | 100% |
+| Kate Wagner Field 2 | RecDesk-Parks-ccrec | 26 | 26 | 100% |
+| Krimgold Park Field 2 | RecDesk-Parks-ccrec | 26 | 26 | 100% |
+| LCAP - Baseball Field 1 | RecDesk-Parks-lcncpr | 26 | 26 | 100% |
+| LCAP - Multipurpose Field 7 (Natural Grass) | RecDesk-Parks-lcncpr | 26 | 26 | 100% |
+| LCAP - Baseball/Softball Field 4 | RecDesk-Parks-lcncpr | 26 | 26 | 100% |
+| LCAP - Baseball/Softball Field 2 | RecDesk-Parks-lcncpr | 26 | 26 | 100% |
+| Lavretta Art and Culture Center & Park | RecDesk-Parks-mprd | 24 | 26 | 92% |
+| BCSC TV Room | RecDesk-Parks-westhartford | 26 | 26 | 100% |
+| Bridge Park Ballfield (Big Field) | RecDesk-Parks-wheeling | 26 | 26 | 100% |
+| Patterson Complex-Field #2 (Middle Field) | RecDesk-Parks-wheeling | 26 | 26 | 100% |
+| West Community Room | RecDesk-Parks-collegedale | 24 | 25 | 96% |
+| Ingram Center | RecDesk-Parks-lcncpr | 25 | 25 | 100% |
+| Fernridge Park | RecDesk-Parks-westhartford | 25 | 25 | 100% |
+| Ruby Fulbright Natatorium - Lap Pool | RecDesk-Parks-habershamga | 24 | 24 | 100% |
+| Tramway Road Park: Field 1 | RecDesk-Parks-lcncpr | 24 | 24 | 100% |
+| LCAP - Multipurpose Field 9 (Natural Grass) | RecDesk-Parks-lcncpr | 24 | 24 | 100% |
+| Bob Hales: Full Court | RecDesk-Parks-lcncpr | 24 | 24 | 100% |
+| Camp Agawam Soccer Fields | RecDesk-Parks-raymond | 18 | 24 | 75% |
+| Patterson Complex-Field #3 (Small Field) | RecDesk-Parks-wheeling | 24 | 24 | 100% |
+| Teaching Courts | RecDesk-Parks-cityofaikensc | 23 | 23 | 100% |
+| VMSR Learn to Skate | RecDesk-Parks-westhartford | 23 | 23 | 100% |
+| Orleans Library | Pratt-Library | 17 | 22 | 77% |
+| Brooklyn Library | Pratt-Library | 16 | 22 | 73% |
+| Hansen Aerobics Room | RecDesk-Parks-cityofaikensc | 22 | 22 | 100% |
+| Virtual Program (Zoom 4) | RecDesk-Parks-crpr | 22 | 22 | 100% |
+| Esports Room | RecDesk-Parks-keeneparks | 22 | 22 | 100% |
+| Tramway Road Park: Field 4 | RecDesk-Parks-lcncpr | 22 | 22 | 100% |
+| Tramway Road Park: Field 2 | RecDesk-Parks-lcncpr | 22 | 22 | 100% |
+| Connie Hudson Lobby - C | RecDesk-Parks-mprd | 22 | 22 | 100% |
+| Beaufort County Library | LibraryMarket-SC | 17 | 21 | 81% |
+| Parks: Greenbriar Saybrook Park | RecDesk-Parks-crpr | 21 | 21 | 100% |
+| Millbrook Marsh Nature Center | RecDesk-Parks-crpr | 21 | 21 | 100% |
+| LCAP - Multipurpose Field 10 (Natural Grass) | RecDesk-Parks-lcncpr | 21 | 21 | 100% |
+| Sage Turf Field C | RecDesk-Parks-mprd | 21 | 21 | 100% |
+| Beachland Park Soccer Field | RecDesk-Parks-westhartford | 21 | 21 | 100% |
+| Landon C. Burns Field 2 upper | RecDesk-Parks-ccrec | 20 | 20 | 100% |
+| Corning Museum of Glass | Venue-Events-ScienceArts | 20 | 20 | 100% |
+| Bristol Public Library | WordPress-CT | 14 | 20 | 70% |

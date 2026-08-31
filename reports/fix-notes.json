@@ -159,19 +159,30 @@
       "confirm": "grep -c 'transient network error' logs/macaroni-group*.log across the next few rotations, and check MacaroniKid states in scrapers/logs/scraper-summary.log are not double-reported.",
       "added": "2026-08-29"
     },
-    "CIVICREC-FACILITY-JUNK": {
-      "what": "isJunkTitle() gained isFacilityInventoryTitle() and isMembershipProductTitle() on 2026-08-30, because CivicRec Rec1 publishes reservable facilities (RV Site #07, Tennis Court 6, Gymnasium) and purchasable memberships (Pool Membership - Annual (Family), Program Punch Card: 5 Visits) in the same catalog as its programmes. Measured over the full corpus before writing either rule: 924 facility rows across 246 distinct titles, 193 membership rows across 52. Validated by listing every matched title - exactly one, Little Gym, was real, and the rules were narrowed until it survived.",
-      "expect": "Two observable effects. (1) The next FunHive-DataQuality pass deletes the roughly 1,117 pre-existing rows via fix-event-quality.js STEP 1b, which already delegates to isJunkTitle(). (2) On the NEXT GROUP 3 ROTATION the CivicRec-Parks-Eastern-* All-Ages percentages should fall, because those sites were flagged largely on facility rows that have no age. Sites at a literal 100% today - jackson-county-ms 115/115, flagler-county 109/109, broome-county-ny 94/94, concord-nc 78/78 - are the ones to watch. If they are still at 100% with the SAME facility titles present, the rules are not reaching the save path.",
-      "confirm": "node scripts/test-junk-titles.js (expect 76/76). After the next data-quality pass: grep -A3 \"STEP 1b\" scrapers/logs/fix-all-recent.log for the deleted count. After the next Group 3 rotation: check the Flagged section of AGE-RANGE-AUDIT.md for the four sites named above.",
-      "added": "2026-08-30",
-      "priority": "medium"
-    },
     "THREE-SCRAPERNAMES-UNRUN": {
       "what": "Intercept-Camden, Drupal-Virginia and WordPress-Events-Calendar all ran on 2026-08-30 with real NEW counts and had ZERO rows in AGE-RANGE-AUDIT.md, because none set metadata.scraperName and the adapter fell back to metadata.sourceName - storing display names (Camden County Library System, Handley Regional Library, Library System of Lancaster County) that join to no registry key. All three now set scraperName and sourceUrl. WordPress-Events-Calendar is multi-site and takes a per-site slug: 13 sites verified to produce 13 distinct slugs.",
       "expect": "On the next GROUP 3 rotation these three should appear in AGE-RANGE-AUDIT.md for the first time, and check-scraper-names.js should stop listing the three display names as FREE_TEXT drift. A RENAME IS NOT RETROACTIVE: _stableEventId excludes scraper_name so no duplicates are created, but existing rows keep the old display name until they expire, so both forms will show in the audits meanwhile. NOT YET RUN - no code path here has executed.",
       "confirm": "After the next Group 3 rotation: node scripts/check-scraper-names.js and confirm Camden County Library System, Handley Regional Library and Library System of Lancaster County no longer gain rows; query events grouped by scraper_name for WordPress-Events-Calendar- prefixed names (expect up to 13).",
       "added": "2026-08-30",
       "priority": "medium"
+    },
+    "VENUE-SUFFIX-STRIP-UNRUN": {
+      "what": "stripVenueSuffixFromTitle() added to supabase-adapter.js and wired into saveEvent()/flattenEvent(), so a title ending in a parenthetical that is exactly its own venue is trimmed at save time. Backfill applied separately via fix-venue-title-quality.js --only=1d --save.",
+      "expect": "The BACKFILL is proven (it ran and reported its counts). The SAVE-TIME path is NOT - RecDesk-Parks had already completed today's Group 1 rotation before the change landed, so no row has yet been written through the new code. On the next Group 1 rotation, newly scraped RecDesk titles should arrive already clean, and a re-run of the backfill should find close to zero rows rather than ~18,000.",
+      "confirm": "node scripts/fix-venue-title-quality.js --only=1d   (dry run; expect a count near zero after the next Group 1 rotation)",
+      "added": "2026-08-31"
+    },
+    "GROUP-2-ROTATION-STARVED": {
+      "what": "DIAGNOSED, NOT FIXED - a scheduling-policy call left for the owner. Group 2 has not completed a rotation since 2026-08-27 (group-last-run.json records \"2\": \"2026-08-28T05:05:47Z\", the finish time of that run). Its 2026-08-29 turn was dropped because the 2026-08-28 Group 1 run was still executing at the 3:00 AM trigger and FunHive-Scrapers is registered MultipleInstances=IgnoreNew, so the new instance was discarded silently. 2026-08-26 was lost the same way. Consequence measured today: 27 of the 28 active library scrapers with no row in the current audit cycle are Group 2, and several older _pending items (WORDPRESS-MONTHGRID-UNRUN, SIMPLEVIEW-DAYGRID-PARTIAL, SIMPLEVIEW-VENUE-COLLAPSE-BACKLOG) are blocked on a Group 2 rotation that keeps not happening.",
+      "expect": "scrapers/helpers/group-catchup.js exists for exactly this and did NOT fire today: STARVATION_DAYS = 4, and Group 2 measured 3.08 days since completion at the 07:00Z trigger, so the calendar pick (Group 1) won. Because a group's turns are only 3 days apart, a single dropped turn is not detectable at a 4-day threshold until on or after that group's own next calendar turn - which makes the mechanism close to a no-op for the common single-drop case it was written for. Lowering STARVATION_DAYS to ~3.5 would have caught today. NOT CHANGED UNILATERALLY: it alters which ~50 scrapers run tomorrow, and a threshold set too low risks oscillating the rotation, so the owner should pick the value.",
+      "confirm": "node -e \"console.log(require('./scrapers/logs/group-last-run.json'))\"   (Group 2 should advance on 2026-09-01, its next calendar turn, IF today's run finishes before 3:00 AM)",
+      "added": "2026-08-31"
+    },
+    "KIDSOUTANDABOUT-VENUE-NEWLINES": {
+      "what": "OPEN DATA BUG, tooling side already fixed. Several KidsOutAndAbout-DMV rows store a multi-line venue ending \"\\n\\n            See map: Google Maps\" - page chrome plus embedded newlines, where venue should be a clean name. The audit builders now sanitize cells so this can no longer truncate a Markdown table, but the bad venue values are still in the database and still render as venue names.",
+      "expect": "The scraper should stop capturing the 'See map: Google Maps' block into venue, and existing rows need their venue re-derived. Neither has been done.",
+      "confirm": "Query events where scraper_name like 'KidsOutAndAbout-DMV%' and venue contains a newline or 'See map'",
+      "added": "2026-08-31"
     }
   },
   "LibCal-VA": {

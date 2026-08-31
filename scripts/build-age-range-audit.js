@@ -30,6 +30,27 @@ if (!sinceArg) {
 const SINCE = sinceArg.split('=')[1];
 const OUT = outArg ? outArg.split('=')[1] : null;
 
+/**
+ * Sanitize one value for a Markdown table cell.
+ *
+ * A pipe ends the cell and a NEWLINE ends the whole table — every row after the
+ * first offender is silently dropped by loadAges()/loadSites() and by the report
+ * generator, with no error anywhere. That is the exact producer/consumer failure
+ * class the diagnosis preflight exists to catch.
+ *
+ * Found live 2026-08-31: several KidsOutAndAbout-DMV rows carry a multi-line
+ * venue ending "\n\n            See map: Google Maps". The 2026-08-31 age section
+ * built as 1,913 sites and parsed back as 985 — 928 rows lost — because the first
+ * such venue broke the table in half. Escaping pipes alone (which this builder
+ * already did) is not enough; whitespace must be collapsed too.
+ */
+function cell(value) {
+  return String(value == null ? '' : value)
+    .replace(/\s+/g, ' ')
+    .replace(/\|/g, '/')
+    .trim() || '—';
+}
+
 // The 6 standard brackets, in report order.
 const BRACKETS = [
   'All Ages',
@@ -119,8 +140,7 @@ async function main() {
   for (const s of list) {
     const cells = BRACKETS.map(b => s.counts[b] || 0);
     const link = s.link ? `[cal](${s.link})` : '—';
-    const site = s.venue.replace(/\|/g, '/');
-    out.push(`| ${site} | ${s.scraper} | ${cells.join(' | ')} | ${s.total} | ${link} |`);
+    out.push(`| ${cell(s.venue)} | ${cell(s.scraper)} | ${cells.join(' | ')} | ${s.total} | ${link} |`);
   }
 
   out.push('');
@@ -133,7 +153,7 @@ async function main() {
     out.push(`|---|---|---|---|---|`);
     for (const s of flagged.sort((a, b) => b.total - a.total)) {
       const aa = s.counts['All Ages'] || 0;
-      out.push(`| ${s.venue.replace(/\|/g, '/')} | ${s.scraper} | ${aa} | ${s.total} | ${((aa / s.total) * 100).toFixed(0)}% |`);
+      out.push(`| ${cell(s.venue)} | ${cell(s.scraper)} | ${aa} | ${s.total} | ${((aa / s.total) * 100).toFixed(0)}% |`);
     }
   }
 

@@ -192,6 +192,23 @@ const CASES = [
   ['Gymnastics PreK1', '', 'Preschool (3-5)', 'PreK with a level digit — trailing \\b used to block this'],
   ['Camp Naticook: Chickadees: Gr K Session 9', 'All Ages', 'Preschool (3-5)', 'lone abbreviated Gr K'],
   ['Gr K-2 Art Club', '', 'Preschool (3-5)', 'abbreviated grade range with K lower bound'],
+
+  // --- Youth-sport age-group notation: "10U" / "U12" -------------------------
+  // Added 2026-08-31 from the Step 3c all-ages audit. 539 corpus rows carry this
+  // notation and 422 sat in All Ages, concentrated in the parks families.
+  ['Mitts Fastpitch 10U', 'All Ages', 'Tweens (9-12)', 'NNU form — "10 and under"'],
+  ['Boys U12 Soccer', '', 'Tweens (9-12)', 'UNN form'],
+  ['Baseball 8U Tee Ball', '', 'Kids (6-8)', 'NNU lands in Kids, not Preschool'],
+  ['Girls 14U Volleyball', '', 'Teens (13-18)', 'NNU teen bracket'],
+  ['Travel Basketball 18U', '', 'Teens (13-18)', '18U caps at 17-18 — "18-18" would normalize to Adults'],
+  ['T-Ball (4U)', '', 'Preschool (3-5)', 'lowest in-range N'],
+  ['Danville Soccer Club Fall Recreational Soccer U2-U7', '', 'Kids (6-8)',
+   'scans for the first IN-RANGE token — U2 is skipped, U7 wins'],
+  // CONTROLS. The 4..19 clamp exists for exactly one real-world collision.
+  ['Elevation - The Ultimate Tribute to U2', '', 'All Ages', 'the band U2 must not read as ages 1-2'],
+  ['Unforgettable Fire U2 Tribute Band', '', 'All Ages', 'band name again — N=2 is below the clamp'],
+  ['Ukulele Jam', '', 'All Ages', 'letter after the u blocks the UNN shape'],
+  ['Route 9 Cleanup', '', 'All Ages', 'a bare digit with no u is not an age group'],
   // CONTROLS for the three rules above — the YR rule is the only bare digit-range
   // scan in detectAgeRange(), so its anchor must hold against the classic shapes.
   ['Registration 2608-2026 Open', '', 'All Ages', 'four-digit ID pair has no YR anchor'],

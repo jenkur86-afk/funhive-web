@@ -620,6 +620,61 @@ function normalizeShoutedTitle(title) {
 }
 
 /**
+ * Strip a trailing parenthetical from a title when it is EXACTLY the row's own
+ * venue: "Lap Swim (Chris Wicker Aquatic Center)" -> "Lap Swim".
+ *
+ * This is the mirror of the venue==title check further down (which nulls a venue
+ * that merely repeats the title). Here the venue is repeated INSIDE the title,
+ * so the title is what needs trimming — the place name is already carried by the
+ * venue column and loses nothing.
+ *
+ * Measured 2026-08-31 over 126,868 rows: 18,239 (14.4%) carry this shape, almost
+ * all of them RecDesk (9,771 RecDesk-Parks-* + 8,371 RecDeskParks-*), plus 89
+ * LocalistParks-IN and a scattering elsewhere. It is NOT a scraper bug — the
+ * RecDesk API genuinely returns EventName "Mitts Fastpitch 10U (Baseball Field -
+ * Mill Valley Central)" alongside FacilityName "Baseball Field - Mill Valley
+ * Central" (confirmed against the live marysvilleoh tenant). Fixing it centrally
+ * rather than in the RecDesk scraper is deliberate: several unrelated families
+ * show the same shape and any future platform doing it is covered for free.
+ *
+ * THE EXACT-MATCH REQUIREMENT IS THE WHOLE SAFETY ARGUMENT. A parenthetical that
+ * merely looks like a place is left alone; only a byte-for-byte (whitespace- and
+ * case-insensitive) repeat of this row's venue is removed, so no information can
+ * be lost. Nesting is handled by scanning back for the matching open paren
+ * instead of a regex, because real facility names contain parentheses -
+ * "I470 Complex-Field #3 (Lisa's Field)" and "LCAP - Multipurpose Field 8
+ * (Natural Grass)" both round-trip correctly, where /\(([^()]+)\)$/ would not.
+ */
+// Accepts several candidate venue spellings because the caller has both the raw
+// scraper value and the cleanVenueName() output, and the title carries the raw
+// one — cleanVenueName strips room/department suffixes, so comparing only the
+// cleaned form would silently miss every title whose facility has one.
+function stripVenueSuffixFromTitle(title, ...venues) {
+  if (!title || typeof title !== 'string') return title;
+
+  const s = title.trimEnd();
+  if (!s.endsWith(')')) return title;
+
+  // Scan backwards for the '(' that matches the final ')'.
+  let depth = 0, open = -1;
+  for (let i = s.length - 1; i >= 0; i--) {
+    if (s[i] === ')') depth++;
+    else if (s[i] === '(') { depth--; if (depth === 0) { open = i; break; } }
+  }
+  if (open <= 0) return title;
+
+  const norm = (v) => v.trim().toLowerCase().replace(/\s+/g, ' ');
+  const inner = norm(s.slice(open + 1, -1));
+  const matches = venues.some(v => v && typeof v === 'string' && norm(v) === inner);
+  if (!matches) return title;
+
+  // Never strip the title down to nothing. No corpus row hits this today, but a
+  // title that is ONLY its venue is the venue==title case, handled elsewhere.
+  const head = s.slice(0, open).replace(/[\s\-–—:|,]+$/, '').trim();
+  return head.length >= 3 ? head : title;
+}
+
+/**
  * Derive a venue when the scraper didn't supply one.
  * Tries (in order): "X at <Venue>" / "@ <Venue>" pattern in name,
  * first comma-separated component of address (if not a street number),
@@ -850,6 +905,38 @@ function detectAgeRange(name, description) {
   // numbers beat a co-occurring keyword: "PreK2 4-5YR" is 4-5, not the generic 3-5.
   const yrRange = text.match(/\b(\d{1,2})\s*[-–]\s*(\d{1,2})\s*(?:yr?s?\b|years?\s*olds?\b)/);
   if (yrRange) return `${yrRange[1]}-${yrRange[2]}`;
+
+  // Youth-sport age-group notation: "10U" / "U12" — universal in rec-league
+  // programming and meaning "N and under". Found 2026-08-31 in the Step 3c
+  // all-ages audit: 539 corpus rows carry it and 422 of them sat in All Ages,
+  // concentrated in RecDesk-Parks-*, RecDeskParks-* and CivicRec-Parks-Eastern-*
+  // ("Mitts Fastpitch 10U", "FALL RVYSA Youth Soccer 13U", "U11 Girls
+  // Inter-County Soccer League", "Queen Bee's 9U Practice").
+  //
+  // TITLE ONLY, deliberately. This is a title convention, and scanning
+  // descriptions as well adds exactly ONE genuine hit corpus-wide while
+  // reopening the band-name reading below. Measured, not assumed.
+  //
+  // N IS CLAMPED TO 4..19, which is what makes the rule safe: the one real
+  // false positive in 126,866 rows is the band U2 ("The Ultimate Tribute to
+  // U2", "Unforgettable Fire U2 Tribute Band"), and every instance is N=2.
+  // Scanning for the first IN-RANGE match rather than the first match is also
+  // load-bearing — "Fall Recreational Soccer U2-U7" is a real soccer title
+  // whose first token is U2, and it must resolve on U7 rather than be thrown
+  // away by the guard.
+  //
+  // Emits `${N-1}-${N}`, not `0-${N}`: normalizeAgeRange() buckets by the
+  // range's LOWER bound (see the teen-keyword comment below), so "0-10" would
+  // file a 10-and-under baseball team under Babies & Toddlers. Youth-sport
+  // brackets are narrow in practice — 8-and-unders play 8U, so a 10U roster is
+  // 9-10 — which makes N-1 the honest lower bound. The upper bound is capped at
+  // 18 because normalizeAgeRange('18-18') returns Adults, and an 18U team is
+  // teens.
+  const youthSportMatches = titleText.match(/(?<![a-z0-9])(?:(\d{1,2})u|u(\d{1,2}))(?![a-z0-9])/g) || [];
+  for (const token of youthSportMatches) {
+    const n = parseInt(token.replace(/[^0-9]/g, ''), 10);
+    if (n >= 4 && n <= 19) return `${n - 1}-${Math.min(n, 18)}`;
+  }
 
   // An explicit all-ages LABEL in the title beats every keyword rule below.
   // The keyword rules run before the generic "all ages" rule at the bottom of
@@ -1816,7 +1903,9 @@ async function saveEvent(id, data) {
 
   const row = {
     id,
-    name: truncate(normalizeShoutedTitle(collapseDoubledTitle(stripPromoBracketCruft(decodeHtmlEntities(repairMojibake(data.name))))), 300),
+    name: truncate(stripVenueSuffixFromTitle(
+      normalizeShoutedTitle(collapseDoubledTitle(stripPromoBracketCruft(decodeHtmlEntities(repairMojibake(data.name))))),
+      data.venue, cleanVenueName(data.venue)), 300),
     event_date: truncate(evtDateStr, 100),
     date: data.date instanceof Date ? data.date.toISOString()
       : (typeof data.date?.toDate === 'function') ? data.date.toDate().toISOString()
@@ -2549,7 +2638,9 @@ function flattenEvent(data) {
   const trunc = (str, maxLen) => str && str.length > maxLen ? str.substring(0, maxLen) : str;
 
   const row = {};
-  row.name = trunc(normalizeShoutedTitle(collapseDoubledTitle(stripPromoBracketCruft(decodeHtmlEntities(repairMojibake(data.name.trim()))))), 300);
+  row.name = trunc(stripVenueSuffixFromTitle(
+    normalizeShoutedTitle(collapseDoubledTitle(stripPromoBracketCruft(decodeHtmlEntities(repairMojibake(data.name.trim()))))),
+    data.venue, cleanVenueName(data.venue)), 300);
   if (data.eventDate) row.event_date = trunc(data.eventDate, 100);
   if (data.date) {
     if (data.date instanceof Date) row.date = data.date.toISOString();
@@ -2810,6 +2901,7 @@ module.exports = {
   cleanVenueName,
   deriveVenueFallback,
   stripPromoBracketCruft,
+  stripVenueSuffixFromTitle,
   collapseDoubledTitle,
   decodeHtmlEntities,
   normalizeShoutedTitle,

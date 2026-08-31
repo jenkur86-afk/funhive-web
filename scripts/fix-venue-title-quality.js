@@ -14,6 +14,8 @@
  *            "Family FestFamily Fest" -> "Family Fest"
  *   Step 1c: Decode HTML entities left raw in a title or venue, e.g.
  *            "Rocky&#8217;s Book Club" -> "Rocky’s Book Club"
+ *   Step 1d: Strip a trailing parenthetical that repeats the row's own venue,
+ *            e.g. "Lap Swim (Chris Wicker Aquatic Center)" -> "Lap Swim"
  *   Step 2 : Normalize SHOUTED all-caps titles to Title Case (guarded against
  *            mangling short acronyms like "GLOW"/"STEM"/"4H")
  *   Step 3 : Null out + re-derive venue when venue exactly duplicates the
@@ -23,7 +25,7 @@
  *   node scripts/fix-venue-title-quality.js                # Dry run (preview)
  *   node scripts/fix-venue-title-quality.js --save          # Save changes to DB
  *   node scripts/fix-venue-title-quality.js --recent-only   # Last 24h only (FIX_WINDOW_HOURS to override)
- *   node scripts/fix-venue-title-quality.js --only=1b       # Run one step only (ids: 1, 1b, 1c, 2, 3)
+ *   node scripts/fix-venue-title-quality.js --only=1b       # Run one step only (ids: 1, 1b, 1c, 1d, 2, 3)
  *
  * This script is NOT part of the nightly fix-all chain — it is run by hand.
  */
@@ -33,6 +35,7 @@ const {
   cleanVenueName,
   deriveVenueFallback,
   stripPromoBracketCruft,
+  stripVenueSuffixFromTitle,
   collapseDoubledTitle,
   decodeHtmlEntities,
   normalizeShoutedTitle,
@@ -42,7 +45,8 @@ const SAVE = process.argv.includes('--save');
 const RECENT_ONLY = process.argv.includes('--recent-only');
 // --only=<ids> runs just the named steps, e.g. --only=1b or --only=1,1b.
 // Valid ids: 1 (promo/a11y cruft), 1b (doubled titles), 1c (HTML entities),
-// 2 (shouted titles), 3 (venue == title). Default is all of them.
+// 1d (venue repeated inside title), 2 (shouted titles), 3 (venue == title).
+// Default is all of them.
 //
 // It exists because the steps have independent risk profiles and a targeted
 // backfill should not have to accept an unrelated rewrite as a side effect:
@@ -237,6 +241,33 @@ async function main() {
       entVenueRows.slice(0, 5).forEach(e => console.log(`  - venue "${e.venue}" -> "${e.cleaned}"`));
     }
     totalFixed += entNameRows.length + entVenueRows.length;
+  }
+
+  if (runStep("1d")) {
+    // ── Step 1d: Strip a trailing parenthetical that repeats the row's own venue ──
+    // "Lap Swim (Chris Wicker Aquatic Center)" with venue "Chris Wicker Aquatic Center".
+    // Measured 2026-08-31: 18,239 rows (14.4% of the corpus), almost entirely RecDesk
+    // (9,771 RecDesk-Parks-* + 8,371 RecDeskParks-*) plus 89 LocalistParks-IN. The
+    // RecDesk API really does return the facility inside EventName as well as in its
+    // own FacilityName field, confirmed against the live marysvilleoh tenant — so this
+    // is upstream data, not a scraper bug. flattenEvent()/saveEvent() now strip it at
+    // save time; this is the backfill for rows written before that.
+    console.log(`\n🏟️  STEP 1d: Strip venue repeated inside the title`);
+    console.log(`───────────────────────────────────────`);
+    const forSuffix = await fetchAll("events", "id, name, venue");
+    const suffixRows = forSuffix
+      .map(e => ({ id: e.id, name: e.name, cleaned: stripVenueSuffixFromTitle(e.name, e.venue) }))
+      .filter(e => e.cleaned && e.cleaned !== e.name);
+    console.log(`  Scanned ${forSuffix.length} events`);
+    console.log(`  Found ${suffixRows.length} titles repeating their own venue`);
+    if (SAVE && suffixRows.length > 0) {
+      const counts = { renamed: 0, deduped: 0, failed: 0 };
+      for (const e of suffixRows) counts[await renameOrDedupe(e.id, e.cleaned)]++;
+      reportRenameOutcome("titles de-duplicated against venue", counts);
+    } else {
+      suffixRows.slice(0, 10).forEach(e => console.log(`  - "${e.name}" -> "${e.cleaned}"`));
+    }
+    totalFixed += suffixRows.length;
   }
 
   if (runStep("2")) {
