@@ -111,6 +111,35 @@ also broken.
 
 ---
 
+## Why concurrency is not free — the real constraint
+
+Asked 2026-08-31: *"if Group 1 can run while MacaroniKid is running, why can't Group 2 run
+while MacaroniKid is still going?"* The question is correct and exposed a contradiction in
+an earlier draft of the options below, which accepted ~3h of overlap under option 1 while
+rejecting the same overlap under option 4.
+
+**There is no technical reason Group 2 cannot start.** `IgnoreNew` is a policy setting, not
+a resource limit. MacaroniKid and the rotation are currently the *same task*, so "MacaroniKid
+is still running" is identical to "the task is still running" and the trigger is refused.
+
+The real blocker is **four shared mutable files**, not Chrome memory (which is what an
+earlier draft claimed):
+
+| File | Write pattern | Failure under concurrency |
+|---|---|---|
+| `.geocode-cache.json` | read → in-memory → `writeFileSync` of the whole file | last writer wins; the other process's geocoding is silently discarded, wasting rate-limited Nominatim calls |
+| `scrapers/logs/scraper-summary.log` | `appendFileSync`, from 5 separate files | two runs interleave rows into one table; the diagnosis and `build-library-site-audit.js` parse that table and would read two runs as one |
+| `scrapers/logs/scraper-checkpoint.json` | one global file keyed by group | `--resume` matches on `checkpoint.group`; concurrent runs clobber each other |
+| `scrapers/logs/group-last-run.json` | read-modify-write of the whole object | a lost update in the starvation bookkeeping itself — exactly the 2026-08-20 "three days stale" bug |
+
+**These apply equally to a "split the task but let it overlap" design.** That is why option 1
+must also *spread* MacaroniKid across the cycle: the spreading is what keeps these files
+single-writer, not a nicety about memory. Any option that permits two runner processes at
+once must make all four concurrency-safe first.
+
+Note the corollary: **option 3 is serialized by construction** — a deferred trigger fires
+only after the running instance exits — so it sidesteps all four. That is its main virtue.
+
 ## Options, in the order I would take them
 
 1. **Move the MacaroniKid tail to its own scheduled task, AND spread it across the cycle's
@@ -175,11 +204,14 @@ also broken.
    means rotations run effectively back-to-back forever, with no idle window, permanently
    overlapping `FunHive-DataQuality` and leaving no gap for hand-runs. Cheaper than option 1
    but it treats the recovery, not the 26h duration.
-4. **Set `MultipleInstances` to queue rather than `IgnoreNew`.** Superficially obvious, and
-   probably wrong: it would start Group 2 immediately on top of a still-running Group 1,
-   putting two Chrome-heavy rotations on the machine at once. `reports/fix-notes.json`
-   already records concurrent heavy Chrome workloads as the leading suspect for a
-   37-scraper launch failure. Not recommended without a concurrency guard.
+4. **Set `MultipleInstances` to allow a second instance.** The most direct reading of the
+   problem — Group 2 is refused only because a policy setting says so — and cheap to change.
+   But it is the one option that creates **genuine concurrency**, so it requires the four
+   shared files above to be made safe first (file locking, or per-run log/cache paths).
+   Without that it trades a dropped rotation for silently corrupted summary tables and lost
+   geocode results, which is a worse failure because it is invisible. Viable, but it is a
+   code change, not a checkbox. Previously dismissed here on Chrome-memory grounds; that
+   reasoning was wrong, and the file-safety reasoning replaces it.
 5. **Do nothing and accept a 5–6 day cadence for whichever group is unlucky.** Honest
    status quo. Worth stating explicitly so it is a decision rather than a drift.
 
