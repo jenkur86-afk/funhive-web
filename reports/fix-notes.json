@@ -168,7 +168,7 @@
     },
     "VENUE-SUFFIX-STRIP-UNRUN": {
       "what": "stripVenueSuffixFromTitle() added to supabase-adapter.js and wired into saveEvent()/flattenEvent(), so a title ending in a parenthetical that is exactly its own venue is trimmed at save time. Backfill applied separately via fix-venue-title-quality.js --only=1d --save.",
-      "expect": "The BACKFILL is proven (it ran and reported its counts). The SAVE-TIME path is NOT - RecDesk-Parks had already completed today's Group 1 rotation before the change landed, so no row has yet been written through the new code. On the next Group 1 rotation, newly scraped RecDesk titles should arrive already clean, and a re-run of the backfill should find close to zero rows rather than ~18,000.",
+      "expect": "The BACKFILL IS PROVEN: --save renamed 18,239 rows with 0 collisions and 0 failures, and an independent re-run of Step 1d afterwards found 0. The SAVE-TIME path is NOT proven - RecDesk-Parks had already completed today's Group 1 rotation before the change landed, so no RecDesk row has yet been written through the new code. On the next Group 1 rotation, newly scraped RecDesk titles should arrive already clean and a Step 1d dry run should still report 0 rather than climbing back toward ~18,000.",
       "confirm": "node scripts/fix-venue-title-quality.js --only=1d   (dry run; expect a count near zero after the next Group 1 rotation)",
       "added": "2026-08-31"
     },
