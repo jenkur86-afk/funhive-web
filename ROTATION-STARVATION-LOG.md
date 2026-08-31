@@ -113,18 +113,58 @@ also broken.
 
 ## Options, in the order I would take them
 
-1. **Move the MacaroniKid tail to its own scheduled task.** Attacks the root cause: the
-   rotation drops from ~26h to ~11.4h, comfortably inside 24h, and nothing is dropped any
-   more. MacaroniKid then runs on its own cadence and can overrun freely without eating
-   anything. Cost: `recordGroupCompletion()` currently fires *after* the tail and would
-   need to move, and the group-completion semantics ("only a run that reached the END
-   counts") need re-establishing for the split. This is the only option that fixes the
-   cause rather than the recovery.
-2. **Lower `STARVATION_DAYS` from 4 to ~3.5.** One constant. Makes a *single* missed turn
-   recoverable the next day instead of requiring two. Does not stop rotations being
-   dropped — it just stops a dropped one compounding. Risk: set too low and the calendar
-   group's own ~3d age could trip it, shuffling the rotation; the existing
-   `worst.group !== calendar` guard mitigates this but has not been tested at 3.5.
+1. **Move the MacaroniKid tail to its own scheduled task, AND spread it across the cycle's
+   three days.** Both halves are needed; the second is easy to miss.
+
+   Phase durations, measured from the scheduled runs (all start 07:00:01Z):
+
+   | Date | Group | Regular phase | MacaroniKid tail | Total |
+   |---|---|---|---|---|
+   | 08-24 | G3 | 4.0h | 12.8h | 16.9h |
+   | 08-25 | **G1** | 10.6h | 15.5h | **26.1h** |
+   | 08-27 | G2 | 6.9h | 15.2h | 22.1h |
+   | 08-28 | **G1** | 11.0h | 14.7h | **25.7h** |
+   | 08-30 | G3 | 4.4h | 8.1h | 12.5h |
+   | 08-31 | **G1** | 11.4h | ~15h | **~26.4h** |
+
+   **Only Group 1 consistently exceeds 24h**, and every dropped day followed a Group 1 run
+   (08-26 after 08-25; 08-29 after 08-28; 09-01 predicted after 08-31). The regular phase
+   alone never exceeds 11.4h, so splitting the tail off puts the rotation permanently inside
+   24h and **the rotation trigger can never be discarded again** — `MultipleInstances` is
+   per-task, so a long MacaroniKid run can no longer delete a rotation.
+
+   **But splitting alone still leaves ~3h of overlap.** The rotation ends by 18:25Z, leaving
+   a 12.6h idle window before the next 07:00Z trigger; MacaroniKid Group 1 needs 15.5h and
+   does not fit. Two Chrome workloads would then overlap for ~3h — and `reports/fix-notes.json`
+   records concurrent heavy Chrome as the leading suspect for a 37-scraper launch failure.
+   Splitting Group 1's 9 states / 139 sites across the cycle's 3 days (~3 states, ~5h per
+   day) fits the idle window comfortably and removes the overlap entirely.
+
+   Cost: `recordGroupCompletion()` currently fires *after* the tail, so it must move, and the
+   "only a run that reached the END counts" semantics need re-establishing across the split.
+   This is the only option that addresses the 26h duration rather than the recovery.
+2. **Lower `STARVATION_DAYS` from 4 to 3.0** — *not* 3.5. An earlier draft of this list said
+   ~3.5; **that value does not work and the correction matters.** Replayed against the real
+   `group-last-run.json` at the 2026-08-31 07:00Z trigger (G1=1.93d, G2=3.08d, G3=0.48d,
+   calendar group 1):
+
+   | `STARVATION_DAYS` | group that would have run |
+   |---|---|
+   | 4.0 (current) | Group 1 |
+   | 3.5 | Group 1 |
+   | 3.25 | Group 1 |
+   | **3.0** | **Group 2** ✅ |
+
+   A group that misses one turn sits at only ~3.08d when the next run starts, so any
+   threshold above 3.0 misses it. Safety at 3.0 rests entirely on the existing
+   `worst.group !== calendar` guard: in steady state the group aged ~3.0d *is* the calendar
+   group, so no override happens. That guard is what makes 3.0 viable rather than chaotic,
+   and it has not been exercised at this threshold.
+
+   **This only helps on days a run actually starts** — the threshold is evaluated inside
+   `selectGroup()`, so on a dropped day nothing reads it and the group just keeps aging. Its
+   value is real but bounded: 5 of the last 7 days did start a run, and on those days it
+   would redirect the run to the starved group.
 3. **Set `StartWhenAvailable = True`** (currently `False`). Surfaced 2026-08-31 by the
    question "will a scraper run automatically if the starvation day is hit?" — the answer
    is no, and this setting is why. With it on, a trigger discarded at 07:00Z re-fires as
