@@ -144,6 +144,109 @@ function checkHeartbeat() {
   }
 }
 
+// Did a ROTATION actually start today, and which recent days lost theirs?
+//
+// WHY THE EXISTING GUARDS CANNOT SEE THIS (diagnosed 2026-08-31)
+// --------------------------------------------------------------
+// Step 1's staleness guard is "if the newest line in scraper-summary.log is more than
+// 24h old, the nightly task did not run". That guard is ANTI-CORRELATED with the failure
+// it needs to catch. A rotation now takes ~26h (11.4h of regular scrapers + ~15h of the
+// MacaroniKid tail) against a 24h trigger interval, and FunHive-Scrapers is registered
+// MultipleInstances=IgnoreNew — so when a run overruns, the next day's trigger is
+// DISCARDED SILENTLY while the overrunning run keeps writing fresh log lines. The very
+// condition that drops a rotation guarantees the log looks healthy.
+//
+// Measured on 2026-08-29: the newest summary line was timestamped 18:36:16Z, minutes
+// before the diagnosis ran, so the guard passed — but those lines were the 2026-08-28
+// Group 1 run finishing at 08:43Z plus hand re-runs, and Group 2's calendar turn that
+// day never happened. The gap went unreported for two more days.
+//
+// The fix is to stop inferring from log freshness and read the fact directly: the runner
+// prints "Running Group N scrapers" exactly once per rotation, into a per-day log. A day
+// with no such line had no rotation, whatever else is in the logs. No threshold, no
+// duration assumption — just which days have the line and which do not.
+//
+// WARN, never FAIL, matching checkDataQualityFreshness(): a dropped rotation makes the
+// DATA stale, not the diagnosis invalid. The audits, verification and report are all
+// still worth doing — and failing here would halt the run on precisely the day the
+// report is most needed.
+const ROTATION_LOOKBACK_DAYS = 7;
+
+function checkRotationStarted() {
+  const logDir = path.join(ROOT, 'scrapers', 'logs');
+  const groupRe = /Running Group (\d) scrapers/;
+
+  const days = [];
+  for (let i = 0; i < ROTATION_LOOKBACK_DAYS; i++) {
+    const d = new Date(Date.now() - i * 86400000);
+    // Local date: run-scrapers.bat names the log from the machine's own calendar day.
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const file = path.join(logDir, `scraper-run-${key}.log`);
+    let group = null;
+    if (fs.existsSync(file)) {
+      const m = fs.readFileSync(file, 'utf8').match(groupRe);
+      if (m) group = Number(m[1]);
+    }
+    days.push({ key, group, isToday: i === 0 });
+  }
+
+  const missing = days.filter(d => d.group === null);
+  const ran = days.filter(d => d.group !== null);
+  const today = days[0];
+  const summary = days.map(d => `${d.key}=${d.group === null ? 'NONE' : 'G' + d.group}`).join(' ');
+
+  if (today.group === null) {
+    warn('rotation started today',
+      `NO "Running Group N" line in scraper-run-${today.key}.log — today's rotation never started. ` +
+      `Do NOT read a fresh scraper-summary.log as evidence it did: an overrunning run from a ` +
+      `previous day keeps writing to it. Last ${ROTATION_LOOKBACK_DAYS} days: ${summary}`);
+  } else {
+    pass('rotation started today', `Group ${today.group} started (last ${ROTATION_LOOKBACK_DAYS} days: ${summary})`);
+  }
+
+  // Even when today is fine, a day missing from the window is a dropped rotation whose
+  // group has now waited 6 days instead of 3. Report it separately so it is not lost
+  // behind a green "today started" line.
+  if (missing.length && today.group !== null) {
+    warn('recent rotations all started',
+      `${missing.length} of the last ${ROTATION_LOOKBACK_DAYS} days had NO rotation: ` +
+      `${missing.map(d => d.key).join(', ')} — each is a dropped turn, and the group that ` +
+      `lost it waits 6 days instead of 3. See ROTATION-STARVATION-LOG.md`);
+  }
+
+  // Which groups are actually behind, from the runner's own completion bookkeeping.
+  const stateFile = path.join(logDir, 'group-last-run.json');
+  if (!fs.existsSync(stateFile)) {
+    warn('rotation groups current', 'scrapers/logs/group-last-run.json not found — cannot tell which group is starved');
+    return;
+  }
+  let state;
+  try { state = JSON.parse(fs.readFileSync(stateFile, 'utf8')); }
+  catch (e) { return warn('rotation groups current', `group-last-run.json unreadable: ${e.message}`); }
+
+  const ages = [1, 2, 3].map(g => {
+    const last = state[String(g)];
+    return { g, days: last ? (Date.now() - Date.parse(last)) / 86400000 : null };
+  });
+  const detail = ages.map(a => `G${a.g}=${a.days === null ? '?' : a.days.toFixed(1) + 'd'}`).join(' ');
+  // A group's turns are 3 days apart and a run can take over a day, so ~4.2d is the
+  // healthiest a lagging group legitimately reaches. Past 4.5d it has missed a turn.
+  const behind = ages.filter(a => a.days !== null && a.days > 4.5);
+  const groupsSeen = new Set(ran.map(d => d.group));
+  const neverRan = [1, 2, 3].filter(g => !groupsSeen.has(g));
+
+  if (behind.length) {
+    warn('rotation groups current',
+      `${behind.map(a => `Group ${a.g} has not completed in ${a.days.toFixed(1)} days`).join('; ')} ` +
+      `(${detail}). Report this and check ROTATION-STARVATION-LOG.md before treating it as a normal mid-cycle gap.`);
+  } else if (neverRan.length && ran.length >= ROTATION_LOOKBACK_DAYS - 1) {
+    warn('rotation groups current',
+      `Group(s) ${neverRan.join(', ')} did not run at all in the last ${ROTATION_LOOKBACK_DAYS} days (${detail})`);
+  } else {
+    pass('rotation groups current', detail);
+  }
+}
+
 // The data-quality pass is the one scheduled dependency with no other alarm on it.
 // Between 2026-08-12 and 2026-08-22 it did not run at ALL for ten days and nothing
 // noticed: it was chained onto the end of run-scrapers.bat, rotations grew past the
@@ -259,6 +362,7 @@ async function checkDatabase() {
 (async () => {
   checkWritable();
   checkHeartbeat();
+  checkRotationStarted();
   checkDataQualityFreshness();
   checkContracts();
   await checkDatabase();
