@@ -185,9 +185,9 @@
       "added": "2026-08-31"
     },
     "MACARONI-TASK-UNREGISTERED": {
-      "what": "BLOCKING OWNER ACTION from the 2026-08-31 rotation split: the FunHive-Macaroni scheduled task exists only in setup-tasks.ps1 and could not be registered from the non-elevated work session. MacaroniKid coverage (43 state sites) is fully stopped until it is registered - the rotation deliberately no longer runs it.",
-      "expect": "Owner runs, from an ELEVATED PowerShell: cd C:\\dev\\funhive-web\\scrapers\\task-scheduler; .\\setup-tasks.ps1 - it re-asserts all four tasks idempotently and verifies settings on read-back. First FunHive-Macaroni fire is the next 3:00 PM after registration; its transition shim prevents duplicating Group 1 on 09-01. Delete this entry once Get-ScheduledTaskInfo -TaskName FunHive-Macaroni shows a LastRunTime.",
-      "confirm": "Get-ScheduledTaskInfo -TaskName FunHive-Macaroni | Select LastRunTime,LastTaskResult",
+      "what": "RESOLVED TO AWAITING-FIRST-FIRE 2026-08-31 evening: the owner ran setup-tasks.ps1 elevated; all four tasks registered and the script verified settings on read-back (S4U, battery-kill disabled, limits as intended). FunHive-Macaroni is State=Ready, NextRunTime 2026-09-01 3:00 PM. No fire has happened yet.",
+      "expect": "First fire 2026-09-01 3:00 PM: macaroni-daily-runner selects a group against macaroni-last-run.json - Group 2 is most starved (2026-08-28) so expect it to run G2 MacaroniKid, UNLESS the transition shim or lock timing changes the picture; the G1 shim only prevents a same-day G1 duplicate. Delete this entry once LastRunTime shows a real fire AND logs/macaroni-daily-2026-09-01.log exists with a completion.",
+      "confirm": "Get-ScheduledTaskInfo -TaskName FunHive-Macaroni | Select LastRunTime,LastTaskResult; Get-Content scrapers/logs/macaroni-daily-2026-09-01.log -Tail 10",
       "added": "2026-08-31"
     }
   },

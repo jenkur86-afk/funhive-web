@@ -267,10 +267,28 @@ function checkMacaroniTask(logDir) {
     fs.readdirSync(logDir).some(f => /^macaroni-daily-\d{4}-\d{2}-\d{2}\.log$/.test(f));
 
   if (!anyDailyLog) {
-    warn('macaroni task running',
-      'no macaroni-daily-<date>.log exists yet — the FunHive-Macaroni task appears unregistered. ' +
-      'Run scrapers\\task-scheduler\\setup-tasks.ps1 from an ELEVATED PowerShell to register it; ' +
-      'until then NO MacaroniKid scraping happens at all (the rotation no longer runs it).');
+    // No run artifact yet. Distinguish "task was never registered" (owner
+    // action needed, MacaroniKid fully stopped) from "registered, first 3:00 PM
+    // fire hasn't happened yet" (normal for up to a day after registration —
+    // and specifically for the 2:12 PM diagnosis on the registration day,
+    // which runs 48 minutes before the first possible fire). schtasks exits
+    // non-zero when the task does not exist.
+    let registered = false;
+    try {
+      const { spawnSync } = require('child_process');
+      registered = spawnSync('schtasks', ['/Query', '/TN', 'FunHive-Macaroni'], { timeout: 15000 }).status === 0;
+    } catch (e) { /* fall through to the unregistered message */ }
+    if (registered) {
+      warn('macaroni task running',
+        'FunHive-Macaroni is registered but has not produced a macaroni-daily-<date>.log yet — ' +
+        'expected before its first 3:00 PM fire. If this persists past the first scheduled fire, ' +
+        'check Get-ScheduledTaskInfo -TaskName FunHive-Macaroni for LastTaskResult.');
+    } else {
+      warn('macaroni task running',
+        'no macaroni-daily-<date>.log exists and the FunHive-Macaroni task is NOT registered. ' +
+        'Run scrapers\\task-scheduler\\setup-tasks.ps1 from an ELEVATED PowerShell to register it; ' +
+        'until then NO MacaroniKid scraping happens at all (the rotation no longer runs it).');
+    }
     return;
   }
 
