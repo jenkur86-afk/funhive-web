@@ -115,6 +115,16 @@ SCRAPER-FIX-LOG.jsonl line, and refresh gate 5 via the command in project-status
 
 ### 1.3 KidsOutAndAbout-DMV venue chrome — **OPUS 5**
 
+> **STATUS 2026-09-01 — DONE.** Bigger than the note said: the venue held the whole
+> location block and `address` was NULL on all 65 rows. Two source defects fixed (the
+> chrome strip was discarded unless an address regex matched; the split was gated on
+> `!city` which the JSON-LD block above usually fills). `cleanVenueName()` now collapses
+> whitespace and strips map-widget chrome centrally. Backfill applied the scraper's logic
+> verbatim; 50 of 65 turned out to be **cross-scraper duplicates** of already-clean
+> KidsOutAndAbout-Eastern rows and were deleted after proving each twin, 15 repaired in
+> place. 65 → 0. **New follow-up raised:** the DMV/Eastern metro overlap itself is
+> unfixed — see `_pending.KOA-DMV-EASTERN-OVERLAP`.
+
 Open pending item (`KIDSOUTANDABOUT-VENUE-NEWLINES`): venues stored as multi-line strings
 ending `"See map: Google Maps"` — page chrome rendered as venue names on the site, and
 the thing that broke the audit tables on 2026-08-31. Scoped, reproducible, one scraper.

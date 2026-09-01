@@ -442,6 +442,31 @@ function cleanVenueName(venue) {
   // `\s+[-–—]\s+` search entirely, which is how it kept its suffix.
   let cleaned = decodeHtmlEntities(repairMojibake(venue)).trim();
 
+  // COLLAPSE ALL INTERNAL WHITESPACE. Added 2026-09-01 (§1.3). A venue name has
+  // no legitimate newline, tab or double space in it — those only ever arrive
+  // from a scraper capturing a multi-line DOM block. 65 KidsOutAndAbout-DMV rows
+  // stored a venue ending "\n\n            See map: Google Maps", which rendered
+  // as the venue on the site and, on 2026-08-31, silently truncated an audit
+  // table in half because a newline ends a Markdown row.
+  //
+  // Done HERE rather than only in that scraper because this is the one function
+  // every venue passes through, so a future scraper that grabs a block inherits
+  // the defence for free. It also runs BEFORE the dash/room-suffix rules below,
+  // which search for "\s+[-–—]\s+" and would otherwise be matching against a
+  // newline-separated string.
+  cleaned = cleaned.replace(/\s+/g, ' ').trim();
+
+  // Google-Maps widget chrome. Same 2026-09-01 origin: the DMV scraper captured
+  // the whole location block including the map link. Stripped centrally because
+  // this is a MAP-WIDGET artifact, not a site-specific one — any scraper that
+  // grabs a location container can pick it up. Safe as a literal: no venue is
+  // called "See map", and the trailing comma/whitespace cleanup keeps names like
+  // "Harris Pavilion," from ending in punctuation once the suffix is gone.
+  cleaned = cleaned.replace(/\s*See\s*map:\s*Google\s*Maps\s*/gi, ' ')
+                   .replace(/\s+/g, ' ')
+                   .replace(/[\s,]+$/, '')
+                   .trim();
+
   // If venue contains " - " and anything after the first " - " has a room keyword,
   // keep only the part before the first " - "
   const dashIndex = cleaned.search(/\s+[-–—]\s+/);

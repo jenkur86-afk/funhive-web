@@ -298,18 +298,42 @@ async function fetchEventDetails(url) {
       }
     }
 
-    // Parse address components from venue field if it contains a full address blob
-    // e.g., "Shipgarten, 7581 Colshire Dr, McLean, VA 22102, United States \n See map: Google Maps"
-    if (venue && !address && !city) {
-      let cleanedVenue = venue.replace(/\s*See\s*map:\s*Google\s*Maps\s*/gi, '').trim();
-      cleanedVenue = cleanedVenue.replace(/,?\s*(United States|USA)\s*$/i, '').trim();
+    // STEP 1 — always strip the page chrome, whatever else happens below.
+    //
+    // This used to live inside the `if` and, worse, only took effect when one of
+    // the three address regexes matched: `cleanedVenue` was a local that was
+    // discarded otherwise. So "Weston History and Culture Center" — a bare name
+    // with no address to parse — kept its trailing "\n\n See map: Google Maps"
+    // forever. Fixed 2026-09-01 (§1.3); the sibling scraper
+    // scraper-kidsoutandabout-eastern.js has always done it unconditionally,
+    // which is exactly why it has zero damaged rows against DMV's 65.
+    if (venue) {
+      venue = venue.replace(/\s*See\s*map:\s*Google\s*Maps\s*/gi, ' ')
+                   .replace(/\s+/g, ' ')
+                   .replace(/[\s,]+$/, '')
+                   .trim();
+    }
+
+    // STEP 2 — split a full address blob out of the venue field.
+    // e.g., "Shipgarten, 7581 Colshire Dr, McLean, VA 22102, United States"
+    //
+    // THE GUARD USED TO BE `!address && !city`, which is why this barely ran: the
+    // JSON-LD block above usually supplies a city, so any event with a known city
+    // skipped the split entirely and kept the whole address blob as its "venue"
+    // — with `address` left NULL, so the split was needed MOST exactly where it
+    // was skipped. All 65 damaged rows had an empty address. Now it runs whenever
+    // the venue still looks like an address blob, and each field is filled only
+    // if it is currently empty, so a good JSON-LD city is never overwritten by a
+    // worse parse.
+    if (venue && /,/.test(venue)) {
+      let cleanedVenue = venue.replace(/,?\s*(United States|USA)\s*$/i, '').trim();
 
       // Try: "Name, Street, City, ST ZIP"
       const fullAddrMatch = cleanedVenue.match(/^(.+?),\s*(\d+[^,]+),\s*([^,]+),\s*([A-Z]{2})\s*(\d{5})?/);
       if (fullAddrMatch) {
         venue = fullAddrMatch[1].trim();
-        address = fullAddrMatch[2].trim();
-        city = fullAddrMatch[3].trim();
+        address = address || fullAddrMatch[2].trim();
+        city = city || fullAddrMatch[3].trim();
         state = state || fullAddrMatch[4];
         zipCode = zipCode || (fullAddrMatch[5] || '').trim();
       } else {
@@ -317,15 +341,15 @@ async function fetchEventDetails(url) {
         const streetMatch = cleanedVenue.match(/^(.+?),\s*([^,]+(?:Street|Road|Avenue|Drive|Boulevard|Blvd|Lane|Way|Pike|Pkwy|Parkway|Hwy|Highway|Rd|Dr|Ave|St|Ln|Ct|Pl|Circle|Trail|Tr)[^,]*),\s*([^,]+),\s*([A-Z]{2})/i);
         if (streetMatch) {
           venue = streetMatch[1].trim();
-          address = streetMatch[2].trim();
-          city = streetMatch[3].trim();
+          address = address || streetMatch[2].trim();
+          city = city || streetMatch[3].trim();
           state = state || streetMatch[4];
         } else {
           // Try: "Name, City, ST ZIP"
           const nStreetMatch = cleanedVenue.match(/^(.+?),\s*([^,]+),\s*([A-Z]{2})\s*(\d{5})?/);
           if (nStreetMatch) {
             venue = nStreetMatch[1].trim();
-            city = nStreetMatch[2].trim();
+            city = city || nStreetMatch[2].trim();
             state = state || nStreetMatch[3];
             zipCode = zipCode || (nStreetMatch[4] || '').trim();
           }
