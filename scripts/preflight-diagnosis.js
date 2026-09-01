@@ -398,20 +398,41 @@ function checkContracts() {
     const md = fs.readFileSync(aPath, 'utf8');
     const heads = [...md.matchAll(/^##\s+(20\d{2}-\d{2}-\d{2})/gm)];
     if (!heads.length) { warn(`${b.name}: newest section parses`, `no dated sections in ${b.audit}`); continue; }
-    const last = heads[heads.length - 1];
-    const section = md.slice(last.index);
-    let rows = 0, inTable = false;
-    for (const line of section.split(/\r?\n/)) {
-      if (!line.startsWith('|')) { inTable = false; continue; }
-      if (!inTable) { if (c.headerRe.test(line)) inTable = true; continue; }
-      if (helpers.isSeparator(line)) continue;
-      if (helpers.cells(line).length >= c.expectedCols) rows++;
+    // A day on which no scraper of this family ran legitimately produces a section
+    // with prose and no table (2026-09-01: the rotation was dropped and the only work
+    // that completed was a MacaroniKid-only window, so LIBRARY-SITE-AUDIT.md had
+    // nothing to add). That is not format drift, and failing on it would make an
+    // honest empty day indistinguishable from the silent producer/consumer breakage
+    // this check exists to catch. Such a section must SAY SO with an explicit
+    // <!-- NO-ROWS: reason --> marker; unmarked sections are still required to parse,
+    // so the guard is not weakened - a section cannot go quiet by accident.
+    const countRows = (from) => {
+      let n = 0, inTable = false;
+      for (const line of md.slice(from).split(/\r?\n/)) {
+        if (!line.startsWith('|')) { inTable = false; continue; }
+        if (!inTable) { if (c.headerRe.test(line)) inTable = true; continue; }
+        if (helpers.isSeparator(line)) continue;
+        if (helpers.cells(line).length >= c.expectedCols) n++;
+      }
+      return n;
+    };
+    const NO_ROWS = /<!--\s*NO-ROWS\b/;
+    let idx = heads.length - 1;
+    const skipped = [];
+    while (idx > 0) {
+      const body = md.slice(heads[idx].index, idx + 1 < heads.length ? heads[idx + 1].index : undefined);
+      if (!NO_ROWS.test(body)) break;
+      skipped.push(heads[idx][1]);
+      idx--;
     }
+    const last = heads[idx];
+    const rows = countRows(last.index);
+    const note = skipped.length ? ` (skipped declared-empty ${skipped.join(', ')})` : '';
     if (rows === 0) {
       fail(`${b.name}: newest section parses`,
-        `${b.audit} section "${last[1]}" yields 0 rows under ${c.fn}() — that section is invisible to the report`);
+        `${b.audit} section "${last[1]}" yields 0 rows under ${c.fn}() - that section is invisible to the report`);
     } else {
-      pass(`${b.name}: newest section parses`, `${b.audit} "${last[1]}" -> ${rows} rows`);
+      pass(`${b.name}: newest section parses`, `${b.audit} "${last[1]}" -> ${rows} rows${note}`);
     }
   }
 }

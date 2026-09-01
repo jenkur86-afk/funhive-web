@@ -74,6 +74,19 @@ const CASES = [
   ['7th Grade Summer Math Tutoring', '', 'Tweens (9-12)', 'lone ordinal grade -> age 12'],
   ['Grade 3 Book Group', '', 'Kids (6-8)', 'lone word-first grade -> age 8'],
   ['12th Grade College Prep', '', 'Teens (13-18)', 'lone grade at the top of the range'],
+  // --- Spelled-out ordinal grades (added 2026-09-01) -------------------------
+  // Every rule above needs a digit, so these fell through to All Ages entirely.
+  ['First Grade - Career Day for Tools', '', 'Kids (6-8)', 'spelled-out lone grade -> age 6'],
+  ['Fall Soccer - Kinder & First Grade-10 AM', '', 'Preschool (3-5)', 'kinder lower bound in a spelled-out range -> 5-6'],
+  ['Third Grade Book Buddies', '', 'Kids (6-8)', 'spelled-out third grade -> age 8'],
+  ['Eighth Grade Study Hall', '', 'Teens (13-18)', 'spelled-out eighth grade -> age 13'],
+  ['Third through Fifth Grade Chess', '', 'Kids (6-8)', 'spelled-out range keeps its lower bound'],
+  // Controls: these must NOT be read as an audience.
+  ['Junie B., First Grader Boo -- and I Mean It!', 'All Ages', 'All Ages', 'play title: "grader" is not "grade"'],
+  // Unchanged by the spelled-out rule, and that is the point: a lone "kindergarten"
+  // must not become Preschool (3-5). This is a babies programme; leaving it All Ages
+  // is the existing, deliberate behaviour, and the new rule must not disturb it.
+  ['1000 Books Before Kindergarten', '', 'All Ages', 'lone kindergarten is not treated as grade 0'],
   // Closed ranges and "and up" must keep priority over the lone-grade rule, or a
   // range gets truncated to its first grade.
   ['Lego Club', '', 'Kids (6-8)', 'closed range still wins over lone-grade', 'Grades 3-5 welcome.'],

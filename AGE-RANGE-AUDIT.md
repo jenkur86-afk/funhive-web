@@ -41364,3 +41364,2066 @@ The new rule is title-only and clamps N to 4..19. Both constraints were measured
 | Landon C. Burns Field 2 upper | RecDesk-Parks-ccrec | 20 | 20 | 100% |
 | Corning Museum of Glass | Venue-Events-ScienceArts | 20 | 20 | 100% |
 | Bristol Public Library | WordPress-CT | 14 | 20 | 70% |
+
+## 2026-09-01
+
+**No rotation started today** — the 2026-08-31 Group 1 run was still executing at the 03:00 trigger and `MultipleInstances=IgnoreNew` discarded it (see `ROTATION-STARVATION-LOG.md`; this drop was predicted on record). What completed inside this window is the **MacaroniKid Group 1 tail of that pre-split rotation**, which ran 2026-08-31T18:25:55Z → 2026-09-01T13:42:47Z. Window therefore opens at 2026-08-31T18:25:55Z.
+
+17,775 rows touched across **2,003 individual sites** from 94 per-site scraper identities (PA, NC, MA, TN, AL, KY, RI, DC, WV). **44 sites cross the >=70% All-Ages flag.** Every scraper identity in this section is `MacaroniKid-*`; no other scraper wrote in the window.
+
+**Read the Total column as "rows re-touched", not "new events".** MacaroniKid's upserts refresh `scraped_at` on rows that already existed, so this window's 17,775 rows are ~4.8x the 3,727 the summary table reports as FOUND (NEW 2,387 + DUPES 1,340). Spot-checked on `MacaroniKid-DC`: 62 rows carry a `scraped_at` inside the window while only 7 have a `created_at` inside it, against a reported FOUND of 8. The builder keys on `scraped_at` by design (Step 3c), so this is a labelling caveat on the column, not a data defect — but it does mean a flagged percentage here is computed over a site's whole standing corpus, not over one day's additions, which if anything makes the flags more stable rather than less.
+
+| Site | Scraper | All Ages | Babies 0-2 | Preschool 3-5 | Kids 6-8 | Tweens 9-12 | Teens 13-18 | Total | Link |
+|---|---|---|---|---|---|---|---|---|---|
+| Foley Public Library | MacaroniKid-AL-baldwin | 11 | 2 | 12 | 15 | 5 | 2 | 47 | [cal](https://baldwin.macaronikid.com) |
+| Daphne Public Library | MacaroniKid-AL-baldwin | 2 | 5 | 4 | 11 | 0 | 10 | 32 | [cal](https://baldwin.macaronikid.com) |
+| Loxley Public Library | MacaroniKid-AL-baldwin | 10 | 7 | 9 | 1 | 0 | 0 | 27 | [cal](https://baldwin.macaronikid.com) |
+| Fairhope Public Library | MacaroniKid-AL-baldwin | 4 | 3 | 1 | 5 | 0 | 4 | 17 | [cal](https://baldwin.macaronikid.com) |
+| Spanish Fort Public Library | MacaroniKid-AL-baldwin | 2 | 0 | 2 | 1 | 0 | 1 | 6 | [cal](https://baldwin.macaronikid.com) |
+| City of Daphne, Alabama - "The Jubilee City" | MacaroniKid-AL-baldwin | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://baldwin.macaronikid.com) |
+| Kansas City Mom Collective | MacaroniKid-AL-baldwin | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://baldwin.macaronikid.com) |
+| Grand Hotel Golf Resort & Spa | MacaroniKid-AL-baldwin | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://baldwin.macaronikid.com) |
+| Warhammer Daphne | MacaroniKid-AL-baldwin | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://baldwin.macaronikid.com) |
+| Malbis Market | MacaroniKid-AL-baldwin | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://baldwin.macaronikid.com) |
+| Eco Clean Marine | MacaroniKid-AL-baldwin | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://baldwin.macaronikid.com) |
+| Amanda Cook | MacaroniKid-AL-baldwin | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://baldwin.macaronikid.com) |
+| Public Library of Anniston and Calhoun County | MacaroniKid-AL-calhounal | 5 | 9 | 0 | 5 | 0 | 2 | 21 | [cal](https://calhounal.macaronikid.com) |
+| Public Library of Anniston-Calhoun County | MacaroniKid-AL-calhounal | 2 | 0 | 0 | 2 | 1 | 10 | 15 | [cal](https://calhounal.macaronikid.com) |
+| Anniston Museums and Gardens | MacaroniKid-AL-calhounal | 3 | 0 | 5 | 0 | 0 | 0 | 8 | [cal](https://calhounal.macaronikid.com) |
+| Jacksonville Public Library | MacaroniKid-AL-calhounal | 0 | 0 | 1 | 0 | 1 | 0 | 2 | [cal](https://calhounal.macaronikid.com) |
+| Talladega Superspeedway | MacaroniKid-AL-calhounal | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://calhounal.macaronikid.com) |
+| WoodmenLife | MacaroniKid-AL-calhounal | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://calhounal.macaronikid.com) |
+| City of Mobile: Parks & Recreation | MacaroniKid-AL-mobile | 6 | 0 | 0 | 0 | 0 | 2 | 8 | [cal](https://mobile.macaronikid.com) |
+| Crescent Theater | MacaroniKid-AL-mobile | 2 | 0 | 0 | 2 | 0 | 0 | 4 | [cal](https://mobile.macaronikid.com) |
+| Saenger Theatre Mobile | MacaroniKid-AL-mobile | 0 | 0 | 0 | 4 | 0 | 0 | 4 | [cal](https://mobile.macaronikid.com) |
+| Soul Kitchen | MacaroniKid-AL-mobile | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://mobile.macaronikid.com) |
+| City of Mobile: Events | MacaroniKid-AL-mobile | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://mobile.macaronikid.com) |
+| History Museum of Mobile | MacaroniKid-AL-mobile | 2 | 0 | 1 | 0 | 0 | 0 | 3 | [cal](https://mobile.macaronikid.com) |
+| Tending Futures | MacaroniKid-AL-mobile | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://mobile.macaronikid.com) |
+| Saenger Theatre | MacaroniKid-AL-mobile | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://mobile.macaronikid.com) |
+| The Blowout Bar | MacaroniKid-AL-mobile | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mobile.macaronikid.com) |
+| Nationwide Expos | MacaroniKid-AL-mobile | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mobile.macaronikid.com) |
+| Mobile County Animal Shelter | MacaroniKid-AL-mobile | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mobile.macaronikid.com) |
+| The Haunted Book Shop | MacaroniKid-AL-mobile | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://mobile.macaronikid.com) |
+| Mob Town Riders | MacaroniKid-AL-mobile | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mobile.macaronikid.com) |
+| Central Midtown | MacaroniKid-AL-mobile | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mobile.macaronikid.com) |
+| Mobile Botanical Gardens | MacaroniKid-AL-mobile | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mobile.macaronikid.com) |
+| MCCPL Lowder Regional Library | MacaroniKid-AL-montgomeryal | 5 | 1 | 6 | 1 | 0 | 0 | 13 | [cal](https://montgomeryal.macaronikid.com) |
+| Harriott II Riverboat | MacaroniKid-AL-montgomeryal | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://montgomeryal.macaronikid.com) |
+| Governor Square Library | MacaroniKid-AL-montgomeryal | 6 | 0 | 0 | 0 | 0 | 2 | 8 | [cal](https://montgomeryal.macaronikid.com) |
+| The NewSouth Bookstore | MacaroniKid-AL-montgomeryal | 1 | 0 | 0 | 2 | 0 | 0 | 3 | [cal](https://montgomeryal.macaronikid.com) |
+| Alabama National Fair | MacaroniKid-AL-montgomeryal | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://montgomeryal.macaronikid.com) |
+| My Kids Attic Children's Seasonal Consignment Sale | MacaroniKid-AL-montgomeryal | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://montgomeryal.macaronikid.com) |
+| The Sanctuary (Jubilee Community Center) | MacaroniKid-AL-montgomeryal | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://montgomeryal.macaronikid.com) |
+| For Healthy Pets | MacaroniKid-AL-montgomeryal | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://montgomeryal.macaronikid.com) |
+| Montgomery Performing Arts Centre | MacaroniKid-AL-montgomeryal | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://montgomeryal.macaronikid.com) |
+| Capri Theatre | MacaroniKid-AL-montgomeryal | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://montgomeryal.macaronikid.com) |
+| City of Montgomery Parks and Recreation-MGM | MacaroniKid-AL-montgomeryal | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://montgomeryal.macaronikid.com) |
+| Sickle Cell Foundation of the River Region | MacaroniKid-AL-montgomeryal | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://montgomeryal.macaronikid.com) |
+| Patrick Lamb | MacaroniKid-AL-northbirmingham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://northbirmingham.macaronikid.com) |
+| Visit Dothan | MacaroniKid-AL-ozark | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://ozark.macaronikid.com) |
+| City of Dothan Government | MacaroniKid-AL-ozark | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://ozark.macaronikid.com) |
+| Dothan Civic Center | MacaroniKid-AL-ozark | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://ozark.macaronikid.com) |
+| City of Dothan | MacaroniKid-AL-ozark | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://ozark.macaronikid.com) |
+| Fun Zone Skate Center | MacaroniKid-AL-ozark | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://ozark.macaronikid.com) |
+| Dothan Opera House | MacaroniKid-AL-ozark | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://ozark.macaronikid.com) |
+| Taj Restaurant & Bar | MacaroniKid-AL-ozark | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://ozark.macaronikid.com) |
+| Wiregrass Horse Rescue & Sanctuary | MacaroniKid-AL-ozark | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://ozark.macaronikid.com) |
+| The Thirsty Pig | MacaroniKid-AL-ozark | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ozark.macaronikid.com) |
+| Wiregrass Museum of Art | MacaroniKid-AL-ozark | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ozark.macaronikid.com) |
+| Dothan Leisure Services | MacaroniKid-AL-ozark | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ozark.macaronikid.com) |
+| The Plant | MacaroniKid-AL-ozark | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ozark.macaronikid.com) |
+| Birmingham Public Library | MacaroniKid-AL-sbirmingham | 7 | 23 | 3 | 6 | 5 | 9 | 53 | [cal](https://sbirmingham.macaronikid.com) |
+| WORKPLAY | MacaroniKid-AL-sbirmingham | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://sbirmingham.macaronikid.com) |
+| The BJCC | MacaroniKid-AL-sbirmingham | 0 | 0 | 0 | 0 | 6 | 0 | 6 | [cal](https://sbirmingham.macaronikid.com) |
+| Alys Robinson Stephens PAC | MacaroniKid-AL-sbirmingham | 4 | 0 | 2 | 0 | 0 | 0 | 6 | [cal](https://sbirmingham.macaronikid.com) |
+| UAB National Alumni Society | MacaroniKid-AL-sbirmingham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://sbirmingham.macaronikid.com) |
+| Alabama Theatre | MacaroniKid-AL-sbirmingham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://sbirmingham.macaronikid.com) |
+| Saturn | MacaroniKid-AL-sbirmingham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://sbirmingham.macaronikid.com) |
+| Magic Moments of Central Alabama | MacaroniKid-AL-sbirmingham | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://sbirmingham.macaronikid.com) |
+| Matt Mathews | MacaroniKid-AL-sbirmingham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://sbirmingham.macaronikid.com) |
+| Gurley Public Library | MacaroniKid-AL-scottsboro | 0 | 0 | 5 | 4 | 0 | 7 | 16 | [cal](https://scottsboro.macaronikid.com) |
+| Huntsville Madison County Public Library | MacaroniKid-AL-scottsboro | 1 | 9 | 0 | 5 | 0 | 0 | 15 | [cal](https://scottsboro.macaronikid.com) |
+| Cathedral Caverns State Park | MacaroniKid-AL-scottsboro | 7 | 0 | 0 | 4 | 0 | 0 | 11 | [cal](https://scottsboro.macaronikid.com) |
+| Huntsville Botanical Garden | MacaroniKid-AL-scottsboro | 7 | 3 | 0 | 0 | 0 | 1 | 11 | [cal](https://scottsboro.macaronikid.com) |
+| Arts Huntsville | MacaroniKid-AL-scottsboro | 7 | 0 | 0 | 3 | 0 | 0 | 10 | [cal](https://scottsboro.macaronikid.com) |
+| New Hope Library | MacaroniKid-AL-scottsboro | 0 | 0 | 8 | 2 | 0 | 0 | 10 | [cal](https://scottsboro.macaronikid.com) |
+| Piper & Leaf Tea Company | MacaroniKid-AL-scottsboro | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://scottsboro.macaronikid.com) |
+| Southeast Family YMCA | MacaroniKid-AL-scottsboro | 4 | 0 | 1 | 0 | 0 | 0 | 5 | [cal](https://scottsboro.macaronikid.com) |
+| Huntsville Museum of Art | MacaroniKid-AL-scottsboro | 3 | 2 | 0 | 0 | 0 | 0 | 5 | [cal](https://scottsboro.macaronikid.com) |
+| MidCity District | MacaroniKid-AL-scottsboro | 4 | 0 | 0 | 1 | 0 | 0 | 5 | [cal](https://scottsboro.macaronikid.com) |
+| Huntsville Museum of Art Isenberg Art Academy | MacaroniKid-AL-scottsboro | 2 | 1 | 0 | 0 | 0 | 0 | 3 | [cal](https://scottsboro.macaronikid.com) |
+| The Orion Amphitheater | MacaroniKid-AL-scottsboro | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://scottsboro.macaronikid.com) |
+| Art Society of Jackson County | MacaroniKid-AL-scottsboro | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://scottsboro.macaronikid.com) |
+| Owens Cross Roads - Scottsboro | MacaroniKid-AL-scottsboro | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://scottsboro.macaronikid.com) |
+| Visit Jackson County | MacaroniKid-AL-scottsboro | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://scottsboro.macaronikid.com) |
+| Belvins Gap Nature Preserve | MacaroniKid-AL-scottsboro | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://scottsboro.macaronikid.com) |
+| South Huntsville Main Business Association | MacaroniKid-AL-scottsboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scottsboro.macaronikid.com) |
+| Fireball Mail | MacaroniKid-AL-scottsboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scottsboro.macaronikid.com) |
+| The CARE Center | MacaroniKid-AL-scottsboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scottsboro.macaronikid.com) |
+| Von Braun Center | MacaroniKid-AL-scottsboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scottsboro.macaronikid.com) |
+| Future Horizons | MacaroniKid-AL-scottsboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scottsboro.macaronikid.com) |
+| Downtown Huntsville, Inc. | MacaroniKid-AL-scottsboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scottsboro.macaronikid.com) |
+| Marshall County Tourism & Sports | MacaroniKid-AL-scottsboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scottsboro.macaronikid.com) |
+| VBC Mars Music Hall | MacaroniKid-AL-scottsboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scottsboro.macaronikid.com) |
+| Anime Town Conventions | MacaroniKid-AL-scottsboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scottsboro.macaronikid.com) |
+| VBC Mark C Smith Concert Hall | MacaroniKid-AL-scottsboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scottsboro.macaronikid.com) |
+| The Scottsboro Boys Museum | MacaroniKid-AL-scottsboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scottsboro.macaronikid.com) |
+| Florence-Lauderdale Public Library | MacaroniKid-AL-shoals | 1 | 0 | 1 | 1 | 2 | 5 | 10 | [cal](https://shoals.macaronikid.com) |
+| Florence Indian Mound Museum | MacaroniKid-AL-shoals | 2 | 0 | 1 | 0 | 0 | 0 | 3 | [cal](https://shoals.macaronikid.com) |
+| Helen Keller Public Library | MacaroniKid-AL-shoals | 0 | 0 | 0 | 3 | 0 | 0 | 3 | [cal](https://shoals.macaronikid.com) |
+| The Artsy Place Muscle Shoals | MacaroniKid-AL-shoals | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://shoals.macaronikid.com) |
+| Brick-Hatton Volunteer Fire Dept. | MacaroniKid-AL-shoals | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://shoals.macaronikid.com) |
+| Start to Finish Dog Training | MacaroniKid-AL-shoals | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://shoals.macaronikid.com) |
+| Muscle Shoals High School | MacaroniKid-AL-shoals | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://shoals.macaronikid.com) |
+| Hesperia Mystic Shoppe | MacaroniKid-AL-shoals | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://shoals.macaronikid.com) |
+| Kentuck Art Center & Festival | MacaroniKid-AL-tuscaloosa | 1 | 0 | 0 | 11 | 0 | 0 | 12 | [cal](https://tuscaloosa.macaronikid.com) |
+| Barnes & Noble - Tuscaloosa | MacaroniKid-AL-tuscaloosa | 0 | 0 | 9 | 0 | 0 | 0 | 9 | [cal](https://tuscaloosa.macaronikid.com) |
+| Moundville Archaeological Park | MacaroniKid-AL-tuscaloosa | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://tuscaloosa.macaronikid.com) |
+| The Arts Council - Bama Theatre - Cultural Arts Center | MacaroniKid-AL-tuscaloosa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://tuscaloosa.macaronikid.com) |
+| Tuscaloosa Public Library | MacaroniKid-AL-tuscaloosa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://tuscaloosa.macaronikid.com) |
+| Tuscaloosa County Park & Recreation Authority (para) | MacaroniKid-AL-tuscaloosa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://tuscaloosa.macaronikid.com) |
+| UA Continuing Education and Lifelong Learning | MacaroniKid-AL-tuscaloosa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://tuscaloosa.macaronikid.com) |
+| Druid City Pride | MacaroniKid-AL-tuscaloosa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tuscaloosa.macaronikid.com) |
+| Tuscaloosa County Park & Recreation | MacaroniKid-AL-tuscaloosa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tuscaloosa.macaronikid.com) |
+| Black Cat DC | MacaroniKid-DC-dceast | 17 | 1 | 0 | 0 | 0 | 1 | 19 | [cal](https://dceast.macaronikid.com) |
+| Audi Field | MacaroniKid-DC-dceast | 1 | 0 | 0 | 5 | 0 | 0 | 6 | [cal](https://dceast.macaronikid.com) |
+| The Hamilton Live | MacaroniKid-DC-dceast | 2 | 1 | 0 | 1 | 0 | 1 | 5 | [cal](https://dceast.macaronikid.com) |
+| Warner Theatre | MacaroniKid-DC-dceast | 2 | 0 | 0 | 0 | 1 | 0 | 3 | [cal](https://dceast.macaronikid.com) |
+| Friends of the National Arboretum | MacaroniKid-DC-dceast | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://dceast.macaronikid.com) |
+| Pinstripes | MacaroniKid-DC-dceast | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://dceast.macaronikid.com) |
+| GO2 for Lung Cancer | MacaroniKid-DC-dceast | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://dceast.macaronikid.com) |
+| Main Street Takoma | MacaroniKid-DC-dceast | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://dceast.macaronikid.com) |
+| The Lincoln Theatre | MacaroniKid-DC-dceast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| Lisner Auditorium | MacaroniKid-DC-dceast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| Miracle Theatre | MacaroniKid-DC-dceast | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://dceast.macaronikid.com) |
+| Mammoth | MacaroniKid-DC-dceast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| Hard Rock Cafe Washington D.C. (999 E St NW, Washington D.C.) | MacaroniKid-DC-dceast | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| Grieves | MacaroniKid-DC-dceast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| Go Gay DC - Metro DC's LGBTQ Community | MacaroniKid-DC-dceast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| The Dirty Grass Players | MacaroniKid-DC-dceast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| Ello - Maryland | MacaroniKid-DC-dceast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| So Kids SOAR (Formerly Dreams For Kids DC) | MacaroniKid-DC-dceast | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| Saint John Paul II National Shrine | MacaroniKid-DC-dceast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| Barberton Public Library | MacaroniKid-DC-dceast | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| Cantina Bambina | MacaroniKid-DC-dceast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| The Washington Area Bicyclist Association | MacaroniKid-DC-dceast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| THE JUNKYARD BAND | MacaroniKid-DC-dceast | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| President Lincoln's Cottage | MacaroniKid-DC-dceast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| Pottery with a Purpose | MacaroniKid-DC-dceast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| All Good Presents | MacaroniKid-DC-dceast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| @AfroCode_ / AfroCode Nation | MacaroniKid-DC-dceast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| DC Huskers | MacaroniKid-DC-dceast | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| Mended Little Hearts of Washington, DC | MacaroniKid-DC-dceast | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://dceast.macaronikid.com) |
+| Louisville Free Public Library - South Central Regional | MacaroniKid-KY-centrallouisville | 3 | 17 | 8 | 6 | 4 | 12 | 50 | [cal](https://centrallouisville.macaronikid.com) |
+| Louisville Free Public Library - Newburg | MacaroniKid-KY-centrallouisville | 5 | 15 | 1 | 3 | 1 | 19 | 44 | [cal](https://centrallouisville.macaronikid.com) |
+| Greathouse Shryock Elementary | MacaroniKid-KY-centrallouisville | 27 | 0 | 1 | 8 | 0 | 0 | 36 | [cal](https://centrallouisville.macaronikid.com) |
+| Louisville Central | MacaroniKid-KY-centrallouisville | 30 | 0 | 0 | 1 | 0 | 0 | 31 | [cal](https://centrallouisville.macaronikid.com) |
+| Waterfront Park | MacaroniKid-KY-centrallouisville | 28 | 0 | 0 | 1 | 0 | 0 | 29 | [cal](https://centrallouisville.macaronikid.com) |
+| Louisville Free Public Library - Bon Air | MacaroniKid-KY-centrallouisville | 6 | 17 | 1 | 3 | 0 | 0 | 27 | [cal](https://centrallouisville.macaronikid.com) |
+| Kentucky Kingdom Theme & Water Park | MacaroniKid-KY-centrallouisville | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://centrallouisville.macaronikid.com) |
+| Bernheim Arboretum and Research Forest | MacaroniKid-KY-centrallouisville | 11 | 0 | 0 | 0 | 0 | 1 | 12 | [cal](https://centrallouisville.macaronikid.com) |
+| Downtown LOU | MacaroniKid-KY-centrallouisville | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://centrallouisville.macaronikid.com) |
+| The Train Depot | MacaroniKid-KY-centrallouisville | 9 | 0 | 0 | 1 | 0 | 0 | 10 | [cal](https://centrallouisville.macaronikid.com) |
+| Frazier History Museum | MacaroniKid-KY-centrallouisville | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://centrallouisville.macaronikid.com) |
+| Kentucky Exposition Center | MacaroniKid-KY-centrallouisville | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://centrallouisville.macaronikid.com) |
+| City of Hillview | MacaroniKid-KY-centrallouisville | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://centrallouisville.macaronikid.com) |
+| Farmington Historic Plantation | MacaroniKid-KY-centrallouisville | 6 | 0 | 0 | 2 | 0 | 0 | 8 | [cal](https://centrallouisville.macaronikid.com) |
+| Louisville SW | MacaroniKid-KY-centrallouisville | 5 | 0 | 0 | 1 | 0 | 0 | 6 | [cal](https://centrallouisville.macaronikid.com) |
+| The Louisville Palace | MacaroniKid-KY-centrallouisville | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://centrallouisville.macaronikid.com) |
+| JD Entertainment LLC | MacaroniKid-KY-centrallouisville | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://centrallouisville.macaronikid.com) |
+| Meg's Magical Morsels | MacaroniKid-KY-centrallouisville | 1 | 0 | 2 | 1 | 1 | 0 | 5 | [cal](https://centrallouisville.macaronikid.com) |
+| StageOne Family Theatre | MacaroniKid-KY-centrallouisville | 0 | 5 | 0 | 0 | 0 | 0 | 5 | [cal](https://centrallouisville.macaronikid.com) |
+| Louisville Zoo | MacaroniKid-KY-centrallouisville | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://centrallouisville.macaronikid.com) |
+| KFC Yum! Center | MacaroniKid-KY-centrallouisville | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://centrallouisville.macaronikid.com) |
+| FirstBuild | MacaroniKid-KY-centrallouisville | 3 | 1 | 0 | 0 | 0 | 0 | 4 | [cal](https://centrallouisville.macaronikid.com) |
+| Trager Family JCC | MacaroniKid-KY-centrallouisville | 1 | 1 | 0 | 1 | 0 | 0 | 3 | [cal](https://centrallouisville.macaronikid.com) |
+| Ms. Audrey's Crafting Emporium | MacaroniKid-KY-centrallouisville | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://centrallouisville.macaronikid.com) |
+| Paristown | MacaroniKid-KY-centrallouisville | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://centrallouisville.macaronikid.com) |
+| Kentucky International Convention Center | MacaroniKid-KY-centrallouisville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://centrallouisville.macaronikid.com) |
+| America's Antique Mall - Louisville | MacaroniKid-KY-centrallouisville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://centrallouisville.macaronikid.com) |
+| The Brown Theatre | MacaroniKid-KY-centrallouisville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://centrallouisville.macaronikid.com) |
+| Fleur De Flea Vintage Urban Markets | MacaroniKid-KY-centrallouisville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://centrallouisville.macaronikid.com) |
+| Douglass Community Center | MacaroniKid-KY-centrallouisville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://centrallouisville.macaronikid.com) |
+| Zanzabar | MacaroniKid-KY-centrallouisville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| Broad Run Park | MacaroniKid-KY-centrallouisville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| kNOw Waste Louisville | MacaroniKid-KY-centrallouisville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| Ambo Dance Theatre | MacaroniKid-KY-centrallouisville | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| Bullitt County Public Library | MacaroniKid-KY-centrallouisville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| Silent Disco | MacaroniKid-KY-centrallouisville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| Media Events Inc. | MacaroniKid-KY-centrallouisville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| Louisville Olmsted Parks Conservancy | MacaroniKid-KY-centrallouisville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| Belknap Neighborhood Association | MacaroniKid-KY-centrallouisville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| Witches Market | MacaroniKid-KY-centrallouisville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| Glow Worm Cafe & Play | MacaroniKid-KY-centrallouisville | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| Cherokee Triangle Association | MacaroniKid-KY-centrallouisville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| Girl Scouts of Kentuckiana | MacaroniKid-KY-centrallouisville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| Louisville Nature Center | MacaroniKid-KY-centrallouisville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| Louisville Bats | MacaroniKid-KY-centrallouisville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| American Cat Fanciers Association - ACFA | MacaroniKid-KY-centrallouisville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://centrallouisville.macaronikid.com) |
+| Lexington Public Library - Central | MacaroniKid-KY-lexingtonky | 30 | 23 | 5 | 13 | 0 | 0 | 71 | [cal](https://lexingtonky.macaronikid.com) |
+| Goldfish Swim School Nicholasville Road Lexington | MacaroniKid-KY-lexingtonky | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://lexingtonky.macaronikid.com) |
+| Living Arts and Science Museum | MacaroniKid-KY-lexingtonky | 2 | 0 | 0 | 2 | 0 | 0 | 4 | [cal](https://lexingtonky.macaronikid.com) |
+| Floracliff Nature Sanctuary | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://lexingtonky.macaronikid.com) |
+| Memorial Coliseum | MacaroniKid-KY-lexingtonky | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://lexingtonky.macaronikid.com) |
+| Lexington Opera House | MacaroniKid-KY-lexingtonky | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lexingtonky.macaronikid.com) |
+| KY Horse Park | MacaroniKid-KY-lexingtonky | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lexingtonky.macaronikid.com) |
+| Leftover Salmon | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Sesame Street Live | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Red Mile Gaming & Racing | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Sempervivi | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Painting with a Twist (Lexington, KY) | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Berea College Forestry Outreach Center | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Struggle Jennings | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Mary Queen of the Holy Rosary Catholic Church | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Live Green Lexington | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Heartland Music Together | MacaroniKid-KY-lexingtonky | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Local LEX Market | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Brad Phillips | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| JD Entertainment LLC | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Visit Lex | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| KET - Kentucky Educational Television | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Terry Harper presents | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Lexington Children's Museum | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Rupp Arena | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Camp Hendon | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Culturalcentreofindia | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Warehouse Block | MacaroniKid-KY-lexingtonky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexingtonky.macaronikid.com) |
+| Louisville Free Public Library - Northeast Regional | MacaroniKid-KY-louisvilleeast | 4 | 24 | 5 | 6 | 11 | 2 | 52 | [cal](https://louisvilleeast.macaronikid.com) |
+| Louisville Free Public Library - Middletown | MacaroniKid-KY-louisvilleeast | 1 | 21 | 1 | 2 | 0 | 25 | 50 | [cal](https://louisvilleeast.macaronikid.com) |
+| Oldham County Public Library - LaGrange Branch | MacaroniKid-KY-louisvilleeast | 18 | 14 | 14 | 1 | 0 | 3 | 50 | [cal](https://louisvilleeast.macaronikid.com) |
+| Louisville East - Oldham County | MacaroniKid-KY-louisvilleeast | 18 | 0 | 4 | 6 | 0 | 0 | 28 | [cal](https://louisvilleeast.macaronikid.com) |
+| Oldham County Public Library - Goshen Branch | MacaroniKid-KY-louisvilleeast | 12 | 7 | 3 | 2 | 1 | 0 | 25 | [cal](https://louisvilleeast.macaronikid.com) |
+| Louisville Free Public Library - St. Matthews Eline | MacaroniKid-KY-louisvilleeast | 4 | 16 | 0 | 3 | 0 | 1 | 24 | [cal](https://louisvilleeast.macaronikid.com) |
+| Louisville Free Public Library - Jeffersontown | MacaroniKid-KY-louisvilleeast | 0 | 18 | 0 | 1 | 1 | 1 | 21 | [cal](https://louisvilleeast.macaronikid.com) |
+| Oldham County Public Library - Crestwood Branch | MacaroniKid-KY-louisvilleeast | 6 | 1 | 4 | 9 | 0 | 1 | 21 | [cal](https://louisvilleeast.macaronikid.com) |
+| Preston Arts Center | MacaroniKid-KY-louisvilleeast | 3 | 0 | 1 | 9 | 5 | 1 | 19 | [cal](https://louisvilleeast.macaronikid.com) |
+| Louisville Free Public Library - Crescent Hill | MacaroniKid-KY-louisvilleeast | 4 | 6 | 4 | 0 | 0 | 0 | 14 | [cal](https://louisvilleeast.macaronikid.com) |
+| Kawaii Candy & Karaoke | MacaroniKid-KY-louisvilleeast | 6 | 0 | 0 | 2 | 0 | 0 | 8 | [cal](https://louisvilleeast.macaronikid.com) |
+| Recbar | MacaroniKid-KY-louisvilleeast | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://louisvilleeast.macaronikid.com) |
+| Wigglewow | MacaroniKid-KY-louisvilleeast | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://louisvilleeast.macaronikid.com) |
+| Gaslight Festival- Official | MacaroniKid-KY-louisvilleeast | 5 | 0 | 0 | 2 | 0 | 0 | 7 | [cal](https://louisvilleeast.macaronikid.com) |
+| Bernheim Arboretum and Research Forest | MacaroniKid-KY-louisvilleeast | 3 | 0 | 0 | 4 | 0 | 0 | 7 | [cal](https://louisvilleeast.macaronikid.com) |
+| Barnes & Noble - Shops at Paddock | MacaroniKid-KY-louisvilleeast | 0 | 0 | 7 | 0 | 0 | 0 | 7 | [cal](https://louisvilleeast.macaronikid.com) |
+| Haymarket by Ashbourne Farms | MacaroniKid-KY-louisvilleeast | 1 | 1 | 0 | 1 | 0 | 3 | 6 | [cal](https://louisvilleeast.macaronikid.com) |
+| Pinot's Palette - St. Matthews | MacaroniKid-KY-louisvilleeast | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://louisvilleeast.macaronikid.com) |
+| E.P. Tom Sawyer State Park | MacaroniKid-KY-louisvilleeast | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://louisvilleeast.macaronikid.com) |
+| Barnes & Noble - The Shoppes at Plainview | MacaroniKid-KY-louisvilleeast | 0 | 0 | 0 | 5 | 0 | 0 | 5 | [cal](https://louisvilleeast.macaronikid.com) |
+| Trager Family JCC | MacaroniKid-KY-louisvilleeast | 2 | 0 | 0 | 3 | 0 | 0 | 5 | [cal](https://louisvilleeast.macaronikid.com) |
+| Beckley Creek Park | MacaroniKid-KY-louisvilleeast | 2 | 2 | 1 | 0 | 0 | 0 | 5 | [cal](https://louisvilleeast.macaronikid.com) |
+| Blackacre State Nature Preserve And Historic Homestead | MacaroniKid-KY-louisvilleeast | 4 | 0 | 0 | 1 | 0 | 0 | 5 | [cal](https://louisvilleeast.macaronikid.com) |
+| Blind Squirrel Louisville - Music, Grub, Sports | MacaroniKid-KY-louisvilleeast | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://louisvilleeast.macaronikid.com) |
+| Pewee Valley Farmers Market | MacaroniKid-KY-louisvilleeast | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://louisvilleeast.macaronikid.com) |
+| Oxmoor Center | MacaroniKid-KY-louisvilleeast | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://louisvilleeast.macaronikid.com) |
+| Oldham County History Center | MacaroniKid-KY-louisvilleeast | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://louisvilleeast.macaronikid.com) |
+| JD Entertainment LLC | MacaroniKid-KY-louisvilleeast | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://louisvilleeast.macaronikid.com) |
+| Creasey Mahan Nature Preserve | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://louisvilleeast.macaronikid.com) |
+| Jeffersontown Amphitheater | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| Bonnie Knows Breast | MacaroniKid-KY-louisvilleeast | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| 3rd Turn Oldham Gardens | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| Asia Institute-Crane House | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| Goldfish Swim School - St. Matthews | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| Saint Bernadette Diaper Bank | MacaroniKid-KY-louisvilleeast | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| Girl Scouts of Kentuckiana | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| Once Upon A Flash Photography | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| Cedar Lake | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| Greathouse Shryock Elementary | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| City of Douglass Hills | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| Carmichael's Bookstores | MacaroniKid-KY-louisvilleeast | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| Oldham County Schools Arts Center | MacaroniKid-KY-louisvilleeast | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| Yew Dell Botanical Gardens | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| LaGrange Railroad Museum & Learning Center | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| Pottery with a Purpose | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| City of St. Matthews, KY | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| City of Jeffersontown, KY | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| PokeKon Fest | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| America's Floor Source | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| Shannon Fabrics | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| CityPlace Expo Center | MacaroniKid-KY-louisvilleeast | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| La Grange Kentucky Main Street | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| Seven Counties Services | MacaroniKid-KY-louisvilleeast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://louisvilleeast.macaronikid.com) |
+| Louisville Free Public Library - Western | MacaroniKid-KY-louisvillesw | 0 | 1 | 0 | 1 | 0 | 1 | 3 | [cal](https://louisvillesw.macaronikid.com) |
+| Louisville Free Public Library - Fairdale | MacaroniKid-KY-louisvillesw | 0 | 2 | 0 | 0 | 1 | 0 | 3 | [cal](https://louisvillesw.macaronikid.com) |
+| Louisville Free Public Library - Southwest Regional | MacaroniKid-KY-louisvillesw | 0 | 2 | 0 | 0 | 1 | 0 | 3 | [cal](https://louisvillesw.macaronikid.com) |
+| Louisville Free Public Library - Portland | MacaroniKid-KY-louisvillesw | 0 | 1 | 0 | 0 | 1 | 0 | 2 | [cal](https://louisvillesw.macaronikid.com) |
+| Louisville Free Public Library - Shawnee | MacaroniKid-KY-louisvillesw | 0 | 1 | 0 | 1 | 0 | 0 | 2 | [cal](https://louisvillesw.macaronikid.com) |
+| Churchill Downs | MacaroniKid-KY-louisvillesw | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://louisvillesw.macaronikid.com) |
+| Louisville Free Public Library - Iroquois | MacaroniKid-KY-louisvillesw | 0 | 0 | 1 | 0 | 0 | 1 | 2 | [cal](https://louisvillesw.macaronikid.com) |
+| Louisville Free Public Library - Parkland | MacaroniKid-KY-louisvillesw | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://louisvillesw.macaronikid.com) |
+| Forbes Library | MacaroniKid-MA-amherst | 25 | 18 | 20 | 12 | 8 | 0 | 83 | [cal](https://amherst.macaronikid.com) |
+| Historic Deerfield | MacaroniKid-MA-amherst | 15 | 0 | 0 | 0 | 3 | 0 | 18 | [cal](https://amherst.macaronikid.com) |
+| The Eric Carle Museum of Picture Book Art | MacaroniKid-MA-amherst | 2 | 2 | 4 | 1 | 0 | 0 | 9 | [cal](https://amherst.macaronikid.com) |
+| Mill District General Store & Local Art Gallery | MacaroniKid-MA-amherst | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://amherst.macaronikid.com) |
+| Western Mass Hilltown Hikers Inc | MacaroniKid-MA-amherst | 1 | 0 | 0 | 2 | 0 | 0 | 3 | [cal](https://amherst.macaronikid.com) |
+| The Mill District | MacaroniKid-MA-amherst | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://amherst.macaronikid.com) |
+| Smith College Museum of Art | MacaroniKid-MA-amherst | 1 | 1 | 0 | 1 | 0 | 0 | 3 | [cal](https://amherst.macaronikid.com) |
+| It Takes a Village | MacaroniKid-MA-amherst | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://amherst.macaronikid.com) |
+| The DeadHeads MA | MacaroniKid-MA-amherst | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://amherst.macaronikid.com) |
+| World Ballet Company | MacaroniKid-MA-amherst | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://amherst.macaronikid.com) |
+| Pines Theater at Look Park | MacaroniKid-MA-amherst | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://amherst.macaronikid.com) |
+| Pioneer Valley Pro Wrestling | MacaroniKid-MA-amherst | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://amherst.macaronikid.com) |
+| Q-MoB (Queer Men of the Berkshires) | MacaroniKid-MA-amherst | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://amherst.macaronikid.com) |
+| Diemand Farm | MacaroniKid-MA-amherst | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://amherst.macaronikid.com) |
+| Hockomock Area YMCA - North Attleborough | MacaroniKid-MA-attleboro | 2 | 0 | 36 | 31 | 5 | 1 | 75 | [cal](https://attleboro.macaronikid.com) |
+| Plainville Public Library | MacaroniKid-MA-attleboro | 6 | 16 | 6 | 7 | 0 | 0 | 35 | [cal](https://attleboro.macaronikid.com) |
+| Richards Memorial Library | MacaroniKid-MA-attleboro | 15 | 15 | 0 | 4 | 0 | 0 | 34 | [cal](https://attleboro.macaronikid.com) |
+| Seekonk Public Library | MacaroniKid-MA-attleboro | 14 | 13 | 4 | 0 | 1 | 0 | 32 | [cal](https://attleboro.macaronikid.com) |
+| Mansfield Public Library | MacaroniKid-MA-attleboro | 14 | 7 | 0 | 5 | 0 | 5 | 31 | [cal](https://attleboro.macaronikid.com) |
+| Swansea Public Library | MacaroniKid-MA-attleboro | 13 | 2 | 0 | 11 | 3 | 1 | 30 | [cal](https://attleboro.macaronikid.com) |
+| Hurley Family Branch YMCA | MacaroniKid-MA-attleboro | 24 | 0 | 0 | 0 | 0 | 0 | 24 | [cal](https://attleboro.macaronikid.com) |
+| Norton Public Library | MacaroniKid-MA-attleboro | 5 | 9 | 2 | 0 | 0 | 1 | 17 | [cal](https://attleboro.macaronikid.com) |
+| Dighton Public Library | MacaroniKid-MA-attleboro | 0 | 0 | 0 | 8 | 0 | 0 | 8 | [cal](https://attleboro.macaronikid.com) |
+| SAFE Coalition | MacaroniKid-MA-attleboro | 0 | 7 | 0 | 0 | 0 | 0 | 7 | [cal](https://attleboro.macaronikid.com) |
+| An Unlikely Story | MacaroniKid-MA-attleboro | 4 | 0 | 2 | 1 | 0 | 0 | 7 | [cal](https://attleboro.macaronikid.com) |
+| Seekonk Speedway | MacaroniKid-MA-attleboro | 2 | 0 | 0 | 3 | 0 | 0 | 5 | [cal](https://attleboro.macaronikid.com) |
+| Fernandes Farm | MacaroniKid-MA-attleboro | 3 | 0 | 0 | 0 | 0 | 1 | 4 | [cal](https://attleboro.macaronikid.com) |
+| Berkley Public Library | MacaroniKid-MA-attleboro | 1 | 0 | 0 | 2 | 0 | 0 | 3 | [cal](https://attleboro.macaronikid.com) |
+| Seekonk Library Youth Services | MacaroniKid-MA-attleboro | 1 | 2 | 0 | 0 | 0 | 0 | 3 | [cal](https://attleboro.macaronikid.com) |
+| Illuminate //creative+theatrical arts co | MacaroniKid-MA-attleboro | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://attleboro.macaronikid.com) |
+| Palmer River Equestrian Center | MacaroniKid-MA-attleboro | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://attleboro.macaronikid.com) |
+| The Soul Purpose | MacaroniKid-MA-attleboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://attleboro.macaronikid.com) |
+| Manheim New England | MacaroniKid-MA-attleboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://attleboro.macaronikid.com) |
+| Attleboro Norton YMCA | MacaroniKid-MA-attleboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://attleboro.macaronikid.com) |
+| Seekonk Congregational Church, UCC | MacaroniKid-MA-attleboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://attleboro.macaronikid.com) |
+| North Attleboro Recreation Department | MacaroniKid-MA-attleboro | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://attleboro.macaronikid.com) |
+| Oak Knoll Wildlife Sanctuary | MacaroniKid-MA-attleboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://attleboro.macaronikid.com) |
+| Awakening Foundation | MacaroniKid-MA-attleboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://attleboro.macaronikid.com) |
+| Azorean Maritime Heritage Society | MacaroniKid-MA-attleboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://attleboro.macaronikid.com) |
+| Mathnasium of Plainville | MacaroniKid-MA-attleboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://attleboro.macaronikid.com) |
+| Julie Clapp | MacaroniKid-MA-attleboro | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://attleboro.macaronikid.com) |
+| PVD Food Truck Events | MacaroniKid-MA-attleboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://attleboro.macaronikid.com) |
+| Turn The Page | MacaroniKid-MA-attleboro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://attleboro.macaronikid.com) |
+| Auburn MA | MacaroniKid-MA-auburnma | 45 | 16 | 0 | 16 | 0 | 0 | 77 | [cal](https://auburnma.macaronikid.com) |
+| Auburn Public Library | MacaroniKid-MA-auburnma | 0 | 25 | 22 | 7 | 10 | 4 | 68 | [cal](https://auburnma.macaronikid.com) |
+| Gladys E. Kelly Public Library | MacaroniKid-MA-auburnma | 8 | 14 | 1 | 5 | 0 | 12 | 40 | [cal](https://auburnma.macaronikid.com) |
+| Whitinsville Social Library | MacaroniKid-MA-auburnma | 10 | 6 | 8 | 10 | 1 | 0 | 35 | [cal](https://auburnma.macaronikid.com) |
+| Charlton Public Library | MacaroniKid-MA-auburnma | 2 | 16 | 8 | 1 | 5 | 0 | 32 | [cal](https://auburnma.macaronikid.com) |
+| Oxford Free Public Library | MacaroniKid-MA-auburnma | 1 | 18 | 7 | 1 | 0 | 0 | 27 | [cal](https://auburnma.macaronikid.com) |
+| Leicester Public Library | MacaroniKid-MA-auburnma | 7 | 14 | 0 | 4 | 2 | 0 | 27 | [cal](https://auburnma.macaronikid.com) |
+| Millbury Public Library | MacaroniKid-MA-auburnma | 4 | 6 | 9 | 4 | 0 | 4 | 27 | [cal](https://auburnma.macaronikid.com) |
+| Pearle L. Crawford Memorial Library | MacaroniKid-MA-auburnma | 4 | 6 | 5 | 7 | 1 | 0 | 23 | [cal](https://auburnma.macaronikid.com) |
+| Oxford Community Center | MacaroniKid-MA-auburnma | 12 | 5 | 0 | 5 | 0 | 0 | 22 | [cal](https://auburnma.macaronikid.com) |
+| Sutton Free Public Library | MacaroniKid-MA-auburnma | 2 | 6 | 2 | 0 | 4 | 1 | 15 | [cal](https://auburnma.macaronikid.com) |
+| DCU Center Convention Center | MacaroniKid-MA-auburnma | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://auburnma.macaronikid.com) |
+| Gillette Stadium | MacaroniKid-MA-auburnma | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://auburnma.macaronikid.com) |
+| Chester P. Tuttle Post 279 | MacaroniKid-MA-auburnma | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://auburnma.macaronikid.com) |
+| Simon Fairfield Public Library | MacaroniKid-MA-auburnma | 2 | 0 | 2 | 0 | 0 | 0 | 4 | [cal](https://auburnma.macaronikid.com) |
+| TD Garden | MacaroniKid-MA-auburnma | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://auburnma.macaronikid.com) |
+| Waters Farm Preservation, Inc. | MacaroniKid-MA-auburnma | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://auburnma.macaronikid.com) |
+| Asa Waters Mansion | MacaroniKid-MA-auburnma | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://auburnma.macaronikid.com) |
+| Let's Cake Decorate | MacaroniKid-MA-auburnma | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://auburnma.macaronikid.com) |
+| Douglas Orchard & Farm | MacaroniKid-MA-auburnma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://auburnma.macaronikid.com) |
+| Stowe Farm | MacaroniKid-MA-auburnma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://auburnma.macaronikid.com) |
+| Claire Birtz Wildlife Sanctuary | MacaroniKid-MA-auburnma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://auburnma.macaronikid.com) |
+| The Hanover Theatre and Conservatory for the Performing Arts | MacaroniKid-MA-auburnma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://auburnma.macaronikid.com) |
+| Millbury Lions Foundation | MacaroniKid-MA-auburnma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://auburnma.macaronikid.com) |
+| Berkshire Athenaeum | MacaroniKid-MA-berkshires | 8 | 8 | 0 | 9 | 0 | 0 | 25 | [cal](https://berkshires.macaronikid.com) |
+| Becket Athenaeum: Becket-Washington's Community Library | MacaroniKid-MA-berkshires | 0 | 9 | 8 | 0 | 0 | 0 | 17 | [cal](https://berkshires.macaronikid.com) |
+| Lenox Library | MacaroniKid-MA-berkshires | 3 | 5 | 0 | 5 | 0 | 0 | 13 | [cal](https://berkshires.macaronikid.com) |
+| South Berkshire Kids | MacaroniKid-MA-berkshires | 0 | 0 | 9 | 0 | 0 | 0 | 9 | [cal](https://berkshires.macaronikid.com) |
+| Mohawk Trail Association | MacaroniKid-MA-berkshires | 5 | 0 | 4 | 0 | 0 | 0 | 9 | [cal](https://berkshires.macaronikid.com) |
+| Great Barrington Family Resource Center (141 West Ave., Great Barrington, MA) | MacaroniKid-MA-berkshires | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://berkshires.macaronikid.com) |
+| Greylock Glen Center | MacaroniKid-MA-berkshires | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://berkshires.macaronikid.com) |
+| Berkshire Art Center | MacaroniKid-MA-berkshires | 1 | 2 | 0 | 3 | 1 | 0 | 7 | [cal](https://berkshires.macaronikid.com) |
+| The Clark | MacaroniKid-MA-berkshires | 3 | 2 | 0 | 2 | 0 | 0 | 7 | [cal](https://berkshires.macaronikid.com) |
+| Berkshire South Regional Community Center | MacaroniKid-MA-berkshires | 4 | 0 | 0 | 0 | 1 | 0 | 5 | [cal](https://berkshires.macaronikid.com) |
+| Families Like Ours | MacaroniKid-MA-berkshires | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://berkshires.macaronikid.com) |
+| Hancock Shaker Village | MacaroniKid-MA-berkshires | 4 | 0 | 0 | 1 | 0 | 0 | 5 | [cal](https://berkshires.macaronikid.com) |
+| The Mount - Edith Wharton Cultural Center | MacaroniKid-MA-berkshires | 3 | 1 | 0 | 0 | 0 | 1 | 5 | [cal](https://berkshires.macaronikid.com) |
+| Miraval Berkshires Resort and Spa | MacaroniKid-MA-berkshires | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://berkshires.macaronikid.com) |
+| North Adams Tourism | MacaroniKid-MA-berkshires | 2 | 0 | 0 | 2 | 0 | 0 | 4 | [cal](https://berkshires.macaronikid.com) |
+| Norman Rockwell Museum | MacaroniKid-MA-berkshires | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://berkshires.macaronikid.com) |
+| Mahaiwe Performing Arts Center | MacaroniKid-MA-berkshires | 3 | 0 | 0 | 0 | 0 | 1 | 4 | [cal](https://berkshires.macaronikid.com) |
+| Mass Audubon Pleasant Valley | MacaroniKid-MA-berkshires | 3 | 1 | 0 | 0 | 0 | 0 | 4 | [cal](https://berkshires.macaronikid.com) |
+| Williamstown Rural Lands Foundation | MacaroniKid-MA-berkshires | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://berkshires.macaronikid.com) |
+| Naumkeag | MacaroniKid-MA-berkshires | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://berkshires.macaronikid.com) |
+| Downtown Pittsfield, Inc. | MacaroniKid-MA-berkshires | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://berkshires.macaronikid.com) |
+| National Shrine of the Divine Mercy | MacaroniKid-MA-berkshires | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://berkshires.macaronikid.com) |
+| City of Pittsfield | MacaroniKid-MA-berkshires | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://berkshires.macaronikid.com) |
+| Q-MoB (Queer Men of the Berkshires) | MacaroniKid-MA-berkshires | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://berkshires.macaronikid.com) |
+| Berkshire Natural Resources Council | MacaroniKid-MA-berkshires | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://berkshires.macaronikid.com) |
+| Adams Theater | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://berkshires.macaronikid.com) |
+| The Stationery Factory | MacaroniKid-MA-berkshires | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://berkshires.macaronikid.com) |
+| MCLA Alumni Association | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Notchview | MacaroniKid-MA-berkshires | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Benson's Pet Center | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Wild Oats Market | MacaroniKid-MA-berkshires | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Mass Audubon Pleasant Valley Wildlife Sanctuary | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Community Access to the Arts | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Barrington Hall | MacaroniKid-MA-berkshires | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Berkshire Busk! | MacaroniKid-MA-berkshires | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Sweetwood of Williamstown | MacaroniKid-MA-berkshires | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Mt. Greylock Campsite Park | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Bousquet Mountain | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Gateway Collaborative Media | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Blue Rider Stables | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| 1Berkshire | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| The Foundry | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Berkshire Arts & Technology Charter Public School | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Berkshire Community College | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| WANDER Berkshires | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Living In Recovery | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| OLLI: Osher Lifelong Learning Institute at Berkshire Community College | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Berkshire Theatre Group | MacaroniKid-MA-berkshires | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Flying Cloud Institute | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Xtreme Wrestling Alliance | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| Greenagers | MacaroniKid-MA-berkshires | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://berkshires.macaronikid.com) |
+| West Bridgewater Public Library | MacaroniKid-MA-bridgewater | 23 | 10 | 10 | 0 | 1 | 4 | 48 | [cal](https://bridgewater.macaronikid.com) |
+| East Bridgewater Public Library | MacaroniKid-MA-bridgewater | 35 | 3 | 5 | 1 | 0 | 2 | 46 | [cal](https://bridgewater.macaronikid.com) |
+| Raynham Public Library | MacaroniKid-MA-bridgewater | 2 | 19 | 17 | 5 | 0 | 2 | 45 | [cal](https://bridgewater.macaronikid.com) |
+| Bridgewater Public Library | MacaroniKid-MA-bridgewater | 7 | 0 | 17 | 5 | 0 | 8 | 37 | [cal](https://bridgewater.macaronikid.com) |
+| Brockton Public Library - Thomas P. Kennedy Main Library | MacaroniKid-MA-bridgewater | 9 | 0 | 8 | 2 | 0 | 0 | 19 | [cal](https://bridgewater.macaronikid.com) |
+| Just Claying Around | MacaroniKid-MA-bridgewater | 2 | 0 | 0 | 2 | 0 | 0 | 4 | [cal](https://bridgewater.macaronikid.com) |
+| Old Colony YMCA - Easton Branch | MacaroniKid-MA-bridgewater | 1 | 2 | 0 | 0 | 0 | 0 | 3 | [cal](https://bridgewater.macaronikid.com) |
+| Ames Free Library | MacaroniKid-MA-bridgewater | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://bridgewater.macaronikid.com) |
+| Brockton Arts Inc | MacaroniKid-MA-bridgewater | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://bridgewater.macaronikid.com) |
+| Julie Clapp | MacaroniKid-MA-bridgewater | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://bridgewater.macaronikid.com) |
+| Barrett's Alehouse Bridgewater | MacaroniKid-MA-bridgewater | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://bridgewater.macaronikid.com) |
+| CAS - Community Autism Services | MacaroniKid-MA-bridgewater | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://bridgewater.macaronikid.com) |
+| Fire For Effect Foundation Inc. | MacaroniKid-MA-bridgewater | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://bridgewater.macaronikid.com) |
+| Community Autism Resources | MacaroniKid-MA-bridgewater | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://bridgewater.macaronikid.com) |
+| The Soulful Palette | MacaroniKid-MA-bridgewater | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://bridgewater.macaronikid.com) |
+| Bridgewater-Brockton | MacaroniKid-MA-bridgewater | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://bridgewater.macaronikid.com) |
+| Charlotte and William Bloomberg Medford Public Library | MacaroniKid-MA-burlingtonma | 17 | 21 | 22 | 32 | 5 | 33 | 130 | [cal](https://burlingtonma.macaronikid.com) |
+| Wilmington Memorial Library | MacaroniKid-MA-burlingtonma | 78 | 8 | 9 | 8 | 2 | 3 | 108 | [cal](https://burlingtonma.macaronikid.com) |
+| Winchester Public Library | MacaroniKid-MA-burlingtonma | 4 | 18 | 28 | 40 | 0 | 1 | 91 | [cal](https://burlingtonma.macaronikid.com) |
+| Burlington Public Library | MacaroniKid-MA-burlingtonma | 1 | 39 | 4 | 10 | 10 | 5 | 69 | [cal](https://burlingtonma.macaronikid.com) |
+| Friends of the Fells | MacaroniKid-MA-burlingtonma | 1 | 3 | 0 | 0 | 0 | 0 | 4 | [cal](https://burlingtonma.macaronikid.com) |
+| Public Library of New London | MacaroniKid-MA-burlingtonma | 0 | 0 | 0 | 3 | 0 | 0 | 3 | [cal](https://burlingtonma.macaronikid.com) |
+| Cheshire Public Library | MacaroniKid-MA-burlingtonma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://burlingtonma.macaronikid.com) |
+| Winchester Community Music School | MacaroniKid-MA-burlingtonma | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://burlingtonma.macaronikid.com) |
+| Last Hope K9 Rescue | MacaroniKid-MA-burlingtonma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://burlingtonma.macaronikid.com) |
+| Thayer Public Library | MacaroniKid-MA-burlingtonma | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://burlingtonma.macaronikid.com) |
+| RSM Arlington | MacaroniKid-MA-burlingtonma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://burlingtonma.macaronikid.com) |
+| Nantucket Historical Association | MacaroniKid-MA-capecod | 25 | 0 | 0 | 0 | 0 | 0 | 25 | [cal](https://capecod.macaronikid.com) |
+| Duffy Health Center | MacaroniKid-MA-capecod | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://capecod.macaronikid.com) |
+| Bartlett's Ocean View Farm | MacaroniKid-MA-capecod | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://capecod.macaronikid.com) |
+| Linda Loring Nature Foundation | MacaroniKid-MA-capecod | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://capecod.macaronikid.com) |
+| CCWA - Cape Cod Women's Association | MacaroniKid-MA-capecod | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://capecod.macaronikid.com) |
+| Barnstable Land Trust | MacaroniKid-MA-capecod | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://capecod.macaronikid.com) |
+| Mass Audubon | MacaroniKid-MA-capecod | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://capecod.macaronikid.com) |
+| Cape Symphony | MacaroniKid-MA-capecod | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://capecod.macaronikid.com) |
+| Osterville Village Library | MacaroniKid-MA-capecod | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://capecod.macaronikid.com) |
+| Falmouth Museums on the Green | MacaroniKid-MA-capecod | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://capecod.macaronikid.com) |
+| Mass Audubon Wachusett Meadow | MacaroniKid-MA-capecod | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://capecod.macaronikid.com) |
+| Nauset Beach | MacaroniKid-MA-capecod | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://capecod.macaronikid.com) |
+| Peter Mayer | MacaroniKid-MA-capecod | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://capecod.macaronikid.com) |
+| The Silent Trees | MacaroniKid-MA-capecod | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://capecod.macaronikid.com) |
+| Cape and Islands Veterans Outreach Center | MacaroniKid-MA-capecod | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://capecod.macaronikid.com) |
+| Cape Cod Central Railroad | MacaroniKid-MA-capecod | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://capecod.macaronikid.com) |
+| Master Gardener Association of Cape Cod | MacaroniKid-MA-capecod | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://capecod.macaronikid.com) |
+| Agawam Public Library | MacaroniKid-MA-chicopee | 22 | 36 | 12 | 29 | 0 | 0 | 99 | [cal](https://chicopee.macaronikid.com) |
+| Westfield Athenaeum | MacaroniKid-MA-chicopee | 0 | 0 | 1 | 5 | 5 | 0 | 11 | [cal](https://chicopee.macaronikid.com) |
+| Holyoke Public Library | MacaroniKid-MA-chicopee | 0 | 0 | 0 | 4 | 0 | 1 | 5 | [cal](https://chicopee.macaronikid.com) |
+| Sarah the Fiddler | MacaroniKid-MA-chicopee | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://chicopee.macaronikid.com) |
+| Wistariahurst Museum | MacaroniKid-MA-chicopee | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://chicopee.macaronikid.com) |
+| Riley Home Realty | MacaroniKid-MA-chicopee | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://chicopee.macaronikid.com) |
+| Food Bank of Western Massachusetts | MacaroniKid-MA-chicopee | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://chicopee.macaronikid.com) |
+| Lobsterz from Marz - New Englands Longest Running Dead Band | MacaroniKid-MA-chicopee | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://chicopee.macaronikid.com) |
+| BusinessWest | MacaroniKid-MA-chicopee | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://chicopee.macaronikid.com) |
+| Ovations ForThe Cure | MacaroniKid-MA-chicopee | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://chicopee.macaronikid.com) |
+| Framingham Public Library | MacaroniKid-MA-framingham | 7 | 9 | 6 | 7 | 0 | 2 | 31 | [cal](https://framingham.macaronikid.com) |
+| Framingham Public Schools | MacaroniKid-MA-framingham | 0 | 0 | 11 | 1 | 0 | 0 | 12 | [cal](https://framingham.macaronikid.com) |
+| Ten Trees Books | MacaroniKid-MA-framingham | 0 | 1 | 2 | 1 | 0 | 0 | 4 | [cal](https://framingham.macaronikid.com) |
+| WooTrucks | MacaroniKid-MA-framingham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://framingham.macaronikid.com) |
+| The Learning Center for the Deaf (MA) | MacaroniKid-MA-framingham | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://framingham.macaronikid.com) |
+| Bellingham Public Library | MacaroniKid-MA-franklin | 16 | 38 | 44 | 29 | 0 | 3 | 130 | [cal](https://franklin.macaronikid.com) |
+| Upton Town Library | MacaroniKid-MA-franklin | 11 | 24 | 20 | 15 | 0 | 0 | 70 | [cal](https://franklin.macaronikid.com) |
+| Grafton Public Library | MacaroniKid-MA-franklin | 1 | 13 | 12 | 3 | 23 | 7 | 59 | [cal](https://franklin.macaronikid.com) |
+| Franklin Public Library | MacaroniKid-MA-franklin | 11 | 11 | 1 | 3 | 0 | 2 | 28 | [cal](https://franklin.macaronikid.com) |
+| EARTH Limited at Southwick's Zoo | MacaroniKid-MA-franklin | 24 | 0 | 0 | 0 | 0 | 0 | 24 | [cal](https://franklin.macaronikid.com) |
+| SAFE Coalition | MacaroniKid-MA-franklin | 11 | 9 | 0 | 0 | 0 | 0 | 20 | [cal](https://franklin.macaronikid.com) |
+| Holliston Public Library | MacaroniKid-MA-franklin | 12 | 4 | 1 | 2 | 0 | 0 | 19 | [cal](https://franklin.macaronikid.com) |
+| TJ Cafe & Games | MacaroniKid-MA-franklin | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://franklin.macaronikid.com) |
+| Bancroft Memorial Library | MacaroniKid-MA-franklin | 0 | 7 | 0 | 0 | 0 | 0 | 7 | [cal](https://franklin.macaronikid.com) |
+| Barnes & Noble - Bellingham, MA | MacaroniKid-MA-franklin | 0 | 0 | 3 | 1 | 0 | 0 | 4 | [cal](https://franklin.macaronikid.com) |
+| Hopkinton Recreation Department | MacaroniKid-MA-franklin | 0 | 0 | 0 | 3 | 0 | 0 | 3 | [cal](https://franklin.macaronikid.com) |
+| Southwick's Zoo | MacaroniKid-MA-franklin | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://franklin.macaronikid.com) |
+| Azza Law | MacaroniKid-MA-franklin | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://franklin.macaronikid.com) |
+| St John's Episcopal Church | MacaroniKid-MA-franklin | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://franklin.macaronikid.com) |
+| Grafton Recreation | MacaroniKid-MA-franklin | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://franklin.macaronikid.com) |
+| Millville Free Public Library | MacaroniKid-MA-franklin | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://franklin.macaronikid.com) |
+| JTB | MacaroniKid-MA-franklin | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://franklin.macaronikid.com) |
+| Bigelow Free Public Library | MacaroniKid-MA-franklin | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://franklin.macaronikid.com) |
+| Weston Nurseries | MacaroniKid-MA-franklin | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://franklin.macaronikid.com) |
+| The Learning Experience (Milford) | MacaroniKid-MA-franklin | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://franklin.macaronikid.com) |
+| Town of Bellingham, MA | MacaroniKid-MA-franklin | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://franklin.macaronikid.com) |
+| Advocates, Inc. | MacaroniKid-MA-franklin | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://franklin.macaronikid.com) |
+| Doubletree by Hilton Boston/Milford | MacaroniKid-MA-franklin | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://franklin.macaronikid.com) |
+| Raydio | MacaroniKid-MA-franklin | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://franklin.macaronikid.com) |
+| Leominster Public Library | MacaroniKid-MA-leominster | 10 | 5 | 20 | 5 | 5 | 21 | 66 | [cal](https://leominster.macaronikid.com) |
+| Ayer Library | MacaroniKid-MA-leominster | 6 | 26 | 11 | 0 | 3 | 0 | 46 | [cal](https://leominster.macaronikid.com) |
+| Townsend Library | MacaroniKid-MA-leominster | 13 | 6 | 19 | 2 | 3 | 3 | 46 | [cal](https://leominster.macaronikid.com) |
+| Conant Public Library | MacaroniKid-MA-leominster | 5 | 6 | 1 | 23 | 2 | 2 | 39 | [cal](https://leominster.macaronikid.com) |
+| Fitchburg Public Library | MacaroniKid-MA-leominster | 6 | 7 | 10 | 8 | 4 | 1 | 36 | [cal](https://leominster.macaronikid.com) |
+| Athol Public Library | MacaroniKid-MA-leominster | 0 | 6 | 8 | 4 | 5 | 5 | 28 | [cal](https://leominster.macaronikid.com) |
+| Boylston Public Library | MacaroniKid-MA-leominster | 1 | 10 | 1 | 7 | 1 | 5 | 25 | [cal](https://leominster.macaronikid.com) |
+| Bolton Public Library | MacaroniKid-MA-leominster | 2 | 17 | 1 | 3 | 1 | 0 | 24 | [cal](https://leominster.macaronikid.com) |
+| Lunenburg Public Library | MacaroniKid-MA-leominster | 3 | 11 | 5 | 4 | 0 | 0 | 23 | [cal](https://leominster.macaronikid.com) |
+| Brew Barn | MacaroniKid-MA-leominster | 23 | 0 | 0 | 0 | 0 | 0 | 23 | [cal](https://leominster.macaronikid.com) |
+| Thayer Memorial Library | MacaroniKid-MA-leominster | 5 | 6 | 2 | 3 | 1 | 5 | 22 | [cal](https://leominster.macaronikid.com) |
+| Bigelow Free Public Library | MacaroniKid-MA-leominster | 5 | 0 | 6 | 5 | 4 | 0 | 20 | [cal](https://leominster.macaronikid.com) |
+| FunStuf Party Place | MacaroniKid-MA-leominster | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [cal](https://leominster.macaronikid.com) |
+| Wachusett Mountain | MacaroniKid-MA-leominster | 5 | 0 | 0 | 4 | 0 | 0 | 9 | [cal](https://leominster.macaronikid.com) |
+| Hollis Hills Farm | MacaroniKid-MA-leominster | 4 | 0 | 0 | 1 | 0 | 0 | 5 | [cal](https://leominster.macaronikid.com) |
+| City of Leominster | MacaroniKid-MA-leominster | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://leominster.macaronikid.com) |
+| Fitchburg State University | MacaroniKid-MA-leominster | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://leominster.macaronikid.com) |
+| Sterling Street Brewery | MacaroniKid-MA-leominster | 1 | 0 | 1 | 1 | 0 | 0 | 3 | [cal](https://leominster.macaronikid.com) |
+| Red Apple Farm | MacaroniKid-MA-leominster | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://leominster.macaronikid.com) |
+| The Sterling Fair | MacaroniKid-MA-leominster | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://leominster.macaronikid.com) |
+| Visit North Central Mass | MacaroniKid-MA-leominster | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://leominster.macaronikid.com) |
+| The Arc of Opportunity in North Central Massachusetts | MacaroniKid-MA-leominster | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://leominster.macaronikid.com) |
+| Clear Path for Veterans New England | MacaroniKid-MA-leominster | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://leominster.macaronikid.com) |
+| Carlson Orchards, Inc. | MacaroniKid-MA-leominster | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://leominster.macaronikid.com) |
+| Appleseed Country Fair | MacaroniKid-MA-leominster | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://leominster.macaronikid.com) |
+| Mr. Strickland | MacaroniKid-MA-leominster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| Virginia Thurston Healing Garden | MacaroniKid-MA-leominster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| Beals Memorial Library | MacaroniKid-MA-leominster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| Power Pilates | MacaroniKid-MA-leominster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| Fenway Bark Dog Resort | MacaroniKid-MA-leominster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| Ayer | MacaroniKid-MA-leominster | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| Little Bee Bookshop | MacaroniKid-MA-leominster | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| Phoenix Park | MacaroniKid-MA-leominster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| Leominster Community Development | MacaroniKid-MA-leominster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| Habitat for Humanity North Central Massachusetts | MacaroniKid-MA-leominster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| Leominster Farmers Market | MacaroniKid-MA-leominster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| Groton Hill Music Center | MacaroniKid-MA-leominster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| North Star Family Services, Inc. | MacaroniKid-MA-leominster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| Leominster Recreation | MacaroniKid-MA-leominster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| The Icon Museum and Study Center | MacaroniKid-MA-leominster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| Scott Handler | MacaroniKid-MA-leominster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leominster.macaronikid.com) |
+| Acton Memorial Library | MacaroniKid-MA-lexington | 18 | 17 | 32 | 10 | 12 | 7 | 96 | [cal](https://lexington.macaronikid.com) |
+| Concord Free Public Library Fowler Branch | MacaroniKid-MA-lexington | 27 | 16 | 18 | 0 | 0 | 9 | 70 | [cal](https://lexington.macaronikid.com) |
+| Cary Memorial Library | MacaroniKid-MA-lexington | 2 | 37 | 22 | 6 | 0 | 0 | 67 | [cal](https://lexington.macaronikid.com) |
+| Bedford Free Public Library | MacaroniKid-MA-lexington | 8 | 10 | 12 | 9 | 0 | 6 | 45 | [cal](https://lexington.macaronikid.com) |
+| Maynard Public Library | MacaroniKid-MA-lexington | 15 | 18 | 9 | 3 | 0 | 0 | 45 | [cal](https://lexington.macaronikid.com) |
+| Sargent Memorial Library | MacaroniKid-MA-lexington | 5 | 20 | 2 | 7 | 6 | 0 | 40 | [cal](https://lexington.macaronikid.com) |
+| Lincoln Library | MacaroniKid-MA-lexington | 6 | 17 | 1 | 8 | 0 | 0 | 32 | [cal](https://lexington.macaronikid.com) |
+| Acton-Concord-Bedford-Lexington | MacaroniKid-MA-lexington | 22 | 0 | 0 | 4 | 0 | 0 | 26 | [cal](https://lexington.macaronikid.com) |
+| Concord Free Public Library - Main Branch | MacaroniKid-MA-lexington | 10 | 0 | 0 | 1 | 4 | 2 | 17 | [cal](https://lexington.macaronikid.com) |
+| Gleason Public Library | MacaroniKid-MA-lexington | 8 | 5 | 1 | 3 | 0 | 0 | 17 | [cal](https://lexington.macaronikid.com) |
+| The Silver Unicorn Bookstore | MacaroniKid-MA-lexington | 2 | 0 | 2 | 3 | 0 | 0 | 7 | [cal](https://lexington.macaronikid.com) |
+| Discovery Museum | MacaroniKid-MA-lexington | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://lexington.macaronikid.com) |
+| Words & Numbers (DBA Huntington Learning Center) | MacaroniKid-MA-lexington | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://lexington.macaronikid.com) |
+| Mass Audubon Wachusett Meadow | MacaroniKid-MA-lexington | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://lexington.macaronikid.com) |
+| Carlisle Congregational Church | MacaroniKid-MA-lexington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexington.macaronikid.com) |
+| Dance Prism | MacaroniKid-MA-lexington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexington.macaronikid.com) |
+| deCordova Sculpture Park & Museum | MacaroniKid-MA-lexington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexington.macaronikid.com) |
+| Sewa International USA - Boston | MacaroniKid-MA-lexington | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lexington.macaronikid.com) |
+| Reuben Hoar Library | MacaroniKid-MA-lowell | 5 | 23 | 12 | 11 | 20 | 2 | 73 | [cal](https://lowell.macaronikid.com) |
+| Groton Public Library | MacaroniKid-MA-lowell | 2 | 16 | 27 | 20 | 0 | 0 | 65 | [cal](https://lowell.macaronikid.com) |
+| Chelmsford Public Library | MacaroniKid-MA-lowell | 9 | 31 | 16 | 0 | 0 | 1 | 57 | [cal](https://lowell.macaronikid.com) |
+| Pollard Memorial Library | MacaroniKid-MA-lowell | 13 | 1 | 11 | 18 | 1 | 1 | 45 | [cal](https://lowell.macaronikid.com) |
+| Parker Memorial Library | MacaroniKid-MA-lowell | 4 | 7 | 22 | 8 | 0 | 0 | 41 | [cal](https://lowell.macaronikid.com) |
+| J.V. Fletcher Library | MacaroniKid-MA-lowell | 2 | 5 | 6 | 12 | 6 | 0 | 31 | [cal](https://lowell.macaronikid.com) |
+| Lowell | MacaroniKid-MA-lowell | 29 | 0 | 0 | 0 | 0 | 0 | 29 | [cal](https://lowell.macaronikid.com) |
+| Tyngsborough Public Library | MacaroniKid-MA-lowell | 1 | 17 | 8 | 2 | 0 | 0 | 28 | [cal](https://lowell.macaronikid.com) |
+| Tewksbury Public Library | MacaroniKid-MA-lowell | 15 | 6 | 4 | 0 | 0 | 0 | 25 | [cal](https://lowell.macaronikid.com) |
+| Billerica Public Library | MacaroniKid-MA-lowell | 2 | 11 | 0 | 2 | 0 | 1 | 16 | [cal](https://lowell.macaronikid.com) |
+| Lowell National Historical Park | MacaroniKid-MA-lowell | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lowell.macaronikid.com) |
+| Good Pickin' Farm | MacaroniKid-MA-lowell | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lowell.macaronikid.com) |
+| Lowell Memorial Auditorium | MacaroniKid-MA-lowell | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lowell.macaronikid.com) |
+| Hand the Light | MacaroniKid-MA-lowell | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lowell.macaronikid.com) |
+| Pepperell Fourth | MacaroniKid-MA-lowell | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lowell.macaronikid.com) |
+| MacKay Branch Library | MacaroniKid-MA-lowell | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lowell.macaronikid.com) |
+| AIM at Melanoma | MacaroniKid-MA-lowell | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lowell.macaronikid.com) |
+| Lowell Kinetic Sculpture Race | MacaroniKid-MA-lowell | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lowell.macaronikid.com) |
+| Friends of Tyler Park (Morgan Schermerhorn) | MacaroniKid-MA-lowell | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lowell.macaronikid.com) |
+| Lowell Parks & Conservation Trust | MacaroniKid-MA-lowell | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lowell.macaronikid.com) |
+| Nam Knights MC Merrimack Valley MA | MacaroniKid-MA-lowell | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lowell.macaronikid.com) |
+| Lawrence Academy | MacaroniKid-MA-lowell | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lowell.macaronikid.com) |
+| The Groton Inn / Forge & Vine | MacaroniKid-MA-lowell | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lowell.macaronikid.com) |
+| The Children's Trust | MacaroniKid-MA-lowell | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lowell.macaronikid.com) |
+| Dwelling House of Hope, Inc. | MacaroniKid-MA-lowell | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lowell.macaronikid.com) |
+| Flint Public Library | MacaroniKid-MA-merrimackvalleyma | 6 | 4 | 1 | 1 | 0 | 3 | 15 | [cal](https://merrimackvalleyma.macaronikid.com) |
+| Temple Emanuel Andover | MacaroniKid-MA-merrimackvalleyma | 2 | 5 | 0 | 0 | 4 | 0 | 11 | [cal](https://merrimackvalleyma.macaronikid.com) |
+| Nevins Memorial Library | MacaroniKid-MA-merrimackvalleyma | 0 | 8 | 0 | 0 | 0 | 0 | 8 | [cal](https://merrimackvalleyma.macaronikid.com) |
+| Lawrence Public Library | MacaroniKid-MA-merrimackvalleyma | 4 | 0 | 0 | 2 | 0 | 0 | 6 | [cal](https://merrimackvalleyma.macaronikid.com) |
+| Taste Buds Kitchen North Andover | MacaroniKid-MA-merrimackvalleyma | 0 | 4 | 0 | 0 | 0 | 0 | 4 | [cal](https://merrimackvalleyma.macaronikid.com) |
+| Plaistow Public Library | MacaroniKid-MA-merrimackvalleyma | 0 | 0 | 0 | 1 | 1 | 0 | 2 | [cal](https://merrimackvalleyma.macaronikid.com) |
+| Tom Jordan | MacaroniKid-MA-merrimackvalleyma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://merrimackvalleyma.macaronikid.com) |
+| Tewksbury Public Library | MacaroniKid-MA-merrimackvalleyma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://merrimackvalleyma.macaronikid.com) |
+| In The Game - Peabody | MacaroniKid-MA-merrimackvalleyma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://merrimackvalleyma.macaronikid.com) |
+| Community Covenant Church | MacaroniKid-MA-merrimackvalleyma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://merrimackvalleyma.macaronikid.com) |
+| Wellesley Free Library | MacaroniKid-MA-needham | 15 | 3 | 4 | 3 | 1 | 2 | 28 | [cal](https://needham.macaronikid.com) |
+| Needham Free Public Library | MacaroniKid-MA-needham | 4 | 9 | 2 | 9 | 0 | 3 | 27 | [cal](https://needham.macaronikid.com) |
+| Mother Brook Arts & Community Center | MacaroniKid-MA-needham | 2 | 0 | 0 | 3 | 0 | 1 | 6 | [cal](https://needham.macaronikid.com) |
+| Milton Public Library | MacaroniKid-MA-needham | 0 | 3 | 1 | 1 | 0 | 0 | 5 | [cal](https://needham.macaronikid.com) |
+| Dedham Free Library | MacaroniKid-MA-needham | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://needham.macaronikid.com) |
+| Legacy Place | MacaroniKid-MA-needham | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://needham.macaronikid.com) |
+| Walk for Apraxia | MacaroniKid-MA-needham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://needham.macaronikid.com) |
+| TLC Studios - Dedham | MacaroniKid-MA-needham | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://needham.macaronikid.com) |
+| Temple Beth Shalom | MacaroniKid-MA-needham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://needham.macaronikid.com) |
+| My Gym Wellesley | MacaroniKid-MA-needham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://needham.macaronikid.com) |
+| Brookline Recreation | MacaroniKid-MA-newton | 68 | 5 | 14 | 9 | 1 | 1 | 98 | [cal](https://newton.macaronikid.com) |
+| Newton Free Library | MacaroniKid-MA-newton | 10 | 15 | 6 | 10 | 1 | 2 | 44 | [cal](https://newton.macaronikid.com) |
+| MGM Music Hall at Fenway | MacaroniKid-MA-newton | 22 | 0 | 0 | 1 | 0 | 0 | 23 | [cal](https://newton.macaronikid.com) |
+| Turtle Books | MacaroniKid-MA-newton | 9 | 9 | 0 | 5 | 0 | 0 | 23 | [cal](https://newton.macaronikid.com) |
+| Citizens House of Blues Boston | MacaroniKid-MA-newton | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://newton.macaronikid.com) |
+| The Street Chestnut Hill | MacaroniKid-MA-newton | 1 | 1 | 7 | 0 | 0 | 0 | 9 | [cal](https://newton.macaronikid.com) |
+| Beth Menachem Chabad | MacaroniKid-MA-newton | 0 | 7 | 0 | 0 | 0 | 0 | 7 | [cal](https://newton.macaronikid.com) |
+| JCC Greater Boston | MacaroniKid-MA-newton | 3 | 0 | 0 | 0 | 1 | 3 | 7 | [cal](https://newton.macaronikid.com) |
+| Brookline Booksmith | MacaroniKid-MA-newton | 1 | 0 | 3 | 2 | 0 | 0 | 6 | [cal](https://newton.macaronikid.com) |
+| Newton Beacon | MacaroniKid-MA-newton | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://newton.macaronikid.com) |
+| First Unitarian Universalist Society in Newton | MacaroniKid-MA-newton | 1 | 0 | 0 | 1 | 1 | 0 | 3 | [cal](https://newton.macaronikid.com) |
+| Hummingbird Books | MacaroniKid-MA-newton | 0 | 0 | 3 | 0 | 0 | 0 | 3 | [cal](https://newton.macaronikid.com) |
+| House of Blues Boston | MacaroniKid-MA-newton | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://newton.macaronikid.com) |
+| Scandinavian Cultural Center & Library | MacaroniKid-MA-newton | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://newton.macaronikid.com) |
+| City of Newton | MacaroniKid-MA-newton | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://newton.macaronikid.com) |
+| My Gym Wellesley | MacaroniKid-MA-newton | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://newton.macaronikid.com) |
+| Charles River Ballet Academy | MacaroniKid-MA-newton | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://newton.macaronikid.com) |
+| Coolidge Corner Theatre | MacaroniKid-MA-newton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newton.macaronikid.com) |
+| National Brain Tumor Society | MacaroniKid-MA-newton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newton.macaronikid.com) |
+| Boston | MacaroniKid-MA-newton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newton.macaronikid.com) |
+| Newton Free Library — Newton Free Library | MacaroniKid-MA-newton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://newton.macaronikid.com) |
+| Newbury Town Library | MacaroniKid-MA-northshorema | 1 | 4 | 2 | 5 | 1 | 1 | 14 | [cal](https://northshorema.macaronikid.com) |
+| Wenham Museum | MacaroniKid-MA-northshorema | 0 | 11 | 0 | 0 | 0 | 0 | 11 | [cal](https://northshorema.macaronikid.com) |
+| Rowley Public Library | MacaroniKid-MA-northshorema | 2 | 2 | 7 | 0 | 0 | 0 | 11 | [cal](https://northshorema.macaronikid.com) |
+| The Community House | MacaroniKid-MA-northshorema | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://northshorema.macaronikid.com) |
+| Appleton Farms | MacaroniKid-MA-northshorema | 0 | 3 | 2 | 0 | 0 | 0 | 5 | [cal](https://northshorema.macaronikid.com) |
+| Artfull Minds Collective | MacaroniKid-MA-northshorema | 0 | 0 | 0 | 0 | 3 | 0 | 3 | [cal](https://northshorema.macaronikid.com) |
+| Cider Hill Farm | MacaroniKid-MA-northshorema | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://northshorema.macaronikid.com) |
+| Newburyport Public Library | MacaroniKid-MA-northshorema | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://northshorema.macaronikid.com) |
+| Northeast Sled Services, LLC | MacaroniKid-MA-northshorema | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://northshorema.macaronikid.com) |
+| North Shore Vendor Events | MacaroniKid-MA-northshorema | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://northshorema.macaronikid.com) |
+| Cape Ann Lanes | MacaroniKid-MA-northshorema | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://northshorema.macaronikid.com) |
+| Emmaus, Inc. | MacaroniKid-MA-northshorema | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://northshorema.macaronikid.com) |
+| Mighty Mystic | MacaroniKid-MA-northshorema | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://northshorema.macaronikid.com) |
+| Endicott Athletics | MacaroniKid-MA-northshorema | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://northshorema.macaronikid.com) |
+| Goldfish Swim School - Danvers | MacaroniKid-MA-northshorema | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://northshorema.macaronikid.com) |
+| Keolis massAdventures | MacaroniKid-MA-northshorema | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://northshorema.macaronikid.com) |
+| Hammond Castle Museum | MacaroniKid-MA-northshorema | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://northshorema.macaronikid.com) |
+| Rockwood Taylor | MacaroniKid-MA-northshorema | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://northshorema.macaronikid.com) |
+| Greater Newburyport Chamber of Commerce | MacaroniKid-MA-northshorema | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://northshorema.macaronikid.com) |
+| Millennium Running | MacaroniKid-MA-northshorema | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://northshorema.macaronikid.com) |
+| Worcester Public Library - Main Branch | MacaroniKid-MA-northworcester | 6 | 23 | 13 | 15 | 39 | 0 | 96 | [cal](https://northworcester.macaronikid.com) |
+| Shrewsbury Public Library | MacaroniKid-MA-northworcester | 13 | 11 | 41 | 14 | 0 | 3 | 82 | [cal](https://northworcester.macaronikid.com) |
+| Worcester Palladium | MacaroniKid-MA-northworcester | 31 | 0 | 0 | 0 | 0 | 0 | 31 | [cal](https://northworcester.macaronikid.com) |
+| Worcester Public Library - Frances Perkins Branch | MacaroniKid-MA-northworcester | 0 | 9 | 2 | 3 | 2 | 0 | 16 | [cal](https://northworcester.macaronikid.com) |
+| Worcester Public Library - Burncoat Branch | MacaroniKid-MA-northworcester | 0 | 0 | 0 | 12 | 1 | 0 | 13 | [cal](https://northworcester.macaronikid.com) |
+| Worcester Public Library - Great Brook Valley Branch | MacaroniKid-MA-northworcester | 0 | 0 | 1 | 7 | 3 | 0 | 11 | [cal](https://northworcester.macaronikid.com) |
+| Worcester Public Library - Tatnuck Magnet Branch | MacaroniKid-MA-northworcester | 0 | 0 | 0 | 3 | 6 | 0 | 9 | [cal](https://northworcester.macaronikid.com) |
+| Off The Rails Worcester | MacaroniKid-MA-northworcester | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://northworcester.macaronikid.com) |
+| Worcester Public Library - Roosevelt Branch | MacaroniKid-MA-northworcester | 0 | 0 | 0 | 5 | 2 | 0 | 7 | [cal](https://northworcester.macaronikid.com) |
+| Westborough Public Library | MacaroniKid-MA-northworcester | 0 | 4 | 0 | 0 | 0 | 1 | 5 | [cal](https://northworcester.macaronikid.com) |
+| DCU Center | MacaroniKid-MA-northworcester | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://northworcester.macaronikid.com) |
+| DCU Center Convention Center | MacaroniKid-MA-northworcester | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://northworcester.macaronikid.com) |
+| The Palladium Outdoors | MacaroniKid-MA-northworcester | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://northworcester.macaronikid.com) |
+| Honestly Necessary | MacaroniKid-MA-northworcester | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://northworcester.macaronikid.com) |
+| Worcester Central Kids Calendar | MacaroniKid-MA-northworcester | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://northworcester.macaronikid.com) |
+| Edward Street | MacaroniKid-MA-northworcester | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://northworcester.macaronikid.com) |
+| The Hanover Theatre and Conservatory for the Performing Arts | MacaroniKid-MA-northworcester | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://northworcester.macaronikid.com) |
+| Worcester JCC | MacaroniKid-MA-northworcester | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://northworcester.macaronikid.com) |
+| Palmer Public Library | MacaroniKid-MA-palmermonson | 0 | 9 | 0 | 0 | 0 | 0 | 9 | [cal](https://palmermonson.macaronikid.com) |
+| Community Gaming Coalition | MacaroniKid-MA-palmermonson | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://palmermonson.macaronikid.com) |
+| Petty Larceny Band | MacaroniKid-MA-palmermonson | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://palmermonson.macaronikid.com) |
+| The Painted Goat | MacaroniKid-MA-palmermonson | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://palmermonson.macaronikid.com) |
+| Outstanding Homeschool Adventures | MacaroniKid-MA-palmermonson | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://palmermonson.macaronikid.com) |
+| Opacum Land Trust | MacaroniKid-MA-palmermonson | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://palmermonson.macaronikid.com) |
+| Bay State Babywearers | MacaroniKid-MA-palmermonson | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://palmermonson.macaronikid.com) |
+| St. Stanislaus Polish Lyceum - St. Stan's | MacaroniKid-MA-palmermonson | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://palmermonson.macaronikid.com) |
+| Town of Palmer | MacaroniKid-MA-palmermonson | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://palmermonson.macaronikid.com) |
+| Claire Birtz Wildlife Sanctuary | MacaroniKid-MA-palmermonson | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://palmermonson.macaronikid.com) |
+| Carver Public Library | MacaroniKid-MA-plymouthma | 15 | 1 | 8 | 4 | 0 | 0 | 28 | [cal](https://plymouthma.macaronikid.com) |
+| Elizabeth Taber Library | MacaroniKid-MA-plymouthma | 1 | 11 | 7 | 4 | 2 | 0 | 25 | [cal](https://plymouthma.macaronikid.com) |
+| Kingston Public Library | MacaroniKid-MA-plymouthma | 3 | 7 | 0 | 9 | 0 | 5 | 24 | [cal](https://plymouthma.macaronikid.com) |
+| Mattapoisett Free Public Library | MacaroniKid-MA-plymouthma | 4 | 1 | 4 | 8 | 4 | 3 | 24 | [cal](https://plymouthma.macaronikid.com) |
+| Book Love | MacaroniKid-MA-plymouthma | 1 | 9 | 9 | 0 | 0 | 0 | 19 | [cal](https://plymouthma.macaronikid.com) |
+| Barnes & Noble - Wareham | MacaroniKid-MA-plymouthma | 0 | 0 | 16 | 0 | 0 | 0 | 16 | [cal](https://plymouthma.macaronikid.com) |
+| Middleborough Public Library | MacaroniKid-MA-plymouthma | 12 | 2 | 0 | 0 | 0 | 1 | 15 | [cal](https://plymouthma.macaronikid.com) |
+| The Pinehills | MacaroniKid-MA-plymouthma | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://plymouthma.macaronikid.com) |
+| Elliot Farm | MacaroniKid-MA-plymouthma | 2 | 4 | 0 | 0 | 0 | 0 | 6 | [cal](https://plymouthma.macaronikid.com) |
+| Old Colony YMCA Middleboro | MacaroniKid-MA-plymouthma | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://plymouthma.macaronikid.com) |
+| The Soulful Palette | MacaroniKid-MA-plymouthma | 3 | 0 | 0 | 0 | 1 | 0 | 4 | [cal](https://plymouthma.macaronikid.com) |
+| Old Colony YMCA Plymouth | MacaroniKid-MA-plymouthma | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://plymouthma.macaronikid.com) |
+| New England Rodeo | MacaroniKid-MA-plymouthma | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://plymouthma.macaronikid.com) |
+| Mass Audubon Tidmarsh Wildlife Sanctuary | MacaroniKid-MA-plymouthma | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://plymouthma.macaronikid.com) |
+| ADOBO REPUBLIC | MacaroniKid-MA-plymouthma | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://plymouthma.macaronikid.com) |
+| Pinewood Lodge Campground | MacaroniKid-MA-plymouthma | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://plymouthma.macaronikid.com) |
+| Youth Services at The Lakeville Public Library | MacaroniKid-MA-plymouthma | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://plymouthma.macaronikid.com) |
+| Plymouth Family Network/Plymouth Public LIbrary | MacaroniKid-MA-plymouthma | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://plymouthma.macaronikid.com) |
+| Ever After Events, LLC | MacaroniKid-MA-plymouthma | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://plymouthma.macaronikid.com) |
+| Narragansett Council - Scouting America | MacaroniKid-MA-plymouthma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://plymouthma.macaronikid.com) |
+| Miss Lou Makes | MacaroniKid-MA-plymouthma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://plymouthma.macaronikid.com) |
+| Plymouth Downtown Waterfront District | MacaroniKid-MA-plymouthma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://plymouthma.macaronikid.com) |
+| Armstrong Arena | MacaroniKid-MA-plymouthma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://plymouthma.macaronikid.com) |
+| MIY Studio | MacaroniKid-MA-plymouthma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://plymouthma.macaronikid.com) |
+| FirstLoveWorks | MacaroniKid-MA-plymouthma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://plymouthma.macaronikid.com) |
+| Gleason Family YMCA | MacaroniKid-MA-plymouthma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://plymouthma.macaronikid.com) |
+| Inebri-Art | MacaroniKid-MA-plymouthma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://plymouthma.macaronikid.com) |
+| Blount Clam Shack Food Truck | MacaroniKid-MA-plymouthma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://plymouthma.macaronikid.com) |
+| Peabody Recreation Parks and Forestry | MacaroniKid-MA-salempeabody | 230 | 0 | 9 | 2 | 0 | 0 | 241 | [cal](https://salempeabody.macaronikid.com) |
+| Peabody Institute Library | MacaroniKid-MA-salempeabody | 3 | 20 | 4 | 16 | 2 | 4 | 49 | [cal](https://salempeabody.macaronikid.com) |
+| Salem Public Library | MacaroniKid-MA-salempeabody | 17 | 7 | 4 | 6 | 2 | 1 | 37 | [cal](https://salempeabody.macaronikid.com) |
+| Saugus Public Library | MacaroniKid-MA-salempeabody | 0 | 16 | 4 | 1 | 0 | 1 | 22 | [cal](https://salempeabody.macaronikid.com) |
+| The Good Witch of Salem | MacaroniKid-MA-salempeabody | 16 | 0 | 0 | 1 | 0 | 0 | 17 | [cal](https://salempeabody.macaronikid.com) |
+| Abbot Public Libary | MacaroniKid-MA-salempeabody | 1 | 3 | 0 | 5 | 1 | 1 | 11 | [cal](https://salempeabody.macaronikid.com) |
+| In The Game - Peabody | MacaroniKid-MA-salempeabody | 5 | 0 | 0 | 3 | 0 | 0 | 8 | [cal](https://salempeabody.macaronikid.com) |
+| Nahant Public Library | MacaroniKid-MA-salempeabody | 6 | 0 | 2 | 0 | 0 | 0 | 8 | [cal](https://salempeabody.macaronikid.com) |
+| Peabody Essex Museum | MacaroniKid-MA-salempeabody | 2 | 0 | 0 | 0 | 5 | 0 | 7 | [cal](https://salempeabody.macaronikid.com) |
+| Gulu-Gulu Cafe | MacaroniKid-MA-salempeabody | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://salempeabody.macaronikid.com) |
+| The Bell Inn & Tavern | MacaroniKid-MA-salempeabody | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://salempeabody.macaronikid.com) |
+| Jacq Civitarese (Eternal Stitch) | MacaroniKid-MA-salempeabody | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://salempeabody.macaronikid.com) |
+| The House of the Seven Gables | MacaroniKid-MA-salempeabody | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://salempeabody.macaronikid.com) |
+| Lakeshore Learning | MacaroniKid-MA-salempeabody | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://salempeabody.macaronikid.com) |
+| Food Truck Festivals of America | MacaroniKid-MA-salempeabody | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://salempeabody.macaronikid.com) |
+| Creative Collective MA | MacaroniKid-MA-salempeabody | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://salempeabody.macaronikid.com) |
+| Springfield City Library: Mason Square Branch | MacaroniKid-MA-springfield | 20 | 0 | 6 | 4 | 4 | 1 | 35 | [cal](https://springfield.macaronikid.com) |
+| Make-It Springfield | MacaroniKid-MA-springfield | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://springfield.macaronikid.com) |
+| The Armory at MGM Springfield | MacaroniKid-MA-springfield | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://springfield.macaronikid.com) |
+| More than Mom Inc | MacaroniKid-MA-springfield | 0 | 2 | 0 | 0 | 0 | 0 | 2 | [cal](https://springfield.macaronikid.com) |
+| MassMutual Center | MacaroniKid-MA-springfield | 0 | 0 | 0 | 1 | 1 | 0 | 2 | [cal](https://springfield.macaronikid.com) |
+| Student Prince Cafe and Fort Restaurant | MacaroniKid-MA-springfield | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://springfield.macaronikid.com) |
+| Keep N Time Photography LLC | MacaroniKid-MA-springfield | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://springfield.macaronikid.com) |
+| Mary, Mother Of Hope Church | MacaroniKid-MA-springfield | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://springfield.macaronikid.com) |
+| Zombie Hideout LLC | MacaroniKid-MA-springfield | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://springfield.macaronikid.com) |
+| Unitarian Universalist Society of Greater Springfield | MacaroniKid-MA-springfield | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://springfield.macaronikid.com) |
+| First Baptist Church-East Longmeadow and Springfield | MacaroniKid-MA-springfield | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://springfield.macaronikid.com) |
+| BusinessWest | MacaroniKid-MA-springfield | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://springfield.macaronikid.com) |
+| THE 413 CARD SHOW | MacaroniKid-MA-springfield | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://springfield.macaronikid.com) |
+| Foundation for TJO Animals | MacaroniKid-MA-springfield | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://springfield.macaronikid.com) |
+| Tammie's Essentials | MacaroniKid-MA-springfield | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://springfield.macaronikid.com) |
+| All Nations Church | MacaroniKid-MA-springfield | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://springfield.macaronikid.com) |
+| Springfield Museums | MacaroniKid-MA-springfield | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://springfield.macaronikid.com) |
+| Duxbury Free Library | MacaroniKid-MA-ssboston | 61 | 26 | 9 | 4 | 1 | 0 | 101 | [cal](https://ssboston.macaronikid.com) |
+| Pembroke Public Library | MacaroniKid-MA-ssboston | 15 | 15 | 3 | 7 | 2 | 2 | 44 | [cal](https://ssboston.macaronikid.com) |
+| Carousel Skate Center | MacaroniKid-MA-ssboston | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [cal](https://ssboston.macaronikid.com) |
+| Derby Street Shops | MacaroniKid-MA-ssboston | 0 | 10 | 0 | 3 | 0 | 0 | 13 | [cal](https://ssboston.macaronikid.com) |
+| Starland Sportsplex & Fun Park | MacaroniKid-MA-ssboston | 0 | 0 | 4 | 2 | 0 | 0 | 6 | [cal](https://ssboston.macaronikid.com) |
+| The Center (Duxbury Senior Center) | MacaroniKid-MA-ssboston | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://ssboston.macaronikid.com) |
+| Inebri-Art | MacaroniKid-MA-ssboston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ssboston.macaronikid.com) |
+| Shayna MacDonald | MacaroniKid-MA-ssboston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ssboston.macaronikid.com) |
+| Art Complex Museum | MacaroniKid-MA-ssboston | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://ssboston.macaronikid.com) |
+| Ever After Events, LLC | MacaroniKid-MA-ssboston | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://ssboston.macaronikid.com) |
+| South Shore Conservatory | MacaroniKid-MA-ssboston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ssboston.macaronikid.com) |
+| Alden House Historic Site | MacaroniKid-MA-ssboston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ssboston.macaronikid.com) |
+| Spindles Auto Club | MacaroniKid-MA-ssboston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ssboston.macaronikid.com) |
+| Marshfield Fairgrounds | MacaroniKid-MA-ssboston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ssboston.macaronikid.com) |
+| Sun & Ski Sports | MacaroniKid-MA-ssboston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ssboston.macaronikid.com) |
+| South Shore Sea Dragons | MacaroniKid-MA-ssboston | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://ssboston.macaronikid.com) |
+| Norfolk Recreation Department | MacaroniKid-MA-swboston | 1 | 8 | 34 | 15 | 0 | 0 | 58 | [cal](https://swboston.macaronikid.com) |
+| Norfolk Public Library | MacaroniKid-MA-swboston | 14 | 5 | 9 | 1 | 2 | 0 | 31 | [cal](https://swboston.macaronikid.com) |
+| Invensys Foxboro Branch YMCA | MacaroniKid-MA-swboston | 29 | 1 | 0 | 0 | 0 | 0 | 30 | [cal](https://swboston.macaronikid.com) |
+| Boyden Library | MacaroniKid-MA-swboston | 2 | 7 | 10 | 5 | 3 | 1 | 28 | [cal](https://swboston.macaronikid.com) |
+| Medfield Public Library | MacaroniKid-MA-swboston | 5 | 11 | 7 | 1 | 2 | 0 | 26 | [cal](https://swboston.macaronikid.com) |
+| Medway Public Library | MacaroniKid-MA-swboston | 10 | 4 | 0 | 4 | 1 | 0 | 19 | [cal](https://swboston.macaronikid.com) |
+| Westwood Public Library - Main Library | MacaroniKid-MA-swboston | 5 | 3 | 2 | 9 | 0 | 0 | 19 | [cal](https://swboston.macaronikid.com) |
+| Millis Public Library | MacaroniKid-MA-swboston | 7 | 7 | 4 | 0 | 0 | 0 | 18 | [cal](https://swboston.macaronikid.com) |
+| Fiske Public Library | MacaroniKid-MA-swboston | 3 | 5 | 2 | 5 | 2 | 0 | 17 | [cal](https://swboston.macaronikid.com) |
+| Sharon Public Library | MacaroniKid-MA-swboston | 2 | 7 | 2 | 3 | 2 | 0 | 16 | [cal](https://swboston.macaronikid.com) |
+| Morrill Memorial Library | MacaroniKid-MA-swboston | 4 | 7 | 0 | 5 | 0 | 0 | 16 | [cal](https://swboston.macaronikid.com) |
+| Foxboro, MA Recreation Department | MacaroniKid-MA-swboston | 7 | 1 | 4 | 0 | 0 | 0 | 12 | [cal](https://swboston.macaronikid.com) |
+| Snapology | MacaroniKid-MA-swboston | 3 | 1 | 6 | 1 | 1 | 0 | 12 | [cal](https://swboston.macaronikid.com) |
+| Millis, MA Recreation Department | MacaroniKid-MA-swboston | 0 | 0 | 0 | 11 | 0 | 0 | 11 | [cal](https://swboston.macaronikid.com) |
+| Norwood Recreation Department | MacaroniKid-MA-swboston | 3 | 7 | 0 | 1 | 0 | 0 | 11 | [cal](https://swboston.macaronikid.com) |
+| Normandy Farms | MacaroniKid-MA-swboston | 3 | 1 | 0 | 5 | 0 | 0 | 9 | [cal](https://swboston.macaronikid.com) |
+| Dover Recreation Department | MacaroniKid-MA-swboston | 8 | 0 | 0 | 1 | 0 | 0 | 9 | [cal](https://swboston.macaronikid.com) |
+| Sherborn Library | MacaroniKid-MA-swboston | 0 | 0 | 0 | 1 | 0 | 8 | 9 | [cal](https://swboston.macaronikid.com) |
+| Westwood Public Library - Islington Branch | MacaroniKid-MA-swboston | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://swboston.macaronikid.com) |
+| Temple Israel of Sharon | MacaroniKid-MA-swboston | 4 | 0 | 0 | 2 | 0 | 0 | 6 | [cal](https://swboston.macaronikid.com) |
+| Moose Hill Wildlife | MacaroniKid-MA-swboston | 2 | 0 | 0 | 4 | 0 | 0 | 6 | [cal](https://swboston.macaronikid.com) |
+| Sherborn, MA Recreation Department | MacaroniKid-MA-swboston | 1 | 0 | 5 | 0 | 0 | 0 | 6 | [cal](https://swboston.macaronikid.com) |
+| Sharon, MA Recreation Department | MacaroniKid-MA-swboston | 2 | 0 | 1 | 2 | 0 | 0 | 5 | [cal](https://swboston.macaronikid.com) |
+| Dover Town Library | MacaroniKid-MA-swboston | 3 | 0 | 0 | 1 | 1 | 0 | 5 | [cal](https://swboston.macaronikid.com) |
+| Powisset Farm | MacaroniKid-MA-swboston | 1 | 2 | 0 | 1 | 0 | 0 | 4 | [cal](https://swboston.macaronikid.com) |
+| Barnes & Noble - Walpole Mall | MacaroniKid-MA-swboston | 0 | 0 | 0 | 4 | 0 | 0 | 4 | [cal](https://swboston.macaronikid.com) |
+| Medfield, MA Recreation Department | MacaroniKid-MA-swboston | 1 | 1 | 1 | 1 | 0 | 0 | 4 | [cal](https://swboston.macaronikid.com) |
+| White Barn Farm | MacaroniKid-MA-swboston | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://swboston.macaronikid.com) |
+| Hale Education | MacaroniKid-MA-swboston | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://swboston.macaronikid.com) |
+| Clyde F. Brown Home and School Association | MacaroniKid-MA-swboston | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://swboston.macaronikid.com) |
+| Millis UCC Church | MacaroniKid-MA-swboston | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://swboston.macaronikid.com) |
+| Marilyn Rodman Performing Arts Center | MacaroniKid-MA-swboston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swboston.macaronikid.com) |
+| Moose Hill Wildlife Sanctuary | MacaroniKid-MA-swboston | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://swboston.macaronikid.com) |
+| Norfolk Hunt | MacaroniKid-MA-swboston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swboston.macaronikid.com) |
+| Keep Wrentham Beautiful | MacaroniKid-MA-swboston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swboston.macaronikid.com) |
+| Patriot Place | MacaroniKid-MA-swboston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swboston.macaronikid.com) |
+| Boylston Schul-Verein | MacaroniKid-MA-swboston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swboston.macaronikid.com) |
+| Bellforge | MacaroniKid-MA-swboston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swboston.macaronikid.com) |
+| Raydio | MacaroniKid-MA-swboston | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swboston.macaronikid.com) |
+| Malden Recreation Department | MacaroniKid-MA-wakefield | 164 | 0 | 4 | 0 | 4 | 0 | 172 | [cal](https://wakefield.macaronikid.com) |
+| Town of Wakefield | MacaroniKid-MA-wakefield | 2 | 0 | 0 | 1 | 0 | 2 | 5 | [cal](https://wakefield.macaronikid.com) |
+| Friends of the Fells | MacaroniKid-MA-wakefield | 1 | 4 | 0 | 0 | 0 | 0 | 5 | [cal](https://wakefield.macaronikid.com) |
+| YMCA of Metro North | MacaroniKid-MA-wakefield | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://wakefield.macaronikid.com) |
+| Wakefield Farmers Market | MacaroniKid-MA-wakefield | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://wakefield.macaronikid.com) |
+| Life-Love-Cheese | MacaroniKid-MA-wakefield | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://wakefield.macaronikid.com) |
+| Brighton Music Hall presented by Citizens | MacaroniKid-MA-waltham | 28 | 0 | 0 | 0 | 0 | 0 | 28 | [cal](https://waltham.macaronikid.com) |
+| Scullers Jazz | MacaroniKid-MA-waltham | 14 | 0 | 0 | 0 | 0 | 0 | 14 | [cal](https://waltham.macaronikid.com) |
+| Roadrunner | MacaroniKid-MA-waltham | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://waltham.macaronikid.com) |
+| The Bowery Presents: Boston | MacaroniKid-MA-waltham | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://waltham.macaronikid.com) |
+| Attacca School of Music | MacaroniKid-MA-waltham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://waltham.macaronikid.com) |
+| Brookline Recreation | MacaroniKid-MA-waltham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://waltham.macaronikid.com) |
+| Thomas Crane Public Library | MacaroniKid-MA-weymouth | 44 | 30 | 35 | 11 | 5 | 3 | 128 | [cal](https://weymouth.macaronikid.com) |
+| Weymouth Public Library | MacaroniKid-MA-weymouth | 11 | 29 | 27 | 13 | 26 | 2 | 108 | [cal](https://weymouth.macaronikid.com) |
+| Avon Public Library | MacaroniKid-MA-weymouth | 13 | 29 | 20 | 0 | 12 | 0 | 74 | [cal](https://weymouth.macaronikid.com) |
+| Ames Free Library | MacaroniKid-MA-weymouth | 18 | 14 | 9 | 13 | 0 | 1 | 55 | [cal](https://weymouth.macaronikid.com) |
+| Turner Free Library | MacaroniKid-MA-weymouth | 4 | 4 | 0 | 19 | 0 | 17 | 44 | [cal](https://weymouth.macaronikid.com) |
+| Thayer Public Library | MacaroniKid-MA-weymouth | 3 | 18 | 3 | 10 | 4 | 1 | 39 | [cal](https://weymouth.macaronikid.com) |
+| Old Colony YMCA | MacaroniKid-MA-weymouth | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://weymouth.macaronikid.com) |
+| Old Colony YMCA - Stoughton | MacaroniKid-MA-weymouth | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://weymouth.macaronikid.com) |
+| Town of Weymouth | MacaroniKid-MA-weymouth | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://weymouth.macaronikid.com) |
+| Julie Clapp | MacaroniKid-MA-weymouth | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://weymouth.macaronikid.com) |
+| Old Colony YMCA - Easton Branch | MacaroniKid-MA-weymouth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://weymouth.macaronikid.com) |
+| Clarke Schools for Hearing and Speech | MacaroniKid-MA-weymouth | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://weymouth.macaronikid.com) |
+| Cornerstone of Weymouth | MacaroniKid-MA-weymouth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://weymouth.macaronikid.com) |
+| The Grey Eagle | MacaroniKid-NC-asheville | 43 | 1 | 0 | 1 | 0 | 0 | 45 | [cal](https://asheville.macaronikid.com) |
+| Ignite Jewelry Studios | MacaroniKid-NC-asheville | 0 | 3 | 0 | 22 | 7 | 0 | 32 | [cal](https://asheville.macaronikid.com) |
+| Fairview Public Library | MacaroniKid-NC-asheville | 0 | 18 | 9 | 1 | 0 | 0 | 28 | [cal](https://asheville.macaronikid.com) |
+| Pisgah Brewing Company | MacaroniKid-NC-asheville | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [cal](https://asheville.macaronikid.com) |
+| Worthwhile Sounds | MacaroniKid-NC-asheville | 11 | 0 | 0 | 1 | 0 | 1 | 13 | [cal](https://asheville.macaronikid.com) |
+| Arts AVL (Asheville Area Arts Council) | MacaroniKid-NC-asheville | 10 | 0 | 0 | 1 | 1 | 0 | 12 | [cal](https://asheville.macaronikid.com) |
+| WNC Agricultural Center | MacaroniKid-NC-asheville | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://asheville.macaronikid.com) |
+| Trackside Studios | MacaroniKid-NC-asheville | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://asheville.macaronikid.com) |
+| Hi-Wire Brewing - Biltmore Village | MacaroniKid-NC-asheville | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://asheville.macaronikid.com) |
+| The North Carolina Arboretum | MacaroniKid-NC-asheville | 7 | 0 | 0 | 1 | 0 | 0 | 8 | [cal](https://asheville.macaronikid.com) |
+| House of Black Cat Magic | MacaroniKid-NC-asheville | 0 | 0 | 0 | 8 | 0 | 0 | 8 | [cal](https://asheville.macaronikid.com) |
+| Hi-Wire Brewing RAD Beer Garden & Distribution Center | MacaroniKid-NC-asheville | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://asheville.macaronikid.com) |
+| Well Played Board Game Cafe | MacaroniKid-NC-asheville | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://asheville.macaronikid.com) |
+| The Mule at Devil's Foot Beverage | MacaroniKid-NC-asheville | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://asheville.macaronikid.com) |
+| Hellbender | MacaroniKid-NC-asheville | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://asheville.macaronikid.com) |
+| Mountain Kitchen | MacaroniKid-NC-asheville | 0 | 0 | 0 | 0 | 5 | 0 | 5 | [cal](https://asheville.macaronikid.com) |
+| Chatt Hills Music | MacaroniKid-NC-asheville | 0 | 0 | 0 | 5 | 0 | 0 | 5 | [cal](https://asheville.macaronikid.com) |
+| Asheville Parks & Recreation | MacaroniKid-NC-asheville | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://asheville.macaronikid.com) |
+| Black Mountain Tailgate Market | MacaroniKid-NC-asheville | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://asheville.macaronikid.com) |
+| Kooshlie Care Doula Services | MacaroniKid-NC-asheville | 3 | 1 | 0 | 0 | 0 | 0 | 4 | [cal](https://asheville.macaronikid.com) |
+| Wortham Center for the Performing Arts | MacaroniKid-NC-asheville | 3 | 0 | 1 | 0 | 0 | 0 | 4 | [cal](https://asheville.macaronikid.com) |
+| Highland Brewing Company | MacaroniKid-NC-asheville | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://asheville.macaronikid.com) |
+| Eulogy | MacaroniKid-NC-asheville | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://asheville.macaronikid.com) |
+| Third Room | MacaroniKid-NC-asheville | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://asheville.macaronikid.com) |
+| Tanger Outlets - Asheville | MacaroniKid-NC-asheville | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://asheville.macaronikid.com) |
+| Antidote Cocktail Lounge at Chemist | MacaroniKid-NC-asheville | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://asheville.macaronikid.com) |
+| Asheville Community Theatre | MacaroniKid-NC-asheville | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://asheville.macaronikid.com) |
+| The NC Arboretum: Youth Education Programs | MacaroniKid-NC-asheville | 1 | 0 | 0 | 2 | 0 | 0 | 3 | [cal](https://asheville.macaronikid.com) |
+| Asheville Museum of Science | MacaroniKid-NC-asheville | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://asheville.macaronikid.com) |
+| Local Cloth | MacaroniKid-NC-asheville | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://asheville.macaronikid.com) |
+| Hickory Nut Gap Farm | MacaroniKid-NC-asheville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://asheville.macaronikid.com) |
+| Revival Asheville | MacaroniKid-NC-asheville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://asheville.macaronikid.com) |
+| Torched AVL | MacaroniKid-NC-asheville | 0 | 0 | 0 | 0 | 2 | 0 | 2 | [cal](https://asheville.macaronikid.com) |
+| Sierra Nevada Brewing Co. - Mills River | MacaroniKid-NC-asheville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://asheville.macaronikid.com) |
+| Black Mountain YMCA | MacaroniKid-NC-asheville | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [cal](https://asheville.macaronikid.com) |
+| Swannanoa Valley Museum & History Center | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Board & Brush Creative Studio - Asheville | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Archetype Brewing | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Story Parlor | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| The NC Arboretum: Adult Education Programs | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Lake Eden Retreat | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| JUMP - America’s Van Halen Experience | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Avery's Creek United Methodist Church | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Foodees. | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Asheville Art Museum | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Thurston Howell Band - A Premier Yacht Rock Spectacular | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Appalachian Sustainable Agriculture Project (ASAP) | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| The Orange Peel | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Asheville Wellness Tours | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Asheville Tourists | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Boogie T | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Chaos Fiber Co | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Foodees Fest | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Asheville Salt Cave & Spa | MacaroniKid-NC-asheville | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| White Horse Black Mountain | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Asheville Yards | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Asheville Symphony Orchestra | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| iDaph Events | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Folk Art Center | MacaroniKid-NC-asheville | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Venardos Circus | MacaroniKid-NC-asheville | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| West Asheville Yoga | MacaroniKid-NC-asheville | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Turgua Brewing | MacaroniKid-NC-asheville | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Ginger's Revenge | MacaroniKid-NC-asheville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://asheville.macaronikid.com) |
+| Orange County SportsPlex | MacaroniKid-NC-burlington-hillsborough | 37 | 14 | 22 | 0 | 0 | 0 | 73 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Orange County Public Library - Main Library | MacaroniKid-NC-burlington-hillsborough | 8 | 10 | 8 | 18 | 0 | 1 | 45 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Alamance County Public Library | MacaroniKid-NC-burlington-hillsborough | 0 | 18 | 6 | 15 | 0 | 1 | 40 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Almance County Public Library | MacaroniKid-NC-burlington-hillsborough | 5 | 23 | 0 | 5 | 0 | 0 | 33 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Children's Museum of Alamance County | MacaroniKid-NC-burlington-hillsborough | 7 | 0 | 9 | 0 | 0 | 0 | 16 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Visit Hillsborough | MacaroniKid-NC-burlington-hillsborough | 7 | 1 | 0 | 0 | 0 | 0 | 8 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Downtown Mebane Development Corporation (DMDC) | MacaroniKid-NC-burlington-hillsborough | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| May Memorial Library | MacaroniKid-NC-burlington-hillsborough | 0 | 2 | 1 | 1 | 1 | 0 | 5 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Burlington-Hillsborough | MacaroniKid-NC-burlington-hillsborough | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Graham Recreation & Parks Department | MacaroniKid-NC-burlington-hillsborough | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Paperhand Puppet Project | MacaroniKid-NC-burlington-hillsborough | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Persnickety Books, LLC | MacaroniKid-NC-burlington-hillsborough | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Front Street United Methodist Church | MacaroniKid-NC-burlington-hillsborough | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Freddy's Frozen Custard & Steakburgers Burlington, NC, Boone Station Dr | MacaroniKid-NC-burlington-hillsborough | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Burlington Recreation & Parks | MacaroniKid-NC-burlington-hillsborough | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Burlington Sock Puppets | MacaroniKid-NC-burlington-hillsborough | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Jess Klein | MacaroniKid-NC-burlington-hillsborough | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| RambleRill Farm | MacaroniKid-NC-burlington-hillsborough | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Alamance Arts | MacaroniKid-NC-burlington-hillsborough | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Studio 1 | MacaroniKid-NC-burlington-hillsborough | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Painted Grape - Burlington NC | MacaroniKid-NC-burlington-hillsborough | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://burlington-hillsborough.macaronikid.com) |
+| Bumble Brews Play Cafe | MacaroniKid-NC-cary | 62 | 0 | 0 | 1 | 0 | 0 | 63 | [cal](https://cary.macaronikid.com) |
+| Town of Cary, NC | MacaroniKid-NC-cary | 34 | 3 | 0 | 1 | 0 | 0 | 38 | [cal](https://cary.macaronikid.com) |
+| Flour Power Cary Parkside | MacaroniKid-NC-cary | 30 | 0 | 0 | 0 | 1 | 0 | 31 | [cal](https://cary.macaronikid.com) |
+| Middle Creek Community Library | MacaroniKid-NC-cary | 7 | 4 | 8 | 1 | 8 | 0 | 28 | [cal](https://cary.macaronikid.com) |
+| Eva Perry Regional Library | MacaroniKid-NC-cary | 12 | 10 | 0 | 4 | 0 | 1 | 27 | [cal](https://cary.macaronikid.com) |
+| Art Buzz Kids at Wine & Design - Apex | MacaroniKid-NC-cary | 18 | 0 | 0 | 0 | 0 | 6 | 24 | [cal](https://cary.macaronikid.com) |
+| The Cary Theater | MacaroniKid-NC-cary | 20 | 1 | 0 | 0 | 0 | 0 | 21 | [cal](https://cary.macaronikid.com) |
+| Cary Regional Library | MacaroniKid-NC-cary | 5 | 12 | 1 | 0 | 0 | 0 | 18 | [cal](https://cary.macaronikid.com) |
+| Town of Apex | MacaroniKid-NC-cary | 13 | 0 | 0 | 1 | 0 | 0 | 14 | [cal](https://cary.macaronikid.com) |
+| Halle Cultural Arts Center | MacaroniKid-NC-cary | 8 | 0 | 0 | 1 | 0 | 0 | 9 | [cal](https://cary.macaronikid.com) |
+| Downtown Cary Park | MacaroniKid-NC-cary | 4 | 0 | 0 | 3 | 0 | 0 | 7 | [cal](https://cary.macaronikid.com) |
+| Waverly Place | MacaroniKid-NC-cary | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://cary.macaronikid.com) |
+| JC Raulston Arboretum | MacaroniKid-NC-cary | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://cary.macaronikid.com) |
+| Marbles Kids Museum | MacaroniKid-NC-cary | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://cary.macaronikid.com) |
+| Esteamed Coffee | MacaroniKid-NC-cary | 1 | 0 | 3 | 0 | 0 | 0 | 4 | [cal](https://cary.macaronikid.com) |
+| Fit & Able Productions, Inc. | MacaroniKid-NC-cary | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://cary.macaronikid.com) |
+| FentonNC | MacaroniKid-NC-cary | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://cary.macaronikid.com) |
+| Prestonwood Country Club | MacaroniKid-NC-cary | 1 | 0 | 0 | 2 | 0 | 0 | 3 | [cal](https://cary.macaronikid.com) |
+| Kids EveryWear | MacaroniKid-NC-cary | 0 | 3 | 0 | 0 | 0 | 0 | 3 | [cal](https://cary.macaronikid.com) |
+| Cary | MacaroniKid-NC-cary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://cary.macaronikid.com) |
+| North Carolina Courage | MacaroniKid-NC-cary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://cary.macaronikid.com) |
+| We Rock the Spectrum - Cary | MacaroniKid-NC-cary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cary.macaronikid.com) |
+| Fairy Hair Flare | MacaroniKid-NC-cary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cary.macaronikid.com) |
+| Lightbridge Academy - Cary | MacaroniKid-NC-cary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cary.macaronikid.com) |
+| Color Me Mine | MacaroniKid-NC-cary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cary.macaronikid.com) |
+| Cary Quilting Company | MacaroniKid-NC-cary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cary.macaronikid.com) |
+| Kids Together, Inc. | MacaroniKid-NC-cary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://cary.macaronikid.com) |
+| Prairie Ridge Ecostation | MacaroniKid-NC-cary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cary.macaronikid.com) |
+| Geek and Grub Market | MacaroniKid-NC-cary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cary.macaronikid.com) |
+| Fortnight Brewing Company | MacaroniKid-NC-cary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://cary.macaronikid.com) |
+| Blazin’ Trails Bottle Babies | MacaroniKid-NC-cary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cary.macaronikid.com) |
+| Hum Sub | MacaroniKid-NC-cary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cary.macaronikid.com) |
+| Koka Booth Amphitheatre | MacaroniKid-NC-cary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cary.macaronikid.com) |
+| Mad Splatter Apex | MacaroniKid-NC-cary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cary.macaronikid.com) |
+| Apex | MacaroniKid-NC-cary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cary.macaronikid.com) |
+| Zebulon Parks & Recreation | MacaroniKid-NC-clayton | 178 | 0 | 64 | 15 | 26 | 17 | 300 | [cal](https://clayton.macaronikid.com) |
+| Hocutt-Ellington Memorial Library | MacaroniKid-NC-clayton | 0 | 18 | 13 | 2 | 5 | 12 | 50 | [cal](https://clayton.macaronikid.com) |
+| Haven Farm | MacaroniKid-NC-clayton | 9 | 0 | 0 | 17 | 0 | 0 | 26 | [cal](https://clayton.macaronikid.com) |
+| Zebulon Community Library | MacaroniKid-NC-clayton | 8 | 4 | 2 | 0 | 0 | 0 | 14 | [cal](https://clayton.macaronikid.com) |
+| East Regional Library | MacaroniKid-NC-clayton | 2 | 3 | 0 | 1 | 0 | 2 | 8 | [cal](https://clayton.macaronikid.com) |
+| Clayton Chamber of Commerce | MacaroniKid-NC-clayton | 3 | 0 | 0 | 2 | 0 | 0 | 5 | [cal](https://clayton.macaronikid.com) |
+| Calvary Faith Center | MacaroniKid-NC-clayton | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://clayton.macaronikid.com) |
+| The Feathered Farm | MacaroniKid-NC-clayton | 2 | 1 | 0 | 0 | 0 | 0 | 3 | [cal](https://clayton.macaronikid.com) |
+| Public Library of Johnston County & Smithfield | MacaroniKid-NC-clayton | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://clayton.macaronikid.com) |
+| Town of Knightdale | MacaroniKid-NC-clayton | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://clayton.macaronikid.com) |
+| Public Library of Johnston County and Smithfield | MacaroniKid-NC-clayton | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://clayton.macaronikid.com) |
+| JAKS Stables | MacaroniKid-NC-clayton | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://clayton.macaronikid.com) |
+| Let's Get Social Raleigh | MacaroniKid-NC-clayton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clayton.macaronikid.com) |
+| Town of Wendell | MacaroniKid-NC-clayton | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://clayton.macaronikid.com) |
+| Garner Parks, Recreation and Cultural Resources | MacaroniKid-NC-clayton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clayton.macaronikid.com) |
+| Knightdale Parks and Recreation | MacaroniKid-NC-clayton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clayton.macaronikid.com) |
+| LightWay Ministries NC | MacaroniKid-NC-clayton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clayton.macaronikid.com) |
+| Town of Zebulon | MacaroniKid-NC-clayton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://clayton.macaronikid.com) |
+| Choices Pregnancy Center | MacaroniKid-NC-clayton | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://clayton.macaronikid.com) |
+| Durham County Library - North Regional Library | MacaroniKid-NC-durham | 4 | 7 | 8 | 4 | 34 | 1 | 58 | [cal](https://durham.macaronikid.com) |
+| Durham County Library - East Regional Library | MacaroniKid-NC-durham | 11 | 24 | 0 | 1 | 8 | 0 | 44 | [cal](https://durham.macaronikid.com) |
+| Durham County Library - Southwest Regional Library | MacaroniKid-NC-durham | 9 | 9 | 4 | 5 | 4 | 1 | 32 | [cal](https://durham.macaronikid.com) |
+| Morrisville Community Library | MacaroniKid-NC-durham | 6 | 6 | 3 | 0 | 2 | 4 | 21 | [cal](https://durham.macaronikid.com) |
+| Durham County Library — North Regional Library | MacaroniKid-NC-durham | 16 | 0 | 0 | 1 | 4 | 0 | 21 | [cal](https://durham.macaronikid.com) |
+| Wheels Durham | MacaroniKid-NC-durham | 14 | 0 | 0 | 6 | 0 | 0 | 20 | [cal](https://durham.macaronikid.com) |
+| Sky Zone Trampoline Park Durham | MacaroniKid-NC-durham | 14 | 0 | 6 | 0 | 0 | 0 | 20 | [cal](https://durham.macaronikid.com) |
+| DPAC | MacaroniKid-NC-durham | 7 | 0 | 0 | 12 | 0 | 0 | 19 | [cal](https://durham.macaronikid.com) |
+| Mystic Farm and Distillery | MacaroniKid-NC-durham | 16 | 0 | 0 | 1 | 0 | 0 | 17 | [cal](https://durham.macaronikid.com) |
+| Durham | MacaroniKid-NC-durham | 7 | 0 | 0 | 9 | 0 | 0 | 16 | [cal](https://durham.macaronikid.com) |
+| Durham County Library - Bragtown Branch Library | MacaroniKid-NC-durham | 5 | 0 | 0 | 1 | 10 | 0 | 16 | [cal](https://durham.macaronikid.com) |
+| Raleigh Little Theatre | MacaroniKid-NC-durham | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://durham.macaronikid.com) |
+| Bethesda Baptist Church | MacaroniKid-NC-durham | 0 | 0 | 0 | 0 | 8 | 0 | 8 | [cal](https://durham.macaronikid.com) |
+| Sarah P. Duke Gardens | MacaroniKid-NC-durham | 7 | 0 | 0 | 1 | 0 | 0 | 8 | [cal](https://durham.macaronikid.com) |
+| Moon Dog Meadery and Bottle Shop | MacaroniKid-NC-durham | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://durham.macaronikid.com) |
+| Durham County Library — Bragtown Branch | MacaroniKid-NC-durham | 0 | 0 | 7 | 0 | 0 | 0 | 7 | [cal](https://durham.macaronikid.com) |
+| Durham County Library - Stanford L. Warren Branch Library | MacaroniKid-NC-durham | 0 | 0 | 4 | 1 | 2 | 0 | 7 | [cal](https://durham.macaronikid.com) |
+| Durham Central Park | MacaroniKid-NC-durham | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://durham.macaronikid.com) |
+| Durham County Library - Main Library | MacaroniKid-NC-durham | 3 | 2 | 1 | 0 | 0 | 0 | 6 | [cal](https://durham.macaronikid.com) |
+| Durham County Library - South Regional Library | MacaroniKid-NC-durham | 0 | 0 | 3 | 3 | 0 | 0 | 6 | [cal](https://durham.macaronikid.com) |
+| Durham Parks & Recreation | MacaroniKid-NC-durham | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://durham.macaronikid.com) |
+| Hub RTP | MacaroniKid-NC-durham | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://durham.macaronikid.com) |
+| We Rock the Spectrum - Cary | MacaroniKid-NC-durham | 4 | 0 | 1 | 0 | 0 | 0 | 5 | [cal](https://durham.macaronikid.com) |
+| New Hope Valley Railway | MacaroniKid-NC-durham | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://durham.macaronikid.com) |
+| Boxyard RTP | MacaroniKid-NC-durham | 3 | 0 | 0 | 0 | 1 | 0 | 4 | [cal](https://durham.macaronikid.com) |
+| DSSOLVR Brewing | MacaroniKid-NC-durham | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://durham.macaronikid.com) |
+| Nasher Museum of Art at Duke University | MacaroniKid-NC-durham | 2 | 0 | 2 | 0 | 0 | 0 | 4 | [cal](https://durham.macaronikid.com) |
+| Book Harvest | MacaroniKid-NC-durham | 2 | 1 | 1 | 0 | 0 | 0 | 4 | [cal](https://durham.macaronikid.com) |
+| Freddy's Frozen Custard & Steakburgers - Roxboro Street | MacaroniKid-NC-durham | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://durham.macaronikid.com) |
+| The Glass Jug Beer Lab - Downtown Durham | MacaroniKid-NC-durham | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://durham.macaronikid.com) |
+| Morrisville Parks, Recreation & Cultural Resources | MacaroniKid-NC-durham | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://durham.macaronikid.com) |
+| The Durham Hotel | MacaroniKid-NC-durham | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://durham.macaronikid.com) |
+| Cars and Coffee Morrisville | MacaroniKid-NC-durham | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://durham.macaronikid.com) |
+| Carolina Theatre of Durham | MacaroniKid-NC-durham | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://durham.macaronikid.com) |
+| Bull City Woodshop | MacaroniKid-NC-durham | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://durham.macaronikid.com) |
+| Freddy's Frozen Custard & Steakburgers - Watkins Road | MacaroniKid-NC-durham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://durham.macaronikid.com) |
+| Western Wake Farmers Market | MacaroniKid-NC-durham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://durham.macaronikid.com) |
+| Tara-Anne Johnson, Director of Admissions, Alpha Raleigh | MacaroniKid-NC-durham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://durham.macaronikid.com) |
+| North Carolina Historic Sites | MacaroniKid-NC-durham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://durham.macaronikid.com) |
+| Duke HomeCare & Hospice | MacaroniKid-NC-durham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://durham.macaronikid.com) |
+| Motorco | MacaroniKid-NC-durham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://durham.macaronikid.com) |
+| Simone Fine | MacaroniKid-NC-durham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://durham.macaronikid.com) |
+| Piedmont Farm Animal Refuge | MacaroniKid-NC-durham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://durham.macaronikid.com) |
+| Eno River Association | MacaroniKid-NC-durham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://durham.macaronikid.com) |
+| NS2 | MacaroniKid-NC-durham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://durham.macaronikid.com) |
+| Fairytale Dreamer | MacaroniKid-NC-durham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://durham.macaronikid.com) |
+| Durham Bulls Baseball Club | MacaroniKid-NC-durham | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://durham.macaronikid.com) |
+| Crown Complex | MacaroniKid-NC-fayettevillenc | 0 | 0 | 0 | 9 | 0 | 0 | 9 | [cal](https://fayettevillenc.macaronikid.com) |
+| NCWRC Fishing Education Team | MacaroniKid-NC-fayettevillenc | 3 | 0 | 1 | 0 | 3 | 1 | 8 | [cal](https://fayettevillenc.macaronikid.com) |
+| Fayetteville ART Attack | MacaroniKid-NC-fayettevillenc | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://fayettevillenc.macaronikid.com) |
+| Freddy's Frozen Custard & Steakburgers Fayetteville, NC | MacaroniKid-NC-fayettevillenc | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://fayettevillenc.macaronikid.com) |
+| Adventistas en Faithville | MacaroniKid-NC-fayettevillenc | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://fayettevillenc.macaronikid.com) |
+| Riverwood Events - Part of LWood Media Group | MacaroniKid-NC-fayettevillenc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://fayettevillenc.macaronikid.com) |
+| Downtown Fayetteville | MacaroniKid-NC-fayettevillenc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://fayettevillenc.macaronikid.com) |
+| Paddy's Irish Public House | MacaroniKid-NC-fayettevillenc | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://fayettevillenc.macaronikid.com) |
+| Northwood Temple Church | MacaroniKid-NC-fayettevillenc | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://fayettevillenc.macaronikid.com) |
+| Julia Mae Community Foundation | MacaroniKid-NC-fayettevillenc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fayettevillenc.macaronikid.com) |
+| Fort Bragg Harley-Davidson | MacaroniKid-NC-fayettevillenc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fayettevillenc.macaronikid.com) |
+| Freedom Biker Church Fayetteville | MacaroniKid-NC-fayettevillenc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fayettevillenc.macaronikid.com) |
+| FACTS Wellness & Retreat Center | MacaroniKid-NC-fayettevillenc | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://fayettevillenc.macaronikid.com) |
+| Cumberland County, NC Government | MacaroniKid-NC-fayettevillenc | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://fayettevillenc.macaronikid.com) |
+| Keep Up Creations | MacaroniKid-NC-fayettevillenc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fayettevillenc.macaronikid.com) |
+| Centria Autism | MacaroniKid-NC-fayettevillenc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fayettevillenc.macaronikid.com) |
+| Cape Beard | MacaroniKid-NC-fayettevillenc | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://fayettevillenc.macaronikid.com) |
+| Haymount United Methodist Church | MacaroniKid-NC-fayettevillenc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fayettevillenc.macaronikid.com) |
+| Henderson County Public Library | MacaroniKid-NC-hendersonville | 15 | 9 | 9 | 21 | 1 | 2 | 57 | [cal](https://hendersonville.macaronikid.com) |
+| Transylvania County Library | MacaroniKid-NC-hendersonville | 10 | 2 | 9 | 7 | 0 | 1 | 29 | [cal](https://hendersonville.macaronikid.com) |
+| 185 King Street | MacaroniKid-NC-hendersonville | 24 | 0 | 0 | 1 | 0 | 0 | 25 | [cal](https://hendersonville.macaronikid.com) |
+| Conserving Carolina | MacaroniKid-NC-hendersonville | 11 | 0 | 0 | 1 | 0 | 0 | 12 | [cal](https://hendersonville.macaronikid.com) |
+| Chick-fil-A Hendersonville (52 Highlands Square Dr, Hendersonville, NC) | MacaroniKid-NC-hendersonville | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://hendersonville.macaronikid.com) |
+| The Local Table | MacaroniKid-NC-hendersonville | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://hendersonville.macaronikid.com) |
+| Heart of Brevard | MacaroniKid-NC-hendersonville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://hendersonville.macaronikid.com) |
+| iDaph Events | MacaroniKid-NC-hendersonville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://hendersonville.macaronikid.com) |
+| Girl Scouts Carolinas Peaks to Piedmont | MacaroniKid-NC-hendersonville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://hendersonville.macaronikid.com) |
+| Flat Rock Playhouse | MacaroniKid-NC-hendersonville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://hendersonville.macaronikid.com) |
+| Mary C. Jenkins Community Center | MacaroniKid-NC-hendersonville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://hendersonville.macaronikid.com) |
+| Caldwell County Public Library - Southern Branch | MacaroniKid-NC-hickory | 50 | 0 | 8 | 6 | 0 | 2 | 66 | [cal](https://hickory.macaronikid.com) |
+| Hickory Public Library | MacaroniKid-NC-hickory | 7 | 12 | 1 | 2 | 10 | 2 | 34 | [cal](https://hickory.macaronikid.com) |
+| Catawba County Library System | MacaroniKid-NC-hickory | 5 | 3 | 0 | 14 | 3 | 0 | 25 | [cal](https://hickory.macaronikid.com) |
+| Hickory Museum of Art | MacaroniKid-NC-hickory | 2 | 0 | 0 | 4 | 0 | 0 | 6 | [cal](https://hickory.macaronikid.com) |
+| Girl Scouts Carolinas Peaks to Piedmont | MacaroniKid-NC-hickory | 3 | 0 | 0 | 0 | 0 | 1 | 4 | [cal](https://hickory.macaronikid.com) |
+| Hickory Community Theater | MacaroniKid-NC-hickory | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://hickory.macaronikid.com) |
+| Western Piedmont Symphony | MacaroniKid-NC-hickory | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://hickory.macaronikid.com) |
+| Downtown Newton Deveopment Association | MacaroniKid-NC-hickory | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://hickory.macaronikid.com) |
+| Silver Fork Winery | MacaroniKid-NC-hickory | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://hickory.macaronikid.com) |
+| Downtown Hickory | MacaroniKid-NC-hickory | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://hickory.macaronikid.com) |
+| Brunswick Town/Fort Anderson State Historic Site | MacaroniKid-NC-leland | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://leland.macaronikid.com) |
+| All 4 Cats | MacaroniKid-NC-leland | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leland.macaronikid.com) |
+| Gio Fund | MacaroniKid-NC-leland | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leland.macaronikid.com) |
+| Riverfront Farmers' Market Inc, Downtown | MacaroniKid-NC-leland | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://leland.macaronikid.com) |
+| Charlotte Mecklenburg Library - ImaginOn | MacaroniKid-NC-southcharlotte | 0 | 72 | 17 | 0 | 47 | 0 | 136 | [cal](https://southcharlotte.macaronikid.com) |
+| Gigi's Playhouse | MacaroniKid-NC-southcharlotte | 36 | 12 | 10 | 8 | 0 | 21 | 87 | [cal](https://southcharlotte.macaronikid.com) |
+| South Charlotte | MacaroniKid-NC-southcharlotte | 22 | 12 | 16 | 6 | 10 | 9 | 75 | [cal](https://southcharlotte.macaronikid.com) |
+| Charlotte Mecklenburg Library - Matthews Branch | MacaroniKid-NC-southcharlotte | 0 | 11 | 13 | 0 | 4 | 0 | 28 | [cal](https://southcharlotte.macaronikid.com) |
+| Charlotte Mecklenburg Library — Matthews | MacaroniKid-NC-southcharlotte | 0 | 8 | 1 | 0 | 2 | 0 | 11 | [cal](https://southcharlotte.macaronikid.com) |
+| Charlotte Mecklenburg Library — Myers Park | MacaroniKid-NC-southcharlotte | 1 | 4 | 0 | 1 | 3 | 0 | 9 | [cal](https://southcharlotte.macaronikid.com) |
+| Daniel Stowe Conservancy | MacaroniKid-NC-southcharlotte | 3 | 4 | 0 | 0 | 0 | 0 | 7 | [cal](https://southcharlotte.macaronikid.com) |
+| Bluementhal Arts Center | MacaroniKid-NC-southcharlotte | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://southcharlotte.macaronikid.com) |
+| Promenade On Providence | MacaroniKid-NC-southcharlotte | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://southcharlotte.macaronikid.com) |
+| Charlotte Mecklenburg Library - Myers Park | MacaroniKid-NC-southcharlotte | 0 | 5 | 0 | 0 | 0 | 1 | 6 | [cal](https://southcharlotte.macaronikid.com) |
+| Charlotte Chinese Story Time | MacaroniKid-NC-southcharlotte | 2 | 1 | 0 | 2 | 0 | 0 | 5 | [cal](https://southcharlotte.macaronikid.com) |
+| The Mint Museum | MacaroniKid-NC-southcharlotte | 1 | 0 | 0 | 3 | 0 | 0 | 4 | [cal](https://southcharlotte.macaronikid.com) |
+| Billy Graham Library | MacaroniKid-NC-southcharlotte | 1 | 0 | 0 | 2 | 0 | 0 | 3 | [cal](https://southcharlotte.macaronikid.com) |
+| Charlotte Symphony | MacaroniKid-NC-southcharlotte | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://southcharlotte.macaronikid.com) |
+| Urban District Market | MacaroniKid-NC-southcharlotte | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://southcharlotte.macaronikid.com) |
+| Bank of America Stadium | MacaroniKid-NC-southcharlotte | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://southcharlotte.macaronikid.com) |
+| Handcraftedmarketclt | MacaroniKid-NC-southcharlotte | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://southcharlotte.macaronikid.com) |
+| Charlotte Mecklenburg Library - Independence Regional | MacaroniKid-NC-southcharlotte | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://southcharlotte.macaronikid.com) |
+| The Carolina | MacaroniKid-NC-southcharlotte | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southcharlotte.macaronikid.com) |
+| TREO Foundation's The Walk | MacaroniKid-NC-southcharlotte | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://southcharlotte.macaronikid.com) |
+| Booth Playhouse | MacaroniKid-NC-southcharlotte | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southcharlotte.macaronikid.com) |
+| The MOB Group Inc | MacaroniKid-NC-southcharlotte | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://southcharlotte.macaronikid.com) |
+| Ballantyne | MacaroniKid-NC-southcharlotte | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southcharlotte.macaronikid.com) |
+| Lakeshore Learning | MacaroniKid-NC-southcharlotte | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://southcharlotte.macaronikid.com) |
+| Ballantyne Village | MacaroniKid-NC-southcharlotte | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southcharlotte.macaronikid.com) |
+| Anne Springs Close Greenway | MacaroniKid-NC-southcharlotte | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southcharlotte.macaronikid.com) |
+| The Broken Hearts: National Touring Tom Petty & The Heartbreakers Tribute | MacaroniKid-NC-southcharlotte | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://southcharlotte.macaronikid.com) |
+| Hindu Center of Charlotte | MacaroniKid-NC-southcharlotte | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southcharlotte.macaronikid.com) |
+| Durham County Library - Southwest Regional Library | MacaroniKid-NC-southdurham | 12 | 19 | 10 | 8 | 40 | 1 | 90 | [cal](https://southdurham.macaronikid.com) |
+| Chapel Hill Public Library | MacaroniKid-NC-southdurham | 15 | 17 | 12 | 5 | 0 | 1 | 50 | [cal](https://southdurham.macaronikid.com) |
+| Durham County Library - South Regional Library | MacaroniKid-NC-southdurham | 0 | 17 | 7 | 6 | 2 | 0 | 32 | [cal](https://southdurham.macaronikid.com) |
+| Chapel Hill - Durham | MacaroniKid-NC-southdurham | 16 | 0 | 4 | 2 | 0 | 0 | 22 | [cal](https://southdurham.macaronikid.com) |
+| The Nest | MacaroniKid-NC-southdurham | 0 | 6 | 6 | 9 | 0 | 0 | 21 | [cal](https://southdurham.macaronikid.com) |
+| Barnes & Noble - The Streets at Southpoint | MacaroniKid-NC-southdurham | 0 | 0 | 9 | 8 | 0 | 0 | 17 | [cal](https://southdurham.macaronikid.com) |
+| The Wonder Lab | MacaroniKid-NC-southdurham | 0 | 0 | 7 | 1 | 0 | 8 | 16 | [cal](https://southdurham.macaronikid.com) |
+| Town of Carrboro | MacaroniKid-NC-southdurham | 6 | 0 | 5 | 1 | 0 | 0 | 12 | [cal](https://southdurham.macaronikid.com) |
+| Paperhand Puppet Project | MacaroniKid-NC-southdurham | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://southdurham.macaronikid.com) |
+| Southern Village | MacaroniKid-NC-southdurham | 5 | 0 | 0 | 5 | 0 | 0 | 10 | [cal](https://southdurham.macaronikid.com) |
+| Southern Branch Library | MacaroniKid-NC-southdurham | 1 | 4 | 2 | 0 | 0 | 1 | 8 | [cal](https://southdurham.macaronikid.com) |
+| Spring Haven Farm | MacaroniKid-NC-southdurham | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://southdurham.macaronikid.com) |
+| MOSAIC at Chatham Park | MacaroniKid-NC-southdurham | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://southdurham.macaronikid.com) |
+| Durham Bulls Athletic Park | MacaroniKid-NC-southdurham | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://southdurham.macaronikid.com) |
+| Durham County Library — South Regional Library | MacaroniKid-NC-southdurham | 0 | 0 | 0 | 5 | 0 | 0 | 5 | [cal](https://southdurham.macaronikid.com) |
+| Morehead Planetarium | MacaroniKid-NC-southdurham | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://southdurham.macaronikid.com) |
+| Art Buzz Kids at Wine & Design - Durham | MacaroniKid-NC-southdurham | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://southdurham.macaronikid.com) |
+| Durham Central Park | MacaroniKid-NC-southdurham | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://southdurham.macaronikid.com) |
+| University Place | MacaroniKid-NC-southdurham | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://southdurham.macaronikid.com) |
+| Freddy's Frozen Custard & Steakburgers - Watkins Road | MacaroniKid-NC-southdurham | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://southdurham.macaronikid.com) |
+| The Glass Jug Beer Lab - Research Triangle Park | MacaroniKid-NC-southdurham | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://southdurham.macaronikid.com) |
+| Piedmont Farm Animal Refuge | MacaroniKid-NC-southdurham | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://southdurham.macaronikid.com) |
+| New Hope Valley Railway | MacaroniKid-NC-southdurham | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://southdurham.macaronikid.com) |
+| Hub RTP | MacaroniKid-NC-southdurham | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://southdurham.macaronikid.com) |
+| Durham Parks & Recreation | MacaroniKid-NC-southdurham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southdurham.macaronikid.com) |
+| Chapel Hill Community Arts & Culture | MacaroniKid-NC-southdurham | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southdurham.macaronikid.com) |
+| Durham County Library — Southwest Regional Library | MacaroniKid-NC-southdurham | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://southdurham.macaronikid.com) |
+| Union County Library - Southwest Regional Library | MacaroniKid-NC-union | 11 | 3 | 26 | 0 | 0 | 0 | 40 | [cal](https://union.macaronikid.com) |
+| Union County Library - Main Library | MacaroniKid-NC-union | 6 | 5 | 18 | 0 | 0 | 0 | 29 | [cal](https://union.macaronikid.com) |
+| Union County Library - Union West Regional Branch | MacaroniKid-NC-union | 7 | 4 | 13 | 0 | 0 | 0 | 24 | [cal](https://union.macaronikid.com) |
+| Union County Library - Edwards Memorial Library | MacaroniKid-NC-union | 4 | 4 | 6 | 0 | 0 | 0 | 14 | [cal](https://union.macaronikid.com) |
+| Charlotte Mecklenburg Library - Matthews Branch | MacaroniKid-NC-union | 0 | 0 | 1 | 0 | 3 | 0 | 4 | [cal](https://union.macaronikid.com) |
+| Museum of the Waxhaws | MacaroniKid-NC-union | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://union.macaronikid.com) |
+| Monroe North Carolina | MacaroniKid-NC-union | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://union.macaronikid.com) |
+| Tickle My Pickle | MacaroniKid-NC-union | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://union.macaronikid.com) |
+| Promenade On Providence | MacaroniKid-NC-union | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://union.macaronikid.com) |
+| Union | MacaroniKid-NC-union | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://union.macaronikid.com) |
+| Charlotte Chinese Story Time | MacaroniKid-NC-union | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://union.macaronikid.com) |
+| Sweets & Savories by JoyMarie | MacaroniKid-NC-union | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://union.macaronikid.com) |
+| The Alphabet Museum at JAARS | MacaroniKid-NC-union | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://union.macaronikid.com) |
+| Monroe Aquatics & Fitness Center | MacaroniKid-NC-union | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://union.macaronikid.com) |
+| Dowd Center Theatre | MacaroniKid-NC-union | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://union.macaronikid.com) |
+| Ballantyne | MacaroniKid-NC-union | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://union.macaronikid.com) |
+| Anne Springs Close Greenway | MacaroniKid-NC-union | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://union.macaronikid.com) |
+| The Bowl at Ballantyne | MacaroniKid-NC-union | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://union.macaronikid.com) |
+| Town of Indian Trail, NC - Government | MacaroniKid-NC-union | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://union.macaronikid.com) |
+| Foodees. | MacaroniKid-NC-union | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://union.macaronikid.com) |
+| Town of Wake Forest, NC | MacaroniKid-NC-wakeforest | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://wakeforest.macaronikid.com) |
+| Freddy's Frozen Custard & Steakburgers (Wake Forest, NC) | MacaroniKid-NC-wakeforest | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://wakeforest.macaronikid.com) |
+| Triangle Town Center | MacaroniKid-NC-wakeforest | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://wakeforest.macaronikid.com) |
+| Ever Awakening | MacaroniKid-NC-wakeforest | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://wakeforest.macaronikid.com) |
+| Town of Rolesville, NC | MacaroniKid-NC-wakeforest | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://wakeforest.macaronikid.com) |
+| Wake Forest Downtown | MacaroniKid-NC-wakeforest | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://wakeforest.macaronikid.com) |
+| Living Stones Family Church | MacaroniKid-NC-wakeforest | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://wakeforest.macaronikid.com) |
+| PLUS Dueling Piano Bar | MacaroniKid-NC-wakeforest | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://wakeforest.macaronikid.com) |
+| Down Under Divers Club | MacaroniKid-NC-wakeforest | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://wakeforest.macaronikid.com) |
+| Kerr Family YMCA | MacaroniKid-NC-wakeforest | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://wakeforest.macaronikid.com) |
+| Rum Runner Dive Shop | MacaroniKid-NC-wakeforest | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://wakeforest.macaronikid.com) |
+| Taylor Academy of Dance | MacaroniKid-NC-wakeforest | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://wakeforest.macaronikid.com) |
+| Saving Grace NC | MacaroniKid-NC-wakeforest | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://wakeforest.macaronikid.com) |
+| Oconaluftee Indian Village | MacaroniKid-NC-waynesville | 45 | 0 | 0 | 0 | 0 | 0 | 45 | [cal](https://waynesville.macaronikid.com) |
+| Visit Cherokee, NC | MacaroniKid-NC-waynesville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://waynesville.macaronikid.com) |
+| Smokies Life | MacaroniKid-NC-waynesville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://waynesville.macaronikid.com) |
+| Transylvania County Library | MacaroniKid-NC-waynesville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://waynesville.macaronikid.com) |
+| Southern Lehigh Public Library | MacaroniKid-PA-bethlehem | 5 | 6 | 23 | 27 | 0 | 0 | 61 | [cal](https://bethlehem.macaronikid.com) |
+| Memorial Library of Nazareth and Vicinity | MacaroniKid-PA-bethlehem | 0 | 7 | 7 | 7 | 0 | 0 | 21 | [cal](https://bethlehem.macaronikid.com) |
+| Smartivities Showcase | MacaroniKid-PA-bethlehem | 11 | 0 | 0 | 7 | 0 | 0 | 18 | [cal](https://bethlehem.macaronikid.com) |
+| Bethlehem Area Public Library | MacaroniKid-PA-bethlehem | 9 | 0 | 0 | 1 | 0 | 0 | 10 | [cal](https://bethlehem.macaronikid.com) |
+| Blessed Trinity Lutheran Church at Rosemont | MacaroniKid-PA-bethlehem | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://bethlehem.macaronikid.com) |
+| Bethlehem | MacaroniKid-PA-bethlehem | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://bethlehem.macaronikid.com) |
+| Cousins Maine Lobster - Harrisburg, PA | MacaroniKid-PA-bethlehem | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://bethlehem.macaronikid.com) |
+| Pennsylvania Environmental Council | MacaroniKid-PA-bethlehem | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://bethlehem.macaronikid.com) |
+| The Music Studio of Patricia Keith | MacaroniKid-PA-boyertown | 2 | 1 | 4 | 6 | 0 | 0 | 13 | [cal](https://boyertown.macaronikid.com) |
+| Studio B Art Gallery | MacaroniKid-PA-boyertown | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://boyertown.macaronikid.com) |
+| Boyertown YMCA | MacaroniKid-PA-boyertown | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://boyertown.macaronikid.com) |
+| Kauffman's Fundraiser and Catering Trailers | MacaroniKid-PA-boyertown | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://boyertown.macaronikid.com) |
+| Laurel Mountain Ministries | MacaroniKid-PA-boyertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://boyertown.macaronikid.com) |
+| YMCA of Reading & Berks County | MacaroniKid-PA-boyertown | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://boyertown.macaronikid.com) |
+| Triple Dog Dare | MacaroniKid-PA-boyertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://boyertown.macaronikid.com) |
+| Sunflower Events & More LLC | MacaroniKid-PA-boyertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://boyertown.macaronikid.com) |
+| Emmaus Main Street Partners | MacaroniKid-PA-boyertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://boyertown.macaronikid.com) |
+| Boyertown Museum of Historic Vehicles | MacaroniKid-PA-boyertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://boyertown.macaronikid.com) |
+| Boyertown Area Historical Society | MacaroniKid-PA-boyertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://boyertown.macaronikid.com) |
+| GO Getter Movement Studioz | MacaroniKid-PA-boyertown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://boyertown.macaronikid.com) |
+| Boyertown Community Library | MacaroniKid-PA-boyertown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://boyertown.macaronikid.com) |
+| Boyertown Halloween Parade | MacaroniKid-PA-boyertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://boyertown.macaronikid.com) |
+| Coy Public Library | MacaroniKid-PA-carlisle | 0 | 4 | 7 | 3 | 3 | 3 | 20 | [cal](https://carlisle.macaronikid.com) |
+| Cumberland County Library System - Simpson Library | MacaroniKid-PA-carlisle | 2 | 8 | 0 | 1 | 0 | 0 | 11 | [cal](https://carlisle.macaronikid.com) |
+| Cumberland County Library System - Fredricksen Library | MacaroniKid-PA-carlisle | 0 | 6 | 0 | 2 | 1 | 0 | 9 | [cal](https://carlisle.macaronikid.com) |
+| Cumberland County Library System - East Pennsboro Library | MacaroniKid-PA-carlisle | 0 | 6 | 0 | 1 | 0 | 0 | 7 | [cal](https://carlisle.macaronikid.com) |
+| H2L Studio | MacaroniKid-PA-carlisle | 3 | 1 | 1 | 0 | 1 | 0 | 6 | [cal](https://carlisle.macaronikid.com) |
+| Cumberland County Libraries New Cumberland | MacaroniKid-PA-carlisle | 0 | 3 | 0 | 3 | 0 | 0 | 6 | [cal](https://carlisle.macaronikid.com) |
+| State Parks - Kings Gap, Pine Grove Furnace, and Little Buffalo | MacaroniKid-PA-carlisle | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://carlisle.macaronikid.com) |
+| Soccer Shots Harrisburg | MacaroniKid-PA-carlisle | 0 | 3 | 0 | 0 | 0 | 0 | 3 | [cal](https://carlisle.macaronikid.com) |
+| Carlisle YMCA | MacaroniKid-PA-carlisle | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://carlisle.macaronikid.com) |
+| Ashcombe Farm & Greenhouses | MacaroniKid-PA-carlisle | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://carlisle.macaronikid.com) |
+| USA Ninja Challenge - Camp Hill | MacaroniKid-PA-carlisle | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://carlisle.macaronikid.com) |
+| Adams County Library | MacaroniKid-PA-carlisle | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://carlisle.macaronikid.com) |
+| Franklin County 11/30 Visitors Center | MacaroniKid-PA-carlisle | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://carlisle.macaronikid.com) |
+| Create-A-Palooza | MacaroniKid-PA-carlisle | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://carlisle.macaronikid.com) |
+| Code Ninjas Harrisburg-Mechanicsburg | MacaroniKid-PA-carlisle | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://carlisle.macaronikid.com) |
+| CC Mellor Library | MacaroniKid-PA-cityofpittsburgh | 19 | 13 | 2 | 6 | 0 | 5 | 45 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Pittsburgh Zoo & Aquarium | MacaroniKid-PA-cityofpittsburgh | 10 | 6 | 3 | 4 | 3 | 0 | 26 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| National Aviary | MacaroniKid-PA-cityofpittsburgh | 15 | 0 | 0 | 1 | 0 | 1 | 17 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Citizens Live at The Wylie | MacaroniKid-PA-cityofpittsburgh | 15 | 0 | 0 | 0 | 0 | 0 | 15 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Grow Pittsburgh | MacaroniKid-PA-cityofpittsburgh | 15 | 0 | 0 | 0 | 0 | 0 | 15 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| PPG Paints Arena | MacaroniKid-PA-cityofpittsburgh | 14 | 0 | 0 | 1 | 0 | 0 | 15 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Pittsburgh Parks Conservancy | MacaroniKid-PA-cityofpittsburgh | 11 | 1 | 0 | 1 | 0 | 0 | 13 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Bakery Square | MacaroniKid-PA-cityofpittsburgh | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Pittsburgh Cultural Trust | MacaroniKid-PA-cityofpittsburgh | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Greater Pittsburgh Community Food Bank | MacaroniKid-PA-cityofpittsburgh | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Mad Science of Pittsburgh | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 6 | 0 | 0 | 7 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| The Funhouse at Mr. Smalls | MacaroniKid-PA-cityofpittsburgh | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Pittsburgh Downtown Partnership | MacaroniKid-PA-cityofpittsburgh | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Carnegie Library of Pittsburgh | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 2 | 1 | 0 | 0 | 4 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| The Neighborhood Flea | MacaroniKid-PA-cityofpittsburgh | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Mexican War Streets Society | MacaroniKid-PA-cityofpittsburgh | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Veterans Leadership Program | MacaroniKid-PA-cityofpittsburgh | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| PromoWest North Shore | MacaroniKid-PA-cityofpittsburgh | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Acrisure Stadium | MacaroniKid-PA-cityofpittsburgh | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| ACS Hobbies | MacaroniKid-PA-cityofpittsburgh | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Allegheny County Parks | MacaroniKid-PA-cityofpittsburgh | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Petersen Events Center | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Pittsburgh | MacaroniKid-PA-cityofpittsburgh | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| City of Pittsburgh Office of Special Events | MacaroniKid-PA-cityofpittsburgh | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Allegheny Observatory | MacaroniKid-PA-cityofpittsburgh | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Justin Willman | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Pittsburgh Women's Wellness Drum Circle | MacaroniKid-PA-cityofpittsburgh | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Carnegie Library of Pittsburgh — Allegheny | MacaroniKid-PA-cityofpittsburgh | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| The Terminal | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Sierra Ferrell | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Holocaust Center of Pittsburgh | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Strip District Terminal | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| The Sanctuary at Mr. Smalls | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Fur All Kittys | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| D and E Collectibles | MacaroniKid-PA-cityofpittsburgh | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Pennsylvania Department of Conservation and Natural Resources | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Heinz History Center | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Chatham Baroque | MacaroniKid-PA-cityofpittsburgh | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Bike Pittsburgh | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Pittsburgh Gaming Expo | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| The Swissvale Mile | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Mr Smalls Theatre | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Pittsburgh Robotics Network | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| The Consortium | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Walk the Burgh Tours | MacaroniKid-PA-cityofpittsburgh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofpittsburgh.macaronikid.com) |
+| Easton Area Public Library | MacaroniKid-PA-eastonmetro | 3 | 30 | 17 | 1 | 10 | 1 | 62 | [cal](https://eastonmetro.macaronikid.com) |
+| Book & Puppet Co. | MacaroniKid-PA-eastonmetro | 7 | 0 | 8 | 0 | 0 | 1 | 16 | [cal](https://eastonmetro.macaronikid.com) |
+| Crayola Experience | MacaroniKid-PA-eastonmetro | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://eastonmetro.macaronikid.com) |
+| Easton Farmers' Market | MacaroniKid-PA-eastonmetro | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://eastonmetro.macaronikid.com) |
+| State Theatre Center for the Arts | MacaroniKid-PA-eastonmetro | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://eastonmetro.macaronikid.com) |
+| TimeWhys | MacaroniKid-PA-eastonmetro | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://eastonmetro.macaronikid.com) |
+| City of Easton | MacaroniKid-PA-eastonmetro | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://eastonmetro.macaronikid.com) |
+| Bethlehem YMCA | MacaroniKid-PA-eastonmetro | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://eastonmetro.macaronikid.com) |
+| Nature Nurture Center | MacaroniKid-PA-eastonmetro | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://eastonmetro.macaronikid.com) |
+| Sigal Museum and Northampton County Historical and Genealogical Society | MacaroniKid-PA-eastonmetro | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://eastonmetro.macaronikid.com) |
+| HangDog Outdoor Adventure | MacaroniKid-PA-eastonmetro | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://eastonmetro.macaronikid.com) |
+| The Nurture Nature Center | MacaroniKid-PA-eastonmetro | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://eastonmetro.macaronikid.com) |
+| Easton Public Market | MacaroniKid-PA-eastonmetro | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://eastonmetro.macaronikid.com) |
+| Belltower Cultural Center - Martins Creek, PA | MacaroniKid-PA-eastonmetro | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://eastonmetro.macaronikid.com) |
+| West Ward Community Initiative | MacaroniKid-PA-eastonmetro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastonmetro.macaronikid.com) |
+| Northampton County Historical and Genealogical Society | MacaroniKid-PA-eastonmetro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastonmetro.macaronikid.com) |
+| ACE Eastern Pennsylvania | MacaroniKid-PA-eastonmetro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastonmetro.macaronikid.com) |
+| Classical Arts | MacaroniKid-PA-eastonmetro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastonmetro.macaronikid.com) |
+| Big Easy Easton Brass | MacaroniKid-PA-eastonmetro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastonmetro.macaronikid.com) |
+| Record Riots | MacaroniKid-PA-eastonmetro | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://eastonmetro.macaronikid.com) |
+| Blasco Memorial Library | MacaroniKid-PA-erie | 5 | 11 | 13 | 7 | 0 | 16 | 52 | [cal](https://erie.macaronikid.com) |
+| Macaroni KID Erie | MacaroniKid-PA-erie | 33 | 0 | 1 | 5 | 0 | 0 | 39 | [cal](https://erie.macaronikid.com) |
+| Port Farms | MacaroniKid-PA-erie | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://erie.macaronikid.com) |
+| Erie County Public Library — Edinboro | MacaroniKid-PA-erie | 6 | 0 | 0 | 10 | 0 | 0 | 16 | [cal](https://erie.macaronikid.com) |
+| Erie Zoo | MacaroniKid-PA-erie | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://erie.macaronikid.com) |
+| Erie Playhouse | MacaroniKid-PA-erie | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://erie.macaronikid.com) |
+| Warner Theatre | MacaroniKid-PA-erie | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://erie.macaronikid.com) |
+| Erie Board Games | MacaroniKid-PA-erie | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://erie.macaronikid.com) |
+| Erie County Public Library - Edinboro | MacaroniKid-PA-erie | 0 | 0 | 0 | 4 | 0 | 1 | 5 | [cal](https://erie.macaronikid.com) |
+| Barnes & Noble - Erie | MacaroniKid-PA-erie | 0 | 0 | 0 | 5 | 0 | 0 | 5 | [cal](https://erie.macaronikid.com) |
+| NAMI Erie County PA | MacaroniKid-PA-erie | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://erie.macaronikid.com) |
+| Werner Books and Coffee | MacaroniKid-PA-erie | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://erie.macaronikid.com) |
+| Autism Society of Northwest Pennsylvania | MacaroniKid-PA-erie | 1 | 0 | 2 | 0 | 0 | 0 | 3 | [cal](https://erie.macaronikid.com) |
+| Autism Society of NWPA | MacaroniKid-PA-erie | 1 | 0 | 2 | 0 | 0 | 0 | 3 | [cal](https://erie.macaronikid.com) |
+| Erie Downtown Partnership | MacaroniKid-PA-erie | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://erie.macaronikid.com) |
+| Erie SeaWolves | MacaroniKid-PA-erie | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://erie.macaronikid.com) |
+| Zem Zem Shrine Club | MacaroniKid-PA-erie | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://erie.macaronikid.com) |
+| Achievement Center of LECOM Health | MacaroniKid-PA-erie | 0 | 1 | 0 | 1 | 0 | 0 | 2 | [cal](https://erie.macaronikid.com) |
+| Erie Bird Observatory | MacaroniKid-PA-erie | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://erie.macaronikid.com) |
+| Erie Art Museum | MacaroniKid-PA-erie | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://erie.macaronikid.com) |
+| Buzz n' B's Pet Shop | MacaroniKid-PA-erie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://erie.macaronikid.com) |
+| 814 Vintage Marketplace | MacaroniKid-PA-erie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://erie.macaronikid.com) |
+| Livaelore Events LLC | MacaroniKid-PA-erie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://erie.macaronikid.com) |
+| Rustling Pages Book Cafe | MacaroniKid-PA-erie | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://erie.macaronikid.com) |
+| Erie County Public Library — Edinboro Branch Library | MacaroniKid-PA-erie | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://erie.macaronikid.com) |
+| ANNA Shelter | MacaroniKid-PA-erie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://erie.macaronikid.com) |
+| 1020 Collective | MacaroniKid-PA-erie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://erie.macaronikid.com) |
+| Dena Rupp | MacaroniKid-PA-erie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://erie.macaronikid.com) |
+| Millcreek Mall | MacaroniKid-PA-erie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://erie.macaronikid.com) |
+| Victory Family Church | MacaroniKid-PA-erie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://erie.macaronikid.com) |
+| Luther Memorial Academy | MacaroniKid-PA-erie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://erie.macaronikid.com) |
+| Erie County Public Library — Millcreek | MacaroniKid-PA-erie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://erie.macaronikid.com) |
+| Presque Isle State Park | MacaroniKid-PA-erie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://erie.macaronikid.com) |
+| The Union City Family Support Center | MacaroniKid-PA-erie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://erie.macaronikid.com) |
+| Board & Brush | MacaroniKid-PA-erie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://erie.macaronikid.com) |
+| York County Libraries - Guthrie Memorial Library | MacaroniKid-PA-gettysburgpa | 4 | 6 | 3 | 23 | 2 | 2 | 40 | [cal](https://gettysburgpa.macaronikid.com) |
+| Little Fox Coffee & Books | MacaroniKid-PA-gettysburgpa | 14 | 1 | 5 | 1 | 1 | 0 | 22 | [cal](https://gettysburgpa.macaronikid.com) |
+| The Serpent's Key | MacaroniKid-PA-gettysburgpa | 17 | 2 | 0 | 2 | 0 | 0 | 21 | [cal](https://gettysburgpa.macaronikid.com) |
+| Adams County Library | MacaroniKid-PA-gettysburgpa | 7 | 3 | 3 | 3 | 0 | 2 | 18 | [cal](https://gettysburgpa.macaronikid.com) |
+| York County Libraries - Glatfelter Memorial Library | MacaroniKid-PA-gettysburgpa | 2 | 11 | 0 | 4 | 0 | 0 | 17 | [cal](https://gettysburgpa.macaronikid.com) |
+| Codorus State Park | MacaroniKid-PA-gettysburgpa | 3 | 0 | 0 | 3 | 0 | 0 | 6 | [cal](https://gettysburgpa.macaronikid.com) |
+| York County Libraries | MacaroniKid-PA-gettysburgpa | 5 | 0 | 1 | 0 | 0 | 0 | 6 | [cal](https://gettysburgpa.macaronikid.com) |
+| The Curious Little Playhouse | MacaroniKid-PA-gettysburgpa | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://gettysburgpa.macaronikid.com) |
+| York County Libraries — Guthrie Memorial | MacaroniKid-PA-gettysburgpa | 2 | 0 | 0 | 0 | 0 | 1 | 3 | [cal](https://gettysburgpa.macaronikid.com) |
+| Main Street Hanover | MacaroniKid-PA-gettysburgpa | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://gettysburgpa.macaronikid.com) |
+| Church of Satire Comedy Club | MacaroniKid-PA-gettysburgpa | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://gettysburgpa.macaronikid.com) |
+| Fraternal Order of Eagles - Aerie #1406 | MacaroniKid-PA-gettysburgpa | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://gettysburgpa.macaronikid.com) |
+| Dancin’ with Brittanie, LLC | MacaroniKid-PA-gettysburgpa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://gettysburgpa.macaronikid.com) |
+| Reptile Invasion | MacaroniKid-PA-gettysburgpa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://gettysburgpa.macaronikid.com) |
+| Eichelberger Performing Arts Center | MacaroniKid-PA-gettysburgpa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://gettysburgpa.macaronikid.com) |
+| Hoffman Homes | MacaroniKid-PA-gettysburgpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gettysburgpa.macaronikid.com) |
+| Land of the Living | MacaroniKid-PA-gettysburgpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gettysburgpa.macaronikid.com) |
+| Dustin Muller Music | MacaroniKid-PA-gettysburgpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gettysburgpa.macaronikid.com) |
+| IMC Concerts | MacaroniKid-PA-gettysburgpa | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://gettysburgpa.macaronikid.com) |
+| Hollabaugh Bros. | MacaroniKid-PA-gettysburgpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gettysburgpa.macaronikid.com) |
+| FAT BAT BREWING | MacaroniKid-PA-gettysburgpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gettysburgpa.macaronikid.com) |
+| KiTTYBACK | MacaroniKid-PA-gettysburgpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gettysburgpa.macaronikid.com) |
+| COB51 Art Studio | MacaroniKid-PA-gettysburgpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gettysburgpa.macaronikid.com) |
+| Exchange Club of Hanover, PA | MacaroniKid-PA-gettysburgpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gettysburgpa.macaronikid.com) |
+| New Oxford Cheerleading | MacaroniKid-PA-gettysburgpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gettysburgpa.macaronikid.com) |
+| Jill Fulton Band | MacaroniKid-PA-gettysburgpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gettysburgpa.macaronikid.com) |
+| Neil and Shannon | MacaroniKid-PA-gettysburgpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gettysburgpa.macaronikid.com) |
+| Delone Catholic High School | MacaroniKid-PA-gettysburgpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gettysburgpa.macaronikid.com) |
+| Pennsylvania Guild of Craftsmen | MacaroniKid-PA-gettysburgpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://gettysburgpa.macaronikid.com) |
+| Pennsylvania Department of Conservation and Natural Resources | MacaroniKid-PA-harrisburg | 128 | 2 | 4 | 7 | 6 | 0 | 147 | [cal](https://harrisburg.macaronikid.com) |
+| Dauphin County Parks and Recreation | MacaroniKid-PA-harrisburg | 37 | 1 | 6 | 3 | 0 | 0 | 47 | [cal](https://harrisburg.macaronikid.com) |
+| Dauphin County Libraries | MacaroniKid-PA-harrisburg | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://harrisburg.macaronikid.com) |
+| Fort Hunter Mansion and Park | MacaroniKid-PA-harrisburg | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://harrisburg.macaronikid.com) |
+| SLP Concerts | MacaroniKid-PA-harrisburg | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://harrisburg.macaronikid.com) |
+| Susquehanna Art Museum | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 1 | 1 | 0 | 3 | [cal](https://harrisburg.macaronikid.com) |
+| The Abbey Bar at Appalachian Brewing Company | MacaroniKid-PA-harrisburg | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://harrisburg.macaronikid.com) |
+| The Nest of Pennsylvania | MacaroniKid-PA-harrisburg | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://harrisburg.macaronikid.com) |
+| Soccer Shots Harrisburg | MacaroniKid-PA-harrisburg | 0 | 2 | 0 | 0 | 0 | 0 | 2 | [cal](https://harrisburg.macaronikid.com) |
+| Families United Network | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| Lower Paxton Township | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| DockDogs | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| Cub Scout Pack #256 and Faith Immanuel Presbyterian Church | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| Homeland Hospice | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| Harrisburg City Government | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| The City of Harrisburg PA | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| Grieves | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| Healthy Kids Running Series - Harrisburg | MacaroniKid-PA-harrisburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| Harrisburg Area YMCA | MacaroniKid-PA-harrisburg | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| Caitlin's Smiles | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| Hershey Symphony Orchestra | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| Holy Name of Jesus Church | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| Lowee's Group Tours, LLC | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| The Rummagers | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| Hershey - Harrisburg | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| BRE Presents | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| Whitaker Center | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| Detweiler Park | MacaroniKid-PA-harrisburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://harrisburg.macaronikid.com) |
+| Easttown Library | MacaroniKid-PA-havertown | 13 | 15 | 18 | 33 | 12 | 0 | 91 | [cal](https://havertown.macaronikid.com) |
+| Tredyffrin Public Library | MacaroniKid-PA-havertown | 27 | 6 | 16 | 5 | 0 | 4 | 58 | [cal](https://havertown.macaronikid.com) |
+| Bala Cynwyd Library | MacaroniKid-PA-havertown | 5 | 15 | 4 | 5 | 10 | 0 | 39 | [cal](https://havertown.macaronikid.com) |
+| Ludington Library | MacaroniKid-PA-havertown | 2 | 17 | 5 | 10 | 1 | 0 | 35 | [cal](https://havertown.macaronikid.com) |
+| Gladwyne Library | MacaroniKid-PA-havertown | 2 | 10 | 4 | 8 | 2 | 0 | 26 | [cal](https://havertown.macaronikid.com) |
+| Belmont Hills Library | MacaroniKid-PA-havertown | 11 | 12 | 0 | 1 | 1 | 0 | 25 | [cal](https://havertown.macaronikid.com) |
+| Penn Wynne Library | MacaroniKid-PA-havertown | 2 | 13 | 0 | 4 | 0 | 0 | 19 | [cal](https://havertown.macaronikid.com) |
+| Ardmore Library | MacaroniKid-PA-havertown | 2 | 2 | 10 | 0 | 0 | 0 | 14 | [cal](https://havertown.macaronikid.com) |
+| FIT4MOM -Delco | MacaroniKid-PA-havertown | 5 | 0 | 0 | 4 | 0 | 0 | 9 | [cal](https://havertown.macaronikid.com) |
+| Barnes & Noble - Broomall | MacaroniKid-PA-havertown | 0 | 0 | 0 | 8 | 0 | 1 | 9 | [cal](https://havertown.macaronikid.com) |
+| Jenkins Arboretum & Gardens | MacaroniKid-PA-havertown | 3 | 4 | 0 | 0 | 0 | 0 | 7 | [cal](https://havertown.macaronikid.com) |
+| Stoneleigh: A Natural Garden | MacaroniKid-PA-havertown | 2 | 0 | 0 | 0 | 4 | 0 | 6 | [cal](https://havertown.macaronikid.com) |
+| Lulu's Casita | MacaroniKid-PA-havertown | 3 | 1 | 0 | 0 | 0 | 0 | 4 | [cal](https://havertown.macaronikid.com) |
+| McKaig Nature Center | MacaroniKid-PA-havertown | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://havertown.macaronikid.com) |
+| Chanticleer | MacaroniKid-PA-havertown | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://havertown.macaronikid.com) |
+| Bryn Mawr Twilight Concerts | MacaroniKid-PA-havertown | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://havertown.macaronikid.com) |
+| Main Point Books | MacaroniKid-PA-havertown | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://havertown.macaronikid.com) |
+| The Candy Lab | MacaroniKid-PA-havertown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://havertown.macaronikid.com) |
+| Harriton House | MacaroniKid-PA-havertown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://havertown.macaronikid.com) |
+| Ardmore Music Hall | MacaroniKid-PA-havertown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://havertown.macaronikid.com) |
+| Wayne Business Association | MacaroniKid-PA-havertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://havertown.macaronikid.com) |
+| Hill Top Preparatory School | MacaroniKid-PA-havertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://havertown.macaronikid.com) |
+| Shift | MacaroniKid-PA-havertown | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://havertown.macaronikid.com) |
+| Frances M. Maguire Art Museum | MacaroniKid-PA-havertown | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://havertown.macaronikid.com) |
+| Havertown - Main Line | MacaroniKid-PA-havertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://havertown.macaronikid.com) |
+| Longwood Gardens | MacaroniKid-PA-kennettsquare | 120 | 5 | 0 | 0 | 1 | 0 | 126 | [cal](https://kennettsquare.macaronikid.com) |
+| Kennett Library | MacaroniKid-PA-kennettsquare | 15 | 7 | 10 | 20 | 0 | 0 | 52 | [cal](https://kennettsquare.macaronikid.com) |
+| Avon Grove Library | MacaroniKid-PA-kennettsquare | 5 | 7 | 12 | 1 | 2 | 3 | 30 | [cal](https://kennettsquare.macaronikid.com) |
+| Oxford Library | MacaroniKid-PA-kennettsquare | 5 | 5 | 15 | 0 | 2 | 2 | 29 | [cal](https://kennettsquare.macaronikid.com) |
+| Delaware Nature Society | MacaroniKid-PA-kennettsquare | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://kennettsquare.macaronikid.com) |
+| Kennett Collaborative | MacaroniKid-PA-kennettsquare | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://kennettsquare.macaronikid.com) |
+| Zion Lutheran Church | MacaroniKid-PA-kennettsquare | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://kennettsquare.macaronikid.com) |
+| The Yoga Space | MacaroniKid-PA-kennettsquare | 0 | 1 | 0 | 1 | 0 | 0 | 2 | [cal](https://kennettsquare.macaronikid.com) |
+| New Garden Township Park | MacaroniKid-PA-kennettsquare | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://kennettsquare.macaronikid.com) |
+| Canine Partners for Life | MacaroniKid-PA-kennettsquare | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://kennettsquare.macaronikid.com) |
+| Victory Taprooms | MacaroniKid-PA-kennettsquare | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kennettsquare.macaronikid.com) |
+| Brandywine Museum of Art | MacaroniKid-PA-kennettsquare | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kennettsquare.macaronikid.com) |
+| Penn Township | MacaroniKid-PA-kennettsquare | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kennettsquare.macaronikid.com) |
+| Kennett Square | MacaroniKid-PA-kennettsquare | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kennettsquare.macaronikid.com) |
+| Nottingham Missionary Baptist Church | MacaroniKid-PA-kennettsquare | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://kennettsquare.macaronikid.com) |
+| Brandywine River Museum of Art | MacaroniKid-PA-kennettsquare | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kennettsquare.macaronikid.com) |
+| WGK Glass Art, Inc. | MacaroniKid-PA-kennettsquare | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kennettsquare.macaronikid.com) |
+| Kennett Square-Oxford | MacaroniKid-PA-kennettsquare | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kennettsquare.macaronikid.com) |
+| Clover Market | MacaroniKid-PA-kennettsquare | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://kennettsquare.macaronikid.com) |
+| West Chester | MacaroniKid-PA-kennettsquare | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kennettsquare.macaronikid.com) |
+| Lehigh Valley Sports Turf | MacaroniKid-PA-kutztown-to-allentown | 6 | 12 | 40 | 0 | 0 | 0 | 58 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Kutztown Community Library | MacaroniKid-PA-kutztown-to-allentown | 2 | 31 | 0 | 4 | 14 | 0 | 51 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Parkland Community Library | MacaroniKid-PA-kutztown-to-allentown | 5 | 2 | 3 | 3 | 1 | 3 | 17 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Allentown Art Museum | MacaroniKid-PA-kutztown-to-allentown | 16 | 0 | 0 | 1 | 0 | 0 | 17 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Menchie's Frozen Yogurt (Shops at Cedar Point) | MacaroniKid-PA-kutztown-to-allentown | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Da Vinci Science Center | MacaroniKid-PA-kutztown-to-allentown | 2 | 2 | 1 | 0 | 0 | 0 | 5 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Whitehall Township Public Libary | MacaroniKid-PA-kutztown-to-allentown | 0 | 2 | 0 | 1 | 1 | 0 | 4 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| JCC of the Lehigh Valley | MacaroniKid-PA-kutztown-to-allentown | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| The Great Allentown Fair | MacaroniKid-PA-kutztown-to-allentown | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| The End: a bookstore | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Allentown H.O.P.E Community Church | MacaroniKid-PA-kutztown-to-allentown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Lehigh Valley250 | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| St. Josaphat Ukrainian Catholic Church | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Concerts by Candlelight | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Little Lies: A Tribute to Fleetwood Mac | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Smartivities Showcase | MacaroniKid-PA-kutztown-to-allentown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Together With Light Candles | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| The Kids Clothesline | MacaroniKid-PA-kutztown-to-allentown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Visit Historic Bethlehem | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Apraxia Kids | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Allentown Public Library | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Allentown Fairgrounds | MacaroniKid-PA-kutztown-to-allentown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Hangout for Art | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Lehigh Valley Grand Prix | MacaroniKid-PA-kutztown-to-allentown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Secondhand Arts & Craft Supplies | MacaroniKid-PA-kutztown-to-allentown | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| The Pink Lotus - Spiritual & Wellness Center | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Lehigh Valley Zoo | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Encounter Comics & Games | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Little Gym of Trexlertown | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Puertorrican Culture Preservation Inc | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| James Cooper | MacaroniKid-PA-kutztown-to-allentown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Kospia Farms | MacaroniKid-PA-kutztown-to-allentown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kutztown-to-allentown.macaronikid.com) |
+| Library System of Lancaster County | MacaroniKid-PA-lancaster | 3 | 26 | 9 | 7 | 0 | 3 | 48 | [cal](https://lancaster.macaronikid.com) |
+| Visit Lancaster City | MacaroniKid-PA-lancaster | 32 | 0 | 0 | 1 | 0 | 0 | 33 | [cal](https://lancaster.macaronikid.com) |
+| Library System of Lancaster County - Manheim Community Library | MacaroniKid-PA-lancaster | 13 | 10 | 0 | 6 | 0 | 1 | 30 | [cal](https://lancaster.macaronikid.com) |
+| Library System of Lancaster County - Milanof-Schock Library | MacaroniKid-PA-lancaster | 16 | 3 | 2 | 1 | 0 | 2 | 24 | [cal](https://lancaster.macaronikid.com) |
+| Library System of Lancaster County - Lancaster City Branch | MacaroniKid-PA-lancaster | 1 | 3 | 7 | 0 | 9 | 3 | 23 | [cal](https://lancaster.macaronikid.com) |
+| Discover Lancaster | MacaroniKid-PA-lancaster | 14 | 1 | 7 | 0 | 0 | 0 | 22 | [cal](https://lancaster.macaronikid.com) |
+| Unique Lancaster Experiences | MacaroniKid-PA-lancaster | 0 | 0 | 0 | 18 | 0 | 0 | 18 | [cal](https://lancaster.macaronikid.com) |
+| Library System of Lancaster County — Lancaster | MacaroniKid-PA-lancaster | 14 | 0 | 2 | 1 | 0 | 0 | 17 | [cal](https://lancaster.macaronikid.com) |
+| Library System of Lancaster County - Mountville Branch | MacaroniKid-PA-lancaster | 5 | 0 | 9 | 1 | 0 | 0 | 15 | [cal](https://lancaster.macaronikid.com) |
+| Library System of Lancaster County — Mountville | MacaroniKid-PA-lancaster | 0 | 5 | 0 | 0 | 5 | 0 | 10 | [cal](https://lancaster.macaronikid.com) |
+| Library System of Lancaster County - Strasburg-Heisler Library | MacaroniKid-PA-lancaster | 5 | 1 | 0 | 4 | 0 | 0 | 10 | [cal](https://lancaster.macaronikid.com) |
+| Phantom Power | MacaroniKid-PA-lancaster | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://lancaster.macaronikid.com) |
+| Strasburg Rail Road | MacaroniKid-PA-lancaster | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://lancaster.macaronikid.com) |
+| Library System of Lancaster County — Manheim | MacaroniKid-PA-lancaster | 0 | 6 | 0 | 0 | 0 | 0 | 6 | [cal](https://lancaster.macaronikid.com) |
+| Landis Valley Museum | MacaroniKid-PA-lancaster | 1 | 0 | 0 | 4 | 0 | 0 | 5 | [cal](https://lancaster.macaronikid.com) |
+| Ken's Gardens | MacaroniKid-PA-lancaster | 3 | 0 | 0 | 2 | 0 | 0 | 5 | [cal](https://lancaster.macaronikid.com) |
+| Lancaster Science Factory | MacaroniKid-PA-lancaster | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://lancaster.macaronikid.com) |
+| Lancaster Cupcake | MacaroniKid-PA-lancaster | 3 | 0 | 0 | 2 | 0 | 0 | 5 | [cal](https://lancaster.macaronikid.com) |
+| Library System of Lancaster County — Lititz | MacaroniKid-PA-lancaster | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://lancaster.macaronikid.com) |
+| North Museum | MacaroniKid-PA-lancaster | 1 | 0 | 2 | 0 | 0 | 0 | 3 | [cal](https://lancaster.macaronikid.com) |
+| Library System of Lancaster County — Columbia | MacaroniKid-PA-lancaster | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://lancaster.macaronikid.com) |
+| That Pet Place | MacaroniKid-PA-lancaster | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://lancaster.macaronikid.com) |
+| Lancaster | MacaroniKid-PA-lancaster | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lancaster.macaronikid.com) |
+| Lancaster County Libraries | MacaroniKid-PA-lancaster | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://lancaster.macaronikid.com) |
+| Library System of Lancaster County — Elizabethtown | MacaroniKid-PA-lancaster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lancaster.macaronikid.com) |
+| 717 Entertainment, LLC | MacaroniKid-PA-lancaster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lancaster.macaronikid.com) |
+| Expressive Avenue | MacaroniKid-PA-lancaster | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://lancaster.macaronikid.com) |
+| East Hempfield Township | MacaroniKid-PA-lancaster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lancaster.macaronikid.com) |
+| Pennsylvania Guild of Craftsmen | MacaroniKid-PA-lancaster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lancaster.macaronikid.com) |
+| The Grandstand Jockeys | MacaroniKid-PA-lancaster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lancaster.macaronikid.com) |
+| ACE Eastern Pennsylvania | MacaroniKid-PA-lancaster | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://lancaster.macaronikid.com) |
+| W Donuts | MacaroniKid-PA-lancaster | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://lancaster.macaronikid.com) |
+| Best Kept Secrets Tour | MacaroniKid-PA-lancaster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lancaster.macaronikid.com) |
+| Break My Game | MacaroniKid-PA-lancaster | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lancaster.macaronikid.com) |
+| Lebanon County Library System | MacaroniKid-PA-lebanon | 0 | 32 | 0 | 0 | 0 | 0 | 32 | [cal](https://lebanon.macaronikid.com) |
+| Lebanon County Library System - Lebanon Community Library | MacaroniKid-PA-lebanon | 2 | 13 | 0 | 0 | 0 | 0 | 15 | [cal](https://lebanon.macaronikid.com) |
+| The Haunted Whimsy | MacaroniKid-PA-lebanon | 9 | 0 | 0 | 4 | 0 | 0 | 13 | [cal](https://lebanon.macaronikid.com) |
+| Klick Lewis | MacaroniKid-PA-lebanon | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://lebanon.macaronikid.com) |
+| Lancaster Cupcake | MacaroniKid-PA-lebanon | 1 | 0 | 0 | 6 | 0 | 0 | 7 | [cal](https://lebanon.macaronikid.com) |
+| Church of the Good Shepherd | MacaroniKid-PA-lebanon | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://lebanon.macaronikid.com) |
+| St. Luke's Episcopal Church | MacaroniKid-PA-lebanon | 0 | 1 | 0 | 1 | 0 | 0 | 2 | [cal](https://lebanon.macaronikid.com) |
+| Champion Force Cheerleading - Lebanon | MacaroniKid-PA-lebanon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lebanon.macaronikid.com) |
+| Kenbrook Bible Camp | MacaroniKid-PA-lebanon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lebanon.macaronikid.com) |
+| Lebanon County Builders Association | MacaroniKid-PA-lebanon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lebanon.macaronikid.com) |
+| Stacey Berard | MacaroniKid-PA-lebanon | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://lebanon.macaronikid.com) |
+| Fortna Auctioneers & Marketing Group | MacaroniKid-PA-lebanon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lebanon.macaronikid.com) |
+| St. Stephen's Christian Fellowship Church | MacaroniKid-PA-lebanon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lebanon.macaronikid.com) |
+| Lebanon Bicycle Recycle | MacaroniKid-PA-lebanon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lebanon.macaronikid.com) |
+| Kind Bird Events | MacaroniKid-PA-lebanon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lebanon.macaronikid.com) |
+| Humane Society of Lebanon County | MacaroniKid-PA-lebanon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lebanon.macaronikid.com) |
+| American Heart Association - Pennsylvania | MacaroniKid-PA-lebanon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lebanon.macaronikid.com) |
+| Making a Difference of Lebanon, PA | MacaroniKid-PA-lebanon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lebanon.macaronikid.com) |
+| Kauffman's Fundraiser and Catering Trailers | MacaroniKid-PA-lebanon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lebanon.macaronikid.com) |
+| Calvary Chapel Lebanon, PA | MacaroniKid-PA-lebanon | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://lebanon.macaronikid.com) |
+| Penn State Master Gardeners of Lebanon County | MacaroniKid-PA-lebanon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lebanon.macaronikid.com) |
+| Isaac Meier Homestead | MacaroniKid-PA-lebanon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lebanon.macaronikid.com) |
+| Pennsbury Manor | MacaroniKid-PA-lowermakefield | 5 | 0 | 1 | 0 | 5 | 0 | 11 | [cal](https://lowermakefield.macaronikid.com) |
+| Bethlehem YMCA | MacaroniKid-PA-lowermakefield | 4 | 0 | 0 | 1 | 0 | 0 | 5 | [cal](https://lowermakefield.macaronikid.com) |
+| Sesame Place Philadelphia | MacaroniKid-PA-lowermakefield | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://lowermakefield.macaronikid.com) |
+| Penelope Fox Art Studio | MacaroniKid-PA-lowermakefield | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://lowermakefield.macaronikid.com) |
+| Sesame Place | MacaroniKid-PA-lowermakefield | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lowermakefield.macaronikid.com) |
+| Shady Brook Farm | MacaroniKid-PA-lowermakefield | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://lowermakefield.macaronikid.com) |
+| Snipes Farm and Education Center | MacaroniKid-PA-lowermakefield | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lowermakefield.macaronikid.com) |
+| Phila Flea Markets | MacaroniKid-PA-lowermakefield | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lowermakefield.macaronikid.com) |
+| Tiny Paws Rescue | MacaroniKid-PA-lowermakefield | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lowermakefield.macaronikid.com) |
+| St. Anselm Parish, Philadelphia | MacaroniKid-PA-lowermakefield | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://lowermakefield.macaronikid.com) |
+| Media-Upper Providence Free Library | MacaroniKid-PA-media | 4 | 14 | 9 | 0 | 2 | 0 | 29 | [cal](https://media.macaronikid.com) |
+| Rachel Kohl Community Library | MacaroniKid-PA-media | 12 | 0 | 0 | 10 | 0 | 0 | 22 | [cal](https://media.macaronikid.com) |
+| Newtown Public Library | MacaroniKid-PA-media | 0 | 19 | 0 | 0 | 0 | 1 | 20 | [cal](https://media.macaronikid.com) |
+| Middletown Free Library | MacaroniKid-PA-media | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://media.macaronikid.com) |
+| The Media Theater | MacaroniKid-PA-media | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://media.macaronikid.com) |
+| Rocky Run YMCA | MacaroniKid-PA-media | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://media.macaronikid.com) |
+| Concord Township Park | MacaroniKid-PA-media | 4 | 0 | 0 | 1 | 0 | 0 | 5 | [cal](https://media.macaronikid.com) |
+| Media Borough | MacaroniKid-PA-media | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://media.macaronikid.com) |
+| Freddy's Frozen Custard & Steakburgers | MacaroniKid-PA-media | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://media.macaronikid.com) |
+| Aston Public Library | MacaroniKid-PA-media | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://media.macaronikid.com) |
+| Painting with a Twist | MacaroniKid-PA-media | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://media.macaronikid.com) |
+| Newlin Grist Mill Park | MacaroniKid-PA-media | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://media.macaronikid.com) |
+| Rockdale Art Center | MacaroniKid-PA-media | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://media.macaronikid.com) |
+| Subaru Park Festival Grounds | MacaroniKid-PA-media | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://media.macaronikid.com) |
+| Wild Birds Unlimited Glen Mills, PA | MacaroniKid-PA-media | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://media.macaronikid.com) |
+| Linvilla Orchards, Inc. | MacaroniKid-PA-media | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://media.macaronikid.com) |
+| Media Arts Council | MacaroniKid-PA-media | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://media.macaronikid.com) |
+| Media | MacaroniKid-PA-media | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://media.macaronikid.com) |
+| MAC Arts Center | MacaroniKid-PA-media | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://media.macaronikid.com) |
+| Newlin Grist Mill | MacaroniKid-PA-media | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://media.macaronikid.com) |
+| Atglen Library | MacaroniKid-PA-morgantown | 0 | 8 | 10 | 10 | 8 | 10 | 46 | [cal](https://morgantown.macaronikid.com) |
+| Library System of Lancaster County | MacaroniKid-PA-morgantown | 4 | 10 | 8 | 5 | 7 | 5 | 39 | [cal](https://morgantown.macaronikid.com) |
+| Library System of Lancaster County - Eastern Lancaster County Library | MacaroniKid-PA-morgantown | 2 | 9 | 9 | 3 | 0 | 0 | 23 | [cal](https://morgantown.macaronikid.com) |
+| Library System of Lancaster County - Quarryville Library | MacaroniKid-PA-morgantown | 6 | 6 | 2 | 0 | 0 | 1 | 15 | [cal](https://morgantown.macaronikid.com) |
+| Brecknock Orchard | MacaroniKid-PA-morgantown | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://morgantown.macaronikid.com) |
+| Library System of Lancaster County — Quarryville | MacaroniKid-PA-morgantown | 4 | 0 | 3 | 0 | 0 | 0 | 7 | [cal](https://morgantown.macaronikid.com) |
+| W Donuts | MacaroniKid-PA-morgantown | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://morgantown.macaronikid.com) |
+| Library System of Lancaster County — Lancaster | MacaroniKid-PA-morgantown | 1 | 0 | 0 | 1 | 0 | 1 | 3 | [cal](https://morgantown.macaronikid.com) |
+| Heralds of Hope | MacaroniKid-PA-morgantown | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://morgantown.macaronikid.com) |
+| Atglen Community Day | MacaroniKid-PA-morgantown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://morgantown.macaronikid.com) |
+| BLDG. 7 Yoga | MacaroniKid-PA-morgantown | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://morgantown.macaronikid.com) |
+| Jess Zimmerman Band | MacaroniKid-PA-morgantown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://morgantown.macaronikid.com) |
+| Famous Rumors Band & FR Country Band | MacaroniKid-PA-morgantown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://morgantown.macaronikid.com) |
+| Library System of Lancaster County - Strasburg-Heisler Library | MacaroniKid-PA-morgantown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://morgantown.macaronikid.com) |
+| Library System of Lancaster County — Ephrata | MacaroniKid-PA-morgantown | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://morgantown.macaronikid.com) |
+| The Fabulous Greaseband | MacaroniKid-PA-morgantown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://morgantown.macaronikid.com) |
+| Free Library of Philadelphia - Northeast Regional Library | MacaroniKid-PA-nephilly | 7 | 6 | 1 | 10 | 0 | 8 | 32 | [cal](https://nephilly.macaronikid.com) |
+| Tacony Lab | MacaroniKid-PA-nephilly | 2 | 0 | 0 | 2 | 0 | 9 | 13 | [cal](https://nephilly.macaronikid.com) |
+| Rolling Thunder Skating Rink | MacaroniKid-PA-nephilly | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://nephilly.macaronikid.com) |
+| Free Library of Philadelphia - Bustleton Library | MacaroniKid-PA-nephilly | 3 | 4 | 0 | 3 | 0 | 1 | 11 | [cal](https://nephilly.macaronikid.com) |
+| Fox Chase Library | MacaroniKid-PA-nephilly | 4 | 1 | 1 | 1 | 0 | 0 | 7 | [cal](https://nephilly.macaronikid.com) |
+| Glen Foerd | MacaroniKid-PA-nephilly | 3 | 2 | 0 | 0 | 0 | 0 | 5 | [cal](https://nephilly.macaronikid.com) |
+| Free Library of Philadelphia — Torresdale | MacaroniKid-PA-nephilly | 0 | 3 | 0 | 0 | 0 | 0 | 3 | [cal](https://nephilly.macaronikid.com) |
+| Blessed Trinity Catholic School | MacaroniKid-PA-nephilly | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://nephilly.macaronikid.com) |
+| Free Library of Philadelphia - Frankford Library | MacaroniKid-PA-nephilly | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://nephilly.macaronikid.com) |
+| Norwin Public Library | MacaroniKid-PA-nhuntingdon | 1 | 6 | 12 | 1 | 2 | 3 | 25 | [cal](https://nhuntingdon.macaronikid.com) |
+| Greensburg Hose Company #7 (Greensburg Engine Company Seven) | MacaroniKid-PA-nhuntingdon | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://nhuntingdon.macaronikid.com) |
+| The Palace Theatre | MacaroniKid-PA-nhuntingdon | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://nhuntingdon.macaronikid.com) |
+| Green Beacon Gallery | MacaroniKid-PA-nhuntingdon | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://nhuntingdon.macaronikid.com) |
+| North Huntingdon-Greensburg-Latrobe | MacaroniKid-PA-nhuntingdon | 1 | 1 | 0 | 1 | 0 | 0 | 3 | [cal](https://nhuntingdon.macaronikid.com) |
+| Enchanted Experiences | MacaroniKid-PA-nhuntingdon | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://nhuntingdon.macaronikid.com) |
+| Westmoreland Historical Society & Historic Hanna's Town | MacaroniKid-PA-nhuntingdon | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://nhuntingdon.macaronikid.com) |
+| The Westmoreland Museum of American Art | MacaroniKid-PA-nhuntingdon | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [cal](https://nhuntingdon.macaronikid.com) |
+| Cutie's Coffee Company | MacaroniKid-PA-nhuntingdon | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://nhuntingdon.macaronikid.com) |
+| The Lamp Theatre | MacaroniKid-PA-nhuntingdon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://nhuntingdon.macaronikid.com) |
+| Seton Hill Alumni | MacaroniKid-PA-nhuntingdon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://nhuntingdon.macaronikid.com) |
+| Greensburg YMCA | MacaroniKid-PA-nhuntingdon | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://nhuntingdon.macaronikid.com) |
+| Pennsylvania Chapter of The TEARS Foundation | MacaroniKid-PA-nhuntingdon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://nhuntingdon.macaronikid.com) |
+| Kaleidoscope Kids Club | MacaroniKid-PA-nhuntingdon | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://nhuntingdon.macaronikid.com) |
+| Greensburg Civic Theatre | MacaroniKid-PA-nhuntingdon | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://nhuntingdon.macaronikid.com) |
+| Adams Memorial Library | MacaroniKid-PA-nhuntingdon | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://nhuntingdon.macaronikid.com) |
+| Borough of Oakmont | MacaroniKid-PA-pittsburgheast | 11 | 0 | 37 | 11 | 0 | 8 | 67 | [cal](https://pittsburgheast.macaronikid.com) |
+| Donora Roll'R'Way | MacaroniKid-PA-pittsburgheast | 50 | 0 | 0 | 0 | 0 | 0 | 50 | [cal](https://pittsburgheast.macaronikid.com) |
+| Plum Borough Community Library | MacaroniKid-PA-pittsburgheast | 11 | 6 | 7 | 9 | 3 | 8 | 44 | [cal](https://pittsburgheast.macaronikid.com) |
+| Penn Hills Library | MacaroniKid-PA-pittsburgheast | 1 | 9 | 3 | 19 | 0 | 2 | 34 | [cal](https://pittsburgheast.macaronikid.com) |
+| Westmoreland County Libraries | MacaroniKid-PA-pittsburgheast | 2 | 0 | 3 | 6 | 0 | 0 | 11 | [cal](https://pittsburgheast.macaronikid.com) |
+| MonValley - Pittsburgh East | MacaroniKid-PA-pittsburgheast | 7 | 1 | 0 | 1 | 0 | 0 | 9 | [cal](https://pittsburgheast.macaronikid.com) |
+| The Oaks Theater | MacaroniKid-PA-pittsburgheast | 4 | 0 | 0 | 0 | 0 | 1 | 5 | [cal](https://pittsburgheast.macaronikid.com) |
+| CC Mellor Library | MacaroniKid-PA-pittsburgheast | 0 | 0 | 5 | 0 | 0 | 0 | 5 | [cal](https://pittsburgheast.macaronikid.com) |
+| Monroeville Recreation & Parks, Monroeville, PA | MacaroniKid-PA-pittsburgheast | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://pittsburgheast.macaronikid.com) |
+| Whispering Souls Paranormal Investigations LLC | MacaroniKid-PA-pittsburgheast | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://pittsburgheast.macaronikid.com) |
+| Monongahela Area Chamber of Commerce | MacaroniKid-PA-pittsburgheast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburgheast.macaronikid.com) |
+| Autism Connection of Pennsylvania | MacaroniKid-PA-pittsburgheast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburgheast.macaronikid.com) |
+| Walkers Pet HoTail Pet Care Center (North Versailles Rt. 30W) | MacaroniKid-PA-pittsburgheast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburgheast.macaronikid.com) |
+| Stanford Home Centers | MacaroniKid-PA-pittsburgheast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburgheast.macaronikid.com) |
+| Sunny Days Arena - at the Venue | MacaroniKid-PA-pittsburgheast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburgheast.macaronikid.com) |
+| St. Sava Serbian Orthodox Church - McKeesport, PA | MacaroniKid-PA-pittsburgheast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburgheast.macaronikid.com) |
+| Allegheny County Parks | MacaroniKid-PA-pittsburgheast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburgheast.macaronikid.com) |
+| The Crafty Alpaca | MacaroniKid-PA-pittsburgheast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburgheast.macaronikid.com) |
+| Pennsylvania Cinderella Pageants | MacaroniKid-PA-pittsburgheast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburgheast.macaronikid.com) |
+| Allegheny County Library Association | MacaroniKid-PA-pittsburgheast | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://pittsburgheast.macaronikid.com) |
+| Rossi's Flea Market | MacaroniKid-PA-pittsburgheast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburgheast.macaronikid.com) |
+| Chatham Baroque | MacaroniKid-PA-pittsburgheast | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburgheast.macaronikid.com) |
+| Monroeville Foundation | MacaroniKid-PA-pittsburgheast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburgheast.macaronikid.com) |
+| Greater Pittsburgh Community Food Bank | MacaroniKid-PA-pittsburgheast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburgheast.macaronikid.com) |
+| Fret Buzz | MacaroniKid-PA-pittsburgheast | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburgheast.macaronikid.com) |
+| Shaler North Hills Library | MacaroniKid-PA-pittsburghnorth | 11 | 3 | 6 | 8 | 0 | 0 | 28 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Northland Public Library | MacaroniKid-PA-pittsburghnorth | 5 | 6 | 3 | 2 | 1 | 3 | 20 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Cranberry Public Library | MacaroniKid-PA-pittsburghnorth | 1 | 4 | 4 | 6 | 3 | 0 | 18 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Allegheny County Library Association | MacaroniKid-PA-pittsburghnorth | 15 | 0 | 0 | 0 | 0 | 0 | 15 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Pine Center Branch | MacaroniKid-PA-pittsburghnorth | 10 | 3 | 0 | 1 | 1 | 0 | 15 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Cranberry Township | MacaroniKid-PA-pittsburghnorth | 14 | 0 | 0 | 0 | 0 | 0 | 14 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Terminus Games | MacaroniKid-PA-pittsburghnorth | 0 | 0 | 0 | 9 | 0 | 0 | 9 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Ross Township Parks & Recreation | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 3 | 0 | 0 | 4 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Kitty Queen Cat Rescue | MacaroniKid-PA-pittsburghnorth | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Paws Across Pittsburgh | MacaroniKid-PA-pittsburghnorth | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Allegheny RiverTrail Park | MacaroniKid-PA-pittsburghnorth | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Cranberry Township Municipal Center | MacaroniKid-PA-pittsburghnorth | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Walk for Apraxia | MacaroniKid-PA-pittsburghnorth | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Allegheny Observatory | MacaroniKid-PA-pittsburghnorth | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Guitars For Vets - Butler, PA | MacaroniKid-PA-pittsburghnorth | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Family House Pittsburgh | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Prototype PGH | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Cranberry Township Swimming Pool | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Babesburgh | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburghnorth.macaronikid.com) |
+| St. John's Evangelical Lutheran Church of Perrysville | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Cranberry Township Community Waterpark | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Oxford Athletic Club | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Cranberry Township Library | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Children's Museum | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburghnorth.macaronikid.com) |
+| YogaSix Wexford (Wexford) | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Allegheny County Parks | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Family House | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Lifted Spiritss | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Enchanted Experiences | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Pittsburgh North | MacaroniKid-PA-pittsburghnorth | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pittsburghnorth.macaronikid.com) |
+| Bucks County Free Library - Doylestown | MacaroniKid-PA-quakertown | 36 | 34 | 4 | 0 | 0 | 0 | 74 | [cal](https://quakertown.macaronikid.com) |
+| Mercer Museum & Fonthill Castle | MacaroniKid-PA-quakertown | 1 | 0 | 0 | 7 | 0 | 12 | 20 | [cal](https://quakertown.macaronikid.com) |
+| River Crossing YMCA | MacaroniKid-PA-quakertown | 9 | 0 | 0 | 4 | 2 | 4 | 19 | [cal](https://quakertown.macaronikid.com) |
+| Bethlehem YMCA | MacaroniKid-PA-quakertown | 6 | 0 | 0 | 7 | 0 | 2 | 15 | [cal](https://quakertown.macaronikid.com) |
+| Peddler's Village | MacaroniKid-PA-quakertown | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://quakertown.macaronikid.com) |
+| Bucks County Free Library — Doylestown | MacaroniKid-PA-quakertown | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://quakertown.macaronikid.com) |
+| Bowman's Hill Wildflower Preserve | MacaroniKid-PA-quakertown | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://quakertown.macaronikid.com) |
+| My Size City | MacaroniKid-PA-quakertown | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://quakertown.macaronikid.com) |
+| Borough of Quakertown | MacaroniKid-PA-quakertown | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://quakertown.macaronikid.com) |
+| Upper Gwynedd Township Parks and Recreation | MacaroniKid-PA-quakertown | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://quakertown.macaronikid.com) |
+| The Newtown Theatre | MacaroniKid-PA-quakertown | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://quakertown.macaronikid.com) |
+| Quakertown Alive! | MacaroniKid-PA-quakertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://quakertown.macaronikid.com) |
+| Trolley Barn Public Market - Quakertown | MacaroniKid-PA-quakertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://quakertown.macaronikid.com) |
+| Los Lonely Boys | MacaroniKid-PA-quakertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://quakertown.macaronikid.com) |
+| Last Chance Ranch | MacaroniKid-PA-quakertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://quakertown.macaronikid.com) |
+| East Penn Modifiers Club | MacaroniKid-PA-quakertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://quakertown.macaronikid.com) |
+| The Rhoads Garden Education Team | MacaroniKid-PA-quakertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://quakertown.macaronikid.com) |
+| The Collingsworth Family | MacaroniKid-PA-quakertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://quakertown.macaronikid.com) |
+| Sellersville | MacaroniKid-PA-quakertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://quakertown.macaronikid.com) |
+| Mud & Maker | MacaroniKid-PA-quakertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://quakertown.macaronikid.com) |
+| Pennsylvania Department of Conservation and Natural Resources | MacaroniKid-PA-quakertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://quakertown.macaronikid.com) |
+| The Doylestown Bookshop | MacaroniKid-PA-quakertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://quakertown.macaronikid.com) |
+| Holistic Events LVPA | MacaroniKid-PA-quakertown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://quakertown.macaronikid.com) |
+| Scott Township Public Library | MacaroniKid-PA-robinson | 8 | 14 | 2 | 3 | 0 | 5 | 32 | [cal](https://robinson.macaronikid.com) |
+| Sewickley Public Library | MacaroniKid-PA-robinson | 0 | 16 | 6 | 6 | 0 | 0 | 28 | [cal](https://robinson.macaronikid.com) |
+| Crafton Public Library | MacaroniKid-PA-robinson | 10 | 0 | 0 | 9 | 0 | 0 | 19 | [cal](https://robinson.macaronikid.com) |
+| Focus on Renewal | MacaroniKid-PA-robinson | 18 | 0 | 0 | 0 | 0 | 0 | 18 | [cal](https://robinson.macaronikid.com) |
+| Allegheny County Library Association | MacaroniKid-PA-robinson | 0 | 7 | 5 | 0 | 0 | 0 | 12 | [cal](https://robinson.macaronikid.com) |
+| Moon Parks & Recreation | MacaroniKid-PA-robinson | 5 | 0 | 0 | 1 | 0 | 0 | 6 | [cal](https://robinson.macaronikid.com) |
+| Township of Moon | MacaroniKid-PA-robinson | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://robinson.macaronikid.com) |
+| Moon Market & Music | MacaroniKid-PA-robinson | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://robinson.macaronikid.com) |
+| The Lindsay Theater | MacaroniKid-PA-robinson | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://robinson.macaronikid.com) |
+| Turo Family Chiropractic | MacaroniKid-PA-robinson | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://robinson.macaronikid.com) |
+| Smokey & Moo's Treats | MacaroniKid-PA-robinson | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://robinson.macaronikid.com) |
+| Faithbridge Community Church | MacaroniKid-PA-robinson | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://robinson.macaronikid.com) |
+| The Pavilion at Star Lake | MacaroniKid-PA-robinson | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://robinson.macaronikid.com) |
+| Pittsburgh West - Robinson | MacaroniKid-PA-robinson | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://robinson.macaronikid.com) |
+| Old Economy Village Visitor Center | MacaroniKid-PA-robinson | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://robinson.macaronikid.com) |
+| Enchanted Experiences | MacaroniKid-PA-robinson | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://robinson.macaronikid.com) |
+| Hilton Garden Inn Pittsburgh Airport (Moon Township, Allegheny County, PA) | MacaroniKid-PA-robinson | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://robinson.macaronikid.com) |
+| Peters Township Parks & Recreation and Community Recreation Center | MacaroniKid-PA-robinson | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://robinson.macaronikid.com) |
+| Andrew Carnegie Free Library & Music Hall | MacaroniKid-PA-robinson | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://robinson.macaronikid.com) |
+| Bellevue Forward | MacaroniKid-PA-robinson | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://robinson.macaronikid.com) |
+| The Home Team | MacaroniKid-PA-robinson | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://robinson.macaronikid.com) |
+| Coraopolis Community Development | MacaroniKid-PA-robinson | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://robinson.macaronikid.com) |
+| Lackawanna County Children’s Library | MacaroniKid-PA-scranton | 3 | 8 | 2 | 2 | 2 | 0 | 17 | [cal](https://scranton.macaronikid.com) |
+| Abington Community Library - Lackawanna County Library System | MacaroniKid-PA-scranton | 4 | 2 | 4 | 1 | 2 | 0 | 13 | [cal](https://scranton.macaronikid.com) |
+| Nancy Kay Holmes Branch Library | MacaroniKid-PA-scranton | 1 | 3 | 3 | 0 | 3 | 2 | 12 | [cal](https://scranton.macaronikid.com) |
+| Scranton/Wilkes-Barre RailRiders | MacaroniKid-PA-scranton | 0 | 2 | 0 | 8 | 0 | 0 | 10 | [cal](https://scranton.macaronikid.com) |
+| Nay Aug Park | MacaroniKid-PA-scranton | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://scranton.macaronikid.com) |
+| The Greenhouse Project | MacaroniKid-PA-scranton | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://scranton.macaronikid.com) |
+| Albright Memorial Library | MacaroniKid-PA-scranton | 1 | 0 | 0 | 0 | 3 | 0 | 4 | [cal](https://scranton.macaronikid.com) |
+| The Ritz Theater | MacaroniKid-PA-scranton | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://scranton.macaronikid.com) |
+| Scranton Cultural Center at the Masonic Temple | MacaroniKid-PA-scranton | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://scranton.macaronikid.com) |
+| Awakening Foundation | MacaroniKid-PA-scranton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scranton.macaronikid.com) |
+| South Side Farmers Market | MacaroniKid-PA-scranton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scranton.macaronikid.com) |
+| Susquehanna Kayak & Canoe Rentals | MacaroniKid-PA-scranton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scranton.macaronikid.com) |
+| Awakening Events | MacaroniKid-PA-scranton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scranton.macaronikid.com) |
+| Horr's Hot Dogs | MacaroniKid-PA-scranton | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://scranton.macaronikid.com) |
+| The Conrail Historical Society | MacaroniKid-PA-scranton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scranton.macaronikid.com) |
+| Johnson College | MacaroniKid-PA-scranton | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://scranton.macaronikid.com) |
+| South Fayette Township Library | MacaroniKid-PA-southhills | 4 | 4 | 17 | 4 | 9 | 3 | 41 | [cal](https://southhills.macaronikid.com) |
+| Dormont Public Library | MacaroniKid-PA-southhills | 3 | 28 | 0 | 2 | 4 | 0 | 37 | [cal](https://southhills.macaronikid.com) |
+| Baldwin Borough Public Library | MacaroniKid-PA-southhills | 27 | 0 | 0 | 7 | 1 | 0 | 35 | [cal](https://southhills.macaronikid.com) |
+| Whitehall Public Library | MacaroniKid-PA-southhills | 7 | 6 | 7 | 1 | 1 | 0 | 22 | [cal](https://southhills.macaronikid.com) |
+| Pittsburgh Cultural Trust | MacaroniKid-PA-southhills | 20 | 0 | 0 | 0 | 0 | 0 | 20 | [cal](https://southhills.macaronikid.com) |
+| Mt. Lebanon Public Library | MacaroniKid-PA-southhills | 7 | 0 | 4 | 3 | 2 | 3 | 19 | [cal](https://southhills.macaronikid.com) |
+| Bethel Park Recreation | MacaroniKid-PA-southhills | 8 | 0 | 0 | 1 | 0 | 0 | 9 | [cal](https://southhills.macaronikid.com) |
+| Municipality of Bethel Park | MacaroniKid-PA-southhills | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://southhills.macaronikid.com) |
+| PPG Paints Arena | MacaroniKid-PA-southhills | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://southhills.macaronikid.com) |
+| Pennsylvania Trolley Museum | MacaroniKid-PA-southhills | 1 | 0 | 0 | 2 | 0 | 0 | 3 | [cal](https://southhills.macaronikid.com) |
+| Carnegie Library of Pittsburgh | MacaroniKid-PA-southhills | 1 | 0 | 2 | 0 | 0 | 0 | 3 | [cal](https://southhills.macaronikid.com) |
+| Children's Museum | MacaroniKid-PA-southhills | 0 | 2 | 0 | 0 | 0 | 0 | 2 | [cal](https://southhills.macaronikid.com) |
+| South Hills Pet Rescue and Resort | MacaroniKid-PA-southhills | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| Enchanted Experiences | MacaroniKid-PA-southhills | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| Pasta Too- Rev'em up for Kids MEGA Car Cruise Event | MacaroniKid-PA-southhills | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| Mt. Lebanon Partnership | MacaroniKid-PA-southhills | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| Kenny Ross Ford South | MacaroniKid-PA-southhills | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| Chabad of the South Hills | MacaroniKid-PA-southhills | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| Prince of Peace Lutheran Church - Pleasant Hills, PA | MacaroniKid-PA-southhills | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| Pittsburgh - South Hills | MacaroniKid-PA-southhills | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| Pittsburgh Air Local 1976 | MacaroniKid-PA-southhills | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| Whispering Souls Paranormal Investigations LLC | MacaroniKid-PA-southhills | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| Stereo Scandal | MacaroniKid-PA-southhills | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| Some Die Nameless | MacaroniKid-PA-southhills | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| Pittsburgh Mega Reptile Expo | MacaroniKid-PA-southhills | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| Brownsville Rd & Corrigan Dr | MacaroniKid-PA-southhills | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| Munhall Community Band | MacaroniKid-PA-southhills | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| PromoWest North Shore | MacaroniKid-PA-southhills | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southhills.macaronikid.com) |
+| York County Libraries - Paul Smith Library of Southern York County | MacaroniKid-PA-southyork | 22 | 7 | 8 | 4 | 0 | 0 | 41 | [cal](https://southyork.macaronikid.com) |
+| York County Libraries - Village Library | MacaroniKid-PA-southyork | 1 | 7 | 9 | 2 | 0 | 0 | 19 | [cal](https://southyork.macaronikid.com) |
+| York County Libraries - Kaltreider-Benfer Library | MacaroniKid-PA-southyork | 0 | 10 | 6 | 2 | 0 | 0 | 18 | [cal](https://southyork.macaronikid.com) |
+| York County Libraries - Collinsville Community Library | MacaroniKid-PA-southyork | 0 | 4 | 2 | 9 | 0 | 0 | 15 | [cal](https://southyork.macaronikid.com) |
+| Dancin’ with Brittanie, LLC | MacaroniKid-PA-southyork | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://southyork.macaronikid.com) |
+| York County Libraries | MacaroniKid-PA-southyork | 7 | 0 | 0 | 1 | 0 | 0 | 8 | [cal](https://southyork.macaronikid.com) |
+| Double Barrel Roadhouse | MacaroniKid-PA-southyork | 1 | 0 | 0 | 0 | 5 | 0 | 6 | [cal](https://southyork.macaronikid.com) |
+| York County Libraries — Village | MacaroniKid-PA-southyork | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://southyork.macaronikid.com) |
+| The Guitar Spot USA | MacaroniKid-PA-southyork | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://southyork.macaronikid.com) |
+| Springettsbury Township | MacaroniKid-PA-southyork | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://southyork.macaronikid.com) |
+| Hammer & Stain Shrewsbury | MacaroniKid-PA-southyork | 1 | 0 | 0 | 2 | 0 | 0 | 3 | [cal](https://southyork.macaronikid.com) |
+| York Township Recreation | MacaroniKid-PA-southyork | 2 | 0 | 0 | 0 | 1 | 0 | 3 | [cal](https://southyork.macaronikid.com) |
+| Paint and Enjoy Painting Parties York, PA | MacaroniKid-PA-southyork | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://southyork.macaronikid.com) |
+| Ma & Pa Railroad Heritage Village | MacaroniKid-PA-southyork | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://southyork.macaronikid.com) |
+| The Pullo Center | MacaroniKid-PA-southyork | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://southyork.macaronikid.com) |
+| The Guitar Spot | MacaroniKid-PA-southyork | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://southyork.macaronikid.com) |
+| York Catholic Middle & High School | MacaroniKid-PA-southyork | 0 | 0 | 1 | 0 | 1 | 0 | 2 | [cal](https://southyork.macaronikid.com) |
+| The Pullo Center at Penn State York | MacaroniKid-PA-southyork | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://southyork.macaronikid.com) |
+| Building Bridges For Brianna | MacaroniKid-PA-southyork | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://southyork.macaronikid.com) |
+| KiTTYBACK | MacaroniKid-PA-southyork | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| Borough of Red Lion, PA | MacaroniKid-PA-southyork | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| York Home School Association (YHSA) | MacaroniKid-PA-southyork | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| St. Paul's Church of Red Lion | MacaroniKid-PA-southyork | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| York County Libraries — Kaltreider-Benfer | MacaroniKid-PA-southyork | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| The Musical Box Theatre | MacaroniKid-PA-southyork | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| Lowee's Group Tours, LLC | MacaroniKid-PA-southyork | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| Red Lion | MacaroniKid-PA-southyork | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| York County Libraries — Collinsville Community | MacaroniKid-PA-southyork | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| Samuel S. Lewis State Park | MacaroniKid-PA-southyork | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| Michael Peluso Glass | MacaroniKid-PA-southyork | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| Agricultural & Industrial Museum | MacaroniKid-PA-southyork | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| Lancaster Cupcake | MacaroniKid-PA-southyork | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| Sunflower's & Smiles Consignments | MacaroniKid-PA-southyork | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| Heavenly Paws Animal Shelter, Inc. | MacaroniKid-PA-southyork | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| York Ice Arena | MacaroniKid-PA-southyork | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| Jeff Gibble | MacaroniKid-PA-southyork | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| Franklin Street Social | MacaroniKid-PA-southyork | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://southyork.macaronikid.com) |
+| Lansdowne Public Library | MacaroniKid-PA-springfieldpa | 36 | 8 | 8 | 4 | 1 | 0 | 57 | [cal](https://springfieldpa.macaronikid.com) |
+| Springfield Township Library | MacaroniKid-PA-springfieldpa | 2 | 24 | 14 | 5 | 0 | 0 | 45 | [cal](https://springfieldpa.macaronikid.com) |
+| Swarthmore Public Library | MacaroniKid-PA-springfieldpa | 23 | 0 | 1 | 0 | 2 | 2 | 28 | [cal](https://springfieldpa.macaronikid.com) |
+| Yeadon Public Library | MacaroniKid-PA-springfieldpa | 4 | 9 | 0 | 0 | 0 | 4 | 17 | [cal](https://springfieldpa.macaronikid.com) |
+| Norwood Public Library | MacaroniKid-PA-springfieldpa | 1 | 7 | 7 | 0 | 0 | 0 | 15 | [cal](https://springfieldpa.macaronikid.com) |
+| Ridley Park Public Library | MacaroniKid-PA-springfieldpa | 1 | 4 | 0 | 4 | 0 | 0 | 9 | [cal](https://springfieldpa.macaronikid.com) |
+| Upper Darby Free Library Municipal Branch | MacaroniKid-PA-springfieldpa | 0 | 6 | 2 | 0 | 0 | 0 | 8 | [cal](https://springfieldpa.macaronikid.com) |
+| Sharon Hill Public Library | MacaroniKid-PA-springfieldpa | 0 | 0 | 0 | 8 | 0 | 0 | 8 | [cal](https://springfieldpa.macaronikid.com) |
+| Havertown - Main Line | MacaroniKid-PA-springfieldpa | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://springfieldpa.macaronikid.com) |
+| UDTJ Community Center | MacaroniKid-PA-springfieldpa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://springfieldpa.macaronikid.com) |
+| Cat Nook Cafe | MacaroniKid-PA-springfieldpa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://springfieldpa.macaronikid.com) |
+| Recreation Board of Ridley Park | MacaroniKid-PA-springfieldpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://springfieldpa.macaronikid.com) |
+| LEDC / Utility Works | MacaroniKid-PA-springfieldpa | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://springfieldpa.macaronikid.com) |
+| William Jeanes Memorial Library | MacaroniKid-PA-swmontgomery | 7 | 25 | 48 | 4 | 2 | 8 | 94 | [cal](https://swmontgomery.macaronikid.com) |
+| Phoenixville Public Library | MacaroniKid-PA-swmontgomery | 5 | 32 | 18 | 3 | 14 | 0 | 72 | [cal](https://swmontgomery.macaronikid.com) |
+| Upper Merion Township Library | MacaroniKid-PA-swmontgomery | 9 | 19 | 7 | 6 | 2 | 6 | 49 | [cal](https://swmontgomery.macaronikid.com) |
+| Spring City Public Library | MacaroniKid-PA-swmontgomery | 2 | 8 | 9 | 17 | 2 | 0 | 38 | [cal](https://swmontgomery.macaronikid.com) |
+| Royersford Parks and Recreation | MacaroniKid-PA-swmontgomery | 3 | 0 | 1 | 0 | 0 | 0 | 4 | [cal](https://swmontgomery.macaronikid.com) |
+| Upper Merion Dance & Gymnastics Center | MacaroniKid-PA-swmontgomery | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://swmontgomery.macaronikid.com) |
+| Nova Dawn Yoga & Pilates | MacaroniKid-PA-swmontgomery | 0 | 0 | 3 | 0 | 0 | 0 | 3 | [cal](https://swmontgomery.macaronikid.com) |
+| Upper Merion Township Parks and Recreation | MacaroniKid-PA-swmontgomery | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://swmontgomery.macaronikid.com) |
+| Lower Providence Community Library | MacaroniKid-PA-swmontgomery | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://swmontgomery.macaronikid.com) |
+| Erich Cawalla Music | MacaroniKid-PA-swmontgomery | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://swmontgomery.macaronikid.com) |
+| Southern Montgomery | MacaroniKid-PA-swmontgomery | 0 | 0 | 1 | 1 | 0 | 0 | 2 | [cal](https://swmontgomery.macaronikid.com) |
+| Royersford Parks and Rec | MacaroniKid-PA-swmontgomery | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://swmontgomery.macaronikid.com) |
+| Upper Providence Township Parks and Recreation | MacaroniKid-PA-swmontgomery | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://swmontgomery.macaronikid.com) |
+| Historic Trappe | MacaroniKid-PA-swmontgomery | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swmontgomery.macaronikid.com) |
+| King of Prussia Rotary Club | MacaroniKid-PA-swmontgomery | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://swmontgomery.macaronikid.com) |
+| Chester County Parks & Preservation | MacaroniKid-PA-swmontgomery | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swmontgomery.macaronikid.com) |
+| Splintered Sunlight | MacaroniKid-PA-swmontgomery | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://swmontgomery.macaronikid.com) |
+| The Colonial Theatre | MacaroniKid-PA-swmontgomery | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://swmontgomery.macaronikid.com) |
+| Expressive Path | MacaroniKid-PA-swmontgomery | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://swmontgomery.macaronikid.com) |
+| Norristown Parks and Recreation | MacaroniKid-PA-swmontgomery | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swmontgomery.macaronikid.com) |
+| Elmwood Park Zoo | MacaroniKid-PA-swmontgomery | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swmontgomery.macaronikid.com) |
+| Pottstown Area Regional Recreation Committee | MacaroniKid-PA-swmontgomery | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swmontgomery.macaronikid.com) |
+| Greater Plymouth Community Center | MacaroniKid-PA-swmontgomery | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swmontgomery.macaronikid.com) |
+| Flour Power - Valley Forge | MacaroniKid-PA-swmontgomery | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://swmontgomery.macaronikid.com) |
+| Lakeshore Learning | MacaroniKid-PA-swmontgomery | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://swmontgomery.macaronikid.com) |
+| Animal House Project | MacaroniKid-PA-swmontgomery | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swmontgomery.macaronikid.com) |
+| Phoenixville Parks and Recreation | MacaroniKid-PA-swmontgomery | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swmontgomery.macaronikid.com) |
+| East Pikeland Township | MacaroniKid-PA-swmontgomery | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swmontgomery.macaronikid.com) |
+| The WOW! Factory | MacaroniKid-PA-uniontown | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [cal](https://uniontown.macaronikid.com) |
+| Morgantown Public Library | MacaroniKid-PA-uniontown | 3 | 2 | 2 | 3 | 1 | 0 | 11 | [cal](https://uniontown.macaronikid.com) |
+| Elks Lodge 411 | MacaroniKid-PA-uniontown | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://uniontown.macaronikid.com) |
+| Uniontown | MacaroniKid-PA-uniontown | 2 | 0 | 0 | 1 | 0 | 1 | 4 | [cal](https://uniontown.macaronikid.com) |
+| The Tea Shoppe at Seneca Center | MacaroniKid-PA-uniontown | 2 | 0 | 0 | 1 | 0 | 1 | 4 | [cal](https://uniontown.macaronikid.com) |
+| West Overton Village | MacaroniKid-PA-uniontown | 0 | 0 | 0 | 3 | 0 | 0 | 3 | [cal](https://uniontown.macaronikid.com) |
+| Mylan Park | MacaroniKid-PA-uniontown | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://uniontown.macaronikid.com) |
+| Troop 620 - Uniontown, PA | MacaroniKid-PA-uniontown | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://uniontown.macaronikid.com) |
+| Scottdale Public Library | MacaroniKid-PA-uniontown | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://uniontown.macaronikid.com) |
+| Mom Marucas Pizza | MacaroniKid-PA-uniontown | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://uniontown.macaronikid.com) |
+| Enchanted Experiences | MacaroniKid-PA-uniontown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://uniontown.macaronikid.com) |
+| Asbury United Methodist Church, Uniontown, PA | MacaroniKid-PA-uniontown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://uniontown.macaronikid.com) |
+| North American Karate and Fitness | MacaroniKid-PA-uniontown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://uniontown.macaronikid.com) |
+| Mount Pleasant Free Public Library | MacaroniKid-PA-uniontown | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://uniontown.macaronikid.com) |
+| St. George Maronite Church | MacaroniKid-PA-uniontown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://uniontown.macaronikid.com) |
+| Downtown Morgantown | MacaroniKid-PA-uniontown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://uniontown.macaronikid.com) |
+| PokeKon Fest | MacaroniKid-PA-uniontown | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://uniontown.macaronikid.com) |
+| The Sisters of St. Basil the Great | MacaroniKid-PA-uniontown | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://uniontown.macaronikid.com) |
+| Big Brothers Big Sisters of the Laurel Region | MacaroniKid-PA-uniontown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://uniontown.macaronikid.com) |
+| Healthy Kids Running Series Latrobe | MacaroniKid-PA-uniontown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://uniontown.macaronikid.com) |
+| 2G Brothers Pizza- Uniontown PA | MacaroniKid-PA-uniontown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://uniontown.macaronikid.com) |
+| The Playroom (The Playroom Coffee Corner) | MacaroniKid-PA-uniontown | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://uniontown.macaronikid.com) |
+| Chester County Library Exton | MacaroniKid-PA-westchesterpa | 1 | 13 | 45 | 13 | 0 | 0 | 72 | [cal](https://westchesterpa.macaronikid.com) |
+| Henrietta Hankin Branch Library | MacaroniKid-PA-westchesterpa | 0 | 30 | 20 | 16 | 2 | 2 | 70 | [cal](https://westchesterpa.macaronikid.com) |
+| West Chester Library | MacaroniKid-PA-westchesterpa | 7 | 16 | 7 | 1 | 16 | 0 | 47 | [cal](https://westchesterpa.macaronikid.com) |
+| Downingtown Library | MacaroniKid-PA-westchesterpa | 3 | 14 | 13 | 4 | 2 | 0 | 36 | [cal](https://westchesterpa.macaronikid.com) |
+| Coatesville Library | MacaroniKid-PA-westchesterpa | 16 | 2 | 5 | 12 | 0 | 0 | 35 | [cal](https://westchesterpa.macaronikid.com) |
+| Paoli Library | MacaroniKid-PA-westchesterpa | 1 | 17 | 6 | 2 | 0 | 1 | 27 | [cal](https://westchesterpa.macaronikid.com) |
+| Barnes & Noble - Exton | MacaroniKid-PA-westchesterpa | 0 | 0 | 0 | 26 | 0 | 0 | 26 | [cal](https://westchesterpa.macaronikid.com) |
+| Parkesburg Library | MacaroniKid-PA-westchesterpa | 4 | 14 | 0 | 5 | 1 | 0 | 24 | [cal](https://westchesterpa.macaronikid.com) |
+| Malvern Public Library | MacaroniKid-PA-westchesterpa | 4 | 2 | 4 | 8 | 0 | 1 | 19 | [cal](https://westchesterpa.macaronikid.com) |
+| Honey Brook Community Library | MacaroniKid-PA-westchesterpa | 0 | 19 | 0 | 0 | 0 | 0 | 19 | [cal](https://westchesterpa.macaronikid.com) |
+| Chester County History Center | MacaroniKid-PA-westchesterpa | 8 | 0 | 0 | 1 | 0 | 0 | 9 | [cal](https://westchesterpa.macaronikid.com) |
+| East Goshen Township Park | MacaroniKid-PA-westchesterpa | 6 | 0 | 2 | 0 | 0 | 0 | 8 | [cal](https://westchesterpa.macaronikid.com) |
+| Downtown West Chester, PA | MacaroniKid-PA-westchesterpa | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://westchesterpa.macaronikid.com) |
+| West Whiteland Township | MacaroniKid-PA-westchesterpa | 4 | 0 | 1 | 0 | 0 | 0 | 5 | [cal](https://westchesterpa.macaronikid.com) |
+| Malvern | MacaroniKid-PA-westchesterpa | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://westchesterpa.macaronikid.com) |
+| Exton | MacaroniKid-PA-westchesterpa | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://westchesterpa.macaronikid.com) |
+| Chester Springs Library | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 2 | 0 | 0 | 3 | [cal](https://westchesterpa.macaronikid.com) |
+| Malvern Memorial Cabin | MacaroniKid-PA-westchesterpa | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://westchesterpa.macaronikid.com) |
+| Synergy Gymnastics | MacaroniKid-PA-westchesterpa | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [cal](https://westchesterpa.macaronikid.com) |
+| Kidz Town | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://westchesterpa.macaronikid.com) |
+| Malvern Borough | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://westchesterpa.macaronikid.com) |
+| West Bradford Township | MacaroniKid-PA-westchesterpa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://westchesterpa.macaronikid.com) |
+| Paoli Battlefield Historical Park | MacaroniKid-PA-westchesterpa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://westchesterpa.macaronikid.com) |
+| Craft & Mercantile | MacaroniKid-PA-westchesterpa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://westchesterpa.macaronikid.com) |
+| Chester County Art Association: Creative Space For Everyone | MacaroniKid-PA-westchesterpa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://westchesterpa.macaronikid.com) |
+| Salt Performing Arts | MacaroniKid-PA-westchesterpa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://westchesterpa.macaronikid.com) |
+| West Chester | MacaroniKid-PA-westchesterpa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://westchesterpa.macaronikid.com) |
+| Caln Township | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| East Brandywine Township | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Malvern Farmers Market | MacaroniKid-PA-westchesterpa | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Downingtown Friends Meeting | MacaroniKid-PA-westchesterpa | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Yoga with Ms. Rebecca | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Historic Yellow Springs | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Valley Township | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| East Whiteland Township | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Visual Grace Sacred Art - Kate Capato | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Historic Sugartown | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| West Chester Railroad | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Matlack Florist | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Westtown Township | MacaroniKid-PA-westchesterpa | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Chester County Mural and Arts | MacaroniKid-PA-westchesterpa | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Myrick Conservation Center | MacaroniKid-PA-westchesterpa | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| My Gym Downingtown | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Newlin Grist Mill Park | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| East Bradford Township | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Uptown Knauer Performing Arts Center | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Record Riots | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Chesterbrook Academy Preschool | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Ryerss Farm | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| Time To Leap Dance Center | MacaroniKid-PA-westchesterpa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westchesterpa.macaronikid.com) |
+| CASA of Wyoming Valley | MacaroniKid-PA-wilkesbarre | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://wilkesbarre.macaronikid.com) |
+| Sordoni Art Gallery at Wilkes University | MacaroniKid-PA-wilkesbarre | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://wilkesbarre.macaronikid.com) |
+| Circle Centre for the Arts, home of the Wyoming Valley Art League | MacaroniKid-PA-wilkesbarre | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://wilkesbarre.macaronikid.com) |
+| Horr's Hot Dogs | MacaroniKid-PA-wilkesbarre | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://wilkesbarre.macaronikid.com) |
+| Visit Luzerne County | MacaroniKid-PA-wilkesbarre | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://wilkesbarre.macaronikid.com) |
+| NECMS | MacaroniKid-PA-wilkesbarre | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://wilkesbarre.macaronikid.com) |
+| SPCA of Luzerne County | MacaroniKid-PA-wilkesbarre | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://wilkesbarre.macaronikid.com) |
+| Whitpain Township | MacaroniKid-PA-willowgrove | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://willowgrove.macaronikid.com) |
+| Bethlehem YMCA | MacaroniKid-PA-willowgrove | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://willowgrove.macaronikid.com) |
+| The Lab (Ambler, PA) | MacaroniKid-PA-willowgrove | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://willowgrove.macaronikid.com) |
+| BARC Developmental Services | MacaroniKid-PA-willowgrove | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://willowgrove.macaronikid.com) |
+| The Bowery Presents | MacaroniKid-PA-willowgrove | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://willowgrove.macaronikid.com) |
+| Yächtley Crëw | MacaroniKid-PA-willowgrove | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://willowgrove.macaronikid.com) |
+| Ben Wilson Senior Activity Center | MacaroniKid-PA-willowgrove | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://willowgrove.macaronikid.com) |
+| NGA National Giving Alliance | MacaroniKid-PA-willowgrove | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://willowgrove.macaronikid.com) |
+| Apraxia Kids | MacaroniKid-PA-willowgrove | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://willowgrove.macaronikid.com) |
+| NF Walk | MacaroniKid-PA-willowgrove | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://willowgrove.macaronikid.com) |
+| House of Magic | MacaroniKid-PA-willowgrove | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://willowgrove.macaronikid.com) |
+| York County Libraries | MacaroniKid-PA-york | 28 | 52 | 31 | 20 | 10 | 40 | 181 | [cal](https://york.macaronikid.com) |
+| Flinchbaugh’s Orchard & Farm Market | MacaroniKid-PA-york | 28 | 0 | 0 | 0 | 0 | 0 | 28 | [cal](https://york.macaronikid.com) |
+| York County Libraries - Red Land Community Library | MacaroniKid-PA-york | 2 | 7 | 3 | 4 | 0 | 0 | 16 | [cal](https://york.macaronikid.com) |
+| York County Libraries — Martin Library | MacaroniKid-PA-york | 0 | 0 | 0 | 1 | 2 | 9 | 12 | [cal](https://york.macaronikid.com) |
+| York County Libraries - Kreutz Creek Library | MacaroniKid-PA-york | 2 | 4 | 3 | 0 | 3 | 0 | 12 | [cal](https://york.macaronikid.com) |
+| Restaurant Row York | MacaroniKid-PA-york | 8 | 0 | 0 | 2 | 0 | 0 | 10 | [cal](https://york.macaronikid.com) |
+| Keystone Kidspace | MacaroniKid-PA-york | 4 | 2 | 0 | 1 | 1 | 0 | 8 | [cal](https://york.macaronikid.com) |
+| Appell Center for the Performing Arts | MacaroniKid-PA-york | 6 | 2 | 0 | 0 | 0 | 0 | 8 | [cal](https://york.macaronikid.com) |
+| York County Libraries — Kreutz Creek | MacaroniKid-PA-york | 5 | 0 | 0 | 3 | 0 | 0 | 8 | [cal](https://york.macaronikid.com) |
+| Matt Jameson Live (MattjamesonLive) | MacaroniKid-PA-york | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://york.macaronikid.com) |
+| York Revolution | MacaroniKid-PA-york | 5 | 0 | 0 | 1 | 0 | 0 | 6 | [cal](https://york.macaronikid.com) |
+| Agricultural & Industrial Museum | MacaroniKid-PA-york | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://york.macaronikid.com) |
+| Refillism | MacaroniKid-PA-york | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://york.macaronikid.com) |
+| Flinchbaugh's Orchard & Farm Market | MacaroniKid-PA-york | 3 | 0 | 1 | 0 | 0 | 0 | 4 | [cal](https://york.macaronikid.com) |
+| Sattva Center for Meditation & Yoga | MacaroniKid-PA-york | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://york.macaronikid.com) |
+| Downtown York, PA | MacaroniKid-PA-york | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://york.macaronikid.com) |
+| Gift Horse Brewing Company | MacaroniKid-PA-york | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://york.macaronikid.com) |
+| York County SPCA | MacaroniKid-PA-york | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://york.macaronikid.com) |
+| Marketview Arts | MacaroniKid-PA-york | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://york.macaronikid.com) |
+| York County Libraries - Martin Library | MacaroniKid-PA-york | 0 | 0 | 1 | 1 | 0 | 0 | 2 | [cal](https://york.macaronikid.com) |
+| Central Market York | MacaroniKid-PA-york | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://york.macaronikid.com) |
+| York First Church of the Brethren | MacaroniKid-PA-york | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://york.macaronikid.com) |
+| YMCA of the Roses - Arthur J. Glatfelter YMCA | MacaroniKid-PA-york | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://york.macaronikid.com) |
+| Alleys Bar | MacaroniKid-PA-york | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://york.macaronikid.com) |
+| J&P Custom Creations | MacaroniKid-PA-york | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://york.macaronikid.com) |
+| York Academy PTO | MacaroniKid-PA-york | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://york.macaronikid.com) |
+| Gather 256 | MacaroniKid-PA-york | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://york.macaronikid.com) |
+| The Grotto | MacaroniKid-PA-york | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| Adams County Library | MacaroniKid-PA-york | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| DreamWrights Center for Community Arts | MacaroniKid-PA-york | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| Steph Holmes Artist Studio | MacaroniKid-PA-york | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| Ripe Creatives | MacaroniKid-PA-york | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| Christine Hsieh Photography | MacaroniKid-PA-york | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| Soccer Shots Harrisburg | MacaroniKid-PA-york | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| F. H. Pappy's | MacaroniKid-PA-york | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| A Unified Mind | MacaroniKid-PA-york | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| Royal Square District | MacaroniKid-PA-york | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| Creatives on King | MacaroniKid-PA-york | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| African-American First Fridays | MacaroniKid-PA-york | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| Samuel S. Lewis State Park | MacaroniKid-PA-york | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| The Musical Box Theatre | MacaroniKid-PA-york | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| Raptor Rise Collective | MacaroniKid-PA-york | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| York Catholic Middle & High School | MacaroniKid-PA-york | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://york.macaronikid.com) |
+| West Warwick Public Library | MacaroniKid-RI-kent | 13 | 6 | 15 | 1 | 9 | 4 | 48 | [cal](https://kent.macaronikid.com) |
+| Cranston Public Library-Central Branch | MacaroniKid-RI-kent | 1 | 13 | 12 | 2 | 0 | 2 | 30 | [cal](https://kent.macaronikid.com) |
+| Coventry Public Library | MacaroniKid-RI-kent | 1 | 4 | 4 | 11 | 1 | 5 | 26 | [cal](https://kent.macaronikid.com) |
+| Cranston Public Library-Oaklawn Branch | MacaroniKid-RI-kent | 0 | 16 | 5 | 1 | 0 | 1 | 23 | [cal](https://kent.macaronikid.com) |
+| Cranston Public Library-Auburn Branch | MacaroniKid-RI-kent | 1 | 20 | 1 | 1 | 0 | 0 | 23 | [cal](https://kent.macaronikid.com) |
+| East Greenwich Free Library | MacaroniKid-RI-kent | 0 | 7 | 8 | 2 | 0 | 1 | 18 | [cal](https://kent.macaronikid.com) |
+| Cranston Public Library-Knightsville Branch | MacaroniKid-RI-kent | 0 | 16 | 2 | 0 | 0 | 0 | 18 | [cal](https://kent.macaronikid.com) |
+| Warwick Public Library — Apponaug | MacaroniKid-RI-kent | 5 | 0 | 5 | 4 | 0 | 0 | 14 | [cal](https://kent.macaronikid.com) |
+| Warwick Public Library — Conimicut | MacaroniKid-RI-kent | 0 | 9 | 0 | 0 | 0 | 0 | 9 | [cal](https://kent.macaronikid.com) |
+| The Hope Collective | MacaroniKid-RI-kent | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://kent.macaronikid.com) |
+| Cranston Public Library — Central Library | MacaroniKid-RI-kent | 0 | 6 | 0 | 0 | 0 | 0 | 6 | [cal](https://kent.macaronikid.com) |
+| PVD Food Truck Events | MacaroniKid-RI-kent | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://kent.macaronikid.com) |
+| Warwick Public Library — Norwood | MacaroniKid-RI-kent | 1 | 3 | 0 | 1 | 0 | 0 | 5 | [cal](https://kent.macaronikid.com) |
+| Healthy Babies, Happy Moms Inc. | MacaroniKid-RI-kent | 0 | 4 | 0 | 0 | 0 | 0 | 4 | [cal](https://kent.macaronikid.com) |
+| Valley Country Club | MacaroniKid-RI-kent | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://kent.macaronikid.com) |
+| Taste Buds Kitchen - Providence - East Greenwich (East Greenwich, RI) | MacaroniKid-RI-kent | 0 | 1 | 0 | 1 | 0 | 0 | 2 | [cal](https://kent.macaronikid.com) |
+| The Historic Park Theatre and Event Center | MacaroniKid-RI-kent | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kent.macaronikid.com) |
+| RI Society for the Prevention of Cruelty to Animals | MacaroniKid-RI-kent | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://kent.macaronikid.com) |
+| Los Lonely Boys | MacaroniKid-RI-kent | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kent.macaronikid.com) |
+| Spectacle Live | MacaroniKid-RI-kent | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kent.macaronikid.com) |
+| Coventry Parks & Recreation RI | MacaroniKid-RI-kent | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kent.macaronikid.com) |
+| Ted's Stadium Kitchen and Pub | MacaroniKid-RI-kent | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kent.macaronikid.com) |
+| Charlestown Parks & Recreation | MacaroniKid-RI-washingtonri | 255 | 0 | 0 | 9 | 18 | 0 | 282 | [cal](https://washingtonri.macaronikid.com) |
+| Kingstown Free Library | MacaroniKid-RI-washingtonri | 12 | 0 | 1 | 18 | 0 | 0 | 31 | [cal](https://washingtonri.macaronikid.com) |
+| North Kingstown Free Library | MacaroniKid-RI-washingtonri | 9 | 3 | 6 | 4 | 1 | 1 | 24 | [cal](https://washingtonri.macaronikid.com) |
+| Peace Dale Library Branch | MacaroniKid-RI-washingtonri | 6 | 0 | 9 | 3 | 0 | 1 | 19 | [cal](https://washingtonri.macaronikid.com) |
+| Robert Beverly Hale Library Branch | MacaroniKid-RI-washingtonri | 9 | 0 | 6 | 0 | 0 | 0 | 15 | [cal](https://washingtonri.macaronikid.com) |
+| The Knickerbocker Music Center | MacaroniKid-RI-washingtonri | 8 | 0 | 0 | 1 | 0 | 1 | 10 | [cal](https://washingtonri.macaronikid.com) |
+| Rebekah Cook Art | MacaroniKid-RI-washingtonri | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://washingtonri.macaronikid.com) |
+| Historic New England | MacaroniKid-RI-washingtonri | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://washingtonri.macaronikid.com) |
+| The Westerly Land Trust | MacaroniKid-RI-washingtonri | 2 | 1 | 2 | 0 | 1 | 0 | 6 | [cal](https://washingtonri.macaronikid.com) |
+| Courthouse Center for the Arts | MacaroniKid-RI-washingtonri | 4 | 1 | 0 | 1 | 0 | 0 | 6 | [cal](https://washingtonri.macaronikid.com) |
+| The United Theatre | MacaroniKid-RI-washingtonri | 2 | 0 | 0 | 0 | 0 | 2 | 4 | [cal](https://washingtonri.macaronikid.com) |
+| Misquamicut Drive-In | MacaroniKid-RI-washingtonri | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://washingtonri.macaronikid.com) |
+| Hammer & Stain Wickford | MacaroniKid-RI-washingtonri | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://washingtonri.macaronikid.com) |
+| Westerly Public Library | MacaroniKid-RI-washingtonri | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://washingtonri.macaronikid.com) |
+| South Kingstown Parks & Recreation | MacaroniKid-RI-washingtonri | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://washingtonri.macaronikid.com) |
+| South Kingstown Parks and Recreation | MacaroniKid-RI-washingtonri | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://washingtonri.macaronikid.com) |
+| Wakefield Books | MacaroniKid-RI-washingtonri | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://washingtonri.macaronikid.com) |
+| Save One Soul Animal Rescue League | MacaroniKid-RI-washingtonri | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://washingtonri.macaronikid.com) |
+| Paper In Fire - John Mellencamp Anthology | MacaroniKid-RI-washingtonri | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://washingtonri.macaronikid.com) |
+| SOS retail | MacaroniKid-RI-washingtonri | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://washingtonri.macaronikid.com) |
+| Create! Color Art Studio | MacaroniKid-RI-washingtonri | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://washingtonri.macaronikid.com) |
+| Simply The Best - A tribute to the music of Tina Turner | MacaroniKid-RI-washingtonri | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://washingtonri.macaronikid.com) |
+| Swim Across America | MacaroniKid-RI-washingtonri | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://washingtonri.macaronikid.com) |
+| Everybody Wants Some | MacaroniKid-RI-washingtonri | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://washingtonri.macaronikid.com) |
+| White House Public Library | MacaroniKid-TN-hendersonvilletn | 0 | 17 | 8 | 4 | 16 | 2 | 47 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Breeden's Orchard | MacaroniKid-TN-hendersonvilletn | 3 | 0 | 17 | 2 | 0 | 0 | 22 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Nashville Public Library - Madison | MacaroniKid-TN-hendersonvilletn | 5 | 5 | 3 | 4 | 1 | 3 | 21 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Nashville Public Library - Goodlettsville | MacaroniKid-TN-hendersonvilletn | 11 | 1 | 3 | 3 | 1 | 1 | 20 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Nashville Public Library - Hermitage | MacaroniKid-TN-hendersonvilletn | 7 | 5 | 3 | 0 | 0 | 1 | 16 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Lebanon-Wilson County Public Library | MacaroniKid-TN-hendersonvilletn | 0 | 4 | 0 | 6 | 0 | 1 | 11 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Hawaii Fluid Art Mt. Juliet | MacaroniKid-TN-hendersonvilletn | 1 | 0 | 0 | 9 | 0 | 0 | 10 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Mt. Juliet - Wilson County Library | MacaroniKid-TN-hendersonvilletn | 1 | 1 | 0 | 4 | 0 | 0 | 6 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Hammer & Stain Mount Juliet | MacaroniKid-TN-hendersonvilletn | 1 | 0 | 0 | 2 | 2 | 0 | 5 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Nashville Public Library - Old Hickory | MacaroniKid-TN-hendersonvilletn | 1 | 1 | 2 | 0 | 0 | 0 | 4 | [cal](https://hendersonvilletn.macaronikid.com) |
+| City of Hendersonville | MacaroniKid-TN-hendersonvilletn | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Hawaii Fluid Art | MacaroniKid-TN-hendersonvilletn | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://hendersonvilletn.macaronikid.com) |
+| The Palace Theatre | MacaroniKid-TN-hendersonvilletn | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Mt. Juliet Parks & Recreation | MacaroniKid-TN-hendersonvilletn | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Candy & Jeremy MUSIC | MacaroniKid-TN-hendersonvilletn | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Station Camp High School | MacaroniKid-TN-hendersonvilletn | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Lollitots Consignment | MacaroniKid-TN-hendersonvilletn | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Ferrell Farms | MacaroniKid-TN-hendersonvilletn | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Lonesome River Band | MacaroniKid-TN-hendersonvilletn | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Bread and Puppet Theater | MacaroniKid-TN-hendersonvilletn | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://hendersonvilletn.macaronikid.com) |
+| New Leash On Life - Home of The JOY Clinic | MacaroniKid-TN-hendersonvilletn | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://hendersonvilletn.macaronikid.com) |
+| TREEMONT MANSION | MacaroniKid-TN-hendersonvilletn | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://hendersonvilletn.macaronikid.com) |
+| Knox County TN Public Library | MacaroniKid-TN-knoxville | 40 | 46 | 57 | 20 | 4 | 4 | 171 | [cal](https://knoxville.macaronikid.com) |
+| Knoxville Mobile Karaoke | MacaroniKid-TN-knoxville | 0 | 0 | 0 | 8 | 0 | 0 | 8 | [cal](https://knoxville.macaronikid.com) |
+| The Bark | MacaroniKid-TN-knoxville | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://knoxville.macaronikid.com) |
+| Tennessee Theatre | MacaroniKid-TN-knoxville | 5 | 0 | 0 | 1 | 0 | 0 | 6 | [cal](https://knoxville.macaronikid.com) |
+| East Tennessee Historical Society and Museum | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 3 | 0 | 0 | 4 | [cal](https://knoxville.macaronikid.com) |
+| Travel by Olympus | MacaroniKid-TN-knoxville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://knoxville.macaronikid.com) |
+| Bijou Theatre | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://knoxville.macaronikid.com) |
+| Open Chord Stage | MacaroniKid-TN-knoxville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://knoxville.macaronikid.com) |
+| Tennessee Valley Fair | MacaroniKid-TN-knoxville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://knoxville.macaronikid.com) |
+| McClung Museum of Natural History & Culture | MacaroniKid-TN-knoxville | 0 | 2 | 0 | 0 | 0 | 0 | 2 | [cal](https://knoxville.macaronikid.com) |
+| Ancient Lore Village | MacaroniKid-TN-knoxville | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [cal](https://knoxville.macaronikid.com) |
+| Friends of the Knox County Public Library | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| Pinnacle at Turkey Creek | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| Gary Chapman | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| Clarence Brown LAB Theatre, Univ of Tennessee | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| Knox Main Street United | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| Mabry-Hazen House | MacaroniKid-TN-knoxville | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| Joystick Gaming and Collectibles | MacaroniKid-TN-knoxville | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| The Final Five Agency | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| The 808 | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| Little Valley Play Cafe - Knoxville | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| UT Gardens Knoxville | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| Ijams Nature Center | MacaroniKid-TN-knoxville | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| Marble Springs State Historic Site | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| Little Bellas | MacaroniKid-TN-knoxville | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| Yellow Door Media | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| City of Knoxville Special Events | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| Colt Classic Presents | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| Historic Ramsey House | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| Covenant Health Park | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| City of Knoxville - Government | MacaroniKid-TN-knoxville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://knoxville.macaronikid.com) |
+| The Bluebird Cafe | MacaroniKid-TN-swnashville | 20 | 0 | 0 | 0 | 0 | 0 | 20 | [cal](https://swnashville.macaronikid.com) |
+| Nashville Public Library - Bellevue | MacaroniKid-TN-swnashville | 3 | 4 | 3 | 5 | 2 | 0 | 17 | [cal](https://swnashville.macaronikid.com) |
+| Nashville Public Library - Green Hills | MacaroniKid-TN-swnashville | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://swnashville.macaronikid.com) |
+| Nashville Public Library - Richland Park | MacaroniKid-TN-swnashville | 0 | 2 | 1 | 0 | 0 | 0 | 3 | [cal](https://swnashville.macaronikid.com) |
+| Rescue Puppy Yoga | MacaroniKid-TN-swnashville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://swnashville.macaronikid.com) |
+| National Barbecue & Grilling Association | MacaroniKid-TN-swnashville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://swnashville.macaronikid.com) |
+| Cheekwood | MacaroniKid-TN-swnashville | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://swnashville.macaronikid.com) |
+| Travellers Rest Historic House and Museum | MacaroniKid-TN-swnashville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swnashville.macaronikid.com) |
+| Down Syndrome Association of Middle Tennessee | MacaroniKid-TN-swnashville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swnashville.macaronikid.com) |
+| Ford Ice Center | MacaroniKid-TN-swnashville | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://swnashville.macaronikid.com) |
+| Loveless Cafe | MacaroniKid-TN-swnashville | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://swnashville.macaronikid.com) |
+| Artsbridge | MacaroniKid-WV-parkersburg | 36 | 31 | 38 | 4 | 3 | 10 | 122 | [cal](https://parkersburg.macaronikid.com) |
+| Washington County Public Library/Marietta Branch Library | MacaroniKid-WV-parkersburg | 2 | 13 | 5 | 0 | 0 | 0 | 20 | [cal](https://parkersburg.macaronikid.com) |
+| South Parkersburg Library | MacaroniKid-WV-parkersburg | 6 | 0 | 9 | 0 | 0 | 2 | 17 | [cal](https://parkersburg.macaronikid.com) |
+| Wizard Post - MOV | MacaroniKid-WV-parkersburg | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://parkersburg.macaronikid.com) |
+| Marietta Main Street | MacaroniKid-WV-parkersburg | 2 | 0 | 0 | 2 | 0 | 0 | 4 | [cal](https://parkersburg.macaronikid.com) |
+| Mountwood Park | MacaroniKid-WV-parkersburg | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://parkersburg.macaronikid.com) |
+| Parkersburg & Wood County Public Library | MacaroniKid-WV-parkersburg | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://parkersburg.macaronikid.com) |
+| Grand Central Mall | MacaroniKid-WV-parkersburg | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://parkersburg.macaronikid.com) |
+| West Virginia Motor Speedway | MacaroniKid-WV-parkersburg | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://parkersburg.macaronikid.com) |
+| Valley Gem and Major Riviera | MacaroniKid-WV-parkersburg | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://parkersburg.macaronikid.com) |
+| WV Deaf Service Center | MacaroniKid-WV-parkersburg | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://parkersburg.macaronikid.com) |
+| Mid-Ohio Valley Signers' Club presented by AKA Professional Services | MacaroniKid-WV-parkersburg | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://parkersburg.macaronikid.com) |
+| Marietta College | MacaroniKid-WV-parkersburg | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://parkersburg.macaronikid.com) |
+| Ohio Valley Opry | MacaroniKid-WV-parkersburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| WILD RIVER KAYAK CO. Llc | MacaroniKid-WV-parkersburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| Freedom Gate Church | MacaroniKid-WV-parkersburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| Parkersburg Homecoming | MacaroniKid-WV-parkersburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| Parkersburg Pride | MacaroniKid-WV-parkersburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| CertifiKid | MacaroniKid-WV-parkersburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| Parkersburg Art Center | MacaroniKid-WV-parkersburg | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| Ron Seldomridge at Astorg Auto | MacaroniKid-WV-parkersburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| West Virginia Central Federal Credit Union | MacaroniKid-WV-parkersburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| Blennerhassett Island Historical State Park | MacaroniKid-WV-parkersburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| Friends of Vienna | MacaroniKid-WV-parkersburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| Campus Martius and Ohio River Museum | MacaroniKid-WV-parkersburg | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| Downtown PKB | MacaroniKid-WV-parkersburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| Peoples Bank Theatre | MacaroniKid-WV-parkersburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| Kootaga District, Buckskin Council | MacaroniKid-WV-parkersburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| Huffman's Prime Steakhouse | MacaroniKid-WV-parkersburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+| The Minted Vintage | MacaroniKid-WV-parkersburg | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://parkersburg.macaronikid.com) |
+
+### Flagged: All Ages >= 70% (total >= 20 events)
+
+| Site | Scraper | All Ages | Total | % |
+|---|---|---|---|---|
+| Charlestown Parks & Recreation | MacaroniKid-RI-washingtonri | 255 | 282 | 90% |
+| Peabody Recreation Parks and Forestry | MacaroniKid-MA-salempeabody | 230 | 241 | 95% |
+| Malden Recreation Department | MacaroniKid-MA-wakefield | 164 | 172 | 95% |
+| Pennsylvania Department of Conservation and Natural Resources | MacaroniKid-PA-harrisburg | 128 | 147 | 87% |
+| Longwood Gardens | MacaroniKid-PA-kennettsquare | 120 | 126 | 95% |
+| Wilmington Memorial Library | MacaroniKid-MA-burlingtonma | 78 | 108 | 72% |
+| Caldwell County Public Library - Southern Branch | MacaroniKid-NC-hickory | 50 | 66 | 76% |
+| Bumble Brews Play Cafe | MacaroniKid-NC-cary | 62 | 63 | 98% |
+| Donora Roll'R'Way | MacaroniKid-PA-pittsburgheast | 50 | 50 | 100% |
+| Dauphin County Parks and Recreation | MacaroniKid-PA-harrisburg | 37 | 47 | 79% |
+| East Bridgewater Public Library | MacaroniKid-MA-bridgewater | 35 | 46 | 76% |
+| The Grey Eagle | MacaroniKid-NC-asheville | 43 | 45 | 96% |
+| Oconaluftee Indian Village | MacaroniKid-NC-waynesville | 45 | 45 | 100% |
+| Macaroni KID Erie | MacaroniKid-PA-erie | 33 | 39 | 85% |
+| Town of Cary, NC | MacaroniKid-NC-cary | 34 | 38 | 89% |
+| Greathouse Shryock Elementary | MacaroniKid-KY-centrallouisville | 27 | 36 | 75% |
+| Baldwin Borough Public Library | MacaroniKid-PA-southhills | 27 | 35 | 77% |
+| Visit Lancaster City | MacaroniKid-PA-lancaster | 32 | 33 | 97% |
+| Louisville Central | MacaroniKid-KY-centrallouisville | 30 | 31 | 97% |
+| Worcester Palladium | MacaroniKid-MA-northworcester | 31 | 31 | 100% |
+| Flour Power Cary Parkside | MacaroniKid-NC-cary | 30 | 31 | 97% |
+| Invensys Foxboro Branch YMCA | MacaroniKid-MA-swboston | 29 | 30 | 97% |
+| Waterfront Park | MacaroniKid-KY-centrallouisville | 28 | 29 | 97% |
+| Lowell | MacaroniKid-MA-lowell | 29 | 29 | 100% |
+| Brighton Music Hall presented by Citizens | MacaroniKid-MA-waltham | 28 | 28 | 100% |
+| Swarthmore Public Library | MacaroniKid-PA-springfieldpa | 23 | 28 | 82% |
+| Flinchbaugh’s Orchard & Farm Market | MacaroniKid-PA-york | 28 | 28 | 100% |
+| Acton-Concord-Bedford-Lexington | MacaroniKid-MA-lexington | 22 | 26 | 85% |
+| Carousel Skate Center | MacaroniKid-MA-ssboston | 26 | 26 | 100% |
+| Nantucket Historical Association | MacaroniKid-MA-capecod | 25 | 25 | 100% |
+| 185 King Street | MacaroniKid-NC-hendersonville | 24 | 25 | 96% |
+| Hurley Family Branch YMCA | MacaroniKid-MA-attleboro | 24 | 24 | 100% |
+| EARTH Limited at Southwick's Zoo | MacaroniKid-MA-franklin | 24 | 24 | 100% |
+| Art Buzz Kids at Wine & Design - Apex | MacaroniKid-NC-cary | 18 | 24 | 75% |
+| Brew Barn | MacaroniKid-MA-leominster | 23 | 23 | 100% |
+| MGM Music Hall at Fenway | MacaroniKid-MA-newton | 22 | 23 | 96% |
+| Chapel Hill - Durham | MacaroniKid-NC-southdurham | 16 | 22 | 73% |
+| The Cary Theater | MacaroniKid-NC-cary | 20 | 21 | 95% |
+| Durham County Library — North Regional Library | MacaroniKid-NC-durham | 16 | 21 | 76% |
+| The Serpent's Key | MacaroniKid-PA-gettysburgpa | 17 | 21 | 81% |
+| Wheels Durham | MacaroniKid-NC-durham | 14 | 20 | 70% |
+| Sky Zone Trampoline Park Durham | MacaroniKid-NC-durham | 14 | 20 | 70% |
+| Pittsburgh Cultural Trust | MacaroniKid-PA-southhills | 20 | 20 | 100% |
+| The Bluebird Cafe | MacaroniKid-TN-swnashville | 20 | 20 | 100% |

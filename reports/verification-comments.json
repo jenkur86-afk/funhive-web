@@ -10941,23 +10941,23 @@
   "population": "allages"
  },
  "MacaroniKid-MA-capecod|||Nantucket Historical Association": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "only a yodel event-detail link is stored for this venue; a museum is plausibly broad-audience but that was not confirmed against a live calendar",
+  "verdict": "MATCHES",
+  "comment": "Museum and walking-tour programming (Four Centuries Walking Tour, Whaling Museum, Family Connections Tour). All-ages is the correct reading.",
   "population": "allages"
  },
  "MacaroniKid-NC-durham|||Durham County Library — North Regional Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "durhamcountylibrary.org redirects to durhamcountylibrary.libcal.com, which rendered no dated events to Puppeteer. Not a coverage gap - LibCal-NC already configures this library at that exact URL; these MacaroniKid rows are a syndicated second copy",
+  "verdict": "MISMATCH",
+  "comment": "Library branch whose All-Ages rows are visibly age-targeted: 'Playtime with Ms. Chelsea' (early-childhood play session), 'Mini Makers Workshop' and 'Homeschool Learning Lab' (school-age), alongside an adult cookbook club. None carries an age or grade token, so this is a program-name detection gap rather than a grade-rule gap.",
   "population": "allages"
  },
  "MacaroniKid-PA-southhills|||Baldwin Borough Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "only a yodel event-detail link is stored; no library-owned calendar URL in any config, and a guessed baldwinboroughlibrary.org does not resolve",
+  "verdict": "MISMATCH",
+  "comment": "Library programming with clearly age-targeted items sitting in All Ages: 'Little Bookworms!' and 'Little Bookworms! With Philomena the Therapy Dog!' are early-childhood storytime sessions. No generic token in the title for the detector to key on; needs a program-name signal, not a grade or age rule.",
   "population": "allages"
  },
  "MacaroniKid-PA-harrisburg|||Pennsylvania Department of Conservation and Natural Resources": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "dcnr.pa.gov redirects to pa.gov and renders no event containers. A state parks agency is plausibly genuinely all-ages but that was not confirmed",
+  "verdict": "MATCHES",
+  "comment": "State-park interpretive programming is genuinely all-ages: hikes, bonfires, paddles, bird walks, heritage festivals. A minority carry soft signals (Homeschool Day, Girl Scouts Love State Parks) but the bulk is correctly unbracketed.",
   "population": "allages"
  },
  "MacaroniKid-VA-nrv|||Montgomery-Floyd Regional Library - Blacksburg Library": {
@@ -11024,5 +11024,60 @@
   "verdict": "UNVERIFIABLE",
   "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
   "population": "zero"
+ },
+ "MacaroniKid-NC-cary|||Town of Cary, NC": {
+  "verdict": "MATCHES",
+  "comment": "Municipal community calendar: garden workdays, litter sweeps, Diwali and Asia Fest, pumpkin flotilla, public safety day. Genuinely community-wide, not age-targeted.",
+  "population": "allages"
+ },
+ "MacaroniKid-KY-centrallouisville|||Greathouse Shryock Elementary": {
+  "verdict": "MISMATCH",
+  "comment": "Elementary-school calendar; every item is school-age (After School Clubs, Dress as a Storybook Character, Report Card Distribution) and one carries an explicit grade: 'First Grade - Career Day for Tools'. detectAgeRange only matched DIGIT grades, so the spelled-out form fell through to All Ages. Rule added 2026-09-01 and this row reclassified to Kids (6-8).",
+  "population": "allages"
+ },
+ "MacaroniKid-PA-lancaster|||Visit Lancaster City": {
+  "verdict": "MATCHES",
+  "comment": "Downtown tourism calendar: First Fridays, arts markets, print crawl, Ragtime the Musical, free movie series. Genuinely all-ages city programming.",
+  "population": "allages"
+ },
+ "MacaroniKid-NC-cary|||Flour Power Cary Parkside": {
+  "verdict": "MISMATCH",
+  "comment": "Flour Power is a children's cooking studio; every listing (Culinary Boot Camp, Wizardly Kitchen, Chocolate Craze, Pumpkin Patch Bakery) is a kids' class. The age is carried by the venue identity, not by any token in the title, so no title-level rule can recover it - would need a per-venue age default.",
+  "population": "allages"
+ },
+ "MacaroniKid-KY-centrallouisville|||Waterfront Park": {
+  "verdict": "MATCHES",
+  "comment": "City waterfront park: music festivals, 5k runs, drive-in movies, historic walking tours, charity walks. Correctly all-ages.",
+  "population": "allages"
+ },
+ "MacaroniKid-PA-york|||Flinchbaugh's Orchard & Farm Market": {
+  "verdict": "MATCHES",
+  "comment": "Only six distinct listings, all seasonal farm activities (U-Pick pumpkins and flowers, Clydesdale corn maze, Harvest Saturday). Genuinely all-ages.",
+  "population": "allages"
+ },
+ "MacaroniKid-NC-southdurham|||Chapel Hill - Durham": {
+  "verdict": "MATCHES",
+  "comment": "Only two distinct listings, both generic recurring community events (Fridays on the Front Porch, Saturdays at the Farm). No age signal exists to extract.",
+  "population": "allages"
+ },
+ "MacaroniKid-NC-cary|||The Cary Theater": {
+  "verdict": "MATCHES",
+  "comment": "Film screenings and shorts programmes (The Magic Faraway Tree, CatVideo Fest 2026, Where We Come From: Shorts). All-ages screenings, correctly unbracketed.",
+  "population": "allages"
+ },
+ "MacaroniKid-PA-gettysburgpa|||The Serpent's Key": {
+  "verdict": "MATCHES",
+  "comment": "Herbalism and occult shop running adult-oriented craft circles and rituals. Not age-targeted at children; All Ages is defensible, though several items arguably belong in Adults - a separate question from this flag.",
+  "population": "allages"
+ },
+ "MacaroniKid-NC-durham|||Wheels Durham": {
+  "verdict": "MATCHES",
+  "comment": "Roller rink theme nights (Glow in the Dark Family Night, Karaoke Skate, Gospel Night, Anime Skate). Open-session skating is genuinely all-ages.",
+  "population": "allages"
+ },
+ "MacaroniKid-TN-swnashville|||The Bluebird Cafe": {
+  "verdict": "MATCHES",
+  "comment": "Songwriter listening room; every listing is an In The Round or Sunday Spotlight music set. Not children's programming and not age-bracketed - All Ages is the right store for it.",
+  "population": "allages"
  }
 }

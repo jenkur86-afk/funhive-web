@@ -822,6 +822,27 @@ function _isTimeOnlyDateString(s) {
 // AGE DETECTION — auto-tag events with age ranges
 // ============================================================================
 
+// Spelled-out ordinal grades. Every grade rule inside detectAgeRange() requires a
+// DIGIT ("3rd grade", "grades 3-5", "gr k-2"), so the written-out form fell straight
+// through to All Ages. Found 2026-09-01 on Greathouse Shryock Elementary
+// (MacaroniKid-KY-centrallouisville, flagged at 75% All Ages) whose "First Grade -
+// Career Day for Tools" carried no detected age, and on 24 RecDeskParks-hoboken rows
+// titled "Fall Soccer - Kinder & First Grade".
+//
+// Hoisted to module scope because detectAgeRange() runs once per saved event across
+// 150+ scrapers; recompiling these per call would be pure waste.
+const GRADE_WORD_VALUES = {
+  kinder: 0, kindergarten: 0,
+  first: 1, second: 2, third: 3, fourth: 4, fifth: 5, sixth: 6,
+  seventh: 7, eighth: 8, ninth: 9, tenth: 10, eleventh: 11, twelfth: 12,
+};
+const GRADE_WORD = '(?:kindergarten|kinder|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth)';
+// "grades?" and NOT "grader": the word boundary after "grade" excludes "grader", which
+// matters because "Junie B., First Grader Boo -- and I Mean It!" is a play title, not an
+// audience descriptor. It is live in the corpus under MacaroniKid-FL-okeechobee.
+const WORD_GRADE_RANGE_RE = new RegExp(`\\b(${GRADE_WORD})\\s*(?:[-–&]|through|thru|to|and)\\s*(${GRADE_WORD})\\s*grades?\\b`);
+const WORD_GRADE_SINGLE_RE = new RegExp(`\\b(${GRADE_WORD})\\s*grades?\\b`);
+
 function detectAgeRange(name, description) {
   const text = `${name || ''} ${description || ''}`.toLowerCase();
   const titleText = `${name || ''}`.toLowerCase();
@@ -1161,6 +1182,31 @@ function detectAgeRange(name, description) {
   // Kindergarten is deliberately NOT treated as a lone grade here. "1000 Books Before
   // Kindergarten" is a ubiquitous library programme aimed at BABIES, and mapping a bare
   // "kindergarten" to age 5 would file it as Preschool — the opposite of correct.
+  // Spelled-out ordinal grades — see GRADE_WORD_VALUES at the top of this section for
+  // where this came from. Placed after every digit rule so a digit range always wins,
+  // and range-before-single for the same reason "grades 3-5" must not truncate to 3.
+  //
+  // A lone "kindergarten"/"kinder" is excluded from the SINGLE form (g >= 1) for exactly
+  // the reason spelled out below: "1000 Books Before Kindergarten" is a babies programme.
+  // It IS allowed as the LOWER bound of a range ("Kinder & First Grade" -> ages 5-6),
+  // where the second grade word makes the school-age reading unambiguous.
+  const wordGradeRange = text.match(WORD_GRADE_RANGE_RE);
+  if (wordGradeRange) {
+    const lo = GRADE_WORD_VALUES[wordGradeRange[1]];
+    const hi = GRADE_WORD_VALUES[wordGradeRange[2]];
+    if (lo !== undefined && hi !== undefined && lo <= hi) {
+      return `${gradeToAge(lo)}-${gradeToAge(hi)}`;
+    }
+  }
+  const wordGradeSingle = text.match(WORD_GRADE_SINGLE_RE);
+  if (wordGradeSingle) {
+    const g = GRADE_WORD_VALUES[wordGradeSingle[1]];
+    if (g >= 1 && g <= 12) {
+      const age = gradeToAge(g);
+      return `${age}-${age}`;
+    }
+  }
+
   const singleGradeOrdinal = text.match(/\b(\d{1,2})(?:st|nd|rd|th)\s*grade\b/);
   const singleGradeWordFirst = text.match(/\bgrades?\s*(\d{1,2})\b/);
   const singleGrade = singleGradeOrdinal || singleGradeWordFirst;

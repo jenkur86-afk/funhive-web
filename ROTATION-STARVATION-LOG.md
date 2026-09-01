@@ -72,6 +72,38 @@ self-heals" overstated it.
 
 ---
 
+## Prediction check — 2026-09-01
+
+**The 09-01 prediction held, exactly.** Recorded here rather than edited into the section
+below, so the claim and its test stay side by side.
+
+| Predicted (2026-08-31) | Measured (2026-09-01) | Held? |
+|---|---|---|
+| No rotation at all on 09-01; preflight shows `2026-09-01=NONE` | Preflight: `2026-09-01=NONE 2026-08-31=G1 2026-08-30=G3 2026-08-29=NONE 2026-08-28=G1 2026-08-27=G2 2026-08-26=NONE`. No `Running Group N` line exists for 09-01. | ✅ |
+| Cause: the old-code MacaroniKid tail is still running at the 07:00Z trigger | `scraper-run-2026-08-31.log:127` — `🍝 Running MacaroniKid scrapers for Group 1 (macaroni-runner-group1.js)` at `2026-08-31T18:25:55Z`, finishing `2026-09-01T13:42:47Z`. The rotation's own table reports **1842.8 min = 30.7h** total. | ✅ |
+| Nothing deployed 08-31 could prevent it | Split commit `7184edc` is timestamped `2026-08-31T20:53Z` — 2.5h **after** the runner had already spawned the group-1 tail from pre-split code held in memory. | ✅ |
+| Tail length ~15h | **19.3h measured** (18:25:55Z → 13:42:47Z). | ❌ — see below |
+
+**The duration model understates Group 1 tails and should be widened.** The ledger's option-1
+table recorded Group 1 MacaroniKid tails of 15.5h / 14.7h / "~15h"; the actual 08-31 tail was
+19.3h, ~29% above the top of that range. The conclusion is unchanged — with an 11.4h regular
+phase, any tail over ~12.6h overruns, and every observed Group 1 tail already clears that —
+but anyone re-deriving headroom from these numbers should use 19.3h, not 15h, as the Group 1
+worst case. Recording the miss rather than quietly re-fitting it.
+
+**Both new tasks verified live the same day.** `FunHive-Macaroni` is registered and Ready
+(`NextRunTime = 2026-09-01 15:00`, `LastTaskResult = 267011` = never run yet), and a
+`macaroni-daily-runner.js --dry-run` at 18:19Z resolved to *"CATCH-UP (macaroni ledger):
+Group 2 has not completed in 4.6 days (calendar said Group 1)"* → `macaroni-runner-group2.js`.
+That is the predicted behaviour — the starved group beating the calendar pick — confirmed
+before the trigger rather than after. `scripts/test-rotation-safety.js` passes 8/8.
+
+**Still open, and the actual test of intervention #5:** the 09-02 prediction. Group 2 should
+run under new code, regular scrapers only, in roughly 7h, with a lock-acquisition line in
+`scraper-run-2026-09-02.log`. Until that is observed, intervention #5's ledger row stays ⏳.
+
+---
+
 ## Current state — 2026-08-31
 
 - Rotations in the last 7 days: `08-31=G1 08-30=G3 08-29=NONE 08-28=G1 08-27=G2 08-26=NONE 08-25=G1`

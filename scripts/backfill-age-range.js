@@ -36,6 +36,24 @@ const SAVE = process.argv.includes('--save');
 const limitArg = process.argv.find(a => a.startsWith('--limit='));
 const LIMIT = limitArg ? parseInt(limitArg.split('=')[1], 10) : null;
 
+// --name-like=a,b,c  — restrict the scan to rows whose NAME contains any of the
+// given substrings (case-insensitive), instead of scanning every "All Ages" row.
+//
+// Added 2026-09-01. A full scan reads the entire All-Ages population to find the
+// handful of rows a newly-added detection rule actually changes, which is the
+// single largest avoidable egress cost of running this script after a small rule
+// change. When you know the shape the new rule keys on — "first grade", "second
+// grade", … — scoping to it costs a few hundred KB instead of tens of MB and
+// reclassifies exactly the same rows.
+//
+// It narrows only the CANDIDATE SET; detection itself still runs the full
+// save-time chain over name + description, so a scoped run can never assign a
+// bracket a full run would not have.
+const nameLikeArg = process.argv.find(a => a.startsWith('--name-like='));
+const NAME_LIKE = nameLikeArg
+  ? nameLikeArg.split('=').slice(1).join('=').split(',').map(s => s.trim()).filter(Boolean)
+  : null;
+
 // ── Pull every event currently tagged "All Ages" ──
 async function fetchAllAgesEvents() {
   const all = [];
@@ -44,10 +62,14 @@ async function fetchAllAgesEvents() {
   while (true) {
     if (LIMIT && all.length >= LIMIT) break;
     const pageSize = LIMIT ? Math.min(PAGE, LIMIT - all.length) : PAGE;
-    const { data, error } = await supabase
+    let q = supabase
       .from('events')
       .select('id, name, description, scraper_name')
-      .eq('age_range', 'All Ages')
+      .eq('age_range', 'All Ages');
+    if (NAME_LIKE) q = q.or(NAME_LIKE.map(s => `name.ilike.%${s}%`).join(','));
+    // .order() BEFORE .range() is mandatory — an unordered paginator returns
+    // overlapping pages (CLAUDE.md, the 2026-05-15 incident).
+    const { data, error } = await q
       .order('id', { ascending: true })
       .range(from, from + pageSize - 1);
     if (error) throw error;
@@ -78,7 +100,7 @@ function truncStr(s, n) {
 async function main() {
   console.log(`\n${'═'.repeat(60)}`);
   console.log(`  BACKFILL AGE_RANGE  (${SAVE ? '💾 SAVE' : '👀 DRY RUN'})`);
-  console.log(`  Mode: full scan of age_range = 'All Ages'${LIMIT ? ` (capped at ${LIMIT})` : ''}`);
+  console.log(`  Mode: ${NAME_LIKE ? `name ILIKE any of [${NAME_LIKE.join(', ')}]` : 'full scan'} over age_range = 'All Ages'${LIMIT ? ` (capped at ${LIMIT})` : ''}`);
   console.log(`${'═'.repeat(60)}\n`);
 
   const events = await fetchAllAgesEvents();
