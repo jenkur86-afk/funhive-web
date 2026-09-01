@@ -65,6 +65,17 @@ rows today alone.
 > are documented below in the fix-log entry (craft-fair false positives, program "Level
 > N", pool-specific swim-level names). Parenting talks tagged as kids events is a newly
 > identified class, recorded and not yet acted on.
+>
+> **COMPLETION PASS 2026-09-01 (Fable) — §1.2 CLOSED.** The assessment's five rule
+> defects fixed and pinned (era/franchise guard, years-unit open-ended, and-under
+> crossover documented both ways, dead ternary); carry-permit firearms phrases added to
+> the non-family patterns with negative controls and the 6 live rows deleted; the skipped
+> flagged-family sampling done WITH descriptions — verdict: those families' All-Ages
+> shares are structural (boilerplate descriptions, genuine adult programming), zero of 45
+> samples recoverable, so no description-inclusive backfill should be built. Incidental:
+> "is closed today" closure-notice gap fixed, 13 stored rows deleted. Suites 115/115,
+> 85/85. Remaining age work is the 67k null-signal pool, which is now believed mostly
+> structural rather than recoverable.
 
 Gate 5 regressed −2 this window and MASTER-PLAN Phase 5 (26 age bugs across 8 scrapers)
 has never started. The regression suite (`test-age-detection.js`, 94 cases) exists

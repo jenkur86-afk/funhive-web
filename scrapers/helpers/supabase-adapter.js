@@ -879,9 +879,12 @@ function detectAgeRange(name, description) {
   if (unitRange) {
     const unitOf = (u) => (u ? UNIT_YEARS[u.replace(/s$|\.$/g, '').replace(/s$/, '')] : null);
     const loU = unitOf(unitRange[2]);
-    // A missing second unit inherits the first ONLY when the first is years;
-    // "18 months-3" almost always means 3 YEARS, not 3 months.
-    const hiU = unitOf(unitRange[4]) ?? (loU === 1 ? 1 : 1);
+    // A missing second unit is read as YEARS regardless of the first unit —
+    // "Ages 18 months-3" means 3 years, not 3 months; nobody writes a range
+    // whose unnamed upper bound is smaller than its named lower one. (An
+    // earlier version of this line dressed the constant up as a conditional;
+    // it was always 1.)
+    const hiU = unitOf(unitRange[4]) ?? 1;
     if (loU && hiU) {
       const lo = Math.floor(parseInt(unitRange[1], 10) * loU);
       const hi = Math.floor(parseInt(unitRange[3], 10) * hiU);
@@ -925,9 +928,15 @@ function detectAgeRange(name, description) {
   // would have been deleted, not merely mistagged. Caught 2026-09-01 by a test
   // case while adding the unit-range rule above; it is the same
   // number-without-its-unit trap, in the direction that destroys data.
-  const ageMinUnit = text.match(/\bages?:?\s+(\d{1,3})\s*(weeks?|wks?|months?|mos?)\s*(?:\+|and\s+(?:up|older|over))/);
+  // YEARS accepted here too as of 2026-09-01 (§1.2 completion pass): "Ages 2
+  // years and up" previously matched NEITHER open-ended rule — years blocked
+  // the bare-number one's grammar without being handled here — so it fell
+  // through to the lone-age rule and became "2-2", filing an
+  // everyone-from-two event under Babies only. With years handled it returns
+  // "2+", which normalizeAgeRange() buckets as All Ages — the honest label.
+  const ageMinUnit = text.match(/\bages?:?\s+(\d{1,3})\s*(weeks?|wks?|months?|mos?|years?|yrs?)\s*(?:\+|and\s+(?:up|older|over))/);
   if (ageMinUnit) {
-    const perYear = /^w/i.test(ageMinUnit[2]) ? 52 : 12;
+    const perYear = /^w/i.test(ageMinUnit[2]) ? 52 : (/^m/i.test(ageMinUnit[2]) ? 12 : 1);
     return `${Math.floor(parseInt(ageMinUnit[1], 10) / perYear)}+`;
   }
 
@@ -939,9 +948,17 @@ function detectAgeRange(name, description) {
   // Open-ended UPPER bound: "ages 12 and under". Added 2026-09-01, and it is
   // LOAD-BEARING rather than merely additive: without it the single-age rule
   // further down reads "Ages 12 and under" as exactly 12 and files a
-  // birth-to-12 event under Tweens. Emitting a range from 0 keeps it honest —
-  // it resolves to All Ages, which is what an event open to every child under
-  // 12 actually is. Must therefore stay ABOVE the single-age rule.
+  // birth-to-12 event under Tweens. Must therefore stay ABOVE the single-age
+  // rule.
+  //
+  // What the emitted "0-N" becomes is SPAN-DEPENDENT, and that is deliberate
+  // (corrected 2026-09-01 — an earlier comment claimed it always resolved to
+  // All Ages, which is only true for wide spans): normalizeAgeRange() buckets
+  // 0-8 and narrower into Babies & Toddlers and 0-9 and wider into All Ages.
+  // Both readings are right — "ages 4 and under" IS a toddler event, while
+  // "ages 12 and under" is everyone. Both sides of the crossover are pinned in
+  // test-age-detection.js; do not "fix" one direction without looking at the
+  // other.
   const ageMaxMatch = text.match(/\bages?:?\s+(\d{1,2})\s*and\s+(?:under|younger)\b/);
   if (ageMaxMatch) return `0-${ageMaxMatch[1]}`;
 
@@ -955,7 +972,16 @@ function detectAgeRange(name, description) {
   // or "ages 3-5" would resolve on the 3 alone and "ages 18+" would become
   // 18-18. It requires digits IMMEDIATELY after the keyword, so "Age Division",
   // "Ages and Stages Playgroup" and "One for the Ages Tour" cannot match.
-  const ageSingle = text.match(/\bages?:?\s+(\d{1,2})(?![\d:%-])/);
+  // ERA/FRANCHISE GUARD (2026-09-01, §1.2 completion pass): in "Ice Age 3
+  // Movie Screening" the "Age 3" is a sequel number, not an audience — this
+  // rule was filing the screening under Preschool. When the word before "age"
+  // is an era/franchise modifier, the phrase names a THING, not an age. A
+  // preceding-word blocklist rather than anything cleverer because the real
+  // shapes are few and closed ("Ice Age 2", "Stone Age", "Golden Age of...");
+  // the structural alternatives all break genuine titles like "Toddler Gym
+  // age 2" (text is lowercased, so capitalisation cannot discriminate).
+  const ageSingle = text.match(
+    /(?<!\b(?:ice|stone|bronze|iron|golden|gilded|middle|dark|space|digital|jazz|atomic|viking|new)\s)\bages?:?\s+(\d{1,2})(?![\d:%-])/);
   if (ageSingle) {
     const n = parseInt(ageSingle[1], 10);
     if (n <= 18) return `${n}-${n}`;
@@ -1374,6 +1400,19 @@ const NON_FAMILY_PATTERNS = [
   /\bgambling\b/i,
   /\bgun\s*show\b/i,
   /\bfirearms?\s*(show|expo|sale)\b/i,
+  // Carry-permit / defensive-shooting instruction (added 2026-09-01, §1.2
+  // completion pass). The rules above only matched the literal word "firearms",
+  // so "Defensive Carry Fundamentals (MD Wear and Carry)" and "MD Wear and
+  // Carry Renewal Class" sat live on a family events site as All Ages — 6 rows
+  // measured across RecDesk-Parks-ccrec and MacaroniKid-MD-frederick. These
+  // phrases are legal terms of art for handgun-permit instruction and have no
+  // family reading; "carry" alone is deliberately NOT matched ("carry-in
+  // dinner", "Baby Carrier Fitting" must survive — see test-junk-titles.js).
+  /\bwear\s+and\s+carry\b/i,
+  /\bconcealed\s+carry\b/i,
+  /\bdefensive\s+(carry|pistol|handgun|shooting)\b/i,
+  /\b(handgun|pistol)\s+(permit|class|course|training|qualification)\b/i,
+  /\bccw\s+(class|course|permit|training)\b/i,
 
   // Adult library / community programs
   /\bbook\s+club\b/i,
@@ -1611,6 +1650,13 @@ function isCancelledEvent(name, description) {
     // "closed for <reason>" / "will be closed": "Museum Closed For Construction",
     // "Closed for Staff Development", "We will be closed August 10-18".
     if (/\bclosed\s+for\b/i.test(nameStr)) return true;
+    // "is closed <when>": "Kamin Science Center is closed today". Added
+    // 2026-09-01 (§1.2 completion pass) — found stored live during the
+    // flagged-family sampling. Every shape above needs "closed" at an edge, a
+    // holiday word, or "for", so a temporal adverb after "is closed" slipped
+    // all of them. Anchored on that adverb so "Registration is closed" (a real
+    // event whose signup ended) cannot match.
+    if (/\bis\s+closed\s+(today|tomorrow|until|through|this\s+week)\b/i.test(nameStr)) return true;
     if (/\bwill\s+be\s+closed\b/i.test(nameStr)) return true;
     // CONCATENATED-DATE ARTIFACT — 32 rows over 6 titles, all from Assabet:
     // "Sunday, August 30Library Closed". The date is glued to the title with no

@@ -197,7 +197,7 @@
       "added": "2026-09-01"
     },
     "AGE-EXPLICIT-FORMATS-UNRUN": {
-      "what": "New explicit-age parsing rules added 2026-09-01 (unit-bearing bounds, colon/ampersand separators, lone stated age, \"N and under\", plus a negative lookahead stopping \"Age 18 months and older\" from resolving to Adults and being rejected). Backfill of 1,163 existing All-Ages rows is PROVEN (1,163 -> 0 on re-run). The SAVE-TIME path is unrun.",
+      "what": "New explicit-age parsing rules added 2026-09-01 (unit-bearing bounds, colon/ampersand separators, lone stated age, \"N and under\", plus a negative lookahead stopping \"Age 18 months and older\" from resolving to Adults and being rejected). Backfill of 1,163 existing All-Ages rows is PROVEN (1,163 -> 0 on re-run). The SAVE-TIME path is unrun. COMPLETION PASS 2026-09-01: five rule defects fixed (era-guard, years-unit, and-under crossover, cleanup), carry-permit firearms phrases added to NON_FAMILY_PATTERNS (6 rows deleted), \"is closed today\" closure gap fixed (13 rows deleted). Suites 115/115, 85/85.",
       "expect": "On the next rotations, newly scraped rows whose titles carry these formats should arrive with a specific bracket rather than All Ages. A re-run of scripts/backfill-allages-to-specific.js should keep reporting a small number, not climb back toward 1,000+. Gate 5 should also stop oscillating as violently once RecDesk F/G rows stop entering the audit.",
       "confirm": "node scripts/backfill-allages-to-specific.js   (dry run; expect a low count)",
       "added": "2026-09-01"

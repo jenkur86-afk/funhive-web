@@ -222,6 +222,19 @@ const CASES = [
   ['One for the Ages Tour', '', 'All Ages', 'idiom, no digits'],
   ['09-10 Age Division (2140)', '', 'All Ages', '"Age Division" — digits do not follow the keyword'],
 
+  // --- §1.2 completion pass (added 2026-09-01) -------------------------------
+  // Four defects found by the Fable assessment's adversarial probes; each is
+  // pinned here so a later "simplification" cannot quietly reintroduce it.
+  ['Ice Age 3 Movie Screening', '', 'All Ages', 'sequel number is not an audience — era/franchise guard'],
+  ['Golden Age of Hollywood Film Series', '', 'All Ages', 'era phrase, no digits — must stay null'],
+  ['Ages 2 years and up Open Play', '', 'All Ages',
+   'years-unit open-ended: was falling through to the lone-age rule and reading as exactly 2'],
+  // The and-under crossover, BOTH sides. normalizeAgeRange buckets 0-8 and
+  // narrower into Babies, 0-9 and wider into All Ages — deliberate, measured,
+  // and documented at the rule. Do not fix one direction without the other.
+  ['ages 8 and under swim meet', '', 'Babies & Toddlers (0-2)', 'narrow and-under stays a young-child event'],
+  ['Storytime ages 4 and under', '', 'Babies & Toddlers (0-2)', 'genuinely a toddler event'],
+
   // --- Youth-sport age-group notation: "10U" / "U12" -------------------------
   // Added 2026-08-31 from the Step 3c all-ages audit. 539 corpus rows carry this
   // notation and 422 sat in All Ages, concentrated in the parks families.
