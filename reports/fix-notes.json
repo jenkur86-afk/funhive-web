@@ -189,6 +189,12 @@
       "expect": "First fire 2026-09-01 3:00 PM: macaroni-daily-runner selects a group against macaroni-last-run.json - Group 2 is most starved (2026-08-28) so expect it to run G2 MacaroniKid, UNLESS the transition shim or lock timing changes the picture; the G1 shim only prevents a same-day G1 duplicate. Delete this entry once LastRunTime shows a real fire AND logs/macaroni-daily-2026-09-01.log exists with a completion.",
       "confirm": "Get-ScheduledTaskInfo -TaskName FunHive-Macaroni | Select LastRunTime,LastTaskResult; Get-Content scrapers/logs/macaroni-daily-2026-09-01.log -Tail 10",
       "added": "2026-08-31"
+    },
+    "RECDESK-FG-SKIP-UNRUN": {
+      "what": "RecDesk EventType F/G skip added at source 2026-08-31/09-01 (reports/recdesk-junk-taxonomy.md); backfill of 7,009 stored reservation/game rows PROVEN (deleted with committed pre-deletion snapshot, independent re-run classifies 0 junk). The SOURCE skip has not executed yet - RecDesk-Parks ran before the change landed.",
+      "expect": "Next Group 1 rotation (2026-09-03): per-tenant \"Skipped N facility bookings / league games\" lines in scraper-stdout.log; RecDesk-Parks FOUND drops from 22,038 to roughly the P-side ~12k; no \"X vs. Y\" / \"Practice ...\" / \"Field Prep\" titles among its new rows. Separately, TODAY: the 1 PM FunHive-DataQuality pass should delete the 186 westhartford paperwork rows via fix-event-quality STEP 1b (isPaperworkTitle now in isJunkTitle).",
+      "confirm": "grep \"Skipped .* facility bookings\" scrapers/logs/scraper-stdout.log | tail -50;  and grep -c \"junk titles\" scrapers/logs/fix-all-recent.log",
+      "added": "2026-09-01"
     }
   },
   "LibCal-VA": {

@@ -95,6 +95,7 @@ FunHive is a family event and activity discovery platform. It aggregates events 
 
 ### Scraper Conventions
 - Many scrapers export a cloud function named `scrape{Name}CloudFunction`, but not all — some export plain function names like `scrapeMacaroniKidAlabama`.
+- **RecDesk `EventType` semantics (2026-08-31, `reports/recdesk-junk-taxonomy.md`):** RecDesk's `GetCalendarItems` types every item — `'P'` = real program (keep), `'F'` = facility booking (private-team reservation: "MJBSA Practice", "Field Prep"), `'G'` = league game row ("X vs. Y (field)"). The scraper skips F and G before its detail calls; an absent/unknown type is treated as a keeper. Do not remove this skip, and do not classify RecDesk junk by title — the API field is the authoritative signal, measured fleet-wide (F=10,294 / P=23,129 / G=683) with the snapshot committed in `reports/`.
 - The `saveEvent()` function automatically: rejects non-family events, rejects past events, rejects cancelled events, cleans venue names, extracts time from date strings, detects age ranges.
 - When modifying MacaroniKid scrapers, remember all 43 files share the same structure — changes often need to be applied to all of them via a script.
 - Geocoding fallback chain: full address → city-level → venue cache → county centroid (each step guarded by `if (!coords)`).

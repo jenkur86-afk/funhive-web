@@ -117,6 +117,21 @@ const CASES = [
   ['Callahan Baseball #6', false, 'proper noun present, not pure facility filler'],
   ['White Oak Pavilion', false, 'proper noun present, left alone on purpose'],
   ['1-2-3 Play with Me', false, 'real toddler program, not a 3-play ticket'],
+  // --- administrative paperwork as calendar items (added 2026-09-01) ---------
+  // RecDesk West Hartford publishes registration forms as recurring calendar
+  // entries — 3 distinct titles, 62 occurrences each, measured corpus-wide
+  // before the rule was written (reports/recdesk-junk-taxonomy.md).
+  ['Med Admin Authorization Form', true, 'admin form as calendar item'],
+  ['Leisure Services Emergency Form', true, 'admin form as calendar item'],
+  ['Beachland Adventure Camper Profile', true, 'camper paperwork as calendar item'],
+  ['Swim Waiver Form', true, 'waiver form'],
+  // controls — the $ anchor and \b are what keep these alive
+  ['Fill out the consent form at the door', false, 'prose mentioning a form mid-title'],
+  ['Fall Formal Dance', false, 'formal is not form'],
+  ['Emergency Preparedness for Families', false, 'emergency without form'],
+  ['Camp Registration Opens', false, 'registration without form'],
+  ['Art in Many Forms', false, 'forms plural mid-phrase, not an admin form'],
+
   ['Membership Swap: Virginia Museum of Contemporary Art', false, 'real museum event'],
   ['Adult Boxing (CRPD Adult Boxing Membership Required)', false, 'real class noting a prerequisite'],
   ['Nonresident Summer Camp', false, 'pricing tier on a real camp'],

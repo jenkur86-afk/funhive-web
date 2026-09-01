@@ -1629,6 +1629,27 @@ function isMembershipProductTitle(title) {
   return NONRESIDENT.test(title) && NONRESIDENT_PRODUCT.test(title);
 }
 
+// Administrative PAPERWORK published as calendar items — same catalog-pollution
+// class as the facility/membership rules above, found 2026-08-31 in RecDesk's
+// West Hartford tenant (reports/recdesk-junk-taxonomy.md): "Med Admin
+// Authorization Form", "Leisure Services Emergency Form" and "Beachland
+// Adventure Camper Profile" each recur 62 times as daily calendar entries.
+// Measured over the full corpus before writing: exactly 3 distinct titles /
+// 186 rows, so these anchors are deliberately narrow — an administrative
+// adjective + "form" ENDING the title, or the literal "camper profile". A
+// title that merely mentions a form mid-sentence ("Fill out the consent form
+// at the door") is prose on a real event and must not match, hence the $
+// anchors. "Formal" cannot match: \bform\b has a word boundary.
+const PAPERWORK_PATTERNS = [
+  /\b(authorization|emergency|consent|registration|medical|waiver|permission)\s+form\s*$/i,
+  /\bcamper\s+profile\s*$/i,
+];
+
+function isPaperworkTitle(title) {
+  if (!title) return false;
+  return PAPERWORK_PATTERNS.some(p => p.test(title.trim()));
+}
+
 function isJunkTitle(name) {
   if (!name || typeof name !== 'string') return true;
   const trimmed = name.trim();
@@ -1756,6 +1777,7 @@ function isJunkTitle(name) {
   // parks family dominates the >=70% All-Ages flag list — a ballfield has no age.
   if (isFacilityInventoryTitle(trimmed)) return true;
   if (isMembershipProductTitle(trimmed)) return true;
+  if (isPaperworkTitle(trimmed)) return true;
 
   // Title with no letters (just numbers, punctuation, or whitespace)
   if (!/[a-zA-Z]/.test(trimmed)) return true;

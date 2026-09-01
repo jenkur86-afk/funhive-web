@@ -686,8 +686,53 @@ async function scrapeRecDeskSite(config) {
       return { saved: 0, skipped: 0, errors: 0 };
     }
 
+    // Skip FACILITY BOOKINGS before any other filtering (2026-08-31, see
+    // reports/recdesk-junk-taxonomy.md).
+    //
+    // RecDesk's calendar publishes two kinds of item, discriminated by the
+    // EventType field this scraper always received and never used:
+    //   'F' = facility booking — a reservation occupying a field/court/room,
+    //         usually by a named private team ("MJBSA Practice", "Marysville
+    //         Mitts", "Field Prep", "Practice Steel Valley Jen"). Not an event
+    //         a family can attend; these were being stored as events and are
+    //         why 149 of the 158 sites flagged >=70% All-Ages on 2026-08-31
+    //         were RecDesk-Parks-*.
+    //   'P' = program — real registered programming ("KPRD Afterschool!",
+    //         "Ranger Led Kayak Trip", "Flag Football 2nd-4th grade").
+    // Measured live across the full 48-tenant fleet before this rule was
+    // written; the classification snapshot is committed at
+    // reports/recdesk-classification-2026-08-31.json.
+    //
+    // A third type exists on 8 of 48 tenants:
+    //   'G' = league game — "X vs. Y (field)" schedule rows. All 683 observed
+    //         G items across the fleet are vs-format game rows: church
+    //         softball (cityofdover), sponsor-named adult leagues (raymond,
+    //         crpr breweries, charparksandrec corporates), and youth leagues
+    //         (habershamga t-ball, cityofaikensc youth football). Skipped too:
+    //         a roster game between two named teams is schedule data for
+    //         people already in the league, not a discoverable family event,
+    //         and the youth subset floods listings with hundreds of
+    //         near-identical All-Ages rows.
+    //
+    // KNOWN COST, accepted deliberately: a public happening that was booked AS
+    // facility use (keeneparks' "Amazing Race - Fundraiser", benefit
+    // tournaments) is dropped with the reservations. Adjudicated in the
+    // taxonomy doc — these are a handful of marginal items per fleet against
+    // thousands of reservations, and no reliable in-band signal separates
+    // them. An unknown/missing EventType is treated as a KEEPER, not junk —
+    // never delete on an absent signal.
+    //
+    // The skip runs FIRST so the capped MAX_DETAIL_CALLS slots below go to
+    // real programs instead of the first 30 ballfield bookings.
+    const SKIPPED_TYPES = new Set(['F', 'G']);
+    const facilityBookings = rawEvents.filter(evt => SKIPPED_TYPES.has(evt.EventType || evt.eventType));
+    const nonFacility = rawEvents.filter(evt => !SKIPPED_TYPES.has(evt.EventType || evt.eventType));
+    if (facilityBookings.length > 0) {
+      console.log(`  🏟️  Skipped ${facilityBookings.length} facility bookings / league games (EventType F or G — reservations and roster games, not events)`);
+    }
+
     // Filter out cancelled and adult-only events before detail calls
-    const candidateEvents = rawEvents.filter(evt => {
+    const candidateEvents = nonFacility.filter(evt => {
       const title = (evt.EventName || evt.eventName || '').toLowerCase();
       if (title.includes('cancelled') || title.includes('canceled') || title.includes('postponed')) {
         return false;

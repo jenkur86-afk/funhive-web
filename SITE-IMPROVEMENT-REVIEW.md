@@ -22,6 +22,17 @@ Rankings are by **user-visible site impact**, not engineering interest.
 
 ### 1.1 RecDesk facility-reservation junk on the site — **FABLE 5**
 
+> **STATUS 2026-09-01 — DONE (source fix awaiting its first rotation).** The predicted
+> "harder than CivicRec" title taxonomy was never needed: RecDesk's API types every item
+> (P/F/G) and the scraper was already receiving the field. Source now skips F+G; 7,009
+> stored rows deleted under the no-information-loss protocol in
+> `reports/recdesk-junk-taxonomy.md` (committed classification snapshot, unanimous-
+> classification-only deletion, 488 unmatched deliberately kept, full pre-deletion row
+> snapshot). Honest residual: 125 RecDesk sites still flag ≥70% All-Ages on REAL programs
+> — that is §1.2's age-detection scope, now visible instead of drowned. §1.2's prompt
+> should be updated to use `reports/recdesk-junk-taxonomy.md` Phase 5 as its starting
+> worklist.
+
 The single largest *visible* quality problem right now. Today's audit flagged 149
 `RecDesk-Parks-*` sites ≥70% All-Ages, and sampling shows why: private team reservations
 stored as family events — `"Practice Justin"`, `"Marysville Mitts"` ×15,
