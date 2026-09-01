@@ -54,6 +54,18 @@ rows today alone.
 
 ### 1.2 Age-detection recovery — Phase 5, gate 5 at 35% vs best 40.6% — **OPUS 5**
 
+> **STATUS 2026-09-01 — first pass done.** JOB 1's answer was that the premise was
+> partly wrong: gate 5 double-counted every flagged site, understating it by 10.5 pts
+> (35.0% → 45.5% once fixed), and the bias scaled with the daily flag count, so much of
+> the "regression" was measurement. Ratchet reset — the old 40.6% best is not comparable.
+> JOB 2 closed the explicit-age format gaps (239 → 91 misses), caught a toddler-class →
+> Adults bug that would have *deleted* rows, and backfilled 1,163 All-Ages rows to
+> specific brackets. Suite 94 → 110. **Still open for a second pass:** the null-signal
+> pool is 67k rows (58.6% of future events); classes examined and *rejected* as unsafe
+> are documented below in the fix-log entry (craft-fair false positives, program "Level
+> N", pool-specific swim-level names). Parenting talks tagged as kids events is a newly
+> identified class, recorded and not yet acted on.
+
 Gate 5 regressed −2 this window and MASTER-PLAN Phase 5 (26 age bugs across 8 scrapers)
 has never started. The regression suite (`test-age-detection.js`, 94 cases) exists
 precisely so this work is safe to delegate. Prompt:

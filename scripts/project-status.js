@@ -289,6 +289,20 @@ function computeGates() {
     detail: `${collidingEntries} entries on ${collidingHosts.length} single-institution hosts claimed by 2+ states` +
       (aggregatorHosts ? `; ${aggregatorHosts} multi-state platform host(s) excluded by design` : '') +
       (disabledByCollision ? `; a further ${disabledByCollision} disabled via urlCollision and excluded` : '') };
+  notes.push('METHODOLOGY CHANGE 2026-09-01: gate 5 stopped DOUBLE-COUNTING flagged sites. ' +
+    'AGE-RANGE-AUDIT.md holds two table shapes whose headers both start "| Site | Scraper | All Ages |" — ' +
+    'the main per-site table and the >=70%-All-Ages flagged sub-table — and the old header regex matched both, ' +
+    'so every flagged site was added a second time on top of its own row in the main table. Flagged sites are ' +
+    '>=70% All Ages by definition, so this understated the gate: 1,401 duplicate rows carrying 65,346 events, ' +
+    'dragging it from 45.5% down to 35.0%. THE +10.5 JUMP IS A MEASUREMENT FIX, NOT WORK DONE — no event ' +
+    'changed bracket because of it. Two consequences. (1) THE RATCHET IS NOT COMPARABLE ACROSS THIS CHANGE: ' +
+    'the recorded best of 40.6% (2026-08-10) was measured under the buggy definition, so 45.5% is NOT a new ' +
+    'record and must not be reported as one; the honest baseline for future comparison starts today. ' +
+    '(2) The bias was NOT a constant offset — it scaled with how many sites were flagged that day, which is ' +
+    'itself highest on RecDesk-heavy Group 1 days, so part of the 3-day oscillation previously read as ' +
+    'regression was this artifact. Verified before changing: all 22 main-table headers ever written carry a ' +
+    '"Babies 0-2" column (including the Adults and "Total (today\'s new events)" variants) and none of the 21 ' +
+    'flagged headers do.');
   notes.push('METHODOLOGY CHANGE 2026-08-26: gate 2 now excludes multi-state platform hosts ' +
     '(macaronikid.com, libcal.com, libnet.info, bibliocommons.com and the rest of AGGREGATOR_DOMAINS, ' +
     'imported from list-url-collisions.js rather than re-listed here). Those hosts are shared across states ' +
@@ -391,9 +405,31 @@ function computeGates() {
   // flagging), so 100% is neither reachable nor desirable and any fixed number would be
   // invented. The ratchet compares against the best value ever recorded in STATUS.md, which
   // makes regressions visible without pretending to know the ceiling.
+  // THE HEADER REGEX MUST REQUIRE A BRACKET COLUMN. Fixed 2026-09-01.
+  //
+  // AGE-RANGE-AUDIT.md contains TWO table shapes whose headers both begin
+  // "| Site | Scraper | All Ages |":
+  //   main per-site table : ... | Babies 0-2 | Preschool 3-5 | ... | Total | Link |
+  //   flagged sub-table   : ... | Total | % |
+  // The old regex stopped at "all ages" and therefore matched BOTH, so every
+  // flagged site's counts were added on top of the same events already counted
+  // in the main table. Flagged sites are >=70% All Ages BY DEFINITION, so the
+  // double-count dragged the gate down hard and — worse — by a varying amount,
+  // since the bias scales with how many sites were flagged that day.
+  //
+  // Measured at the moment of the fix: 1,401 flagged rows carrying 65,346
+  // events were being double-counted, and the gate read 35.0% where the main
+  // tables alone give 45.5% — a 10.5 point understatement.
+  //
+  // Requiring "babies" is safe and was verified against the whole file before
+  // changing: all 22 main-table headers ever written carry it (including the
+  // three "Adults"-column variants and the one "Total (today's new events)"
+  // variant), and none of the 21 flagged headers do. This is the loadSites()
+  // 622-row lesson — never tighten a header match without counting what the
+  // tighter match drops.
   let allAges = 0, totalEvents = 0;
   try {
-    const ageRows = tablesByHeader(fs.readFileSync(AGE_MD, 'utf8'), /\|\s*site\s*\|\s*scraper\s*\|\s*all ages/i);
+    const ageRows = tablesByHeader(fs.readFileSync(AGE_MD, 'utf8'), /\|\s*site\s*\|\s*scraper\s*\|\s*all ages\s*\|\s*babies/i);
     ageRows.forEach(r => {
       const a = toInt(pick(r, 'all ages'));
       const t = toInt(pick(r, 'total'));
@@ -669,12 +705,27 @@ function main() {
 
   // Ratchet for gate 5: the owner set no fixed target ("as high as possible"), so the
   // bar is the best value ever recorded. Anything below it is a regression worth naming.
-  const history = readAllSnapshots().filter(s => typeof s.specificAgeShare === 'number');
+  // The ratchet may only compare LIKE WITH LIKE. Every specificAgeShare recorded
+  // before 2026-09-01 was measured while flagged sites were double-counted (see
+  // the METHODOLOGY CHANGE note above), which understated the gate by ~10 points
+  // by a varying amount. Ratcheting today's corrected 45.5% against the old
+  // best of 40.6% would announce a record that no work produced — the exact
+  // false-progress this ledger exists to prevent. So the comparable history
+  // starts at the fix; until a second corrected entry exists there is simply no
+  // best to ratchet against, and the gate reports that honestly rather than
+  // inventing one.
+  const AGE_METHODOLOGY_EPOCH = '2026-09-01';
+  const history = readAllSnapshots()
+    .filter(s => typeof s.specificAgeShare === 'number' && s.date >= AGE_METHODOLOGY_EPOCH);
   if (history.length && gates.specificAgeShare) {
     const best = history.reduce((a, b) => (b.specificAgeShare > a.specificAgeShare ? b : a));
     gates.specificAgeShare.best = best.specificAgeShare;
     gates.specificAgeShare.bestDate = best.date;
     gates.specificAgeShare.regressed = gates.specificAgeShare.now < best.specificAgeShare;
+  } else if (gates.specificAgeShare) {
+    gates.specificAgeShare.detail +=
+      ` RATCHET RESET ${AGE_METHODOLOGY_EPOCH}: pre-fix values were measured under a double-counting bug ` +
+      `and are not comparable, so no best-ever is shown until corrected history accumulates.`;
   }
 
   const tableMd = renderTable(gates, prev);

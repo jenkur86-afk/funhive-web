@@ -854,9 +854,48 @@ function detectAgeRange(name, description) {
   const ADULTS_RE = /\badults?\b/;
 
 
-  // Explicit age ranges: "ages 3-5", "age 6 to 12", "ages 0-18"
+  // UNIT-BEARING age range, where the unit sits on the FIRST bound:
+  // "ages 18 months-3 years", "AGES 4 MONTHS - 4 YEARS", "ages 6 weeks-12 months",
+  // "ages 15 months - 4 years". Added 2026-09-01 (SITE-IMPROVEMENT-REVIEW §1.2).
+  //
+  // The closed-range rule below only accepts a unit AFTER the second number, so
+  // every one of these fell through to All Ages despite stating an exact age.
+  // Measured before writing: of 239 future-dated rows whose title contains the
+  // word "age(s)" and which the detector still returned null for, 91 carry a
+  // months/weeks unit and 34 are specifically this mixed-unit shape — the single
+  // largest explicit-age miss. These are baby/toddler programmes ("Babytime",
+  // "Music for Aardvarks", "Library Play Date"), the audience most poorly served
+  // by landing in All Ages.
+  //
+  // Both bounds are normalised to YEARS because normalizeAgeRange() buckets on
+  // the lower bound and its month handling only applies when BOTH bounds are
+  // months. Sub-year bounds floor to 0, which is correct: an "18 months - 3
+  // years" class is for 1-3 year olds. Anchored on the literal "age(s)" keyword
+  // for the 2026-08-03 reason — a bare "18 months" elsewhere could be a lease
+  // term or a programme length.
+  const UNIT_YEARS = { week: 1 / 52, wk: 1 / 52, month: 1 / 12, mo: 1 / 12, year: 1, yr: 1 };
+  const unitRange = text.match(
+    /\bages?:?\s+(\d{1,3})\s*(weeks?|wks?|months?|mos?|years?|yrs?)\s*(?:[-–]|to|up\s+to)\s*(?:age\s+)?(\d{1,3})\s*(weeks?|wks?|months?|mos?|years?|yrs?)?/);
+  if (unitRange) {
+    const unitOf = (u) => (u ? UNIT_YEARS[u.replace(/s$|\.$/g, '').replace(/s$/, '')] : null);
+    const loU = unitOf(unitRange[2]);
+    // A missing second unit inherits the first ONLY when the first is years;
+    // "18 months-3" almost always means 3 YEARS, not 3 months.
+    const hiU = unitOf(unitRange[4]) ?? (loU === 1 ? 1 : 1);
+    if (loU && hiU) {
+      const lo = Math.floor(parseInt(unitRange[1], 10) * loU);
+      const hi = Math.floor(parseInt(unitRange[3], 10) * hiU);
+      if (hi >= lo && hi <= 18) return `${lo}-${hi}`;
+    }
+  }
+
+  // Explicit age ranges: "ages 3-5", "age 6 to 12", "ages 0-18", "Ages: 3-5",
+  // "Ages 7&8". The optional colon and the "&" separator were added 2026-09-01
+  // from the same measurement — "Soothing Sensory Time Ages: 3-5" and
+  // "Ballet & more - Ages 3 & 4" state their bracket outright and were being
+  // read as All Ages purely on punctuation.
   // Check for "months" or "mo" after the range to preserve month-based ages
-  const ageMatch = text.match(/\bages?\s+(\d{1,2})\s*[-–to]+\s*(\d{1,2})\s*(months?|mos?\.?)?\b/);
+  const ageMatch = text.match(/\bages?:?\s+(\d{1,2})\s*(?:[-–]|to|&|and)\s*(\d{1,2})\s*(months?|mos?\.?)?\b/);
   if (ageMatch) {
     const isMonths = ageMatch[3] || (parseInt(ageMatch[1]) <= 36 && parseInt(ageMatch[2]) <= 36 && /month|mo\b/i.test(text));
     return isMonths ? `${ageMatch[1]}-${ageMatch[2]} months` : `${ageMatch[1]}-${ageMatch[2]}`;
@@ -879,8 +918,48 @@ function detectAgeRange(name, description) {
   // price, a room number or a capacity. Returns the raw "N+" form because
   // normalizeAgeRange() already buckets it natively (18+/21+/55+ -> Adults,
   // 13+ -> Teens, 6+ -> Kids), so no bucketing logic is duplicated here.
-  const ageMinMatch = text.match(/\bages?\s+(\d{1,2})\s*(?:\+|and\s+(?:up|older|over))/);
+  // OPEN-ENDED LOWER BOUND CARRYING A SUB-YEAR UNIT: "Age 18 months and older".
+  // Handled here, before the bare-number rule below, because that rule would read
+  // the 18 as YEARS and return "18+" — which normalizeAgeRange() buckets as
+  // Adults, and adult-only rows are REJECTED at save time. A toddler LEGO class
+  // would have been deleted, not merely mistagged. Caught 2026-09-01 by a test
+  // case while adding the unit-range rule above; it is the same
+  // number-without-its-unit trap, in the direction that destroys data.
+  const ageMinUnit = text.match(/\bages?:?\s+(\d{1,3})\s*(weeks?|wks?|months?|mos?)\s*(?:\+|and\s+(?:up|older|over))/);
+  if (ageMinUnit) {
+    const perYear = /^w/i.test(ageMinUnit[2]) ? 52 : 12;
+    return `${Math.floor(parseInt(ageMinUnit[1], 10) / perYear)}+`;
+  }
+
+  // The negative lookahead is what keeps the unit-bearing form above reachable —
+  // without it this rule consumes "18 months and older" first.
+  const ageMinMatch = text.match(/\bages?:?\s+(\d{1,2})\s*(?!\s*(?:weeks?|wks?|months?|mos?)\b)(?:\+|and\s+(?:up|older|over))/);
   if (ageMinMatch) return `${ageMinMatch[1]}+`;
+
+  // Open-ended UPPER bound: "ages 12 and under". Added 2026-09-01, and it is
+  // LOAD-BEARING rather than merely additive: without it the single-age rule
+  // further down reads "Ages 12 and under" as exactly 12 and files a
+  // birth-to-12 event under Tweens. Emitting a range from 0 keeps it honest —
+  // it resolves to All Ages, which is what an event open to every child under
+  // 12 actually is. Must therefore stay ABOVE the single-age rule.
+  const ageMaxMatch = text.match(/\bages?:?\s+(\d{1,2})\s*and\s+(?:under|younger)\b/);
+  if (ageMaxMatch) return `0-${ageMaxMatch[1]}`;
+
+  // A SINGLE explicit age, no range: "Kinder Kickz (Age 3)", "DIY Wind Chimes
+  // (Ages 14 )", "Pokemon Battle Academy (Ages 7 )". Added 2026-09-01 — 53 of
+  // the 239 measured explicit-age misses. Every range and open-ended rule above
+  // needs a second number or a +/and-up phrase, so a lone stated age reached
+  // nothing.
+  //
+  // ORDER IS LOAD-BEARING: this must stay AFTER the range and open-ended rules,
+  // or "ages 3-5" would resolve on the 3 alone and "ages 18+" would become
+  // 18-18. It requires digits IMMEDIATELY after the keyword, so "Age Division",
+  // "Ages and Stages Playgroup" and "One for the Ages Tour" cannot match.
+  const ageSingle = text.match(/\bages?:?\s+(\d{1,2})(?![\d:%-])/);
+  if (ageSingle) {
+    const n = parseInt(ageSingle[1], 10);
+    if (n <= 18) return `${n}-${n}`;
+  }
 
   // Parenthetical ages: "(ages 11-18)", "(3-5 yrs)", "(6-24 months)"
   const parenMatch = text.match(/\((?:ages?\s+)?(\d{1,2})\s*[-–]\s*(\d{1,2})(?:\s*(?:months?|mos?\.?|yrs?|years?))?\)/);

@@ -195,6 +195,12 @@
       "expect": "Next Group 1 rotation (2026-09-03): per-tenant \"Skipped N facility bookings / league games\" lines in scraper-stdout.log; RecDesk-Parks FOUND drops from 22,038 to roughly the P-side ~12k; no \"X vs. Y\" / \"Practice ...\" / \"Field Prep\" titles among its new rows. Separately, TODAY: the 1 PM FunHive-DataQuality pass should delete the 186 westhartford paperwork rows via fix-event-quality STEP 1b (isPaperworkTitle now in isJunkTitle).",
       "confirm": "grep \"Skipped .* facility bookings\" scrapers/logs/scraper-stdout.log | tail -50;  and grep -c \"junk titles\" scrapers/logs/fix-all-recent.log",
       "added": "2026-09-01"
+    },
+    "AGE-EXPLICIT-FORMATS-UNRUN": {
+      "what": "New explicit-age parsing rules added 2026-09-01 (unit-bearing bounds, colon/ampersand separators, lone stated age, \"N and under\", plus a negative lookahead stopping \"Age 18 months and older\" from resolving to Adults and being rejected). Backfill of 1,163 existing All-Ages rows is PROVEN (1,163 -> 0 on re-run). The SAVE-TIME path is unrun.",
+      "expect": "On the next rotations, newly scraped rows whose titles carry these formats should arrive with a specific bracket rather than All Ages. A re-run of scripts/backfill-allages-to-specific.js should keep reporting a small number, not climb back toward 1,000+. Gate 5 should also stop oscillating as violently once RecDesk F/G rows stop entering the audit.",
+      "confirm": "node scripts/backfill-allages-to-specific.js   (dry run; expect a low count)",
+      "added": "2026-09-01"
     }
   },
   "LibCal-VA": {

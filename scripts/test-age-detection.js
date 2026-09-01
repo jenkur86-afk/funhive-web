@@ -193,6 +193,35 @@ const CASES = [
   ['Camp Naticook: Chickadees: Gr K Session 9', 'All Ages', 'Preschool (3-5)', 'lone abbreviated Gr K'],
   ['Gr K-2 Art Club', '', 'Preschool (3-5)', 'abbreviated grade range with K lower bound'],
 
+  // --- explicit ages the parser could not read (added 2026-09-01) ------------
+  // Measured: 239 future-dated rows whose title contains "age(s)" and which the
+  // detector still returned null for. These are stated intents, not guesses.
+  ['Kinder-Gym Friday 10:30 (Ages 18 months-3 years', '', 'Babies & Toddlers (0-2)', 'unit on the FIRST bound'],
+  ['Babytime (Ages 6 weeks-12 months)', '', 'Babies & Toddlers (0-2)', 'weeks-to-months range'],
+  ['Music for Aardvarks - AGES 4 MONTHS - 4 YEARS', '', 'Babies & Toddlers (0-2)', 'months-to-years, caps'],
+  ['Wiggles and Giggles Ages 18 Months up to Age 4', '', 'Babies & Toddlers (0-2)', '"up to" as the separator'],
+  ['Soothing Sensory Time Ages: 3-5', '', 'Preschool (3-5)', 'colon after Ages'],
+  ['Ballet & more - Ages 7&8 - Miss Ari', '', 'Kids (6-8)', 'ampersand as range separator'],
+  ['Ballet & more - Ages 3 & 4 - Miss Susan', '', 'Preschool (3-5)', 'spaced ampersand'],
+  ['Kinder Kickz (Age 3) Instructional Soccer', '', 'Preschool (3-5)', 'singular Age + one number'],
+  ['DIY Wind Chimes (Ages 14 )', '', 'Teens (13-18)', 'single age, trailing space'],
+  ['Rock Painting at Oldsmar Library (Ages 12 and under)', '', 'All Ages',
+   'MUST NOT read as exactly 12 — birth-to-12 is All Ages, and this rule must stay above the single-age rule'],
+  // THE EXPENSIVE DIRECTION. An unread unit here does not mistag, it DELETES:
+  // "18" read as years resolves to Adults, and adult-only rows are rejected at
+  // save time, so a toddler class would vanish. Caught by this case 2026-09-01.
+  ['LEGO Time for Age 18 months and older', '', 'All Ages', 'sub-year unit must block the "N and older" rule'],
+  ['Toddler Time for Age 6 weeks and up', '', 'All Ages', 'weeks unit must block it too'],
+  // controls — the open-ended and range rules must still win where they should.
+  // NOTE: a genuine "Ages 18+" case cannot live here — flattenEvent() rejects it
+  // as non-family before any bracket is reported (see the note above this block).
+  // The unit-blocking behaviour it would test is covered by the two cases above,
+  // which assert the toddler forms do NOT become Adults.
+  ['Ages 13 and older Craft Night', '', 'Teens (13-18)', 'bare-number and-older unaffected'],
+  ['Ages and Stages Playgroup', '', 'All Ages', 'no digits after the keyword'],
+  ['One for the Ages Tour', '', 'All Ages', 'idiom, no digits'],
+  ['09-10 Age Division (2140)', '', 'All Ages', '"Age Division" — digits do not follow the keyword'],
+
   // --- Youth-sport age-group notation: "10U" / "U12" -------------------------
   // Added 2026-08-31 from the Step 3c all-ages audit. 539 corpus rows carry this
   // notation and 422 sat in All Ages, concentrated in the parks families.
