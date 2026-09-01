@@ -124,6 +124,18 @@ SCRAPER-FIX-LOG.jsonl line, and refresh gate 5 via the command in project-status
 > KidsOutAndAbout-Eastern rows and were deleted after proving each twin, 15 repaired in
 > place. 65 → 0. **New follow-up raised:** the DMV/Eastern metro overlap itself is
 > unfixed — see `_pending.KOA-DMV-EASTERN-OVERLAP`.
+>
+> **ASSESSMENT 2026-09-01 (Fable) — complete with two corrections applied.** The source
+> fix is **unrun** until the next Group 1 rotation (9/3) — the original status said DONE
+> without that caveat. Probes found and fixed a parenthesised-chrome residue in
+> `cleanVenueName` ("Harris Pavilion ( )"), with "Library (Main)" and "T(w)eens"
+> verified untouched. Two findings changed the overlap picture: the deleted DMV rows
+> carried addresses their surviving Eastern twins entirely lack (0/300 sampled have any),
+> and Eastern has a confirmed misgeocode class — the kept Mount Vernon VA twin is plotted
+> in Washington PA. The overlap note's "retire DMV" lean was therefore backwards and its
+> duplicate prediction inverted; both corrected in `_pending.KOA-DMV-EASTERN-OVERLAP`.
+> Process gap recorded: the 50 unplanned deletions wrote no pre-deletion snapshot,
+> unlike the RecDesk protocol.
 
 Open pending item (`KIDSOUTANDABOUT-VENUE-NEWLINES`): venues stored as multi-line strings
 ending `"See map: Google Maps"` — page chrome rendered as venue names on the site, and

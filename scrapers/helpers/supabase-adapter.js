@@ -463,6 +463,10 @@ function cleanVenueName(venue) {
   // called "See map", and the trailing comma/whitespace cleanup keeps names like
   // "Harris Pavilion," from ending in punctuation once the suffix is gone.
   cleaned = cleaned.replace(/\s*See\s*map:\s*Google\s*Maps\s*/gi, ' ')
+                   // A parenthesised variant leaves empty brackets behind —
+                   // "Harris Pavilion (See map: Google Maps)" → "Harris Pavilion ( )".
+                   // Found by the §1.3 assessment probe, 2026-09-01.
+                   .replace(/[([]\s*[)\]]/g, ' ')
                    .replace(/\s+/g, ' ')
                    .replace(/[\s,]+$/, '')
                    .trim();
