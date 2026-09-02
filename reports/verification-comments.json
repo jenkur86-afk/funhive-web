@@ -4736,8 +4736,8 @@
   "population": "allages"
  },
  "MacaroniKid-FL-fortlauderdale|||Museum of Discovery and Science": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MATCHES",
+  "comment": "checked 115 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "Localist-Parks-IN|||Center Township Trustee's Office": {
@@ -4746,8 +4746,8 @@
   "population": "allages"
  },
  "MacaroniKid-FL-okeechobee|||Palm Beach County Library System - Belle Glade Branch": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MATCHES",
+  "comment": "checked 62 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "generic-FL|||Miami-Dade Public Library System": {
@@ -4761,8 +4761,8 @@
   "population": "allages"
  },
  "MacaroniKid-FL-pinecrest|||Miami-Dade Public Library System - Main Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MATCHES",
+  "comment": "checked 25 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "ActiveNet-Parks-Eastern-novaparks|||NOVA Parks (Northern Virginia Regional Park Authority)": {
@@ -4771,8 +4771,8 @@
   "population": "allages"
  },
  "MacaroniKid-FL-portstlucie|||Oxbow Eco-Center": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MATCHES",
+  "comment": "checked 33 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "Localist-Parks-IN|||Pokagon State Park": {
@@ -11078,6 +11078,156 @@
  "MacaroniKid-TN-swnashville|||The Bluebird Cafe": {
   "verdict": "MATCHES",
   "comment": "Songwriter listening room; every listing is an In The Round or Sunday Spotlight music set. Not children's programming and not age-bracketed - All Ages is the right store for it.",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-verobeach|||Environmental Learning Center": {
+  "verdict": "MATCHES",
+  "comment": "checked 120 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-GA-buckheadbrookhaven|||Center for Puppetry Arts": {
+  "verdict": "MATCHES",
+  "comment": "checked 74 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-MD-tpss|||Takoma Park Library": {
+  "verdict": "MISMATCH",
+  "comment": "age-detection miss: 2/69 (3%) of this venue's All-Ages titles carry an unambiguous age signal, e.g. \"Amharic Circle Time/የአማርኛ መዝሙር እና ተረት ጊዜ\" (circle time)",
+  "population": "allages"
+ },
+ "MacaroniKid-MD-annapolis|||Pip Moyer Recreation Center": {
+  "verdict": "MATCHES",
+  "comment": "checked 63 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-CT-madison|||Niantic Children's Museum": {
+  "verdict": "MATCHES",
+  "comment": "checked 42 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-portcharlotte|||Charlotte County Libraries & History - Punta Gorda Charlotte Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 33 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-MD-rockville|||Activity Center at Bohrer Park": {
+  "verdict": "MATCHES",
+  "comment": "checked 53 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-GA-eastatlanta|||Fulton County Library System - Martin Luther King Jr. Branch": {
+  "verdict": "MISMATCH",
+  "comment": "age-detection miss: 1/31 (3%) of this venue's All-Ages titles carry an unambiguous age signal, e.g. \"Hunny & Koko StoryTime\" (storytime)",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-winterpark|||Winter Park": {
+  "verdict": "MATCHES",
+  "comment": "checked 28 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-verobeach|||Vero Beach": {
+  "verdict": "MATCHES",
+  "comment": "checked 31 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-MD-columbiamd|||Baltimore County Public Library Catonsville": {
+  "verdict": "MATCHES",
+  "comment": "checked 29 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-bradenton|||Parenting Matters": {
+  "verdict": "MATCHES",
+  "comment": "checked 33 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-stuart|||City of Stuart Recreation": {
+  "verdict": "MATCHES",
+  "comment": "checked 34 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-GA-duluth|||Gas South Arena": {
+  "verdict": "MATCHES",
+  "comment": "checked 29 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-NY-westchester-rivertowns|||Legoland Discovery Center (Westchester)": {
+  "verdict": "MATCHES",
+  "comment": "checked 28 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-MD-tpss|||The Fillmore Silver Spring": {
+  "verdict": "MATCHES",
+  "comment": "checked 31 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-MD-timonium|||Maple Border Farm": {
+  "verdict": "MATCHES",
+  "comment": "checked 26 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-MD-timonium|||Cockeysville Public Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 22 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-southlake|||House of Blues": {
+  "verdict": "MATCHES",
+  "comment": "checked 24 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-GA-buckheadbrookhaven|||Buckhead Theatre": {
+  "verdict": "MATCHES",
+  "comment": "checked 24 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-GA-conyers|||Conyers Convention & Visitors Bureau": {
+  "verdict": "MATCHES",
+  "comment": "checked 20 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-southlake|||Johns Hopkins All Children's Foundation": {
+  "verdict": "MATCHES",
+  "comment": "checked 24 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-MD-jessup|||Montgomery County Public Library - Marilyn J. Praisner Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 21 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-MD-tpss|||Montgomery County Public Libraries — Wheaton Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 21 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-apopka|||Apopka - Mount Dora": {
+  "verdict": "MATCHES",
+  "comment": "checked 21 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-GA-buckheadbrookhaven|||Vinyl": {
+  "verdict": "MATCHES",
+  "comment": "checked 28 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-winterhaven-davenport|||Visit Central Florida": {
+  "verdict": "MATCHES",
+  "comment": "checked 22 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-MD-tpss|||Brigadier General Charles E. McGee Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 16 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-NY-pittsford|||The Strong Museum": {
+  "verdict": "MATCHES",
+  "comment": "checked 16 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "MacaroniKid-FL-bradenton|||Musical Motion": {
+  "verdict": "MATCHES",
+  "comment": "checked 23 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  }
 }
