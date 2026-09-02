@@ -411,6 +411,51 @@ becomes deletable.
 
 ---
 
+## Open review-process items
+
+### A1 Assess §1.4 (CustomDrupal) — **FABLE 5**, queued 2026-09-02
+
+Each completed item has had a Fable assessment (§1.2, §1.3 both found real defects the
+delivering pass missed). §1.4 has not been assessed yet. **It was started 2026-09-02 and
+stopped early** when the evidence turned up something outside its scope; the partial
+findings are recorded here so the assessment does not begin cold:
+
+- **Verified:** the Phase 7 "0 rows" premise really is false, and the naming explanation
+  holds (7 of 8 configs emit no `scraperName`).
+- **Not yet probed:** whether the 15s→45s bump is enough for Richland (the site was never
+  fetched directly — only the timeout message was read); whether the both-streams logging
+  actually yields a Richland row in `LIBRARY-SITE-AUDIT.md`; whether Anderson County's
+  "found 0" is a selector problem or a JS-gated calendar.
+- **Blocked on:** a Group 2 rotation, which has not happened — see the rotation note below,
+  which is the more urgent finding.
+
+### A2 Rotation may have stopped running — **URGENT, needs a human look**
+
+Gathered 2026-09-02 ~11:26Z while assessing §1.4, and outside that task's scope:
+
+| Signal | Value |
+|---|---|
+| `FunHive-Scrapers` last result | **09-02 03:00 → `Result=1` (failure)**; 09-01 → `Result=0` |
+| `scrapers/logs/scraper-run-2026-09-01.log` / `-09-02.log` | **neither exists** |
+| Last `"FunHive scrapers starting"` marker in `scraper-stdout.log` | **2026-08-31** |
+| `group-last-run.json` | G1 09-01, **G2 08-28 (5 days stale)**, G3 08-30 |
+| `runner.lock` | held by `macaroni-daily-runner` pid 15868 (**alive**) since **09-01T19:00Z** — 16h+ |
+
+The MacaroniKid side is working as designed: its ledger-based catch-up correctly chose the
+starved Group 2 ("Group 2 has not completed in 4.6 days") and is grinding through it. But
+the ROTATION has produced no run log and no stdout marker for two consecutive days while
+Task Scheduler recorded a start both days, once succeeding and once failing. Two readings,
+not yet distinguished:
+
+1. The rotation is waiting on the run lock (by design, up to 8h) and exiting — but that
+   should still write a run log and a lock-wait line, and neither exists.
+2. `run-scrapers.bat` is failing before its first `echo`, which would mean the batch or
+   its working directory is broken — the same class as the 2026-08-12 silent chain failure.
+
+**Whoever picks this up: check the batch and the Task Scheduler action first, not the
+scraper code** — that is the standing lesson from CLAUDE.md's Automated Maintenance note.
+Do not assume the split caused it without evidence; the 09-01 run returned 0.
+
 ## Suggested sequencing
 
 | When | Item | Model |
