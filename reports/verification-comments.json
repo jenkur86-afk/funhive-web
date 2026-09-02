@@ -163,8 +163,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Heard County Public Library (Franklin, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to running-care.com]",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: the configured URL redirects to running-care.com, an unrelated commercial domain — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correct URL or a guard",
   "population": "zero"
  },
  "WordPress-GA|||Gordon Public Library (Gordon, GA)": {
@@ -401,8 +401,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Macon County Public Library (Franklin, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to running-care.com]",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: the configured URL redirects to running-care.com, an unrelated commercial domain — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correct URL or a guard",
   "population": "zero"
  },
  "WordPress-NC|||Graham Public Library (Graham, NC)": {
@@ -421,8 +421,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Harmony Branch Library (Harmony, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell [redirects to fresupdate.com]",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: the configured URL redirects to fresupdate.com, an unrelated commercial domain — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correct URL or a guard",
   "population": "zero"
  },
  "WordPress-NC|||Havelock-Craven County Public (Havelock, NC)": {
@@ -451,8 +451,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Leicester Branch Library (Leicester, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "301 redirects to leicesterma.org/157/Library, which is a town hub page linking to a separate Calendar page with no events shown directly.",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: the configured URL redirects to leicesterma.org, which serves MA, not NC — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard",
   "population": "zero"
  },
  "WordPress-NC|||Leland Branch Library (Leland, NC)": {
@@ -509,8 +509,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Newport Public Library (Newport, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "301 redirects to newportoregon.gov (Newport, Oregon government site) - wrong domain, not the NC library.",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: the configured URL redirects to newportoregon.gov, which serves OR, not NC — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard",
   "population": "zero"
  },
  "WordPress-NC|||Catawba County Library (Newton, NC)": {
@@ -595,13 +595,13 @@
   "population": "zero"
  },
  "WordPress-CT|||Waterbury Public Library (Waterbury, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to forsale.godaddy.com]",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: the configured URL redirects to forsale.godaddy.com, a GoDaddy parked \"domain for sale\" page — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correct URL or a guard",
   "population": "zero"
  },
  "WordPress-CT|||Norwalk Public Library (Norwalk, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to agentaruhanjuditogel.com]",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: the configured URL redirects to agentaruhanjuditogel.com, an online gambling site — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correct URL or a guard",
   "population": "zero"
  },
  "WordPress-CT|||Danbury Public Library (Danbury, CT)": {
@@ -743,8 +743,8 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-CT|||Mansfield Public Library (Mansfield, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "URL redirects (301) to an unrelated domain, mansfieldtexas.gov -- the CT library's own domain appears to be dead/expired and now resolves to a Texas city site.",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: the configured URL redirects to mansfieldtexas.gov, which serves TX, not CT — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard",
   "population": "zero"
  },
  "WordPress-CT|||Levi E.Coe Library (Middlefield, CT)": {
@@ -1559,8 +1559,8 @@
   "population": "zero"
  },
  "WordPress-VT|||Chelsea Public (Chelsea, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to wherewindsmeetgame.com]",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: the configured URL redirects to wherewindsmeetgame.com, a video-game marketing site — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correct URL or a guard",
   "population": "zero"
  },
  "WordPress-VT|||Whiting (Chester, VT)": {
@@ -1667,8 +1667,8 @@
   "population": "zero"
  },
  "WordPress-VT|||Richmond Free (Richmond, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Domain now permanently redirects to richmondca.gov (Richmond, California city government) -- unrelated to the VT library, domain appears repurposed/expired.",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: the configured URL redirects to richmondca.gov, which serves CA, not VT — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard",
   "population": "zero"
  },
  "WordPress-VT|||Rochester Public (Rochester, VT)": {
@@ -7675,8 +7675,8 @@
   "population": "zero"
  },
  "WordPress-KY|||Harlan County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to harlan.lib.ia.us]",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: the configured URL redirects to harlan.lib.ia.us, which serves IA, not KY — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard",
   "population": "zero"
  },
  "WordPress-KY|||Estill County Public Library": {
@@ -8487,8 +8487,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Francis J. Catania Law Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to forsale.godaddy.com]",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: the configured URL redirects to forsale.godaddy.com, a GoDaddy parked \"domain for sale\" page — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correct URL or a guard",
   "population": "zero"
  },
  "WordPress-PA|||Hamlin Memorial Library": {
@@ -9514,8 +9514,8 @@
   "population": "zero"
  },
  "WordPress-MS|||William Estes Powell Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to beaumonttexas.gov]",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: the configured URL redirects to beaumonttexas.gov, which serves TX, not MS — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard",
   "population": "zero"
  },
  "WordPress-MS|||Woodville Public Library": {
@@ -9663,8 +9663,8 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-NJ|||Linwood Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 88 chars of text — likely JS-gated or a shell [redirects to wordpress2.nekls.org]",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: the configured URL redirects to wordpress2.nekls.org, which serves KS, not NJ — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard",
   "population": "zero"
  },
  "WordPress-NJ|||Little Silver Public Library": {
