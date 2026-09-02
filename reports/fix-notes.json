@@ -208,6 +208,12 @@
       "expect": "Owner decision on metro ownership, now properly informed: the evidence favours restricting KidsOutAndAbout-Eastern to non-DMV subdomains and keeping DMV (better location extraction), the opposite of this note's original lean. Whoever decides should also consider re-deriving location for the 2-3% misgeocoded Eastern DMV rows (their venue names geocode correctly even where their city strings do not).",
       "confirm": "node scripts/fix-koa-venue-chrome.js  (dry run - new dirty rows); duplicate pairs: rows sharing name+event_date across the two scraper_name families",
       "added": "2026-09-01"
+    },
+    "CUSTOMDRUPAL-TIMEOUT-VISIBILITY-UNRUN": {
+      "what": "CustomDrupal-Libraries §1.4 fixes, 2026-09-01: goto timeout 15s -> 45s (Richland Library had NEVER been scraped - navigation timeout every run, zero rows ever), and per-site catch now logs to stdout as well as stderr plus emits \"Found 0 events\" so a crashed site appears in LIBRARY-SITE-AUDIT.md instead of vanishing. Greenville County documented in-config as a site-side dead calendar (serves 2020 archive on every audience view, verified live) and deliberately left running as an explained gap.",
+      "expect": "On the next GROUP 2 rotation: Richland Library should produce a real \"Found N events\" line for the first time ever, or - if it still times out - now say so IN stdout with a Found 0 events row rather than disappearing. Anderson County remains an open extraction question (found 0 on its main URL). Greenville should keep finding ~10 events and storing none; that is correct, not a regression.",
+      "confirm": "grep -n \"Error scraping\\|Richland\" scrapers/logs/scraper-stdout.log | tail -20   then check LIBRARY-SITE-AUDIT.md has a Richland row",
+      "added": "2026-09-01"
     }
   },
   "LibCal-VA": {

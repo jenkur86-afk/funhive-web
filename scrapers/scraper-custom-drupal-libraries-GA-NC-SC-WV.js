@@ -60,6 +60,23 @@ const LIBRARY_SYSTEMS = [
     }
   },
   {
+    // DEAD CALENDAR, SITE-SIDE — verified live 2026-09-01 (§1.4). Do NOT spend a
+    // session on selectors here: extraction works fine and the scraper is right
+    // to store nothing. greenvillelibrary.org/events serves 2020 content, every
+    // entry stamped "This event has already taken place" ("Bouncing Babies",
+    // Tue Oct 27 2020; "Indie Author Day", Sat Nov 7 2020), and it is not a URL
+    // problem — the audience sub-views the site's own nav links to
+    // (/events/kids, /events/teens, /events/adults) serve the same 2020 archive,
+    // and the page still carries a Labor Day banner from that year. Most of the
+    // listings are Zoom events with YouTube recordings, i.e. a COVID-era calendar
+    // that was frozen and never restored.
+    //
+    // LEFT RUNNING ON PURPOSE rather than guarded or deleted: it costs one page
+    // load, its 10 past events are correctly skipped, and the row it now produces
+    // in LIBRARY-SITE-AUDIT.md keeps this library visible as an EXPLAINED GAP.
+    // Deleting it would hide a real coverage hole (the Worcester rule). Reopen if
+    // the library ever publishes a live calendar — check whether it has moved to
+    // a platform this codebase already parses before re-pointing this entry.
     name: 'Greenville County Library System',
     url: 'https://www.greenvillelibrary.org/events',
     county: 'Greenville',
@@ -323,7 +340,15 @@ async function scrapeLibraryEvents(library, browser) {
       // OPTIMIZED: Faster page load strategy
       const response = await page.goto(pageUrl, {
         waitUntil: 'domcontentloaded',
-        timeout: 15000
+        // 45s, raised from 15s on 2026-09-01 (§1.4). Richland Library
+        // (richlandlibrary.com) exceeded 15s on EVERY run and was therefore
+        // never scraped at all — it has zero rows in the database, ever. 15s is
+        // tight for a Drupal library site rendering a full events view, and the
+        // cost of being wrong is asymmetric: a slow site that times out is lost
+        // silently and permanently, while an extra 30s of patience costs one
+        // scraper run a few seconds. Matches the 30s+ budgets used elsewhere in
+        // the fleet for the same reason.
+        timeout: 45000
       });
 
       // Check for HTTP errors
@@ -730,7 +755,24 @@ async function scrapeLibraryEvents(library, browser) {
     await page.close();
 
   } catch (error) {
-    console.error(`  ❌ Error scraping ${library.name}:`, error.message);
+    // BOTH STREAMS, DELIBERATELY (2026-09-01, §1.4).
+    //
+    // This used to write only to console.error. run-scrapers.bat sends stdout and
+    // stderr to SEPARATE files, and the Step 3b library audit is built by parsing
+    // scrapers/logs/scraper-stdout.log — so a site that crashed printed its
+    // "📍 name" and "URL:" header to stdout and then nothing, which is
+    // indistinguishable from a site whose calendar is genuinely empty. Richland
+    // Library had been failing on a navigation timeout every single run and was
+    // recorded in the audit as a zero-event site, with the real reason sitting
+    // unread in the other file.
+    //
+    // The "Found 0 events" line matters as much as the error text: it is the
+    // shape build-library-site-audit.js pairs with the "📍" header, so without it
+    // the site produces no audit row at all.
+    const msg = `  ❌ Error scraping ${library.name}: ${error.message}`;
+    console.error(msg);
+    console.log(msg);
+    console.log(`   Found 0 events`);
     failed++;
   }
 

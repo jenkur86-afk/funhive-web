@@ -168,6 +168,19 @@ containing embedded newlines and the literal text "See map: Google Maps".
 
 ### 1.4 Phase 7 — CustomDrupal-Libraries found→stored broken — **OPUS 5**
 
+> **STATUS 2026-09-01 — diagnosed; Phase 7's premise disproven.** The family holds ~103
+> rows, not 0 — the premise's query used a `scraper_name` no site emits (7 of 8 store
+> under library display names, 1 under `CustomDrupal-Libraries-wake`). Real per-site
+> findings: **Richland Library has never been scraped** (15s navigation timeout every
+> run — budget raised to 45s); **Greenville County is a site-side dead calendar** serving
+> 2020 archive on every audience view, verified live, extraction is correct and it is
+> left running as an explained gap; **Anderson County** returns 0 events, still open. The
+> highest-value fix is the meta-bug: per-site failures went only to stderr while the
+> audit parses stdout, so crashed sites were indistinguishable from empty ones. **Not
+> re-run** — MacaroniKid held the runner lock all session; verification falls to the next
+> Group 2 rotation (`_pending.CUSTOMDRUPAL-TIMEOUT-VISIBILITY-UNRUN`). MASTER-PLAN
+> Phase 7 should be rewritten around these findings rather than "stores nothing".
+
 Reported 356 found / 65 new on 2026-08-05 while the database holds 0 upcoming rows.
 Something between extraction and storage eats everything — dedup, date parsing, or a
 rejection rule. Bounded to one scraper, evidence-driven. Prompt:
