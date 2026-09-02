@@ -149,7 +149,19 @@ function collectSignals() {
 
   const iframes = [...document.querySelectorAll('iframe')].map(f => f.src).filter(Boolean).slice(0, 10);
 
+  // 5. Yodel widget id. Many MacaroniKid sites migrated to the Yodel widget, which
+  // renders NOTHING into the host page — so every one of them classified as
+  // "rendered fully but shows no dated events" and was permanently UNVERIFIABLE
+  // (34/34 on 2026-09-02). Same detection as scrapers/helpers/yodel-helper.js:
+  // <body data-yenabled="1" data-yid="...">. verifyOne() follows this to the
+  // widget origin and re-reads the signals there.
+  const body = document.body;
+  const yid = body && body.getAttribute('data-yenabled') === '1' &&
+              (body.getAttribute('data-yid') || '').length > 10
+    ? body.getAttribute('data-yid') : null;
+
   return {
+    yid,
     title: (document.title || '').slice(0, 160),
     text: txt.slice(0, 20000),
     htmlSample: html.slice(0, 60000),
@@ -274,14 +286,46 @@ async function verifyOne(browser, row) {
     try { await page.close(); } catch (_) {}
   }
 
+  // Yodel follow-through. The host page is only a shell for these sites; the events
+  // live at the widget origin, which is exactly what scraper-macaroni-*.js reads via
+  // yodel-helper.js. Verifying the shell answers the wrong question — it says "no
+  // events here" about a page that never had any. Re-read at the widget instead, and
+  // say so in the comment so the verdict's basis stays visible.
+  let yodelNote = '';
+  if (sig && sig.yid && !nav.error && nav.status < 400) {
+    const widgetUrl = `https://events.yodel.today/y/widget/${sig.yid}`;
+    const wpage = await browser.newPage();
+    try {
+      await wpage.setViewport({ width: 1440, height: 900 });
+      const wresp = await wpage.goto(widgetUrl, { waitUntil: 'networkidle2', timeout: NAV_TIMEOUT });
+      await new Promise(r => setTimeout(r, SETTLE_MS));
+      const wsig = await wpage.evaluate(collectSignals);
+      if (wsig) {
+        sig = wsig;
+        nav.status = wresp ? wresp.status() : nav.status;
+        nav.finalUrl = wpage.url();
+        yodelNote = ' [read via Yodel widget, not the host page]';
+      }
+    } catch (e) {
+      yodelNote = ` [Yodel widget unreachable: ${(e.message || '').slice(0, 60)}]`;
+    } finally {
+      try { await wpage.close(); } catch (_) {}
+    }
+  }
+
   let [verdict, comment] = classify(row, nav, sig);
+  if (yodelNote) comment = `${comment}${yodelNote}`.slice(0, 250);
 
   // Record a cross-host redirect: it is how hijacked and rehomed domains announce themselves.
-  try {
-    const a = new URL(row.url).hostname.replace(/^www\./, '');
-    const b = new URL(nav.finalUrl).hostname.replace(/^www\./, '');
-    if (a !== b) comment = `${comment} [redirects to ${b}]`.slice(0, 250);
-  } catch (_) {}
+  // Skipped after a Yodel hop — that host change is ours, not the site's, and reporting it
+  // as a redirect would label every MacaroniKid site a rehomed domain.
+  if (!yodelNote) {
+    try {
+      const a = new URL(row.url).hostname.replace(/^www\./, '');
+      const b = new URL(nav.finalUrl).hostname.replace(/^www\./, '');
+      if (a !== b) comment = `${comment} [redirects to ${b}]`.slice(0, 250);
+    } catch (_) {}
+  }
 
   return [row.site, row.scraper, verdict, comment.replace(/[|\r\n]+/g, ' ').trim()];
 }
