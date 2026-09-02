@@ -53,7 +53,7 @@ function cell(value) {
 const args = process.argv.slice(2);
 const sinceArg = args.find(a => a.startsWith('--since='));
 const outArg = args.find(a => a.startsWith('--out='));
-const logArg = args.find(a => a.startsWith('--log='));
+const logArgs = args.filter(a => a.startsWith('--log='));
 if (!sinceArg) {
   console.error('Missing --since=<ISO timestamp>');
   process.exit(1);
@@ -61,12 +61,34 @@ if (!sinceArg) {
 const SINCE = new Date(sinceArg.split('=')[1]).getTime();
 const OUT = outArg ? outArg.split('=')[1] : null;
 
-const LOG = logArg
-  ? logArg.split('=').slice(1).join('=')
-  : path.join(__dirname, '..', 'scrapers', 'logs', 'scraper-stdout.log');
+// Two capture files, because the two scheduled tasks must not share one. Until
+// 2026-09-02 run-macaroni.bat appended to scraper-stdout.log too; cmd.exe will
+// not share a ">>" target between processes, so the rotation task's redirect
+// failed and its node never launched, silently deleting that day's rotation.
+// Splitting the files fixed that, and this list is why the split cost no data:
+// both are parsed, so MacaroniKid's per-site rows still reach the audit.
+const DEFAULT_LOGS = [
+  path.join(__dirname, '..', 'scrapers', 'logs', 'scraper-stdout.log'),
+  path.join(__dirname, '..', 'scrapers', 'logs', 'macaroni-stdout.log')
+];
 
-if (!fs.existsSync(LOG)) {
-  console.error(`Log not found: ${LOG}`);
+// --log may be repeated to parse several captures in one pass.
+const LOGS = logArgs.length
+  ? logArgs.map(a => a.split('=').slice(1).join('='))
+  : DEFAULT_LOGS;
+
+// An explicitly-named log that is absent is an error (the caller asked for it).
+// A default one that is absent is not: macaroni-stdout.log does not exist until
+// FunHive-Macaroni has run once under the split, and scraper-stdout.log can be
+// rotated away. Missing every log is still fatal.
+const PRESENT = LOGS.filter(l => {
+  if (fs.existsSync(l)) return true;
+  if (logArgs.length) { console.error(`Log not found: ${l}`); process.exit(1); }
+  console.warn(`note: skipping absent default log ${path.basename(l)}`);
+  return false;
+});
+if (!PRESENT.length) {
+  console.error(`No log found. Looked for: ${LOGS.join(', ')}`);
   process.exit(1);
 }
 
@@ -76,16 +98,21 @@ const SITE_PIN = /^\s*📍\s+(.+?)\s*$/;
 const SITE_SCRAPING = /^\s*📚\s+Scraping\s+(.+?)\.\.\.\s*$/;
 const FOUND = /Found\s+(\d+)\s+events/;
 
-async function main() {
+/**
+ * Stream one capture file, appending {scraper, site, count} rows for the slice
+ * at/after SINCE. Per-file state is deliberately local: the two logs are written
+ * by two independent processes, so a scraper left "open" at the end of one file
+ * must not carry over and mis-attribute the first sites of the next.
+ */
+async function parseLog(logPath, rows) {
   const rl = readline.createInterface({
-    input: fs.createReadStream(LOG, { encoding: 'utf8' }),
+    input: fs.createReadStream(logPath, { encoding: 'utf8' }),
     crlfDelay: Infinity
   });
 
   let inWindow = false;
   let currentScraper = null;
   let pendingSite = null;
-  const rows = [];
 
   for await (const line of rl) {
     const m = TS.exec(line);
@@ -116,6 +143,13 @@ async function main() {
       rows.push({ scraper: currentScraper, site: pendingSite, count: parseInt(f[1], 10) });
       pendingSite = null;
     }
+  }
+}
+
+async function main() {
+  const rows = [];
+  for (const logPath of PRESENT) {
+    await parseLog(logPath, rows);
   }
 
   // Split "Name (County County, ST)" into name + state where present.

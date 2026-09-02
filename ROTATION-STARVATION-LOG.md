@@ -53,6 +53,7 @@ more days.
 | 3 | 2026-08-22 | `ExecutionTimeLimit` 12h → 36h; data-quality split into its own `FunHive-DataQuality` task. | Stops Task Scheduler killing the batch mid-run. | Held — no `267014` since. | ✅ Held, but **addressed a different symptom.** 26h fits inside 36h comfortably; the time limit was never the binding constraint. |
 | 4 | 2026-08-31 | `checkRotationStarted()` in `scripts/preflight-diagnosis.js` — parses each of the last 7 `scraper-run-<date>.log` files for a `Running Group N` line. | Surfaces a dropped rotation the day it happens, without inferring from log freshness. | On its first run, immediately reported `2026-08-29=NONE 2026-08-26=NONE`. | ✅ **Detection only — not a fix.** The rotations are still being dropped. |
 | 5 | 2026-08-31 | **The task split (Layers 1+2, the genuine fix).** Layer 1: `helpers/atomic-json.js` (temp+rename JSON state, re-read-before-modify), `helpers/run-lock.js` (bounded, loud, stale-breaking mutex for full-group runs), geocode cache merge-on-write, per-group checkpoint files, `group-catchup.js` completion redefined per pipeline. Layer 2: MacaroniKid removed from the rotation into its own task (`FunHive-Macaroni` 3:00 PM → `macaroni-daily-runner.js`, own `macaroni-last-run.json` ledger + catch-up + same-day guard). `STARVATION_DAYS` kept at 4, argued in `group-catchup.js`. 8/8 in `scripts/test-rotation-safety.js`. **Task registration still pending — needs elevated `setup-tasks.ps1`.** | With both tasks registered: the rotation task's own duration is ≤ regular-pass length (~11.4h max) + a bounded lock wait, always under 24h, so **no rotation trigger is ever discarded again**; MacaroniKid overrun delays the next rotation by hours instead of deleting it; every group advances on a ~3-day cadence; preflight shows no `NONE` days. | *(pending — fill in after a full 3-day cycle with `FunHive-Macaroni` registered)* | ⏳ code proven by unit suite; scheduling effect **unobserved** |
+| 6 | 2026-09-02 | **Split the stdout/stderr capture files.** `run-macaroni.bat` → `logs\macaroni-stdout.log` / `macaroni-stderr.log`; `build-library-site-audit.js` gains `DEFAULT_LOGS` and parses both; `setup-tasks.ps1` + `CLAUDE.md` corrected. Fixes the defect introduced by #5, in which both tasks shared one `>>` target and `cmd.exe` refused to share it — killing the rotation before node launched (`LastTaskResult=1`, no run log). Root cause reproduced deliberately, not inferred. | The 09-03 03:00 trigger fires into a **held lock but a free log file**: `scraper-run-2026-09-03.log` exists with a `Running Group 3` line, `LastTaskResult = 0`, an explicit **2–3h lock wait** logged, and preflight reads `2026-09-03=G3` not `NONE`. Audit detail is unchanged: re-parsing the 08-31 window still gives 617 rows / 34 scrapers. | *(pending — fill in 2026-09-03)* | ⏳ audit-parity verified live; scheduling effect **unobserved** |
 
 ### Why #1 half-works, and why that matters
 
@@ -69,6 +70,88 @@ Its real effect: it converted a **permanent** stall (MacaroniKid Group 2 had gon
 before it shipped) into a **5–6 day** cycle. That is a genuine improvement. It just does not
 restore the 3-day cadence, and the 2026-08-19 entry's claim that "a skipped day now
 self-heals" overstated it.
+
+---
+
+## Prediction check — 2026-09-02 — **the 09-02 prediction FAILED, and it found a new mechanism**
+
+The standing prediction was: *"2026-09-02 — day 2 is Group 2's calendar turn, nothing is in
+flight, so the trigger fires and Group 2 runs under NEW code … Its run log will carry a
+lock-acquisition line."* It also said: *"If Group 2 does not run on 09-02, something beyond
+this mechanism is broken."* That clause is now cashed in — something beyond it **was** broken.
+
+| Predicted (2026-08-31) | Measured (2026-09-02) | Held? |
+|---|---|---|
+| The 03:00 trigger fires (nothing in flight) | It fired: `FunHive-Scrapers LastRunTime = 9/2/2026 3:00:01 AM` | ✅ |
+| Group 2 runs under new code, ~7h | **No rotation ran at all.** `LastTaskResult = 1`, no `scraper-run-2026-09-02.log`, no `FunHive scrapers starting` marker in any capture file, no node process | ❌ |
+| The run log carries a lock-acquisition line | There is no run log to carry one | ❌ |
+
+**This was NOT starvation.** The trigger was not discarded — `IgnoreNew` never came into it.
+The batch was started by Task Scheduler and **died on its first line.**
+
+### The new mechanism: two tasks, one `>>` target
+
+`run-scrapers.bat` and `run-macaroni.bat` both redirected into `logs\scraper-stdout.log`.
+**`cmd.exe` opens a `>>` redirect target at process start and does not share it with a second
+`cmd` process.** `FunHive-Macaroni` held that file open from 2026-09-01T19:00Z until
+2026-09-02T12:28Z — a window that contains the 07:00Z (03:00 local) rotation trigger. So:
+
+1. `echo … FunHive scrapers starting >> logs\scraper-stdout.log` — **failed to open the file**
+2. `node local-scraper-runner.js >> logs\scraper-stdout.log` — **never launched**
+3. batch exits **1** → `LastTaskResult = 1`
+
+**`run-lock.js` cannot defend against this, by construction.** The lock lives inside node;
+`cmd` opens the redirect *before* node exists. The rotation died several steps before it
+could ever wait on a lock. The claim in `run-macaroni.bat`'s own header — *"The run lock
+guarantees the two writers never interleave"* — was true of the two node processes and
+false of the two `cmd` processes wrapping them.
+
+**Reproduced deliberately before fixing**, rather than inferred: two `cmd /c` processes were
+pointed at one file, the first holding it open via a child `node`. The second lost its first
+`echo` entirely, its `node` never ran, and it exited **1** — the exact signature above.
+
+**Why it only surfaced now.** 2026-09-02 was the **first day the two tasks actually
+overlapped**. On 08-31 the rotation finished 09-01 09:42, before `FunHive-Macaroni`'s 15:00
+start. On 09-01 the rotation trigger was discarded by the old `IgnoreNew` mechanism. The
+task split of 2026-08-31 introduced this defect and it lay dormant for two days — which is
+also why intervention #5 must not be read as disproven: its lock/ledger machinery was never
+reached.
+
+### Intervention #6 — 2026-09-02
+
+Split the capture files: `run-macaroni.bat` now writes `logs\macaroni-stdout.log` /
+`macaroni-stderr.log`. `scripts/build-library-site-audit.js` gained a `DEFAULT_LOGS` list and
+parses **both** files, so the split costs no per-site audit detail (verified: re-parsing the
+08-31 window still yields 617 per-site rows across 34 scrapers, matching the pre-change
+figure). `setup-tasks.ps1` and `CLAUDE.md` updated. **No elevated re-registration is needed —
+the task action still points at the same batch file.**
+
+**Prediction, falsifiable, for 2026-09-03.** `FunHive-Macaroni` starts 2026-09-02 15:00 local
+and, at the rebalanced ~14.8h per MacaroniKid group, holds the run lock until roughly
+05:50 on 09-03. The 03:00 rotation trigger therefore fires into a *held lock but a free log
+file*, which is the case that previously killed it. Expect:
+
+- `scraper-run-2026-09-03.log` **exists** and contains a `Running Group 3` line (day 3).
+- `FunHive-Scrapers LastTaskResult = 0`, not `1`, and a `FunHive scrapers starting` marker
+  appears in `scraper-stdout.log` at ~03:00.
+- The run log carries an explicit **lock-wait line of roughly 2–3 hours** — that wait is the
+  fix working, not a hang. Group 3's regular pass then runs ~7.6h, finishing early afternoon.
+- The preflight on 09-03 reports `2026-09-03=G3`, not `NONE`.
+
+If `LastTaskResult` is `1` again with no run log, the log-sharing fix is wrong or incomplete.
+If a run log exists but shows no lock wait, the MacaroniKid duration model is wrong again.
+
+### Consequence to watch, not a defect
+
+`group-last-run.json` and `macaroni-last-run.json` were **both reset at 2026-09-02T12:53Z**
+by the group rebalance (114 scrapers changed group), and `selectGroup()` treats absent
+history as "not starved" and falls through to the calendar. Combined with the rotation lost
+today, **Group 2's regular scrapers have not run since 2026-08-27 and will not run until
+2026-09-05** (09-03 = G3, 09-04 = G1, 09-05 = G2). That is a 9-day gap for one group, but it
+is bounded and self-correcting inside one cycle. It was deliberately **not** recovered by a
+manual run today: starting a ~7.6h rotation at ~14:30 would have forced the 15:00 MacaroniKid
+task to wait ~7.2h against its 8h lock bound, risking trading a lost rotation for a lost
+MacaroniKid group.
 
 ---
 
