@@ -216,11 +216,11 @@ migration task.
 > composition: JS-gated/renders-nothing is **491 (58% of the backlog)**, not the 71 assumed
 > here — so these mechanical slices can clear at most ~40% of gate 4 even if all succeed.
 > A **redirect class of 48** that this section did not contain at all was found, grouped by
-> destination (one squatter domain, , accounts for **11 libraries**). 14
+> destination (one squatter domain, `dot-book.org`, accounts for **11 libraries**). 14
 > conclusive dead-domain rows promoted to MISMATCH; gate 4 **849 → 831**. All
 > Puppeteer-dependent slices deferred — MacaroniKid held the runner lock and ran Chrome all
 > session, which this section's own rule forbids working through. Worklist:
-> .
+> `reports/unverifiable-backlog-triage.md`.
 
 Gate 4's 849 unknowns and STATUS.md's named next action. The backlog splits into slices
 with very different natures. The mechanical ones — platform-mismatch relocations (~55),
