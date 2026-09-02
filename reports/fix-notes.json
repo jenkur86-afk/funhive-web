@@ -214,6 +214,12 @@
       "expect": "On the next GROUP 2 rotation: Richland Library should produce a real \"Found N events\" line for the first time ever, or - if it still times out - now say so IN stdout with a Found 0 events row rather than disappearing. Anderson County remains an open extraction question (found 0 on its main URL). Greenville should keep finding ~10 events and storing none; that is correct, not a regression.",
       "confirm": "grep -n \"Error scraping\\|Richland\" scrapers/logs/scraper-stdout.log | tail -20   then check LIBRARY-SITE-AUDIT.md has a Richland row",
       "added": "2026-09-01"
+    },
+    "ROTATION-REBALANCE-UNRUN": {
+      "what": "Rotation groups rebalanced by measured runtime 2026-09-02 (registry group: fields only, 114 scrapers moved). Was 30.1h/24.7h/12.6h - Group 1 over its own 24h trigger - now 22.4/22.4/22.5, i.e. regular 7.6h and MacaroniKid 14.8h per group. Owner chose redistribution within 3 days over a 4-day split, keeping the freshness cadence.",
+      "expect": "Over the next full 3-day cycle each rotation should complete in roughly 7-8h (regular) and each MacaroniKid run in roughly 14-15h, with no group exceeding 24h and therefore no dropped triggers. A transient is expected first: the in-flight cycle is disrupted, so a scraper may run twice or be skipped once as the new assignment settles. Re-run the balance whenever scrapers are added or removed.",
+      "confirm": "Compare TIME(s) totals per group in scrapers/logs/scraper-summary.log across the next 3 runs; node scripts/preflight-diagnosis.js for dropped-rotation days",
+      "added": "2026-09-02"
     }
   },
   "LibCal-VA": {
