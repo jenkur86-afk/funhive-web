@@ -1304,7 +1304,16 @@ function detectAgeRange(name, description) {
   // children's event puts it in front of the wrong audience. So "Storytime" with
   // a blurb reading "an adults-only storytime" still returns null, exactly as
   // before. Checked as a negative control when this change was made.
-  const STORYTIME_RE = /\b(story\s*times?|story\s*hours?)\b/;
+  // "circle time" joins this rule rather than getting its own: it is the same
+  // early-literacy program under a different house style, wants the same 3-5
+  // answer, and needs the same three guards. Found 2026-09-02 by the flagged
+  // >=70% All-Ages check on Takoma Park Library — "Spanish Circle Time/El
+  // Circulo de Cuentos en Español" and "Amharic Circle Time" were falling
+  // through to All Ages. Deliberately placed here, AFTER the toddler/baby rules
+  // above, so "Toddler Circle Time" still resolves 0-2 on its own more specific
+  // rule (12 such rows already do). The FAMILY guard keeps "Family Circle Time"
+  // All Ages, which is the same intended behaviour as "Family Storytime".
+  const STORYTIME_RE = /\b(story\s*times?|story\s*hours?|circle\s*times?)\b/;
   const storytimeIsVenueMention = /\bstory\s*time\s+room\b/.test(text);
   if (!storytimeIsVenueMention && !ADULTS_RE.test(text)
       && guarded(STORYTIME_RE, FAMILY_RE)) return '3-5';

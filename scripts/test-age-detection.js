@@ -116,6 +116,15 @@ const CASES = [
   ['Storytime for Adults', '', 'All Ages', 'adult storytime must not become a kids event'],
   ['Book Club in the Storytime Room', '', 'All Ages', 'venue mention is not an audience'],
 
+  // --- circle time (2026-09-02) ----------------------------------------------
+  // Folded into STORYTIME_RE rather than given its own rule: same program, same
+  // 3-5 answer, same three guards. Found by the flagged >=70% All-Ages check on
+  // Takoma Park Library, where language-specific circle times were All Ages.
+  ['Spanish Circle Time/El Circulo de Cuentos en Español', '', 'Preschool (3-5)', 'language circle time resolves like storytime'],
+  ['Amharic Circle Time', '', 'Preschool (3-5)', 'language circle time resolves like storytime'],
+  ['Family Circle Time', '', 'All Ages', 'family guard applies to circle time too'],
+  ['Toddler Circle Time', '', 'Babies & Toddlers (0-2)', 'qualified circle time keeps its specific bracket'],
+
   // --- FIELD-SCOPED FAMILY GUARD (2026-08-23) --------------------------------
   // The "…and not family" guards on the teen / kids / tots / storytime rules
   // were evaluated over title + description combined, so one incidental word in
