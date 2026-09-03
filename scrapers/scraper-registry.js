@@ -736,7 +736,7 @@ const SCRAPERS = {
     // is Anderson County Library System, relocated from CustomDrupal-Libraries the
     // same day (LibraryCalendar markup, not custom Drupal — see that entry).
     // Re-counted from LIBRARY_SYSTEMS with comments stripped, not incremented by hand.
-    sites: 32
+    sites: 33
   },
   'CustomDrupal-Libraries': {
     file: './scraper-custom-drupal-libraries-GA-NC-SC-WV.js',

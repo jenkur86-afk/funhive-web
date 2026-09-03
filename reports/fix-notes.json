@@ -226,6 +226,18 @@
       "expect": "On the next GROUP 1 rotation, LibraryCalendar-Libraries should log a Anderson County Library System site header and store rows under scraper_name LibraryCalendar-Libraries-andersonlibrary, in real age brackets (its feed carries Toddler/Preschool/Family storytimes). ONLY THEN delete the CustomDrupal entry. On the next GROUP 2 rotation the old entry should keep reporting found 0 events, which is correct and not a regression.",
       "confirm": "grep -n \"andersonlibrary\" scrapers/logs/scraper-stdout.log | tail; then query events for scraper_name LibraryCalendar-Libraries-andersonlibrary",
       "added": "2026-09-02"
+    },
+    "REDIRECT-SLICE-RELOCATIONS-UNRUN": {
+      "what": "Three redirect-slice fixes 2026-09-03: Jefferson Hills PA relocated WordPress-PA -> LibraryCalendar-Libraries (proven live, 15 events x 9 pages), Blue Hill ME relocated WordPress-ME -> LibCal-ME (identity proven from the LibCal page title; events unprovable by plain fetch since LibCal renders client-side), Medfield MA URL corrected within WordPress-MA to its own /events/ calendar. All three OLD entries left enabled per the Worcester rule.",
+      "expect": "Jefferson Hills should store rows under LibraryCalendar-Libraries-jeffersonhills on the next GROUP 1 rotation; Blue Hill under LibCal-ME on its group turn. ONLY THEN delete the WordPress-PA and WordPress-ME entries. Medfield should start finding events on the next WordPress-MA run instead of hitting a redirect.",
+      "confirm": "grep -nE \"jeffersonhills|Blue Hill|Medfield\" scrapers/logs/scraper-stdout.log | tail -20",
+      "added": "2026-09-03"
+    },
+    "WHOFI-EXTRACTOR-NEEDED": {
+      "what": "WhoFi is a CONFIRMED multi-library gap, not a one-off. THREE instances known as of 2026-09-03: Seekonk Public Library MA on seekonk-ma.whofi.com/calendar (found this session in the redirect slice, NOT yet in the verdict store), North Kingstown Free Library RI on northkingstown-ri.whofi.com (verdict store MISMATCH, and the LibCal file carries a urlCollision note calling it an open gap needing a WhoFi extractor), and Southington Public Library CT (verdict store, currently MATCHES). No scraper in this codebase parses WhoFi, so all of them are uncovered or mis-served.",
+      "expect": "Scope a WhoFi extractor: one shared scraper unlocks all three at once. THREE IS THE CONFIRMED FLOOR, NOT THE TOTAL - only Seekonk was found by deliberate search, the other two surfaced incidentally, so the redirect and renders-nothing buckets likely hide more. Size the real population before building by grepping the store AND the scraper configs.",
+      "confirm": "grep -i whofi reports/verification-comments.json   (and grep -rn whofi scrapers/ for urlCollision notes)",
+      "added": "2026-09-03"
     }
   },
   "LibCal-VA": {

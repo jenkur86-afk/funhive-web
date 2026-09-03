@@ -151,7 +151,12 @@ const LIBRARIES = [
   { name: 'Ventress Memorial Library', url: 'https://marshfieldlibrary.org/', eventsUrl: 'https://marshfieldlibrary.org/', city: 'Marshfield', state: 'MA', zipCode: '02050', county: 'Plymouth', urlCollision: 'marshfieldlibrary.org is WI, not MA (and marshfieldlibrary.libcal.com is WI too); relocated to Assabet-NH-MA 2026-08-27' },
   { name: 'Mashpee Public Library', url: 'https://mashpeepubliclibrary.org/', eventsUrl: 'https://mashpeepubliclibrary.org/', city: 'Mashpee', state: 'MA', zipCode: '02649', county: 'Barnstable'},
   { name: 'Mattapoisett Public Library', url: 'https://mattapoisettlibrary.org/', eventsUrl: 'https://mattapoisettlibrary.org/', city: 'Mattapoisett', state: 'MA', zipCode: '02739', county: 'Plymouth'},
-  { name: 'Medfield Memorial Library', url: 'https://www.medfieldlibrary.org', eventsUrl: 'https://www.medfieldlibrary.org/events', city: 'Medfield', state: 'MA', zipCode: '02052', county: 'Norfolk'},
+  // URL corrected 2026-09-03 (§2.1 redirect slice): medfieldlibrary.org 301s to
+  // medfieldpubliclibrary.org, the library's current domain. Verified live as the
+  // right institution (468 Main St, Medfield MA 02052) and it hosts its OWN
+  // calendar at /events/ rather than a third-party platform, so this stays a
+  // WordPress-MA entry - a URL fix, not a relocation.
+  { name: 'Medfield Memorial Library', url: 'https://www.medfieldpubliclibrary.org', eventsUrl: 'https://www.medfieldpubliclibrary.org/events/', city: 'Medfield', state: 'MA', zipCode: '02052', county: 'Norfolk'},
   { name: 'Medford Public Library', url: 'https://www.medfordlibrary.org', eventsUrl: 'https://www.medfordlibrary.org/events', city: 'Medford', state: 'MA', zipCode: '02155', county: 'Middlesex'},
   { name: 'Taft Public Library', url: 'https://mendonlibrary.org/', eventsUrl: 'https://mendonlibrary.org/', city: 'Mendon', state: 'MA', zipCode: '01756', county: 'Worcester'},
   { name: 'Merrimac Public Library', url: 'https://merrimaclibrary.org/', eventsUrl: 'https://merrimaclibrary.org/', city: 'Merrimac', state: 'MA', zipCode: '01860', county: 'Essex'},

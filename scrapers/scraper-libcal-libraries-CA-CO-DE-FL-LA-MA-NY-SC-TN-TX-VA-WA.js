@@ -2031,6 +2031,30 @@ const LIBRARY_SYSTEMS = [
     city: 'Bangor',
     zipCode: '04401'
   },
+  {
+    // Relocated from WordPress-ME on 2026-09-03 (SITE-IMPROVEMENT-REVIEW §2.1,
+    // redirect slice). Its WordPress entry pointed at bluehilllibrary.org, which
+    // 301s to bhpl.net — the library's current domain — and that site does not
+    // host its calendar at all: every events link goes to bhpl.libcal.com.
+    //
+    // IDENTITY PROVEN FROM THE LIBCAL PAGE'S OWN TITLE, not from name similarity:
+    // bhpl.libcal.com/calendar/events/ renders as "Library Events - Blue Hill
+    // Library Events - Blue Hill Public Library".
+    //
+    // Events are NOT proven by that fetch and cannot be — a LibCal grid renders
+    // client-side, so a plain HTTP read returns an empty shell whether the
+    // calendar is full or empty. That is exactly why this family is scraped with
+    // Puppeteer. The WordPress-ME entry is deliberately LEFT IN PLACE until a
+    // real LibCal-ME run stores Blue Hill rows (the Worcester rule); remove it
+    // only then.
+    name: 'Blue Hill Public Library',
+    url: 'https://bhpl.libcal.com/calendar/events/',
+    county: 'Hancock',
+    state: 'ME',
+    website: 'https://www.bhpl.net',
+    city: 'Blue Hill',
+    zipCode: '04614'
+  },
 
   // VERMONT
   {

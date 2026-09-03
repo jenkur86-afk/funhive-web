@@ -98,3 +98,49 @@ browser is the tool that can see past a 403 — run it when Chrome is free.
 3. Class C — repoint the ~18 legitimate relocations; each recovers a real library.
 4. Re-examine whether the 491 renders-nothing rows are truly Phase 10 work, given they are
    58% of gate 4 and the current plan leaves them untouched indefinitely.
+
+---
+
+## Session 2026-09-03 — the redirect slice, worked
+
+The Class C "legitimate relocation" group turned out to be mostly **platform
+migrations**, not stale URLs: the library moved its calendar onto LibCal or
+LibraryCalendar and its WordPress entry was never updated. That reframes the
+slice — most of these are Slice 2 (relocations) wearing a redirect's clothes.
+
+### Resolved
+
+| Library | Was | Now | Kind |
+|---|---|---|---|
+| Jefferson Hills Public Library (PA) | WordPress-PA → `jeffersonhillslibrary.org` | `jeffersonhills.librarycalendar.com/events/upcoming` | relocation — **proven live**, 15 events × 9 pages, "Baby & Me Storytime" |
+| Blue Hill Public Library (ME) | WordPress-ME → `bluehilllibrary.org` | `bhpl.libcal.com/calendar/events/` (LibCal-ME) | relocation — identity proven from the LibCal page title; events unprovable by plain fetch (JS grid) |
+| Medfield Memorial Library (MA) | WordPress-MA → `medfieldlibrary.org` | `medfieldpubliclibrary.org/events/` | **URL fix** — own-domain calendar, stays WordPress-MA |
+
+All three old entries are **left enabled** until a real run stores rows
+(Worcester rule). `LibraryCalendar-Libraries` sites 32 → 33.
+
+### New finding — WhoFi is a blocking platform, not a one-off
+
+**Seekonk Public Library (MA)** publishes on `seekonk-ma.whofi.com/calendar`.
+That is the *second* confirmed WhoFi library — `scraper-libcal-libraries-*.js`
+already carries a `urlCollision` note for North Kingstown RI reading "the library
+publishes on northkingstown-ri.whofi.com, a platform no scraper here supports.
+OPEN GAP needing a WhoFi extractor". Two known instances makes a WhoFi extractor
+worth scoping: it would unlock both at once, and the redirect slice likely hides
+more. Not attempted here.
+
+### Still open in this slice
+
+- **East Islip (NY)** and the `dot-book.org` cluster (11 libraries): both return
+  HTTP 403 to plain fetches. Not grounds to act — the stealth browser is the tool
+  that sees past a 403.
+- **Penfield (NY)**: the town site hosts library *news* but exposes no library
+  calendar URL; needs a deeper look than one fetch.
+- ~13 further Class C candidates unexamined (town .gov hosts, Follett Destiny,
+  `carnegieofhomestead.com`, `newcastlede.gov`).
+
+### Still gated on Chrome
+
+Slice 1 (153 network errors), bot-block (30) and TLS (8) all need
+`verify-sites-puppeteer.js`. A rotation was mid-run for this entire session, and
+§2.1's own rule is not to add Chrome load while one is running.

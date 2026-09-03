@@ -247,6 +247,31 @@ const LIBRARY_SYSTEMS = [
     zipCode: '29621'
   },
   {
+    // Relocated from WordPress-PA on 2026-09-03 (SITE-IMPROVEMENT-REVIEW §2.1,
+    // redirect slice). Its WordPress entry pointed at jeffersonhillslibrary.org,
+    // which redirects to jeffersonhillspubliclibrary.org — and that site does not
+    // host its own calendar: every "Register for a Program" link goes to
+    // jeffersonhills.librarycalendar.com.
+    //
+    // PROVEN LIVE, unlike a LibCal relocation: LibraryCalendar's upcoming view is
+    // server-rendered, so a plain fetch of /events/upcoming shows the real feed —
+    // 15 events on page 1 of 9, under the header "Upcoming Events | Jefferson
+    // Hills Public Library", including "Baby & Me Storytime" and "Crafternoon:
+    // Pumpkin Spice Candles". Right institution, real family programming, and
+    // enough volume to be worth recovering.
+    //
+    // Standard {slug}.librarycalendar.com subdomain, so buildScraperName() slugs
+    // it to LibraryCalendar-Libraries-jeffersonhills with no www-skipping needed.
+    // The WordPress-PA entry stays until a real run stores rows (Worcester rule).
+    name: 'Jefferson Hills Public Library',
+    url: 'https://jeffersonhills.librarycalendar.com/events/upcoming',
+    county: 'Allegheny',
+    state: 'PA',
+    website: 'https://www.jeffersonhillspubliclibrary.org',
+    city: 'Jefferson Hills',
+    zipCode: '15025'
+  },
+  {
     name: 'Grant County Public Library',
     url: 'https://grantcounty.librarycalendar.com/events/upcoming',
     county: 'Grant',
