@@ -52,7 +52,7 @@ const { db, supabase, saveScraperLog } = require('./helpers/supabase-adapter');
 const { selectGroup, recordGroupCompletion } = require('./helpers/group-catchup');
 // Full-group runs serialize on this mutex now that MacaroniKid is its own
 // scheduled task — see helpers/run-lock.js and ROTATION-STARVATION-LOG.md.
-const { acquireRunLock } = require('./helpers/run-lock');
+const { acquireRunLock, waitBudget } = require('./helpers/run-lock');
 
 // Import scraper registry
 const {
@@ -580,7 +580,7 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
     } else if (options.all) {
       // Run all groups (regular + Macaroni Kid)
       log('⚠️  Running ALL scrapers (including Macaroni Kid) - this will take many hours!');
-      releaseLock = await acquireRunLock('local-scraper-runner --all', { log: (m) => log(m) });
+      releaseLock = await acquireRunLock('local-scraper-runner --all', { log: (m) => log(m), maxWaitMs: waitBudget({ interactive: true }), pollMs: 15000 });
       process.on('exit', releaseLock);
       results = { success: [], failed: [], skipped: [] };
 
@@ -608,7 +608,7 @@ Macaroni Sites:    ${JSON.stringify(mkSites)} (total sites per group)
         process.exit(1);
       }
       results = { success: [], failed: [], skipped: [] };
-      releaseLock = await acquireRunLock(`local-scraper-runner --group ${options.group}`, { log: (m) => log(m) });
+      releaseLock = await acquireRunLock(`local-scraper-runner --group ${options.group}`, { log: (m) => log(m), maxWaitMs: waitBudget({ interactive: true }), pollMs: 15000 });
       process.on('exit', releaseLock);
 
       // Run regular scrapers for group

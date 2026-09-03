@@ -71,6 +71,43 @@ function tryAcquire(taskName) {
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const fmt = (ms) => (ms >= 3600000 ? `${(ms / 3600000).toFixed(1)}h` : `${Math.round(ms / 60000)}min`);
+
+/**
+ * How long a caller should be willing to queue behind another runner.
+ *
+ * The two cases are genuinely different and conflating them cost a real night's
+ * work on 2026-09-02: a hand-typed `--group 2` inherited the scheduled task's 8h
+ * budget, waited from 00:23Z to 08:23Z, and failed — while the MacaroniKid run
+ * holding the lock did not finish until 10:15Z. Eight hours of silence is the
+ * right answer for a 3 AM task nobody is watching (late beats dropped, which is
+ * the whole point of the lock) and the wrong answer for a person at a prompt,
+ * who needs to know within seconds whether to wait or come back later.
+ *
+ * INTERACTIVE runs therefore fail fast by default and say when the blocker
+ * started, so the operator can decide. `--wait=30m` / `--wait=8h` overrides
+ * either way. There is deliberately NO bypass flag: the lock also protects
+ * scraper-summary.log, .geocode-cache.json and the checkpoints from interleaved
+ * writes, and those hazards do not care that a human is impatient.
+ */
+const SCHEDULED_WAIT_MS = 8 * 3600 * 1000;
+const INTERACTIVE_WAIT_MS = 10 * 60 * 1000;
+
+function parseWaitArg(argv = process.argv) {
+  const a = argv.find((x) => /^--wait=/.test(x));
+  if (!a) return null;
+  const raw = a.slice('--wait='.length);
+  const mm = /^(\d+(?:\.\d+)?)\s*(m|min|h|hr|hours?)?$/i.exec(raw);
+  if (!mm) return null;
+  const n = parseFloat(mm[1]);
+  const unit = (mm[2] || 'm').toLowerCase();
+  return /^h/.test(unit) ? n * 3600000 : n * 60000;
+}
+
+/** Budget for a caller, honouring --wait= and falling back on invocation style. */
+function waitBudget({ interactive = false, argv = process.argv } = {}) {
+  return parseWaitArg(argv) ?? (interactive ? INTERACTIVE_WAIT_MS : SCHEDULED_WAIT_MS);
+}
 
 /**
  * Acquire the runner mutex, waiting up to maxWaitMs for the current holder.
@@ -80,7 +117,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
  * non-zero. Never call process.exit() from here; the caller owns its own
  * shutdown (summary-log lines, results files).
  */
-async function acquireRunLock(taskName, { maxWaitMs = 8 * 3600 * 1000, pollMs = 60 * 1000, log = console.log } = {}) {
+async function acquireRunLock(taskName, { maxWaitMs = SCHEDULED_WAIT_MS, pollMs = 60 * 1000, log = console.log } = {}) {
   const deadline = Date.now() + maxWaitMs;
   let announcedWait = false;
 
@@ -107,10 +144,12 @@ async function acquireRunLock(taskName, { maxWaitMs = 8 * 3600 * 1000, pollMs = 
     }
 
     if (Date.now() >= deadline) {
+      const heldFor = (Date.now() - Date.parse(holder.startedAt)) / 3600000;
       throw new Error(
-        `runner lock still held by ${holder.task} (pid ${holder.pid}, since ${holder.startedAt}) ` +
-        `after waiting ${(maxWaitMs / 3600000).toFixed(1)}h — giving up so this shows up as a ` +
-        `failed task run instead of hanging forever`);
+        `runner lock still held by ${holder.task} (pid ${holder.pid}, since ${holder.startedAt}, ` +
+        `${heldFor.toFixed(1)}h so far) after waiting ${fmt(maxWaitMs)} — giving up so this shows up as a ` +
+        `failed run instead of hanging forever. ` +
+        `Wait for that task to finish, then re-run; or pass --wait=<n>m|<n>h to queue for longer.`);
     }
 
     if (!announcedWait) {
@@ -122,4 +161,4 @@ async function acquireRunLock(taskName, { maxWaitMs = 8 * 3600 * 1000, pollMs = 
   }
 }
 
-module.exports = { acquireRunLock, LOCK_FILE };
+module.exports = { acquireRunLock, waitBudget, LOCK_FILE, SCHEDULED_WAIT_MS, INTERACTIVE_WAIT_MS };
