@@ -218,6 +218,35 @@ const LIBRARY_SYSTEMS = [
     zipCode: '37902'
   },
   {
+    // Added 2026-09-02 — same platform-mismatch class as Knox County above, found while
+    // completing MASTER-PLAN Phase 7 (SITE-IMPROVEMENT-REVIEW §1.4). It sat in
+    // CustomDrupal-Libraries pointing at andersonlibrary.org/events/month and reported
+    // "found 0 events" on every run, which looked like an extraction bug in that file.
+    // It is not: the site is fast (481ms, HTTP 200, 234KB) and its events are fully
+    // server-rendered — the CustomDrupal entry simply had the wrong VIEW and the wrong
+    // selectors. /events/month is a month GRID whose markup has no .views-row at all,
+    // while /events/upcoming serves 24 dated events in `div.lc-event > article.event-card`
+    // with titles in `h3.lc-event__title` — the exact shape this file already parses.
+    //
+    // The lc-* class prefix is the giveaway: this is a LibraryCalendar instance, not a
+    // custom Drupal build, so it belongs here rather than being patched with bespoke
+    // selectors in the CustomDrupal file.
+    //
+    // Self-hosted on the library's own domain like Knox County, NOT a
+    // {slug}.librarycalendar.com subdomain — buildScraperName() skips the leading "www"
+    // and slugs this to LibraryCalendar-Libraries-andersonlibrary.
+    //
+    // Real family programming confirmed in the feed: "Movers & Shakers Storytime",
+    // "Family Storytime", "Preschool Storytime", "Toddler Storytime".
+    name: 'Anderson County Library System',
+    url: 'https://www.andersonlibrary.org/events/upcoming',
+    county: 'Anderson',
+    state: 'SC',
+    website: 'https://www.andersonlibrary.org',
+    city: 'Anderson',
+    zipCode: '29621'
+  },
+  {
     name: 'Grant County Public Library',
     url: 'https://grantcounty.librarycalendar.com/events/upcoming',
     county: 'Grant',

@@ -180,6 +180,17 @@ containing embedded newlines and the literal text "See map: Google Maps".
 > re-run** — MacaroniKid held the runner lock all session; verification falls to the next
 > Group 2 rotation (`_pending.CUSTOMDRUPAL-TIMEOUT-VISIBILITY-UNRUN`). MASTER-PLAN
 > Phase 7 should be rewritten around these findings rather than "stores nothing".
+>
+> **COMPLETED 2026-09-02.** The last open question, Anderson County, was a PLATFORM
+> MISMATCH rather than an extraction bug: the site answers in 481ms and its events are
+> fully server-rendered, but the configured URL was the month-grid view (no .views-row in
+> its markup at all) while /events/upcoming serves 24 events in LibraryCalendar markup.
+> Relocated to LibraryCalendar-Libraries, which already parses those selectors — same fix
+> as Knox County. Old entry left enabled until the replacement produces rows (Worcester
+> rule). Richland confirmed without Chrome: a plain GET takes 18.3s against the old 15s
+> budget, so the timeout was real and 45s is right. Also fixed a stale registry sites
+> count (30 -> 32) that had been wrong since the Knox relocation and would report a false
+> COLLAPSED. Phase 7 can now be closed in MASTER-PLAN.
 
 Reported 356 found / 65 new on 2026-08-05 while the database holds 0 upcoming rows.
 Something between extraction and storage eats everything — dedup, date parsing, or a

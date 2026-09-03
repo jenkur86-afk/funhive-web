@@ -729,7 +729,14 @@ const SCRAPERS = {
     // rather than incremented by hand — check-scraper-names.js compares this
     // number against the distinct scraper_name count, so a stale value here is
     // reported as a COLLAPSED multi-site scraper that is not actually collapsed.
-    sites: 30
+    //
+    // 30 -> 32 on 2026-09-02, and the first of those two was already overdue: Knox
+    // County was relocated here on 2026-08-29 without this line being updated, which
+    // is exactly the stale-value failure the paragraph above warns about. The second
+    // is Anderson County Library System, relocated from CustomDrupal-Libraries the
+    // same day (LibraryCalendar markup, not custom Drupal — see that entry).
+    // Re-counted from LIBRARY_SYSTEMS with comments stripped, not incremented by hand.
+    sites: 32
   },
   'CustomDrupal-Libraries': {
     file: './scraper-custom-drupal-libraries-GA-NC-SC-WV.js',

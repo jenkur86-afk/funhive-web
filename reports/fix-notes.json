@@ -220,6 +220,12 @@
       "expect": "AUDIT PARITY IS PROVEN: re-parsing the 2026-08-31 window after the change still yields 617 per-site rows across 34 scrapers, so the split costs no detail. THE SCHEDULING EFFECT IS UNOBSERVED. On 2026-09-03 the 03:00 trigger fires into a held lock but a FREE log file - the exact case that killed it. Expect scraper-run-2026-09-03.log to EXIST with a \"Running Group 3\" line, LastTaskResult = 0 (not 1), a \"FunHive scrapers starting\" marker at ~03:00, and an explicit lock wait of roughly 2-3h while MacaroniKid finishes (~05:50). THAT WAIT IS THE FIX WORKING, NOT A HANG. If LastTaskResult is 1 again with no run log, this fix is wrong or incomplete. If a run log exists with no lock wait, the MacaroniKid duration model is wrong again. NOTE the separate consequence: Group 2 regular scrapers have not run since 2026-08-27 and, because both group ledgers were reset by the rebalance and selectGroup() treats absent history as not-starved, no catch-up will fire - Group 2 waits for its calendar turn on 2026-09-05.",
       "confirm": "Get-ScheduledTaskInfo -TaskName FunHive-Scrapers | Select LastRunTime,LastTaskResult; Test-Path scrapers\\logs\\scraper-run-2026-09-03.log; node scripts/preflight-diagnosis.js  (expect 2026-09-03=G3, not NONE)",
       "added": "2026-09-02"
+    },
+    "ANDERSON-RELOCATED-TO-LIBRARYCALENDAR": {
+      "what": "Anderson County Library System relocated 2026-09-02 from CustomDrupal-Libraries (group 2) to LibraryCalendar-Libraries (group 1). Its CustomDrupal URL was the month-grid view with no .views-row; /events/upcoming serves 24 server-rendered events in div.lc-event > article.event-card, which the LibraryCalendar scraper already parses. The old entry is still ENABLED per the Worcester rule.",
+      "expect": "On the next GROUP 1 rotation, LibraryCalendar-Libraries should log a Anderson County Library System site header and store rows under scraper_name LibraryCalendar-Libraries-andersonlibrary, in real age brackets (its feed carries Toddler/Preschool/Family storytimes). ONLY THEN delete the CustomDrupal entry. On the next GROUP 2 rotation the old entry should keep reporting found 0 events, which is correct and not a regression.",
+      "confirm": "grep -n \"andersonlibrary\" scrapers/logs/scraper-stdout.log | tail; then query events for scraper_name LibraryCalendar-Libraries-andersonlibrary",
+      "added": "2026-09-02"
     }
   },
   "LibCal-VA": {

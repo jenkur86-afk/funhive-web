@@ -94,6 +94,20 @@ const LIBRARY_SYSTEMS = [
     }
   },
   {
+    // RELOCATED 2026-09-02 to scraper-librarycalendar-libraries-MD-VA.js as
+    // LibraryCalendar-Libraries-andersonlibrary. This is NOT a custom Drupal site:
+    // its markup is LibraryCalendar (`div.lc-event > article.event-card`,
+    // `h3.lc-event__title`), which that file already parses.
+    //
+    // Why this entry reported "found 0 events" every run, and why it was never an
+    // extraction bug here: the URL below is the month GRID view, whose markup contains
+    // no `.views-row` at all, so the selectors could never match. The site itself is
+    // healthy — 481ms, HTTP 200, 234KB — and /events/upcoming serves 24 dated events.
+    //
+    // STILL ENABLED ON PURPOSE, per the Worcester rule: the replacement has not yet
+    // produced database rows, so removing this now would delete coverage on an unproven
+    // claim. Delete this entry only after a real LibraryCalendar-Libraries run stores
+    // Anderson rows; until then it costs one page load and correctly stores nothing.
     name: 'Anderson County Library System',
     url: 'https://www.andersonlibrary.org/events/month',
     county: 'Anderson',
