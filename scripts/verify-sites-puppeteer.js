@@ -266,6 +266,16 @@ async function verifyOne(browser, row) {
   if (!row.url || row.url === 'NO-URL')
     return [row.site, row.scraper, 'UNVERIFIABLE', 'no URL in scraper config'];
 
+  // GUARDED entries are never fetched. Their configured URL is already PROVEN to point
+  // at a different institution and the scraper skips them at run time, so fetching it
+  // reads the wrong library and yields advice about the wrong library — on 2026-09-03
+  // it recommended moving a Cape Cod library into a LibCal scraper on the strength of a
+  // New York library's page. This verdict is deliberately stable so the site stops
+  // consuming a fetch every cycle, per Step 3d's don't-re-verify rule.
+  if (row.url === 'GUARDED')
+    return [row.site, row.scraper, 'UNVERIFIABLE',
+      'entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.'];
+
   const page = await browser.newPage();
   const nav = { status: 0, finalUrl: row.url, error: '' };
   let sig = null;

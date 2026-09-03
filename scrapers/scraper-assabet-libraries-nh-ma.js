@@ -127,6 +127,51 @@ const REGISTRY_KEY = 'Assabet-NH-MA';
  * visible instead of silently passing.
  */
 
+const MONTH_NAMES = ['january', 'february', 'march', 'april', 'may', 'june',
+  'july', 'august', 'september', 'october', 'november', 'december'];
+
+// How many months to walk, counting the current one. Three covers the ~60-day
+// horizon the rest of the pipeline keeps without pulling far-future noise.
+const MONTHS_AHEAD = 3;
+
+/**
+ * Assabet serves ONE MONTH PER PAGE, and a bare /calendar/ 301s to the CURRENT month
+ * (this file already recorded that for Ventress: "301s to /calendar/2026-august/ and
+ * titles itself August 2026 Events"). The scraper only ever read that one page, so
+ * what it collected was always "this month" — and by the end of a month, that is
+ * almost entirely the PAST.
+ *
+ * Measured on the 2026-08-30 run, which is what exposed it:
+ *   Found 1717 → saved 16. Skip breakdown: 1665 PAST EVENT, 21 junk, 8 duplicate,
+ *   and 0 for every other reason. 97% of everything scraped was already over.
+ *
+ * The cost was not spread evenly. The 24 libraries added on 2026-08-27 had only ever
+ * run on 08-28 and 08-30 — both late in August — so every event they ever returned was
+ * past and NONE OF THEM HAS A SINGLE ROW in the database: Ventress, Brewster Ladies,
+ * Hampstead, Rye, Acton, Amesbury, Boxford, Grafton, Hanson, Hopkinton, Lunenburg,
+ * Lynnfield, Medford, Needham, Newburyport, Northborough, Oxford, Palmer, Rowley,
+ * Sherborn, Townsend, Weston, Whitinsville and Portsmouth. The 19 older libraries look
+ * healthy only because they were also scraped EARLY in earlier months.
+ *
+ * This is NOT the same-day past-event bug fixed on 2026-07-08, and not a date-parsing
+ * fault: the dates parsed correctly and the events really were over. It is a scrape
+ * WINDOW defect, so the fix is to ask for the months that have not happened yet.
+ */
+function monthUrlsFor(eventsUrl) {
+  const m = String(eventsUrl).match(/^(https?:\/\/[^/]+\/calendar\/)/i);
+  // Anything not matching the documented /calendar/ shape keeps its configured URL
+  // rather than being guessed at — a wrong URL here would scrape nothing silently.
+  if (!m) return [eventsUrl];
+  const base = m[1];
+  const now = new Date();
+  const urls = [];
+  for (let i = 0; i < MONTHS_AHEAD; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+    urls.push(`${base}${d.getFullYear()}-${MONTH_NAMES[d.getMonth()]}/`);
+  }
+  return urls;
+}
+
 async function scrapeAssabetEvents() {
   const browser = await launchBrowser();
   const events = [];
@@ -135,10 +180,21 @@ async function scrapeAssabetEvents() {
     try {
       console.log(`Scraping: ${library.name} (${library.slug})`);
       const page = await browser.newPage();
-      await page.goto(library.eventsUrl, { waitUntil: 'networkidle2', timeout: 30000 });
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      const libraryEvents = [];
+      // NOTE: the page.evaluate body below is unchanged and keeps its original
+      // indentation — re-indenting ~160 commented lines would bury this change in a
+      // whitespace diff. Only the loop around it is new.
+      for (const monthUrl of monthUrlsFor(library.eventsUrl)) {
+        try {
+          await page.goto(monthUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+        } catch (navErr) {
+          // A month page that does not load is one month lost, not the library.
+          console.log(`  ⚠️ ${library.name}: ${monthUrl} did not load (${navErr.message.split('\n')[0]})`);
+          continue;
+        }
+        await new Promise(resolve => setTimeout(resolve, 3000));
 
-      const libraryEvents = await page.evaluate((libName, libSlug) => {
+        const monthEvents = await page.evaluate((libName, libSlug) => {
         const events = [];
 
         // Strategy 1: Look for Assabet-specific calendar event selectors
@@ -298,6 +354,17 @@ async function scrapeAssabetEvents() {
           return true;
         });
       }, library.name, library.slug);
+
+        // Cross-month dedupe. The in-page dedupe above is per-page and keyed on TITLE
+        // ALONE, which is right within one month but would silently drop next month's
+        // occurrence of any recurring programme if applied across months. Keyed on
+        // title+date so a weekly storytime keeps one row per month page.
+        for (const e of monthEvents) {
+          const key = `${(e.title || '').toLowerCase()}|${(e.date || '').toLowerCase()}`;
+          if (libraryEvents.some(x => `${(x.title || '').toLowerCase()}|${(x.date || '').toLowerCase()}` === key)) continue;
+          libraryEvents.push(e);
+        }
+      }
 
       console.log(`  Found ${libraryEvents.length} events at ${library.name}`);
 

@@ -68,7 +68,11 @@ function entriesFor(file) {
       const window = nextName >= 0 ? after.slice(0, nextName) : after;
       const uu = urlRe.exec(window);
       if (!uu) continue;
-      out.push([name, uu[1] !== undefined ? uu[1] : uu[2]]);
+      // An entry carrying urlCollision has a URL we have already PROVEN points at a
+      // different institution, and the scraper skips it at run time. Recording that
+      // here is what stops the verifier fetching it — see the GUARDED note below.
+      const guarded = /["']?urlCollision["']?\s*:/.test(window);
+      out.push([name, uu[1] !== undefined ? uu[1] : uu[2], guarded]);
     }
   }
   fileCache.set(abs, out);
@@ -87,27 +91,46 @@ function urlFor(scraper, site) {
   if (!sc || !sc.file) return null;
 
   if (!perScraper.has(key)) {
-    perScraper.set(key, new Map(entriesFor(sc.file).map(([n, u]) => [cfgKey(n), u])));
+    perScraper.set(key, new Map(entriesFor(sc.file).map(([n, u, g]) => [cfgKey(n), { url: u, guarded: g }])));
   }
   const idx = perScraper.get(key);
   const want = cfgKey(site);
   if (idx.has(want)) return idx.get(want);
 
   // Substring fallback: audit rows sometimes shorten or lengthen the config name.
-  for (const [n, u] of idx) {
-    if (n && want && (n.includes(want) || want.includes(n))) return u;
+  for (const [n, rec] of idx) {
+    if (n && want && (n.includes(want) || want.includes(n))) return rec;
   }
   return null;
 }
 
 const todo = JSON.parse(fs.readFileSync(IN, 'utf8'));
 const lines = [];
-let resolved = 0, unresolved = 0;
+let resolved = 0, unresolved = 0, guarded = 0;
 for (const t of todo) {
-  const u = urlFor(t.scraper, t.site);
-  if (u) resolved++; else unresolved++;
+  const rec = urlFor(t.scraper, t.site);
   const st = (t.state && t.state !== '—') ? t.state : '';
+
+  // GUARDED, not fetched. A urlCollision entry still emits "Found 0 events" by design
+  // (the guard prints it so the library keeps an audit row), so it lands in the
+  // zero-event population every cycle — and its configured URL is the one we already
+  // PROVED belongs to another institution. Fetching it re-reads the wrong library and
+  // produces advice about the wrong library.
+  //
+  // That is not hypothetical. On 2026-09-03 this sent "Brewster Ladies Library Assoc."
+  // (WordPress-MA, Cape Cod) to brewsterlibrary.libcal.com — Brewster Public Library in
+  // NEW YORK — and the verifier duly reported platform=libcal, "belongs in a LibCal-*
+  // scraper". Acting on that would have re-created the exact wrong-state bug guarded on
+  // 2026-08-27, and would have imported a New York library's events into Massachusetts.
+  //
+  // These sites are a KNOWN COVERAGE GAP, not an unknown one, so they are recorded
+  // without a fetch rather than dropped — dropping them is the failure the completeness
+  // rule exists to prevent.
+  if (rec && rec.guarded) { guarded++; lines.push([t.site, t.scraper, 'GUARDED', st].filter((v, i) => i < 3 || v).join(' | ')); continue; }
+
+  const u = rec && rec.url;
+  if (u) resolved++; else unresolved++;
   lines.push([t.site, t.scraper, u || 'NO-URL', st].filter((v, i) => i < 3 || v).join(' | '));
 }
 fs.writeFileSync(OUT, lines.join('\n') + '\n', 'utf8');
-console.log(`${todo.length} sites -> ${OUT}   resolved ${resolved} | NO-URL ${unresolved}`);
+console.log(`${todo.length} sites -> ${OUT}   resolved ${resolved} | GUARDED ${guarded} | NO-URL ${unresolved}`);

@@ -3428,7 +3428,7 @@
  },
  "WordPress-GA|||Greene County Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org",
+  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
   "population": "zero"
  },
  "WordPress-GA|||Harris County Public Library": {
@@ -3531,7 +3531,7 @@
  },
  "WordPress-GA|||Oglethorpe County Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.lexingtonlibrary.org",
+  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
   "population": "zero"
  },
  "WordPress-GA|||Pembroke Public Library": {
@@ -7691,7 +7691,7 @@
  },
  "WordPress-KY|||Hickman County Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org",
+  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
   "population": "zero"
  },
  "WordPress-KY|||Jessamine County Public Library": {
@@ -7712,12 +7712,12 @@
  },
  "WordPress-KY|||Lents Branch": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 82 chars of text — likely JS-gated or a shell",
+  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
   "population": "zero"
  },
  "WordPress-KY|||Mahan-Oldham County Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
   "population": "zero"
  },
  "WordPress-KY|||Madison County Public Library": {
@@ -7727,7 +7727,7 @@
  },
  "WordPress-KY|||Nicholas County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.carlislelibrary.org",
+  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
   "population": "zero"
  },
  "WordPress-KY|||Pike County Public Library": {
@@ -7775,7 +7775,7 @@
  },
  "WordPress-MA|||Bigelow Free Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation timeout after 35000ms",
+  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
   "population": "zero"
  },
  "WordPress-MA|||Boxford Town Library": {
@@ -7813,7 +7813,7 @@
  },
  "WordPress-MA|||Cary Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.lexingtonlibrary.org",
+  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
   "population": "zero"
  },
  "WordPress-MA|||Carver Public Library": {
@@ -7881,7 +7881,7 @@
  },
  "WordPress-MA|||Gleason Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.carlislelibrary.org",
+  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
   "population": "zero"
  },
  "WordPress-MA|||Grafton Public Library": {
@@ -10680,7 +10680,7 @@
  },
  "WordPress-MA|||Brewster Ladies Library Assoc.": {
   "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
   "population": "zero"
  },
  "Communico-DC|||Huntington Public Library": {
@@ -11377,7 +11377,7 @@
  },
  "WordPress-NJ|||Montclair Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
   "population": "zero"
  },
  "WordPress-NY|||Ellicottville Memorial Library": {

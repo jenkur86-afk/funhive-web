@@ -226,6 +226,18 @@
       "expect": "Scope a WhoFi extractor: one shared scraper unlocks all three at once. THREE IS THE CONFIRMED FLOOR, NOT THE TOTAL - only Seekonk was found by deliberate search, the other two surfaced incidentally, so the redirect and renders-nothing buckets likely hide more. Size the real population before building by grepping the store AND the scraper configs.",
       "confirm": "grep -i whofi reports/verification-comments.json   (and grep -rn whofi scrapers/ for urlCollision notes)",
       "added": "2026-09-03"
+    },
+    "ASSABET-MONTH-WINDOW-UNRUN": {
+      "what": "Assabet-NH-MA serves ONE MONTH PER PAGE and the scraper only ever read the current month (a bare /calendar/ 301s to it). Late in a month that is almost entirely the past: the 2026-08-30 run found 1717 events and saved 16, with a skip breakdown of 1665 PAST EVENT and 0 for every other reason except 21 junk and 8 duplicate. The 24 libraries added 2026-08-27 had only run on 08-28 and 08-30, both late in August, so NONE of them has a single database row - including Brewster Ladies Library, whose Assabet relocation therefore looked failed when it was actually correct. Fixed by walking MONTHS_AHEAD=3 month URLs per library with a title+date cross-month dedupe. NOT a date-parsing bug and NOT the 2026-07-08 same-day fix - the dates were right and the events really were over.",
+      "expect": "On the next Group 2 rotation, Assabet-NH-MA's past-event skip count should fall from ~97% to a small fraction, NEW should rise well above 16, and the 24 currently-rowless libraries should gain rows - Brewster Ladies Library first among them, since its September page was confirmed live on 2026-09-03 serving 64 event cards. Row counts across the whole family should rise roughly 3x since three months are now read instead of one. NOT YET RUN: MacaroniKid held Chrome for this entire session so no live scraper run was possible.",
+      "confirm": "After the next Group 2 rotation: grep -A3 'Save complete' scrapers/logs/scraper-stdout.log near the Assabet block and read the 'past event' number in the skip breakdown (expect it far below 1665); then query events for scraper_name in (assabet-NH-MA, Assabet-NH-MA) grouped by venue and confirm more than 19 distinct venues, with 'Brewster Ladies Library' present.",
+      "added": "2026-09-03"
+    },
+    "GUARDED-ENTRIES-NOT-REFETCHED": {
+      "what": "build-verify-input.js and verify-sites-puppeteer.js had no concept of urlCollision, so guarded entries - which emit 'Found 0 events' by design and therefore land in the zero-event population every cycle - were re-fetched at the very URL already PROVEN to belong to another institution. 11 of the 52 sites verified on 2026-09-03 were guarded (21% of the batch). Worse than waste: for Brewster Ladies Library MA it fetched the New York library's LibCal and recommended 'belongs in a LibCal-* scraper', which if followed would have re-created the wrong-state bug guarded on 2026-08-27. The builder now emits GUARDED and the verifier records a stable verdict without fetching.",
+      "expect": "On the next verification pass the GUARDED count should be non-zero and those sites should consume no fetches, so the batch's UNVERIFIABLE-from-timeout share falls and the fetch budget goes to genuinely unknown sites. No guarded site should ever again receive a platform-relocation recommendation.",
+      "confirm": "node scripts/build-verify-input.js --in=<todo>.json --out=<sites>.txt and read the 'GUARDED n' field in its summary line; then grep GUARDED <sites>.txt and confirm none of those sites appear with a platform= comment in the resulting verdicts.",
+      "added": "2026-09-03"
     }
   },
   "LibCal-VA": {
