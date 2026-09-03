@@ -58,6 +58,7 @@ const GROUND_TRUTH = {
   'springfieldlibrary.org':  { state: 'MA', evidence: 'live page: Springfield City Library, "220 State Street, Springfield MA 01103", area code 413; Brightwood is one of its branches.' },
   'chesterlibrary.org':      { state: 'NY', evidence: 'live page: Town of Chester Public Library, "Chestertown, New York 12817", area code 518.' },
   'belfastlibrary.org':      { state: 'ME', evidence: 'live page: Belfast Free Library, "106 High Street, Belfast, ME", area code 207.' },
+  'graveslibrary.org':       { state: 'ME', evidence: 'live page via stealth browser (serves Cloudflare 403 to a plain fetch): title "Home - Louis T. Graves Memorial Public Library", 18 Maine St, Kennebunkport ME 04046, ph (207) 967-2778, area code 207. Claimed only by a KY entry (Graves County Public Library, Mayfield 42066), whose real site is gravescountypubliclibrary.org - relocated to LibraryCalendar-Libraries 2026-09-03.' },
   'germantownlibrary.org':   { state: 'NY', evidence: 'live page: Germantown Library, "31 Palatine Park Road, Germantown NY, 12526", area code 518. Puppeteer also reports platform=libcal.' },
   'unionlibrary.org':        { state: 'SC', evidence: 'verify-sites-puppeteer url-collision: page addresses show SC (Union County Library System) under NJ/CT/MS/WV/ME entries.' },
   'oaklandlibrary.org':      { state: 'CA', evidence: 'verify-sites-puppeteer url-collision: page addresses show CA. California is outside the active region entirely, so every eastern entry on this host is wrong.' },

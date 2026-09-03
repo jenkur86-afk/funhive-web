@@ -98,35 +98,59 @@ async function main() {
   for (const host of hosts) {
     const truth = GT[host];
     for (let attempt = 1; ; attempt++) {
-      let from = 0, ok = true;
-      const got = [];
-      for (;;) {
-        const { data, error } = await supabase
-          .from('events')
-          .select('id, state, source_url, name, venue, scraper_name')
-          .ilike('source_url', `%${host}%`)
-          .order('id', { ascending: true })      // REQUIRED before .range() — see header
-          .range(from, from + PAGE - 1);
-        if (error) {
-          if (/timeout/i.test(error.message) && attempt < 3) {
-            console.error(`  ${host}: ${error.message} — retry ${attempt}/2`);
-            ok = false; break;
+      let ok = true;
+      const seen = new Map();
+
+      // BOTH columns are searched, and a row on EITHER counts as being on this host.
+      //
+      // source_url alone used to be the only filter, and it silently missed a whole
+      // collision on 2026-09-03: graveslibrary.org (really ME) had written 34 rows
+      // under a KY entry, every one of them carrying `url` on graveslibrary.org but
+      // `source_url` on lfpl.org — a different library in the same state file. The
+      // purge reported "nothing on this host" for a host whose rows were sitting
+      // right there. source_url records the LISTING page and can be wrong or stale
+      // independently of the event's own URL, so keying on it alone leaves exactly
+      // the rows this script exists to remove.
+      //
+      // This widens only the MATCH, never the delete rule: hosts still come solely
+      // from GROUND_TRUTH (state proven off the live page), a row is still deleted
+      // only when its stored state differs from that proven state, and MAX_DELETE
+      // still caps the whole run.
+      for (const column of ['source_url', 'url']) {
+        let from = 0;
+        for (;;) {
+          const { data, error } = await supabase
+            .from('events')
+            .select('id, state, source_url, url, name, venue, scraper_name')
+            .ilike(column, `%${host}%`)
+            .order('id', { ascending: true })      // REQUIRED before .range() — see header
+            .range(from, from + PAGE - 1);
+          if (error) {
+            if (/timeout/i.test(error.message) && attempt < 3) {
+              console.error(`  ${host} (${column}): ${error.message} — retry ${attempt}/2`);
+              ok = false; break;
+            }
+            console.error(`query failed for ${host} (${column}):`, error.message);
+            process.exit(1);
           }
-          console.error(`query failed for ${host}:`, error.message);
-          process.exit(1);
+          if (!data || !data.length) break;
+          // Merge by id so a row matching on both columns is scanned once, not twice.
+          for (const r of data) if (!seen.has(r.id)) seen.set(r.id, r);
+          from += PAGE;
+          if (data.length < PAGE) break;
         }
-        if (!data || !data.length) break;
-        got.push(...data);
-        from += PAGE;
-        if (data.length < PAGE) break;
+        if (!ok) break;
       }
       if (!ok) { await new Promise(r => setTimeout(r, 3000)); continue; }
 
+      const got = [...seen.values()];
       scanned += got.length;
       for (const r of got) {
         // Re-check the host exactly: the ilike is a substring match and could in
-        // principle catch a longer hostname that merely contains this one.
-        if (hostOf(r.source_url) !== host) continue;
+        // principle catch a longer hostname that merely contains this one. Either
+        // column qualifying is enough, matching the widened query above.
+        const onHost = hostOf(r.source_url) === host || hostOf(r.url) === host;
+        if (!onHost) continue;
         if (r.state === truth) { keep.push(r); continue; }
         kill.push(r);
         const k = `${host} (really ${truth}) stored as ${r.state}`;
@@ -148,7 +172,11 @@ async function main() {
 
   console.log('\nsamples (name — venue — stored state — source host):');
   for (const r of kill.slice(0, 12)) {
-    console.log(`  "${(r.name || '').slice(0, 46)}" — ${(r.venue || '').slice(0, 30)} — ${r.state} — ${hostOf(r.source_url)}`);
+    // Print whichever column put this row on the host, so a row matched via `url`
+    // is not mistaken for one whose source_url was already correct.
+    const via = hostOf(r.source_url) ? `src:${hostOf(r.source_url)}` : `url:${hostOf(r.url)}`;
+    const shown = hostOf(r.source_url) === hostOf(r.url) ? hostOf(r.source_url) : `${via} / url:${hostOf(r.url)}`;
+    console.log(`  "${(r.name || '').slice(0, 46)}" — ${(r.venue || '').slice(0, 30)} — ${r.state} — ${shown}`);
   }
 
   if (!ids.length) { console.log('\nNothing to delete.'); return; }

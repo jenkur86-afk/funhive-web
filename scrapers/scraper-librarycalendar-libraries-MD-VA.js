@@ -272,6 +272,39 @@ const LIBRARY_SYSTEMS = [
     zipCode: '15025'
   },
   {
+    // Relocated from WordPress-KY on 2026-09-03. Its WordPress entry pointed at
+    // graveslibrary.org, which is a DIFFERENT INSTITUTION IN A DIFFERENT STATE:
+    // Louis T. Graves Memorial Public Library, 18 Maine St, Kennebunkport ME 04046,
+    // ph (207) 967-2778 — proven from the live page's own title and contact block
+    // through the stealth browser (a plain fetch gets a Cloudflare 403). Classic
+    // Defect A: the guessed {city}library.org host belongs to another state.
+    //
+    // The KY entry had been importing that Maine library's events under state KY
+    // and city Louisville — Portland Camera Club, PORT KNITTERS — roughly 1,000
+    // miles from where they were stored.
+    //
+    // The REAL library is confirmed by ZIP: 601 N 17th St, Mayfield KY 42066,
+    // ph (270) 247-2911, matching the WordPress entry's own zipCode 42066 and a
+    // western-Kentucky area code. That ZIP match is the control that makes this
+    // live-page evidence rather than another name guess.
+    //
+    // It runs LibraryCalendar, not WordPress: /events/upcoming serves 24
+    // `div.lc-event > article.event-card` with titles in `h3.lc-event__title` —
+    // the exact shape this file parses. Same lc-* tell as Anderson and Knox.
+    // The feed even carries LibraryCalendar age-group labels ("Teens", "Adults").
+    //
+    // Self-hosted on its own domain like Knox and Anderson, so buildScraperName()
+    // skips the leading "www" and slugs this to
+    // LibraryCalendar-Libraries-gravescountypubliclibrary.
+    name: 'Graves County Public Library',
+    url: 'https://www.gravescountypubliclibrary.org/events/upcoming',
+    county: 'Graves',
+    state: 'KY',
+    website: 'https://www.gravescountypubliclibrary.org',
+    city: 'Mayfield',
+    zipCode: '42066'
+  },
+  {
     name: 'Grant County Public Library',
     url: 'https://grantcounty.librarycalendar.com/events/upcoming',
     county: 'Grant',

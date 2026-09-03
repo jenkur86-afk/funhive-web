@@ -257,21 +257,38 @@ async function scrapeOrangeCountyLibraryFL() {
         }
       };
 
-      // Try to extract age group from description or title
       const fullText = `${event.title} ${description}`.toLowerCase();
-      if (fullText.includes('toddler') || fullText.includes('baby') || fullText.includes('0-3')) {
-        eventObj.ageRange = 'Babies & Toddlers (0-2)';
-      } else if (fullText.includes('preschool') || fullText.includes('3-5')) {
-        eventObj.ageRange = 'Preschool (3-5)';
-      } else if (fullText.includes('kids') || fullText.includes('6-8') || fullText.includes('children')) {
-        eventObj.ageRange = 'Kids (6-8)';
-      } else if (fullText.includes('tween') || fullText.includes('9-12')) {
-        eventObj.ageRange = 'Tweens (9-12)';
-      } else if (fullText.includes('teen') || fullText.includes('13-18')) {
-        eventObj.ageRange = 'Teens (13-18)';
-      } else {
-        eventObj.ageRange = 'All Ages';
-      }
+
+      // NO LOCAL AGE DETECTION. `ageRange` is deliberately left unset so
+      // resolveAgeRange()/detectAgeRange() in helpers/supabase-adapter.js own it —
+      // the same removal already applied to the five parks scrapers. See CLAUDE.md,
+      // "don't reimplement detectAgeRange() locally in a scraper".
+      //
+      // The local ladder removed here on 2026-09-03 was actively harmful in two ways,
+      // both measured against live rows rather than assumed:
+      //
+      //  1. Its bare `includes('kids')` / `includes('children')` branch stored
+      //     "Kids (6-8)" for anything generic, which is the wrong bucket — CLAUDE.md
+      //     records that normalizeAgeRange() was fixed for exactly this (generic
+      //     kids/children is 6-12, not 6-8). Live rows it mis-filed: "Beginner French
+      //     for Children" and "Crochet in the Round (*Ages 6-12)", the latter carrying
+      //     an EXPLICIT range the shared detector parses correctly.
+      //  2. Because those are SPECIFIC values rather than the All Ages catch-all,
+      //     resolveAgeRange() KEEPS them and never re-checks — so a wrong local guess
+      //     silently beat the authoritative detector, while a correct one only ever
+      //     matched what that detector would have produced anyway. The local ladder
+      //     could therefore only lose.
+      //
+      // Its unqualified substring tests were also false-positive prone in the way the
+      // shared detector's anchored checks exist to avoid ("teen" inside "canteen",
+      // "baby" inside a stray description mention).
+      //
+      // Removing it does NOT explain this scraper's high All-Ages share, and was not
+      // done to chase that number: scripts/check-allages-titles.js judged all 16 of its
+      // flagged sites MATCHES on 2026-09-03. Orange County is a large urban system whose
+      // catalog really is general-audience (Adobe courses, Microsoft Excel levels,
+      // language classes, studio reservations), so a high All-Ages share is the honest
+      // reading of that catalog, not a detection miss.
 
       // Check if free
       if (fullText.includes('free')) {

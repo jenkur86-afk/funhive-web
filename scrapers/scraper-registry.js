@@ -736,7 +736,11 @@ const SCRAPERS = {
     // is Anderson County Library System, relocated from CustomDrupal-Libraries the
     // same day (LibraryCalendar markup, not custom Drupal — see that entry).
     // Re-counted from LIBRARY_SYSTEMS with comments stripped, not incremented by hand.
-    sites: 33
+    //
+    // 33 -> 34 on 2026-09-03: Graves County Public Library KY, relocated from
+    // WordPress-KY, whose entry pointed at graveslibrary.org - a Maine library.
+    // Re-counted from LIBRARY_SYSTEMS the same way, not incremented by hand.
+    sites: 34
   },
   'CustomDrupal-Libraries': {
     file: './scraper-custom-drupal-libraries-GA-NC-SC-WV.js',

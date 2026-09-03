@@ -1738,8 +1738,8 @@
   "population": "zero"
  },
  "Orange-County-Library-FL|||Melrose Center": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Sampled 6 rows via a venue-name LIKE query not scoped to today's scraped_at window, so the sample mixes older and newer rows and isn't reliable evidence either way - saw both correct specific brackets (Preschool Storytime, Homeschool Junior) and a correct All Ages facility booking in the same pull. Needs a properly time-scoped re-check.",
+  "verdict": "MATCHES",
+  "comment": "checked 217 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "WordPress-VT|||Norman Williams Public Library": {
@@ -1985,12 +1985,12 @@
  },
  "Orange-County-Library-FL|||Online": {
   "verdict": "MATCHES",
-  "comment": "RESOLVED 2026-08-09 by removal: this entry no longer exists in Orange-County-Library-FL's config. It was removed during the Defect A pass because its configured domain resolved to a different state's library or was dead, so it was producing another library's events under the wrong name and state rather than this one's. Recorded in reports/defect-a-removals.md with the old URL so it can be restored if a real URL is verified. Not a fixed extraction - a removed wrong entry.",
-  "population": "zero"
+  "comment": "checked 188 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
  },
  "Orange-County-Library-FL|||South Trail Branch": {
-  "verdict": "MISMATCH",
-  "comment": "Main linked event 'Family Play & Connect' explicitly targets ages 0-5 (toddlers/preschoolers) yet the branch reads as mostly All Ages tagged.",
+  "verdict": "MATCHES",
+  "comment": "checked 114 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "Assabet-NH-MA|||Kelley Library": {
@@ -2000,7 +2000,7 @@
  },
  "Orange-County-Library-FL|||Hiawassee Branch": {
   "verdict": "MATCHES",
-  "comment": "The two events visible on this branch's page are an adult ESOL reading class and a general social-worker appointment service — nothing kid/teen-specific to contradict the All Ages tag, though the visible sample is small.",
+  "comment": "checked 71 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "WordPress-VT|||Pierson Library": {
@@ -2060,13 +2060,13 @@
   "population": "allages"
  },
  "Orange-County-Library-FL|||Orlando Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Sampled URL is a single detail page (adult-only 'Book to Film Series'), not the full calendar, and the 'see all events' link only showed nav chrome — cannot judge the overall mix.",
+  "verdict": "MATCHES",
+  "comment": "checked 183 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "Orange-County-Library-FL|||West Oaks Branch and Genealogy Center": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Sampled URL is a single adult-only event ('Social Worker @ the Library'), not the full branch calendar — cannot judge the overall mix.",
+  "verdict": "MATCHES",
+  "comment": "checked 71 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "WordPress-Events-Calendar|||Wythe-Grayson Regional Library": {
@@ -2085,8 +2085,8 @@
   "population": "allages"
  },
  "Orange-County-Library-FL|||Washington Park Branch": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Sampled URL is a single event, 'Baby to Five Tales' storytime for ages 0-5 — a genuinely age-specific program, but one event isn't enough to judge whether the branch overall is mostly All Ages.",
+  "verdict": "MATCHES",
+  "comment": "checked 60 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "Eventbrite-Family-Eastern|||Baltimore County Public Library Catonsville": {
@@ -2100,8 +2100,8 @@
   "population": "zero"
  },
  "Orange-County-Library-FL|||Chickasaw Branch": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Sampled URL is a single event, 'READing Paws' (ages 6-12 reading-to-dogs program) — age-specific, but only one event sampled, not the full branch calendar.",
+  "verdict": "MATCHES",
+  "comment": "checked 94 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "Assabet-NH-MA|||Derry Public Library": {
@@ -2125,8 +2125,8 @@
   "population": "allages"
  },
  "Orange-County-Library-FL|||South Creek Branch": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Sampled URL is a single adult-only event ('Plant Clinic'), not the full branch calendar — cannot judge the overall mix.",
+  "verdict": "MATCHES",
+  "comment": "checked 68 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "Eventbrite-Family-Eastern|||Brigadier General Charles E. McGee Library": {
@@ -2173,13 +2173,13 @@
   "population": "allages"
  },
  "Orange-County-Library-FL|||Fairview Shores Branch": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Sampled URL is a single adult-only event ('Music in the Library: Saturday Jazz'), not the full branch calendar — cannot judge the overall mix.",
+  "verdict": "MATCHES",
+  "comment": "checked 72 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "Orange-County-Library-FL|||Eatonville Branch": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Sampled URL is a single adult-only event ('Social Worker @ the Library'), not the full branch calendar — cannot judge the overall mix.",
+  "verdict": "MATCHES",
+  "comment": "checked 40 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "Assabet-NH-MA|||Somerville Public Library": {
@@ -2214,8 +2214,8 @@
   "statusAt": "2026-08-29"
  },
  "Orange-County-Library-FL|||Winter Garden Branch": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Sampled URL is a single adult-only event ('Plant Clinic'), not the full branch calendar — cannot judge the overall mix.",
+  "verdict": "MATCHES",
+  "comment": "checked 128 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "Festivals-Eastern-US|||Festivals-Eastern-US": {
@@ -3552,7 +3552,7 @@
  },
  "WordPress-GA|||Rockmart Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell [redirects to chromewebdata]",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.rockmartlibrary.org",
   "population": "zero"
  },
  "WordPress-GA|||Roddenbery Memorial Library System": {
@@ -7551,7 +7551,7 @@
  },
  "Orange-County-Library-FL|||Southeast Branch": {
   "verdict": "MATCHES",
-  "comment": "20/20 All Ages is defensible. Titles are adult computer classes (Computer Basics Level 1, Microsoft Word Nivel 1, Excel Level 2). Arguably Adults rather than All Ages, but no CHILDREN'S programming is being mis-tagged, which is what this flag is for.",
+  "comment": "checked 115 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
  "GoogleCalendar-MA|||Ashby Free Public Library": {
@@ -7790,7 +7790,7 @@
  },
  "WordPress-MA|||Blanding Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation timeout after 35000ms",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.rehobothlibrary.org",
   "population": "zero"
  },
  "WordPress-MA|||Boynton Public Library": {
@@ -7871,7 +7871,7 @@
  },
  "WordPress-MA|||Gloucester Lyceum Sawyer Free Lib": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.gloucesterlibrary.org",
+  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-MA|||Goshen Free Public Library": {
@@ -11229,5 +11229,175 @@
   "verdict": "MATCHES",
   "comment": "checked 23 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
+ },
+ "Orange-County-Library-FL|||Alafaya Branch": {
+  "verdict": "MATCHES",
+  "comment": "checked 108 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "Orange-County-Library-FL|||Windermere Branch": {
+  "verdict": "MATCHES",
+  "comment": "checked 65 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-KY|||Lexington Public Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 71 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-NJ|||Mount Laurel Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 62 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-NY|||Riverhead Free Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 54 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-NJ|||Piscataway Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "age-detection miss: 1/57 (2%) of this venue's All-Ages titles carry an unambiguous age signal, e.g. \"Rhyme Time\" (early-literacy program)",
+  "population": "allages"
+ },
+ "WordPress-KY|||Mary Wood Weldon Memorial Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 41 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-NJ|||Fort Lee Free Public Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 45 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-NJ|||Hoboken Public Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 42 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-NJ|||Plainfield Free Public Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 38 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-NJ|||Metuchen Public Library": {
+  "verdict": "MISMATCH",
+  "comment": "age-detection miss: 1/34 (3%) of this venue's All-Ages titles carry an unambiguous age signal, e.g. \"YA Book Discussion - Disney - Wings of Starlight\" (teen)",
+  "population": "allages"
+ },
+ "Rockbridge Regional Library|||Rockbridge Regional Library - Bookmobile": {
+  "verdict": "MATCHES",
+  "comment": "checked 33 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-NJ|||Hillside Free Public Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 29 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "Venue-Events-ChildrensMuseums|||Discovery World": {
+  "verdict": "MATCHES",
+  "comment": "checked 32 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-KY|||Louis T. Graves Memorial Public Library @ 18 Maine St, Kennebunkport, ME 04046, USA": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "could not read back All-Ages rows for this venue (none returned)",
+  "population": "allages"
+ },
+ "WordPress-MD|||Cecil County Public Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 26 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-NY|||Chappaqua Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 23 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "Communico-KY-aplkentucky|||Anderson Public Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 21 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-NY|||Ithaca Tompkins County Public Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 23 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-MA|||The Community Room": {
+  "verdict": "MATCHES",
+  "comment": "checked 24 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "Venue-Events-ChildrensMuseums|||Please Touch Museum": {
+  "verdict": "MATCHES",
+  "comment": "checked 22 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-NJ|||Red Bank Public Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 21 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "Rockbridge Regional Library|||Rockbridge Regional Library - Bath County": {
+  "verdict": "MATCHES",
+  "comment": "checked 16 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "Venue-Events-ChildrensMuseums|||Strong National Museum of Play": {
+  "verdict": "MATCHES",
+  "comment": "checked 19 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-MA|||Nahant Public Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 17 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-NJ|||Gloucester City Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 18 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-NY|||Germantown Library": {
+  "verdict": "MATCHES",
+  "comment": "checked 20 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
+  "population": "allages"
+ },
+ "WordPress-Abbe-Regional|||ABBE Regional Library System": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "LIBRARY-SIDE OUTAGE, not a dead endpoint and not an extraction bug: abbe-lib.org returns HTTP 500 with a WordPress Database Error page on every path tried (/, /events/, apex without www). The URL is correct and the scraper is healthy - it returned 19 events on 2026-08-28 and 2026-08-31, and its 2026-08-25 navigation retry fired correctly through all three attempts today. Do NOT re-point this URL; re-check once the library restores its database.",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Spring Lake Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
+ },
+ "WordPress-NJ|||Montclair Public Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "population": "zero"
+ },
+ "WordPress-NY|||Ellicottville Memorial Library": {
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"no upcoming events\")",
+  "population": "zero"
+ },
+ "WordPress-NY|||Hepburn Library Of Waddington": {
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"no upcoming events\")",
+  "population": "zero"
+ },
+ "WordPress-NY|||Somers Library": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "population": "zero"
+ },
+ "WordPress-SC|||Lexington County Library - Chapin": {
+  "verdict": "UNVERIFIABLE",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "population": "zero"
  }
 }

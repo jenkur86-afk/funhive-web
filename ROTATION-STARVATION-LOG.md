@@ -73,6 +73,74 @@ self-heals" overstated it.
 
 ---
 
+## Prediction check — 2026-09-03 — **the split held; the lock did its job to the second**
+
+The 09-02 prediction had already failed and been cashed in (see below). Today is the first
+full day running under **intervention #6** (the split capture files), and it is the first
+clean rotation day since 2026-08-31.
+
+| Predicted (2026-08-31) | Measured (2026-09-03) | Held? |
+|---|---|---|
+| `2026-09-01` is discarded, preflight shows `NONE` | `2026-09-01=NONE` | ✅ |
+| `2026-09-02` Group 2 runs under new code | No rotation — killed by the shared `>>` target | ❌ (mechanism found, fixed same day) |
+| From the first day both tasks are registered: zero `NONE` days | **09-03 = G3 ran.** First clean day; 2 of the previous 7 are still `NONE` | ⏳ too early |
+
+Preflight rotation line, verbatim:
+
+```
+Group 3 started (last 7 days: 2026-09-03=G3 2026-09-02=NONE 2026-09-01=NONE
+                 2026-08-31=G1 2026-08-30=G3 2026-08-29=NONE 2026-08-28=G1)
+[WARN] 3 of the last 7 days had NO rotation: 2026-09-02, 2026-09-01, 2026-08-29
+```
+
+**All three `NONE` days have separate, identified, already-fixed causes** — 08-29 overrun
+discard, 09-01 old-code MacaroniKid tail, 09-02 the redirect kill. None of them recurred today.
+
+### The handoff was 39 seconds
+
+This is the number worth keeping. MacaroniKid Group 2 ran 2026-09-02T19:00:02Z →
+**2026-09-03T10:15:25Z** (15.26h). The rotation's 07:00Z trigger found the lock held, waited
+**3.25h**, and acquired at **10:16:04Z** — 39 seconds after MacaroniKid released it. It then
+ran 7.51h and finished 17:46:56Z.
+
+```
+19:00Z ──MacaroniKid G2 15.26h──▶ 10:15Z
+        07:00Z ──wait 3.25h──▶ 10:16Z ──rotation G3 7.51h──▶ 17:46Z
+                                                          19:00Z next MacaroniKid: lock free
+```
+
+**Late is the designed outcome, not a fault.** Before 2026-08-31 this exact collision
+discarded the trigger permanently. The measured day totals **15.26 + 7.51 = 22.77h**, which
+fits inside 24h — but with only ~1.2h of headroom, so the margin is real and thin. The
+post-rebalance estimates (MacaroniKid 14.8h, regular 7.6h) were both accurate to within
+half an hour.
+
+### Standing prediction — 2026-09-04 and 2026-09-05
+
+`getDayGroup`: day 4 → **Group 1**, day 5 → **Group 2**. Nothing is in flight overnight that
+predates a deploy, and both tasks are registered. Falsifiably:
+
+- **2026-09-04**: MacaroniKid (started 09-03T19:00Z) releases the lock **between 09:30Z and
+  11:00Z**; the 07:00Z rotation trigger waits ~2.5–4h rather than being discarded, acquires
+  within ~5 minutes of that release, runs **Group 1** for ~7–8h and finishes between
+  **16:30Z and 19:00Z**. `group-last-run.json` gains a `"1"` key. Preflight shows
+  `2026-09-04=G1`, **not** `NONE`.
+- **2026-09-05**: same shape for **Group 2**, which clears the 13 Group 2 library scrapers
+  currently missing from the audit cycle (BiblioCommons-GA, Communico-AL, Communico-SC,
+  CustomDrupal-Libraries, EventActions-Libraries, LibCal-MA, LibCal-PA, LibCal-VT,
+  LibraryMarket, LibraryMarket-GA, Somerset-County, WordPress-ME, WordPress-MS) and unblocks
+  the three `_pending` items waiting on a Group 2 rotation.
+- **By 2026-09-06** all three groups hold a real post-reset completion in
+  `group-last-run.json`, each ≤ 3.5d old, and `LIBRARY-SITE-AUDIT.md` reaches
+  `Cycle complete`.
+
+**What would falsify this:** any `NONE` day on 09-04 or 09-05 means the split did not fix the
+general case and intervention #6's ledger row must say so. A rotation finishing **after
+19:00Z** means the ~1.2h headroom is gone and MacaroniKid will start waiting on the rotation
+instead of the reverse — at which point the two tasks are competing for a day that no longer
+fits them both, and the next intervention is a scheduling change, not another lock tweak.
+
+---
 ## Prediction check — 2026-09-02 — **the 09-02 prediction FAILED, and it found a new mechanism**
 
 The standing prediction was: *"2026-09-02 — day 2 is Group 2's calendar turn, nothing is in
