@@ -36,7 +36,15 @@ const activityCache = new Map();
  * empty-name) falls back to the generic skipped count only.
  */
 function categorizeCommitSkips(skippedReasons) {
-  const result = { skippedCount: 0, pastEventCount: 0, noDateCount: 0, invalidDateCount: 0 };
+  const result = {
+    skippedCount: 0, pastEventCount: 0, noDateCount: 0, invalidDateCount: 0,
+    nonFamilyCount: 0, cancelledCount: 0, adultOnlyCount: 0, junkTitleCount: 0,
+    placeholderVenueCount: 0, emptyNameCount: 0, contentDuplicateCount: 0,
+    // Anything the adapter starts rejecting that this function does not yet know
+    // about. It exists so a NEW reason string shows up as an explicit number
+    // instead of silently re-opening the accounting hole described below.
+    uncategorizedCount: 0, uncategorizedSamples: []
+  };
   if (!skippedReasons || skippedReasons.length === 0) return result;
   for (const reason of skippedReasons) {
     result.skippedCount++;
@@ -46,6 +54,23 @@ function categorizeCommitSkips(skippedReasons) {
       result.noDateCount++;
     } else if (reason.includes('Skipping time-only event_date') || reason.includes('Skipping "Invalid Date" event')) {
       result.invalidDateCount++;
+    } else if (reason.includes('Skipping non-family event')) {
+      result.nonFamilyCount++;
+    } else if (reason.includes('Skipping cancelled/closed event')) {
+      result.cancelledCount++;
+    } else if (reason.includes('Skipping adult-only event')) {
+      result.adultOnlyCount++;
+    } else if (reason.includes('Skipping junk-title event')) {
+      result.junkTitleCount++;
+    } else if (reason.includes('Skipping placeholder-venue')) {
+      result.placeholderVenueCount++;
+    } else if (reason.includes('empty/null name')) {
+      result.emptyNameCount++;
+    } else if (reason.includes('Skipping content-duplicate row')) {
+      result.contentDuplicateCount++;
+    } else {
+      result.uncategorizedCount++;
+      if (result.uncategorizedSamples.length < 3) result.uncategorizedSamples.push(reason);
     }
   }
   return result;
@@ -479,6 +504,46 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
   let skippedPastEvent = 0;
   let skippedDuplicate = 0;
   let skippedJunkTitle = 0;
+  // Commit-time rejections. flattenForTable() throws for these inside batch.commit(),
+  // so they are NOT reachable by the per-event checks above — the loop has already
+  // counted the event as saved, and the commit hands back a reason string.
+  //
+  // Until 2026-09-04 only past/dateless/invalid-date were attributed back, while
+  // `skipped` was incremented by the FULL commit-skip count, so every other reason
+  // vanished into an unexplained remainder. Measured on the Assabet run of
+  // 2026-09-03: 1,174 skipped against a breakdown that accounted for 486, leaving
+  // 688 unattributed — the breakdown said "0 cancelled" on a run whose own log
+  // showed 45 "Skipping cancelled/closed" lines.
+  let skippedNonFamily = 0;
+  let skippedCancelled = 0;
+  let skippedAdultOnly = 0;
+  let skippedPlaceholderVenue = 0;
+  let skippedEmptyName = 0;
+  let skippedContentDuplicate = 0;
+  let skippedUncategorized = 0;
+  const uncategorizedSamples = [];
+
+  // Fold one commit's categorized skips into the run totals. Both commit sites use
+  // this so they cannot drift apart — they did not share a helper before, which is
+  // how the mid-batch site and the final site would have needed the same fix twice.
+  const applyCommitSkips = (c) => {
+    saved -= c.skippedCount;
+    skipped += c.skippedCount;
+    skippedPastEvent += c.pastEventCount;
+    skippedNoDate += c.noDateCount;
+    skippedInvalidDate += c.invalidDateCount;
+    skippedNonFamily += c.nonFamilyCount;
+    skippedCancelled += c.cancelledCount;
+    skippedAdultOnly += c.adultOnlyCount;
+    skippedJunkTitle += c.junkTitleCount;
+    skippedPlaceholderVenue += c.placeholderVenueCount;
+    skippedEmptyName += c.emptyNameCount;
+    skippedContentDuplicate += c.contentDuplicateCount;
+    skippedUncategorized += c.uncategorizedCount;
+    for (const s of c.uncategorizedSamples) {
+      if (uncategorizedSamples.length < 3) uncategorizedSamples.push(s);
+    }
+  };
 
   console.log(`\n💾 Saving ${events.length} events with geocoding...`);
 
@@ -778,12 +843,7 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
       // Commit batch every 500 documents
       if (batchCount >= 500) {
         const commitResult = await batch.commit();
-        const c = categorizeCommitSkips(commitResult?.skippedReasons);
-        saved -= c.skippedCount;
-        skipped += c.skippedCount;
-        skippedPastEvent += c.pastEventCount;
-        skippedNoDate += c.noDateCount;
-        skippedInvalidDate += c.invalidDateCount;
+        applyCommitSkips(categorizeCommitSkips(commitResult?.skippedReasons));
         batch = db.batch();
         batchCount = 0;
         console.log(`   💾 Committed ${saved} events...`);
@@ -798,16 +858,36 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
   // Commit remaining
   if (batchCount > 0) {
     const commitResult = await batch.commit();
-    const c = categorizeCommitSkips(commitResult?.skippedReasons);
-    saved -= c.skippedCount;
-    skipped += c.skippedCount;
-    skippedPastEvent += c.pastEventCount;
-    skippedNoDate += c.noDateCount;
-    skippedInvalidDate += c.invalidDateCount;
+    applyCommitSkips(categorizeCommitSkips(commitResult?.skippedReasons));
   }
 
   console.log(`\n✅ Save complete: ${saved} saved, ${skipped} skipped, ${errors} errors`);
-  console.log(`   Skip breakdown: ${skippedInvalidDate} invalid date, ${skippedDuplicate} duplicate, ${skippedNoVenue} no venue match, ${skippedNoGeocode} geocode failed, ${skippedNoDate} no date, ${skippedPastEvent} past event, ${skippedJunkTitle} junk title`);
+
+  // Every named bucket, including the ones that are zero — a category that prints only
+  // when non-zero cannot be distinguished from one that is silently not being counted.
+  const parts = [
+    [skippedInvalidDate, 'invalid date'], [skippedDuplicate, 'duplicate'],
+    [skippedNoVenue, 'no venue match'], [skippedNoGeocode, 'geocode failed'],
+    [skippedNoDate, 'no date'], [skippedPastEvent, 'past event'],
+    [skippedJunkTitle, 'junk title'], [skippedNonFamily, 'non-family'],
+    [skippedCancelled, 'cancelled'], [skippedAdultOnly, 'adult-only'],
+    [skippedPlaceholderVenue, 'placeholder venue'], [skippedEmptyName, 'empty name'],
+    [skippedContentDuplicate, 'content duplicate']
+  ];
+  console.log(`   Skip breakdown: ${parts.map(([n, l]) => `${n} ${l}`).join(', ')}`);
+
+  // SELF-CHECK. The breakdown is only trustworthy if it adds up, and for a year it
+  // did not: the totals line and the breakdown were computed independently, so a
+  // reason string nobody had categorized just widened the gap in silence. Reconciling
+  // them here means the NEXT uncategorized reason announces itself on the very first
+  // run instead of being noticed months later by hand-subtracting two numbers.
+  const attributed = parts.reduce((a, [n]) => a + n, 0) + skippedUncategorized;
+  if (skippedUncategorized > 0) {
+    console.log(`   ⚠️ ${skippedUncategorized} skip(s) matched no known reason — categorizeCommitSkips() needs a new branch. Samples: ${uncategorizedSamples.map(s => JSON.stringify(String(s).slice(0, 90))).join(' | ')}`);
+  }
+  if (attributed !== skipped) {
+    console.log(`   ⚠️ SKIP ACCOUNTING MISMATCH: breakdown sums to ${attributed} but ${skipped} were skipped (${skipped - attributed} unexplained). This is a bug in the counters, not in the data.`);
+  }
 
   // Verify and cleanup events that are no longer on source
   let deleted = 0;
@@ -831,7 +911,18 @@ async function saveEventsWithGeocoding(events, libraries, options = {}) {
     noGeocode: skippedNoGeocode,
     noDate: skippedNoDate,
     pastEvent: skippedPastEvent,
-    junkTitle: skippedJunkTitle
+    junkTitle: skippedJunkTitle,
+    // Commit-time categories, added 2026-09-04 alongside the log breakdown. The log
+    // and this object must expose the SAME set — a caller that reconciles `skipped`
+    // against these fields would otherwise rediscover the very gap being closed.
+    nonFamily: skippedNonFamily,
+    cancelled: skippedCancelled,
+    adultOnly: skippedAdultOnly,
+    placeholderVenue: skippedPlaceholderVenue,
+    emptyName: skippedEmptyName,
+    contentDuplicate: skippedContentDuplicate,
+    // Non-zero means categorizeCommitSkips() met a reason string it does not know.
+    uncategorized: skippedUncategorized
   };
 }
 
@@ -1035,5 +1126,9 @@ module.exports = {
   getOrCreateActivity,
   createActivityId,
   verifyAndCleanupEvents,
-  getExistingEventsForSource
+  getExistingEventsForSource,
+  // Exported for scripts/test-skip-accounting.js. A skip category that stops being
+  // counted is invisible by construction, so this one needs regression coverage for
+  // the same reason isCancelledEvent() does.
+  categorizeCommitSkips
 };
