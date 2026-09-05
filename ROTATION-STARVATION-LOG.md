@@ -52,8 +52,8 @@ more days.
 | 2 | 2026-08-20 | `scripts/seed-group-last-run.js` — re-derives `group-last-run.json` from the runner's own completion lines, after it was found 3 days stale. | Stops a stale-old timestamp making the wrong group eligible. | No recurrence observed. | ✅ Held |
 | 3 | 2026-08-22 | `ExecutionTimeLimit` 12h → 36h; data-quality split into its own `FunHive-DataQuality` task. | Stops Task Scheduler killing the batch mid-run. | Held — no `267014` since. | ✅ Held, but **addressed a different symptom.** 26h fits inside 36h comfortably; the time limit was never the binding constraint. |
 | 4 | 2026-08-31 | `checkRotationStarted()` in `scripts/preflight-diagnosis.js` — parses each of the last 7 `scraper-run-<date>.log` files for a `Running Group N` line. | Surfaces a dropped rotation the day it happens, without inferring from log freshness. | On its first run, immediately reported `2026-08-29=NONE 2026-08-26=NONE`. | ✅ **Detection only — not a fix.** The rotations are still being dropped. |
-| 5 | 2026-08-31 | **The task split (Layers 1+2, the genuine fix).** Layer 1: `helpers/atomic-json.js` (temp+rename JSON state, re-read-before-modify), `helpers/run-lock.js` (bounded, loud, stale-breaking mutex for full-group runs), geocode cache merge-on-write, per-group checkpoint files, `group-catchup.js` completion redefined per pipeline. Layer 2: MacaroniKid removed from the rotation into its own task (`FunHive-Macaroni` 3:00 PM → `macaroni-daily-runner.js`, own `macaroni-last-run.json` ledger + catch-up + same-day guard). `STARVATION_DAYS` kept at 4, argued in `group-catchup.js`. 8/8 in `scripts/test-rotation-safety.js`. **Task registration still pending — needs elevated `setup-tasks.ps1`.** | With both tasks registered: the rotation task's own duration is ≤ regular-pass length (~11.4h max) + a bounded lock wait, always under 24h, so **no rotation trigger is ever discarded again**; MacaroniKid overrun delays the next rotation by hours instead of deleting it; every group advances on a ~3-day cadence; preflight shows no `NONE` days. | *(pending — fill in after a full 3-day cycle with `FunHive-Macaroni` registered)* | ⏳ code proven by unit suite; scheduling effect **unobserved** |
-| 6 | 2026-09-02 | **Split the stdout/stderr capture files.** `run-macaroni.bat` → `logs\macaroni-stdout.log` / `macaroni-stderr.log`; `build-library-site-audit.js` gains `DEFAULT_LOGS` and parses both; `setup-tasks.ps1` + `CLAUDE.md` corrected. Fixes the defect introduced by #5, in which both tasks shared one `>>` target and `cmd.exe` refused to share it — killing the rotation before node launched (`LastTaskResult=1`, no run log). Root cause reproduced deliberately, not inferred. | The 09-03 03:00 trigger fires into a **held lock but a free log file**: `scraper-run-2026-09-03.log` exists with a `Running Group 3` line, `LastTaskResult = 0`, an explicit **2–3h lock wait** logged, and preflight reads `2026-09-03=G3` not `NONE`. Audit detail is unchanged: re-parsing the 08-31 window still gives 617 rows / 34 scrapers. | *(pending — fill in 2026-09-03)* | ⏳ audit-parity verified live; scheduling effect **unobserved** |
+| 5 | 2026-08-31 | **The task split (Layers 1+2, the genuine fix).** Layer 1: `helpers/atomic-json.js` (temp+rename JSON state, re-read-before-modify), `helpers/run-lock.js` (bounded, loud, stale-breaking mutex for full-group runs), geocode cache merge-on-write, per-group checkpoint files, `group-catchup.js` completion redefined per pipeline. Layer 2: MacaroniKid removed from the rotation into its own task (`FunHive-Macaroni` 3:00 PM → `macaroni-daily-runner.js`, own `macaroni-last-run.json` ledger + catch-up + same-day guard). `STARVATION_DAYS` kept at 4, argued in `group-catchup.js`. 8/8 in `scripts/test-rotation-safety.js`. **Task registration still pending — needs elevated `setup-tasks.ps1`.** | With both tasks registered: the rotation task's own duration is ≤ regular-pass length (~11.4h max) + a bounded lock wait, always under 24h, so **no rotation trigger is ever discarded again**; MacaroniKid overrun delays the next rotation by hours instead of deleting it; every group advances on a ~3-day cadence; preflight shows no `NONE` days. | **Filled in 2026-09-05, the first full 3-day cycle with both tasks registered — and it held on every measurable clause.** Three consecutive days, three different groups, **zero `NONE` days**: `09-03=G3 09-04=G1 09-05=G2`. Every rotation was **delayed by a held lock and none was discarded**, which is the exact behaviour change this intervention bought: 09-04 waited 2h42m (07:00:01Z → 09:42:03Z), 09-05 waited 2h33m (07:00:02Z → 09:33:03Z), each acquiring within **34 seconds** of MacaroniKid's release. Rotation durations 8h17m and 8h31m, both far under 24h. `group-last-run.json` now holds a real post-reset completion for all three groups at 1.0d / 0.0d / 2.0d, `macaroni-last-run.json` at 0.4d / 2.3d / 1.4d — every one inside the predicted bounds. `LIBRARY-SITE-AUDIT.md` reached **`Cycle complete — 2026-09-05`**, one day ahead of the "by 2026-09-06" clause. **One clause was wrong and is worth keeping:** the predicted regular-pass duration was "~7–8h" and the measured figures are 8.3h and 8.5h, so the headroom before the 19:00Z MacaroniKid trigger is ~56–61 min rather than the ~1.2h stated. The mechanism works; the duration model is about 45 minutes optimistic. | ✅ **Held.** Scheduling effect now observed over a full cycle. |
+| 6 | 2026-09-02 | **Split the stdout/stderr capture files.** `run-macaroni.bat` → `logs\macaroni-stdout.log` / `macaroni-stderr.log`; `build-library-site-audit.js` gains `DEFAULT_LOGS` and parses both; `setup-tasks.ps1` + `CLAUDE.md` corrected. Fixes the defect introduced by #5, in which both tasks shared one `>>` target and `cmd.exe` refused to share it — killing the rotation before node launched (`LastTaskResult=1`, no run log). Root cause reproduced deliberately, not inferred. | The 09-03 03:00 trigger fires into a **held lock but a free log file**: `scraper-run-2026-09-03.log` exists with a `Running Group 3` line, `LastTaskResult = 0`, an explicit **2–3h lock wait** logged, and preflight reads `2026-09-03=G3` not `NONE`. Audit detail is unchanged: re-parsing the 08-31 window still gives 617 rows / 34 scrapers. | **Filled in 2026-09-05.** Every clause held. `scraper-run-2026-09-03.log` exists and carries `📋 Running Group 3 scrapers (53 total)` at 10:16:04Z, preceded by an explicit lock wait from 07:00Z — a **3.27h** delay where the pre-fix behaviour was a silently deleted trigger. Preflight reads `2026-09-03=G3`, not `NONE`. The two rotations since have behaved identically (2h42m and 2h33m waits), so the free-log-file case is now exercised three times, not once. Audit parity confirmed by construction: today's build across both capture files produced 372 rows for 09-04 and 709 for 09-05 with no gaps attributable to the split. | ✅ **Held.** |
 
 ### Why #1 half-works, and why that matters
 
@@ -70,6 +70,60 @@ Its real effect: it converted a **permanent** stall (MacaroniKid Group 2 had gon
 before it shipped) into a **5–6 day** cycle. That is a genuine improvement. It just does not
 restore the 3-day cadence, and the 2026-08-19 entry's claim that "a skipped day now
 self-heals" overstated it.
+
+---
+
+## Current state — 2026-09-05 — **first full clean cycle; the residual risk is duration, not dropping**
+
+- Rotations in the last 7 days: `09-05=G2 09-04=G1 09-03=G3 09-02=NONE 09-01=NONE 08-31=G1 08-30=G3`
+- **Two `NONE` days remain in the window, and both predate intervention #6.** 09-01 was the
+  old-code MacaroniKid tail (correctly predicted). 09-02 was the shared-`>>`-target kill that
+  #6 fixed that afternoon. **Since #6 landed there have been zero dropped rotations in three
+  consecutive days, covering all three groups.**
+- `group-last-run.json`: G1 = 1.0d, G2 = 0.0d, G3 = 2.0d — all three hold a real post-reset
+  completion for the first time since the 2026-09-02 rebalance cleared them.
+- `macaroni-last-run.json`: G1 = 0.4d, G2 = 2.3d, G3 = 1.4d.
+- `LIBRARY-SITE-AUDIT.md` reached **`Cycle complete — 2026-09-05`**: 109 of 109 active
+  library-family scrapers have a row. It took nine dated sections instead of three, entirely
+  because of the pre-#6 losses.
+- The three `_pending` items that had been blocked on a Group 2 rotation were all checked
+  today; two moved, one was found to have a stale trigger (`WORDPRESS-MONTHGRID-UNRUN` names
+  Group 2, but the rebalance moved WordPress-NY to **Group 3**).
+
+**The failure mode has changed shape.** Rotations are no longer *dropped*; they are *delayed*
+by a bounded lock wait, which is exactly what intervention #5 traded for. The new binding
+constraint is arithmetic:
+
+| | 09-04 | 09-05 |
+|---|---|---|
+| Trigger fires | 07:00:01Z | 07:00:02Z |
+| Lock acquired (MacaroniKid releases) | 09:42:03Z | 09:33:03Z |
+| Wait | 2h42m | 2h33m |
+| Rotation finishes | 17:59:24Z | 18:04:28Z |
+| Duration | 8h17m | 8h31m |
+| **Headroom before the 19:00Z MacaroniKid trigger** | **61 min** | **56 min** |
+
+The 2026-09-02 rebalance targeted 7.6h per regular group. The measured figures are ~0.8h
+over that, and the headroom is shrinking rather than growing.
+
+**Standing prediction — 2026-09-06 through 2026-09-08.** `getDayGroup`: day 6 → Group 3,
+day 7 → Group 1, day 8 → Group 2. Falsifiably:
+
+- **No `NONE` day** on any of the three. Each rotation waits ~2.5–3.5h on the lock, acquires
+  within a minute of MacaroniKid's release, and finishes between **17:30Z and 19:00Z**.
+- **Duration stays in the 8.0–9.0h band**, not the 7.6h the rebalance targeted. Predicting the
+  measured band rather than the target, because the target has now been missed twice in the
+  same direction and re-predicting it would be wishful.
+- **Headroom stays positive but under 90 minutes** on every day.
+- Group 3 on 09-06 clears `WordPress-NY`, so `WORDPRESS-MONTHGRID-UNRUN` becomes checkable:
+  INVALID 56 → roughly 29, and first-ever rows for Weedsport, Holley and D.R. Evarts.
+
+**What would falsify this:** a rotation finishing **after 19:00Z** means MacaroniKid starts
+waiting on the rotation instead of the reverse, and the two tasks no longer fit in one day —
+at which point the next intervention is a **scheduling change** (move one trigger), not
+another lock tweak. A `NONE` day means #6 did not fix the general case and its ledger row,
+now marked ✅, must be revised to say so. A duration under 8.0h would mean the rebalance is
+working better than measured and the model here is pessimistic — also worth recording.
 
 ---
 
