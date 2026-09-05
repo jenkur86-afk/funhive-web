@@ -232,6 +232,29 @@ async function scrapeCVBSite(site, browser) {
       // from a day-grid's bare day number.
       const MONTH_DAY_RE = /\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}\b/i;
 
+      // A venue is never a date. The unclassed-block fallback below reads the
+      // first div/p sitting beside the title, and on several tenants that block
+      // is the DATE RANGE, not the venue — visitburlingtonvt.com renders
+      // "June 20 - September 6" there. Adopted as a venue name it reached the
+      // activities table as a real place: four such rows were created on
+      // 2026-09-05 ("June 20 - September 6", "January 17 - September 7",
+      // "May 25 - September 7", "July 3 - June 22", all Burlington VT), and each
+      // one also burned a Nominatim lookup on a string that can never resolve.
+      // Test both halves deliberately: the string must carry a date signal AND
+      // consist of nothing but date tokens once punctuation is removed, so real
+      // venues that merely contain a month word ("May Street Center",
+      // "Marchmont Hall") are left alone.
+      const DATE_TOKEN_RE = /\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?|\b(?:mon|tue|tues|wed|thu|thur|thurs|fri|sat|sun)[a-z]*\.?|\d+|\b(?:am|pm|to|through|thru|now|and|at|st|nd|rd|th|all|day|days|ongoing)\b/gi;
+      const isDateOnly = (str) => {
+        const t = clean(str);
+        if (!t) return false;
+        const hasDateSignal = MONTH_DAY_RE.test(t) ||
+          /\d{1,2}\s*[/-]\s*\d{1,2}/.test(t) ||
+          /^now\b/i.test(t);
+        if (!hasDateSignal) return false;
+        return t.replace(DATE_TOKEN_RE, '').replace(/[\s,.;:•|\-–—/&()]+/g, '') === '';
+      };
+
       // Strategy 1: JSON-LD structured data (most reliable)
       const scripts = document.querySelectorAll('script[type="application/ld+json"]');
       scripts.forEach(script => {
@@ -346,6 +369,11 @@ async function scrapeCVBSite(site, browser) {
             let venue = clean(venueEl?.textContent) || '';
             let address = '';
 
+            // .address / [class*="location"] occasionally wrap the date on these
+            // tenants too, so clear it here and let the fallback below try again
+            // rather than shipping a date as the venue.
+            if (isDateOnly(venue)) venue = '';
+
             // Venue/address fallback for layouts that render "<Venue Name>
             // <street address>" as one unclassed block beside the title, with
             // the street in a nested element. Splitting on that nested text is
@@ -359,7 +387,7 @@ async function scrapeCVBSite(site, browser) {
               const infoEl = titleEl?.parentElement?.querySelector('div, p, address');
               const full = clean(infoEl?.textContent);
               const nested = clean(infoEl?.querySelector('span, a, em')?.textContent);
-              if (full && full.length <= 120 && full !== title) {
+              if (full && full.length <= 120 && full !== title && !isDateOnly(full)) {
                 if (nested && full !== nested && full.endsWith(nested)) {
                   venue = full.slice(0, full.length - nested.length).trim();
                   address = nested;
@@ -368,6 +396,12 @@ async function scrapeCVBSite(site, browser) {
                 }
               }
             }
+
+            // Final guard: whichever branch produced them, neither field may be
+            // a bare date. An empty venue is handled downstream (the venueMap
+            // falls back to the site's city) — a date-named venue is not.
+            if (isDateOnly(venue)) venue = '';
+            if (isDateOnly(address)) address = '';
 
             const descEl = card.querySelector(
               '.description, .summary, .excerpt, p, [class*="desc"], [class*="summary"], [class*="excerpt"]'
@@ -441,6 +475,12 @@ async function scrapeCVBSite(site, browser) {
     // Filter and build event objects
     let skippedNonFamily = 0;
     let dayGridRecovered = 0;
+    // Events reaching the save path with no date string at all are rejected
+    // there as "no date". The 2026-09-05 run lost 535 of 818 that way — 65% of
+    // everything this scraper found — but the saves are BATCHED across ~50
+    // tourism sites, so the batch-level breakdown cannot say WHICH tenants are
+    // dateless. Count it here, where the site is still known.
+    let noDateText = 0;
 
     for (const raw of rawEvents) {
       // Day-grid sites put the date in a heading above the title and only the bare
@@ -451,6 +491,8 @@ async function scrapeCVBSite(site, browser) {
         raw.dateText = recovered.dateText;
         dayGridRecovered++;
       }
+
+      if (!raw.dateText) noDateText++;
 
       const combined = `${raw.title} ${raw.description}`;
 
@@ -524,6 +566,10 @@ async function scrapeCVBSite(site, browser) {
       console.log(`     🚫 Skipped ${skippedNonFamily} non-family events`);
     }
     console.log(`     ✅ ${events.length} family-friendly events extracted`);
+    if (noDateText > 0) {
+      const pct = Math.round((noDateText / rawEvents.length) * 100);
+      console.log(`     🗓️❌ ${noDateText} of ${rawEvents.length} cards carried NO date string (${pct}%) — these are rejected at save as "no date"`);
+    }
     if (dayGridRecovered > 0) {
       console.log(`     🗓️  ${dayGridRecovered} day-grid dates recovered from the title heading`);
     }
