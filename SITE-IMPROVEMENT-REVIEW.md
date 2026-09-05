@@ -18,6 +18,49 @@ Rankings are by **user-visible site impact**, not engineering interest.
 
 ---
 
+## Progress log — 2026-08-31 → 09-03
+
+Everything below was done against this review. Read the per-item STATUS blocks for detail;
+this table is the index. **Proven** distinguishes a change that has actually executed from
+one that is only reasoned — the distinction the close-out rules exist to protect.
+
+| Item | Outcome | Proven? |
+|---|---|---|
+| **1.1** RecDesk junk | API types every item (P/F/G); source skips F+G; **7,009 rows purged** under a no-information-loss protocol | ✅ backfill live; source skip awaits a Group 1 run |
+| **1.2** Age detection | Gate 5 was **double-counting flagged sites** (35.0% → 45.5%); explicit-age formats fixed (239→91 misses); **1,163 rows** backfilled; suite 83→115 | ✅ live |
+| **1.3** KidsOutAndAbout venue | Whole location block stored as venue, `address` NULL on all 65; fixed at source + centrally; **50 cross-scraper duplicates** removed, 15 repaired | ✅ 65→0 |
+| **1.4** CustomDrupal / Phase 7 | Premise **disproven** (103 rows exist, not 0); Richland never scraped (15s→45s); Anderson relocated to LibraryCalendar; per-site failures made visible | ⚠️ awaits Group 1/2 runs |
+| **2.1** UNVERIFIABLE backlog | Composition **corrected** (renders-nothing 491, not 71); new **redirect class of 48** found; 14 rows cleared; 3 libraries relocated/repointed | ⚠️ partial — Puppeteer slices gated |
+| **A2** Rotation outage | **Root-caused and fixed** — see below | ✅ live |
+| *(unplanned)* Rotation rebalance | 30.1h/24.7h/12.6h → **22.4/22.4/22.5** | ⚠️ awaits a full cycle |
+| *(unplanned)* Lock wait | Manual runs no longer inherit the 8h scheduled budget | ✅ proven live 09-03 |
+
+### Gates, 2026-08-31 → 09-03
+
+| Gate | Was | Now | Note |
+|---|---|---|---|
+| 3. Zero open bugs | 174 | **195** | *Rose deliberately* — dead-domain rows promoted from "unknown" into "known-broken" |
+| 4. Zero unknown sites | 849 | **824** | real reduction |
+| 5. Age brackets resolved | 35% | **46.7%** | ~10.5pts of this was the **double-count fix, not work** |
+
+> Gate 3 going **up** is progress, not regression: converting an UNVERIFIABLE row into a
+> confirmed MISMATCH moves it from a bucket nobody can act on into one that is actionable.
+> Reading it as a regression would punish exactly the work that needs doing.
+
+### Cross-cutting lessons worth keeping
+
+- **Measure before writing a rule.** Every §1.2 rule was sized against the corpus first;
+  the ones that *looked* obvious — "craft" (matched adult craft fairs), "Level N" (matched
+  *Pro Tools Level 1*), swim-level names (matched a street called Lititz **Pike**) — were
+  killed by sampling before they shipped.
+- **The premise is often wrong.** §1.4's "0 rows" and §1.2's "regression" were both
+  artifacts. Two of five items changed shape once measured. Verify the ticket first.
+- **Silent-failure class keeps recurring**, in four separate forms this week: a newline
+  truncating a Markdown audit table; `console.error` splitting a scraper's story across
+  two log files; a shared `>>` redirect deleting a whole rotation; a swallowed query error
+  reporting 0 rows where 13 existed. All were found by comparing a producer's count against
+  a consumer's, never by an error message.
+
 ## Tier 1 — What families actually see (data quality on live pages)
 
 ### 1.1 RecDesk facility-reservation junk on the site — **FABLE 5**
@@ -450,7 +493,25 @@ findings are recorded here so the assessment does not begin cold:
 - **Blocked on:** a Group 2 rotation, which has not happened — see the rotation note below,
   which is the more urgent finding.
 
-### A2 Rotation may have stopped running — **URGENT, needs a human look**
+### A2 Rotation stopped running — **RESOLVED 2026-09-02** (commit `52fa453`)
+
+> **Root cause: the two scraper tasks shared one stdout redirect target.** `cmd.exe` opens
+> a `>>` file at process start and will not share it with a second `cmd`. When
+> `FunHive-Scrapers` triggered at 03:00 while `FunHive-Macaroni` still held
+> `logs\scraper-stdout.log` open, `run-scrapers.bat` could not open its redirect — its
+> very first `echo` failed, **node never launched**, and the task exited 1 with no run log
+> and no "starting" marker. That is precisely the evidence pattern recorded below.
+>
+> **`run-lock.js` could not have prevented this**, and that is the instructive part: the
+> lock lives *inside* node, but `cmd` opens the redirect *before* node exists — the
+> rotation died before it could ever wait. Fixed by giving MacaroniKid its own
+> `macaroni-stdout.log` / `macaroni-stderr.log`, with `build-library-site-audit.js`
+> taught to parse **both** files so no per-site detail is lost.
+>
+> **Proven:** the 2026-09-03 rotation ran to 54 scrapers. The evidence below is kept as the
+> diagnostic record rather than deleted.
+
+### A2 (original diagnosis, kept for the record)
 
 Gathered 2026-09-02 ~11:26Z while assessing §1.4, and outside that task's scope:
 
@@ -477,17 +538,26 @@ not yet distinguished:
 scraper code** — that is the standing lesson from CLAUDE.md's Automated Maintenance note.
 Do not assume the split caused it without evidence; the 09-01 run returned 0.
 
-## Suggested sequencing
+## Suggested sequencing — revised 2026-09-03
 
-| When | Item | Model |
+Done: **1.1, 1.2, 1.3, 1.4**, A2. Partial: **2.1**.
+
+| When | Item | Model | Note |
+|---|---|---|---|
+| Owner, 15 min | 3.1 analytics migration + src review; 3.2 Stripe | you | unchanged, still highest insight-per-effort |
+| Next | **2.1 Puppeteer slices** — 153 network, 30 bot-block, 8 TLS, the `dot-book.org` 11 | Opus | **needs an idle Chrome window**; blocked three sessions running |
+| Next | **A1 assess §1.4** | Fable | every other item got an assessment; this one has not |
+| Next | 2.3 LibCal-FL2, 3.3 weekend roundup, 4.2 docs, 4.3 stale gates | Opus | unchanged |
+| Then | 2.2 WordPress clustering strategy | Fable | now better informed: 491 renders-nothing rows are the same population |
+| Then | 2.4 MISMATCH batches (now 195) | Opus | repeatable |
+| Last | 4.1 name migration | Fable → Opus per family | unchanged |
+
+### New work these sessions surfaced
+
+| Item | Why it exists | Model |
 |---|---|---|
-| Now (owner, 15 min) | 3.1 migration + src review, 3.2 Stripe account | you |
-| This week | 1.2 age recovery, 1.3 KidsOutAndAbout, 4.2 docs, 4.3 gates | Opus 5 |
-| This week | 1.1 RecDesk junk taxonomy | Fable 5 |
-| Next | 2.1 backlog slices, 2.3 LibCal-FL2, 1.4 CustomDrupal, 3.3 roundup | Opus 5 |
-| Next | 2.2 WordPress clustering strategy | Fable 5 |
-| After 2.2 lands | 2.4 MISMATCH batches (repeat) | Opus 5 |
-| Last, deliberately | 4.1 name migration | Fable 5 → Opus per family |
+| **WhoFi extractor** | **3 confirmed libraries** (Seekonk MA, North Kingstown RI, Southington CT) on a platform no scraper parses. Three is the *floor* — only one was found deliberately | Opus — one shared extractor unlocks all |
+| **MacaroniKid VT + MS** | Both are **active states with no MacaroniKid scraper and no file**. Unverified against the live site — may be genuine absence, may be a coverage hole | Opus, after checking the subdomains exist |
+| **Re-scope the 491** | "Renders nothing" is 58% of gate 4 and currently assigned to Phase 10 indefinitely. Gate 4 cannot approach zero while it is parked | Fable — a scoping call, not execution |
+| **Rotation balance drift** | Groups are now balanced by *measured runtime*; adding scrapers unbalances them again. Re-run the packing after any material change | whoever adds scrapers |
 
-Two Fable items (1.1, 2.2) unlock the most Opus-executable work downstream; that is the
-leverage argument for doing them early rather than by severity order alone.
