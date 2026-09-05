@@ -232,6 +232,12 @@
       "expect": "On the next verification pass the GUARDED count should be non-zero and those sites should consume no fetches, so the batch's UNVERIFIABLE-from-timeout share falls and the fetch budget goes to genuinely unknown sites. No guarded site should ever again receive a platform-relocation recommendation.",
       "confirm": "node scripts/build-verify-input.js --in=<todo>.json --out=<sites>.txt and read the 'GUARDED n' field in its summary line; then grep GUARDED <sites>.txt and confirm none of those sites appear with a platform= comment in the resulting verdicts.",
       "added": "2026-09-03"
+    },
+    "LIBCAL-FL2-COLLIER-ZERO": {
+      "what": "LibCal-FL2 registered and PROVEN 2026-09-05 (126 found, 90 rows stored across Volusia, Osceola, Leon, Manatee). Collier County Public Library is the one holdout: collier-lib.libcal.com returns HTTP 200 with the correct title \"LibCal - Collier County Public Library\" and LibCal markers, but yields 0 events even under the VA2 nine-selector cascade that works for the other four.",
+      "expect": "Someone should open collier-lib.libcal.com in a browser and identify which LibCal view it uses - the likely answer is a tenant-specific layout whose container class is not in the cascade, in which case adding that one selector fixes it for every LibCal scraper at once. Do NOT assume the calendar is empty: that was assumed for Anderson County and was wrong.",
+      "confirm": "npm run scraper -- --scraper LibCal-FL2   then check the Collier line",
+      "added": "2026-09-05"
     }
   },
   "LibCal-VA": {

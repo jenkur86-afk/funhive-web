@@ -334,6 +334,34 @@ fixes or none. This decides where weeks of effort go — wrong clustering wastes
 
 ### 2.3 Orphaned Florida LibCal systems — **OPUS 5**
 
+> **STATUS 2026-09-05 — DONE, four systems recovered, 90 rows stored.** Registered as
+> `LibCal-FL2` (group 3, the lightest post-rebalance). **Why it was never registered is a
+> correction to Defect E:** the file could not even load — it required the AWS Lambda
+> browser pair, which is not installed here — and `node -c` passed on it the whole time,
+> so "several pass `node -c`" is not evidence an orphan is viable.
+>
+> Seven configured systems became five, neither dropped silently. **Jacksonville** dropped:
+> its LibCal 404s behind a cert that does not match the host, but that is no coverage loss
+> because Communico-FL already scrapes it, proven by audit rows rather than name
+> similarity. **Clay County** dropped: already in the shared file with an identical URL —
+> and mis-filed twice now, having been moved out of the KY section on 08-28 for being
+> Florida's. All five survivors were verified by their own LibCal page titles.
+>
+> **The first run found 0 events on all five** — which is exactly why the checklist demands
+> a watched run. The auto-generated extraction tried two container selectors and required
+> both a title *and* a date element; replaced verbatim with LibCal-VA2's nine-selector
+> cascade so both twins behave identically. Re-run: **126 found, 90 stored**, with correct
+> age brackets ("Family Storytime" → Babies & Toddlers, "Virtual Story Time" → Preschool).
+>
+> Note the runner printed **"New: 0" while 90 rows landed** — a stats artifact of
+> `saveEventsWithGeocoding`, caught by querying the table rather than trusting the summary
+> line.
+>
+> **Still open:** Collier County returns 200 with the correct title but yields 0 even under
+> the cascade — recorded as `_pending.LIBCAL-FL2-COLLIER-ZERO` rather than assumed empty,
+> which is the mistake made with Anderson County. `scraper-miami-dade-library-FL.js`
+> remains unregistered; reported only, as scoped.
+
 MASTER-PLAN Defect E: `scraper-libcal-libraries-fl.js` configures Volusia, Osceola, Leon,
 Manatee — real library systems with zero coverage — and is registered nowhere. The VA
 twin became `LibCal-VA2` (now producing 185 found/run), so the precedent is proven.

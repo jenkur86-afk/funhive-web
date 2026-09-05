@@ -190,6 +190,22 @@ const SCRAPERS = {
   // which had a single library-scraper row in the database. The registered shared LibCal file
   // does not cover the seven largest of them. Group 3 chosen as the smallest rotation group.
   'LibCal-VA2': { file: './scraper-libcal-libraries-va.js', exportName: 'scrapeLibCalEventsCloudFunction', type: 'puppeteer', group: 2, state: 'VA' },
+  // Registered 2026-09-03 (SITE-IMPROVEMENT-REVIEW §2.3 / MASTER-PLAN Defect E).
+  // The file existed unregistered since 2026-07-07 and could NEVER have run: it
+  // required puppeteer-core + @sparticuz/chromium, the AWS Lambda pair, which is
+  // not installed here, so it threw on require. `node -c` passed on it the whole
+  // time — a syntax check does not resolve requires, so Defect E's "several pass
+  // node -c" should not be read as "several are viable". Now on the local
+  // launchBrowser stack like its LibCal-VA2 twin.
+  //
+  // 7 configured systems -> 5: Jacksonville dropped (its LibCal 404s behind a
+  // mismatched cert and the library is already covered by Communico-FL, proven by
+  // audit rows) and Clay County dropped (already in the shared LibCal file).
+  //
+  // Group 3 chosen because it was the lightest at the time (7.61h vs 7.70/7.65
+  // after the 2026-09-02 runtime rebalance); its twin LibCal-VA2 runs ~134s, so
+  // this barely moves the balance.
+  'LibCal-FL2': { file: './scraper-libcal-libraries-fl.js', exportName: 'scrapeLibCalEventsCloudFunction', type: 'puppeteer', group: 3, state: 'FL', sites: 5 },
   // 2026-08-07: some libraries publish their entire programme through an embedded Google
   // Calendar iframe, leaving the host page with no event markup at all — Somerset County
   // Library's events.php has a 493-character body and no dates, so every DOM scraper
