@@ -165,7 +165,10 @@
  "WordPress-GA|||Heard County Public Library (Franklin, GA)": {
   "verdict": "MISMATCH",
   "comment": "dead-domain: the configured URL redirects to running-care.com, an unrelated commercial domain — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correct URL or a guard",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: franklinlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-05"
  },
  "WordPress-GA|||Gordon Public Library (Gordon, GA)": {
   "verdict": "MISMATCH",
@@ -403,7 +406,10 @@
  "WordPress-NC|||Macon County Public Library (Franklin, NC)": {
   "verdict": "MISMATCH",
   "comment": "dead-domain: the configured URL redirects to running-care.com, an unrelated commercial domain — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correct URL or a guard",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: franklinlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-05"
  },
  "WordPress-NC|||Graham Public Library (Graham, NC)": {
   "verdict": "UNVERIFIABLE",
@@ -423,7 +429,10 @@
  "WordPress-NC|||Harmony Branch Library (Harmony, NC)": {
   "verdict": "MISMATCH",
   "comment": "dead-domain: the configured URL redirects to fresupdate.com, an unrelated commercial domain — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correct URL or a guard",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: harmonylibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-05"
  },
  "WordPress-NC|||Havelock-Craven County Public (Havelock, NC)": {
   "verdict": "UNVERIFIABLE",
@@ -1561,7 +1570,10 @@
  "WordPress-VT|||Chelsea Public (Chelsea, VT)": {
   "verdict": "MISMATCH",
   "comment": "dead-domain: the configured URL redirects to wherewindsmeetgame.com, a video-game marketing site — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correct URL or a guard",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: chelsealibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-05"
  },
  "WordPress-VT|||Whiting (Chester, VT)": {
   "verdict": "UNVERIFIABLE",
@@ -11408,12 +11420,18 @@
  "CustomDrupal-Libraries|||Florence County Library System": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch - runs LibraryCalendar not custom Drupal: 48 h3.lc-event__title and 55 .event-card on the live page, and /events 301s to the month grid. Real dated programming confirmed - Author Visit with Kate Salley Palmer Sep 8 2026, Canasta at the Library Sep 10, Pressing Issues Sep 10. Relocated 2026-09-05 to LibraryCalendar-Libraries at /events/upcoming",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: florencelibrary.org runs LibraryCalendar, not custom Drupal - relocated to LibraryCalendar-Libraries on 2026-09-05 and proven live at 23 events",
+  "statusAt": "2026-09-05"
  },
  "CustomDrupal-Libraries|||Rowan County Public Library": {
   "verdict": "MISMATCH",
   "comment": "url-collision AND platform-mismatch - live page reads Rowan County Public Library, 175 Beacon Hill Rd, Morehead KY 40351, ph 606-784-7137, so this NC entry is the KENTUCKY library. It also runs LibraryCalendar (35 div.lc-event, 24 h3.lc-event__title). Relocated 2026-09-05 to LibraryCalendar-Libraries under KY. Rowan County NORTH CAROLINA is an open coverage gap, not covered elsewhere",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: rowancountylibrary.org is KENTUCKY not NC - Rowan County Public Library, 175 Beacon Hill Rd, Morehead KY 40351, ph 606-784-7137. Relocated to LibraryCalendar-Libraries under KY on 2026-09-05, proven live at 19 events. Rowan County NC remai",
+  "statusAt": "2026-09-05"
  },
  "LibCal-CT|||East Hartford Public Library": {
   "verdict": "MATCHES",
