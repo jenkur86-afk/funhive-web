@@ -305,6 +305,69 @@ const LIBRARY_SYSTEMS = [
     zipCode: '42066'
   },
   {
+    // Added 2026-09-05, found by Step 3d's Puppeteer verifier, which reported
+    // "event containers present (.event-card:55) but no parseable dates" for the
+    // CustomDrupal-Libraries entry that had been returning 0. The containers it
+    // saw are `lc-event event-card` with titles in h3.lc-event__title — the same
+    // lc-* tell as Knox, Anderson and Graves, so this is a PLATFORM MISMATCH,
+    // not selector work on the CustomDrupal file.
+    //
+    // Two details worth recording. First, /events 301s to /events/month, the
+    // MONTH GRID — exactly the Anderson County trap from 2026-09-02 — so the
+    // configured URL is /events/upcoming, not the site's own /events.
+    // Second, this host is a settled Defect A collision: florencelibrary.org is
+    // already GUARDED as "SC, not KY/MA/MS" in three WordPress state files, so
+    // SOUTH CAROLINA here is the state those guards agreed on, not a fresh guess.
+    //
+    // Confirmed live: /events/upcoming returns 200 titled "Florence County
+    // Library System" with real dated programming — Author Visit with Kate Salley
+    // Palmer (Sep 8 2026), Canasta at the Library (Sep 10), Pressing Issues @ the
+    // Library (Sep 10) — carrying branch groups ("Timmonsville Public Library").
+    // Self-hosted on its own domain, so buildScraperName() slugs this to
+    // LibraryCalendar-Libraries-florencelibrary.
+    name: 'Florence County Library System',
+    url: 'https://www.florencelibrary.org/events/upcoming',
+    county: 'Florence',
+    state: 'SC',
+    website: 'https://www.florencelibrary.org',
+    city: 'Florence',
+    zipCode: '29501'
+  },
+  {
+    // Added 2026-09-05 alongside Florence, from the same verifier pass, and it is
+    // TWO defects in one entry, so read both before changing it.
+    //
+    // (1) WRONG STATE. CustomDrupal-Libraries carried this as Rowan County NORTH
+    // CAROLINA, Salisbury NC 28144. The live page is Rowan County Public Library,
+    // 175 Beacon Hill Rd, MOREHEAD KY 40351, ph (606) 784-7137 — a Kentucky ZIP
+    // and an eastern-Kentucky area code. Identity comes from those page-printed
+    // addresses, never from the name: both states have a Rowan County, which is
+    // exactly how the collision was minted. The control that settles it is that
+    // ZIP 40351 matches the WordPress-KY entry's own zipCode byte for byte.
+    // Rowan County NC (Rowan Public Library, Salisbury) is therefore an OPEN
+    // COVERAGE GAP, not something covered elsewhere — no claim is made about it.
+    //
+    // (2) WRONG PLATFORM. The site runs LibraryCalendar (35 div.lc-event, 24
+    // h3.lc-event__title), so neither the CustomDrupal entry nor the WordPress-KY
+    // one could ever read it properly. WordPress-KY did store 23 rows and that is
+    // worse than zero, not better: they are DOM debris — "Farmers, US60 W, 801 S",
+    // "City Area & Apartments", "Closing" — with one real programme among them.
+    //
+    // Confirmed live: /events/upcoming returns 200 titled "Upcoming Events | Rowan
+    // County Public Library" with real dated programming — Irish Club (Oct 7 2026),
+    // Fall Plant Share (Sep 12), Medicinal Foraging w/ Craig Caudill (Sep 15),
+    // 3rd Annual Community Card Design Contest (Jun 22 - Sep 30).
+    // Self-hosted, so buildScraperName() slugs this to
+    // LibraryCalendar-Libraries-rowancountylibrary.
+    name: 'Rowan County Public Library',
+    url: 'https://www.rowancountylibrary.org/events/upcoming',
+    county: 'Rowan',
+    state: 'KY',
+    website: 'https://www.rowancountylibrary.org',
+    city: 'Morehead',
+    zipCode: '40351'
+  },
+  {
     name: 'Grant County Public Library',
     url: 'https://grantcounty.librarycalendar.com/events/upcoming',
     county: 'Grant',

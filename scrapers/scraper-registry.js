@@ -756,7 +756,14 @@ const SCRAPERS = {
     // 33 -> 34 on 2026-09-03: Graves County Public Library KY, relocated from
     // WordPress-KY, whose entry pointed at graveslibrary.org - a Maine library.
     // Re-counted from LIBRARY_SYSTEMS the same way, not incremented by hand.
-    sites: 34
+    //
+    // 34 -> 36 on 2026-09-05: Florence County Library System SC and Rowan County
+    // Public Library KY, both relocated from CustomDrupal-Libraries after the
+    // Step 3d verifier found lc-event/event-card markup behind their zeros.
+    // Rowan also crossed a state line - CustomDrupal filed it as North Carolina
+    // and the live page reads Morehead KY 40351. Re-counted from LIBRARY_SYSTEMS
+    // with comments stripped, not incremented by hand.
+    sites: 36
   },
   'CustomDrupal-Libraries': {
     file: './scraper-custom-drupal-libraries-GA-NC-SC-WV.js',

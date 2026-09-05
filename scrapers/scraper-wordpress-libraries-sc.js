@@ -29,7 +29,13 @@ const LIBRARIES = [
   { name: 'Dillon County Library System', url: 'https://www.dillonlibrary.org/', eventsUrl: 'https://www.dillonlibrary.org/', city: 'Dillon', state: 'SC', zipCode: '29536', county: 'Dillon County'},
   { name: 'Kershaw County Library - Elgin Branch Library', url: 'https://www.elginlibrary.org/', eventsUrl: 'https://www.elginlibrary.org/', city: 'Elgin', state: 'SC', zipCode: '29045', county: 'Lancaster'},
   { name: 'Hampton County Library - Estill Branch Library', url: 'https://www.estilllibrary.org', eventsUrl: 'https://www.estilllibrary.org/events', city: 'Estill', state: 'SC', zipCode: '29918', county: 'Hampton', urlCollision: 'estilllibrary.org is KY, not SC' },
-  { name: 'Florence County Library System', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'SC', zipCode: '29506', county: 'Florence County'},
+  // GUARDED 2026-09-05. Right library and right state - the three WordPress guards
+  // reading "florencelibrary.org is SC, not KY/MA/MS" all point here - but the wrong
+  // PLATFORM: the site runs LibraryCalendar, so this WordPress entry only ever
+  // reached 8 rows off a page carrying 48 lc-event cards. Relocated to
+  // LibraryCalendar-Libraries at /events/upcoming and PROVEN LIVE at 23 events
+  // including Toddler Storytime, Family Storytime and Preschool Storytime.
+  { name: 'Florence County Library System', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'SC', zipCode: '29506', county: 'Florence County', urlCollision: 'right library and right state but wrong platform - florencelibrary.org runs LibraryCalendar. Relocated to LibraryCalendar-Libraries on 2026-09-05, proven live at 23 events'},
   { name: 'Lexington County Library - Gilbert-Summit', url: 'https://www.gilbertlibrary.org/', eventsUrl: 'https://www.gilbertlibrary.org/', city: 'Gilbert', state: 'SC', zipCode: '29054', county: 'Lexington', urlCollision: 'gilbertlibrary.org is CT, not SC' },
   { name: 'Great Falls Library', url: 'https://www.greatfallslibrary.org', eventsUrl: 'https://www.greatfallslibrary.org/events', city: 'Great Falls', state: 'SC', zipCode: '29055', county: 'Chester'},
   { name: 'Greenville County Library - Anderson Road (West) Branch', url: 'https://www.greenvillelibrary.org', eventsUrl: 'https://www.greenvillelibrary.org/events', city: 'Greenville', state: 'SC', zipCode: '29611', county: 'Greenville County'},

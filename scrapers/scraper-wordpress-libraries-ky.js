@@ -54,7 +54,15 @@ const LIBRARIES = [
   { name: 'Graves County Public Library', url: 'https://www.graveslibrary.org', eventsUrl: 'https://www.graveslibrary.org/events', city: 'Mayfield', state: 'KY', zipCode: '42066', county: 'Graves', urlCollision: 'graveslibrary.org is MAINE not KY - Louis T. Graves Memorial Public Library, 18 Maine St, Kennebunkport ME 04046, ph 207-967-2778; real library relocated to LibraryCalendar-Libraries 2026-09-03'},
   { name: 'Calloway County Public Library', url: 'https://www.callowaycountylibrary.org', eventsUrl: 'https://www.callowaycountylibrary.org/events', city: 'Murray', state: 'KY', zipCode: '42071' },
   { name: 'Woodford County Library', url: 'https://www.woodfordlibrary.org', eventsUrl: 'https://www.woodfordlibrary.org/events', city: 'Versailles', state: 'KY', zipCode: '40383', county: 'Woodford'},
-  { name: 'Rowan County Public Library', url: 'https://www.rowancountylibrary.org', eventsUrl: 'https://www.rowancountylibrary.org/events', city: 'Morehead', state: 'KY', zipCode: '40351' },
+  // GUARDED 2026-09-05. This entry had the RIGHT library and the RIGHT state - its
+  // zipCode 40351 is the control that proved the CustomDrupal NC entry wrong - but
+  // the wrong PLATFORM: rowancountylibrary.org runs LibraryCalendar, and a WordPress
+  // DOM extractor reading it produced 23 rows of debris rather than events
+  // ("Farmers, US60 W, 801 S", "City Area & Apartments", "Closing"), with one real
+  // programme among them. That is worse than zero, because junk rows look like
+  // coverage. Relocated to LibraryCalendar-Libraries and PROVEN LIVE at 19 events
+  // including Toddler Time, Preschool Storytime, Kids LEGO Club and Teen Game Night.
+  { name: 'Rowan County Public Library', url: 'https://www.rowancountylibrary.org', eventsUrl: 'https://www.rowancountylibrary.org/events', city: 'Morehead', state: 'KY', zipCode: '40351', urlCollision: 'right library and right state but wrong platform - rowancountylibrary.org runs LibraryCalendar, so this WordPress entry stored 23 rows of DOM debris. Relocated to LibraryCalendar-Libraries on 2026-09-05, proven live at 19 events' },
   { name: 'Montgomery County Public Library', url: 'https://www.mcplib.org', eventsUrl: 'https://www.mcplib.org/events', city: 'Mount Sterling', state: 'KY', zipCode: '40353', county: 'Montgomery'},
   // 2026-08-27: WRONG-STATE URL, a new instance of Defect A. grantlibrary.net is Grant Area District Library, 122 S. Elder Ave, Grant, MI 49327, ph 231-834-5713 - Michigan, under a Kentucky entry. NOTE GATE 2 COULD NEVER SEE THIS: only one state claims the host, so it is a wrong-state URL rather than a collision, and it surfaced only because the platform probe read the page title. The real library is Grant County Public Library, 201 Barnes Rd, Williamstown KY 41097, whose events are on grantcounty.librarycalendar.com.
   // Guarded rather than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.

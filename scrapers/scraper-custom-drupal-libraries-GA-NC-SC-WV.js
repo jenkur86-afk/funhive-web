@@ -132,6 +132,16 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.florencelibrary.org',
     city: 'Florence',
     zipCode: '29501',
+    // GUARDED 2026-09-05 - right library, right state, WRONG PLATFORM. The Step 3d
+    // verifier reported event containers present but no parseable dates, and a
+    // markup probe found 48 h3.lc-event__title and 55 .event-card: this is a
+    // LibraryCalendar instance, so the selectors below can never match it. The
+    // configured /events path also 301s to the MONTH GRID, the same trap as
+    // Anderson County on 2026-09-02. Relocated to LibraryCalendar-Libraries at
+    // /events/upcoming and PROVEN LIVE the same day - 23 events found including
+    // Toddler Storytime, Family Storytime and Preschool Storytime - so this is a
+    // duplicate rather than a coverage gap.
+    urlCollision: 'florencelibrary.org runs LibraryCalendar, not custom Drupal - relocated to LibraryCalendar-Libraries on 2026-09-05 and proven live at 23 events',
     selectors: {
       eventContainer: '.views-row, article, div[class*="event"]',
       title: 'h2 a, h3 a, h2, h3',
@@ -202,6 +212,19 @@ const LIBRARY_SYSTEMS = [
     website: 'https://www.rowancountylibrary.org',
     city: 'Salisbury',
     zipCode: '28144',
+    // GUARDED 2026-09-05 - WRONG STATE and wrong platform, a Defect A collision.
+    // rowancountylibrary.org is Rowan County Public Library of MOREHEAD KENTUCKY,
+    // 175 Beacon Hill Rd, KY 40351, ph 606-784-7137 - taken from the live page,
+    // never from the name, because both states have a Rowan County and that is
+    // precisely how this collision was minted. The control is that ZIP 40351
+    // matches the WordPress-KY entry byte for byte. It also runs LibraryCalendar
+    // (35 div.lc-event, 24 h3.lc-event__title), so it was relocated there under KY
+    // and PROVEN LIVE at 19 events including Toddler Time, Preschool Storytime,
+    // Kids LEGO Club and Teen Game Night.
+    // ROWAN COUNTY NORTH CAROLINA IS NOW AN OPEN COVERAGE GAP. Its real library is
+    // Rowan Public Library in Salisbury NC and nothing here has been shown to
+    // cover it - no such claim is made.
+    urlCollision: 'rowancountylibrary.org is KENTUCKY not NC - Rowan County Public Library, 175 Beacon Hill Rd, Morehead KY 40351, ph 606-784-7137. Relocated to LibraryCalendar-Libraries under KY on 2026-09-05, proven live at 19 events. Rowan County NC remains uncovered',
     selectors: {
       eventContainer: '.views-row, article, div[class*="event"]',
       title: 'h2 a, h3 a, h2, h3',
@@ -335,6 +358,19 @@ async function scrapeLibraryEvents(library, browser) {
   let imported = 0;
   let skipped = 0;
   let failed = 0;
+
+  // A guarded entry is NOT fetched, but it still prints the "📍 name" +
+  // "Found 0 events" pair, because that pair is what gives the library a row in
+  // LIBRARY-SITE-AUDIT.md. Dropping the row is what hid BiblioCommons-* and
+  // Communico-* from the audit until 2026-08-20: a site absent from the audit is
+  // indistinguishable from a site that does not exist. The guard also stops the
+  // verifier re-fetching a URL already proven to belong to somewhere else — the
+  // exact failure fixed in build-verify-input.js on 2026-09-03.
+  if (library.urlCollision) {
+    console.log(`   ⛔ GUARDED: ${library.urlCollision}`);
+    console.log(`   Found 0 events`);
+    return { imported: 0, failed: 0, skipped: 0 };
+  }
 
   try {
     const page = await browser.newPage();
