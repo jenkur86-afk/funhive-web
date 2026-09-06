@@ -372,8 +372,8 @@
     "added": "2026-08-27"
   },
   "LibCal-FL2": {
-    "note": "Collier County Public Library legitimately returns 0 — SETTLED 2026-09-06, do not re-investigate as an extraction bug. The Puppeteer verifier read the page's own empty-state text (\"No events are scheduled\"); this is a MATCHES on the required standard, not an inference from a blank render, so the 2026-09-05 warning against assuming emptiness is satisfied rather than ignored. The other four systems returned 126 events between them the same day. Two defects in this scraper were fixed 2026-09-06: saveToDatabase() discarded the save helper's stats so the run table read New 0 / Duplicates 0 against 84 real saves (now New 80, proven live), and all five sites shared one scraper_name (now per-site slugs from each libcal subdomain). Pre-2026-09-06 rows keep the bare name until they expire.",
-    "priority": "low",
+    "note": "Two things, both settled 2026-09-06. (1) Collier County Public Library legitimately returns 0 - do NOT re-investigate as an extraction bug. The Puppeteer verifier read the page's OWN empty-state text ('No events are scheduled'), which meets the MATCHES standard rather than inferring emptiness from a blank render, so the 2026-09-05 warning is satisfied, not ignored. The other four systems returned 126 events the same day. (2) saveToDatabase() discarded the save helper's stats, so the run table read 'Found 126, New 0, Duplicates 0' against 84 real saves; fixed and proven live (New 80). DO NOT RETRY THE PER-SITE scraper_name HERE - attempted a third time on 2026-09-06 and proven inert by re-running and reading the rows back (all 84 still flat 'LibCal-FL2'). saveEventsWithGeocoding() rebuilds the metadata block at event-save-helper.js:778 and overwrites both scraperName and sourceUrl. A real fix means changing how verifyAndCleanupEvents() identifies a scraper's rows, across ~50 scrapers - owner-level, not daily work.",
+    "priority": "medium",
     "added": "2026-09-06"
   },
   "Assabet-NH-MA": {

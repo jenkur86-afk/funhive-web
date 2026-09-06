@@ -62,17 +62,6 @@ const LIBRARIES = [
 
 const SCRAPER_NAME = 'LibCal-FL2';
 
-/**
- * Per-site scraper_name: "<registryKey>-<siteSlug>", slug derived from the
- * site's own hostname subdomain (never a display name) and restricted to
- * lowercase [a-z0-9-] per CLAUDE.md -> Scraper Naming.
- */
-function siteScraperName(library) {
-  const host = String(library.url || '').replace(/^https?:\/\//, '').split('/')[0];
-  const slug = host.split('.')[0].toLowerCase().replace(/[^a-z0-9-]/g, '');
-  return slug ? `${SCRAPER_NAME}-${slug}` : SCRAPER_NAME;
-}
-
 async function scrapeLibCalEvents() {
   const browser = await launchBrowser();
   const events = [];
@@ -195,17 +184,17 @@ async function scrapeLibCalEvents() {
           ...event,
           metadata: {
             sourceName: library.name,
-            // The site's own listing page, not the bare host and not the event
-            // URL — this is what scripts/verify-coverage.js establishes identity
-            // from.
-            sourceUrl: library.eventsUrl || library.url,
+            // NOTE: saveEventsWithGeocoding() rebuilds this whole metadata block
+            // and OVERWRITES both sourceUrl (with library.url) and scraperName
+            // (with the options-level value), so setting a per-site value here
+            // has no effect on what reaches the database. Verified 2026-09-06 by
+            // re-running the scraper and reading back the rows: all 84 carried
+            // the flat "LibCal-FL2". Do not re-attempt the per-site name here —
+            // this is the third time it has been tried. See the LibCal-FL2 note
+            // in reports/fix-notes.json for what a real fix requires.
+            sourceUrl: library.url,
             scrapedAt: new Date().toISOString(),
-            // One distinct scraper_name PER SITE, slug taken from the site's own
-            // libcal subdomain. Emitting the bare registry key for all five
-            // collapsed them into a single row in AGE-RANGE-AUDIT.md, which the
-            // "No aggregation, ever" rule forbids — check-scraper-names.js
-            // flagged this as COLLAPSED on 2026-09-06.
-            scraperName: siteScraperName(library),
+            scraperName: SCRAPER_NAME,
             category: 'library',
             platform: 'libcal',
             state: 'FL'
