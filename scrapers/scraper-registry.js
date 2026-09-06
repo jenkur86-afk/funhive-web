@@ -1073,7 +1073,7 @@ const SCRAPERS = {
   // is why this one emitted a single bare name for all 18 sites unnoticed until now.
   // NOTE the file name still says nh-ma while it now also covers RI; renaming it
   // needs a git mv plus this entry, so it is recorded rather than done silently.
-  'Assabet-NH-MA': { file: './scraper-assabet-libraries-nh-ma.js', exportName: 'scrapeAssabetLibrariesCloudFunction', type: 'puppeteer', group: 2, state: 'Multi', sites: 41 },
+  'Assabet-NH-MA': { file: './scraper-assabet-libraries-nh-ma.js', exportName: 'scrapeAssabetLibrariesCloudFunction', type: 'puppeteer', group: 2, state: 'Multi', sites: 61 },
 
   // ============================================================================
   // PHASE 7: GAP COVERAGE SCRAPERS (non-library family event sources)

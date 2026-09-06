@@ -25,7 +25,16 @@ const LIBRARIES = [
   { name: 'Knox County Public Library', url: 'https://www.knoxlib.org', eventsUrl: 'https://www.knoxlib.org/events', city: 'Knoxville', state: 'TN', zipCode: '37902', county: 'Knox'},
   { name: 'Chattanooga Public Library', url: 'https://chattlibrary.org', eventsUrl: 'https://chattlibrary.org/events', city: 'Chattanooga', state: 'TN', zipCode: '37402', county: 'Hamilton'},
   // Regional Libraries
-  { name: 'Clarksville-Montgomery County Public Library', url: 'https://mcgtn.org/library', eventsUrl: 'https://mcgtn.org/library/events', city: 'Clarksville', state: 'TN', zipCode: '37040', county: 'Montgomery'},
+  // REMOVED 2026-09-06 — this library was being scraped TWICE, and only the other
+  // copy worked. mcgtn.org/library/events is a dead endpoint (mcgtn.org redirects to
+  // montgomerytn.gov); this entry returned "Found 0 events" every run. The library
+  // publishes on LibCal at mcgtn.libcal.com and is already configured in LibCal-TN.
+  // NOT REMOVED ON AN ASSUMPTION — the replacement was checked first, per the
+  // Worcester rule: the LibCal-TN entry logged "Found 48 events" against
+  // https://mcgtn.libcal.com/calendar?cid=14859 with real age-targeted titles
+  // (Preschool Craft Time, North Branch Toddler Time Story Time, Teen Scene), while
+  // this entry logged 0 in the same window. This is NOT a coverage gap: coverage is
+  // verified live under LibCal-TN. Do not re-add a WordPress entry for it.
   { name: 'Johnson City Public Library', url: 'https://www.jcpl.org', eventsUrl: 'https://www.jcpl.org/events', city: 'Johnson City', state: 'TN', zipCode: '37601', county: 'Washington'},
   { name: 'Kingsport Public Library', url: 'https://www.kingsportlibrary.org/', eventsUrl: 'https://www.kingsportlibrary.org/', city: 'Kingsport', state: 'TN', zipCode: '37660', county: 'Sullivan'},
   // Williamson County Public Library MOVED to CivicEngage-Libraries 2026-08-11.

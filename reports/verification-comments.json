@@ -135,9 +135,12 @@
   "population": "zero"
  },
  "WordPress-GA|||Laurens County Library (Dublin, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"dublinlibrary.org is TX, not GA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dublinlibrary.org is TX, not GA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-GA|||Duluth (Duluth, GA)": {
   "verdict": "MISMATCH",
@@ -179,9 +182,12 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-GA|||Greene County Library (Greensboro, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"greensborolibrary.org is NC, not GA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: greensborolibrary.org is NC, not GA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-GA|||Harris County Public Library (Hamilton, GA)": {
   "verdict": "MATCHES",
@@ -189,9 +195,12 @@
   "population": "zero"
  },
  "WordPress-GA|||Oglethorpe County Library (Lexington, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-GA|||Nelle Brown Memorial Public Library (Lyons, GA)": {
   "verdict": "MISMATCH",
@@ -228,14 +237,20 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-GA|||Monroe-Walton County Library (Monroe, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"monroelibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: monroelibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-GA|||Baker County (Newton, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"newtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: newtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-GA|||Pembroke Public Library (Pembroke, GA)": {
   "verdict": "MATCHES",
@@ -243,9 +258,12 @@
   "population": "zero"
  },
  "WordPress-GA|||Houston County Public Libraries System (Perry, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 156 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"perrylibrary.org is NC, not GA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: perrylibrary.org is NC, not GA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-GA|||Webster County Library (Preston, GA)": {
   "verdict": "MATCHES",
@@ -271,9 +289,12 @@
   "population": "zero"
  },
  "WordPress-GA|||Scottdale-Tobie Grant Branch (Scottdale, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"scottdalelibrary.org is PA, not GA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: scottdalelibrary.org is PA, not GA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-GA|||Lewis A. Ray Library (Smyrna, GA)": {
   "verdict": "MISMATCH",
@@ -284,19 +305,28 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-GA|||Chattooga County Library System (Summerville, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"summervillelibrary.org is PA, not GA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: summervillelibrary.org is PA, not GA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-GA|||Hightower Memorial Library (Thomaston, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"thomastonlibrary.org is CT, not GA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: thomastonlibrary.org is CT, not GA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-GA|||Thomson-Mcduffie County Library (Thomson, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"thomsonlibrary.org is Thomson IL, not GA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: thomsonlibrary.org is Thomson IL, not GA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-GA|||Tyrone Public Library (Tyrone, GA)": {
   "verdict": "MATCHES",
@@ -367,9 +397,12 @@
   "population": "zero"
  },
  "WordPress-NC|||J.C. Holliday Library (Clinton, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"clintonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: clintonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NC|||Tyrrell County Library (Columbia, NC)": {
   "verdict": "UNVERIFIABLE",
@@ -476,9 +509,12 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-NC|||Davidson County Public Library System (Lexington, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NC|||Liberty Public Library (Liberty, NC)": {
   "verdict": "MATCHES",
@@ -516,9 +552,12 @@
   "population": "zero"
  },
  "WordPress-NC|||Union County Public Library (Monroe, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"monroelibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: monroelibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NC|||Newport Public Library (Newport, NC)": {
   "verdict": "MISMATCH",
@@ -595,14 +634,20 @@
   "population": "zero"
  },
  "WordPress-NC|||Lawrence Memorial Library (Windsor, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"windsorlibrary.org is VT, not NC\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: windsorlibrary.org is VT, not NC",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Hartford Public Library (Hartford, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"platform mismatch - publishes on hplct.libnet.info; relocated to Communico 2026-08-27 (the LibCal-CT entry was also wrong and returned 0)\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: platform mismatch - publishes on hplct.libnet.info; relocated to Communico 2026-08-27 (the LibCal-CT entry was also wrong and returned 0)",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Stamford Public Library (Stamford, CT)": {
   "verdict": "MATCHES",
@@ -650,9 +695,12 @@
   "population": "zero"
  },
  "WordPress-CT|||Trumbull Library (Trumbull, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"platform mismatch - publishes on trumbull.libcal.com; relocated to LibCal-CT 2026-08-27\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: platform mismatch - publishes on trumbull.libcal.com; relocated to LibCal-CT 2026-08-27",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Vernon Public Library (Vernon, CT)": {
   "verdict": "MISMATCH",
@@ -660,9 +708,12 @@
   "population": "zero"
  },
  "WordPress-CT|||Andover Public Library (Andover, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"andoverlibrary.org is KS, not CT\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: andoverlibrary.org is KS, not CT",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Ansonia Public Library (Ansonia, CT)": {
   "verdict": "UNVERIFIABLE",
@@ -685,9 +736,12 @@
   "population": "zero"
  },
  "WordPress-CT|||Bethlehem Public Library (Bethlehem, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 53 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"bethlehemlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: bethlehemlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Canterbury Public Library (Canterbury, CT)": {
   "verdict": "UNVERIFIABLE",
@@ -700,14 +754,20 @@
   "population": "zero"
  },
  "WordPress-CT|||Chester Public Library (Chester, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"chesterlibrary.org is NY, not CT\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: chesterlibrary.org is NY, not CT",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Henry Carter Hull Library (Clinton, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"clintonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: clintonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Easton Public Library (Easton, CT)": {
   "verdict": "UNVERIFIABLE",
@@ -725,19 +785,28 @@
   "population": "zero"
  },
  "WordPress-CT|||Goshen Public Library (Goshen, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"goshenlibrary.org is NH, not CT\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: goshenlibrary.org is NH, not CT",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Hartland Public Library (Hartland, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"hartlandlibrary.org is WI, not CT\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: hartlandlibrary.org is WI, not CT",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Douglas Library Of Hebron (Hebron, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 82 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"hebronlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: hebronlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Ivoryton Library Association (Ivoryton, CT)": {
   "verdict": "UNVERIFIABLE",
@@ -745,9 +814,12 @@
   "population": "zero"
  },
  "WordPress-CT|||Killingworth Library (Killingworth, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"platform mismatch - publishes on killingworthlibrary.libcal.com; relocated to LibCal-CT 2026-08-27\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: platform mismatch - publishes on killingworthlibrary.libcal.com; relocated to LibCal-CT 2026-08-27",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Jonathan Trumbull Library (Lebanon, CT)": {
   "verdict": "MISMATCH",
@@ -768,9 +840,12 @@
   "population": "zero"
  },
  "WordPress-CT|||Edith Wheeler Memorial Library (Monroe, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"monroelibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: monroelibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Mystic Noank Library (Mystic, CT)": {
   "verdict": "UNVERIFIABLE",
@@ -786,9 +861,12 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-CT|||North Haven Memorial Library (North Haven, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"northhavenlibrary.org is ME, not CT\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: northhavenlibrary.org is ME, not CT",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Old Lyme - Phoebe Griffin Noyes Library (Old Lyme, CT)": {
   "verdict": "UNVERIFIABLE",
@@ -801,9 +879,12 @@
   "population": "zero"
  },
  "WordPress-CT|||Plainville Public Library (Plainville, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 155 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"plainvillelibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: plainvillelibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Plymouth Library Association (Plymouth, CT)": {
   "verdict": "MATCHES",
@@ -850,9 +931,12 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-CT|||Stonington Free Library (Stonington, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 82 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"stoningtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: stoningtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Kent Memorial Library (Suffield, CT)": {
   "verdict": "UNVERIFIABLE",
@@ -893,9 +977,12 @@
   "population": "zero"
  },
  "WordPress-CT|||Wilson Branch Library (Windsor, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"windsorlibrary.org is VT, not CT\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: windsorlibrary.org is VT, not CT",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Windsor Locks Public Library (Windsor Locks, CT)": {
   "verdict": "UNVERIFIABLE",
@@ -910,7 +997,10 @@
  "WordPress-TN|||Clarksville-Montgomery County Public Library": {
   "verdict": "MISMATCH",
   "comment": "extraction-failure mcgtn.org redirects to montgomerytn.gov and events live on mcgtn.libcal.com with 246 results e.g. Baby and Me Storytime Aug 17 2026",
-  "population": "zero"
+  "population": "zero",
+  "status": "fixed",
+  "statusNote": "Coverage VERIFIED under LibCal-TN, and the duplicate WordPress-TN entry removed 2026-09-06. Evidence from the same run window: LibCal-TN logged 'Found 48 events' against https://mcgtn.libcal.com/calendar?cid=14859 with age-targeted titles (Preschool Craft Time, North Branch Toddler Time Story Time, North Branch Teen Scene), while the WordPress-TN entry logged 'Found 0 events' against the dead mcgt",
+  "statusAt": "2026-09-06"
  },
  "WordPress-TN|||Kingsport Public Library": {
   "verdict": "MISMATCH",
@@ -1046,9 +1136,12 @@
   "population": "zero"
  },
  "WordPress-TN|||Clinton Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"clintonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: clintonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-TN|||Cordova Branch Library": {
   "verdict": "MISMATCH",
@@ -1335,9 +1428,12 @@
   "population": "zero"
  },
  "WordPress-AL|||Hale County Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"greensborolibrary.org is NC, not AL\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: greensborolibrary.org is NC, not AL",
+  "statusAt": "2026-09-06"
  },
  "WordPress-AL|||Guntersville Public Library": {
   "verdict": "MATCHES",
@@ -1399,9 +1495,12 @@
   "population": "zero"
  },
  "WordPress-AL|||Burchell Campbell Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-AL|||Lincoln Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -1448,9 +1547,12 @@
   "population": "zero"
  },
  "WordPress-AL|||Piedmont Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"piedmontlibrary.org is OK, not AL\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: piedmontlibrary.org is OK, not AL",
+  "statusAt": "2026-09-06"
  },
  "WordPress-AL|||Clay Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -1550,9 +1652,12 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-VT|||Martha Canfield Memorial (Arlington, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"arlingtonlibrary.org is TX, not VT\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: arlingtonlibrary.org is TX, not VT",
+  "statusAt": "2026-09-06"
  },
  "WordPress-VT|||Barton Public (Barton, VT)": {
   "verdict": "UNVERIFIABLE",
@@ -1565,14 +1670,20 @@
   "population": "zero"
  },
  "WordPress-VT|||Bethel Public (Bethel, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 233 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"bethellibrary.org is CT, not VT\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: bethellibrary.org is CT, not VT",
+  "statusAt": "2026-09-06"
  },
  "WordPress-VT|||Bradford Public (Bradford, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"bradfordlibrary.org is PA, not VT\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: bradfordlibrary.org is PA, not VT",
+  "statusAt": "2026-09-06"
  },
  "WordPress-VT|||Cabot Public (Cabot, VT)": {
   "verdict": "MISMATCH",
@@ -1588,9 +1699,12 @@
   "statusAt": "2026-09-05"
  },
  "WordPress-VT|||Whiting (Chester, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"chesterlibrary.org is NY, not VT\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: chesterlibrary.org is NY, not VT",
+  "statusAt": "2026-09-06"
  },
  "WordPress-VT|||Pope Memorial (Danville, VT)": {
   "verdict": "MISMATCH",
@@ -1623,9 +1737,12 @@
   "population": "zero"
  },
  "WordPress-VT|||Greensboro Free (Greensboro, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"greensborolibrary.org is NC, not VT\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: greensborolibrary.org is NC, not VT",
+  "statusAt": "2026-09-06"
  },
  "WordPress-VT|||Hartford (Hartford, VT)": {
   "verdict": "MISMATCH",
@@ -1636,9 +1753,12 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-VT|||Huntington Public (Huntington, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SOCKET_NOT_CONNECTED at https://www.huntingtonlibrary.org/",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"huntingtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: huntingtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-VT|||Lincoln (Lincoln, VT)": {
   "verdict": "UNVERIFIABLE",
@@ -1661,9 +1781,12 @@
   "population": "zero"
  },
  "WordPress-VT|||Jaquith Public (Marshfield, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"marshfieldlibrary.org is WI, not VT\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: marshfieldlibrary.org is WI, not VT",
+  "statusAt": "2026-09-06"
  },
  "WordPress-VT|||Milton Public Library (Milton, VT)": {
   "verdict": "UNVERIFIABLE",
@@ -1671,9 +1794,12 @@
   "population": "zero"
  },
  "WordPress-VT|||Moore Free (Newfane, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"newfanelibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: newfanelibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-VT|||Proctor Free (Proctor, VT)": {
   "verdict": "MISMATCH",
@@ -1696,9 +1822,12 @@
   "population": "zero"
  },
  "WordPress-VT|||Rochester Public (Rochester, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"rochesterlibrary.org is IL, not VT\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: rochesterlibrary.org is IL, not VT",
+  "statusAt": "2026-09-06"
  },
  "WordPress-VT|||Salisbury Free Public (Salisbury, VT)": {
   "verdict": "MISMATCH",
@@ -2719,9 +2848,12 @@
   "population": "zero"
  },
  "WordPress-PA|||Bethel-Tulpehocken Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 329 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"bethellibrary.org is CT, not PA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: bethellibrary.org is CT, not PA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-PA|||Bethel Park Public Library": {
   "verdict": "MATCHES",
@@ -2729,9 +2861,12 @@
   "population": "zero"
  },
  "WordPress-PA|||Bethlehem Area Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 53 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"bethlehemlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: bethlehemlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-PA|||Boyertown Community Library": {
   "verdict": "UNVERIFIABLE",
@@ -2764,9 +2899,12 @@
   "population": "zero"
  },
  "WordPress-PA|||Bosler Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"carlislelibrary.org is IA, not PA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: carlislelibrary.org is IA, not PA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-PA|||Community Library Of Castle Shannon": {
   "verdict": "MISMATCH",
@@ -3043,9 +3181,12 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-CT|||Andover Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"andoverlibrary.org is KS, not CT\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: andoverlibrary.org is KS, not CT",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Ansonia Public Library": {
   "verdict": "MATCHES",
@@ -3063,9 +3204,12 @@
   "population": "zero"
  },
  "WordPress-CT|||Bethlehem Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 53 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"bethlehemlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: bethlehemlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Bridgeport Public Library": {
   "verdict": "MATCHES",
@@ -3107,9 +3251,12 @@
   "population": "zero"
  },
  "WordPress-CT|||Douglas Library Of Hebron": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 82 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"hebronlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: hebronlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||East Hampton Public Library": {
   "verdict": "MISMATCH",
@@ -3130,9 +3277,12 @@
   "population": "zero"
  },
  "WordPress-CT|||Edith Wheeler Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"monroelibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: monroelibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Essex Library Association": {
   "verdict": "MISMATCH",
@@ -3185,9 +3335,12 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-CT|||Henry Carter Hull Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"clintonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: clintonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Ivoryton Library Association": {
   "verdict": "MATCHES",
@@ -3270,9 +3423,12 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-CT|||Plainville Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 215 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"plainvillelibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: plainvillelibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Pomfret Public Library": {
   "verdict": "MISMATCH",
@@ -3457,9 +3613,12 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-GA|||Greene County Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"greensborolibrary.org is NC, not GA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: greensborolibrary.org is NC, not GA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-GA|||Harris County Public Library": {
   "verdict": "MISMATCH",
@@ -3560,9 +3719,12 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-GA|||Oglethorpe County Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-GA|||Pembroke Public Library": {
   "verdict": "MISMATCH",
@@ -3680,9 +3842,12 @@
   "population": "zero"
  },
  "WordPress-NC|||Davidson County Public Library System": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NC|||Dobson Community Library": {
   "verdict": "UNVERIFIABLE",
@@ -3747,9 +3912,12 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-NC|||J.C. Holliday Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"clintonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: clintonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NC|||La Grange Branch Library": {
   "verdict": "MISMATCH",
@@ -3784,9 +3952,12 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-NC|||Littleton Public Library (Wc Jones Memorial)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"littletonlibrary.org is MA, not NC\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: littletonlibrary.org is MA, not NC",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NC|||Macon County Public Library": {
   "verdict": "MISMATCH",
@@ -3957,9 +4128,12 @@
   "population": "zero"
  },
  "WordPress-VT|||Greensboro Free": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"greensborolibrary.org is NC, not VT\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: greensborolibrary.org is NC, not VT",
+  "statusAt": "2026-09-06"
  },
  "WordPress-VT|||Hartford": {
   "verdict": "MISMATCH",
@@ -4473,7 +4647,10 @@
  "WordPress-MA|||Andrews Branch Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.newburyportlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - its own site names the instance newburyportpl.assabetinteractive.com, which is ALREADY configured there as Newburyport Public Library. Andrews is a branch of that system, so the branch arr",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Amesbury Public Library": {
   "verdict": "MISMATCH",
@@ -4484,9 +4661,12 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Andover Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"andoverlibrary.org is KS, not NH\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: andoverlibrary.org is KS, not NH",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Ashby Free Public Library": {
   "verdict": "MATCHES",
@@ -4494,9 +4674,12 @@
   "population": "zero"
  },
  "WordPress-NH|||Bethlehem Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 53 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"bethlehemlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: bethlehemlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Athol Public Library": {
   "verdict": "MISMATCH",
@@ -4558,9 +4741,12 @@
   "population": "zero"
  },
  "WordPress-RI|||Greene Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"greenelibrary.org is dead and was shared with NY/ME; Greene is a Coventry branch now covered live by LibCal-RI-coventrylibrary, proven by 4 Greene Branch rows\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: greenelibrary.org is dead and was shared with NY/ME; Greene is a Coventry branch now covered live by LibCal-RI-coventrylibrary, proven by 4 Greene Branch rows",
+  "statusAt": "2026-09-06"
  },
  "WordPress-SC|||Berkeley County Library - Sangaree Library": {
   "verdict": "UNVERIFIABLE",
@@ -4581,9 +4767,12 @@
   "population": "zero"
  },
  "WordPress-SC|||Anderson County Library - Piedmont Branch Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"piedmontlibrary.org is OK, not SC\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: piedmontlibrary.org is OK, not SC",
+  "statusAt": "2026-09-06"
  },
  "WordPress-WV|||Berkeley County Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -7702,9 +7891,12 @@
   "population": "zero"
  },
  "WordPress-KY|||Graves County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "bot-block: 403 even under the stealth browser the scrapers use",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"graveslibrary.org is MAINE not KY - Louis T. Graves Memorial Public Library, 18 Maine St, Kennebunkport ME 04046, ph 207-967-2778; real library relocated to LibraryCalendar-Libraries 2026-09-03\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: graveslibrary.org is MAINE not KY - Louis T. Graves Memorial Public Library, 18 Maine St, Kennebunkport ME 04046, ph 207-967-2778; real library relocated to LibraryCalendar-Libraries 2026-09-03",
+  "statusAt": "2026-09-06"
  },
  "WordPress-KY|||Greenup County Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -7732,9 +7924,12 @@
   "population": "zero"
  },
  "WordPress-KY|||Hickman County Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"clintonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: clintonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-KY|||Jessamine County Public Library": {
   "verdict": "MISMATCH",
@@ -7753,14 +7948,20 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-KY|||Lents Branch": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"hebronlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: hebronlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-KY|||Mahan-Oldham County Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"goshenlibrary.org is NH, not KY\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: goshenlibrary.org is NH, not KY",
+  "statusAt": "2026-09-06"
  },
  "WordPress-KY|||Madison County Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -7768,9 +7969,12 @@
   "population": "zero"
  },
  "WordPress-KY|||Nicholas County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"carlislelibrary.org is IA, not KY\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: carlislelibrary.org is IA, not KY",
+  "statusAt": "2026-09-06"
  },
  "WordPress-KY|||Pike County Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -7816,9 +8020,12 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-MA|||Bigelow Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"clintonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: clintonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Boxford Town Library": {
   "verdict": "MISMATCH",
@@ -7857,9 +8064,12 @@
   "population": "zero"
  },
  "WordPress-MA|||Cary Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Carver Public Library": {
   "verdict": "MISMATCH",
@@ -7877,7 +8087,10 @@
  "WordPress-MA|||Conant Free Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://sterlinglibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance sterlinglibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 45 items titled for this same ",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Chelmsford Public Library": {
   "verdict": "MISMATCH",
@@ -7892,7 +8105,10 @@
  "WordPress-MA|||Dover Town Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://dovertownlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance dovertownlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 29 items titled for this same",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||East Bridgewater Public Library": {
   "verdict": "MATCHES",
@@ -7907,12 +8123,18 @@
  "WordPress-MA|||Edgartown Free Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.edgartownlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance edgartownlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 39 items titled for this same",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||G. A. R. Memorial Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://westnewburylibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance westnewburylibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 33 items titled for this sa",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Gloucester Lyceum Sawyer Free Lib": {
   "verdict": "UNVERIFIABLE",
@@ -7920,14 +8142,20 @@
   "population": "zero"
  },
  "WordPress-MA|||Goshen Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"goshenlibrary.org is NH, not MA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: goshenlibrary.org is NH, not MA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Gleason Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"carlislelibrary.org is IA, not MA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: carlislelibrary.org is IA, not MA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Grafton Public Library": {
   "verdict": "MATCHES",
@@ -7943,9 +8171,12 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Grace Hall Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"montgomerylibrary.org is dead and was shared with PA/NY/WV; this library has no website of its own, Facebook only\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: montgomerylibrary.org is dead and was shared with PA/NY/WV; this library has no website of its own, Facebook only",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Haston Free Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -7958,9 +8189,12 @@
   "population": "zero"
  },
  "WordPress-MA|||Haverhill Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 348 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"haverhilllibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: haverhilllibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Holland Public Library": {
   "verdict": "MISMATCH",
@@ -7973,7 +8207,10 @@
  "WordPress-MA|||Holliston Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://hollistonlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance hollistonlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 49 items titled for this same",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Hopkinton Public Library": {
   "verdict": "MISMATCH",
@@ -7991,7 +8228,10 @@
  "WordPress-MA|||Ipswich Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.ipswichlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance ipswichlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 48 items titled for this same l",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Islington Branch Library": {
   "verdict": "MISMATCH",
@@ -8001,12 +8241,18 @@
  "WordPress-MA|||Jonathan Bourne Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.bournelibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance bournelibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 53 items titled for this same li",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Lakeville Free Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://lakevillelibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: OPEN GAP, not fixed - lakevillelibrary.assabetinteractive.com returns HTTP 200 titled Lakeville Public Library, but /calendar/ 404s and the instance exposes no internal links. It runs Assabet for its SITE and not for its EVENTS, so there i",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Lenox Library Association": {
   "verdict": "MISMATCH",
@@ -8019,12 +8265,18 @@
  "WordPress-MA|||Leicester Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.leicesterlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance leicesterma.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 33 items titled for this same libr",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Leominster Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.leominsterlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance leominsterlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 73 items titled for this sam",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Leverett Library": {
   "verdict": "MISMATCH",
@@ -8053,7 +8305,10 @@
  "WordPress-MA|||Medfield Memorial Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.medfieldpubliclibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance medfieldpubliclibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 100 items titled for thi",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Mattapoisett Public Library": {
   "verdict": "MISMATCH",
@@ -8061,9 +8316,12 @@
   "population": "zero"
  },
  "WordPress-MA|||Memorial Hall Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"andoverlibrary.org is KS, not MA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: andoverlibrary.org is KS, not MA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Medford Public Library": {
   "verdict": "MISMATCH",
@@ -8086,7 +8344,10 @@
  "WordPress-MA|||Millbury Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.millburylibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance millburylibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 51 items titled for this same ",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Middlefield Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -8099,9 +8360,12 @@
   "population": "zero"
  },
  "WordPress-MA|||Monterey Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"montereylibrary.org is CA, not MA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: montereylibrary.org is CA, not MA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Moses Greeley Parker Memorial Lib.": {
   "verdict": "MISMATCH",
@@ -8117,9 +8381,12 @@
   "population": "zero"
  },
  "WordPress-MA|||Newton Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"newtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: newtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||North Adams Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -8179,9 +8446,12 @@
   "population": "zero"
  },
  "WordPress-MA|||Plainville Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"plainvillelibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: plainvillelibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Pollard Memorial Library": {
   "verdict": "UNVERIFIABLE",
@@ -8230,9 +8500,12 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Shrewsbury Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"shrewsburylibrary.org is VT, not MA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: shrewsburylibrary.org is VT, not MA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Seekonk Public Library": {
   "verdict": "MISMATCH",
@@ -8247,7 +8520,10 @@
  "WordPress-MA|||Somerset Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.somersetpubliclibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: OPEN GAP, not fixed - somersetpubliclibrary.assabetinteractive.com returns HTTP 200 titled Somerset Public Library, but /calendar/ 404s and the instance exposes no internal links. Already recorded as this exact case in the Assabet config o",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Swansea Free Public Library": {
   "verdict": "MISMATCH",
@@ -8285,7 +8561,10 @@
  "WordPress-MA|||Topsfield Town Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.topsfieldlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance topsfieldlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 36 items titled for this same",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Uxbridge Free Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -8293,9 +8572,12 @@
   "population": "zero"
  },
  "WordPress-MA|||Ventress Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"marshfieldlibrary.org is WI, not MA (and marshfieldlibrary.libcal.com is WI too); relocated to Assabet-NH-MA 2026-08-27\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: marshfieldlibrary.org is WI, not MA (and marshfieldlibrary.libcal.com is WI too); relocated to Assabet-NH-MA 2026-08-27",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Wayland Free Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -8373,9 +8655,12 @@
   "population": "zero"
  },
  "WordPress-NH|||Dublin Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"dublinlibrary.org is TX, not NH\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dublinlibrary.org is TX, not NH",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Effingham Free Public Library": {
   "verdict": "MISMATCH",
@@ -8396,9 +8681,12 @@
   "population": "zero"
  },
  "WordPress-NH|||East Rochester Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"eastrochesterlibrary.org is NY, not NH\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: eastrochesterlibrary.org is NY, not NH",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Fremont Public Library": {
   "verdict": "MISMATCH",
@@ -8406,9 +8694,12 @@
   "population": "zero"
  },
  "WordPress-NH|||Gale Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"newtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: newtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NH|||George Holmes Bixby Memorial Library": {
   "verdict": "UNVERIFIABLE",
@@ -8431,17 +8722,26 @@
  "WordPress-NH|||Hampton Lane Memorial Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.hampton.lib.nh.us/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - resolves to slug hampton, ALREADY configured there as Lane Memorial Library. Caught by matching on SLUG, not name, which is the same catch the 2026-08-24 Assabet note records for this exac",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Haverhill Library Association": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 348 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"haverhilllibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: haverhilllibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Hebron Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 82 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"hebronlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: hebronlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Holderness Library": {
   "verdict": "MISMATCH",
@@ -8462,9 +8762,12 @@
   "population": "zero"
  },
  "WordPress-NH|||Littleton Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"littletonlibrary.org is MA, not NH\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: littletonlibrary.org is MA, not NH",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Laconia Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -8492,9 +8795,12 @@
   "population": "zero"
  },
  "WordPress-NH|||Monroe Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"monroelibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: monroelibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NH|||New Ipswich Library": {
   "verdict": "UNVERIFIABLE",
@@ -8504,7 +8810,10 @@
  "WordPress-NH|||Nashua Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.nashualibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: publishes on nashualibrary.libcal.com and is ALREADY in the LibCal-NH config - a live duplicate that could only ever return 0 here. Guarded 2026-09-06. Identity is from the HOST, not the name: nashualibrary.org and nashualibrary.libcal.com",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Newmarket Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -8530,9 +8839,12 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Pike Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"pikelibrary.org is KY, not NH\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: pikelibrary.org is KY, not NH",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Stark Public Library": {
   "verdict": "MISMATCH",
@@ -8649,9 +8961,12 @@
   "population": "zero"
  },
  "WordPress-PA|||Middletown Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"middletownlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: middletownlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-PA|||Meyersdale Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -8714,9 +9029,12 @@
   "population": "zero"
  },
  "WordPress-PA|||Paul Smith Library Of Southern York County": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"shrewsburylibrary.org is VT, not PA\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: shrewsburylibrary.org is VT, not PA",
+  "statusAt": "2026-09-06"
  },
  "WordPress-PA|||Priestley Forsyth Memorial Library": {
   "verdict": "UNVERIFIABLE",
@@ -8924,9 +9242,12 @@
   "population": "zero"
  },
  "WordPress-RI|||Middletown Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"middletownlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: middletownlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-RI|||Marian J. Mohr Memorial Library": {
   "verdict": "UNVERIFIABLE",
@@ -8949,9 +9270,12 @@
   "population": "zero"
  },
  "WordPress-RI|||Rumford Branch": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"platform mismatch - East Providence publishes on eplib.libcal.com (covered by LibCal-RI); Rumford has no separate calendar, 404 on /calendar/rumford\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: platform mismatch - East Providence publishes on eplib.libcal.com (covered by LibCal-RI); Rumford has no separate calendar, 404 on /calendar/rumford",
+  "statusAt": "2026-09-06"
  },
  "WordPress-SC|||Edgefield County Public Library - Johnston Branch (Mobley Library)": {
   "verdict": "UNVERIFIABLE",
@@ -8959,14 +9283,20 @@
   "population": "zero"
  },
  "WordPress-SC|||Clinton Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"clintonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: clintonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-SC|||Hal Kohn Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"newberrylibrary.org is dead and was shared with FL; real site is youseemore.com/newberry, a YouSeeMore ILS calendar.asp, not WordPress\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: newberrylibrary.org is dead and was shared with FL; real site is youseemore.com/newberry, a YouSeeMore ILS calendar.asp, not WordPress",
+  "statusAt": "2026-09-06"
  },
  "WordPress-SC|||Hampton County Library - Estill Branch Library": {
   "verdict": "MISMATCH",
@@ -8992,9 +9322,12 @@
   "population": "zero"
  },
  "WordPress-SC|||Lexington County Public Library System - Main": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-SC|||Oconee County Public Library - Seneca Branch Library": {
   "verdict": "MISMATCH",
@@ -9043,9 +9376,12 @@
   "population": "zero"
  },
  "WordPress-WV|||Piedmont Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"piedmontlibrary.org is OK, not WV\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: piedmontlibrary.org is OK, not WV",
+  "statusAt": "2026-09-06"
  },
  "WordPress-WV|||Putnam County Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -9053,9 +9389,12 @@
   "population": "zero"
  },
  "WordPress-WV|||Swaney Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"newcumberlandlibrary.org is PA, not WV\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: newcumberlandlibrary.org is PA, not WV",
+  "statusAt": "2026-09-06"
  },
  "WordPress-WV|||Ronceverte Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -9146,9 +9485,12 @@
   "population": "zero"
  },
  "WordPress-FL|||Freeport Branch Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"freeportlibrary.org is PA, not FL\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: freeportlibrary.org is PA, not FL",
+  "statusAt": "2026-09-06"
  },
  "WordPress-FL|||Alachua Branch Library": {
   "verdict": "UNVERIFIABLE",
@@ -9204,9 +9546,12 @@
   "population": "zero"
  },
  "WordPress-FL|||Newberry Branch Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"newberrylibrary.org is dead and was shared with SC; real site is aclib.us which runs Communico - see Communico-FL, which currently returns 0 rows\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: newberrylibrary.org is dead and was shared with SC; real site is aclib.us which runs Communico - see Communico-FL, which currently returns 0 rows",
+  "statusAt": "2026-09-06"
  },
  "WordPress-FL|||Reddick Public Library": {
   "verdict": "MISMATCH",
@@ -9252,9 +9597,12 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-ME|||Andover Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"andoverlibrary.org is KS, not ME\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: andoverlibrary.org is KS, not ME",
+  "statusAt": "2026-09-06"
  },
  "WordPress-ME|||Belgrade Public Library": {
   "verdict": "MISMATCH",
@@ -9270,9 +9618,12 @@
   "population": "zero"
  },
  "WordPress-ME|||Bethel Library Assn": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 357 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"bethellibrary.org is CT, not ME\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: bethellibrary.org is CT, not ME",
+  "statusAt": "2026-09-06"
  },
  "WordPress-ME|||Blue Hill Library": {
   "verdict": "UNVERIFIABLE",
@@ -9308,14 +9659,20 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-ME|||Freeport Community Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"freeportlibrary.org is PA, not ME\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: freeportlibrary.org is PA, not ME",
+  "statusAt": "2026-09-06"
  },
  "WordPress-ME|||Brown Memorial Library - Clinton": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"clintonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: clintonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-ME|||Hollis Center Public Library": {
   "verdict": "MISMATCH",
@@ -9340,7 +9697,10 @@
  "WordPress-ME|||Kennebunk Free Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://kennebunklibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance kennebunklibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 63 items titled for this same",
+  "statusAt": "2026-09-06"
  },
  "WordPress-ME|||Lawrence Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -9358,9 +9718,12 @@
   "population": "zero"
  },
  "WordPress-ME|||Louise Clements Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"cutlerlibrary.org is VT, not ME\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: cutlerlibrary.org is VT, not ME",
+  "statusAt": "2026-09-06"
  },
  "WordPress-ME|||Milbridge Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -9373,9 +9736,12 @@
   "population": "zero"
  },
  "WordPress-ME|||Monroe Community Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 199 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"monroelibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: monroelibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-ME|||New Gloucester Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -9403,9 +9769,12 @@
   "population": "zero"
  },
  "WordPress-ME|||Parsons Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"alfredlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: alfredlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-ME|||Pembroke Library": {
   "verdict": "UNVERIFIABLE",
@@ -9453,9 +9822,12 @@
   "population": "zero"
  },
  "WordPress-ME|||Stonington Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 82 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"stoningtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: stoningtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-ME|||Swans Island Public Library": {
   "verdict": "MISMATCH",
@@ -9473,9 +9845,12 @@
   "population": "zero"
  },
  "WordPress-ME|||Thomaston Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"thomastonlibrary.org is CT, not ME\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: thomastonlibrary.org is CT, not ME",
+  "statusAt": "2026-09-06"
  },
  "WordPress-ME|||Waldoboro Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -9528,9 +9903,12 @@
   "population": "zero"
  },
  "WordPress-MS|||A. E. Wood Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"clintonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: clintonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MS|||Dixie Regional Library System": {
   "verdict": "UNVERIFIABLE",
@@ -9578,14 +9956,20 @@
   "population": "zero"
  },
  "WordPress-MS|||Lexington Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: lexingtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MS|||J. Elliott Mcmullan Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"newtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: newtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MS|||Magnolia Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -9653,7 +10037,10 @@
  "WordPress-NJ|||Boonton Holmes Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.boontonlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance boontonlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 53 items titled for this same l",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NJ|||Bridgeton Free Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -9780,9 +10167,12 @@
   "population": "zero"
  },
  "WordPress-NJ|||Middletown Township Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"middletownlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: middletownlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NJ|||Maywood Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -9870,7 +10260,10 @@
  "WordPress-NJ|||Ridgewood Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://ridgewoodlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance ridgewoodlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 123 items titled for this sam",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NJ|||River Vale Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -9914,9 +10307,12 @@
   "population": "zero"
  },
  "WordPress-NJ|||Sussex County Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"newtonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: newtonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NJ|||Tenafly Free Public Library": {
   "verdict": "MISMATCH",
@@ -9967,9 +10363,12 @@
   "population": "zero"
  },
  "WordPress-NY|||Alfred Box Of Books Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"alfredlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: alfredlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NY|||Amagansett Free Library": {
   "verdict": "UNVERIFIABLE",
@@ -9987,9 +10386,12 @@
   "population": "zero"
  },
  "WordPress-NY|||Andover Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"andoverlibrary.org is KS, not NY\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: andoverlibrary.org is KS, not NY",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NY|||Andes Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -10019,7 +10421,10 @@
  "WordPress-NY|||Baldwin Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.baldwinpl.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance baldwinpl.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 114 items titled for this same libra",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NY|||Barneveld Free Library Association": {
   "verdict": "MISMATCH",
@@ -10199,9 +10604,12 @@
   "population": "zero"
  },
  "WordPress-NY|||Goshen Public Library And Historical Society": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"goshenlibrary.org is NH, not NY\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: goshenlibrary.org is NH, not NY",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NY|||Galway Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -10308,9 +10716,12 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-NY|||Kirkland Town Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"clintonlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: clintonlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NY|||Lisle Free Library": {
   "verdict": "MISMATCH",
@@ -10323,7 +10734,10 @@
  "WordPress-NY|||Locust Valley Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.locustvalleylibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance locustvalleylibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 81 items titled for this s",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NY|||Marcellus Free Library": {
   "verdict": "MISMATCH",
@@ -10377,9 +10791,12 @@
   "population": "zero"
  },
  "WordPress-NY|||Monroe Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"monroelibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: monroelibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NY|||Mount Morris Library": {
   "verdict": "UNVERIFIABLE",
@@ -10417,9 +10834,12 @@
   "population": "zero"
  },
  "WordPress-NY|||Newfane Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"newfanelibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: newfanelibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NY|||Northville Public Library": {
   "verdict": "MISMATCH",
@@ -10473,9 +10893,12 @@
   "population": "zero"
  },
  "WordPress-NY|||Pike Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"pikelibrary.org is KY, not NY\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: pikelibrary.org is KY, not NY",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NY|||Port Leyden Community Library": {
   "verdict": "MATCHES",
@@ -10513,9 +10936,12 @@
   "population": "zero"
  },
  "WordPress-NY|||Ramapo Catskill Library System": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"middletownlibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: middletownlibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NY|||Quogue Library": {
   "verdict": "MISMATCH",
@@ -10584,7 +11010,10 @@
  "WordPress-NY|||Seaford Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://seafordlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance seafordlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 33 items titled for this same l",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NY|||Seneca Nation Of Indians Library Cattaraugus Territory": {
   "verdict": "MISMATCH",
@@ -10613,9 +11042,12 @@
   "population": "zero"
  },
  "WordPress-NY|||Smyrna Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"smyrnalibrary.org is dead or serves an unrelated site — no state entry is correct\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: smyrnalibrary.org is dead or serves an unrelated site — no state entry is correct",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NY|||Sodus Free Library": {
   "verdict": "UNVERIFIABLE",
@@ -10784,9 +11216,12 @@
   "population": "zero"
  },
  "WordPress-MA|||Brewster Ladies Library Assoc.": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"wrong-state URL - brewsterlibrary.libcal.com is Brewster NY; this library runs Assabet, relocated to Assabet-NH-MA 2026-08-27\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: wrong-state URL - brewsterlibrary.libcal.com is Brewster NY; this library runs Assabet, relocated to Assabet-NH-MA 2026-08-27",
+  "statusAt": "2026-09-06"
  },
  "Communico-DC|||Huntington Public Library": {
   "verdict": "MISMATCH",
@@ -11038,7 +11473,10 @@
  "LibCal-TN|||Knox County Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-domain: knoxlib.libcal.com has no DNS record and the entry's website knoxlibrary.org times out. Library is live at knoxcountylibrary.org running LibraryCalendar (45 lc-event cards). FIXED 2026-08-29: moved to LibraryCalendar-Libraries, first run returned 16 events in real age brackets",
-  "population": "zero"
+  "population": "zero",
+  "status": "fixed",
+  "statusNote": "Relocated to LibraryCalendar-Libraries on 2026-08-29 and CONFIRMED RUNNING: scraper-stdout.log 2026-09-04T12:04Z shows '📍 Knox County Public Library (Knoxville, TN)' then 'Found 24 events' against https://www.knoxcountylibrary.org/events/upcoming. The dead knoxlib.libcal.com entry was removed from LibCal-TN in the same change, so no config still points at the dead host. Coverage restored and obse",
+  "statusAt": "2026-09-06"
  },
  "MacaroniKid-PA-lancaster|||Library System of Lancaster County — Lancaster": {
   "verdict": "UNVERIFIABLE",
@@ -11481,9 +11919,12 @@
   "population": "zero"
  },
  "WordPress-NJ|||Montclair Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "known-broken, GUARD CONFIRMED IN CONFIG 2026-09-06: the entry carries urlCollision \"publishes on the shared BCCLS LibCal instance at bccls.libcal.com/calendar/montclair - a WordPress DOM extractor cannot read it. Covered by LibCal-NJ, proven by a database row under LibCal-NJ-bccls-mo\", so the scraper skips it at run time and its configured URL is proven to serve another institution. Reclassified UNVERIFIABLE -> MISMATCH because a guarded entry is KNOWN-broken, not unknown: it is a real, itemised coverage gap awaiting a correct URL. No config was touched and no new evidence was gathered — this corrects a verdict, and the guard was confirmed against the live config rather than taken from the previous comment.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: publishes on the shared BCCLS LibCal instance at bccls.libcal.com/calendar/montclair - a WordPress DOM extractor cannot read it. Covered by LibCal-NJ, proven by a database row under LibCal-NJ-bccls-montclair",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NY|||Ellicottville Memorial Library": {
   "verdict": "MATCHES",

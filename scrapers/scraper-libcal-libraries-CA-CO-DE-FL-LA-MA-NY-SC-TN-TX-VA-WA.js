@@ -1058,7 +1058,28 @@ const LIBRARY_SYSTEMS = [
     state: 'NY',
     website: 'https://www.baldwinlib.org',
     city: 'Baldwin',
-    zipCode: '11510'
+    zipCode: '11510',
+    // GUARDED 2026-09-06 — a NEW Defect A collision, and a subtle one, because the
+    // library name and the town name are both genuinely "Baldwin" in two states.
+    //
+    // baldwinlib.org is Baldwin Public Library of 300 W. Merrill St, BIRMINGHAM
+    // MICHIGAN 48009 — read off its own page, not inferred — and baldwinlib.libcal.com
+    // is that Michigan library's LibCal, titled "LibCal - Baldwin Public Library".
+    // This entry claims it as Baldwin NEW YORK 11510, Nassau County. The two are
+    // different institutions that share a name; only the HOST separates them, which
+    // is why identity here comes from the address on the page.
+    //
+    // THE NEW YORK LIBRARY IS baldwinPL.org, one letter different, and it is now
+    // properly covered: it runs Assabet at baldwinpl.assabetinteractive.com, whose
+    // upcoming-events.rss returned 114 items on 2026-09-06, and it was relocated to
+    // Assabet-NH-MA that day. Its WordPress-NY entry is guarded too.
+    //
+    // NO ROWS WERE EVER WRITTEN through this entry — a targeted query on both
+    // source_url and url found 0, and 0 events carry a "Baldwin Public" venue — so
+    // this is a latent risk closed, not damage repaired. Guarded rather than deleted
+    // so the collision stays recorded and cannot be re-introduced by someone reading
+    // baldwinlib.org as a plausible New York host.
+    urlCollision: 'baldwinlib.org is MICHIGAN not NY - Baldwin Public Library, 300 W. Merrill St, Birmingham MI 48009. The New York library is baldwinpl.org, runs Assabet, and was relocated to Assabet-NH-MA on 2026-09-06 with 114 items in its RSS feed'
   },
   {
     name: 'North Bellmore Public Library',

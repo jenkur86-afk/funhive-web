@@ -7,8 +7,9 @@ const ngeohash = require('ngeohash');
 
 /**
  * Assabet Interactive Library Calendar Scraper
- * States: NH, MA
- * Coverage: 15 libraries using the Assabet Interactive calendar platform
+ * States: MA, NH, RI, ME, NY, NJ — the key says NH-MA for historical reasons; see the
+ *          note above the 2026-09-06 block for why it was not renamed.
+ * Coverage: 61 libraries using the Assabet Interactive calendar platform
  * URL pattern: https://[slug].assabetinteractive.com/calendar/
  */
 
@@ -95,6 +96,87 @@ const LIBRARIES = [
   { name: 'Weston Public Library', slug: 'westonlibrary', eventsUrl: 'https://westonlibrary.assabetinteractive.com/calendar/', city: 'Weston', state: 'MA', zipCode: '02493' },   // 47 upcoming in RSS
   { name: 'Whitinsville Social Library', slug: 'northbridgemass', eventsUrl: 'https://northbridgemass.assabetinteractive.com/calendar/', city: 'Whitinsville', state: 'MA', zipCode: '01588' },   // 27 upcoming in RSS
   { name: 'Portsmouth Free Public Library', slug: 'portsmouthlibrary', eventsUrl: 'https://portsmouthlibrary.assabetinteractive.com/calendar/', city: 'Portsmouth', state: 'RI', zipCode: '02871' },   // 27 upcoming in RSS
+
+  // --- Added 2026-09-06, second pass over the same defect --------------------
+  // Found by re-checking the UNVERIFIABLE backlog over plain HTTP: 43 libraries
+  // still sitting in WordPress-{state} configs serve assabetinteractive.com
+  // markup, which is why every one of them carried the verdict "rendered fully
+  // but shows no dated events". Same class as the 2026-08-24 batch above, and
+  // the same method — slug READ from the library's own site, never guessed.
+  //
+  // 43 CANDIDATES BECAME 18, and the three things that removed the other 25 are
+  // each worth keeping:
+  //
+  //  * 21 were ALREADY CONFIGURED here and were caught by an exact-name match
+  //    against this array. Their WordPress entries were guarded rather than
+  //    relocated, because relocating an already-covered library double-scrapes
+  //    one calendar under two scraper names.
+  //  * 2 MORE were caught only by matching on SLUG after the name check had
+  //    passed them as new — Andrews Branch Library resolves to `newburyportpl`
+  //    (it is a branch of Newburyport Public Library, already here) and Hampton
+  //    Lane Memorial Library resolves to `hampton` (already here as Lane
+  //    Memorial Library). THE SLUG IS THE IDENTITY, NOT THE NAME. That is the
+  //    same catch the 2026-08-24 note records for Hampton Lane, re-confirmed.
+  //  * 2 were dropped for having no calendar: lakevillelibrary and
+  //    somersetpubliclibrary both return HTTP 200 at their instance root, titled
+  //    correctly, but 404 on /calendar/ and expose no internal links at all.
+  //    They run Assabet for their SITE and not for their EVENTS. Somerset was
+  //    already recorded as exactly this on 2026-08-24; Lakeville is the same
+  //    shape and joins it as an open gap. Neither is wired, because an entry
+  //    that cannot return an event is worse than an acknowledged gap.
+  //
+  // Every one of the 18 below was verified twice before wiring: its own website
+  // names the instance, and the instance's /calendar/upcoming-events.rss returns
+  // HTTP 200 with a feed title naming the same institution and the item count in
+  // the trailing comment. City/state/ZIP were then confirmed from the library's
+  // own page — street address, ZIP and phone area code, never name similarity —
+  // and every ZIP and area code agrees with the state of the file it came from.
+  //
+  // FIVE OF THESE ARE OUTSIDE NH AND MA (ME 1, NY 3, NJ 2), so the registry key
+  // `Assabet-NH-MA` now UNDERSTATES this scraper's coverage. The key was
+  // deliberately NOT renamed: this scraper writes ONE scraper_name for all its
+  // sites (see the COLLAPSED note below), so the key IS the scraper_name on
+  // every row it has ever written, and renaming it would churn attribution on
+  // 3,400+ existing rows for a cosmetic gain. `state: 'Multi'` in the registry
+  // already carries the truth; the key is only a label. Revisit this if the
+  // COLLAPSED constraint is ever lifted, since a per-site-slug family pays a far
+  // smaller rename cost.
+  { name: 'Dover Town Library', slug: 'dovertownlibrary', eventsUrl: 'https://dovertownlibrary.assabetinteractive.com/calendar/', city: 'Dover', state: 'MA', zipCode: '01773' },   // 29 upcoming in RSS
+  { name: 'G. A. R. Memorial Library', slug: 'westnewburylibrary', eventsUrl: 'https://westnewburylibrary.assabetinteractive.com/calendar/', city: 'West Newbury', state: 'MA', zipCode: '01985' },   // 33 upcoming in RSS
+  { name: 'Edgartown Free Public Library', slug: 'edgartownlibrary', eventsUrl: 'https://edgartownlibrary.assabetinteractive.com/calendar/', city: 'Edgartown', state: 'MA', zipCode: '02539' },   // 39 upcoming in RSS
+  // Conant Free Public Library is the WordPress name; the library titles itself
+  // Conant Public Library and sits in Sterling MA, which is why the slug reads
+  // sterlinglibrary. Confirmed at 4 Meetinghouse Hill Rd, Sterling MA 01564.
+  { name: 'Conant Free Public Library', slug: 'sterlinglibrary', eventsUrl: 'https://sterlinglibrary.assabetinteractive.com/calendar/', city: 'Sterling', state: 'MA', zipCode: '01564' },   // 45 upcoming in RSS
+  { name: 'Holliston Public Library', slug: 'hollistonlibrary', eventsUrl: 'https://hollistonlibrary.assabetinteractive.com/calendar/', city: 'Holliston', state: 'MA', zipCode: '01746' },   // 49 upcoming in RSS
+  // THE SECOND HALF OF A DIAGNOSIS THAT WAS ONLY HALF RIGHT. On 2026-09-03 this
+  // library's URL was corrected inside WordPress-MA after medfieldlibrary.org was
+  // found to 301 to medfieldpubliclibrary.org. That was right about the host and
+  // silent about the platform: the corrected host serves Assabet, so the entry
+  // still could not work where it sat, and its REDIRECT-SLICE-RELOCATIONS-UNRUN
+  // pending item would have kept reading 0 forever.
+  { name: 'Medfield Memorial Library', slug: 'medfieldpubliclibrary', eventsUrl: 'https://medfieldpubliclibrary.assabetinteractive.com/calendar/', city: 'Medfield', state: 'MA', zipCode: '02052' },   // 100 upcoming in RSS
+  { name: 'Jonathan Bourne Public Library', slug: 'bournelibrary', eventsUrl: 'https://bournelibrary.assabetinteractive.com/calendar/', city: 'Bourne', state: 'MA', zipCode: '02532' },   // 53 upcoming in RSS
+  { name: 'Leicester Public Library', slug: 'leicesterma', eventsUrl: 'https://leicesterma.assabetinteractive.com/calendar/', city: 'Leicester', state: 'MA', zipCode: '01524' },   // 33 upcoming in RSS
+  { name: 'Leominster Public Library', slug: 'leominsterlibrary', eventsUrl: 'https://leominsterlibrary.assabetinteractive.com/calendar/', city: 'Leominster', state: 'MA', zipCode: '01453' },   // 73 upcoming in RSS
+  { name: 'Millbury Public Library', slug: 'millburylibrary', eventsUrl: 'https://millburylibrary.assabetinteractive.com/calendar/', city: 'Millbury', state: 'MA', zipCode: '01527' },   // 51 upcoming in RSS
+  { name: 'Ipswich Public Library', slug: 'ipswichlibrary', eventsUrl: 'https://ipswichlibrary.assabetinteractive.com/calendar/', city: 'Ipswich', state: 'MA', zipCode: '01938' },   // 48 upcoming in RSS
+  { name: 'Topsfield Town Library', slug: 'topsfieldlibrary', eventsUrl: 'https://topsfieldlibrary.assabetinteractive.com/calendar/', city: 'Topsfield', state: 'MA', zipCode: '01983' },   // 36 upcoming in RSS
+  // Maine — first ME library in this scraper.
+  { name: 'Kennebunk Free Library', slug: 'kennebunklibrary', eventsUrl: 'https://kennebunklibrary.assabetinteractive.com/calendar/', city: 'Kennebunk', state: 'ME', zipCode: '04043' },   // 63 upcoming in RSS
+  // New York — all three are Nassau County, Long Island; area code 516 on each.
+  { name: 'Seaford Public Library', slug: 'seafordlibrary', eventsUrl: 'https://seafordlibrary.assabetinteractive.com/calendar/', city: 'Seaford', state: 'NY', zipCode: '11783' },   // 33 upcoming in RSS
+  { name: 'Locust Valley Library', slug: 'locustvalleylibrary', eventsUrl: 'https://locustvalleylibrary.assabetinteractive.com/calendar/', city: 'Locust Valley', state: 'NY', zipCode: '11560' },   // 81 upcoming in RSS
+  // TRIPLE-CONFIGURED BEFORE TODAY, AND NONE OF THE THREE WORKED. WordPress-NY
+  // held it with eventsUrl pointed at baldwinlib.libcal.com, and LibCal-NY2 held
+  // it too with a settled MATCHES verdict reading "LibCal day view renders with
+  // empty search results" — which was true, and true of the wrong calendar. The
+  // real one is Assabet. Baldwin MI exists and this is NOT it: 2385 Grand Avenue,
+  // Baldwin NY 11510, ph (516) 223-6228.
+  { name: 'Baldwin Public Library', slug: 'baldwinpl', eventsUrl: 'https://baldwinpl.assabetinteractive.com/calendar/', city: 'Baldwin', state: 'NY', zipCode: '11510' },   // 114 upcoming in RSS
+  // New Jersey — first NJ libraries in this scraper.
+  { name: 'Boonton Holmes Public Library', slug: 'boontonlibrary', eventsUrl: 'https://boontonlibrary.assabetinteractive.com/calendar/', city: 'Boonton', state: 'NJ', zipCode: '07005' },   // 53 upcoming in RSS
+  { name: 'Ridgewood Public Library', slug: 'ridgewoodlibrary', eventsUrl: 'https://ridgewoodlibrary.assabetinteractive.com/calendar/', city: 'Ridgewood', state: 'NJ', zipCode: '07450' },   // 123 upcoming in RSS
 ];
 
 // The registry key, byte-for-byte. This was 'assabet-NH-MA' (lowercase 'a') until
