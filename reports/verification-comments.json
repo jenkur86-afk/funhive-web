@@ -57,8 +57,8 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-VA|||Henrico County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-va.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-VA|||Jefferson-Madison Regional Library": {
@@ -97,8 +97,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Roddenbery Memorial Library System (Cairo, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Only a closure notice is server-rendered; a 'Mini Calendar' is referenced but no event data appears, likely JS-loaded.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ga.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-GA|||Clarkesville-Habersham Co. Lib. (Clarkesville, GA)": {
@@ -153,8 +153,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Fayette County Public Library (Fayetteville, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Server returned HTTP 526 (Cloudflare SSL origin error).",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ga.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-GA|||Monroe County Library (Forsyth, GA)": {
@@ -184,8 +184,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Harris County Public Library (Hamilton, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Calendar is hosted externally (events.hamiltonlibrary.org) and not embedded; homepage itself has no dated events.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ga.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-GA|||Oglethorpe County Library (Lexington, GA)": {
@@ -215,8 +215,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Maysville Public Library (Maysville, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "TLS SSL error (TLSV1_ALERT_UNRECOGNIZED_NAME) - could not load the page.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ga.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-GA|||Lake Sinclair Library (Milledgeville, GA)": {
@@ -238,8 +238,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Pembroke Public Library (Pembroke, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.pembrokelibrary.org/upcoming-events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 3 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ga.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-GA|||Houston County Public Libraries System (Perry, GA)": {
@@ -248,8 +248,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Webster County Library (Preston, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "\"Events Calendar\" heading present but no events listed; content likely loads dynamically via JS.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ga.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-GA|||Brooks County Public Library System (Quitman, GA)": {
@@ -299,8 +299,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Tyrone Public Library (Tyrone, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Page titled \"Events Calendar\" but no events rendered in static content; likely JS-dependent.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ga.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-GA|||Warren County Public Library (Warrenton, GA)": {
@@ -344,13 +344,13 @@
   "population": "zero"
  },
  "WordPress-NC|||Canton Branch Library (Canton, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Page header claims \"42 events found\" yet the rendered calendar grid shows 0 events for every day -- contradictory result suggesting a JS-rendering issue, worth a closer manual look.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-nc.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-NC|||Moore County Library (Carthage, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Fetch returned no usable content after repeated attempts, could not determine event status.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-nc.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-NC|||Claremont Branch Library (Claremont, NC)": {
@@ -422,8 +422,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Hampstead Branch Library (Hampstead, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Page has an \"Upcoming Events\" heading but the section is empty; other event mentions exist but no list is rendered, likely JS-dependent.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-nc.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-NC|||Harmony Branch Library (Harmony, NC)": {
@@ -440,8 +440,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Henderson County Public Library (Hendersonville, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Page references August 2026 programming banners and directs to a monthly calendar/social media elsewhere, but no event list is rendered on the page itself.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-nc.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-NC|||Hickory Public Library (Hickory, NC)": {
@@ -478,8 +478,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Liberty Public Library (Liberty, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Page shows a single unrelated event ('Conservative Mommy Meetup' at a coffee shop in Spring, TX) - domain appears parked or repurposed, not a real NC library calendar.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-nc.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-NC|||Littleton Public Library (Wc Jones Memorial) (Littleton, NC)": {
@@ -493,8 +493,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Florence Gallier Library (Magnolia, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Page says events are 'shown below' but no events appear in static content - likely a JS-rendered calendar widget.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-nc.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-NC|||Madison County Public Library (Marshall, NC)": {
@@ -503,13 +503,13 @@
   "population": "zero"
  },
  "WordPress-NC|||Matthews Branch Library (Matthews, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=bibliocommons detected — belongs in a BiblioCommons-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-nc.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-NC|||Maysville Public Library (Maysville, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "SSL handshake error (TLSV1_ALERT_UNRECOGNIZED_NAME), site unreachable.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-nc.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-NC|||Union County Public Library (Monroe, NC)": {
@@ -528,13 +528,13 @@
   "population": "zero"
  },
  "WordPress-NC|||Berea Branch Library (Oxford, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Domain now shows a 'This domain is for sale' parking page - stale/expired URL, cannot verify real library site.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-nc.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-NC|||Pembroke Public Library (Pembroke, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "RE-CHECKED 2026-08-10 IN A REAL BROWSER, downgraded from MISMATCH: rendering the configured events page (https://www.pembrokelibrary.org/upcoming-events) with JavaScript executed surfaced no event cards, no JSON-LD Event data and 3 date-like mentions. The earlier MISMATCH was recorded from a raw-HTML fetch, which cannot see client-rendered calendars; a full render can, and it found nothing. That means the claim \"the live site shows events the scraper is missing\" is no longer supported - but it does NOT prove the library has no events, since the configured URL may still be the wrong institution. Recorded as UNVERIFIABLE (unknown) rather than MATCHES (fine), per the projects rule that an unverifiable site is unknown, not good.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-nc.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-NC|||Pettigrew Regional Library (Plymouth, NC)": {
@@ -574,8 +574,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Montgomery County Library (Troy, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Page returned only header/footer content referencing an unrelated 'Tri-Township Public Library', no event data retrievable - likely wrong or misconfigured domain.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-nc.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-NC|||Warren County Memorial Library (Warrenton, NC)": {
@@ -599,8 +599,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Stamford Public Library (Stamford, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Page says 'SEE OUR MONTHLY CALENDAR' with an empty 'Past Events' placeholder - actual calendar is elsewhere, not rendered in static content.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ct.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-CT|||Waterbury Public Library (Waterbury, CT)": {
@@ -709,8 +709,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Hall Memorial Library (Ellington, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Page shows an 'Events' heading with no event titles/dates beneath it, suggesting JS-dependent content not rendered for WebFetch.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ct.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-CT|||Essex Library Association (Essex, CT)": {
@@ -757,8 +757,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Levi E.Coe Library (Middlefield, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Homepage (root, no /events page found) has no dated events, only recurring weekly activity times (knitting circle, book discussion); can't confirm an actual events calendar exists elsewhere.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ct.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-CT|||Edith Wheeler Memorial Library (Monroe, CT)": {
@@ -790,8 +790,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Oxford Public Library (Oxford, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Homepage shows 'What's New in the Library' book listings but no events section or calendar at all; likely wrong page for events content.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ct.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-CT|||Plainville Public Library (Plainville, CT)": {
@@ -815,8 +815,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Prospect Public Library (Prospect, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Calendar page renders only nav/contact info and two screenshot images, no calendar grid or event data of any kind -- page appears broken or not the real calendar view.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ct.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-CT|||Salem Free Public Library (Salem, CT)": {
@@ -882,8 +882,8 @@
   "population": "zero"
  },
  "WordPress-CT|||Wethersfield Public Library (Wethersfield, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ct.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-CT|||Wilson Branch Library (Windsor, CT)": {
@@ -1218,8 +1218,8 @@
   "population": "zero"
  },
  "WordPress-AL|||Homewood Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 383 chars of text — likely JS-gated or a shell",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-al.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-AL|||Jefferson County Library Cooperative": {
@@ -1498,8 +1498,8 @@
   "population": "zero"
  },
  "WordPress-AL|||Woodville Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "HTTP 403 Forbidden on woodvillelibrary.org/events",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-al.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-AL|||Hightower Memorial Library": {
@@ -1722,8 +1722,8 @@
   "population": "zero"
  },
  "WordPress-VT|||Wells Village (Wells, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "'What's Coming Up' section on the homepage is empty/placeholder; links out to a separate Online Calendar that was not fetched.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-vt.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-VT|||Butterfield (Westminster, VT)": {
@@ -2057,9 +2057,9 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-NC|||Robbins Area Branch": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "robbinslibrary.org/events returned HTTP 403 Forbidden.",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-nc.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
+  "population": "zero"
  },
  "Assabet-NH-MA|||Malden Public Library": {
   "verdict": "MISMATCH",
@@ -2334,8 +2334,8 @@
   "verifiedOn": "2026-08-06"
  },
  "WordPress-MD|||St. Mary's County Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "stmalib.org/events loads but is a navigation hub only (links to separate Kids/Teen/Adult/Book Discussion event pages) with no dated events rendered in the static HTML fetched.",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-md.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-MD|||Dorchester County Public Library": {
@@ -3508,8 +3508,8 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-GA|||Maysville Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "TLS alert unrecognized_name on maysvillelibrary.org; handshake failed",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ga.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-GA|||Middle Georgia Regional Library System": {
@@ -4197,8 +4197,8 @@
   "population": "zero"
  },
  "WordPress-VT|||Roger Clark Memorial": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_BLOCKED_BY_CLIENT at http://www.pittsfieldlibrary.com",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-vt.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-VT|||Roxbury Free": {
@@ -4465,8 +4465,8 @@
   "population": "zero"
  },
  "WordPress-MA|||Ashby Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ma.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
   "population": "zero"
  },
  "WordPress-NH|||Bethlehem Public Library": {
@@ -11313,9 +11313,9 @@
   "population": "allages"
  },
  "WordPress-KY|||Louis T. Graves Memorial Public Library @ 18 Maine St, Kennebunkport, ME 04046, USA": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "could not read back All-Ages rows for this venue (none returned)",
-  "population": "allages"
+  "verdict": "MATCHES",
+  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ky.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
+  "population": "zero"
  },
  "WordPress-MD|||Cecil County Public Library": {
   "verdict": "MATCHES",
