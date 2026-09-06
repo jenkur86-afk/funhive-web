@@ -76,19 +76,31 @@ const FLAG_MIN_TOTAL = 20;
 async function main() {
   console.log(`Reading events scraped since ${SINCE} ...`);
 
+  // KEYSET pagination, not .range(). OFFSET-style paging made Postgres re-walk
+  // and re-sort every skipped row on each page, so on a big rotation the later
+  // pages breached the statement timeout and the whole audit died with
+  // "canceling statement due to statement timeout" — observed 2026-09-06, when
+  // the day's run had ~25k new rows. Seeking on the last id read is O(page)
+  // instead of O(offset), and it also satisfies CLAUDE.md's paginator rule more
+  // strongly than .range() did: ordering by a unique key means a row can never
+  // land in two pages or be skipped between them.
   const rows = [];
   const PAGE = 1000;
-  for (let from = 0; ; from += PAGE) {
-    const { data, error } = await supabase
+  let lastId = null;
+  for (;;) {
+    let q = supabase
       .from('events')
       .select('id, scraper_name, venue, age_range, source_url')
       .gte('scraped_at', SINCE)
-      .order('id', { ascending: true })   // REQUIRED before .range()
-      .range(from, from + PAGE - 1);
+      .order('id', { ascending: true })
+      .limit(PAGE);
+    if (lastId !== null) q = q.gt('id', lastId);
 
+    const { data, error } = await q;
     if (error) { console.error('Query failed:', error.message); process.exit(1); }
     if (!data || data.length === 0) break;
     rows.push(...data);
+    lastId = data[data.length - 1].id;
     process.stdout.write(`\r  ${rows.length} rows`);
     if (data.length < PAGE) break;
   }

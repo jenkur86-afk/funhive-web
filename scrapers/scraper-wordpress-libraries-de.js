@@ -133,8 +133,15 @@ async function scrapeGenericEvents() {
             events.push({ title: title.textContent.trim(), date: resolveEventDate(card), ageRange: ageEl ? ageEl.textContent.trim() : '', description: descEl ? descEl.textContent.trim() : '', location: libName, venueName: libName });
           }
         });
-        const seen = new Set();
-        return events.filter(e => { if (seen.has(e.title.toLowerCase())) return false; seen.add(e.title.toLowerCase()); return true; });
+        // Dedup by title, preferring the copy that actually resolved a date —
+        // see the 2026-09-06 Oldham County PL measurement in the KY scraper.
+        const byKey = new Map();
+        for (const e of events) {
+          const key = e.title.toLowerCase();
+          const prev = byKey.get(key);
+          if (!prev || (!prev.date && e.date)) byKey.set(key, e);
+        }
+        return Array.from(byKey.values());
       }, library.name, RESOLVER_SRC);
       libraryEvents.forEach(event => events.push({ ...event, metadata: { sourceName: library.name, sourceUrl: library.url, scrapedAt: new Date().toISOString(), scraperName: SCRAPER_NAME, category: 'library', state: 'DE', city: library.city, zipCode: library.zipCode }}));
       await page.close();

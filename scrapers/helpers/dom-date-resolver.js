@@ -87,6 +87,30 @@ function resolveEventDate(card) {
     );
   }
 
+  // A day heading is text that is essentially ONLY a date ("Saturday,
+  // September 14, 2026"). An event card is a title that happens to contain a
+  // date ("Cozy Corner 9/14/26@LaGrange10 - 11am"). Step 4 borrows text from
+  // preceding siblings, so it must tell them apart: on 2026-09-06 Oldham County
+  // Public Library sent 11 distinct events into the InvalidDate bucket because
+  // each one inherited the PREVIOUS card's entire text as its date — that text
+  // was 37 chars, under the old length cap, and contained a real date.
+  // Method: strip every date/time/weekday token and require the residue to be
+  // near-empty. Headings survive; titles leave their words behind.
+  function isDateHeading(s) {
+    if (!hasRealDate(s)) return false;
+    var r = String(s).toLowerCase();
+    r = r.replace(/\d{4}-\d{2}-\d{2}/g, ' ');                       // ISO
+    r = r.replace(/\d{1,2}\/\d{1,2}\/\d{2,4}/g, ' ');               // 9/14/26
+    r = r.replace(new RegExp(MONTH_RE + '[a-z]*\\.?', 'g'), ' ');   // month word
+    r = r.replace(/\b(?:sun|mon|tues?|wed(?:nes)?|thur?s?|fri|sat(?:ur)?)(?:day)?\b/g, ' ');
+    r = r.replace(/\d{1,2}\s*(?::\s*\d{2})?\s*(?:am|pm)/g, ' ');    // clock times
+    r = r.replace(/\ball\s*day\b/g, ' ');
+    r = r.replace(/\b(?:events?|for|on|the|at|starting|beginning)\b/g, ' ');
+    r = r.replace(/\d{1,2}(?:st|nd|rd|th)?/g, ' ');                 // day + year digits
+    r = r.replace(/[^a-z0-9]/g, '');                                // punctuation, spaces
+    return r.length <= 12;
+  }
+
   // Month-grid calendars (CivicPlus and friends) put the month+year once in a
   // <caption> or heading and the day number in the grid cell, so no single
   // element carries a full date. Recombine them: walk up to the containing <td>,
@@ -192,7 +216,10 @@ function resolveEventDate(card) {
     var guard = 0;
     while (sib && guard < 5) {
       var st = (sib.textContent || '').trim();
-      if (st.length <= 60 && hasRealDate(st)) return st;
+      // Only a DAY HEADING may be borrowed here, never a neighbouring event
+      // card. See isDateHeading — a bare `hasRealDate` length check let one
+      // card's whole text become the next card's date.
+      if (st.length <= 60 && isDateHeading(st)) return st;
       sib = sib.previousElementSibling;
       guard++;
     }

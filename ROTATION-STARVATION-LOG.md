@@ -73,6 +73,47 @@ self-heals" overstated it.
 
 ---
 
+## Prediction check — 2026-09-06 — **held on dropping, FAILED on duration, and the failure relocates the constraint**
+
+Day 6 → Group 3, as `getDayGroup` predicted. Measured from `scraper-run-2026-09-06.log`:
+
+| | value |
+|---|---|
+| Trigger fires | 07:00:01.954Z |
+| Lock held by | `macaroni-daily-runner` (pid 20184) since 2026-09-05T19:00:01.973Z |
+| Lock acquired | 10:32:04.232Z |
+| Wait | **3h32m** |
+| Rotation finishes | 18:12:48Z |
+| Duration (lock → finish) | **7h41m** |
+| Headroom before the 19:00Z MacaroniKid trigger | **47 min** |
+
+Against the four falsifiable claims in `## Current state — 2026-09-05`:
+
+- **"No `NONE` day" — HELD.** Preflight reads `09-06=G3 09-05=G2 09-04=G1 09-03=G3 09-02=NONE 09-01=NONE 08-31=G1`. Both `NONE` days predate intervention #6 and are the same two already accounted for; they will age out of the 7-day window on 09-08 and 09-09. Four consecutive clean days now, covering all three groups plus a repeat of Group 3.
+- **"Finishes between 17:30Z and 19:00Z" — HELD.** 18:12:48Z.
+- **"Waits ~2.5–3.5h on the lock" — MARGINALLY FAILED.** 3h32m, just past the ceiling.
+- **"Duration stays in the 8.0–9.0h band, not the 7.6h the rebalance targeted" — FAILED, in the favourable direction.** 7h41m is *below* the predicted band and essentially on the rebalance's 7.6h target. The 09-04/09-05 figures (8h17m, 8h31m) were not a settled new normal, and predicting a band from two points was over-fitting. **Revised duration model: regular-group rotations run 7.5–8.5h**, and the rebalance target is being met rather than missed. This claim is now weaker, not stronger — three points is still thin.
+
+**The important consequence: headroom is shrinking, but NOT for the reason the last entry assumed.** It has gone 61 → 56 → **47 min** across 09-04/09-05/09-06 while rotation duration went 8h17m → 8h31m → **7h41m**, i.e. *down*. Duration is therefore not what is eating the margin. The lock-release time is:
+
+| Rotation date | MacaroniKid released the lock at |
+|---|---|
+| 2026-09-03 | 10:16:04Z |
+| 2026-09-04 | 09:42:03Z |
+| 2026-09-05 | 09:33:03Z |
+| 2026-09-06 | **10:32:04Z** |
+
+MacaroniKid starts at a fixed 19:00Z and released 15h32m later today, its longest of the four. **The binding constraint is MacaroniKid group duration, not regular-rotation duration** — the previous entry named the wrong variable, which is exactly why it is worth checking a prediction rather than assuming it. Note the groups differ in size (the 2026-09-02 rebalance targeted 14.8h per MacaroniKid group), so some of this spread is which group ran, not drift; four points cannot separate those yet.
+
+**Standing prediction — 2026-09-07 through 2026-09-09.** `getDayGroup`: day 7 → Group 1, day 8 → Group 2, day 9 → Group 3. Falsifiably:
+
+- **No `NONE` day** on any of the three. If one appears, intervention #6 has not held and that must be said in its ledger row.
+- **Lock wait between 2h30m and 4h00m**, rotation finishing **between 17:15Z and 19:15Z**.
+- **Regular-rotation duration in 7.5–8.5h**, per the revised model above. A figure outside that band on two of the three days means the model is still wrong and should be widened again, not quietly re-fitted.
+- **Headroom stays positive but under 90 min.** The specific thing to watch: if MacaroniKid ever releases the lock *after* ~11:20Z, the rotation cannot finish before the next 19:00Z MacaroniKid trigger, and the two tasks begin colliding every day rather than merely queueing. Today's 10:32Z release leaves roughly **48 minutes of margin against that threshold** — this is the number to track, in preference to the finish-time headroom the previous entry tracked.
+- **No intervention was made this run**, so nothing here is attributable to a change; these are observations of the existing #5+#6 configuration. Per the ledger rule, no ledger row is added for a run that changed nothing about the rotation.
+
+
 ## Current state — 2026-09-05 — **first full clean cycle; the residual risk is duration, not dropping**
 
 - Rotations in the last 7 days: `09-05=G2 09-04=G1 09-03=G3 09-02=NONE 09-01=NONE 08-31=G1 08-30=G3`

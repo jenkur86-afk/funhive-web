@@ -385,13 +385,19 @@ async function scrapeGenericEvents() {
         });
 
         // Deduplicate by title
-        const seen = new Set();
-        return events.filter(evt => {
+        // Dedup by title, preferring the copy that actually resolved a date.
+        // These themes render the same programme several times (list row, grid
+        // cell, teaser) and only some copies sit near the element carrying the
+        // date, so keeping whichever appeared FIRST in DOM order threw away the
+        // dated copy. Measured live on 2026-09-06 at Oldham County PL: 4 of 79
+        // titles kept a date under keep-first, 18 under prefer-dated.
+        const byKey = new Map();
+        for (const evt of events) {
           const key = evt.title.toLowerCase();
-          if (seen.has(key)) return false;
-          seen.add(key);
-          return true;
-        });
+          const prev = byKey.get(key);
+          if (!prev || (!prev.date && evt.date)) byKey.set(key, evt);
+        }
+        return Array.from(byKey.values());
       }, library.name);
 
       console.log(`   ✅ Found ${libraryEvents.length} events`);

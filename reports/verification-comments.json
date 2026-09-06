@@ -9127,7 +9127,7 @@
  },
  "Communico-NJ|||Camden County Library System": {
   "verdict": "UNVERIFIABLE",
-  "comment": "reachable over plain HTTPS (HTTP 200, 4469 chars) with no platform marker and no empty-state wording. Silence is not evidence of an empty calendar - needs the stealth browser",
+  "comment": "re-checked 2026-09-06, still unresolved: renders fully over plain HTTPS but shows no dated events, no event containers and no explicit empty-state wording, so an empty calendar cannot be distinguished from one needing interaction.",
   "population": "zero"
  },
  "WordPress-FL|||Bartow Public Library": {
@@ -11472,7 +11472,7 @@
  },
  "WordPress-Abbe-Regional|||ABBE Regional Library System": {
   "verdict": "UNVERIFIABLE",
-  "comment": "LIBRARY-SIDE OUTAGE, not a dead endpoint and not an extraction bug: abbe-lib.org returns HTTP 500 with a WordPress Database Error page on every path tried (/, /events/, apex without www). The URL is correct and the scraper is healthy - it returned 19 events on 2026-08-28 and 2026-08-31, and its 2026-08-25 navigation retry fired correctly through all three attempts today. Do NOT re-point this URL; re-check once the library restores its database.",
+  "comment": "bot-block/WAF, and the failure mode CHANGED since the 2026-09-03 HTTP 500 WordPress Database Error. Probed 11 paths across www.abbe-lib.org and abbe-lib.org: every one answered 403 or 404 and the status is INCONSISTENT between requests for the same path (/events/ gave 404 to the verifier then 403 minutes later; the apex both timed out and 403'd). No path returned 200. That rules out a moved page, so no URL change was made. Deliberately recorded UNVERIFIABLE rather than the verifier's MISMATCH/dead-endpoint, which was inferred from one 404. Fourth consecutive zero and a real coverage gap.",
   "population": "zero"
  },
  "WordPress-NJ|||Spring Lake Public Library": {
@@ -11820,5 +11820,10 @@
   "verdict": "MATCHES",
   "comment": "checked 22 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
+ },
+ "LibCal-FL2|||Collier County Public Library": {
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"No events are scheduled\") — genuinely empty calendar, not an extraction fault. First verdict for this site; LibCal-FL2 was registered 2026-09-05.",
+  "population": "zero"
  }
 }

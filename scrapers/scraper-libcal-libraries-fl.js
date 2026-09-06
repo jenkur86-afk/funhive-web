@@ -62,6 +62,17 @@ const LIBRARIES = [
 
 const SCRAPER_NAME = 'LibCal-FL2';
 
+/**
+ * Per-site scraper_name: "<registryKey>-<siteSlug>", slug derived from the
+ * site's own hostname subdomain (never a display name) and restricted to
+ * lowercase [a-z0-9-] per CLAUDE.md -> Scraper Naming.
+ */
+function siteScraperName(library) {
+  const host = String(library.url || '').replace(/^https?:\/\//, '').split('/')[0];
+  const slug = host.split('.')[0].toLowerCase().replace(/[^a-z0-9-]/g, '');
+  return slug ? `${SCRAPER_NAME}-${slug}` : SCRAPER_NAME;
+}
+
 async function scrapeLibCalEvents() {
   const browser = await launchBrowser();
   const events = [];
@@ -184,9 +195,17 @@ async function scrapeLibCalEvents() {
           ...event,
           metadata: {
             sourceName: library.name,
-            sourceUrl: library.url,
+            // The site's own listing page, not the bare host and not the event
+            // URL — this is what scripts/verify-coverage.js establishes identity
+            // from.
+            sourceUrl: library.eventsUrl || library.url,
             scrapedAt: new Date().toISOString(),
-            scraperName: SCRAPER_NAME,
+            // One distinct scraper_name PER SITE, slug taken from the site's own
+            // libcal subdomain. Emitting the bare registry key for all five
+            // collapsed them into a single row in AGE-RANGE-AUDIT.md, which the
+            // "No aggregation, ever" rule forbids — check-scraper-names.js
+            // flagged this as COLLAPSED on 2026-09-06.
+            scraperName: siteScraperName(library),
             category: 'library',
             platform: 'libcal',
             state: 'FL'
@@ -211,8 +230,12 @@ async function scrapeLibCalEvents() {
   return events;
 }
 
+// Returns the helper's stats object. Dropping it here is not cosmetic: the
+// cloud-function wrapper reads `result?.saved` / `result?.duplicates`, so an
+// undefined return made a healthy run report "Found 126, New 0, Duplicates 0"
+// on 2026-09-06 while 84 rows were actually saved.
 async function saveToDatabase(events) {
-  await saveEventsWithGeocoding(events, LIBRARIES, {
+  return await saveEventsWithGeocoding(events, LIBRARIES, {
     scraperName: SCRAPER_NAME,
     state: 'FL',
     category: 'library',

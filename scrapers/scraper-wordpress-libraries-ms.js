@@ -267,13 +267,16 @@ async function scrapeGenericEvents() {
           });
         });
 
-        const seen = new Set();
-        return events.filter(evt => {
+        // Dedup by title, preferring the copy that actually resolved a date —
+        // see the 2026-09-06 Oldham County PL measurement in the KY scraper.
+        const byKey = new Map();
+        for (const evt of events) {
+          if (!evt.date && !evt.description) continue;
           const key = evt.title.toLowerCase();
-          if (seen.has(key)) return false;
-          seen.add(key);
-          return evt.date || evt.description;
-        });
+          const prev = byKey.get(key);
+          if (!prev || (!prev.date && evt.date)) byKey.set(key, evt);
+        }
+        return Array.from(byKey.values());
       }, library.name);
 
       console.log(`   ✅ Found ${libraryEvents.length} events`);
