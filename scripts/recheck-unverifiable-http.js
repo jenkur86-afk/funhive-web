@@ -97,7 +97,13 @@ const PLATFORMS = [
   ['bibliocommons', /[a-z0-9-]+\.bibliocommons\.com/i, 'BiblioCommons-*'],
   ['communico', /communico|\.libnet\.info\/events/i, 'Communico-*'],
   ['google-calendar', /calendar\.google\.com\/calendar\/(embed|htmlembed)/i, 'GoogleCalendar-*'],
-  ['assabet', /assabetinteractive\.com|\/calendar\/\d{4}-[a-z]+/i, 'Assabet-NH-MA'],
+  // HOST ONLY. This rule originally also accepted the path shape `/calendar/2026-september`,
+  // which is how Assabet builds its month URLs — and it produced 44 hits on the first run,
+  // including BROOKLYN PUBLIC LIBRARY, which runs BiblioCommons and has its own scraper.
+  // Any CMS can mint that path, so it identified a URL convention rather than a vendor.
+  // Caught by reading the output instead of trusting the count, which is the same lesson
+  // reports/platform-mismatches.md records for the two Georgia Google Calendar rows.
+  ['assabet', /assabetinteractive\.com/i, 'Assabet-NH-MA'],
   ['the-events-calendar', /tribe_events|wp-json\/tribe\/events/i, 'WordPress TEC REST path'],
   ['whofi', /[a-z0-9-]+\.whofi\.com/i, 'no WhoFi extractor exists yet'],
 ];
