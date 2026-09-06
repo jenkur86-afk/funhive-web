@@ -149,12 +149,12 @@
  },
  "WordPress-GA|||Gibbs Memorial Library (Evans, GA)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.evanslibrary.org/events",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-GA|||Fayette County Public Library (Fayetteville, GA)": {
-  "verdict": "MATCHES",
-  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ga.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
+  "verdict": "UNVERIFIABLE",
+  "comment": "no URL could be resolved from the scraper config for this site",
   "population": "zero"
  },
  "WordPress-GA|||Monroe County Library (Forsyth, GA)": {
@@ -180,7 +180,7 @@
  },
  "WordPress-GA|||Greene County Library (Greensboro, GA)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org/events",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-GA|||Harris County Public Library (Hamilton, GA)": {
@@ -190,7 +190,7 @@
  },
  "WordPress-GA|||Oglethorpe County Library (Lexington, GA)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.lexingtonlibrary.org/events",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-GA|||Nelle Brown Memorial Public Library (Lyons, GA)": {
@@ -215,8 +215,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Maysville Public Library (Maysville, GA)": {
-  "verdict": "MATCHES",
-  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ga.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
+  "verdict": "UNVERIFIABLE",
+  "comment": "no URL could be resolved from the scraper config for this site",
   "population": "zero"
  },
  "WordPress-GA|||Lake Sinclair Library (Milledgeville, GA)": {
@@ -262,7 +262,7 @@
  },
  "WordPress-GA|||Rockmart Library (Rockmart, GA)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.rockmartlibrary.org/events",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-GA|||Rossville Public Library (Rossville, GA)": {
@@ -330,7 +330,7 @@
  },
  "WordPress-NC|||Watauga County Public Library (Boone, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.boonelibrary.org/events",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NC|||Boonville Community Public Library (Boonville, NC)": {
@@ -340,7 +340,7 @@
  },
  "WordPress-NC|||Bunn Branch Library (Bunn, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.bunnlibrary.org/events",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NC|||Canton Branch Library (Canton, NC)": {
@@ -356,7 +356,10 @@
  "WordPress-NC|||Claremont Branch Library (Claremont, NC)": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch RESOLVED 2026-09-06 - events are in a cross-origin Google Calendar iframe that no DOM extractor can read. The Catawba system publishes ONE calendar and the ICS LOCATION names the branch, so Claremont arrives as its own venue. Relocated to GoogleCalendar-NC, proven live: 167 rows across 12 branch venues. WordPress-NC entry guarded",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are in a cross-origin Google Calendar iframe, unreadable by a DOM extractor. The whole Catawba system publishes ONE calendar and the ICS LOCATION names the branch, so Claremont arrives as its own venue under GoogleCalendar-NC. Reloc",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NC|||Hocutt Ellington Memorial Library (Clayton, NC)": {
   "verdict": "MATCHES",
@@ -365,7 +368,7 @@
  },
  "WordPress-NC|||J.C. Holliday Library (Clinton, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org/events",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-NC|||Tyrrell County Library (Columbia, NC)": {
@@ -380,7 +383,7 @@
  },
  "WordPress-NC|||Dobson Community Library (Dobson, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.dobsonlibrary.org/events",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NC|||Erwin Public Library (Erwin, NC)": {
@@ -390,7 +393,7 @@
  },
  "WordPress-NC|||Fairview Branch Library (Fairview, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "TLS certificate mismatch on www subdomain; non-www variant returned 404 -- could not verify event content.",
+  "comment": "no URL could be resolved from the scraper config for this site",
   "population": "zero"
  },
  "WordPress-NC|||Farmville Public Library (Farmville, NC)": {
@@ -400,7 +403,7 @@
  },
  "WordPress-NC|||Bordeaux Branch Library (Fayetteville, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "Server returned HTTP 526 (invalid SSL/origin error), could not retrieve page content.",
+  "comment": "no URL could be resolved from the scraper config for this site",
   "population": "zero"
  },
  "WordPress-NC|||Macon County Public Library (Franklin, NC)": {
@@ -418,7 +421,7 @@
  },
  "WordPress-NC|||Blanche Benjamin Branch Library (Greensboro, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org/events",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NC|||Hampstead Branch Library (Hampstead, NC)": {
@@ -451,7 +454,7 @@
  },
  "WordPress-NC|||Union West Branch Library (Indian Trail, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.indiantraillibrary.org/events",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NC|||King Public Library (King, NC)": {
@@ -474,7 +477,7 @@
  },
  "WordPress-NC|||Davidson County Public Library System (Lexington, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.lexingtonlibrary.org/events",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-NC|||Liberty Public Library (Liberty, NC)": {
@@ -484,7 +487,7 @@
  },
  "WordPress-NC|||Littleton Public Library (Wc Jones Memorial) (Littleton, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.littletonlibrary.org/events",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-NC|||Lowell Branch Library (Lowell, NC)": {
@@ -508,8 +511,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Maysville Public Library (Maysville, NC)": {
-  "verdict": "MATCHES",
-  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-nc.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
+  "verdict": "UNVERIFIABLE",
+  "comment": "no URL could be resolved from the scraper config for this site",
   "population": "zero"
  },
  "WordPress-NC|||Union County Public Library (Monroe, NC)": {
@@ -525,7 +528,10 @@
  "WordPress-NC|||Catawba County Library (Newton, NC)": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch RESOLVED 2026-09-06 - cross-origin Google Calendar iframe. Relocated to GoogleCalendar-NC and proven live at 167 rows across 12 branch venues, age brackets well spread (60 All Ages, 52 Preschool, 27 Babies, 16 Teens, 12 Kids). WordPress-NC entry guarded",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are in a cross-origin Google Calendar iframe, unreadable by a DOM extractor. Relocated to GoogleCalendar-NC 2026-09-06, proven live at 167 rows across 12 branch venues",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NC|||Berea Branch Library (Oxford, NC)": {
   "verdict": "MATCHES",
@@ -590,7 +596,7 @@
  },
  "WordPress-NC|||Lawrence Memorial Library (Windsor, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.windsorlibrary.org/events",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-CT|||Hartford Public Library (Hartford, CT)": {
@@ -655,7 +661,7 @@
  },
  "WordPress-CT|||Andover Public Library (Andover, CT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.andoverlibrary.org/events",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-CT|||Ansonia Public Library (Ansonia, CT)": {
@@ -700,7 +706,7 @@
  },
  "WordPress-CT|||Henry Carter Hull Library (Clinton, CT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org/events",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-CT|||Easton Public Library (Easton, CT)": {
@@ -725,7 +731,7 @@
  },
  "WordPress-CT|||Hartland Public Library (Hartland, CT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.hartlandlibrary.org/events",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-CT|||Douglas Library Of Hebron (Hebron, CT)": {
@@ -888,7 +894,7 @@
  },
  "WordPress-CT|||Wilson Branch Library (Windsor, CT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.windsorlibrary.org/events",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-CT|||Windsor Locks Public Library (Windsor Locks, CT)": {
@@ -931,7 +937,7 @@
  },
  "WordPress-TN|||Collierville Burch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.colliervillelibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-TN|||Bartlett Library": {
@@ -984,7 +990,7 @@
  },
  "WordPress-TN|||Rogersville Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.rogersvillelibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ECONNRESET. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-TN|||Tipton County Public Library": {
@@ -1041,7 +1047,7 @@
  },
  "WordPress-TN|||Clinton Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-TN|||Cordova Branch Library": {
@@ -1080,7 +1086,7 @@
  },
  "WordPress-TN|||Fairview Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "www subdomain has an SSL hostname/cert mismatch against the apex domain, could not load the page.",
+  "comment": "no URL could be resolved from the scraper config for this site",
   "population": "zero"
  },
  "WordPress-TN|||Gleason Memorial Library": {
@@ -1137,7 +1143,7 @@
  },
  "WordPress-TN|||Mt. Juliet-Harvey Freeman Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.mtjulietlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-TN|||Palmer Public Library": {
@@ -1257,7 +1263,7 @@
  },
  "WordPress-AL|||Ashland City Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "TLS certificate mismatch error (cert is for Pantheon hosting domains, not ashlandlibrary.org) -- fetch failed outright.",
+  "comment": "no URL could be resolved from the scraper config for this site",
   "population": "zero"
  },
  "WordPress-AL|||Bridgeport - Lena Cagle Public Library": {
@@ -1330,7 +1336,7 @@
  },
  "WordPress-AL|||Hale County Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-AL|||Guntersville Public Library": {
@@ -1394,7 +1400,7 @@
  },
  "WordPress-AL|||Burchell Campbell Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.lexingtonlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-AL|||Lincoln Public Library": {
@@ -1443,12 +1449,12 @@
  },
  "WordPress-AL|||Piedmont Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.piedmontlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-AL|||Clay Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.pinsonlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-AL|||Satsuma Public Library": {
@@ -1458,7 +1464,7 @@
  },
  "WordPress-AL|||Evergreen Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation timeout after 35000ms",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-AL|||Sheffield Public Library": {
@@ -1489,7 +1495,7 @@
  },
  "WordPress-AL|||Warrior Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.warriorlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-AL|||Northwest Regional Library": {
@@ -1524,18 +1530,24 @@
  },
  "WordPress-VT|||Haskell Free Library (Derby Line, VT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation timeout after 35000ms",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-VT|||Cobleigh Public Library (Lyndonville, VT)": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch RESOLVED 2026-09-06 - cross-origin Google Calendar iframe. Identity confirmed live: Cobleigh Public Library, 14 Depot St, Lyndonville VT 05851, ph 802-626-5475. Relocated to GoogleCalendar-VT-cobleighlibrary, proven live at 86 rows. The configured URL was one hop short - the embed is on the site root, not /events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are in a cross-origin Google Calendar iframe, unreadable by a DOM extractor. Relocated to GoogleCalendar-VT 2026-09-06, proven live at 86 rows",
+  "statusAt": "2026-09-06"
  },
  "WordPress-VT|||Hartland Public Library (Hartland, VT)": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch RESOLVED 2026-09-06 - cross-origin Google Calendar iframe. Identity confirmed live: Hartland Public Library, 153 U.S. Route 5, Hartland VT 05048, ph 802-436-2473. Relocated to GoogleCalendar-VT-hartlandlibraryvt, proven live at 126 rows",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are in a cross-origin Google Calendar iframe, unreadable by a DOM extractor. Relocated to GoogleCalendar-VT 2026-09-06, proven live at 126 rows",
+  "statusAt": "2026-09-06"
  },
  "WordPress-VT|||Martha Canfield Memorial (Arlington, VT)": {
   "verdict": "UNVERIFIABLE",
@@ -1544,7 +1556,7 @@
  },
  "WordPress-VT|||Barton Public (Barton, VT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.bartonlibrary.org/events",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-VT|||Benson Public (Benson, VT)": {
@@ -1612,7 +1624,7 @@
  },
  "WordPress-VT|||Greensboro Free (Greensboro, VT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org/events",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-VT|||Hartford (Hartford, VT)": {
@@ -1675,7 +1687,7 @@
  },
  "WordPress-VT|||Readsboro Community (Readsboro, VT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.readsborolibrary.org/events",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-VT|||Richmond Free (Richmond, VT)": {
@@ -1703,7 +1715,7 @@
  },
  "WordPress-VT|||Shrewsbury (Shrewsbury, VT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.shrewsburylibrary.org/events",
+  "comment": "reachable over plain HTTPS (HTTP 200, 9861 chars) with no platform marker and no empty-state wording. Silence is not evidence of an empty calendar - needs the stealth browser",
   "population": "zero"
  },
  "WordPress-VT|||Stamford Community (Stamford, VT)": {
@@ -1746,7 +1758,7 @@
  },
  "WordPress-VT|||Windsor Public (Windsor, VT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.windsorlibrary.org/events",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "Orange-County-Library-FL|||Melrose Center": {
@@ -2273,7 +2285,10 @@
  "WordPress-NY|||Phillips Free Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch RESOLVED 2026-09-06 - cross-origin Google Calendar iframe. Identity confirmed live: Homer Phillips Free Library, 37 South Main St, Homer NY 13077, ph 607-749-4616 - area code 607 is upstate New York. Relocated to GoogleCalendar-NY-phillipsfreelibrary, proven live at 53 rows",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are in a cross-origin Google Calendar iframe, unreadable by a DOM extractor. Relocated to GoogleCalendar-NY 2026-09-06, proven live at 53 rows. Identity confirmed from the live page as Homer Phillips Free Library, 37 South Main St, ",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NY|||Greenville Public Library": {
   "verdict": "MISMATCH",
@@ -2695,7 +2710,7 @@
  },
  "WordPress-PA|||Bernville Area Community Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.bernvillelibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-PA|||Bethany Public Library": {
@@ -2720,7 +2735,7 @@
  },
  "WordPress-PA|||Boyertown Community Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.boyertownlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-PA|||Bradford Area Public Library": {
@@ -2750,7 +2765,7 @@
  },
  "WordPress-PA|||Bosler Free Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.carlislelibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-PA|||Community Library Of Castle Shannon": {
@@ -2853,7 +2868,7 @@
  },
  "WordPress-PA|||Barbara Moscato Brown Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.emporiumlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ECONNRESET. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-PA|||Erie County Public Library": {
@@ -2903,7 +2918,7 @@
  },
  "WordPress-PA|||Genesee Area Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_UNRECOGNIZED_NAME_ALERT at https://www.geneseelibrary.org",
+  "comment": "page returns HTTP 200 but only 0 characters of text - a JS-gated shell. Needs the stealth browser, which executes JavaScript",
   "population": "zero"
  },
  "WordPress-PA|||Arthur Hufnagel Public Library Of Glen Rock": {
@@ -2949,7 +2964,10 @@
  "WordPress-PA|||Union Library Company Of Hatborough": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch RESOLVED 2026-09-06 - cross-origin Google Calendar iframe. Identity confirmed live: Union Library of Hatborough, 243 S York Rd, Hatboro PA 19040, ph 215-672-1420 - area code 215 is greater Philadelphia. Relocated to GoogleCalendar-PA, proven live at 77 rows",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are in a cross-origin Google Calendar iframe, unreadable by a DOM extractor. Relocated to GoogleCalendar-PA 2026-09-06, proven live at 77 rows. Identity confirmed from the live page as Union Library of Hatborough, 243 S York Rd, Hat",
+  "statusAt": "2026-09-06"
  },
  "WordPress-PA|||Hawley Library": {
   "verdict": "UNVERIFIABLE",
@@ -3026,7 +3044,7 @@
  },
  "WordPress-CT|||Andover Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.andoverlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-CT|||Ansonia Public Library": {
@@ -3168,7 +3186,7 @@
  },
  "WordPress-CT|||Henry Carter Hull Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-CT|||Ivoryton Library Association": {
@@ -3427,7 +3445,7 @@
  },
  "WordPress-GA|||Gibbs Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.evanslibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-GA|||Gordon Public Library": {
@@ -3508,8 +3526,8 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-GA|||Maysville Public Library": {
-  "verdict": "MATCHES",
-  "comment": "RETIRED ENTRY, verdict resolved 2026-09-06 without a fetch: this library is present in ./scraper-wordpress-libraries-ga.js ONLY as a commented-out entry, so the scraper never visits it and there is nothing to verify. The old UNVERIFIABLE reading implied a site awaiting a re-check; it is not one. NOTE this is a resolved AUDIT state, not coverage - the library remains uncovered unless another scraper picks it up, and no such claim is made here",
+  "verdict": "UNVERIFIABLE",
+  "comment": "no URL could be resolved from the scraper config for this site",
   "population": "zero"
  },
  "WordPress-GA|||Middle Georgia Regional Library System": {
@@ -3564,7 +3582,7 @@
  },
  "WordPress-GA|||Rockmart Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.rockmartlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-GA|||Roddenbery Memorial Library System": {
@@ -3622,7 +3640,7 @@
  },
  "WordPress-NC|||Blanche Benjamin Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NC|||Boonville Community Public Library": {
@@ -3645,7 +3663,7 @@
  },
  "WordPress-NC|||Bunn Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.bunnlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NC|||Canton Branch Library": {
@@ -3663,12 +3681,12 @@
  },
  "WordPress-NC|||Davidson County Public Library System": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.lexingtonlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-NC|||Dobson Community Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.dobsonlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NC|||Farmville Public Library": {
@@ -3730,7 +3748,7 @@
  },
  "WordPress-NC|||J.C. Holliday Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-NC|||La Grange Branch Library": {
@@ -3767,7 +3785,7 @@
  },
  "WordPress-NC|||Littleton Public Library (Wc Jones Memorial)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.littletonlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-NC|||Macon County Public Library": {
@@ -3855,12 +3873,12 @@
  },
  "WordPress-NC|||Union West Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.indiantraillibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NC|||Watauga County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.boonelibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-VT|||Aldrich Public Library": {
@@ -3870,7 +3888,7 @@
  },
  "WordPress-VT|||Barton Public": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.bartonlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-VT|||Benson Public": {
@@ -3940,7 +3958,7 @@
  },
  "WordPress-VT|||Greensboro Free": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-VT|||Hartford": {
@@ -4018,7 +4036,7 @@
  },
  "WordPress-VT|||Readsboro Community": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.readsborolibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-VT|||Rochester Public": {
@@ -4044,7 +4062,7 @@
  },
  "WordPress-VT|||Shrewsbury": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.shrewsburylibrary.org",
+  "comment": "reachable over plain HTTPS (HTTP 200, 9861 chars) with no platform marker and no empty-state wording. Silence is not evidence of an empty calendar - needs the stealth browser",
   "population": "zero"
  },
  "WordPress-VT|||Stamford Community": {
@@ -4088,7 +4106,7 @@
  },
  "WordPress-VT|||Windsor Public": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.windsorlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "CivicRec-Parks-Eastern|||Ross Community Center": {
@@ -4442,7 +4460,10 @@
  "WordPress-MA|||Acton Memorial Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.actonmemoriallibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - actonmemoriallibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js und",
+  "statusAt": "2026-09-06"
  },
  "WordPress-KY|||Calloway County Public Library": {
   "verdict": "MISMATCH",
@@ -4457,11 +4478,14 @@
  "WordPress-MA|||Amesbury Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.amesburylibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - amesburylibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under th",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Andover Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.andoverlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-MA|||Ashby Free Public Library": {
@@ -4525,17 +4549,17 @@
  },
  "WordPress-RI|||Exeter Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.exeterlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-RI|||Central Falls Free Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.centralfallslibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-RI|||Greene Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greenelibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-SC|||Berkeley County Library - Sangaree Library": {
@@ -4558,7 +4582,7 @@
  },
  "WordPress-SC|||Anderson County Library - Piedmont Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.piedmontlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-WV|||Berkeley County Public Library": {
@@ -4896,12 +4920,18 @@
  "WordPress-NC|||Catawba County Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch RESOLVED 2026-09-06 - duplicate audit key for the Newton NC row above. Relocated to GoogleCalendar-NC, proven live at 167 rows",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are in a cross-origin Google Calendar iframe, unreadable by a DOM extractor. Relocated to GoogleCalendar-NC 2026-09-06, proven live at 167 rows across 12 branch venues",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NC|||Claremont Branch Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch RESOLVED 2026-09-06 - duplicate audit key for the Claremont NC row above. Covered by the single Catawba system calendar under GoogleCalendar-NC",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are in a cross-origin Google Calendar iframe, unreadable by a DOM extractor. The whole Catawba system publishes ONE calendar and the ICS LOCATION names the branch, so Claremont arrives as its own venue under GoogleCalendar-NC. Reloc",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NC|||Madison Branch Library": {
   "verdict": "MISMATCH",
@@ -7693,7 +7723,7 @@
  },
  "WordPress-KY|||Estill County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.irvinelibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT, ECONNRESET. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-KY|||Irvington Branch": {
@@ -7744,7 +7774,7 @@
  },
  "WordPress-KY|||Pike County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.pikelibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-KY|||Woodford County Library": {
@@ -7759,7 +7789,7 @@
  },
  "WordPress-MA|||Bellingham Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.bellinghamlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ECONNRESET. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-MA|||Beals Memorial Library": {
@@ -7793,7 +7823,10 @@
  "WordPress-MA|||Boxford Town Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.boxfordlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - boxfordlibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under the",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Boylston Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -7802,7 +7835,7 @@
  },
  "WordPress-MA|||Blanding Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.rehobothlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-MA|||Boynton Public Library": {
@@ -7904,11 +7937,14 @@
  "WordPress-MA|||Hanson Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://hansonlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - hansonlibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under the ",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Grace Hall Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.montgomerylibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-MA|||Haston Free Public Library": {
@@ -7918,7 +7954,7 @@
  },
  "WordPress-MA|||Heath Free Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.heathlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ECONNRESET. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-MA|||Haverhill Public Library": {
@@ -7942,7 +7978,10 @@
  "WordPress-MA|||Hopkinton Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://hopkintonlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - hopkintonlibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under t",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Hyde Park Branch Library": {
   "verdict": "MATCHES",
@@ -7990,17 +8029,26 @@
  "WordPress-MA|||Leverett Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch RESOLVED 2026-09-06 - cross-origin Google Calendar iframe. Identity confirmed live: Leverett Library, 75 Montague Rd, Leverett MA 01054, ph 413-548-9220 - area code 413 is western Massachusetts. Relocated to GoogleCalendar-MA-leverettlibrary, proven live at 94 rows. Its 65 opening-hours entries are correctly rejected as junk titles by a rule added the same day",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are in a cross-origin Google Calendar iframe, unreadable by a DOM extractor. Relocated to GoogleCalendar-MA 2026-09-06, proven live at 94 rows after its opening-hours entries were correctly rejected as junk titles",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Lunenburg Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://lunenburglibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - lunenburglibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under t",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Lynnfield Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://lynnfieldlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - lynnfieldlibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under t",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Medfield Memorial Library": {
   "verdict": "MISMATCH",
@@ -8014,13 +8062,16 @@
  },
  "WordPress-MA|||Memorial Hall Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.andoverlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-MA|||Medford Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.medfordlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - medfordlibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under the",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Merriam-Gilbert Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -8055,7 +8106,10 @@
  "WordPress-MA|||Moses Greeley Parker Memorial Lib.": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.dracutlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - dracutlibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under the ",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Nantucket Atheneum": {
   "verdict": "UNVERIFIABLE",
@@ -8069,18 +8123,24 @@
  },
  "WordPress-MA|||North Adams Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_UNRECOGNIZED_NAME_ALERT at https://www.northadamslibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-MA|||Needham Free Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.needhamlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - needhamlibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under the",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Northborough Free Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.northboroughlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - northboroughlibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js unde",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Oak Bluffs Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -8090,7 +8150,10 @@
  "WordPress-MA|||Oxford Free Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://oxfordmapubliclibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - oxfordmapubliclibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js un",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Palmer Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -8127,7 +8190,7 @@
  },
  "WordPress-MA|||Reuben Hoar Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.littletonlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ECONNRESET. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-MA|||Phinehas S. Newton Library": {
@@ -8138,7 +8201,10 @@
  "WordPress-MA|||Rowley Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.rowleylibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - rowleylibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under the ",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Richard Salter Storrs Library": {
   "verdict": "MATCHES",
@@ -8158,11 +8224,14 @@
  "WordPress-MA|||Sherborn Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://sherbornlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - sherbornlibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under th",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Shrewsbury Free Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.shrewsburylibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-MA|||Seekonk Public Library": {
@@ -8203,11 +8272,14 @@
  "WordPress-MA|||Townsend Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.townsendlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - townsendlibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under th",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Tyler Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.charlemontlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-MA|||Topsfield Town Library": {
@@ -8238,7 +8310,10 @@
  "WordPress-MA|||Weston Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.westonlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - westonlibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under the ",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Westhampton Memorial Library": {
   "verdict": "MISMATCH",
@@ -8256,7 +8331,10 @@
  "WordPress-MA|||Whitinsville Social Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.whitinsvillelibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - whitinsvillelibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js unde",
+  "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Young Mens Library Association": {
   "verdict": "UNVERIFIABLE",
@@ -8265,22 +8343,28 @@
  },
  "WordPress-NH|||Concord Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://concordpubliclibrary.net",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ECONNRESET. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NH|||Derry Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.derrypl.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - derrypl.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under the same n",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Dover Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://library.dover.nh.gov/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - library.dover.nh.gov serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under t",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Dunbarton Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.dunbartonlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NH|||East Kingston Public Library": {
@@ -8313,7 +8397,7 @@
  },
  "WordPress-NH|||East Rochester Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.eastrochesterlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-NH|||Fremont Public Library": {
@@ -8339,7 +8423,10 @@
  "WordPress-NH|||Hampstead Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.hampsteadlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - hampsteadlibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under t",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Hampton Lane Memorial Library": {
   "verdict": "MISMATCH",
@@ -8376,7 +8463,7 @@
  },
  "WordPress-NH|||Littleton Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.littletonlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-NH|||Laconia Public Library": {
@@ -8437,11 +8524,14 @@
  "WordPress-NH|||Rye Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://ryepubliclibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - ryepubliclibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under t",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Pike Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.pikelibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-NH|||Stark Public Library": {
@@ -8454,7 +8544,7 @@
  },
  "WordPress-NH|||Salem Kelley Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.ci.salem.nh.us/kelleylibrary",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-PA|||Bucks County Free Library - Pipersville Free Library": {
@@ -8510,7 +8600,7 @@
  },
  "WordPress-PA|||Joseph T. Simpson Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.mechanicsburglibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-PA|||Johnsonburg Public Library": {
@@ -8535,7 +8625,7 @@
  },
  "WordPress-PA|||Marienville Area Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.marienvillelibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-PA|||Malvern Public Library": {
@@ -8545,7 +8635,7 @@
  },
  "WordPress-PA|||Mars Area Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.marslibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-PA|||Mary S Biesecker Public Library": {
@@ -8560,7 +8650,7 @@
  },
  "WordPress-PA|||Middletown Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.middletownlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-PA|||Meyersdale Public Library": {
@@ -8600,7 +8690,7 @@
  },
  "WordPress-PA|||New Cumberland Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.newcumberlandlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-PA|||North Versailles Public Library": {
@@ -8615,7 +8705,7 @@
  },
  "WordPress-PA|||Oil City Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.oilcitylibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-PA|||Orwigsburg Area Fr Pub Library": {
@@ -8625,7 +8715,7 @@
  },
  "WordPress-PA|||Paul Smith Library Of Southern York County": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.shrewsburylibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-PA|||Priestley Forsyth Memorial Library": {
@@ -8685,7 +8775,7 @@
  },
  "WordPress-PA|||Robesonia Community Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.robesonialibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-PA|||Sarah S Bovard Memorial Library": {
@@ -8695,7 +8785,7 @@
  },
  "WordPress-PA|||Saxonburg Area Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.saxonburglibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-PA|||Saxton Community Library": {
@@ -8715,12 +8805,12 @@
  },
  "WordPress-PA|||Shippensburg Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.shippensburglibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-PA|||Sinking Spring Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.sinkingspringlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-PA|||Slatington Library Inc": {
@@ -8749,8 +8839,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Mount Pleasant Free Public Library Association": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "navigation timeout after 35000ms",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.mountpleasantlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
   "population": "zero"
  },
  "WordPress-PA|||Springdale Free Public Library": {
@@ -8785,7 +8875,7 @@
  },
  "WordPress-PA|||West Chester Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.westchesterlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ECONNRESET. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-PA|||Warren Library Association": {
@@ -8835,7 +8925,7 @@
  },
  "WordPress-RI|||Middletown Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.middletownlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-RI|||Marian J. Mohr Memorial Library": {
@@ -8865,17 +8955,17 @@
  },
  "WordPress-SC|||Edgefield County Public Library - Johnston Branch (Mobley Library)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.johnstonlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ECONNRESET. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-SC|||Clinton Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-SC|||Hal Kohn Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.newberrylibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-SC|||Hampton County Library - Estill Branch Library": {
@@ -8903,7 +8993,7 @@
  },
  "WordPress-SC|||Lexington County Public Library System - Main": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.lexingtonlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-SC|||Oconee County Public Library - Seneca Branch Library": {
@@ -8926,7 +9016,7 @@
  },
  "WordPress-SC|||Spartanburg County Public Library - H. Carlisle Bean Law Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.spartanburglibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-WV|||Marion County Public Library": {
@@ -8949,12 +9039,12 @@
  },
  "WordPress-WV|||Pleasants County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.stmaryslibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ECONNRESET. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-WV|||Piedmont Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.piedmontlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-WV|||Putnam County Public Library": {
@@ -8964,7 +9054,7 @@
  },
  "WordPress-WV|||Swaney Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.newcumberlandlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-WV|||Ronceverte Public Library": {
@@ -9057,12 +9147,12 @@
  },
  "WordPress-FL|||Freeport Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.freeportlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-FL|||Alachua Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.alachualibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-FL|||Fruitland Park Library": {
@@ -9082,7 +9172,7 @@
  },
  "WordPress-FL|||Jacaranda Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.venicelibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-FL|||Lake County Library System": {
@@ -9105,7 +9195,7 @@
  },
  "WordPress-FL|||Largo Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.largolibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ECONNRESET. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-FL|||Palm Beach County Library System": {
@@ -9115,7 +9205,7 @@
  },
  "WordPress-FL|||Newberry Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.newberrylibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-FL|||Reddick Public Library": {
@@ -9125,12 +9215,12 @@
  },
  "WordPress-FL|||Sunrise Dan Pearl Branch": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.sunriselibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-FL|||Parker Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation timeout after 35000ms",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-FL|||Umatilla Public Library": {
@@ -9163,7 +9253,7 @@
  },
  "WordPress-ME|||Andover Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.andoverlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-ME|||Belgrade Public Library": {
@@ -9219,12 +9309,12 @@
  },
  "WordPress-ME|||Freeport Community Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.freeportlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-ME|||Brown Memorial Library - Clinton": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-ME|||Hollis Center Public Library": {
@@ -9244,7 +9334,7 @@
  },
  "WordPress-ME|||Henry D. Moore Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.steubenlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-ME|||Kennebunk Free Library": {
@@ -9274,7 +9364,7 @@
  },
  "WordPress-ME|||Milbridge Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.milbridgelibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ECONNRESET. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-ME|||Madawaska Public Library": {
@@ -9299,12 +9389,12 @@
  },
  "WordPress-ME|||Ogunquit Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.ogunquitlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-ME|||Owls Head Village Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.owlsheadlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-ME|||North Haven Public Library": {
@@ -9374,7 +9464,7 @@
  },
  "WordPress-ME|||Steep Falls Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.steepfallslibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-ME|||Thomas Free Library": {
@@ -9389,7 +9479,7 @@
  },
  "WordPress-ME|||Waldoboro Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.waldoborolibrary.org",
+  "comment": "reachable over plain HTTPS (HTTP 200, 8207 chars) with no platform marker and no empty-state wording. Silence is not evidence of an empty calendar - needs the stealth browser",
   "population": "zero"
  },
  "WordPress-ME|||Topsham Public Library": {
@@ -9439,7 +9529,7 @@
  },
  "WordPress-MS|||A. E. Wood Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-MS|||Dixie Regional Library System": {
@@ -9489,7 +9579,7 @@
  },
  "WordPress-MS|||Lexington Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.lexingtonlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-MS|||J. Elliott Mcmullan Library": {
@@ -9602,7 +9692,7 @@
  },
  "WordPress-NJ|||Dowdell Library Of South Amboy": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.southamboylibrary.org",
+  "comment": "page returns HTTP 200 but only 70 characters of text - a JS-gated shell. Needs the stealth browser, which executes JavaScript",
   "population": "zero"
  },
  "WordPress-NJ|||Dwight D. Eisenhower Library": {
@@ -9691,7 +9781,7 @@
  },
  "WordPress-NJ|||Middletown Township Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.middletownlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-NJ|||Maywood Public Library": {
@@ -9845,7 +9935,7 @@
  },
  "WordPress-NJ|||Wharton Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.whartonlibrary.org",
+  "comment": "reachable over plain HTTPS (HTTP 200, 15439 chars) with no platform marker and no empty-state wording. Silence is not evidence of an empty calendar - needs the stealth browser",
   "population": "zero"
  },
  "WordPress-NJ|||West Orange Free Public Library": {
@@ -9898,7 +9988,7 @@
  },
  "WordPress-NY|||Andover Free Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.andoverlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-NY|||Andes Public Library": {
@@ -9908,12 +9998,12 @@
  },
  "WordPress-NY|||Arcade Free Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.arcadelibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||Ardsley Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.ardsleylibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||Apalachin Library Association": {
@@ -9938,7 +10028,7 @@
  },
  "WordPress-NY|||Bainbridge Free Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.bainbridgelibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||Beaver Falls Library": {
@@ -9953,7 +10043,7 @@
  },
  "WordPress-NY|||Blodgett Memorial Library District Of Fishkill": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.fishkilllibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||Bemus Point Public Library": {
@@ -10029,7 +10119,7 @@
  },
  "WordPress-NY|||Cohoes Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.cohoeslibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||Deer Park Public Library": {
@@ -10082,7 +10172,7 @@
  },
  "WordPress-NY|||East Rochester Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.eastrochesterlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||Erwin Library Institute": {
@@ -10115,7 +10205,7 @@
  },
  "WordPress-NY|||Galway Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.galwaylibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||Hammond Free Library": {
@@ -10148,7 +10238,7 @@
  },
  "WordPress-NY|||Hannibal Free Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.hanniballibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||Highland Public Library": {
@@ -10176,7 +10266,7 @@
  },
  "WordPress-NY|||John Jermain Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.sagharborlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||Jordan Bramley Library": {
@@ -10196,7 +10286,7 @@
  },
  "WordPress-NY|||John C. Hart Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.shruboaklibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||Lafayette Public Library": {
@@ -10219,7 +10309,7 @@
  },
  "WordPress-NY|||Kirkland Town Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.clintonlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-NY|||Lisle Free Library": {
@@ -10272,8 +10362,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Minoa Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.minoalibrary.org",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.minoalibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
   "population": "zero"
  },
  "WordPress-NY|||Millbrook Free Library": {
@@ -10283,7 +10373,7 @@
  },
  "WordPress-NY|||Mooers Free Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.mooerslibrary.org",
+  "comment": "reachable over plain HTTPS (HTTP 200, 8595 chars) with no platform marker and no empty-state wording. Silence is not evidence of an empty calendar - needs the stealth browser",
   "population": "zero"
  },
  "WordPress-NY|||Monroe Free Library": {
@@ -10293,7 +10383,7 @@
  },
  "WordPress-NY|||Mount Morris Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.mountmorrislibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: EPROTO. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||Moore Memorial Library": {
@@ -10374,7 +10464,7 @@
  },
  "WordPress-NY|||Pawling Free Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.pawlinglibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||Port Jervis Free Library": {
@@ -10384,7 +10474,7 @@
  },
  "WordPress-NY|||Pike Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.pikelibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-NY|||Port Leyden Community Library": {
@@ -10424,7 +10514,7 @@
  },
  "WordPress-NY|||Ramapo Catskill Library System": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.middletownlibrary.org",
+  "comment": "GUARDED entry - the configured URL is already proven to belong to another institution, so this is a KNOWN COVERAGE GAP awaiting a correct URL, not an unverified site. Not fetched",
   "population": "zero"
  },
  "WordPress-NY|||Quogue Library": {
@@ -10512,7 +10602,10 @@
  "WordPress-NY|||Sidney Memorial Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch RESOLVED 2026-09-06 - cross-origin Google Calendar iframe. Identity confirmed live: Sidney Memorial Public Library, 8 River Street, Sidney NY 13838, ph 607-563-1200. This also settles a THREE-WAY host collision on sidneylibrary.org claimed by NY, IL and OH - NEW YORK is correct; the IL and OH claimants are wrong but sit in inactive regions and never run. Relocated to GoogleCalendar-NY-sidneylibrary, proven live at 92 rows",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are in a cross-origin Google Calendar iframe, unreadable by a DOM extractor. Relocated to GoogleCalendar-NY 2026-09-06, proven live at 92 rows. NOTE sidneylibrary.org is a THREE-WAY host collision claimed by NY, IL and OH, and the l",
+  "statusAt": "2026-09-06"
  },
  "WordPress-NY|||Seneca Falls Library": {
   "verdict": "UNVERIFIABLE",
@@ -10526,12 +10619,12 @@
  },
  "WordPress-NY|||Sodus Free Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.soduslibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||Solvay Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.solvaylibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||Southold Free Library": {
@@ -10614,7 +10707,7 @@
  },
  "WordPress-NY|||Warner Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.tarrytownlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||West Islip Public Library": {
@@ -10682,7 +10775,7 @@
  },
  "WordPress-NY|||Wilson Free Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.wilsonlibrary.org",
+  "comment": "host unreachable over plain HTTPS on 7 candidate paths: ETIMEDOUT. Needs the stealth browser to distinguish a block from an outage",
   "population": "zero"
  },
  "WordPress-NY|||Brewster Public Library": {
