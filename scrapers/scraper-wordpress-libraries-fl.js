@@ -95,7 +95,7 @@ const LIBRARIES = [
   { name: 'Archer Branch Library', url: 'https://www.archerlibrary.org/', eventsUrl: 'https://www.archerlibrary.org/', city: 'Archer', state: 'FL', zipCode: '00000', county: 'Alachua'},
   // URL corrected 2026-08-11 (was auburndalelibrary.org): 100 West Bridgers Avenue Auburndale FL, phone 863-965-5548, Polk County Library Cooperative
   { name: 'Auburndale Public Library', url: 'https://auburndalefl.com/library/', eventsUrl: 'https://auburndalefl.com/library/', city: 'Auburndale', state: 'FL', zipCode: '00000', county: 'Polk'},
-  { name: 'Bartow Public Library', url: 'https://www.bartowlibrary.org', eventsUrl: 'https://www.bartowlibrary.org/events', city: 'Bartow', state: 'FL', zipCode: '00000', county: 'Polk'},
+  { name: 'Bartow Public Library', url: 'https://www.bartowlibrary.org', eventsUrl: 'https://www.bartowlibrary.org/events', city: 'Bartow', state: 'FL', zipCode: '00000', county: 'Polk', urlCollision: "bartowlibrary.org is GA, not FL - live page is Bartow County Library System, Georgia. Proven 2026-09-06" },
   { name: 'Brandon Branch', url: 'https://www.brandonlibrary.org/', eventsUrl: 'https://www.brandonlibrary.org/events-calendar', city: 'Brandon', state: 'FL', zipCode: '00000', county: 'Hillsborough', urlCollision: 'brandonlibrary.org is MI, not FL' },
   { name: 'Levy County Public Library System', url: 'https://www.bronsonlibrary.org/', eventsUrl: 'https://www.bronsonlibrary.org/calendar', city: 'Bronson', state: 'FL', zipCode: '32621', county: 'Levy', urlCollision: 'bronsonlibrary.org is CT, not FL' },
   { name: 'Celebration Library', url: 'https://www.celebrationlibrary.org', eventsUrl: 'https://www.celebrationlibrary.org/events', city: 'Celebration', state: 'FL', zipCode: '00000', county: 'Osceola'},
@@ -111,7 +111,7 @@ const LIBRARIES = [
   { name: 'Hudson Regional Library', url: 'https://www.hudsonlibrary.org', eventsUrl: 'https://www.hudsonlibrary.org/events', city: 'Hudson', state: 'FL', zipCode: '00000', county: 'Pasco', urlCollision: 'hudsonlibrary.org is OH, not FL' },
   // URL corrected 2026-08-11 (was lakeplacidlibrary.org): Highlands County FL Library System branch; 205 W Interlake Blvd Lake Placid FL 33852, phone 863-699-3705
   { name: 'Lake Placid Memorial Library', url: 'https://www.myhlc.org/lake-placid-memorial-library', eventsUrl: 'https://myhlc.specialdistrict.org/programming-upcoming-events', city: 'Lake Placid', state: 'FL', zipCode: '00000', county: 'Highlands'},
-  { name: 'Lakeland Public Library', url: 'https://www.lakelandlibrary.org', eventsUrl: 'https://www.lakelandlibrary.org/events', city: 'Lakeland', state: 'FL', zipCode: '00000', county: 'Polk'},
+  { name: 'Lakeland Public Library', url: 'https://www.lakelandlibrary.org', eventsUrl: 'https://www.lakelandlibrary.org/events', city: 'Lakeland', state: 'FL', zipCode: '00000', county: 'Polk', urlCollision: "lakelandlibrary.org is MI, not FL - live page addresses print MI. Proven 2026-09-06" },
   { name: 'Land Olakes Branch Library', url: 'https://www.landolakeslibrary.org', eventsUrl: 'https://www.landolakeslibrary.org/events', city: "Land O' Lakes", state: 'FL', zipCode: '34639', county: 'Pasco County'},
   { name: 'Lantana Public Library', url: 'https://www.lantanalibrary.org/', eventsUrl: 'https://www.lantanalibrary.org/', city: 'Lantana', state: 'FL', zipCode: '33462', county: 'Palm Beach'},
   { name: 'Largo Public Library', url: 'https://www.largolibrary.org', eventsUrl: 'https://www.largolibrary.org/events', city: 'Largo', state: 'FL', zipCode: '00000', county: 'Pinellas'},
