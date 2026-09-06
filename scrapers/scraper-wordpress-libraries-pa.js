@@ -117,7 +117,7 @@ const LIBRARIES = [
   // wrong name, city and county. Renamed rather than removed: the URL is right,
   // only the label was wrong, so deleting it would have dropped real coverage.
   { name: 'Hamlin Memorial Library', url: 'https://www.hamlinlibrary.org/', eventsUrl: 'https://www.hamlinlibrary.org/', city: 'Smethport', state: 'PA', zipCode: '16749', county: 'McKean'},
-  { name: 'Union Library Company Of Hatborough', url: 'https://www.hatborolibrary.org', eventsUrl: 'https://www.hatborolibrary.org/events', city: 'Hatboro', state: 'PA', zipCode: '19040', county: 'Montgomery'},
+  { name: 'Union Library Company Of Hatborough', url: 'https://www.hatborolibrary.org', eventsUrl: 'https://www.hatborolibrary.org/events', city: 'Hatboro', state: 'PA', zipCode: '19040', county: 'Montgomery', urlCollision: 'events are in a cross-origin Google Calendar iframe, unreadable by a DOM extractor. Relocated to GoogleCalendar-PA 2026-09-06, proven live at 77 rows. Identity confirmed from the live page as Union Library of Hatborough, 243 S York Rd, Hatboro PA 19040, ph 215-672-1420'},
   { name: 'Hawley Library', url: 'https://www.hawleylibrary.org/', eventsUrl: 'https://www.hawleylibrary.org/', city: 'Hawley', state: 'PA', zipCode: '18428', county: 'Wayne'},
   { name: 'Hazleton Area Public Library', url: 'https://www.hazletonlibrary.org/', eventsUrl: 'https://www.hazletonlibrary.org/calendar', city: 'Hazleton', state: 'PA', zipCode: '18201', county: 'Luzerne'},
   { name: 'Hellertown Area Library', url: 'https://www.hellertownlibrary.org', eventsUrl: 'https://www.hellertownlibrary.org/events', city: 'Hellertown', state: 'PA', zipCode: '18055', county: 'Northampton'},

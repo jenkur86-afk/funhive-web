@@ -215,12 +215,31 @@ const SCRAPERS = {
   // in a cross-origin Google Calendar iframe that no DOM extractor can read. Groups chosen
   // to match each state's existing WordPress rotation day so coverage does not shift.
   'GoogleCalendar-MD': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesMDCloudFunction', type: 'api', group: 3, state: 'MD' },
-  'GoogleCalendar-MA': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesMACloudFunction', type: 'api', group: 1, state: 'MA' },
+  // sites: 2 as of 2026-09-06 — Leverett Library joined Ashby, so MA emits per-site slugs.
+  'GoogleCalendar-MA': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesMACloudFunction', type: 'api', group: 1, state: 'MA', sites: 2 },
   'GoogleCalendar-SC': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesSCCloudFunction', type: 'api', group: 1, state: 'SC' },
   // Added 2026-08-23 from the platform-mismatch pass (reports/platform-mismatches.md).
   // A GoogleCalendar-GA key was drafted the same day and DELIBERATELY NOT ADDED: both
   // Georgia candidates turned out to be libraries in NY and IL. See scraper-gcal-libraries.js.
-  'GoogleCalendar-VT': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesVTCloudFunction', type: 'api', group: 1, state: 'VT' },
+  'GoogleCalendar-VT': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesVTCloudFunction', type: 'api', group: 1, state: 'VT', sites: 3 },
+  // 2026-09-06: three new states from the UNVERIFIABLE backlog's Google-Calendar-iframe
+  // cluster — seven libraries whose programme lives entirely inside a cross-origin
+  // Google Calendar iframe, so their WordPress-* entries could only ever return 0.
+  // Identity proven per library from its own page (street address, ZIP, phone area code)
+  // and every ICS feed verified live before wiring. See scraper-gcal-libraries.js.
+  //
+  // Group placement is deliberate but barely matters: these are ICS fetches measuring
+  // 0.3-63s against a ~7.7h per-group budget, so the heaviest goes to the lightest group
+  // (G3, 7.65h) and the rest spread. The 2026-09-02 runtime balance is unaffected at
+  // this scale — the three together add well under two minutes.
+  //
+  // VT and MA gained a SECOND library each and therefore now emit per-site slugs
+  // (`GoogleCalendar-VT-cobleighlibrary`), which is why VT and MA carry `sites`.
+  // NC and PA hold one library each and keep the bare key per CLAUDE.md's
+  // "one site -> exactly the registry key" rule.
+  'GoogleCalendar-NC': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesNCCloudFunction', type: 'api', group: 3, state: 'NC' },
+  'GoogleCalendar-NY': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesNYCloudFunction', type: 'api', group: 1, state: 'NY', sites: 2 },
+  'GoogleCalendar-PA': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesPACloudFunction', type: 'api', group: 2, state: 'PA' },
   // 2026-08-09: WordPress-GA's Decatur County - Gilbert H. Gragg Library entry pointed at
   // bainbridgelibrary.org, which times out. The real institution is the Southwest Georgia
   // Regional Library System, whose calendar is a FullCalendar.js widget with no server-

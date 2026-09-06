@@ -354,8 +354,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Claremont Branch Library (Claremont, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - events are in a cross-origin Google Calendar iframe that no DOM extractor can read. The Catawba system publishes ONE calendar and the ICS LOCATION names the branch, so Claremont arrives as its own venue. Relocated to GoogleCalendar-NC, proven live: 167 rows across 12 branch venues. WordPress-NC entry guarded",
   "population": "zero"
  },
  "WordPress-NC|||Hocutt Ellington Memorial Library (Clayton, NC)": {
@@ -523,8 +523,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Catawba County Library (Newton, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - cross-origin Google Calendar iframe. Relocated to GoogleCalendar-NC and proven live at 167 rows across 12 branch venues, age brackets well spread (60 All Ages, 52 Preschool, 27 Babies, 16 Teens, 12 Kids). WordPress-NC entry guarded",
   "population": "zero"
  },
  "WordPress-NC|||Berea Branch Library (Oxford, NC)": {
@@ -1528,13 +1528,13 @@
   "population": "zero"
  },
  "WordPress-VT|||Cobleigh Public Library (Lyndonville, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - cross-origin Google Calendar iframe. Identity confirmed live: Cobleigh Public Library, 14 Depot St, Lyndonville VT 05851, ph 802-626-5475. Relocated to GoogleCalendar-VT-cobleighlibrary, proven live at 86 rows. The configured URL was one hop short - the embed is on the site root, not /events",
   "population": "zero"
  },
  "WordPress-VT|||Hartland Public Library (Hartland, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - cross-origin Google Calendar iframe. Identity confirmed live: Hartland Public Library, 153 U.S. Route 5, Hartland VT 05048, ph 802-436-2473. Relocated to GoogleCalendar-VT-hartlandlibraryvt, proven live at 126 rows",
   "population": "zero"
  },
  "WordPress-VT|||Martha Canfield Memorial (Arlington, VT)": {
@@ -2271,8 +2271,8 @@
   "population": "allages"
  },
  "WordPress-NY|||Phillips Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - cross-origin Google Calendar iframe. Identity confirmed live: Homer Phillips Free Library, 37 South Main St, Homer NY 13077, ph 607-749-4616 - area code 607 is upstate New York. Relocated to GoogleCalendar-NY-phillipsfreelibrary, proven live at 53 rows",
   "population": "zero"
  },
  "WordPress-NY|||Greenville Public Library": {
@@ -2947,8 +2947,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Union Library Company Of Hatborough": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - cross-origin Google Calendar iframe. Identity confirmed live: Union Library of Hatborough, 243 S York Rd, Hatboro PA 19040, ph 215-672-1420 - area code 215 is greater Philadelphia. Relocated to GoogleCalendar-PA, proven live at 77 rows",
   "population": "zero"
  },
  "WordPress-PA|||Hawley Library": {
@@ -4894,13 +4894,13 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-NC|||Catawba County Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - duplicate audit key for the Newton NC row above. Relocated to GoogleCalendar-NC, proven live at 167 rows",
   "population": "zero"
  },
  "WordPress-NC|||Claremont Branch Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - duplicate audit key for the Claremont NC row above. Covered by the single Catawba system calendar under GoogleCalendar-NC",
   "population": "zero"
  },
  "WordPress-NC|||Madison Branch Library": {
@@ -7988,8 +7988,8 @@
   "population": "zero"
  },
  "WordPress-MA|||Leverett Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - cross-origin Google Calendar iframe. Identity confirmed live: Leverett Library, 75 Montague Rd, Leverett MA 01054, ph 413-548-9220 - area code 413 is western Massachusetts. Relocated to GoogleCalendar-MA-leverettlibrary, proven live at 94 rows. Its 65 opening-hours entries are correctly rejected as junk titles by a rule added the same day",
   "population": "zero"
  },
  "WordPress-MA|||Lunenburg Public Library": {
@@ -10510,8 +10510,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Sidney Memorial Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - cross-origin Google Calendar iframe. Identity confirmed live: Sidney Memorial Public Library, 8 River Street, Sidney NY 13838, ph 607-563-1200. This also settles a THREE-WAY host collision on sidneylibrary.org claimed by NY, IL and OH - NEW YORK is correct; the IL and OH claimants are wrong but sit in inactive regions and never run. Relocated to GoogleCalendar-NY-sidneylibrary, proven live at 92 rows",
   "population": "zero"
  },
  "WordPress-NY|||Seneca Falls Library": {

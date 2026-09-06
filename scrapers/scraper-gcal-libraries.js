@@ -34,7 +34,41 @@ const { saveEventsWithGeocoding } = require('./event-save-helper');
 // The slug was reverted rather than left in place: with one library per state the bare
 // key is what the rule above prescribes, and a speculative rename would have churned
 // attribution on MD/MA/SC's existing rows for nothing.
-const scraperNameFor = state => `GoogleCalendar-${state}`;
+// 2026-09-06: THE SECOND LIBRARY ARRIVED, so the rule above now applies for real.
+// Seven libraries were relocated here from the WordPress-* families in one pass, and
+// three states went multi-library at once: VT gained Cobleigh and Hartland, NY gained
+// Phillips Free and Sidney Memorial, MA gained Leverett alongside Ashby. A bare
+// `GoogleCalendar-VT` would put two distinct libraries under one scraper_name, which
+// is exactly the collapse AGE-RANGE-AUDIT.md's "No aggregation, ever" rule forbids.
+//
+// The slug is the listing URL's hostname subdomain, "www" stripped, lowercased —
+// the same derivation buildScraperName() uses in the LibCal and LibraryCalendar
+// families, so the three read alike.
+//
+// SINGLE-LIBRARY STATES KEEP THE BARE KEY. MD, SC and NC configure exactly one
+// library each, and CLAUDE.md's "one site -> exactly the registry key" rule applies
+// to them; slugging those would churn attribution on MD's and SC's existing rows for
+// no gain, which is precisely why the 2026-08-23 near-miss reverted its slug.
+const GENERIC_HOST_LABELS = new Set(['www', 'events', 'calendar', 'lib', 'library']);
+
+function siteSlug(url) {
+  try {
+    const labels = new URL(url).hostname.toLowerCase().split('.');
+    while (labels.length > 1 && GENERIC_HOST_LABELS.has(labels[0])) labels.shift();
+    return (labels[0] || '').replace(/[^a-z0-9-]/g, '');
+  } catch (_) {
+    return '';
+  }
+}
+
+function scraperNameFor(library) {
+  const key = `GoogleCalendar-${library.state}`;
+  const siblings = LIBRARIES.filter(l => l.state === library.state).length;
+  if (siblings <= 1) return key;
+  const slug = siteSlug(library.url);
+  return slug ? `${key}-${slug}` : key;
+}
+
 const MAX_DAYS_AHEAD = 90;
 
 const LIBRARIES = [
@@ -51,6 +85,103 @@ const LIBRARIES = [
     ],
     city: 'Princess Anne', state: 'MD', zipCode: '21853', county: 'Somerset',
   },
+  // ---------------------------------------------------------------------------
+  // SEVEN LIBRARIES RELOCATED 2026-09-06, working down the UNVERIFIABLE backlog.
+  //
+  // All seven sat in the WordPress-* families carrying the verdict "events live in a
+  // cross-origin Google Calendar iframe" — diagnosed months ago, never acted on,
+  // because the `_pending` GCAL-IFRAME-CLUSTER note said the harvest needed Puppeteer
+  // and a rotation was usually running. That turned out to be a false constraint:
+  // every one of these embeds is SERVER-RENDERED, so scripts/harvest-gcal-calendar-ids.js
+  // reads the iframe src over a plain HTTPS GET with no Chrome at all.
+  //
+  // IDENTITY WAS PROVEN PER LIBRARY FROM ITS OWN PAGE before any wiring — street
+  // address, ZIP and phone area code, never name similarity, because these configs
+  // come from the {city}library.org generator that produced 355 cross-state
+  // collisions. Every ZIP and area code below agrees with its claimed state.
+  //
+  // EVERY FEED WAS VERIFIED LIVE before wiring, not just resolved: VEVENT count and
+  // newest DTSTART are recorded on each entry. That check exists because Berkeley
+  // Sangaree below is a live-looking embed fronting a calendar abandoned in 2024 —
+  // an embed that resolves is not an embed that publishes.
+  {
+    // Was WordPress-NC, "Claremont Branch Library" and "Catawba County Library" both
+    // pointing at this one URL. ONE ENTRY, NOT TWO: the system publishes a single
+    // calendar covering every branch, and the ICS LOCATION field names the branch, so
+    // Claremont and the rest arrive as distinct venues off this one feed — the same
+    // shape as Somerset County above. Wiring two entries would double-scrape it.
+    // Identity: catawbacountync.gov is the county's own .gov domain; main library at
+    // 115 West C Street, Newton NC 28658.
+    // Feed verified 2026-09-06: 4,371 VEVENTs, newest DTSTART 2026-09-30, RRULE present.
+    name: 'Catawba County Library',
+    url: 'https://www.catawbacountync.gov/county-services/library/',
+    calendarIds: ['9pksonccdgqsmoeg591g8d26es@group.calendar.google.com'],
+    city: 'Newton', state: 'NC', zipCode: '28658', county: 'Catawba',
+  },
+  {
+    // Was WordPress-VT. Identity: Cobleigh Public Library, 14 Depot St., Lyndonville
+    // VT 05851, ph (802) 626-5475 — 802 is Vermont's only area code.
+    // The configured URL was a hop short of the calendar, which the GCAL-IFRAME-CLUSTER
+    // note had already flagged: /events links onward to /events-calendar/events-calendar/.
+    // The embed is on the site root, so that is what is configured here.
+    // Feed verified 2026-09-06: 349 VEVENTs, newest DTSTART 2027-01-01, RRULE present.
+    name: 'Cobleigh Public Library',
+    url: 'https://www.cobleighlibrary.org/',
+    calendarIds: ['c_ac5c397c802369af304a15e290070a70ac65d37f9aed31f3901329ce4103871b@group.calendar.google.com'],
+    city: 'Lyndonville', state: 'VT', zipCode: '05851', county: 'Caledonia',
+  },
+  {
+    // Was WordPress-VT. Identity: Hartland Public Library, 153 U.S. Route 5, Hartland
+    // VT 05048, ph 802-436-2473.
+    // Feed verified 2026-09-06: 1,333 VEVENTs, newest DTSTART 2027-06-01, RRULE present.
+    name: 'Hartland Public Library',
+    url: 'https://www.hartlandlibraryvt.org/calendar',
+    calendarIds: ['042q6gmk2e8i40j3lrd763ca4c@group.calendar.google.com'],
+    city: 'Hartland', state: 'VT', zipCode: '05048', county: 'Windsor',
+  },
+  {
+    // Was WordPress-NY. Identity: the page titles itself "Homer Phillips Free Library",
+    // 37 South Main St., Homer NY 13077, ph (607) 749-4616 — 607 is upstate New York.
+    // The audit row reads "Phillips Free Library" and that name is kept, so the row
+    // still joins to its audit history; the town is recorded in city.
+    // Feed verified 2026-09-06: 290 VEVENTs, newest DTSTART 2026-10-07, RRULE present.
+    name: 'Phillips Free Library',
+    url: 'https://phillipsfreelibrary.org/',
+    calendarIds: ['c_22cccd61b467c408880c354644db6f335849f6dd4c303a8a0a9f97c92969487d@group.calendar.google.com'],
+    city: 'Homer', state: 'NY', zipCode: '13077', county: 'Cortland',
+  },
+  {
+    // Was WordPress-NY. Identity: Sidney Memorial Public Library, 8 River Street,
+    // Sidney NY 13838, ph (607) 563-1200.
+    // Feed verified 2026-09-06: 1,148 VEVENTs, newest DTSTART 2026-12-31, RRULE present.
+    name: 'Sidney Memorial Public Library',
+    url: 'https://www.sidneylibrary.org/',
+    calendarIds: ['nsrlk8k469pai5plcsorttn9v8@group.calendar.google.com'],
+    city: 'Sidney', state: 'NY', zipCode: '13838', county: 'Delaware',
+  },
+  {
+    // Was WordPress-PA. Identity: the page titles itself "Union Library of Hatborough",
+    // 243 S York Rd, Hatboro PA 19040, ph (215) 672-1420 — 215 is greater Philadelphia.
+    // Note the town is "Hatboro" while the institution is "of Hatborough"; both spellings
+    // are genuine and the audit row's name is kept so the row keeps its history.
+    // The calendar id is a plain gmail address rather than a group calendar, which is
+    // ordinary for a small library and reads fine from the same public ICS endpoint.
+    // Feed verified 2026-09-06: 707 VEVENTs, newest DTSTART 2027-02-11, RRULE present.
+    name: 'Union Library Company Of Hatborough',
+    url: 'https://www.hatborolibrary.org/',
+    calendarIds: ['unionlibrarycohatboro@gmail.com'],
+    city: 'Hatboro', state: 'PA', zipCode: '19040', county: 'Montgomery',
+  },
+  {
+    // Was WordPress-MA. Identity: Leverett Library, 75 Montague Rd., Leverett MA 01054,
+    // ph 413-548-9220 — 413 is western Massachusetts.
+    // Feed verified 2026-09-06: 1,344 VEVENTs, newest DTSTART 2027-06-25, RRULE present.
+    name: 'Leverett Library',
+    url: 'https://www.leverettlibrary.org/',
+    calendarIds: ['leverettlibrary@gmail.com'],
+    city: 'Leverett', state: 'MA', zipCode: '01054', county: 'Franklin',
+  },
+  // ---------------------------------------------------------------------------
   {
     // Relocated from WordPress-MA 2026-08-18. ashbylibrary.org/calendar/ carries no event
     // markup — the programme is entirely inside a cross-origin Google Calendar iframe, so
@@ -231,7 +362,24 @@ async function scrapeGCalLibraries(stateFilter) {
             // USA". Show the branch name as the venue and keep the rest as the address —
             // otherwise every event on the site is titled with a full postal address.
             const loc = String(plain(ev.location) || '').trim();
-            const [venueName, ...addressParts] = loc.split(',').map(p => p.trim());
+            let [venueName, ...addressParts] = loc.split(',').map(p => p.trim());
+
+            // A VENUE IS NEITHER A URL NOR A BARE STREET NUMBER. Splitting LOCATION on
+            // the first comma works when it opens with a branch name, but ICS LOCATION
+            // is free text and two shapes break it, both measured live on 2026-09-06:
+            //   - a virtual event whose LOCATION is a meeting link, which stored venues
+            //     reading "https://zoom.us/j/117278043" (13 rows) and "Zoom" (3)
+            //   - a LOCATION opening with the street, which stored "3107 2nd Ave NW" (1)
+            // Same class as the Simpleview date-as-venue bug fixed 2026-09-05: the venue
+            // column receiving something that is not a venue, which then reaches the
+            // activities table as a place. Fall back to the library's own name and keep
+            // the original string as the address, so nothing is lost.
+            const looksLikeUrl = /^(https?:\/\/|www\.)/i.test(venueName) || /^zoom$/i.test(venueName);
+            const looksLikeStreet = /^\d+\s+\S/.test(venueName);
+            if (looksLikeUrl || looksLikeStreet) {
+              addressParts = looksLikeUrl ? [] : [venueName, ...addressParts];
+              venueName = '';
+            }
             events.push({
               name: title,
               venue: venueName || library.name,
@@ -247,7 +395,7 @@ async function scrapeGCalLibraries(stateFilter) {
                 // event's own link, per the source_url rule in CLAUDE.md.
                 sourceUrl: library.url,
                 scrapedAt: new Date().toISOString(),
-                scraperName: scraperNameFor(library.state),
+                scraperName: scraperNameFor(library),
                 category: 'library',
                 platform: 'google-calendar',
                 state: library.state,
@@ -269,13 +417,48 @@ async function scrapeGCalLibraries(stateFilter) {
   return events;
 }
 
+/**
+ * Save ONE LIBRARY PER CALL, not one state per call.
+ *
+ * This is the whole reason per-site scraper_name is safe here, and it is worth
+ * understanding before anyone "simplifies" it back to a single call.
+ *
+ * saveEventsWithGeocoding() BUILDS ITS OWN metadata block and overwrites
+ * metadata.scraperName with the options-level `scraperName`. So setting a per-site
+ * name in the event's metadata alone does nothing — that is exactly why the same
+ * attempt was reverted for LibCal-FL2 on 2026-09-05 and, before it, family-wide on
+ * 2026-08-06. The 08-06 revert's stated reason is the sharp edge: verifyAndCleanupEvents()
+ * looks existing rows up by that name and DELETES the ones it cannot match, so a
+ * write name that differs from the lookup name is a data-loss hazard, not a cosmetic
+ * mismatch.
+ *
+ * Passing one library at a time keeps write name == lookup name by construction:
+ * the options carry that library's own scraperName, and `libraries` carries only
+ * that library, so verification is scoped to exactly the rows that were just
+ * written. No shared helper is touched and the 08-06 hazard cannot arise.
+ *
+ * The cost is one helper call per library instead of per state — trivial at this
+ * family's size, and each call still batches its own events internally.
+ */
 async function saveToDatabase(events, state) {
-  return await saveEventsWithGeocoding(events, LIBRARIES.filter(l => !state || l.state === state), {
-    scraperName: scraperNameFor(state),
-    state,
-    category: 'library',
-    platform: 'google-calendar',
-  });
+  const targets = LIBRARIES.filter(l => !state || l.state === state);
+  const totals = { saved: 0, skipped: 0, invalidDate: 0, errors: 0 };
+
+  for (const library of targets) {
+    const mine = events.filter(e => e.metadata?.sourceName === library.name);
+    if (!mine.length) continue;
+    const r = await saveEventsWithGeocoding(mine, [library], {
+      scraperName: scraperNameFor(library),
+      state: library.state,
+      category: 'library',
+      platform: 'google-calendar',
+    });
+    totals.saved += r?.saved || 0;
+    totals.skipped += r?.skipped || 0;
+    totals.invalidDate += r?.invalidDate || 0;
+    totals.errors += r?.errors || 0;
+  }
+  return totals;
 }
 
 async function runState(state) {
@@ -294,6 +477,11 @@ async function scrapeGCalLibrariesMDCloudFunction() { return runState('MD'); }
 async function scrapeGCalLibrariesMACloudFunction() { return runState('MA'); }
 async function scrapeGCalLibrariesSCCloudFunction() { return runState('SC'); }
 async function scrapeGCalLibrariesVTCloudFunction() { return runState('VT'); }
+// Added 2026-09-06 with the seven-library relocation. NC and PA hold one library each,
+// so they keep the bare registry key; NY holds two and slugs per site.
+async function scrapeGCalLibrariesNCCloudFunction() { return runState('NC'); }
+async function scrapeGCalLibrariesNYCloudFunction() { return runState('NY'); }
+async function scrapeGCalLibrariesPACloudFunction() { return runState('PA'); }
 
 module.exports = {
   scrapeGCalLibraries,
@@ -302,4 +490,7 @@ module.exports = {
   scrapeGCalLibrariesMACloudFunction,
   scrapeGCalLibrariesSCCloudFunction,
   scrapeGCalLibrariesVTCloudFunction,
+  scrapeGCalLibrariesNCCloudFunction,
+  scrapeGCalLibrariesNYCloudFunction,
+  scrapeGCalLibrariesPACloudFunction,
 };
