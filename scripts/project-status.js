@@ -48,9 +48,9 @@ const TODAY = new Date().toISOString().slice(0, 10);
  */
 const STALE_METRICS = {
   nameConformance: {
-    value: 74.8, unit: '%', measured: '2026-09-05',
-    detail: "644 of 861 distinct scraper_name values conform (78 EXACT + 566 PREFIXED); 217 drift. Measured on the first day since 2026-08-27 with a completed Group 2 rotation, so unlike the last five readings this one is NOT expiry: the DENOMINATOR ROSE 782 -> 861 as Group 2 and Group 1 wrote fresh rows, and conformance still rose 71.7% -> 74.8% with the drift count falling 221 -> 217. A rising denominator alongside a falling drift count is the first reading in this series that is unambiguously repair rather than aging-out. Drift classes: FREE_TEXT 100 names / 4714 rows, FORMAT_DRIFT 55 / 7298 (RecDeskParks-* still the bulk, still needs RecDesk-Parks-<slug>), UNRELATED 30 / 1003, CASE_MISMATCH 22 / 5213 (wordpress-NY alone is 1521 rows), BAD_SLUG 10 / 284. Worst single names: wordpress-NY 1521, wordpress-NJ 1078, LocalistParks-IN 1027, 'Free Library of Philadelphia' 896, 'Washington County Free Library' 105. COLLAPSED entries: Assabet-NH-MA 41 declared sites under ONE name, CustomDrupal-Libraries 8, SouthwestGeorgia-GA 3, CivicEngage-Libraries 2, MacaroniKid-DE 2, and NEW TODAY LibCal-FL2 5 - registered 2026-09-05 with a flat name. The LibCal-FL2 per-site fix was ATTEMPTED AND REVERTED the same day and the reason belongs here, because it is the same reason for most of the others: these scrapers save through saveEventsWithGeocoding(), which builds its own metadata block and OVERWRITES metadata.scraperName with the options-level value, and event-save-helper.js records that a per-site variant \"had to be reverted on 2026-08-06 because verifyAndCleanupEvents looks events up by it\". Fixing the COLLAPSED class therefore requires changing how verifyAndCleanupEvents identifies a scraper's rows - a shared-helper change across ~50 scrapers - not per-file edits. See the LibCal-FL2 pinned note in reports/fix-notes.json. LibraryCalendar-Libraries now reads 36 declared / 36 distinct after today's two relocations, so it is not collapsed. PREVIOUS (2026-09-02): 561 of 782 conform; 221 drift; conformance 71.7%. That and the four readings before it all fell on days with no rotation, so their falling drift counts were rows expiring out of the rolling window, not names being repaired.",
-    refresh: 'node scripts/check-scraper-names.js',
+    value: 75.5, unit: '%', measured: '2026-09-06',
+    detail: "658 of 872 distinct scraper_name values conform (80 EXACT + 578 PREFIXED); 214 drift, over 120,112 rows since 2026-08-01. THE HEADLINE IS THAT MOST OF THIS DRIFT IS ALREADY FIXED AND MERELY AGING OUT, which five previous readings could not distinguish and therefore reported as open work. Measured 2026-09-06 with the new scripts/check-name-drift-liveness.js across the 40 largest drifting names (~15,400 of ~17,500 drifting rows): 34 names / 13,112 rows (85%) had NOT been written for over three days, and only 6 names / 2,306 rows (15%) were live. Every one of the 23 largest drifters last wrote on or before 2026-08-27; wordpress-NY (1,507 rows) stopped dead on 2026-08-27, the day commit bb18d63 'Bring 38 scraper name declarations onto their registry key' landed, while WordPress-NY is written daily. ALL SIX LIVE DRIFTERS WERE FIXED 2026-09-06: FreeLibrary-Philadelphia, Trumba-Spartanburg, Rockbridge-Regional, EventActions-Libraries and LibraryMarket never set metadata.scraperName at all, so the adapter fell back to metadata.sourceName and stored library DISPLAY names ('Free Library of Philadelphia' 878 rows, 'Spartanburg County Public Libraries' 448, 'Jefferson-Madison Regional Library' 392, 'Carroll County Public Library' 289, 'Rockbridge Regional Library' 166); Localist-Parks built an uppercase 'Localist-Parks-PA' slug, now lowercased. So this gate should now RISE on its own as stale rows expire, and a fall would mean a NEW regression rather than the old backlog. Drift classes as measured: FREE_TEXT 97 names / 4580 rows, FORMAT_DRIFT 55 / 7147 (RecDeskParks-* still the bulk, still needs RecDesk-Parks-<slug>, and all of it now stale), CASE_MISMATCH 21 / 5147 (entirely pre-2026-08-27 history — the active files already carry correct-case SCRAPER_NAME, verified by a sweep that found ZERO active files with a case mismatch), UNRELATED 31 / 967, BAD_SLUG 10 / 323. COLLAPSED entries remain: Assabet-NH-MA 41 declared sites under ONE name, CustomDrupal-Libraries 8, SouthwestGeorgia-GA 3, CivicEngage-Libraries 2, MacaroniKid-DE 2, LibCal-FL2 5. The LibCal-FL2 per-site fix was attempted a THIRD time on 2026-09-06 and again proven inert — re-run the scraper and read the rows back and all 84 still carry the flat name — because saveEventsWithGeocoding() rebuilds the metadata block and overwrites both scraperName and sourceUrl. Fixing the COLLAPSED class therefore requires changing how verifyAndCleanupEvents() identifies a scraper's rows, across ~50 scrapers, and is owner-level rather than daily work. PREVIOUS (2026-09-05): 644 of 861 conform; 217 drift; 74.8%.",
+    refresh: 'node scripts/check-scraper-names.js  (then node scripts/check-name-drift-liveness.js to split live from stale)',
   },
   sourceUrlCoverage: {
     value: 62, unit: '%', measured: '2026-08-05',
@@ -559,20 +559,32 @@ function renderBroken(gates, fixNotes) {
     push('🟠', 'Unknown sites (UNVERIFIABLE verdicts)',
       `${gates.unknownSites.now} sites`, 'bot-blocks / JS-only calendars / TLS failures — never re-checked');
   }
-  // Flagged whenever most events still fall in the catch-all, and additionally whenever
-  // specificity has regressed below its own best-ever — the ratchet, since there is no
-  // fixed target to compare against.
-  if (gates.specificAgeShare.now < 50 || gates.specificAgeShare.regressed) {
-    push('🟠', gates.specificAgeShare.regressed
-        ? 'Age detection REGRESSED below best-ever specificity'
-        : 'Age detection — most events still land in the All Ages catch-all',
-      `${gates.specificAgeShare.now}% resolved` +
-        (gates.specificAgeShare.best ? ` (best ever ${gates.specificAgeShare.best}% on ${gates.specificAgeShare.bestDate})` : ''),
-      'MASTER-PLAN Phase 5, not started');
+  // Flagged whenever most events still fall in the catch-all.
+  //
+  // The "regressed below best-ever" wording was REMOVED 2026-09-06 because the
+  // ratchet cannot support it. Gate 5 is computed over the whole of
+  // AGE-RANGE-AUDIT.md, but each section is ONE rotation group, and the groups
+  // differ enormously in content: measured per section, G1 averages 22.5%
+  // specific, G2 44.1%, G3 40.8%. Group mix is worth 20-30 points while the
+  // "regression" being reported was 1.3, so the ratchet was firing on which
+  // group happened to run. Two further confounders: the 2026-09-02 rebalance
+  // moved scrapers between groups (G3 reads 44-50% before it, 30-36% after), and
+  // reconstructed sections mis-attribute their group. Verify with
+  // scripts/age-specificity-by-section.js before treating any move as real.
+  if (gates.specificAgeShare.now < 50) {
+    push('🟠', 'Age detection — most events still land in the All Ages catch-all',
+      `${gates.specificAgeShare.now}% resolved (cumulative; varies 13-60% by rotation group)`,
+      'MASTER-PLAN Phase 5, not started — compare like-for-like with age-specificity-by-section.js, NOT against best-ever');
   }
+  // Reported as two populations, because they need opposite responses. A name that
+  // stopped being written is a FIXED defect whose rows have not yet expired; only a
+  // name still being written is work. Measured 2026-09-06 over the 40 largest
+  // drifting names: 85% of drifting rows were stale, 15% live. Refresh the split
+  // with scripts/check-name-drift-liveness.js rather than assuming this ratio holds.
   if (gates.nameConformance.now < 100) {
     push('🟡', 'scraper_name drift — rows cannot join back to the registry',
-      `${gates.nameConformance.now}% conform (as of ${gates.nameConformance.stale})`, 'deliberate migration, explicitly not daily work');
+      `${gates.nameConformance.now}% conform (as of ${gates.nameConformance.stale})`,
+      'mostly ALREADY-FIXED rows aging out, not live drift — check-name-drift-liveness.js separates the two before anyone renames anything');
   }
   if (gates.countyCoverage.now < 1) {
     push('🟡', 'County-level coverage unknown',

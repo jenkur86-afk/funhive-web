@@ -4646,7 +4646,7 @@
  },
  "WordPress-MA|||Andrews Branch Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.newburyportlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "duplicate RESOLVED 2026-09-06 - its own site names newburyportpl.assabetinteractive.com, ALREADY configured in Assabet-NH-MA as Newburyport Public Library. Andrews is a branch of that system and arrives as its own venue off the system calendar, so this entry was guarded rather than relocated: adding it would double-scrape one calendar under two scraper names. Caught by matching on SLUG after a name check had passed it as new coverage",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - its own site names the instance newburyportpl.assabetinteractive.com, which is ALREADY configured there as Newburyport Public Library. Andrews is a branch of that system, so the branch arr",
@@ -8086,7 +8086,7 @@
  },
  "WordPress-MA|||Conant Free Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://sterlinglibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at sterlinglibrary.assabetinteractive.com; the library titles itself Conant Public Library and sits in Sterling MA, which is why the slug does not match the configured name. Identity 4 Meetinghouse Hill Rd, Sterling MA 01564, ph 978. RSS 45 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance sterlinglibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 45 items titled for this same ",
@@ -8104,7 +8104,7 @@
  },
  "WordPress-MA|||Dover Town Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://dovertownlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at dovertownlibrary.assabetinteractive.com, unreadable by a WordPress DOM extractor. Identity 56 Dedham Street, Dover MA 01773, ph 508. RSS 29 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance dovertownlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 29 items titled for this same",
@@ -8122,7 +8122,7 @@
  },
  "WordPress-MA|||Edgartown Free Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.edgartownlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at edgartownlibrary.assabetinteractive.com. Identity 26 West Tisbury Road, Edgartown MA 02539, ph 508. RSS 39 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance edgartownlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 39 items titled for this same",
@@ -8130,7 +8130,7 @@
  },
  "WordPress-MA|||G. A. R. Memorial Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://westnewburylibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at westnewburylibrary.assabetinteractive.com. Identity 490 Main Street, West Newbury MA 01985, ph 978. RSS 33 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance westnewburylibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 33 items titled for this sa",
@@ -8206,7 +8206,7 @@
  },
  "WordPress-MA|||Holliston Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://hollistonlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at hollistonlibrary.assabetinteractive.com. Identity 752 Washington St, Holliston MA 01746, ph 508. RSS 49 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance hollistonlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 49 items titled for this same",
@@ -8227,7 +8227,7 @@
  },
  "WordPress-MA|||Ipswich Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.ipswichlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at ipswichlibrary.assabetinteractive.com. Identity 25 N. Main St, Ipswich MA 01938, ph 978. RSS 48 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance ipswichlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 48 items titled for this same l",
@@ -8240,19 +8240,16 @@
  },
  "WordPress-MA|||Jonathan Bourne Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.bournelibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at bournelibrary.assabetinteractive.com. Identity 19 Sandwich Road, Bourne MA 02532, ph 508. RSS 53 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance bournelibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 53 items titled for this same li",
   "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Lakeville Free Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://lakevillelibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero",
-  "status": "contained",
-  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: OPEN GAP, not fixed - lakevillelibrary.assabetinteractive.com returns HTTP 200 titled Lakeville Public Library, but /calendar/ 404s and the instance exposes no internal links. It runs Assabet for its SITE and not for its EVENTS, so there i",
-  "statusAt": "2026-09-06"
+  "verdict": "UNVERIFIABLE",
+  "comment": "OPEN GAP, sharpened not closed, 2026-09-06 - lakevillelibrary.assabetinteractive.com returns HTTP 200 titled Lakeville Public Library, but /calendar/ 404s and the instance exposes no internal links at all. The library runs Assabet for its SITE and not for its EVENTS, so there is no feed to relocate to and no entry was wired: an entry that cannot return an event is worse than an acknowledged gap. Identity 4 Precinct St, Lakeville MA 02347, ph 508. Same shape as Somerset, recorded on 2026-08-24",
+  "population": "zero"
  },
  "WordPress-MA|||Lenox Library Association": {
   "verdict": "MISMATCH",
@@ -8264,7 +8261,7 @@
  },
  "WordPress-MA|||Leicester Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.leicesterlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at leicesterma.assabetinteractive.com. Identity 1136 Main Street, Leicester MA 01524, ph 508. RSS 33 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance leicesterma.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 33 items titled for this same libr",
@@ -8272,7 +8269,7 @@
  },
  "WordPress-MA|||Leominster Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.leominsterlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at leominsterlibrary.assabetinteractive.com. Identity 30 West Street, Leominster MA 01453, ph 978. RSS 73 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance leominsterlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 73 items titled for this sam",
@@ -8304,7 +8301,7 @@
  },
  "WordPress-MA|||Medfield Memorial Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.medfieldpubliclibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06, and it completes a diagnosis that was only half right. Its URL was corrected inside WordPress-MA on 2026-09-03 after medfieldlibrary.org was found to 301 to medfieldpubliclibrary.org - correct about the host, silent about the platform. The corrected host runs Assabet at medfieldpubliclibrary.assabetinteractive.com, so the entry still could not work where it sat. Identity 468 Main St, Medfield MA 02052, ph 508. RSS 100 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance medfieldpubliclibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 100 items titled for thi",
@@ -8343,7 +8340,7 @@
  },
  "WordPress-MA|||Millbury Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.millburylibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at millburylibrary.assabetinteractive.com. Identity 128 Elm Street, Millbury MA 01527, ph 508. RSS 51 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance millburylibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 51 items titled for this same ",
@@ -8518,12 +8515,9 @@
   "population": "zero"
  },
  "WordPress-MA|||Somerset Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.somersetpubliclibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero",
-  "status": "contained",
-  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: OPEN GAP, not fixed - somersetpubliclibrary.assabetinteractive.com returns HTTP 200 titled Somerset Public Library, but /calendar/ 404s and the instance exposes no internal links. Already recorded as this exact case in the Assabet config o",
-  "statusAt": "2026-09-06"
+  "verdict": "UNVERIFIABLE",
+  "comment": "OPEN GAP, re-confirmed 2026-09-06 - somersetpubliclibrary.assabetinteractive.com returns HTTP 200 titled Somerset Public Library, but /calendar/ 404s and the instance exposes no internal links. This was already recorded as exactly this case in the Assabet config on 2026-08-24; today independently reached the same conclusion. Identity 1464 County Street, Somerset MA 02726, ph 508. No entry wired, and none should be until the library exposes a calendar",
+  "population": "zero"
  },
  "WordPress-MA|||Swansea Free Public Library": {
   "verdict": "MISMATCH",
@@ -8560,7 +8554,7 @@
  },
  "WordPress-MA|||Topsfield Town Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.topsfieldlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at topsfieldlibrary.assabetinteractive.com. Identity One South Common Street, Topsfield MA 01983, ph 978. RSS 36 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance topsfieldlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 36 items titled for this same",
@@ -8721,7 +8715,7 @@
  },
  "WordPress-NH|||Hampton Lane Memorial Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.hampton.lib.nh.us/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "duplicate RESOLVED 2026-09-06 - resolves to slug hampton, ALREADY configured in Assabet-NH-MA as Lane Memorial Library. Guarded rather than relocated. This is the same catch the 2026-08-24 Assabet note records for this exact library, re-confirmed by slug rather than name",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: duplicate of Assabet-NH-MA, confirmed 2026-09-06 - resolves to slug hampton, ALREADY configured there as Lane Memorial Library. Caught by matching on SLUG, not name, which is the same catch the 2026-08-24 Assabet note records for this exac",
@@ -9696,7 +9690,7 @@
  },
  "WordPress-ME|||Kennebunk Free Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://kennebunklibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at kennebunklibrary.assabetinteractive.com, the first MAINE library in that scraper. Identity 112 Main Street, Kennebunk ME 04043, ph 207. RSS 63 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance kennebunklibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 63 items titled for this same",
@@ -10036,7 +10030,7 @@
  },
  "WordPress-NJ|||Boonton Holmes Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.boontonlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at boontonlibrary.assabetinteractive.com, one of the first two NEW JERSEY libraries in that scraper. Identity 621 Main Street, Boonton NJ 07005, ph 973. RSS 53 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance boontonlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 53 items titled for this same l",
@@ -10259,7 +10253,7 @@
  },
  "WordPress-NJ|||Ridgewood Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://ridgewoodlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at ridgewoodlibrary.assabetinteractive.com. Identity 125 N. Maple Ave, Ridgewood NJ 07450, ph 201. RSS 123 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance ridgewoodlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 123 items titled for this sam",
@@ -10420,7 +10414,7 @@
  },
  "WordPress-NY|||Baldwin Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.baldwinpl.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06, and it exposed a THIRD misconfiguration of the same library. It was held by WordPress-NY with eventsUrl pointing at baldwinlib.libcal.com AND by LibCal-NY2 with a settled MATCHES verdict, and neither could ever work: baldwinlib.org is Baldwin Public Library of Birmingham MICHIGAN 48009. The New York library is baldwinpl.org, one letter different, and runs Assabet - RSS 114 upcoming. Identity 2385 Grand Avenue, Baldwin NY 11510, ph 516. Relocated to Assabet-NH-MA; both the WordPress-NY and LibCal entries are guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance baldwinpl.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 114 items titled for this same libra",
@@ -10733,7 +10727,7 @@
  },
  "WordPress-NY|||Locust Valley Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.locustvalleylibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at locustvalleylibrary.assabetinteractive.com. Identity Locust Valley NY 11560, ph 516 which is Nassau County Long Island. RSS 81 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance locustvalleylibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 81 items titled for this s",
@@ -11009,7 +11003,7 @@
  },
  "WordPress-NY|||Seaford Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://seafordlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "platform-mismatch RESOLVED 2026-09-06 - runs Assabet at seafordlibrary.assabetinteractive.com. Identity 2234 Jackson Ave, Seaford NY 11783, ph 516 which is Nassau County Long Island. RSS 33 upcoming. Relocated to Assabet-NH-MA; WordPress entry guarded",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance seafordlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 33 items titled for this same l",
