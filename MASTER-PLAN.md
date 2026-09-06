@@ -218,10 +218,34 @@ and `ZooAquariums-Eastern` (251) capture **no URL of any kind** — window-indep
 Reported 356 found / 65 new on the 2026-08-05 run, but the database holds 0 upcoming rows.
 Found → stored is broken somewhere. Not part of the 63; its own investigation.
 
-### Phase 8 — UNVERIFIABLE backlog ⬜ NOT STARTED
+### Phase 8 — UNVERIFIABLE backlog 🟡 MEASURED 2026-09-06 — re-checking is NOT the lever
 331 sites came back UNVERIFIABLE (bot-blocks, JS-only calendars, TLS failures). They are
 *unknown*, not good. **The true bug count is between 63 and 394.** Re-checking them is separate
 work that no other phase covers.
+
+**The whole remaining backlog was re-run through `verify-sites-puppeteer.js` on 2026-09-06 —
+458 sites — and the yield was ~7%: 30 MISMATCH, 1 MATCHES, 427 still UNVERIFIABLE.** Do not plan
+on a re-check pass clearing this phase; it will not. These sites are unverifiable for durable
+reasons, and a second pass with the same tool mostly reproduces the same answer. The result was
+controlled before being believed: the first 48 results were all UNVERIFIABLE, which looked like
+Chrome contention with the concurrent `FunHive-Macaroni` task, so three sites verified earlier
+that day were re-run and reproduced their exact earlier verdicts. The tool is fine.
+
+**Two things did work, and both were reclassification rather than re-fetching:**
+- **122 rows were never unknown at all.** A GUARDED entry's URL is already *proven* to serve
+  another institution, so it belongs in MISMATCH, not the unknown pile. `scripts/promote-guarded-unverifiable.js`
+  reclassifies them, reading the live config rather than the stored comment — which caught two
+  rows whose comment claimed a guard that does not exist. Pair it with
+  `mark-contained-mismatches.js` so the promotions land as *contained*, not as open bugs.
+- **The verifier must not be pointed at sites whose scraper already works.** It answers one
+  question — does this page show events? — and for a working scraper the answer is yes, which it
+  mis-reads as a miss. Feeding it the whole backlog indiscriminately manufactured 17 false
+  MISMATCHes against healthy MacaroniKid Yodel sites. Scope it to the ZERO-EVENT population,
+  where page-has-events genuinely does imply a bug.
+
+So the honest next lever for gate 4 is **not** another re-check pass. It is (a) reclassifying
+rows that are already known, and (b) Phase 10's `CONFIGURED-ZERO` work on the renders-nothing
+slice below, which is the majority of what remains.
 
 As of 2026-08-28 the backlog is 830, and its single largest slice — **439 sites that render fully
 but show no dated events** — is enumerated in `reports/renders-nothing-sites.md` and specified as
