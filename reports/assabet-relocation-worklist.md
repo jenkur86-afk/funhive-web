@@ -1,4 +1,36 @@
-# Assabet relocation worklist — 22 libraries, evidence gathered 2026-09-06
+# Assabet relocation worklist — COMPLETED 2026-09-06
+
+> **STATUS: DONE.** All 22 were worked the same day this list was written. **18 were
+> relocated to `Assabet-NH-MA` and proven live at 1,075 database rows**; the other 4
+> were deliberately NOT wired and the reasons are below. Assabet went 3,431 → 4,528
+> rows and 52 → 72 distinct venues. The table is kept as the record of what was
+> checked, not as outstanding work.
+>
+> **Two were duplicates caught only by SLUG**, after a name check had passed them as
+> new coverage — Andrews Branch → `newburyportpl` (already configured as Newburyport
+> Public Library) and Hampton Lane Memorial → `hampton` (already configured as Lane
+> Memorial Library). Their WordPress entries were guarded rather than relocated.
+>
+> **Two have no calendar at all**: `lakevillelibrary` and `somersetpubliclibrary`
+> both return HTTP 200 at their instance root, correctly titled, but 404 on
+> `/calendar/` and expose no internal links. They run Assabet for their SITE and not
+> their EVENTS, so there is nothing to relocate to. **Both remain open coverage gaps**
+> and neither was wired: an entry that cannot return an event is worse than an
+> acknowledged gap.
+>
+> **The naming question in this file was decided: the key stays `Assabet-NH-MA`.**
+> It now spans MA, NH, RI, ME, NY and NJ, so the name understates it — but this
+> scraper writes ONE `scraper_name` for every site, so the key IS the scraper_name on
+> all 4,528 rows, and renaming would churn attribution fleet-wide for a cosmetic gain.
+> `state: 'Multi'` already carries the truth. Revisit only if the COLLAPSED
+> constraint is lifted.
+>
+> **Wiring these exposed a bug in the shared save helper**, not in this list:
+> `findLibraryForEvent()` let a weak city match on an earlier library beat an exact
+> name match on a later one, so 33 Dover **MA** events were stored as Dover **NH**.
+> Fixed with three ordered passes, covered by `scripts/test-library-matching.js`, and
+> the 33 rows repaired. See `SCRAPER-FIX-LOG.jsonl` 2026-09-06.
+
 
 Generated while working down the `UNVERIFIABLE` backlog. Regenerate the evidence with
 `node scripts/recheck-unverifiable-http.js`; do not hand-edit the table.

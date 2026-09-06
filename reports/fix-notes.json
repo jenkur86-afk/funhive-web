@@ -237,6 +237,12 @@
       "expect": "NEW should RISE on WordPress-{state} scrapers, most visibly on the ones with many zero/low-count libraries, because events that previously lost their date to a stale duplicate now keep it. Total FOUND may fall slightly at the same time - that is correct, not a regression: FOUND counts surviving cards, and undated duplicates are no longer retained. Proven only on WordPress-KY (Oldham 24 raw -> 18 dated). Groups 1 and 2 unrun under this change.",
       "confirm": "Compare NEW for WordPress-{state} in scrapers/logs/scraper-summary.log against 2026-09-06 (KY 187, NY 1715, NJ 1312, MA 361, GA 181, SC 97, RI 113, NH 195, MD 90) on the next runs of Groups 1 and 2.",
       "added": "2026-09-06"
+    },
+    "ASSABET-18-SCHEDULED-RUN-UNRUN": {
+      "what": "18 libraries relocated into Assabet-NH-MA on 2026-09-06 (12 MA, 1 ME, 3 NY, 2 NJ), registry sites 41 → 61, 22 WordPress entries and 1 LibCal entry guarded, and findLibraryForEvent() in the shared event-save-helper.js changed to three ordered passes after it stored 33 Dover MA events as Dover NH.",
+      "expect": "THE RELOCATIONS ARE PROVEN by a hand-run: 1,075 rows across the 18, every one in the correct state after the Dover repair. WHAT IS UNPROVEN IS THE SCHEDULED PATH AND THE SHARED-HELPER CHANGE. On the next GROUP 2 rotation (2026-09-08) confirm: Assabet-NH-MA FOUND rises well above its previous ~4,200 now that 18 more libraries are in the list; the 23 guarded entries each emit their guard line plus Found 0 events so they keep their LIBRARY-SITE-AUDIT.md rows; and NO scraper regresses on venue attribution from the findLibraryForEvent change — it is shared by ~50 scrapers, so watch for any scraper whose distinct-venue count moves sharply. THE DOVER ROWS ARE AWAITING RE-GEOCODE: their location and geohash were nulled deliberately, so confirm the daily fix-event-quality backfill has repaired them; if they are still null after two runs, the geohash backfill is not reaching them.",
+      "confirm": "grep \"Assabet-NH-MA\" scrapers/logs/scraper-summary.log | tail -3; node scripts/test-library-matching.js (expect 11/11); node -e \"const{supabase}=require('./scrapers/helpers/supabase-adapter');supabase.from('events').select('id',{count:'exact',head:true}).eq('venue','Dover Town Library').is('geohash',null).then(r=>console.log('Dover rows still lacking geohash:',r.count))\"",
+      "added": "2026-09-06"
     }
   },
   "LibCal-VA": {
@@ -377,8 +383,8 @@
     "added": "2026-09-06"
   },
   "Assabet-NH-MA": {
-    "note": "STANDING WORKLIST: reports/assabet-relocation-worklist.md holds 22 libraries that serve assabetinteractive.com markup from inside WordPress-* configs and are NOT yet in this scraper. They are evidenced but deliberately unwired, for two reasons that are judgement calls rather than mechanical steps. (1) NONE HAS HAD ITS FEED OPENED - a platform marker proves the platform is REFERENCED, not that it holds that library events, which is exactly how two Georgia Google Calendar candidates were rejected on 2026-08-23. (2) FIVE SIT OUTSIDE NH AND MA (ME 1, NY 3, NJ 2), so wiring them makes the registry key Assabet-NH-MA understate its coverage, while renaming the key churns attribution and leaves old rows under the old name until they expire. A further 21 libraries in the same group were ALREADY configured here and their WordPress entries were guarded on 2026-09-06 rather than relocated, because relocating an already-covered library double-scrapes one calendar under two scraper names. Two specific conflicts to resolve first: Medfield Memorial had its URL corrected on 2026-09-03 and the platform half of that diagnosis was missed, and Baldwin Public Library is held by BOTH WordPress-NY and LibCal-NY2 while its real calendar is Assabet.",
-    "priority": "high",
+    "note": "RESOLVED 2026-09-06 — the 22-library worklist this note pointed at was executed the same day. 18 relocated and proven live at 1,075 rows (Assabet 3,431 → 4,528; venues 52 → 72). 2 were duplicates caught by SLUG rather than name (Andrews Branch → newburyportpl, Hampton Lane → hampton) and were guarded. 2 have no calendar module at all (lakevillelibrary, somersetpubliclibrary: root 200, /calendar/ 404) and REMAIN OPEN GAPS — do not re-investigate them, and do not wire an entry that cannot return an event. The naming question is decided: the key stays Assabet-NH-MA despite now spanning six states, because this scraper writes one scraper_name for every site so the key is the scraper_name on all 4,528 rows. Keeping this note one cycle for traceability, then delete. reports/assabet-relocation-worklist.md holds the full record.",
+    "priority": "low",
     "added": "2026-09-06"
   }
 }

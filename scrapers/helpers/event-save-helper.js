@@ -951,12 +951,47 @@ function findLibraryForEvent(event, libraries) {
         || libraries[0];
   }
 
-  for (const lib of libraries) {
-    if (lib.name.toLowerCase().includes(eventVenue) ||
-        eventVenue.includes(lib.name.toLowerCase()) ||
-        (lib.city && eventVenue.includes(lib.city.toLowerCase()))) {
-      return lib;
-    }
+  // THREE ORDERED PASSES, NOT ONE LOOP OVER THREE CONDITIONS.
+  //
+  // This was a single loop returning the first library satisfying ANY of the three
+  // tests, which meant a WEAK CITY MATCH ON AN EARLY LIBRARY BEAT A STRONG NAME
+  // MATCH ON A LATER ONE — the array order decided, not the strength of the evidence.
+  //
+  // Found live 2026-09-06 wiring Dover Town Library (Dover, MASSACHUSETTS) into
+  // Assabet-NH-MA, which already contained Dover Public Library (Dover, NEW
+  // HAMPSHIRE) earlier in the array. The venue "Dover Town Library" contains the
+  // string "dover", so the city test fired on the NH entry first and all 33
+  // Massachusetts events were stored as New Hampshire — wrong state, wrong city,
+  // wrong coordinates. An exact name match for the right library existed the whole
+  // time, three entries further down.
+  //
+  // Splitting the passes can only ever IMPROVE an existing caller's match: every
+  // library that used to win on a name test still wins, and the only matches that
+  // change are precisely the ones where a city guess was overriding a real name.
+  const lc = s => String(s || '').toLowerCase();
+
+  // Pass 1 — exact name. Unambiguous, so it must outrank everything.
+  const exact = libraries.find(l => lc(l.name) === eventVenue);
+  if (exact) return exact;
+
+  // Pass 2 — name containment either way. Still name-based, so still strong.
+  // Longest name first, so "Dover Town Library" beats a hypothetical "Dover".
+  const byName = libraries
+    .filter(l => lc(l.name).includes(eventVenue) || eventVenue.includes(lc(l.name)))
+    .sort((a, b) => lc(b.name).length - lc(a.name).length);
+  if (byName.length) return byName[0];
+
+  // Pass 3 — city containment, the weakest signal and the last resort. Anchored on
+  // a word boundary so "Oxford" no longer matches "Boxford", and narrowed by the
+  // event's own state first when it carries one, so a shared city name across two
+  // states cannot silently pick the wrong one.
+  const cityHits = libraries.filter(l => {
+    if (!l.city) return false;
+    return new RegExp(`\\b${lc(l.city).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`).test(eventVenue);
+  });
+  if (cityHits.length) {
+    const st = lc(event.state);
+    return (st && cityHits.find(l => lc(l.state) === st)) || cityHits[0];
   }
 
   // Default to first library if no match
