@@ -1935,6 +1935,19 @@ function isJunkTitle(name) {
     /^(open|closed)$/i,
     /^(the\s+)?library\s+clos(ed|ing)\b.{0,40}$/i,
     /^clos(ed|ing)\s+(today|early|for\s+the\s+(day|holiday|season))$/i,
+    // Extended 2026-09-06. The $-anchored rule above catches a bare "Library Open"
+    // but NOT the far commoner form that appends the hours — Leverett Library alone
+    // stored 65 rows reading "Library Open 10am-3pm", "Library Open 2pm-7pm",
+    // "Library Open 2PM-7pm", found the day it was wired into GoogleCalendar-MA.
+    // Same defect the 2026-08-23 note describes for GoogleCalendar-VT, one variant
+    // wider: one small library out-posting a whole state with its own opening hours.
+    //
+    // THE EXPLICIT CLOCK RANGE IS THE ENTIRE GUARD and is required, not optional.
+    // "Open" alone is overwhelmingly a real event — Open Gym has 4 live rows under
+    // GoogleCalendar-MD — so only a status word followed by a real time range
+    // matches. Every negative control listed above still cannot match, because none
+    // of them carries one.
+    /^(the\s+)?[\w'’&.\- ]{0,30}\bopen\b\s*[:,-]?\s*\d{1,2}(:\d{2})?\s*(am|pm)?\s*(?:-|–|—|to)\s*\d{1,2}(:\d{2})?\s*(am|pm)\.?$/i,
   ];
   for (const pattern of NAV_JUNK) {
     if (pattern.test(trimmed)) return true;

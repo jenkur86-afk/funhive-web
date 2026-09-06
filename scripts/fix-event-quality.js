@@ -529,8 +529,30 @@ async function main() {
     // isJunkTitle() carries its own AUDIENCE_RESCUE, so Teen/T(w)een Advisory Board are
     // still protected — verified by direct call before this change.
     if (isJunkTitle(n)) return true;
-    if (n.length < 5) return true;  // Too short to be a real event name
-    if (n.length < 8 && /^[A-Z\s\d]+$/.test(n)) return true;  // All-caps gibberish
+    // ---- TWO LOCAL LENGTH RULES REMOVED 2026-09-06 -------------------------
+    // They read:
+    //     if (n.length < 5) return true;                          // "too short"
+    //     if (n.length < 8 && /^[A-Z\s\d]+$/.test(n)) return true; // "all-caps gibberish"
+    // Both CONTRADICTED a decision isJunkTitle() had already made on purpose. That
+    // helper stops at `length < 3` and carries an explicit note that an earlier
+    // all-caps-short rule was REMOVED because it rejected real titles ("GLOW",
+    // "KIDS FIT", "TOT ROCK", "STEAM CLUB"). So the shared predicate kept these rows
+    // at scrape time and this backfill deleted them afterwards — the two halves
+    // disagreeing is precisely the defect the 2026-08-22 delegation was meant to end,
+    // arriving from the opposite direction: STEP 1b was STRICTER than the helper, not
+    // looser.
+    //
+    // DECIDED FROM THE DATA, NOT FROM AN OPINION. Every 3-4 character title in the
+    // table was enumerated: 52 rows across 17 distinct titles, and NOT ONE is junk —
+    // Yoga (31), ESL (6), Hike, Bass, Lake, Wren, Crow, Tusk, Stir, GLOW, TAB (Teen
+    // Advisory Board), MLBx, BLM, SCPD, and three band names (Styx, AJJ, AFI). The
+    // all-caps rule alone would have taken GLOW, AJJ, SCPD, BLM, TAB, AFI and ESL.
+    // Caught by dry-running this script and reading the sample, which is why
+    // CLAUDE.md insists on that before ever passing --save.
+    //
+    // isJunkTitle() remains the single authority for what a junk title is. Add new
+    // rules THERE, with negative controls in scripts/test-junk-titles.js, so both the
+    // save path and this backfill move together.
     if (/^(menu|home|about|contact|login|sign\s*up|subscribe|search|nav|header|footer|click\s+here|read\s+more|learn\s+more|view\s+all)$/i.test(n)) return true;  // Navigation junk
     // HTTP error pages / scraper artifacts
     if (/\b(page\s+(you\s+requested\s+)?(no\s+longer\s+exists|not\s+found|cannot\s+be\s+found|has\s+been\s+removed|does\s+not\s+exist))\b/i.test(n)) return true;

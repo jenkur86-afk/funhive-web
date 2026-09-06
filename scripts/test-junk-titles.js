@@ -59,6 +59,23 @@ const CASES = [
   ["Library Open House", false, "real event that also names the library"],
   ["Closed Captioning Workshop", false, "closed as a modifier, not a status"],
 
+  // --- opening hours WITH the clock range appended (added 2026-09-06) --------
+  // The 2026-08-23 rules above are $-anchored on the bare status phrase, so they
+  // caught "Library OPEN" but not the commoner form that appends the hours.
+  // Leverett Library stored 65 such rows the day it was wired into
+  // GoogleCalendar-MA — the same defect as GoogleCalendar-VT, one variant wider.
+  ["Library Open 10am-3pm", true, "hours announcement, not an event"],
+  ["Library Open 2pm-7pm", true, "same"],
+  ["Library Open 2PM-7pm", true, "same, mixed case"],
+  ["Library Open 10 AM to 3 PM", true, "same, spelled separator"],
+  ["Open 9:00am - 5:00pm", true, "bare status plus hours"],
+  // MUST SURVIVE. A clock range alone must never make a title junk — the rule
+  // requires a status word AND a range AND nothing of substance after it.
+  ["Open Gym 10am-3pm for Ages 5-12", false, "real programme that states its hours"],
+  ["Storytime 10am-11am", false, "real programme with a time range and no status word"],
+  ["Open Gym", false, "real drop-in session — 4 live rows under GoogleCalendar-MD"],
+  ["Open Studio Saturday", false, "real programme"],
+
   // --- municipal governance agendas (added 2026-08-20) ----------------------
   ['Town Council', true, 'governance body'],
   ['Town Council Meeting', true, 'governance body'],
