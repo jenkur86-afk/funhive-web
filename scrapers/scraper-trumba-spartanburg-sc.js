@@ -22,6 +22,10 @@ const { generateEventId } = require('./event-id-helper');
 const { logScraperResult } = require('./scraper-logger');
 const { linkEventToVenue } = require('./venue-matcher');
 
+// Must equal the scraper-registry.js key byte-for-byte — scraper_name is the only
+// join between a database row and its registry entry.
+const SCRAPER_NAME = 'Trumba-Spartanburg';
+
 // Library configuration
 const LIBRARY = {
   name: 'Spartanburg County Public Libraries',
@@ -212,6 +216,9 @@ async function scrapeTrumbaEvents() {
           url: link || LIBRARY.website,
           metadata: {
             source: 'Trumba Scraper',
+            // Without scraperName the adapter falls back to sourceName, storing the
+            // library's DISPLAY name as scraper_name — unjoinable to the registry.
+            scraperName: SCRAPER_NAME,
             sourceName: LIBRARY.name,
             county: LIBRARY.county,
             state: LIBRARY.state,

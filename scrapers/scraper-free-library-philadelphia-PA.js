@@ -17,6 +17,10 @@ const { categorizeEvent } = require('./event-categorization-helper');
 const { normalizeDateString } = require('./date-normalization-helper');
 const { generateEventId, generateEventIdFromDetails } = require('./event-id-helper');
 const { logScraperResult } = require('./scraper-logger');
+
+// Must equal the scraper-registry.js key byte-for-byte — scraper_name is the only
+// join between a database row and its registry entry.
+const SCRAPER_NAME = 'FreeLibrary-Philadelphia';
 const { linkEventToVenue } = require('./venue-matcher');
 const { geocodeWithFallback } = require('./helpers/geocoding-helper');
 
@@ -313,6 +317,7 @@ async function scrapeFreeLibraryPhiladelphia() {
           url: event.url || LIBRARY.website,
           metadata: {
             source: 'Free Library of Philadelphia Scraper',
+            scraperName: SCRAPER_NAME,
             sourceName: LIBRARY.name,
             county: LIBRARY.county,
             addedDate: admin.firestore.FieldValue.serverTimestamp()
@@ -443,6 +448,10 @@ async function scrapeFreeLibraryPhiladelphia() {
             url: event.url || LIBRARY.website,
             metadata: {
               source: 'Free Library of Philadelphia Scraper',
+              // Without scraperName the adapter falls back to sourceName, which
+              // stored the DISPLAY name 'Free Library of Philadelphia' as
+              // scraper_name on 878 rows and made them unjoinable to the registry.
+              scraperName: SCRAPER_NAME,
               sourceName: LIBRARY.name,
               county: LIBRARY.county,
               addedDate: admin.firestore.FieldValue.serverTimestamp()
@@ -512,7 +521,7 @@ async function scrapeFreeLibraryPhiladelphia() {
   console.log('='.repeat(60) + '\n');
 
   // Log scraper stats to database
-  await logScraperResult('Free Library of Philadelphia', {
+  await logScraperResult(SCRAPER_NAME, {
     found: imported + skipped,
     new: imported,
     duplicates: skipped

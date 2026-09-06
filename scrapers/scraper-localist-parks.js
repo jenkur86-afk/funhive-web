@@ -334,7 +334,10 @@ async function scrapeLocalistState(config) {
       const libraries = Array.from(venueMap.values());
 
       const result = await saveEventsWithGeocoding(events, libraries, {
-        scraperName: `${SCRAPER_NAME}-${config.state}`,
+        // Slug must be lowercase [a-z0-9-] per CLAUDE.md -> Scraper Naming. The
+        // uppercase state produced "Localist-Parks-PA", which check-scraper-names.js
+        // classes BAD_SLUG and which therefore does not join back to the registry.
+        scraperName: `${SCRAPER_NAME}-${String(config.state).toLowerCase()}`,
         state: config.state,
         category: 'parks',
         platform: 'localist-parks'

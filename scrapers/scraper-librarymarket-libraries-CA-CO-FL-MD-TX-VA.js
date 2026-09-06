@@ -44,6 +44,22 @@ const { normalizeDateString } = require('./date-normalization-helper');
 const { linkEventToVenue } = require('./venue-matcher');
 const { geocodeWithFallback } = require('./helpers/geocoding-helper');
 
+// scraper_name is the only join between a database row and its registry entry.
+// Multi-site scrapers must emit "<registryKey>-<siteSlug>", one distinct name per
+// site, with the slug taken from the site's OWN hostname — never a display name.
+// Omitting it made the adapter fall back to metadata.sourceName, which stored
+// library display names ("Jefferson-Madison Regional Library", "Carroll County
+// Public Library") as scraper_name and left those rows unjoinable.
+const SCRAPER_NAME = 'LibraryMarket';
+function siteScraperName(site) {
+  // Strip a leading "www." BEFORE taking the first label — otherwise a host like
+  // www.ccpl.org slugs to the empty string and the name collapses to the bare key.
+  const host = String((site && (site.url || site.website)) || '')
+    .replace(/^https?:\/\//, '').split('/')[0].replace(/^www\./, '');
+  const slug = host.split('.')[0].toLowerCase().replace(/[^a-z0-9-]/g, '');
+  return slug ? SCRAPER_NAME + '-' + slug : SCRAPER_NAME;
+}
+
 // LibraryMarket Library Systems
 const LIBRARY_SYSTEMS = [
   // COLORADO
@@ -428,6 +444,7 @@ async function scrapeLibraryEvents(library, browser) {
           url: event.url || library.website,
           metadata: {
             source: 'LibraryMarket Scraper',
+            scraperName: siteScraperName(library),
             sourceName: library.name,
             county: library.county,
             state: library.state,

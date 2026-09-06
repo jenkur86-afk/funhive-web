@@ -22,6 +22,10 @@ const { logScraperResult } = require('./scraper-logger');
 const { getBranchAddress } = require('./library-addresses');
 const { linkEventToVenue } = require('./venue-matcher');
 
+// Must equal the scraper-registry.js key byte-for-byte — scraper_name is the only
+// join between a database row and its registry entry.
+const SCRAPER_NAME = 'Rockbridge-Regional';
+
 // Library configuration - scrape individual branch calendar pages
 const LIBRARY = {
   name: 'Rockbridge Regional Library',
@@ -311,6 +315,9 @@ async function scrapeRockbridgeEvents() {
           url: event.url || LIBRARY.website,
           metadata: {
             source: 'Rockbridge Regional Library Scraper',
+            // Without scraperName the adapter falls back to sourceName, storing the
+            // library's DISPLAY name as scraper_name — unjoinable to the registry.
+            scraperName: SCRAPER_NAME,
             sourceName: LIBRARY.name,
             county: LIBRARY.county,
             addedDate: admin.firestore.FieldValue.serverTimestamp()
