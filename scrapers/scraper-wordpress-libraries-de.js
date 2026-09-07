@@ -52,7 +52,7 @@ const LIBRARIES = [
   { name: 'Dover Public Library', url: 'https://www.doverpubliclibrary.org', eventsUrl: 'https://www.doverpubliclibrary.org/events', city: 'Dover', state: 'DE', zipCode: '19901', county: 'Kent', urlCollision: 'platform mismatch - publishes on delawarelibraries.libcal.com; relocated to LibCal-DE 2026-08-26' },
   { name: 'Kent County Library', url: 'https://www.kentcountyde.gov/library', eventsUrl: 'https://www.kentcountyde.gov/library/events', city: 'Dover', state: 'DE', zipCode: '19904' },
   // Sussex County Libraries
-  { name: 'Georgetown Public Library', url: 'https://www.georgetownpubliclibrary.org', eventsUrl: 'https://www.georgetownpubliclibrary.org/events', city: 'Georgetown', state: 'DE', zipCode: '19947', county: 'Sussex'},
+  { name: 'Georgetown Public Library', url: 'https://www.georgetownpubliclibrary.org', eventsUrl: 'https://www.georgetownpubliclibrary.org/events', city: 'Georgetown', state: 'DE', zipCode: '19947', county: 'Sussex', urlCollision: "host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked rather than assumed, because a bare 404 on one path is not evidence a site is gone. Guarded so the rotation stops visiting it. OPEN COVERAGE GAP until a real URL is found" },
   { name: 'Lewes Public Library', url: 'https://www.leweslibrary.org', eventsUrl: 'https://www.leweslibrary.org/events', city: 'Lewes', state: 'DE', zipCode: '19958', county: 'Sussex'},
   { name: 'Rehoboth Beach Public Library', url: 'https://www.rehobothbeachde.gov/library', eventsUrl: 'https://www.rehobothbeachde.gov/experience-rehoboth-beach/calendar/', city: 'Rehoboth Beach', state: 'DE', zipCode: '19971', county: 'Sussex'},
   // Bridgeville Public Library REMOVED 2026-08-18: its eventsUrl was already pointed at
@@ -62,7 +62,7 @@ const LIBRARIES = [
   // Properly relocated to LibCal-DE now.
   { name: 'Laurel Public Library', url: 'https://www.laurellibrary.org', eventsUrl: 'https://www.laurellibrary.org/events', city: 'Laurel', state: 'DE', zipCode: '19956', county: 'Sussex', urlCollision: 'laurellibrary.org is KY, not DE' },
   // Additional libraries from coverage audit
-  { name: 'Frankford Public Library', url: 'https://www.frankfordlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.frankfordlibrary.org/events', city: 'Frankford', state: 'DE', zipCode: '19945', county: '' },
+  { name: 'Frankford Public Library', url: 'https://www.frankfordlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.frankfordlibrary.org/events', city: 'Frankford', state: 'DE', zipCode: '19945', county: '' , urlCollision: "host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked rather than assumed, because a bare 404 on one path is not evidence a site is gone. Guarded so the rotation stops visiting it. OPEN COVERAGE GAP until a real URL is found" },
   // Appoquinimink Public Library REMOVED 2026-08-18: same dead-endpoint reason as Bear
   // Library above. Relocated to LibCal-DE (delawarelibraries.libcal.com/calendar/appoquinimink).
 ];

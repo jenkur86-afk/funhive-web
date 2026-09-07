@@ -163,7 +163,10 @@
  "WordPress-GA|||Monroe County Library (Forsyth, GA)": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: urlCollision confirmed 2026-09-07: forsythlibrary.org is alive but titles itself \\",
+  "statusAt": "2026-09-07"
  },
  "WordPress-GA|||Heard County Public Library (Franklin, GA)": {
   "verdict": "MISMATCH",
@@ -286,7 +289,10 @@
  "WordPress-GA|||Rossville Public Library (Rossville, GA)": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-GA|||Scottdale-Tobie Grant Branch (Scottdale, GA)": {
   "verdict": "MISMATCH",
@@ -657,12 +663,18 @@
  "WordPress-CT|||Waterbury Public Library (Waterbury, CT)": {
   "verdict": "MISMATCH",
   "comment": "dead-domain: the configured URL redirects to forsale.godaddy.com, a GoDaddy parked \"domain for sale\" page — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correct URL or a guard",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: dead-domain: the configured URL redirects to forsale.godaddy.com, a GoDaddy parked \\",
+  "statusAt": "2026-09-07"
  },
  "WordPress-CT|||Norwalk Public Library (Norwalk, CT)": {
   "verdict": "MISMATCH",
   "comment": "dead-domain: the configured URL redirects to agentaruhanjuditogel.com, an online gambling site — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correct URL or a guard",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: dead-domain: the configured URL redirects to agentaruhanjuditogel.com, an online gambling site — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correc",
+  "statusAt": "2026-09-07"
  },
  "WordPress-CT|||Danbury Public Library (Danbury, CT)": {
   "verdict": "UNVERIFIABLE",
@@ -677,7 +689,10 @@
  "WordPress-CT|||Milford Public Library (Milford, CT)": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to milfordct.us]",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: dead-endpoint: HTTP 404 on the configured URL [redirects to milfordct.us] Guarded 2026-09-07 so the rotation stops visiting it — a squatted domain is one selector change away from importing another site's m",
+  "statusAt": "2026-09-07"
  },
  "WordPress-CT|||East Hartford Public Library (East Hartford, CT)": {
   "verdict": "MISMATCH",
@@ -894,7 +909,10 @@
  "WordPress-CT|||Pomfret Public Library (Pomfret, CT)": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-CT|||Portland Public Library (Portland, CT)": {
   "verdict": "UNVERIFIABLE",
@@ -1099,7 +1117,10 @@
  "WordPress-TN|||Southeast Branch Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-TN|||Ardmore Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -1193,7 +1214,10 @@
  "WordPress-TN|||Harriman Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 522 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-TN|||Carroll County Library": {
   "verdict": "MISMATCH",
@@ -1399,7 +1423,10 @@
  "WordPress-AL|||Collinsville Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-domain - collinsvillelibrary.org 307-redirects to a GoDaddy forsale parked page, no library site",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: dead-domain - collinsvillelibrary.org 307-redirects to a GoDaddy forsale parked page, no library site Guarded 2026-09-07 so the rotation stops visiting it — a squatted domain is one selector change away fro",
+  "statusAt": "2026-09-07"
  },
  "WordPress-AL|||Houston-Love Memorial Library - Columbia": {
   "verdict": "MISMATCH",
@@ -1585,7 +1612,10 @@
  "WordPress-AL|||Stevenson Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to stevenson.libguides.com]",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: dead-endpoint: HTTP 404 on the configured URL [redirects to stevenson.libguides.com] Guarded 2026-09-07 so the rotation stops visiting it — a squatted domain is one selector change away from importing anoth",
+  "statusAt": "2026-09-07"
  },
  "WordPress-AL|||Vernon - Mary Wallace Cobb Memorial Library": {
   "verdict": "MISMATCH",
@@ -1667,7 +1697,10 @@
  "WordPress-VT|||Benson Public (Benson, VT)": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-VT|||Bethel Public (Bethel, VT)": {
   "verdict": "MISMATCH",
@@ -1688,7 +1721,10 @@
  "WordPress-VT|||Cabot Public (Cabot, VT)": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-VT|||Chelsea Public (Chelsea, VT)": {
   "verdict": "MISMATCH",
@@ -1709,7 +1745,10 @@
  "WordPress-VT|||Pope Memorial (Danville, VT)": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-VT|||Essex Free (Essex, VT)": {
   "verdict": "MATCHES",
@@ -1807,7 +1846,10 @@
  "WordPress-VT|||Proctor Free (Proctor, VT)": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-VT|||Kimball Public (Randolph, VT)": {
   "verdict": "UNVERIFIABLE",
@@ -3058,7 +3100,10 @@
  "WordPress-PA|||Borough Of Folcroft Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-PA|||Foxburg Free Library Association": {
   "verdict": "UNVERIFIABLE",
@@ -3088,7 +3133,10 @@
  "WordPress-PA|||Glenolden Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 522 on the configured URL [redirects to chromewebdata]",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: dead-endpoint: HTTP 522 on the configured URL [redirects to chromewebdata] Guarded 2026-09-07 so the rotation stops visiting it — a squatted domain is one selector change away from importing another site's ",
+  "statusAt": "2026-09-07"
  },
  "WordPress-PA|||Greensburg Hempfield Area Library": {
   "verdict": "MATCHES",
@@ -3379,7 +3427,10 @@
  "WordPress-CT|||Kent Memorial Library": {
   "verdict": "MISMATCH",
   "comment": "suffieldlibrary.org is a parked domain - page says This domain may be for sale, no library content",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: suffieldlibrary.org is a parked domain - page says This domain may be for sale, no library content Guarded 2026-09-07 so the rotation stops visiting it — a squatted domain is one selector change away from i",
+  "statusAt": "2026-09-07"
  },
  "WordPress-CT|||Killingworth Library": {
   "verdict": "MATCHES",
@@ -3402,7 +3453,10 @@
  "WordPress-CT|||Milford Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint - ci.milford.ct.us 301s to milfordct.us/milford-public-library which returns 404; real site is milfordlibrary.org",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: dead-endpoint: HTTP 404 on the configured URL [redirects to milfordct.us] Guarded 2026-09-07 so the rotation stops visiting it — a squatted domain is one selector change away from importing another site's m",
+  "statusAt": "2026-09-07"
  },
  "WordPress-CT|||North Haven Memorial Library": {
   "verdict": "MISMATCH",
@@ -3415,7 +3469,10 @@
  "WordPress-CT|||Norwalk Public Library": {
   "verdict": "MISMATCH",
   "comment": "norwalkpubliclibrary.org 301-redirects off-host to dinaspendidikanpidiejaya.com, an unrelated Indonesian domain; not followed",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: dead-domain: the configured URL redirects to agentaruhanjuditogel.com, an online gambling site — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correc",
+  "statusAt": "2026-09-07"
  },
  "WordPress-CT|||Oakville Branch Library": {
   "verdict": "MISMATCH",
@@ -3454,7 +3511,10 @@
  "WordPress-CT|||Pomfret Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-CT|||Prospect Public Library": {
   "verdict": "MISMATCH",
@@ -3529,7 +3589,10 @@
  "WordPress-CT|||Waterbury Public Library": {
   "verdict": "MISMATCH",
   "comment": "siloam.com is a parked GoDaddy for-sale domain, not Waterbury Public Library CT; seed-data URL is wrong",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: dead-domain: the configured URL redirects to forsale.godaddy.com, a GoDaddy parked \\",
+  "statusAt": "2026-09-07"
  },
  "WordPress-CT|||Waterford Public Library": {
   "verdict": "MISMATCH",
@@ -3721,7 +3784,10 @@
  "WordPress-GA|||Monroe County Library": {
   "verdict": "MISMATCH",
   "comment": "forsythlibrary.org cert covers forsyth.lib.nc.us and forsythcountync.gov, i.e. Forsyth County NORTH CAROLINA, not Forsyth GA",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: urlCollision confirmed 2026-09-07: forsythlibrary.org is alive but titles itself \\",
+  "statusAt": "2026-09-07"
  },
  "WordPress-GA|||Monroe-Walton County Library": {
   "verdict": "MISMATCH",
@@ -3779,7 +3845,10 @@
  "WordPress-GA|||Rossville Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-GA|||Scottdale-Tobie Grant Branch": {
   "verdict": "MISMATCH",
@@ -4086,7 +4155,10 @@
  "WordPress-VT|||Benson Public": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-VT|||Bethel Public": {
   "verdict": "MISMATCH",
@@ -4115,7 +4187,10 @@
  "WordPress-VT|||Cabot Public": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-VT|||Chelsea Public": {
   "verdict": "MISMATCH",
@@ -4225,12 +4300,18 @@
  "WordPress-VT|||Pope Memorial": {
   "verdict": "MISMATCH",
   "comment": "Seed-data collision: danvillelibrary.org redirects via readdanvilleva.org to danvilleva.gov Public Library, Danville, VIRGINIA, not Danville VT",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-VT|||Proctor Free": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-VT|||Readsboro Community": {
   "verdict": "UNVERIFIABLE",
@@ -7867,7 +7948,10 @@
  "WordPress-DE|||Frankford Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint confirmed 2026-08-24. frankfordlibrary.org returns 404 on EVERY path tried including the ROOT - the host answers but serves nothing. This is a wrong-or-dead domain, not a wrong path, and needs a replacement URL discovered before the entry can work. Real coverage gap.",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-DE|||Garfield Park Library": {
   "verdict": "UNVERIFIABLE",
@@ -7877,7 +7961,10 @@
  "WordPress-DE|||Georgetown Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint confirmed 2026-08-24. georgetownpubliclibrary.org returns HTTP 520 at the root and 404 on every other path - origin is failing. Wrong-or-dead domain; needs a replacement URL. Real coverage gap.",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-DE|||Hockessin Library": {
   "verdict": "MATCHES",
@@ -7950,7 +8037,10 @@
  "WordPress-KY|||Harlan County Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-domain: the configured URL redirects to harlan.lib.ia.us, which serves IA, not KY — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: dead-domain: the configured URL redirects to harlan.lib.ia.us, which serves IA, not KY — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard Gua",
+  "statusAt": "2026-09-07"
  },
  "WordPress-KY|||Estill County Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -8023,7 +8113,10 @@
  "WordPress-KY|||Woodford County Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint confirmed 2026-08-24. woodfordlibrary.org returns 404 on every path including the root. Wrong-or-dead domain, needs a replacement URL. Real coverage gap in Versailles KY.",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-KY|||Whitley County Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -8791,7 +8884,10 @@
  "WordPress-NH|||Holderness Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint confirmed 2026-08-24. holdernesslibrary.org fails TLS to plain HTTP (EPROTO on every path) and returns a bare '404 Not Found' 57-byte response under the stealth browser. No working path found at root or any of seven common calendar paths. Treat as an unreachable host pending a correct URL.",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NH|||Hollis Social Library": {
   "verdict": "MISMATCH",
@@ -8948,7 +9044,10 @@
  "WordPress-PA|||Francis J. Catania Law Library": {
   "verdict": "MISMATCH",
   "comment": "dead-domain: the configured URL redirects to forsale.godaddy.com, a GoDaddy parked \"domain for sale\" page — the library no longer controls this domain, so extraction can never succeed here and the entry needs a correct URL or a guard",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: dead-domain: the configured URL redirects to forsale.godaddy.com, a GoDaddy parked \\",
+  "statusAt": "2026-09-07"
  },
  "WordPress-PA|||Hamlin Memorial Library": {
   "verdict": "UNVERIFIABLE",
@@ -9317,7 +9416,10 @@
  "WordPress-RI|||North Smithfield Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint confirmed 2026-08-24. northsmithfieldlibrary.org returns 404 on every path including the root. Wrong-or-dead domain, needs a replacement URL. Real coverage gap in Slatersville RI.",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-RI|||Portsmouth Free Public Library": {
   "verdict": "MATCHES",
@@ -9392,12 +9494,18 @@
  "WordPress-SC|||Oconee County Public Library - Seneca Branch Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint 2026-08-24: senecalibrary.org TIMED OUT on all seven paths tried. Recorded as unreachable rather than dead, same rule as Malvern. Re-probe later.",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-SC|||Pickens County Library - Central-Clemson Branch Library": {
   "verdict": "MISMATCH",
   "comment": "dead-domain: DNS does not resolve (stealth browser, 35000ms)",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-SC|||Lamar District Library": {
   "verdict": "MISMATCH",
@@ -9566,7 +9674,10 @@
  "WordPress-FL|||Fruitland Park Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-FL|||Homestead Branch Library": {
   "verdict": "MISMATCH",
@@ -9648,7 +9759,10 @@
  "WordPress-FL|||Wildwood Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-domain: DNS does not resolve (stealth browser, 35000ms)",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-FL|||Tampa-Hillsborough County Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -9705,7 +9819,10 @@
  "WordPress-ME|||Boothbay Harbor Memorial Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-ME|||Bremen Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -10034,7 +10151,10 @@
  "WordPress-MS|||Lafayette County-Oxford Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-domain: DNS does not resolve (stealth browser, 35000ms)",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-MS|||Lexington Public Library": {
   "verdict": "MISMATCH",
@@ -10089,7 +10209,10 @@
  "WordPress-MS|||William Estes Powell Memorial Library": {
   "verdict": "MISMATCH",
   "comment": "dead-domain: the configured URL redirects to beaumonttexas.gov, which serves TX, not MS — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: dead-domain: the configured URL redirects to beaumonttexas.gov, which serves TX, not MS — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard Gu",
+  "statusAt": "2026-09-07"
  },
  "WordPress-MS|||Woodville Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -10178,7 +10301,10 @@
  "WordPress-NJ|||Dwight D. Eisenhower Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NJ|||Elmwood Park Free Public Library": {
   "verdict": "MISMATCH",
@@ -10253,7 +10379,10 @@
  "WordPress-NJ|||Linwood Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-domain: the configured URL redirects to wordpress2.nekls.org, which serves KS, not NJ — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: dead-domain: the configured URL redirects to wordpress2.nekls.org, which serves KS, not NJ — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NJ|||Little Silver Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -10304,12 +10433,18 @@
  "WordPress-NJ|||Mount Arlington Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-domain: connection refused",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NJ|||New Providence Memorial Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 502 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NJ|||North Arlington Public Library": {
   "verdict": "MATCHES",
@@ -10601,7 +10736,10 @@
  "WordPress-NY|||Central Islip Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Cattaraugus Free Library": {
   "verdict": "MATCHES",
@@ -11061,7 +11199,10 @@
  "WordPress-NY|||Queens Borough Public Library - Elmhurst": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Queens Borough Public Library - Astoria": {
   "verdict": "UNVERIFIABLE",
@@ -11167,7 +11308,10 @@
  "WordPress-NY|||Shelter Island Public Library Society": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 503 on the configured URL",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Sidney Memorial Public Library": {
   "verdict": "MISMATCH",
@@ -11237,7 +11381,10 @@
  "WordPress-NY|||The Jervis Public Library Association, Inc.": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to fightbackvenice.org]",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: dead-endpoint: HTTP 404 on the configured URL [redirects to fightbackvenice.org] Guarded 2026-09-07 so the rotation stops visiting it — a squatted domain is one selector change away from importing another s",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Tivoli Free Library": {
   "verdict": "MISMATCH",
@@ -11250,7 +11397,10 @@
  "WordPress-NY|||Tuckahoe Public Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to tuckahoe.gov]",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: dead-endpoint: HTTP 404 on the configured URL [redirects to tuckahoe.gov] Guarded 2026-09-07 so the rotation stops visiting it — a squatted domain is one selector change away from importing another site's m",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Tuxedo Park Library": {
   "verdict": "UNVERIFIABLE",
@@ -12072,7 +12222,7 @@
  },
  "WordPress-Abbe-Regional|||ABBE Regional Library System": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "dead-endpoint, and the failure mode CHANGED AGAIN - third distinct state in five days. 2026-09-03 it was HTTP 500 'Database Error'; 2026-09-06 every path returned an inconsistent 403/404 mix consistent with a WAF; 2026-09-07 the SITE IS BACK - www.abbe-lib.org returns HTTP 200 titled 'ABBE Regional Library System' with 16 elements and dated content. But the configured events path is gone: /events/ returns 404 and /events returns 403, and the root's dates read as news posts rather than a calendar. Probing 8 standard paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs) found no working calendar. So this is no longer an outage or a bot-block - it is a live site whose events URL was removed. OPEN COVERAGE GAP needing its new calendar URL, not a scraper fix.",
   "population": "zero"
  },
  "WordPress-NJ|||Spring Lake Public Library": {
