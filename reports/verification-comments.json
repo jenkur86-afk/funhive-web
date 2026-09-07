@@ -1027,7 +1027,7 @@
  },
  "WordPress-TN|||Collierville Burch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.colliervillelibrary.org",
+  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell [redirects to chromewebdata]",
   "population": "zero"
  },
  "WordPress-TN|||Bartlett Library": {
@@ -1236,7 +1236,7 @@
  },
  "WordPress-TN|||Mt. Juliet-Harvey Freeman Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.mtjulietlibrary.org",
+  "comment": "navigation timeout after 35000ms",
   "population": "zero"
  },
  "WordPress-TN|||Palmer Public Library": {
@@ -9488,7 +9488,7 @@
  },
  "WordPress-FL|||Celebration Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 384 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 381 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-FL|||East Lake Community Library": {
@@ -12293,5 +12293,80 @@
   "verdict": "MATCHES",
   "comment": "live page states no upcoming events (\"No events are scheduled\") — genuinely empty calendar, not an extraction fault. First verdict for this site; LibCal-FL2 was registered 2026-09-05.",
   "population": "zero"
+ },
+ "GoogleCalendar-VT-hartlandlibraryvt|||Hartland Public Library": {
+  "verdict": "MATCHES",
+  "comment": "age-neutral by title evidence: 0 of 16 distinct All-Ages titles carry any age signal - Senior Cafe, Cribbage, Bereavement Support Group, Tech Help by Appointment, Hartland Winter Trails Annual Meeting. One village library running one calendar for general community programming.",
+  "population": "allages"
+ },
+ "Communico-FL-mdpls|||Westchester Library Health and Wellness Information Center": {
+  "verdict": "MATCHES",
+  "comment": "age-neutral by title evidence: 0 of 23 distinct All-Ages titles carry an age signal. Adult wellness programming - Hatha Yoga, Zumba for All, Belly Dancing, Cardio Pump, Social Bingo Hour.",
+  "population": "allages"
+ },
+ "Communico-NY-hauppaugelibrary|||Hauppauge Library - Classrooms A & B": {
+  "verdict": "MATCHES",
+  "comment": "the only two age-bearing titles both resolve to All Ages BY DESIGN, not by failure: Playdough Playtime - Ages 2 years and older reaches the open-ended-lower-bound rule and returns 2+, and Rosh Hashanah Storytime - Families with children of all ages says so outright. Remaining 17 titles are adult or general - Defensive Driving, Mexican Train, Chair Yoga.",
+  "population": "allages"
+ },
+ "Communico-FL-mcls|||Hobe Sound Public Library": {
+  "verdict": "MATCHES",
+  "comment": "Talk Like a Pirate: Family Fun Day is genuinely family programming; the other 12 distinct titles are adult or general - Weekly Cribbage Game, Yoga with Tracy, Apple Watch Basics, Tai Chi Qi Gong.",
+  "population": "allages"
+ },
+ "Communico-NY-hauppaugelibrary|||Hauppauge Library": {
+  "verdict": "MATCHES",
+  "comment": "the single age-bearing title, Autumn Scavenger Hunt - Families with children ages 3 and up, resolves to 3+ and buckets as All Ages by design. Other nine titles are general - Farmer's Market Pop-Up, Voter Registration Day, Medicaid Enrollment Assistance.",
+  "population": "allages"
+ },
+ "Communico-FL-jaxpubliclibrary|||Virtual Branch": {
+  "verdict": "MATCHES",
+  "comment": "only two distinct titles, both ESL conversation classes - Conversation Essentials Intermediate and Advanced - with no stated audience. Genuinely unrestricted.",
+  "population": "allages"
+ },
+ "Communico-FL-mdpls|||Opa-locka Branch": {
+  "verdict": "MATCHES",
+  "comment": "only two distinct titles - Civics Scavenger Hunt for the Opa-locka Centennial and Drop in Tech Time - neither age-targeted.",
+  "population": "allages"
+ },
+ "GoogleCalendar-MA-leverettlibrary|||Leverett Public Library": {
+  "verdict": "MATCHES",
+  "comment": "three distinct titles - Library Trustees meeting and two Tai Chi classes. Genuinely age-neutral; note this site's opening-hours rows were removed by the 2026-09-06 junk-title fix, so what remains is the real programme.",
+  "population": "allages"
+ },
+ "BarnesNoble-Eastern|||Barnes & Noble Paramus": {
+  "verdict": "MATCHES",
+  "comment": "22 distinct titles, all author signings and book celebrations with no stated audience. All Ages is the honest label for a bookstore signing.",
+  "population": "allages"
+ },
+ "Communico-FL-mcls|||Robert Morgade Library": {
+  "verdict": "MATCHES",
+  "comment": "0 of 13 distinct All-Ages titles carry an age signal - Conversational English Group, Cricut Craft, Internet Safety, Explore the Night Sky. Adult and general programming.",
+  "population": "allages"
+ },
+ "Communico-NY-hauppaugelibrary|||Hauppauge Library - Classroom C": {
+  "verdict": "MISMATCH",
+  "comment": "one genuinely age-targeted title sits in All Ages: SAT Prep Course, which is unambiguously teen. DELIBERATELY NOT GIVEN A DETECTOR RULE - measured across seven major library scrapers on 2026-09-07 it is 2 rows and 1 distinct title fleet-wide, and a bare SAT token collides with the Saturday abbreviation. Same call as the bare-holiday-name case left open on 2026-08-23. The other eight titles - Mah Jongg, Board of Trustees Meeting, Yarncrafting Circle - are correctly All Ages.",
+  "population": "allages"
+ },
+ "Communico-FL-jaxpubliclibrary|||Willow Branch": {
+  "verdict": "MISMATCH",
+  "comment": "Little Readers - ages birth-5 was stored as All Ages. FIXED 2026-09-07: detectAgeRange gained a rule for a lower bound spelled birth, which every numeric rule had missed because they all require a digit. 116 rows fleet-wide state this range and 101 were mis-bucketed, 7 of them into Kids 6-8. Already-stored rows keep the old bracket until re-scraped or backfilled.",
+  "population": "allages"
+ },
+ "Gardens-Nature-Eastern|||Schlitz Audubon Nature Center": {
+  "verdict": "MISMATCH",
+  "comment": "Junior Elementary Homeschool and Senior Elementary Homeschool are stored as All Ages when they are plainly elementary-aged. NOT FIXED and the reason is recorded in the detector: the bare word elementary is excluded on purpose because it is usually a venue name, and the existing rule requires elementary followed by school-aged/students/kids/children or preceded by for. Open bug. The other 16 titles - Raptor Encounter, Nature Drawing Workshop, Saturday Morning Bird Walk - are correctly all-ages.",
+  "population": "allages"
+ },
+ "Communico-FL|||Miami-Dade Public Library": {
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"there are no events\")",
+  "population": "zero"
+ },
+ "GoogleCalendar-MA-ashbylibrary|||Ashby Free Public Library": {
+  "verdict": "MATCHES",
+  "comment": "carried forward unchanged from the pre-rename key GoogleCalendar-MA on 2026-09-07, when the file began emitting per-site slugs: age-neutral by title evidence, 0 of 6 distinct All-Ages titles carry any age signal. Same site, same calendar, new scraper_name.",
+  "population": "allages"
  }
 }

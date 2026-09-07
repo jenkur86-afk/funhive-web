@@ -14873,3 +14873,439 @@ Group 3 rotation, started **2026-09-06T07:00:01Z** and finished 18:12:48Z (54 sc
 | Brooklyn-Library (scraper aggregate — no per-site log shape) | NY | Brooklyn-Library | 20 |
 | Berks-County (scraper aggregate — no per-site log shape) | PA | Berks-County | 48 |
 | Orange-County-Library-FL (scraper aggregate — no per-site log shape) | FL | Orange-County-Library-FL | 2424 |
+
+## 2026-09-07
+
+Group 1 rotation, started **2026-09-07T07:00:01Z** and finished 15:43:54Z (53 scrapers, 0 failed). **Day 2 of the cycle that opened `## 2026-09-06`** — Group 2 has not had its turn yet, so roughly a third of the active library scrapers legitimately have no row in this cycle.
+
+**415 per-site rows from 35 library scrapers** with per-site log output; **160 zero-event sites**.
+
+**118 of the 160 zeroes are the WordPress-{state} family** (FL 48, WV 26, TN 22, AL 21, VA 1) — the known platform-heterogeneity gap. The rest are spread across Communico-FL, CivicEngage-Libraries, Venue-Events-ScienceArts and the LibCal-* families.
+
+**Twenty of today's zero rows stop being zeroes after this run**, and that is the substantive change: `reports/platform-hosts.tsv`, produced by the discovery job that finally got its quiet window at 12:03Z today, named a LibraryCalendar instance for each of them. Eighteen libraries were relocated out of `WordPress-{FL,KY,MA,MD,NC,NJ,NY,PA}` into `LibraryCalendar-Libraries`, and Palm Harbor Library FL was added as new coverage. Every one was fetched and judged on its own page — title, phone area code, its own event titles — with `notarealsite-xyz-funhive.librarycalendar.com` probed alongside as a negative control (ENOTFOUND), so a 200 means a real instance rather than a wildcard.
+
+**Four candidates were rejected, and the rejections carry more information than the acceptances:**
+
+- **Hammond Free Library (WordPress-NY, Hammond NY 13646)** — the instance behind its configured `hammondlibrary.org` titles itself *Hammond Public Library* on (219) 931-5100. Area code 219 is **Indiana**. Same guessed `{city}library.org` shape as the rest of Defect A. Guarded, not relocated. **Open coverage gap.**
+- **East Lake Community Library (WordPress-FL)** — its entry points at `palmharborlibrary.org`, which is **Palm Harbor Library**: a different institution in the same town. That is the Cairo GA/NY trap arriving from a new direction. The entry is guarded and Palm Harbor Library was added in its own right, since nothing else covered it and this entry could only ever return 0 for either library. **East Lake itself is an open coverage gap.**
+- **Menands Public Library (WordPress-NY)** — its discovered host `uhls.librarycalendar.com` is the **Upper Hudson Library System** consortium calendar, not Menands. Voorheesville, relocated today, is also a UHLS member with its own instance, so wiring the system calendar would double-scrape an unknown number of member libraries. Left alone deliberately. **Open coverage gap.**
+
+Each relocated library keeps its WordPress row here as a guarded, explained gap rather than vanishing from the audit.
+
+| Library Website | State | Scraper | Events Found |
+|---|---|---|---|
+| Anne Arundel County Library events | — | AACPL | 24 |
+| Charlotte Mecklenburg Library | NC | BiblioCommons-NC | 497 |
+| Colonial Heights Public Library | VA | CivicEngage-Libraries | 0 |
+| Williamson County Public Library | TN | CivicEngage-Libraries | 0 |
+| Hartford Public Library | CT | Communico-CT | 7 |
+| Alachua County Library District | FL | Communico-FL | 3 |
+| Broward County Library | FL | Communico-FL | 3 |
+| Hernando County Public Library | FL | Communico-FL | 160 |
+| Hillsborough County Public Library Cooperative | FL | Communico-FL | 1 |
+| Jacksonville Public Library | FL | Communico-FL | 594 |
+| Largo Public Library | FL | Communico-FL | 2 |
+| Martin County Library System | FL | Communico-FL | 200 |
+| Miami-Dade Public Library | FL | Communico-FL | 0 |
+| Pasco County Libraries | FL | Communico-FL | 6 |
+| Peterborough Town Library | NH | Communico-NH | 40 |
+| Hauppauge Public Library | NY | Communico-NY | 118 |
+| Huntington Public Library | NY | Communico-NY | 1 |
+| Massapequa Public Library | NY | Communico-NY | 194 |
+| Mid-York Library System | NY | Communico-NY | 25 |
+| Patchogue-Medford Library | NY | Communico-NY | 1 |
+| Poughkeepsie Public Library District | NY | Communico-NY | 24 |
+| Richmond Memorial Library | NY | Communico-NY | 3 |
+| West Islip Public Library | NY | Communico-NY | 98 |
+| Bridgeport Public Library | WV | Communico-WV | 69 |
+| Lexington County Public Library | SC | EventON-Lexington | 1000 |
+| [1/27] Alabama | AL | Festivals-Eastern-US | 20 |
+| [10/27] Massachusetts | MA | Festivals-Eastern-US | 20 |
+| [11/27] Maryland | MD | Festivals-Eastern-US | 20 |
+| [12/27] Maine | ME | Festivals-Eastern-US | 19 |
+| [13/27] Michigan | MI | Festivals-Eastern-US | 20 |
+| [14/27] Mississippi | MS | Festivals-Eastern-US | 19 |
+| [15/27] North Carolina | NC | Festivals-Eastern-US | 20 |
+| [16/27] New Hampshire | NH | Festivals-Eastern-US | 20 |
+| [17/27] New Jersey | NJ | Festivals-Eastern-US | 20 |
+| [18/27] New York | NY | Festivals-Eastern-US | 20 |
+| [19/27] Ohio | OH | Festivals-Eastern-US | 20 |
+| [2/27] Connecticut | CT | Festivals-Eastern-US | 20 |
+| [20/27] Pennsylvania | PA | Festivals-Eastern-US | 20 |
+| [21/27] Rhode Island | RI | Festivals-Eastern-US | 20 |
+| [22/27] South Carolina | SC | Festivals-Eastern-US | 20 |
+| [23/27] Tennessee | TN | Festivals-Eastern-US | 20 |
+| [24/27] Virginia | VA | Festivals-Eastern-US | 20 |
+| [25/27] Vermont | VT | Festivals-Eastern-US | 22 |
+| [26/27] Wisconsin | WI | Festivals-Eastern-US | 20 |
+| [27/27] West Virginia | WV | Festivals-Eastern-US | 19 |
+| [3/27] District of Columbia | DC | Festivals-Eastern-US | 20 |
+| [4/27] Delaware | DE | Festivals-Eastern-US | 19 |
+| [5/27] Florida | FL | Festivals-Eastern-US | 20 |
+| [6/27] Georgia | GA | Festivals-Eastern-US | 20 |
+| [7/27] Illinois | IL | Festivals-Eastern-US | 20 |
+| [8/27] Indiana | IN | Festivals-Eastern-US | 20 |
+| [9/27] Kentucky | KY | Festivals-Eastern-US | 20 |
+| Blue Ridge Regional Library | VA | FullCalendar-Libraries | 320 |
+| Ashby Free Public Library | — | GoogleCalendar-MA | 47 |
+| Leverett Library | — | GoogleCalendar-MA | 176 |
+| Phillips Free Library | — | GoogleCalendar-NY | 58 |
+| Sidney Memorial Public Library | — | GoogleCalendar-NY | 106 |
+| Berkeley County Library - Sangaree Library | — | GoogleCalendar-SC | 0 |
+| Cobleigh Public Library | — | GoogleCalendar-VT | 127 |
+| Hartland Public Library | — | GoogleCalendar-VT | 157 |
+| Roger Clark Memorial Library | — | GoogleCalendar-VT | 42 |
+| Athens-Clarke County Library | GA | LibCal-GA | 5 |
+| Auburn Public Library | GA | LibCal-GA | 20 |
+| Banks County Public Library | GA | LibCal-GA | 0 |
+| Hall County Library System | GA | LibCal-GA | 10 |
+| Bangor Public Library | ME | LibCal-ME | 12 |
+| Blue Hill Public Library | ME | LibCal-ME | 63 |
+| Alamance County Library | NC | LibCal-NC | 48 |
+| Brunswick County Public Library | NC | LibCal-NC | 10 |
+| Craven-Pamlico Regional Library | NC | LibCal-NC | 0 |
+| Durham County Library | NC | LibCal-NC | 20 |
+| Gaston County Public Library | NC | LibCal-NC | 20 |
+| Henderson County Public Library | NC | LibCal-NC | 5 |
+| Iredell County Public Library | NC | LibCal-NC | 48 |
+| New Hanover County Public Library | NC | LibCal-NC | 20 |
+| Union County Public Library | NC | LibCal-NC | 25 |
+| Albany Public Library | NY | LibCal-NY1 | 24 |
+| Brewster Public Library | NY | LibCal-NY1 | 97 |
+| Buffalo & Erie County Public Library | NY | LibCal-NY1 | 20 |
+| Freeport Memorial Library | NY | LibCal-NY1 | 20 |
+| Garden City Public Library | NY | LibCal-NY1 | 10 |
+| Great Neck Library | NY | LibCal-NY1 | 20 |
+| Hicksville Public Library | NY | LibCal-NY1 | 20 |
+| Long Beach Public Library | NY | LibCal-NY1 | 43 |
+| Monroe County Library System | NY | LibCal-NY1 | 20 |
+| Northern Onondaga Public Libraries | NY | LibCal-NY1 | 10 |
+| Onondaga County Public Libraries | NY | LibCal-NY1 | 20 |
+| Suffolk Cooperative Library System | NY | LibCal-NY1 | 12 |
+| Westchester Library System | NY | LibCal-NY1 | 20 |
+| Baldwin Public Library | NY | LibCal-NY2 | 0 |
+| Dansville Public Library | NY | LibCal-NY2 | 20 |
+| East Meadow Public Library | NY | LibCal-NY2 | 20 |
+| Gardiner Library | NY | LibCal-NY2 | 20 |
+| Highland Public Library | NY | LibCal-NY2 | 20 |
+| Levittown Public Library | NY | LibCal-NY2 | 139 |
+| Marcellus Free Library | NY | LibCal-NY2 | 20 |
+| North Bellmore Public Library | NY | LibCal-NY2 | 20 |
+| North Merrick Public Library | NY | LibCal-NY2 | 20 |
+| Oceanside Public Library | NY | LibCal-NY2 | 20 |
+| Plainview-Old Bethpage Public Library | NY | LibCal-NY2 | 147 |
+| Rockville Centre Public Library | NY | LibCal-NY2 | 20 |
+| Wantagh Public Library | NY | LibCal-NY2 | 20 |
+| Clarksville-Montgomery County Public Library | TN | LibCal-TN | 48 |
+| Rutherford County Library System | TN | LibCal-TN | 20 |
+| Arlington County Public Library | VA | LibCal-VA | 20 |
+| Fairfax County Public Library | VA | LibCal-VA | 20 |
+| Henrico County Public Library | VA | LibCal-VA | 20 |
+| Massanutten Regional Library | VA | LibCal-VA | 20 |
+| Amherst County Public Library | VA | LibraryCalendar-Libraries | 22 |
+| Anderson County Library System | SC | LibraryCalendar-Libraries | 16 |
+| Appomattox Regional Library | VA | LibraryCalendar-Libraries | 13 |
+| Atlantic County Library System | NJ | LibraryCalendar-Libraries | 24 |
+| Bedford Public Library System | VA | LibraryCalendar-Libraries | 14 |
+| Bloomingdale Public Library | IL | LibraryCalendar-Libraries | 20 |
+| Carnegie Library of McKeesport | PA | LibraryCalendar-Libraries | 18 |
+| Caroline County Public Library | MD | LibraryCalendar-Libraries | 19 |
+| Cumberland County Public Library | NC | LibraryCalendar-Libraries | 21 |
+| Essex Public Library | VA | LibraryCalendar-Libraries | 16 |
+| Florence County Library System | SC | LibraryCalendar-Libraries | 23 |
+| Forsyth County Public Library | NC | LibraryCalendar-Libraries | 23 |
+| Frederick County Public Libraries | MD | LibraryCalendar-Libraries | 19 |
+| Gloucester County Library System | NJ | LibraryCalendar-Libraries | 21 |
+| Grant County Public Library | KY | LibraryCalendar-Libraries | 14 |
+| Graves County Public Library | KY | LibraryCalendar-Libraries | 22 |
+| Haverstraw King's Daughters Public Library | NY | LibraryCalendar-Libraries | 22 |
+| Howard County Library System | MD | LibraryCalendar-Libraries | 19 |
+| Jefferson Hills Public Library | PA | LibraryCalendar-Libraries | 17 |
+| Jessamine County Public Library | KY | LibraryCalendar-Libraries | 21 |
+| Knox County Public Library | TN | LibraryCalendar-Libraries | 9 |
+| Lynchburg Public Library | VA | LibraryCalendar-Libraries | 14 |
+| Memphis Public Libraries | TN | LibraryCalendar-Libraries | 24 |
+| Monroeville Public Library | PA | LibraryCalendar-Libraries | 16 |
+| Petersburg Public Library | VA | LibraryCalendar-Libraries | 8 |
+| Poquoson Public Library | VA | LibraryCalendar-Libraries | 18 |
+| Portsmouth Public Library | VA | LibraryCalendar-Libraries | 21 |
+| Powhatan County Public Library | VA | LibraryCalendar-Libraries | 12 |
+| Rensselaerville Public Library | NY | LibraryCalendar-Libraries | 0 |
+| Rowan County Public Library | KY | LibraryCalendar-Libraries | 19 |
+| Schenectady County Public Library | NY | LibraryCalendar-Libraries | 19 |
+| Talbot County Free Library | MD | LibraryCalendar-Libraries | 21 |
+| Waynesboro Public Library | VA | LibraryCalendar-Libraries | 16 |
+| Wilkinsburg Public Library | PA | LibraryCalendar-Libraries | 8 |
+| Wyandanch Public Library | NY | LibraryCalendar-Libraries | 18 |
+| York County Library | SC | LibraryCalendar-Libraries | 20 |
+| York County Public Library | VA | LibraryCalendar-Libraries | 19 |
+| Beaufort County Library | — | LibraryMarket-SC | 31 |
+| Sumter County Library | — | LibraryMarket-SC | 7 |
+| Coverage: Montgomery County, Maryland | — | Montgomery-Parks | 30 |
+| Decatur County - Gilbert H. Gragg Library | GA | SouthwestGeorgia-GA | 141 |
+| Miller County - James W. Merritt, Jr. Memorial Library | GA | SouthwestGeorgia-GA | 29 |
+| Seminole County Public Library | GA | SouthwestGeorgia-GA | 47 |
+| Horry County Memorial Library | SC | Tockify-Horry | 269 |
+| Spartanburg County Public Libraries | SC | Trumba-Spartanburg | 611 |
+| Academy of Natural Sciences | PA | Venue-Events-ScienceArts | 10 |
+| Adler Planetarium | IL | Venue-Events-ScienceArts | 7 |
+| American Museum of Natural History | NY | Venue-Events-ScienceArts | 13 |
+| Art Institute of Chicago | IL | Venue-Events-ScienceArts | 0 |
+| Bishop Museum of Science & Nature | FL | Venue-Events-ScienceArts | 14 |
+| Connecticut Science Center | CT | Venue-Events-ScienceArts | 16 |
+| Conner Prairie Living History | IN | Venue-Events-ScienceArts | 8 |
+| Corning Museum of Glass | NY | Venue-Events-ScienceArts | 81 |
+| Fernbank Museum of Natural History | GA | Venue-Events-ScienceArts | 0 |
+| Field Museum | IL | Venue-Events-ScienceArts | 1 |
+| Franklin Institute | PA | Venue-Events-ScienceArts | 1 |
+| Frost Science Museum | FL | Venue-Events-ScienceArts | 46 |
+| Great Lakes Science Center | OH | Venue-Events-ScienceArts | 6 |
+| Griffin Museum of Science and Industry | IL | Venue-Events-ScienceArts | 0 |
+| Henry Ford Museum | MI | Venue-Events-ScienceArts | 1 |
+| Imagination Station | OH | Venue-Events-ScienceArts | 0 |
+| Impression 5 Science Center | MI | Venue-Events-ScienceArts | 1 |
+| Indiana State Museum | IN | Venue-Events-ScienceArts | 14 |
+| Intrepid Sea Air & Space Museum | NY | Venue-Events-ScienceArts | 0 |
+| Kennedy Space Center Visitor Complex | FL | Venue-Events-ScienceArts | 87 |
+| Maryland Science Center | MD | Venue-Events-ScienceArts | 8 |
+| McAuliffe-Shepard Discovery Center | NH | Venue-Events-ScienceArts | 1 |
+| Michigan Science Center | MI | Venue-Events-ScienceArts | 12 |
+| Milwaukee Art Museum | WI | Venue-Events-ScienceArts | 20 |
+| Museum of Science & Industry | FL | Venue-Events-ScienceArts | 1 |
+| Museum of Science Boston | MA | Venue-Events-ScienceArts | 1 |
+| National Building Museum | DC | Venue-Events-ScienceArts | 0 |
+| NC Museum of Natural Sciences | NC | Venue-Events-ScienceArts | 20 |
+| New York Hall of Science | NY | Venue-Events-ScienceArts | 1 |
+| Science Museum of Virginia | VA | Venue-Events-ScienceArts | 7 |
+| Smithsonian Air & Space Museum | DC | Venue-Events-ScienceArts | 10 |
+| Smithsonian Natural History Museum | DC | Venue-Events-ScienceArts | 40 |
+| Tellus Science Museum | GA | Venue-Events-ScienceArts | 19 |
+| Tennessee State Museum | TN | Venue-Events-ScienceArts | 1 |
+| Virginia Museum of Natural History | VA | Venue-Events-ScienceArts | 35 |
+| Yale Peabody Museum | CT | Venue-Events-ScienceArts | 1 |
+| Hampton Public Library | VA | WithApps-Libraries | 44 |
+| Abbeville Memorial Library | — | WordPress-AL | 7 |
+| Akron Public Library | AL | WordPress-AL | 0 |
+| Andalusia Public Library | — | WordPress-AL | 0 |
+| Athens-Limestone Public Library | — | WordPress-AL | 0 |
+| Auburn Public Library | — | WordPress-AL | 1 |
+| Birmingham Public Library | — | WordPress-AL | 1 |
+| Blanche R. Solomon Memorial Library | — | WordPress-AL | 0 |
+| Bridgeport - Lena Cagle Public Library | AL | WordPress-AL | 0 |
+| Burchell Campbell Memorial Library | AL | WordPress-AL | 0 |
+| Butler County Public Library | AL | WordPress-AL | 0 |
+| Chelsea Public Library | AL | WordPress-AL | 0 |
+| Choctaw County Public Library | AL | WordPress-AL | 0 |
+| City Of Bayou La Batre Public Library | — | WordPress-AL | 0 |
+| Clay Public Library | — | WordPress-AL | 0 |
+| Collinsville Public Library | — | WordPress-AL | 0 |
+| Daleville Public Library | — | WordPress-AL | 1 |
+| Daphne Public Library | — | WordPress-AL | 0 |
+| Decatur Public Library | — | WordPress-AL | 30 |
+| Doris Stanley Memorial Library | — | WordPress-AL | 1 |
+| Dothan Houston County Library System | — | WordPress-AL | 97 |
+| Evergreen Public Library | — | WordPress-AL | 0 |
+| Fairhope Public Library | — | WordPress-AL | 150 |
+| Florence-Lauderdale Public Library | — | WordPress-AL | 0 |
+| Foley Public Library | — | WordPress-AL | 0 |
+| Gardendale Public Library | — | WordPress-AL | 1 |
+| Grant Public Library | — | WordPress-AL | 0 |
+| Guntersville Public Library | — | WordPress-AL | 0 |
+| H. Grady Bradshaw - Chambers County Library | — | WordPress-AL | 1 |
+| Hale County Library | AL | WordPress-AL | 0 |
+| Hartford - Mcgregor-Mckinney Public Library | AL | WordPress-AL | 0 |
+| Hoover Public Library | — | WordPress-AL | 4 |
+| Houston-Love Memorial Library - Columbia | AL | WordPress-AL | 0 |
+| Hueytown Public Library | — | WordPress-AL | 0 |
+| Huntsville-Madison County Public Library | — | WordPress-AL | 11 |
+| Irondale Public Library | — | WordPress-AL | 0 |
+| Jane B. Holmes Public Library | — | WordPress-AL | 0 |
+| Jane Culbreth Library | — | WordPress-AL | 1 |
+| Jefferson County Library Cooperative | — | WordPress-AL | 0 |
+| Kennedy Public Library | AL | WordPress-AL | 0 |
+| Lafayette Pilot Public Library | — | WordPress-AL | 0 |
+| Leighton Public Library | — | WordPress-AL | 21 |
+| Madison Public Library | AL | WordPress-AL | 0 |
+| Marion-Perry County Library | AL | WordPress-AL | 0 |
+| Millbrook Public Library | AL | WordPress-AL | 0 |
+| Mobile Public Library | — | WordPress-AL | 35 |
+| Montgomery City-County Public Library | — | WordPress-AL | 75 |
+| Newton Public Library | AL | WordPress-AL | 0 |
+| Northwest Regional Library | — | WordPress-AL | 0 |
+| Opp Public Library | — | WordPress-AL | 0 |
+| Orange Beach Public Library | — | WordPress-AL | 0 |
+| Piedmont Public Library | AL | WordPress-AL | 0 |
+| Ruby Pickens Tartt Public Library | AL | WordPress-AL | 0 |
+| Satsuma Public Library | — | WordPress-AL | 0 |
+| Scottsboro Public Library | — | WordPress-AL | 0 |
+| Selma-Dallas County Public Library | — | WordPress-AL | 1 |
+| Sheffield Public Library | AL | WordPress-AL | 0 |
+| Stevenson Public Library | — | WordPress-AL | 0 |
+| Trussville Public Library | — | WordPress-AL | 4 |
+| Tuscaloosa Public Library | — | WordPress-AL | 150 |
+| Vernon - Mary Wallace Cobb Memorial Library | AL | WordPress-AL | 0 |
+| Vestavia Hills Library | — | WordPress-AL | 150 |
+| Walter J. Hanna Memorial Library | — | WordPress-AL | 0 |
+| Warrior Public Library | — | WordPress-AL | 0 |
+| Wilcox County Library | AL | WordPress-AL | 0 |
+| Wilsonville - Vernice Stoudenmire Library | AL | WordPress-AL | 0 |
+| Alachua Branch Library | — | WordPress-FL | 0 |
+| Archer Branch Library | — | WordPress-FL | 2 |
+| Auburndale Public Library | — | WordPress-FL | 6 |
+| Bartow Public Library | FL | WordPress-FL | 0 |
+| Blake Library | — | WordPress-FL | 17 |
+| Brandon Branch | FL | WordPress-FL | 0 |
+| Broward County Library | — | WordPress-FL | 20 |
+| Celebration Library | — | WordPress-FL | 0 |
+| Coleman Library | — | WordPress-FL | 1 |
+| Cooper Memorial Library | FL | WordPress-FL | 0 |
+| Desoto County Library | — | WordPress-FL | 1 |
+| E.C. Rowell Public Library | FL | WordPress-FL | 0 |
+| East Lake Community Library | — | WordPress-FL | 0 |
+| Edgewater Public Library | FL | WordPress-FL | 0 |
+| Eustis Memorial Library | — | WordPress-FL | 1 |
+| Freeport Branch Library | FL | WordPress-FL | 0 |
+| Fruitland Park Library | — | WordPress-FL | 0 |
+| Greenville Public Library | FL | WordPress-FL | 0 |
+| Havana Public Library | — | WordPress-FL | 1 |
+| Homestead Branch Library | — | WordPress-FL | 0 |
+| Hudson Regional Library | FL | WordPress-FL | 0 |
+| Jacaranda Public Library | — | WordPress-FL | 0 |
+| Jefferson County R. J. Bailar Public Library | — | WordPress-FL | 0 |
+| Lake County Library System | — | WordPress-FL | 0 |
+| Lake Placid Memorial Library | — | WordPress-FL | 1 |
+| Lakeland Public Library | FL | WordPress-FL | 0 |
+| Land Olakes Branch Library | — | WordPress-FL | 139 |
+| Lantana Public Library | — | WordPress-FL | 1 |
+| Largo Public Library | — | WordPress-FL | 0 |
+| Levy County Public Library System | FL | WordPress-FL | 0 |
+| Madison County Library | FL | WordPress-FL | 0 |
+| Mandel Public Library Of West Palm Beach | — | WordPress-FL | 9 |
+| Margate Catharine Young Branch | FL | WordPress-FL | 0 |
+| Miami-Dade Public Library System | — | WordPress-FL | 3 |
+| Newberry Branch Library | FL | WordPress-FL | 0 |
+| Oldsmar Public Library | — | WordPress-FL | 1 |
+| Orange City Dickinson Memorial Library | — | WordPress-FL | 34 |
+| Orange County Library System | — | WordPress-FL | 15 |
+| Palm Beach County Library System | — | WordPress-FL | 0 |
+| Palm Springs Public Library | — | WordPress-FL | 1 |
+| Parker Public Library | — | WordPress-FL | 0 |
+| Parkland Library | — | WordPress-FL | 1 |
+| Pierson Public Library | FL | WordPress-FL | 0 |
+| Polk City Library | — | WordPress-FL | 1 |
+| Reddick Public Library | — | WordPress-FL | 0 |
+| Safety Harbor Public Library | — | WordPress-FL | 165 |
+| Springfield Branch | FL | WordPress-FL | 0 |
+| Sunrise Dan Pearl Branch | — | WordPress-FL | 0 |
+| Tampa-Hillsborough County Public Library | — | WordPress-FL | 0 |
+| Taylor County Public Library | FL | WordPress-FL | 0 |
+| Umatilla Public Library | — | WordPress-FL | 0 |
+| Vernon Branch Library | FL | WordPress-FL | 0 |
+| West Branch Library | — | WordPress-FL | 153 |
+| Wildwood Public Library | — | WordPress-FL | 0 |
+| Winter Park Public Library | — | WordPress-FL | 117 |
+| Zephyrhills Library | — | WordPress-FL | 1 |
+| Adams Memorial Library | — | WordPress-TN | 1 |
+| Alexandria Branch Library | — | WordPress-TN | 0 |
+| Athens Public Library | — | WordPress-TN | 1 |
+| Auburntown Public Library | — | WordPress-TN | 1 |
+| Audrey Pack Memorial Library | TN | WordPress-TN | 0 |
+| Bartlett Library | — | WordPress-TN | 0 |
+| Baxter Branch Library | TN | WordPress-TN | 0 |
+| Benton County Library | TN | WordPress-TN | 0 |
+| Blount County Public Library | — | WordPress-TN | 0 |
+| Carroll County Library | TN | WordPress-TN | 0 |
+| Chattanooga Public Library | — | WordPress-TN | 150 |
+| Cleveland-Bradley County Public Library | — | WordPress-TN | 1 |
+| Clinton Public Library | TN | WordPress-TN | 0 |
+| Coffee County Lannom Memorial Public Library | — | WordPress-TN | 0 |
+| Collierville Burch Library | — | WordPress-TN | 0 |
+| Crockett County Library | — | WordPress-TN | 1 |
+| Crossville-Cumberland County Public Library | — | WordPress-TN | 0 |
+| Franklin County Public Library | TN | WordPress-TN | 0 |
+| Franklin Public Library | — | WordPress-TN | 0 |
+| Germantown Community Library | TN | WordPress-TN | 0 |
+| Gleason Memorial Library | TN | WordPress-TN | 0 |
+| Hamilton Parks Public Library | — | WordPress-TN | 1 |
+| Harriman Public Library | — | WordPress-TN | 0 |
+| Hendersonville Public Library | — | WordPress-TN | 0 |
+| Hickman County Public Library | — | WordPress-TN | 0 |
+| Humphreys County Public Library | — | WordPress-TN | 0 |
+| Johnson City Public Library | — | WordPress-TN | 21 |
+| Kingsport Public Library | — | WordPress-TN | 0 |
+| Kingston Public Library | TN | WordPress-TN | 0 |
+| Knox County Public Library | — | WordPress-TN | 20 |
+| Lauderdale County Library | — | WordPress-TN | 50 |
+| Madisonville Public Library | — | WordPress-TN | 0 |
+| Mary E. Tippitt Memorial Library | TN | WordPress-TN | 0 |
+| Meigs-Decatur Public Library | — | WordPress-TN | 1 |
+| Memphis Public Libraries | — | WordPress-TN | 32 |
+| Middleton Community Library | — | WordPress-TN | 0 |
+| Mildred G. Fields Memorial Library | TN | WordPress-TN | 0 |
+| Millard Oakley Public Library | TN | WordPress-TN | 0 |
+| Monterey Branch Library | TN | WordPress-TN | 0 |
+| Morristown-Hamblen Library | — | WordPress-TN | 1 |
+| Mt. Juliet-Harvey Freeman Public Library | — | WordPress-TN | 0 |
+| Nashville Public Library | — | WordPress-TN | 1 |
+| Nashville Talking Library | TN | WordPress-TN | 0 |
+| Newbern City Library | — | WordPress-TN | 0 |
+| Parsons Public Library | — | WordPress-TN | 0 |
+| Rogersville Public Library | — | WordPress-TN | 0 |
+| Rutherford County Library System | TN | WordPress-TN | 0 |
+| Sam T. Wilson Public Library | TN | WordPress-TN | 0 |
+| Savannah-Hardin County Library | — | WordPress-TN | 1 |
+| Sequatchie County Public Library | TN | WordPress-TN | 0 |
+| Sevier County Public Library System | — | WordPress-TN | 0 |
+| Smyrna Public Library | TN | WordPress-TN | 0 |
+| Southeast Branch Library | — | WordPress-TN | 0 |
+| Spring Hill Public Library | — | WordPress-TN | 0 |
+| Sweetwater Public Library | — | WordPress-TN | 1 |
+| The Brentwood Library | TN | WordPress-TN | 0 |
+| Tipton County Public Library | TN | WordPress-TN | 0 |
+| Washburn Public Library | — | WordPress-TN | 1 |
+| Westmoreland Public Library | — | WordPress-TN | 0 |
+| White County Public Library | TN | WordPress-TN | 0 |
+| White Pine Public Library | — | WordPress-TN | 1 |
+| Winfield Public Library | — | WordPress-TN | 0 |
+| Alexandria Library | — | WordPress-VA | 0 |
+| Chesapeake Public Library | VA | WordPress-VA | 0 |
+| Culpeper County Library | — | WordPress-VA | 22 |
+| Jefferson-Madison Regional Library | — | WordPress-VA | 0 |
+| Manassas Park City Library | — | WordPress-VA | 10 |
+| Barrett-Wharton Public Library | WV | WordPress-WV | 21 |
+| Berkeley County Public Library | WV | WordPress-WV | 0 |
+| Boone-Madison Public Library | WV | WordPress-WV | 0 |
+| Bridgeport Public Library | WV | WordPress-WV | 0 |
+| Cameron Public Library | WV | WordPress-WV | 0 |
+| Center Point Public Library | WV | WordPress-WV | 10 |
+| Clay County Public Library | WV | WordPress-WV | 2 |
+| Dunbar Branch Library | WV | WordPress-WV | 1 |
+| East Hardy Branch Public Library | WV | WordPress-WV | 0 |
+| Gilbert Public Library | WV | WordPress-WV | 0 |
+| Glasgow Branch Library | WV | WordPress-WV | 32 |
+| Hamlin-Lincoln County Public Library | WV | WordPress-WV | 0 |
+| Harrison County Public Library | WV | WordPress-WV | 15 |
+| Hillsboro Public Library | WV | WordPress-WV | 1 |
+| Jackson County Public Library | WV | WordPress-WV | 1 |
+| Kanawha County Public Library | WV | WordPress-WV | 27 |
+| Lynn Murray Memorial Library | WV | WordPress-WV | 0 |
+| Marion County Public Library | WV | WordPress-WV | 0 |
+| Mercer County Public Library | WV | WordPress-WV | 1 |
+| Monroe County Public Library | WV | WordPress-WV | 0 |
+| Montgomery Public Library | WV | WordPress-WV | 0 |
+| Ohio County Public Library | WV | WordPress-WV | 0 |
+| Paden City Public Library | WV | WordPress-WV | 6 |
+| Paw Paw Public Library | WV | WordPress-WV | 1 |
+| Pendleton County Public Library | WV | WordPress-WV | 0 |
+| Piedmont Public Library | WV | WordPress-WV | 0 |
+| Pleasants County Public Library | WV | WordPress-WV | 0 |
+| Putnam County Public Library | WV | WordPress-WV | 0 |
+| Richwood Public Library | WV | WordPress-WV | 15 |
+| Ronceverte Public Library | WV | WordPress-WV | 0 |
+| Sand Hill Public Library | WV | WordPress-WV | 0 |
+| South Charleston Public Library | WV | WordPress-WV | 9 |
+| Summers County Public Library | WV | WordPress-WV | 35 |
+| Swaney Memorial Library | WV | WordPress-WV | 0 |
+| Waverly Library | WV | WordPress-WV | 2 |
+| Whitesville Public Library | WV | WordPress-WV | 0 |
+| Williamstown Library | WV | WordPress-WV | 0 |

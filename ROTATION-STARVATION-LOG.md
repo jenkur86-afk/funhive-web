@@ -73,6 +73,38 @@ self-heals" overstated it.
 
 ---
 
+## Prediction check — 2026-09-07 — **no drop, but THREE of the four timing claims failed, and the reason is that MacaroniKid group size is the variable**
+
+Against the standing prediction in `## Prediction check — 2026-09-06`:
+
+- **"No `NONE` day" — HELD (1 of the 3 predicted days).** Preflight reads `09-07=G1 09-06=G3 09-05=G2 09-04=G1 09-03=G3 09-02=NONE 09-01=NONE`. Five consecutive clean days. Both `NONE` days still predate intervention #6 and age out of the window on 09-08 and 09-09.
+- **"Lock wait between 2h30m and 4h00m" — FAILED, badly, in the favourable direction. The wait was ZERO.** The trigger fired at 07:00:01.929Z and the first scraper started at 07:00:01.932Z — three milliseconds later. There was no lock to wait for.
+- **"Rotation finishing between 17:15Z and 19:15Z" — FAILED.** 15:43:54Z, 1h31m earlier than the earliest predicted time. This follows directly from the failure above.
+- **"Regular-rotation duration in 7.5–8.5h" — FAILED, marginally, in the unfavourable direction.** 8h43m53s (523.9 min reported). Four points now read 8h17m / 8h31m / 7h41m / 8h43m. **Revised duration model: 7.5–9.0h.** The band is widened rather than re-fitted, per the rule the previous entry set; four points spanning 62 minutes support nothing tighter, and the honest reading is that duration is noisy around ~8h15m rather than trending.
+
+**The 09-06 entry named MacaroniKid group duration as the binding constraint. That was right, and today falsifies the way it was being tracked.** The lock-release series is:
+
+| Rotation date | MacaroniKid group | Released the lock at | Elapsed from its 19:00Z start |
+|---|---|---|---|
+| 2026-09-04 | G1 | 09:42:03Z | 14h42m |
+| 2026-09-05 | G1 | 09:32:29Z | 14h32m |
+| 2026-09-06 | G2 | 10:31:59Z | 15h32m |
+| 2026-09-07 | **G3** | **01:15:23Z** | **6h15m** |
+
+Group 3 released the lock **nine hours earlier than Group 2 did**, which is why today had no wait at all. The previous entry explicitly flagged this possibility — *"the groups differ in size, so some of this spread is which group ran, not drift; four points cannot separate those yet"* — and today separates them. **The variable is which MacaroniKid group runs, not drift over time.** Tracking a single "headroom" number across days therefore compares unlike things: the 48-minute margin computed on 09-06 was a Group 2 number and says nothing about a Group 3 day.
+
+This also sits awkwardly against `CLAUDE.md`, which records the 2026-09-02 rebalance as equalising MacaroniKid at **14.8h per group**. G1 and G2 land near that; **G3 came in at 6h15m across 6 states**. Either the rebalance did not equalise the MacaroniKid side the way it equalised the regular side, or G3 has fewer states than the balance assumed. A short group is harmless in itself — but the 14.8h figure should not be quoted as though it applied to all three.
+
+**Standing prediction — 2026-09-08 through 2026-09-10.** `getDayGroup`: day 8 → Group 2, day 9 → Group 3, day 10 → Group 1. Falsifiably, and now stated PER MACARONI GROUP rather than as one number:
+
+- **No `NONE` day** on any of the three. If one appears, intervention #6 has not held and that must be said in its ledger row.
+- **09-08 (MacaroniKid G1, releasing ~09:30–10:00Z): lock wait 2h30m–3h00m, rotation finishes 17:00Z–19:00Z.**
+- **09-09 (MacaroniKid G2, the long one, releasing ~10:15–10:45Z): lock wait 3h15m–3h45m, rotation finishes 18:00Z–19:45Z.** This is the day nearest the collision threshold.
+- **09-10 (MacaroniKid G3, the short one): lock wait UNDER 30 MINUTES, rotation finishes before 16:30Z.** If 09-10 shows a multi-hour wait, the group-size explanation above is wrong and today was something else.
+- **Regular-rotation duration in 7.5–9.0h** on all three, per the widened model.
+- **No intervention was made to the rotation this run**, so nothing here is attributable to a change and no ledger row is added. The only scheduler change made today was unrelated: the one-shot `FunHive-PlatformDiscovery` task was **disabled** after it succeeded at 12:03Z, having spent the rest of the day firing every 15 minutes and logging "Nothing to do".
+
+
 ## Prediction check — 2026-09-06 — **held on dropping, FAILED on duration, and the failure relocates the constraint**
 
 Day 6 → Group 3, as `getDayGroup` predicted. Measured from `scraper-run-2026-09-06.log`:

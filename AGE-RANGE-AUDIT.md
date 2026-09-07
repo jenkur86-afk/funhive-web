@@ -53566,3 +53566,917 @@ The remaining flagged rows are library branches and parks departments whose All-
 | Little Egg Harbor Branch | Communico-NJ-theoceancountylibrary | 16 | 20 | 80% |
 | Delaware Nature Society | MacaroniKid-DE-newcastle | 18 | 20 | 90% |
 | Luxe Bar & Bistro | MacaroniKid-SC-northcharleston | 20 | 20 | 100% |
+
+## 2026-09-07
+
+Group 1 rotation, window **2026-09-07T07:00:01Z** onward. **9,237 rows** across **862 individual sites** and **104 distinct scraper names**; **25 sites** cross the >=70% All-Ages flag at total >= 20.
+
+**The Step 3c builder itself was broken this morning and is fixed in this commit.** `build-age-range-audit.js` died on its very first page with `canceling statement due to statement timeout`, taking the whole section with it. Keyset pagination, added 2026-09-06, had removed the OFFSET blow-up but not the underlying cost: there is **no index on `scraped_at`** (see `database/schema.sql` — events is indexed on date, state, category, activity_id, scraper_name and location, but not scraped_at), so every page walks the id index skipping non-matching rows until it fills its limit. A 1,000-row page measured **8.45s against an ~8s statement timeout**. The page size is now 250 and halves on a timeout rather than aborting, because aborting loses the day's section — which is the same heartbeat the preflight reads to detect its own missed runs.
+
+**One real detection bug found and fixed: a lower bound spelled "birth".** Jacksonville Public Library's Willow Branch surfaced it — `Little Readers - (ages birth–5)` sitting in All Ages. Measured over ten library scrapers before writing any code: **125 stored rows carry "birth" in the title, 116 state an explicit "ages birth to N" range, and 101 of those 116 are mis-bucketed** — 94 in All Ages and, in the damaging direction, **7 in Kids (6-8)**, where `Little Crafters - (ages birth - 5)` files a birth-to-five programme as six-to-eight. Every numeric rule in `detectAgeRange()` requires a digit for the lower bound, so the phrase reached none of them and fell through to the keyword rules, where whatever word happened to be in the title decided the bracket. The new rule is anchored on the literal "age(s)" keyword like everything around it, and `Happy Birthday to You!` / `Birth Center Open House` are pinned as negative controls. `test-age-detection.js` 126 -> 132 cases, all passing.
+
+**Already-stored rows keep their old bracket** until they are re-scraped or a backfill runs — the fix is a save-time fix and is not retroactive.
+
+**Two flagged sites remain open MISMATCHes and neither was fixed today, on purpose:**
+
+- **Hauppauge Library - Classroom C (Communico-NY-hauppaugelibrary)** — `SAT Prep Course` sits in All Ages and is unambiguously teen. Measured across seven major library scrapers it is **2 rows and 1 distinct title fleet-wide**, and a bare `SAT` token collides with the Saturday abbreviation. Left alone for the same reason the bare-holiday-name case was left alone on 2026-08-23: the rule would cost more than the defect.
+- **Schlitz Audubon Nature Center (Gardens-Nature-Eastern)** — `Junior Elementary Homeschool` and `Senior Elementary Homeschool` sit in All Ages. The bare word `elementary` is excluded from the detector **on purpose** (it is usually a venue name, "held at Lincoln Elementary"); the existing rule needs `elementary` followed by school-aged/students/kids/children, or preceded by `for`. Genuine open bug, not an oversight.
+
+**Eleven of the 25 flagged sites were verified as correctly All Ages**, not as detection failures — Hartland VT, Leverett MA, Barnes & Noble Paramus, the Communico adult-wellness and ESL branches, and both Hauppauge rows whose only age-bearing titles ("Ages 2 years and older", "families with children ages 3 and up") resolve to `2+` and `3+`, which bucket as All Ages **by design**. Full verdicts are in `reports/verification-comments.json`.
+
+**One data-shape callout:** `Festivals-Eastern-US` contributed **332 rows carrying no venue at all** — the single largest "site" in today's table, and it is not a site. Its remaining 37 rows carry a venue byte-identical to the event title. Both shapes are what `fix-missing-venue.js` and `fix-venue-title-quality.js` exist to repair after the fact; this is a note that the scraper is not supplying a venue at source.
+
+| Site | Scraper | All Ages | Babies 0-2 | Preschool 3-5 | Kids 6-8 | Tweens 9-12 | Teens 13-18 | Total | Link |
+|---|---|---|---|---|---|---|---|---|---|
+| Anne Arundel County Library | AACPL | 0 | 1 | 1 | 0 | 0 | 1 | 3 | — |
+| Odenton Library | AACPL | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Glen Burnie Library | AACPL | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Severn Library | AACPL | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Edgewater Library | AACPL | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Broadneck Library | AACPL | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Discoveries Library | AACPL | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Linthicum Library | AACPL | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Deale Library | AACPL | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Mountain Road Library | AACPL | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Severna Park Library | AACPL | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Barnes & Noble Exton | BarnesNoble-Eastern | 12 | 0 | 0 | 47 | 0 | 0 | 59 | [cal](https://stores.barnesandnoble.com/store/2086) |
+| Barnes & Noble Plymouth Meeting | BarnesNoble-Eastern | 26 | 1 | 27 | 3 | 0 | 0 | 57 | [cal](https://stores.barnesandnoble.com/store/2992) |
+| Barnes & Noble Buckland Hills Mall | BarnesNoble-Eastern | 8 | 0 | 2 | 33 | 0 | 0 | 43 | [cal](https://stores.barnesandnoble.com/store/2167) |
+| Barnes & Noble Fairfax | BarnesNoble-Eastern | 19 | 0 | 20 | 1 | 0 | 0 | 40 | [cal](https://stores.barnesandnoble.com/store/2937) |
+| Barnes & Noble Shops at Stonewall | BarnesNoble-Eastern | 1 | 0 | 0 | 38 | 0 | 0 | 39 | [cal](https://stores.barnesandnoble.com/store/3499) |
+| Barnes & Noble Pittsford | BarnesNoble-Eastern | 18 | 0 | 0 | 19 | 0 | 0 | 37 | [cal](https://stores.barnesandnoble.com/store/2790) |
+| Barnes & Noble Union Square | BarnesNoble-Eastern | 22 | 1 | 1 | 11 | 0 | 0 | 35 | [cal](https://stores.barnesandnoble.com/store/2675) |
+| Barnes & Noble South Portland | BarnesNoble-Eastern | 8 | 0 | 1 | 25 | 0 | 0 | 34 | [cal](https://stores.barnesandnoble.com/store/3477) |
+| Barnes & Noble Francis Scott Key Mall | BarnesNoble-Eastern | 8 | 0 | 0 | 26 | 0 | 0 | 34 | [cal](https://stores.barnesandnoble.com/store/2257) |
+| Barnes & Noble Doylestown | BarnesNoble-Eastern | 17 | 1 | 0 | 11 | 3 | 0 | 32 | [cal](https://stores.barnesandnoble.com/store/3471) |
+| Barnes & Noble Bowie | BarnesNoble-Eastern | 5 | 26 | 0 | 0 | 0 | 0 | 31 | [cal](https://stores.barnesandnoble.com/store/2093) |
+| Barnes & Noble Georgetown | BarnesNoble-Eastern | 9 | 0 | 1 | 21 | 0 | 0 | 31 | [cal](https://stores.barnesandnoble.com/store/3989) |
+| Barnes & Noble Carle Place | BarnesNoble-Eastern | 6 | 0 | 25 | 0 | 0 | 0 | 31 | [cal](https://stores.barnesandnoble.com/store/2216) |
+| Barnes & Noble Cheshire | BarnesNoble-Eastern | 15 | 0 | 13 | 3 | 0 | 0 | 31 | [cal](https://stores.barnesandnoble.com/store/3529) |
+| Barnes & Noble F Street | BarnesNoble-Eastern | 4 | 0 | 0 | 26 | 0 | 0 | 30 | [cal](https://stores.barnesandnoble.com/store/3544) |
+| Barnes & Noble Clark Commons | BarnesNoble-Eastern | 4 | 13 | 1 | 12 | 0 | 0 | 30 | [cal](https://stores.barnesandnoble.com/store/3558) |
+| Barnes & Noble Hamilton | BarnesNoble-Eastern | 5 | 0 | 12 | 13 | 0 | 0 | 30 | [cal](https://stores.barnesandnoble.com/store/2217) |
+| Barnes & Noble Moorestown | BarnesNoble-Eastern | 5 | 6 | 13 | 0 | 0 | 5 | 29 | [cal](https://stores.barnesandnoble.com/store/2797) |
+| Barnes & Noble Bethlehem/Easton | BarnesNoble-Eastern | 15 | 0 | 13 | 1 | 0 | 0 | 29 | [cal](https://stores.barnesandnoble.com/store/2210) |
+| Barnes & Noble Marlton | BarnesNoble-Eastern | 9 | 0 | 0 | 20 | 0 | 0 | 29 | [cal](https://stores.barnesandnoble.com/store/2664) |
+| Barnes & Noble Walden Galleria | BarnesNoble-Eastern | 3 | 0 | 1 | 25 | 0 | 0 | 29 | [cal](https://stores.barnesandnoble.com/store/3518) |
+| Barnes & Noble Clarendon | BarnesNoble-Eastern | 3 | 0 | 25 | 0 | 0 | 0 | 28 | [cal](https://stores.barnesandnoble.com/store/3537) |
+| Barnes & Noble The Shoppes at Webb Gin | BarnesNoble-Eastern | 3 | 0 | 3 | 22 | 0 | 0 | 28 | [cal](https://stores.barnesandnoble.com/store/2256) |
+| Barnes & Noble Paramus | BarnesNoble-Eastern | 22 | 0 | 4 | 2 | 0 | 0 | 28 | [cal](https://stores.barnesandnoble.com/store/3448) |
+| Barnes & Noble Hingham | BarnesNoble-Eastern | 12 | 0 | 0 | 15 | 0 | 0 | 27 | [cal](https://stores.barnesandnoble.com/store/2194) |
+| Barnes & Noble The Shops at Greenridge | BarnesNoble-Eastern | 14 | 0 | 13 | 0 | 0 | 0 | 27 | [cal](https://stores.barnesandnoble.com/store/2221) |
+| Barnes & Noble Lake Grove | BarnesNoble-Eastern | 0 | 1 | 13 | 13 | 0 | 0 | 27 | [cal](https://stores.barnesandnoble.com/store/2325) |
+| Barnes & Noble Valley Forge | BarnesNoble-Eastern | 14 | 0 | 0 | 13 | 0 | 0 | 27 | [cal](https://stores.barnesandnoble.com/store/2869) |
+| Barnes & Noble Ellicott City | BarnesNoble-Eastern | 4 | 0 | 23 | 0 | 0 | 0 | 27 | [cal](https://stores.barnesandnoble.com/store/2831) |
+| Barnes & Noble Leominster | BarnesNoble-Eastern | 1 | 0 | 0 | 26 | 0 | 0 | 27 | [cal](https://stores.barnesandnoble.com/store/2903) |
+| Barnes & Noble Tysons Corner | BarnesNoble-Eastern | 2 | 0 | 0 | 25 | 0 | 0 | 27 | [cal](https://stores.barnesandnoble.com/store/3513) |
+| Barnes & Noble Delray Beach | BarnesNoble-Eastern | 0 | 0 | 27 | 0 | 0 | 0 | 27 | [cal](https://stores.barnesandnoble.com/store/3457) |
+| Barnes & Noble Broomall | BarnesNoble-Eastern | 7 | 1 | 0 | 18 | 0 | 0 | 26 | [cal](https://stores.barnesandnoble.com/store/1913) |
+| Barnes & Noble Hadley | BarnesNoble-Eastern | 13 | 0 | 0 | 13 | 0 | 0 | 26 | [cal](https://stores.barnesandnoble.com/store/2088) |
+| Barnes & Noble Germantown | BarnesNoble-Eastern | 0 | 0 | 0 | 26 | 0 | 0 | 26 | [cal](https://stores.barnesandnoble.com/store/3553) |
+| Barnes & Noble Center City Philadelphia | BarnesNoble-Eastern | 18 | 0 | 7 | 1 | 0 | 0 | 26 | [cal](https://stores.barnesandnoble.com/store/3434) |
+| Barnes & Noble The Streets at Southpoint | BarnesNoble-Eastern | 3 | 0 | 10 | 13 | 0 | 0 | 26 | [cal](https://stores.barnesandnoble.com/store/2109) |
+| Barnes & Noble Rio Lakefront | BarnesNoble-Eastern | 0 | 0 | 26 | 0 | 0 | 0 | 26 | [cal](https://stores.barnesandnoble.com/store/2971) |
+| Barnes & Noble Somerset Shopping Center | BarnesNoble-Eastern | 1 | 0 | 1 | 24 | 0 | 0 | 26 | [cal](https://stores.barnesandnoble.com/store/2140) |
+| Barnes & Noble Pasadena Crossroads | BarnesNoble-Eastern | 2 | 0 | 0 | 24 | 0 | 0 | 26 | [cal](https://stores.barnesandnoble.com/store/3560) |
+| Barnes & Noble Woodbridge | BarnesNoble-Eastern | 3 | 0 | 0 | 22 | 0 | 0 | 25 | [cal](https://stores.barnesandnoble.com/store/3410) |
+| Barnes & Noble Augusta Mall | BarnesNoble-Eastern | 0 | 0 | 0 | 25 | 0 | 0 | 25 | [cal](https://stores.barnesandnoble.com/store/2359) |
+| Barnes & Noble Lancaster | BarnesNoble-Eastern | 2 | 0 | 1 | 22 | 0 | 0 | 25 | [cal](https://stores.barnesandnoble.com/store/2916) |
+| Barnes & Noble Westwood | BarnesNoble-Eastern | 1 | 12 | 12 | 0 | 0 | 0 | 25 | [cal](https://stores.barnesandnoble.com/store/2919) |
+| Barnes & Noble Lehigh Valley Mall | BarnesNoble-Eastern | 2 | 23 | 0 | 0 | 0 | 0 | 25 | [cal](https://stores.barnesandnoble.com/store/3470) |
+| Barnes & Noble Newport News | BarnesNoble-Eastern | 2 | 0 | 21 | 1 | 0 | 0 | 24 | [cal](https://stores.barnesandnoble.com/store/2773) |
+| Barnes & Noble Christiana Mall | BarnesNoble-Eastern | 8 | 0 | 3 | 13 | 0 | 0 | 24 | [cal](https://stores.barnesandnoble.com/store/2366) |
+| Barnes & Noble Union Plaza | BarnesNoble-Eastern | 1 | 23 | 0 | 0 | 0 | 0 | 24 | [cal](https://stores.barnesandnoble.com/store/3424) |
+| Barnes & Noble Carriage Crossing | BarnesNoble-Eastern | 1 | 0 | 0 | 22 | 0 | 0 | 23 | [cal](https://stores.barnesandnoble.com/store/2224) |
+| Barnes & Noble Wellington | BarnesNoble-Eastern | 3 | 0 | 0 | 20 | 0 | 0 | 23 | [cal](https://stores.barnesandnoble.com/store/2100) |
+| Barnes & Noble Princeton | BarnesNoble-Eastern | 0 | 0 | 10 | 13 | 0 | 0 | 23 | [cal](https://stores.barnesandnoble.com/store/2368) |
+| Barnes & Noble Burlington MA | BarnesNoble-Eastern | 2 | 0 | 21 | 0 | 0 | 0 | 23 | [cal](https://stores.barnesandnoble.com/store/2966) |
+| Barnes & Noble Triangle Town Center | BarnesNoble-Eastern | 1 | 0 | 0 | 22 | 0 | 0 | 23 | [cal](https://stores.barnesandnoble.com/store/2126) |
+| Barnes & Noble Wareham | BarnesNoble-Eastern | 3 | 0 | 20 | 0 | 0 | 0 | 23 | [cal](https://stores.barnesandnoble.com/store/3439) |
+| Barnes & Noble Manhasset | BarnesNoble-Eastern | 3 | 0 | 20 | 0 | 0 | 0 | 23 | [cal](https://stores.barnesandnoble.com/store/1912) |
+| Barnes & Noble One Loudoun | BarnesNoble-Eastern | 5 | 0 | 0 | 18 | 0 | 0 | 23 | [cal](https://stores.barnesandnoble.com/store/3303) |
+| Barnes & Noble Holmdel | BarnesNoble-Eastern | 1 | 0 | 21 | 0 | 0 | 0 | 22 | [cal](https://stores.barnesandnoble.com/store/3421) |
+| Barnes & Noble Rehoboth Beach | BarnesNoble-Eastern | 0 | 0 | 0 | 22 | 0 | 0 | 22 | [cal](https://stores.barnesandnoble.com/store/3988) |
+| Barnes & Noble Colonie Centre | BarnesNoble-Eastern | 10 | 1 | 10 | 1 | 0 | 0 | 22 | [cal](https://stores.barnesandnoble.com/store/2275) |
+| Barnes & Noble Reston | BarnesNoble-Eastern | 1 | 0 | 21 | 0 | 0 | 0 | 22 | [cal](https://stores.barnesandnoble.com/store/3432) |
+| Barnes & Noble Annapolis | BarnesNoble-Eastern | 0 | 0 | 0 | 22 | 0 | 0 | 22 | [cal](https://stores.barnesandnoble.com/store/2866) |
+| Barnes & Noble Morris Plains | BarnesNoble-Eastern | 2 | 0 | 19 | 0 | 0 | 0 | 21 | [cal](https://stores.barnesandnoble.com/store/2980) |
+| Barnes & Noble Towne Centre | BarnesNoble-Eastern | 0 | 0 | 0 | 21 | 0 | 0 | 21 | [cal](https://stores.barnesandnoble.com/store/2973) |
+| Barnes & Noble Monmouth Square | BarnesNoble-Eastern | 5 | 0 | 14 | 1 | 0 | 0 | 20 | [cal](https://stores.barnesandnoble.com/store/3422) |
+| Barnes & Noble Cape Cod Mall | BarnesNoble-Eastern | 7 | 0 | 0 | 13 | 0 | 0 | 20 | [cal](https://stores.barnesandnoble.com/store/2092) |
+| Barnes & Noble Nashua | BarnesNoble-Eastern | 1 | 0 | 19 | 0 | 0 | 0 | 20 | [cal](https://stores.barnesandnoble.com/store/2791) |
+| Barnes & Noble Chesterfield Towne Center | BarnesNoble-Eastern | 5 | 0 | 1 | 14 | 0 | 0 | 20 | [cal](https://stores.barnesandnoble.com/store/2314) |
+| Barnes & Noble Oglethorpe Mall | BarnesNoble-Eastern | 8 | 0 | 0 | 12 | 0 | 0 | 20 | [cal](https://stores.barnesandnoble.com/store/2015) |
+| Barnes & Noble Tuscaloosa | BarnesNoble-Eastern | 7 | 0 | 13 | 0 | 0 | 0 | 20 | [cal](https://stores.barnesandnoble.com/store/2295) |
+| Barnes & Noble Brick | BarnesNoble-Eastern | 1 | 0 | 12 | 7 | 0 | 0 | 20 | [cal](https://stores.barnesandnoble.com/store/2803) |
+| Barnes & Noble Montgomeryville | BarnesNoble-Eastern | 1 | 0 | 0 | 19 | 0 | 0 | 20 | [cal](https://stores.barnesandnoble.com/store/2976) |
+| Barnes & Noble Westport | BarnesNoble-Eastern | 8 | 0 | 12 | 0 | 0 | 0 | 20 | [cal](https://stores.barnesandnoble.com/store/3400) |
+| Barnes & Noble Seven Corners | BarnesNoble-Eastern | 0 | 0 | 0 | 19 | 0 | 0 | 19 | [cal](https://stores.barnesandnoble.com/store/2712) |
+| Barnes & Noble Manassas | BarnesNoble-Eastern | 15 | 0 | 4 | 0 | 0 | 0 | 19 | [cal](https://stores.barnesandnoble.com/store/3493) |
+| Barnes & Noble Upper West Side (82nd & Broadway) | BarnesNoble-Eastern | 18 | 0 | 1 | 0 | 0 | 0 | 19 | [cal](https://stores.barnesandnoble.com/store/1979) |
+| Barnes & Noble Farmington | BarnesNoble-Eastern | 11 | 0 | 8 | 0 | 0 | 0 | 19 | [cal](https://stores.barnesandnoble.com/store/3594) |
+| Barnes & Noble East Cobb | BarnesNoble-Eastern | 6 | 0 | 0 | 13 | 0 | 0 | 19 | [cal](https://stores.barnesandnoble.com/store/3443) |
+| Barnes & Noble Somerset Square | BarnesNoble-Eastern | 6 | 0 | 0 | 13 | 0 | 0 | 19 | [cal](https://stores.barnesandnoble.com/store/2862) |
+| Barnes & Noble Ledgewood | BarnesNoble-Eastern | 6 | 0 | 13 | 0 | 0 | 0 | 19 | [cal](https://stores.barnesandnoble.com/store/3468) |
+| Barnes & Noble Campbell Lane | BarnesNoble-Eastern | 5 | 0 | 13 | 0 | 0 | 0 | 18 | [cal](https://stores.barnesandnoble.com/store/2753) |
+| Barnes & Noble The Market Common | BarnesNoble-Eastern | 6 | 0 | 0 | 12 | 0 | 0 | 18 | [cal](https://stores.barnesandnoble.com/store/2289) |
+| Barnes & Noble Hampton | BarnesNoble-Eastern | 2 | 2 | 12 | 2 | 0 | 0 | 18 | [cal](https://stores.barnesandnoble.com/store/2309) |
+| Barnes & Noble Natick | BarnesNoble-Eastern | 6 | 0 | 1 | 11 | 0 | 0 | 18 | [cal](https://stores.barnesandnoble.com/store/3437) |
+| Barnes & Noble Cherry Hill | BarnesNoble-Eastern | 5 | 0 | 0 | 12 | 0 | 0 | 17 | [cal](https://stores.barnesandnoble.com/store/2288) |
+| Barnes & Noble Walpole Mall | BarnesNoble-Eastern | 6 | 0 | 0 | 11 | 0 | 0 | 17 | [cal](https://stores.barnesandnoble.com/store/2935) |
+| Barnes & Noble Morgantown | BarnesNoble-Eastern | 5 | 0 | 0 | 12 | 0 | 0 | 17 | [cal](https://stores.barnesandnoble.com/store/2189) |
+| Barnes & Noble Biltmore Park Town Square | BarnesNoble-Eastern | 0 | 0 | 17 | 0 | 0 | 0 | 17 | [cal](https://stores.barnesandnoble.com/store/2326) |
+| Barnes & Noble Eastview Mall | BarnesNoble-Eastern | 3 | 0 | 0 | 13 | 0 | 0 | 16 | [cal](https://stores.barnesandnoble.com/store/3473) |
+| Barnes & Noble Libbie Place | BarnesNoble-Eastern | 0 | 0 | 16 | 0 | 0 | 0 | 16 | [cal](https://stores.barnesandnoble.com/store/2995) |
+| Barnes & Noble Edgewood | BarnesNoble-Eastern | 3 | 0 | 0 | 12 | 0 | 0 | 15 | [cal](https://stores.barnesandnoble.com/store/3583) |
+| Barnes & Noble Mosaic | BarnesNoble-Eastern | 1 | 0 | 12 | 2 | 0 | 0 | 15 | [cal](https://stores.barnesandnoble.com/store/3314) |
+| Barnes & Noble Manchester | BarnesNoble-Eastern | 0 | 0 | 0 | 15 | 0 | 0 | 15 | [cal](https://stores.barnesandnoble.com/store/2052) |
+| Barnes & Noble Walt Whitman | BarnesNoble-Eastern | 1 | 1 | 2 | 11 | 0 | 0 | 15 | [cal](https://stores.barnesandnoble.com/store/3474) |
+| Barnes & Noble Erie | BarnesNoble-Eastern | 3 | 0 | 0 | 12 | 0 | 0 | 15 | [cal](https://stores.barnesandnoble.com/store/2572) |
+| Barnes & Noble Mohegan Lake | BarnesNoble-Eastern | 1 | 0 | 1 | 13 | 0 | 0 | 15 | [cal](https://stores.barnesandnoble.com/store/2897) |
+| Barnes & Noble Elizabethtown Mall | BarnesNoble-Eastern | 1 | 0 | 1 | 13 | 0 | 0 | 15 | [cal](https://stores.barnesandnoble.com/store/2108) |
+| Barnes & Noble Charlottesville | BarnesNoble-Eastern | 2 | 0 | 0 | 13 | 0 | 0 | 15 | [cal](https://stores.barnesandnoble.com/store/2559) |
+| Barnes & Noble Clifton Commons | BarnesNoble-Eastern | 2 | 0 | 12 | 0 | 1 | 0 | 15 | [cal](https://stores.barnesandnoble.com/store/2932) |
+| Barnes & Noble Newburgh Crossing | BarnesNoble-Eastern | 0 | 0 | 2 | 13 | 0 | 0 | 15 | [cal](https://stores.barnesandnoble.com/store/2215) |
+| Barnes & Noble Kingston Pike | BarnesNoble-Eastern | 1 | 0 | 14 | 0 | 0 | 0 | 15 | [cal](https://stores.barnesandnoble.com/store/2838) |
+| Barnes & Noble Cranberry | BarnesNoble-Eastern | 1 | 0 | 0 | 13 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/2819) |
+| Barnes & Noble Deptford | BarnesNoble-Eastern | 1 | 0 | 0 | 13 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/2891) |
+| Barnes & Noble Newnan | BarnesNoble-Eastern | 1 | 0 | 0 | 13 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/2297) |
+| Barnes & Noble Virginia Beach Town Center | BarnesNoble-Eastern | 1 | 0 | 13 | 0 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/3337) |
+| Barnes & Noble Poughkeepsie | BarnesNoble-Eastern | 1 | 0 | 1 | 12 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/2886) |
+| Barnes & Noble Amherst | BarnesNoble-Eastern | 3 | 0 | 0 | 11 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/2958) |
+| Barnes & Noble Fayette Mall | BarnesNoble-Eastern | 2 | 0 | 11 | 1 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/3616) |
+| Barnes & Noble Smithfield | BarnesNoble-Eastern | 4 | 0 | 10 | 0 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/2082) |
+| Barnes & Noble Towne Center at Webster | BarnesNoble-Eastern | 1 | 0 | 13 | 0 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/2229) |
+| Barnes & Noble Livingston | BarnesNoble-Eastern | 1 | 0 | 0 | 13 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/3590) |
+| Barnes & Noble North Haven | BarnesNoble-Eastern | 10 | 0 | 4 | 0 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/1897) |
+| Barnes & Noble Carolina Place Mall | BarnesNoble-Eastern | 1 | 0 | 13 | 0 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/2254) |
+| Barnes & Noble The Mall at Barnes Crossing | BarnesNoble-Eastern | 1 | 0 | 13 | 0 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/2346) |
+| Barnes & Noble Neshaminy Mall | BarnesNoble-Eastern | 1 | 0 | 0 | 13 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/2351) |
+| Barnes & Noble Peabody | BarnesNoble-Eastern | 1 | 0 | 13 | 0 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/2993) |
+| Barnes & Noble Newington/Portsmouth | BarnesNoble-Eastern | 0 | 0 | 0 | 14 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/2988) |
+| Barnes & Noble Greensboro | BarnesNoble-Eastern | 1 | 0 | 0 | 13 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/2795) |
+| Barnes & Noble Boynton Beach | BarnesNoble-Eastern | 1 | 0 | 0 | 13 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/2874) |
+| Barnes & Noble Wolf Chase Galleria | BarnesNoble-Eastern | 1 | 0 | 0 | 13 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/2822) |
+| Barnes & Noble Buckhead | BarnesNoble-Eastern | 5 | 0 | 0 | 9 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/1907) |
+| Barnes & Noble Pikesville | BarnesNoble-Eastern | 1 | 0 | 0 | 13 | 0 | 0 | 14 | [cal](https://stores.barnesandnoble.com/store/3417) |
+| Barnes & Noble Riverhead | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/3425) |
+| Barnes & Noble Lynnfield | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/3428) |
+| Barnes & Noble Salem NH | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2605) |
+| Barnes & Noble Perimeter | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2846) |
+| Barnes & Noble Staten Island Mall | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/3309) |
+| Barnes & Noble Birkdale Village | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2118) |
+| Barnes & Noble Waterworks | BarnesNoble-Eastern | 0 | 13 | 0 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2898) |
+| Barnes & Noble Southbury | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/3516) |
+| Barnes & Noble Alamance Crossing | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2285) |
+| Barnes & Noble Morrison Place | BarnesNoble-Eastern | 0 | 13 | 0 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2317) |
+| Barnes & Noble Brier Creek Commons | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2171) |
+| Barnes & Noble Millbury | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2206) |
+| Barnes & Noble McKinley Mall | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2306) |
+| Barnes & Noble South Burlington VT | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2776) |
+| Barnes & Noble Menlo Park Mall | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2162) |
+| Barnes & Noble Gulfport | BarnesNoble-Eastern | 1 | 0 | 0 | 12 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2961) |
+| Barnes & Noble Saratoga | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2019) |
+| Barnes & Noble Milford | BarnesNoble-Eastern | 1 | 0 | 0 | 12 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2240) |
+| Barnes & Noble Shoppes at Woodhill | BarnesNoble-Eastern | 1 | 0 | 12 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/3462) |
+| Barnes & Noble Centre of Tallahassee | BarnesNoble-Eastern | 1 | 0 | 0 | 12 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2849) |
+| Barnes & Noble The Collection at Forsyth | BarnesNoble-Eastern | 1 | 0 | 0 | 12 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2330) |
+| Barnes & Noble Canton | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2223) |
+| Barnes & Noble Clarence Mall | BarnesNoble-Eastern | 1 | 0 | 12 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2301) |
+| Barnes & Noble Creeks at Virginia | BarnesNoble-Eastern | 0 | 0 | 0 | 13 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/3552) |
+| Barnes & Noble Promenade Shops of Saucon Valley | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2259) |
+| Barnes & Noble Holyoke | BarnesNoble-Eastern | 1 | 12 | 0 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2747) |
+| Barnes & Noble Short Pump | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2029) |
+| Barnes & Noble Market Square | BarnesNoble-Eastern | 1 | 0 | 11 | 1 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/2711) |
+| Barnes & Noble Wilmington at Concord Square | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/3324) |
+| Barnes & Noble Mooresville | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/3461) |
+| Barnes & Noble Westminster | BarnesNoble-Eastern | 0 | 0 | 13 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/3534) |
+| Barnes & Noble Bryn Mawr | BarnesNoble-Eastern | 3 | 0 | 0 | 10 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/3509) |
+| Barnes & Noble Cary | BarnesNoble-Eastern | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [cal](https://stores.barnesandnoble.com/store/3431) |
+| Barnes & Noble Enfield | BarnesNoble-Eastern | 3 | 0 | 0 | 9 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/2132) |
+| Barnes & Noble Bay Shore | BarnesNoble-Eastern | 0 | 0 | 0 | 12 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/2963) |
+| Barnes & Noble East Brunswick | BarnesNoble-Eastern | 0 | 0 | 12 | 0 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/2924) |
+| Barnes & Noble The Avenue at Murfreesboro | BarnesNoble-Eastern | 0 | 0 | 12 | 0 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/2292) |
+| Barnes & Noble Town Center Prado | BarnesNoble-Eastern | 0 | 0 | 12 | 0 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/2656) |
+| Barnes & Noble Massapequa | BarnesNoble-Eastern | 0 | 12 | 0 | 0 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/2547) |
+| Barnes & Noble Freehold | BarnesNoble-Eastern | 0 | 0 | 0 | 12 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/2609) |
+| Barnes & Noble High Ridge | BarnesNoble-Eastern | 0 | 0 | 12 | 0 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/3530) |
+| Barnes & Noble Meriden | BarnesNoble-Eastern | 0 | 0 | 12 | 0 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/3472) |
+| Barnes & Noble Keene | BarnesNoble-Eastern | 0 | 0 | 12 | 0 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/3536) |
+| Barnes & Noble Mount Kisco | BarnesNoble-Eastern | 0 | 0 | 12 | 0 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/3488) |
+| Barnes & Noble Shops at Paddock | BarnesNoble-Eastern | 0 | 0 | 12 | 0 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/3433) |
+| Barnes & Noble Wilkes-Barre | BarnesNoble-Eastern | 1 | 0 | 0 | 11 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/2996) |
+| Barnes & Noble Haywood Road | BarnesNoble-Eastern | 0 | 0 | 12 | 0 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/2558) |
+| Barnes & Noble Bridgehampton | BarnesNoble-Eastern | 0 | 0 | 0 | 12 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/3438) |
+| Barnes & Noble Commack | BarnesNoble-Eastern | 0 | 0 | 0 | 12 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/3595) |
+| Barnes & Noble Naples | BarnesNoble-Eastern | 0 | 0 | 12 | 0 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/3494) |
+| Barnes & Noble Woodland Park | BarnesNoble-Eastern | 0 | 0 | 12 | 0 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/1977) |
+| Barnes & Noble Hartsdale | BarnesNoble-Eastern | 0 | 0 | 0 | 12 | 0 | 0 | 12 | [cal](https://stores.barnesandnoble.com/store/3445) |
+| Barnes & Noble The Court at Oxford Valley | BarnesNoble-Eastern | 0 | 0 | 11 | 0 | 0 | 0 | 11 | [cal](https://stores.barnesandnoble.com/store/2697) |
+| Barnes & Noble Bel Air | BarnesNoble-Eastern | 0 | 0 | 0 | 11 | 0 | 0 | 11 | [cal](https://stores.barnesandnoble.com/store/2817) |
+| Barnes & Noble New Town | BarnesNoble-Eastern | 9 | 0 | 2 | 0 | 0 | 0 | 11 | [cal](https://stores.barnesandnoble.com/store/2265) |
+| Barnes & Noble Camp Hill Shopping Center | BarnesNoble-Eastern | 4 | 0 | 0 | 7 | 0 | 0 | 11 | [cal](https://stores.barnesandnoble.com/store/2046) |
+| Barnes & Noble Congressional Plaza | BarnesNoble-Eastern | 1 | 0 | 10 | 0 | 0 | 0 | 11 | [cal](https://stores.barnesandnoble.com/store/3321) |
+| Barnes & Noble Atlantic Avenue | BarnesNoble-Eastern | 3 | 0 | 8 | 0 | 0 | 0 | 11 | [cal](https://stores.barnesandnoble.com/store/3419) |
+| Barnes & Noble Settlers Ridge | BarnesNoble-Eastern | 3 | 0 | 0 | 7 | 0 | 0 | 10 | [cal](https://stores.barnesandnoble.com/store/2367) |
+| Barnes & Noble Coconut Point | BarnesNoble-Eastern | 1 | 0 | 0 | 9 | 0 | 0 | 10 | [cal](https://stores.barnesandnoble.com/store/3456) |
+| Barnes & Noble The Shoppes at Plainview | BarnesNoble-Eastern | 1 | 0 | 0 | 8 | 0 | 0 | 9 | [cal](https://stores.barnesandnoble.com/store/2705) |
+| Barnes & Noble Augusta | BarnesNoble-Eastern | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://stores.barnesandnoble.com/store/2742) |
+| Barnes & Noble Greece | BarnesNoble-Eastern | 5 | 0 | 3 | 1 | 0 | 0 | 9 | [cal](https://stores.barnesandnoble.com/store/2848) |
+| Barnes & Noble Pinnacle at Turkey Creek | BarnesNoble-Eastern | 3 | 0 | 5 | 0 | 0 | 0 | 8 | [cal](https://stores.barnesandnoble.com/store/3559) |
+| Barnes & Noble Village District | BarnesNoble-Eastern | 5 | 0 | 0 | 3 | 0 | 0 | 8 | [cal](https://stores.barnesandnoble.com/store/3403) |
+| Barnes & Noble The Avenue at West Cobb | BarnesNoble-Eastern | 0 | 0 | 7 | 0 | 0 | 0 | 7 | [cal](https://stores.barnesandnoble.com/store/2157) |
+| Barnes & Noble Fifth Avenue | BarnesNoble-Eastern | 6 | 0 | 0 | 1 | 0 | 0 | 7 | [cal](https://stores.barnesandnoble.com/store/2234) |
+| Barnes & Noble Winston-Salem | BarnesNoble-Eastern | 0 | 0 | 7 | 0 | 0 | 0 | 7 | [cal](https://stores.barnesandnoble.com/store/2761) |
+| Barnes & Noble Chapel Hill | BarnesNoble-Eastern | 4 | 0 | 1 | 2 | 0 | 0 | 7 | [cal](https://stores.barnesandnoble.com/store/3596) |
+| Barnes & Noble The Avenue at White Marsh | BarnesNoble-Eastern | 1 | 0 | 0 | 6 | 0 | 0 | 7 | [cal](https://stores.barnesandnoble.com/store/3423) |
+| Barnes & Noble Monroeville Mall | BarnesNoble-Eastern | 0 | 0 | 0 | 7 | 0 | 0 | 7 | [cal](https://stores.barnesandnoble.com/store/2203) |
+| Barnes & Noble Hamburg Pavilion | BarnesNoble-Eastern | 0 | 0 | 0 | 7 | 0 | 0 | 7 | [cal](https://stores.barnesandnoble.com/store/2953) |
+| Barnes & Noble Renaissance at Colony Park | BarnesNoble-Eastern | 4 | 0 | 1 | 1 | 0 | 0 | 6 | [cal](https://stores.barnesandnoble.com/store/2318) |
+| Barnes & Noble San Jose Boulevard | BarnesNoble-Eastern | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://stores.barnesandnoble.com/store/2683) |
+| Barnes & Noble Crabtree Mall | BarnesNoble-Eastern | 1 | 4 | 1 | 0 | 0 | 0 | 6 | [cal](https://stores.barnesandnoble.com/store/1990) |
+| Barnes & Noble Cool Springs | BarnesNoble-Eastern | 5 | 0 | 0 | 1 | 0 | 0 | 6 | [cal](https://stores.barnesandnoble.com/store/2701) |
+| Barnes & Noble Athens | BarnesNoble-Eastern | 0 | 0 | 0 | 6 | 0 | 0 | 6 | [cal](https://stores.barnesandnoble.com/store/2974) |
+| Barnes & Noble Virginia Beach/Lynnhaven Mall | BarnesNoble-Eastern | 1 | 0 | 0 | 5 | 0 | 0 | 6 | [cal](https://stores.barnesandnoble.com/store/2195) |
+| Barnes & Noble Bellingham MA | BarnesNoble-Eastern | 2 | 0 | 2 | 1 | 0 | 0 | 5 | [cal](https://stores.barnesandnoble.com/store/2829) |
+| Barnes & Noble Flowood | BarnesNoble-Eastern | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://stores.barnesandnoble.com/store/3480) |
+| Barnes & Noble Sawgrass | BarnesNoble-Eastern | 2 | 0 | 1 | 2 | 0 | 0 | 5 | [cal](https://stores.barnesandnoble.com/store/3482) |
+| Barnes & Noble Florence | BarnesNoble-Eastern | 2 | 0 | 3 | 0 | 0 | 0 | 5 | [cal](https://stores.barnesandnoble.com/store/2654) |
+| Barnes & Noble Waterfront at Homestead | BarnesNoble-Eastern | 0 | 0 | 5 | 0 | 0 | 0 | 5 | [cal](https://stores.barnesandnoble.com/store/2076) |
+| Barnes & Noble Pittsfield | BarnesNoble-Eastern | 2 | 0 | 2 | 0 | 0 | 0 | 4 | [cal](https://stores.barnesandnoble.com/store/2661) |
+| Barnes & Noble St. Johns Town Center | BarnesNoble-Eastern | 0 | 0 | 0 | 4 | 0 | 0 | 4 | [cal](https://stores.barnesandnoble.com/store/2214) |
+| Barnes & Noble Warwick | BarnesNoble-Eastern | 3 | 0 | 0 | 0 | 1 | 0 | 4 | [cal](https://stores.barnesandnoble.com/store/2159) |
+| Barnes & Noble West Hartford | BarnesNoble-Eastern | 1 | 0 | 0 | 3 | 0 | 0 | 4 | [cal](https://stores.barnesandnoble.com/store/2279) |
+| Barnes & Noble Colonial | BarnesNoble-Eastern | 1 | 0 | 0 | 3 | 0 | 0 | 4 | [cal](https://stores.barnesandnoble.com/store/2704) |
+| Barnes & Noble Jenkintown | BarnesNoble-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://stores.barnesandnoble.com/store/3571) |
+| Barnes & Noble Brandon | BarnesNoble-Eastern | 0 | 0 | 3 | 0 | 0 | 0 | 3 | [cal](https://stores.barnesandnoble.com/store/3435) |
+| Barnes & Noble Springfield VA | BarnesNoble-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://stores.barnesandnoble.com/store/2982) |
+| Barnes & Noble North Dartmouth | BarnesNoble-Eastern | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://stores.barnesandnoble.com/store/1962) |
+| Barnes & Noble St. Augustine | BarnesNoble-Eastern | 0 | 0 | 3 | 0 | 0 | 0 | 3 | [cal](https://stores.barnesandnoble.com/store/2796) |
+| Barnes & Noble New Hope Commons | BarnesNoble-Eastern | 0 | 0 | 0 | 3 | 0 | 0 | 3 | [cal](https://stores.barnesandnoble.com/store/2631) |
+| Barnes & Noble Palm Harbor | BarnesNoble-Eastern | 0 | 0 | 2 | 1 | 0 | 0 | 3 | [cal](https://stores.barnesandnoble.com/store/3548) |
+| Barnes & Noble Fort Lauderdale | BarnesNoble-Eastern | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/2047) |
+| Barnes & Noble South Tampa | BarnesNoble-Eastern | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/3429) |
+| Barnes & Noble Phoenicia Center | BarnesNoble-Eastern | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/2120) |
+| Barnes & Noble The Summit Birmingham | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/2858) |
+| Barnes & Noble Colonial Palms Plaza | BarnesNoble-Eastern | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/3543) |
+| Barnes & Noble Eastern Shore Centre | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/2186) |
+| Barnes & Noble Altamonte Mall | BarnesNoble-Eastern | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/2188) |
+| Barnes & Noble Pembroke Pines | BarnesNoble-Eastern | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/2814) |
+| Barnes & Noble Park Slope | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/2876) |
+| Barnes & Noble Clearwater | BarnesNoble-Eastern | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/2859) |
+| Barnes & Noble Coral Springs | BarnesNoble-Eastern | 0 | 2 | 0 | 0 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/3402) |
+| Barnes & Noble Huntsville | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/2287) |
+| Barnes & Noble Upper East Side (87th & 3rd) | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/3420) |
+| Barnes & Noble Dawsonville | BarnesNoble-Eastern | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/3483) |
+| Barnes & Noble Mall Of Georgia | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/2972) |
+| Barnes & Noble Mobile | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/3587) |
+| Barnes & Noble Dedham | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/3427) |
+| Barnes & Noble Knightdale | BarnesNoble-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://stores.barnesandnoble.com/store/3603) |
+| Barnes & Noble Coral Gables | BarnesNoble-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/2739) |
+| Barnes & Noble Potomac Yard | BarnesNoble-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/2867) |
+| Barnes & Noble Patton Creek | BarnesNoble-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/2175) |
+| Barnes & Noble Fredericksburg | BarnesNoble-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/2369) |
+| Barnes & Noble York | BarnesNoble-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/3538) |
+| Barnes & Noble Shops at Wiregrass | BarnesNoble-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/2349) |
+| Barnes & Noble Chattanooga | BarnesNoble-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/2337) |
+| Barnes & Noble Broward Mall | BarnesNoble-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/2592) |
+| Barnes & Noble Boca Raton | BarnesNoble-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/2053) |
+| Barnes & Noble Palms of Carrollwood | BarnesNoble-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/3514) |
+| Barnes & Noble St. Petersburg at Tyrone | BarnesNoble-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/1986) |
+| Barnes & Noble Sarasota | BarnesNoble-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/2737) |
+| Barnes & Noble Waterford Lakes | BarnesNoble-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/3502) |
+| Barnes & Noble Yonkers | BarnesNoble-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/2889) |
+| Barnes & Noble Lake Nona | BarnesNoble-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/3556) |
+| Barnes & Noble Eastchester | BarnesNoble-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/3304) |
+| Barnes & Noble Harrisonburg Crossing | BarnesNoble-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/2131) |
+| Barnes & Noble Chesapeake | BarnesNoble-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/2735) |
+| Barnes & Noble B. Dalton at Oviedo Mall | BarnesNoble-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/2945) |
+| Barnes & Noble The Arboretum | BarnesNoble-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/2812) |
+| Barnes & Noble Pavilion at King's Grant | BarnesNoble-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://stores.barnesandnoble.com/store/3476) |
+| SouthPark Regional | BiblioCommons-NC-cmlibrary | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://cmlibrary.bibliocommons.com/v2/events) |
+| Allegra Westbrooks Regional | BiblioCommons-NC-cmlibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://cmlibrary.bibliocommons.com/v2/events) |
+| Mint Hill | BiblioCommons-NC-cmlibrary | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://cmlibrary.bibliocommons.com/v2/events) |
+| Nolensville Branch Library | CivicEngage-Libraries-wcpltn | 12 | 8 | 0 | 0 | 0 | 0 | 20 | [cal](https://www.wcpltn.org/calendar.aspx) |
+| Albany Library | Communico-CT-hplct | 0 | 0 | 0 | 0 | 0 | 3 | 3 | [cal](https://programs.hplct.org/events) |
+| Barbour Library | Communico-CT-hplct | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://programs.hplct.org/events) |
+| Downtown | Communico-CT-hplct | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://programs.hplct.org/events) |
+| Headquarters Library | Communico-FL-aclib | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://attend.aclib.us/events) |
+| North Regional/BC Library | Communico-FL-broward | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://broward.libnet.info/events) |
+| Southwest Regional Library | Communico-FL-broward | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://broward.libnet.info/events) |
+| Bruton Memorial Library | Communico-FL-hcplc | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://attend.hcplc.org/events) |
+| Pablo Creek Regional | Communico-FL-jaxpubliclibrary | 29 | 3 | 3 | 4 | 5 | 5 | 49 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| South Mandarin Branch | Communico-FL-jaxpubliclibrary | 18 | 0 | 5 | 8 | 0 | 10 | 41 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Beaches Branch | Communico-FL-jaxpubliclibrary | 27 | 0 | 4 | 8 | 0 | 1 | 40 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Highlands Regional | Communico-FL-jaxpubliclibrary | 11 | 4 | 7 | 9 | 2 | 3 | 36 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Virtual Branch | Communico-FL-jaxpubliclibrary | 30 | 0 | 0 | 0 | 0 | 0 | 30 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Mandarin Branch | Communico-FL-jaxpubliclibrary | 8 | 0 | 7 | 7 | 0 | 4 | 26 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Main Library | Communico-FL-jaxpubliclibrary | 13 | 0 | 4 | 3 | 0 | 3 | 23 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Argyle Branch | Communico-FL-jaxpubliclibrary | 12 | 4 | 4 | 0 | 3 | 0 | 23 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Charles Webb Wesconnett Regional | Communico-FL-jaxpubliclibrary | 7 | 0 | 4 | 5 | 5 | 2 | 23 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Southeast Regional | Communico-FL-jaxpubliclibrary | 13 | 3 | 3 | 1 | 1 | 1 | 22 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Willow Branch | Communico-FL-jaxpubliclibrary | 16 | 1 | 4 | 1 | 0 | 0 | 22 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Bill Brinton Murray Hill Branch | Communico-FL-jaxpubliclibrary | 14 | 0 | 0 | 4 | 0 | 1 | 19 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| University Park Branch | Communico-FL-jaxpubliclibrary | 7 | 0 | 4 | 2 | 5 | 0 | 18 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| San Marco Branch | Communico-FL-jaxpubliclibrary | 9 | 0 | 1 | 1 | 3 | 2 | 16 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Regency Square Branch | Communico-FL-jaxpubliclibrary | 6 | 0 | 0 | 5 | 3 | 2 | 16 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Brown Eastside Branch | Communico-FL-jaxpubliclibrary | 12 | 0 | 0 | 0 | 1 | 1 | 14 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Westbrook Branch | Communico-FL-jaxpubliclibrary | 7 | 0 | 0 | 2 | 4 | 0 | 13 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Maxville Branch | Communico-FL-jaxpubliclibrary | 13 | 0 | 0 | 0 | 0 | 0 | 13 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Dallas Graham Branch | Communico-FL-jaxpubliclibrary | 7 | 0 | 0 | 0 | 5 | 1 | 13 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| West Branch | Communico-FL-jaxpubliclibrary | 6 | 0 | 0 | 1 | 2 | 0 | 9 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Brentwood Branch | Communico-FL-jaxpubliclibrary | 0 | 0 | 0 | 0 | 5 | 1 | 6 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Bookmobile | Communico-FL-jaxpubliclibrary | 1 | 0 | 0 | 2 | 0 | 0 | 3 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Bradham and Brooks Branch | Communico-FL-jaxpubliclibrary | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Highlands Regional - E-Classroom | Communico-FL-jaxpubliclibrary | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Mandarin Branch - Magazine Galley | Communico-FL-jaxpubliclibrary | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Main Library - Zine/Local Author Collection | Communico-FL-jaxpubliclibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Pablo Creek Regional - Puppet Theater | Communico-FL-jaxpubliclibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| University Park Branch - Center for Adult Learning Classroom | Communico-FL-jaxpubliclibrary | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://jaxpubliclibrary.libnet.info/events) |
+| Largo Public Library | Communico-FL-largopubliclibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://largopubliclibrary.libnet.info/events) |
+| Blake Library | Communico-FL-mcls | 41 | 4 | 3 | 12 | 3 | 4 | 67 | [cal](https://mcls.libnet.info/events) |
+| Hobe Sound Public Library | Communico-FL-mcls | 25 | 4 | 0 | 4 | 0 | 0 | 33 | [cal](https://mcls.libnet.info/events) |
+| Hoke Library | Communico-FL-mcls | 20 | 3 | 2 | 4 | 0 | 0 | 29 | [cal](https://mcls.libnet.info/events) |
+| Robert Morgade Library | Communico-FL-mcls | 19 | 0 | 0 | 7 | 0 | 0 | 26 | [cal](https://mcls.libnet.info/events) |
+| Elisabeth Lahti Library | Communico-FL-mcls | 4 | 0 | 0 | 3 | 0 | 1 | 8 | [cal](https://mcls.libnet.info/events) |
+| Peter and Julie Cummings Library | Communico-FL-mcls | 5 | 0 | 1 | 1 | 0 | 0 | 7 | [cal](https://mcls.libnet.info/events) |
+| Virtual Event | Communico-FL-mcls | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://mcls.libnet.info/events) |
+| Robert Morgade Library - Flight Simulator | Communico-FL-mcls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mcls.libnet.info/events) |
+| New venue Blake Library | Communico-FL-mcls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mcls.libnet.info/events) |
+| Kendale Lakes Branch | Communico-FL-mdpls | 98 | 4 | 7 | 31 | 0 | 23 | 163 | [cal](https://mdpls.org/events) |
+| West Kendall Regional | Communico-FL-mdpls | 48 | 4 | 6 | 39 | 44 | 11 | 152 | [cal](https://mdpls.org/events) |
+| Coral Reef Branch | Communico-FL-mdpls | 51 | 4 | 3 | 23 | 3 | 7 | 91 | [cal](https://mdpls.org/events) |
+| Westchester Regional | Communico-FL-mdpls | 31 | 20 | 4 | 18 | 5 | 1 | 79 | [cal](https://mdpls.org/events) |
+| Westchester Library Health and Wellness Information Center | Communico-FL-mdpls | 64 | 0 | 0 | 1 | 0 | 1 | 66 | [cal](https://mdpls.org/events) |
+| Miami Beach Regional | Communico-FL-mdpls | 26 | 6 | 4 | 11 | 13 | 3 | 63 | [cal](https://mdpls.org/events) |
+| Main Library | Communico-FL-mdpls | 13 | 0 | 0 | 5 | 5 | 31 | 54 | [cal](https://mdpls.org/events) |
+| Hialeah Gardens Branch | Communico-FL-mdpls | 13 | 0 | 2 | 24 | 7 | 8 | 54 | [cal](https://mdpls.org/events) |
+| Pinecrest Branch | Communico-FL-mdpls | 17 | 7 | 8 | 13 | 2 | 3 | 50 | [cal](https://mdpls.org/events) |
+| Arcola Lakes Branch | Communico-FL-mdpls | 29 | 2 | 4 | 5 | 2 | 5 | 47 | [cal](https://mdpls.org/events) |
+| Concord Branch | Communico-FL-mdpls | 12 | 4 | 6 | 17 | 4 | 3 | 46 | [cal](https://mdpls.org/events) |
+| North Dade Regional - YOUmedia | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 43 | 44 | [cal](https://mdpls.org/events) |
+| Miami Springs Branch | Communico-FL-mdpls | 20 | 0 | 7 | 15 | 0 | 0 | 42 | [cal](https://mdpls.org/events) |
+| Hialeah Gardens Branch - YOUmedia | Communico-FL-mdpls | 0 | 0 | 0 | 1 | 0 | 40 | 41 | [cal](https://mdpls.org/events) |
+| Coral Gables Branch | Communico-FL-mdpls | 24 | 0 | 3 | 10 | 0 | 3 | 40 | [cal](https://mdpls.org/events) |
+| Lemon City Branch | Communico-FL-mdpls | 8 | 0 | 4 | 8 | 6 | 14 | 40 | [cal](https://mdpls.org/events) |
+| Northeast Dade-Aventura Branch | Communico-FL-mdpls | 21 | 0 | 7 | 9 | 2 | 1 | 40 | [cal](https://mdpls.org/events) |
+| Shenandoah Branch | Communico-FL-mdpls | 10 | 1 | 6 | 10 | 12 | 0 | 39 | [cal](https://mdpls.org/events) |
+| Culmer/Overtown Branch | Communico-FL-mdpls | 18 | 0 | 0 | 10 | 4 | 6 | 38 | [cal](https://mdpls.org/events) |
+| Country Walk Branch | Communico-FL-mdpls | 22 | 3 | 7 | 6 | 0 | 0 | 38 | [cal](https://mdpls.org/events) |
+| North Dade Regional | Communico-FL-mdpls | 17 | 0 | 8 | 6 | 2 | 5 | 38 | [cal](https://mdpls.org/events) |
+| Allapattah Branch (Temporary Location) | Communico-FL-mdpls | 20 | 0 | 3 | 10 | 0 | 3 | 36 | [cal](https://mdpls.org/events) |
+| West Flagler Branch | Communico-FL-mdpls | 23 | 0 | 0 | 6 | 0 | 4 | 33 | [cal](https://mdpls.org/events) |
+| Fairlawn Branch | Communico-FL-mdpls | 11 | 0 | 8 | 8 | 0 | 3 | 30 | [cal](https://mdpls.org/events) |
+| Kendall Branch | Communico-FL-mdpls | 8 | 7 | 4 | 6 | 0 | 5 | 30 | [cal](https://mdpls.org/events) |
+| Opa-locka Branch | Communico-FL-mdpls | 23 | 0 | 3 | 4 | 0 | 0 | 30 | [cal](https://mdpls.org/events) |
+| Sunset Branch | Communico-FL-mdpls | 12 | 0 | 7 | 10 | 0 | 0 | 29 | [cal](https://mdpls.org/events) |
+| Naranja Branch | Communico-FL-mdpls | 7 | 0 | 8 | 6 | 0 | 5 | 26 | [cal](https://mdpls.org/events) |
+| Golden Glades Branch | Communico-FL-mdpls | 12 | 3 | 6 | 4 | 0 | 0 | 25 | [cal](https://mdpls.org/events) |
+| Virrick Park Branch | Communico-FL-mdpls | 6 | 0 | 0 | 18 | 0 | 0 | 24 | [cal](https://mdpls.org/events) |
+| Palmetto Bay Branch | Communico-FL-mdpls | 9 | 0 | 3 | 3 | 0 | 7 | 22 | [cal](https://mdpls.org/events) |
+| International Mall Branch | Communico-FL-mdpls | 4 | 0 | 6 | 10 | 1 | 0 | 21 | [cal](https://mdpls.org/events) |
+| Doral Branch | Communico-FL-mdpls | 4 | 0 | 4 | 8 | 0 | 4 | 20 | [cal](https://mdpls.org/events) |
+| Coconut Grove Branch | Communico-FL-mdpls | 5 | 5 | 3 | 6 | 0 | 0 | 19 | [cal](https://mdpls.org/events) |
+| Palm Springs North Branch | Communico-FL-mdpls | 1 | 2 | 7 | 5 | 1 | 3 | 19 | [cal](https://mdpls.org/events) |
+| Lakes of the Meadow Branch | Communico-FL-mdpls | 2 | 1 | 5 | 10 | 1 | 0 | 19 | [cal](https://mdpls.org/events) |
+| South Miami Branch | Communico-FL-mdpls | 9 | 0 | 3 | 4 | 1 | 0 | 17 | [cal](https://mdpls.org/events) |
+| Hispanic Branch | Communico-FL-mdpls | 0 | 1 | 3 | 8 | 4 | 0 | 16 | [cal](https://mdpls.org/events) |
+| Sunny Isles Beach Branch | Communico-FL-mdpls | 0 | 0 | 8 | 7 | 0 | 0 | 15 | [cal](https://mdpls.org/events) |
+| Lemon City Branch - YOUmedia | Communico-FL-mdpls | 0 | 0 | 0 | 0 | 0 | 14 | 14 | [cal](https://mdpls.org/events) |
+| California Club Branch | Communico-FL-mdpls | 7 | 0 | 2 | 5 | 0 | 0 | 14 | [cal](https://mdpls.org/events) |
+| Little River Branch | Communico-FL-mdpls | 7 | 0 | 0 | 3 | 0 | 3 | 13 | [cal](https://mdpls.org/events) |
+| Tamiami Branch | Communico-FL-mdpls | 7 | 0 | 3 | 0 | 0 | 1 | 11 | [cal](https://mdpls.org/events) |
+| North Central Branch | Communico-FL-mdpls | 4 | 2 | 0 | 5 | 0 | 0 | 11 | [cal](https://mdpls.org/events) |
+| Virtual Library | Communico-FL-mdpls | 7 | 0 | 0 | 3 | 0 | 1 | 11 | [cal](https://mdpls.org/events) |
+| West Kendall Regional - Coworking Center | Communico-FL-mdpls | 6 | 0 | 0 | 0 | 0 | 4 | 10 | [cal](https://mdpls.org/events) |
+| South Shore Branch - South Shore In-Person Programs | Communico-FL-mdpls | 0 | 0 | 3 | 7 | 0 | 0 | 10 | [cal](https://mdpls.org/events) |
+| Bay Harbor Islands Branch | Communico-FL-mdpls | 0 | 2 | 7 | 0 | 0 | 0 | 9 | [cal](https://mdpls.org/events) |
+| West Kendall Regional - YOUmake | Communico-FL-mdpls | 1 | 0 | 0 | 2 | 0 | 3 | 6 | [cal](https://mdpls.org/events) |
+| Model City Branch | Communico-FL-mdpls | 1 | 0 | 0 | 3 | 0 | 1 | 5 | [cal](https://mdpls.org/events) |
+| Miami Beach Regional - YOUmake | Communico-FL-mdpls | 0 | 0 | 0 | 4 | 0 | 0 | 4 | [cal](https://mdpls.org/events) |
+| North Shore Branch | Communico-FL-mdpls | 0 | 0 | 3 | 1 | 0 | 0 | 4 | [cal](https://mdpls.org/events) |
+| Edison Center Branch | Communico-FL-mdpls | 1 | 1 | 0 | 0 | 1 | 0 | 3 | [cal](https://mdpls.org/events) |
+| Connections | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| South Shore Branch | Communico-FL-mdpls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mdpls.org/events) |
+| Richmond Memorial Library | Communico-NY-batavialibrary | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://batavialibrary.libnet.info/events) |
+| Hauppauge Library - Classrooms A & B | Communico-NY-hauppaugelibrary | 38 | 0 | 6 | 5 | 0 | 0 | 49 | [cal](https://hauppaugelibrary.libnet.info/events) |
+| Hauppauge Library | Communico-NY-hauppaugelibrary | 28 | 0 | 0 | 5 | 0 | 0 | 33 | [cal](https://hauppaugelibrary.libnet.info/events) |
+| Hauppauge Library - Classroom C | Communico-NY-hauppaugelibrary | 19 | 4 | 3 | 0 | 0 | 0 | 26 | [cal](https://hauppaugelibrary.libnet.info/events) |
+| Hauppauge Library - Classroom B | Communico-NY-hauppaugelibrary | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://hauppaugelibrary.libnet.info/events) |
+| Hauppauge Library - Classroom D | Communico-NY-hauppaugelibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://hauppaugelibrary.libnet.info/events) |
+| Bretton Woods Park | Communico-NY-hauppaugelibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://hauppaugelibrary.libnet.info/events) |
+| New Hartford Public Library | Communico-NY-midyork | 1 | 2 | 0 | 0 | 0 | 0 | 3 | [cal](https://midyork.libnet.info/events) |
+| Canastota Public Library | Communico-NY-midyork | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://midyork.libnet.info/events) |
+| Hamilton Public Library | Communico-NY-midyork | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://midyork.libnet.info/events) |
+| Huntington Public Library Station Branch | Communico-NY-myhpl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://myhpl.libnet.info/events) |
+| Carnegie Library | Communico-NY-pmlib | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://pmlib.libnet.info/events) |
+| Greene Rooms at Boardman Road Branch Library | Communico-NY-poughkeepsie | 2 | 1 | 0 | 0 | 0 | 0 | 3 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| Charwat Room (Ground Floor) at Adriance Memorial Library | Communico-NY-poughkeepsie | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| JLP Pre-Schooler Learning Center (Second Floor) at Adriance Memorial Library | Communico-NY-poughkeepsie | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| Joba Children's Program Room at Boardman Road Branch Library | Communico-NY-poughkeepsie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| Greene Room 1 at Boardman Road Branch Library | Communico-NY-poughkeepsie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| Teen Computer Area at Boardman Road Branch Library | Communico-NY-poughkeepsie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| In the Community at Offsite | Communico-NY-poughkeepsie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| Marcotte Computer Lab (Main Floor) at Adriance Memorial Library | Communico-NY-poughkeepsie | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://poughkeepsie.librarycalendar.com/events/list) |
+| West Islip Public Library | Communico-NY-westisliplibrary | 32 | 9 | 19 | 9 | 1 | 6 | 76 | [cal](https://westisliplibrary.libnet.info/events) |
+| Bay Shore Brightwaters Library | Communico-NY-westisliplibrary | 0 | 0 | 0 | 0 | 0 | 4 | 4 | [cal](https://westisliplibrary.libnet.info/events) |
+| Bayard Cutting Arboretum & Hidden Oak Cafe | Communico-NY-westisliplibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westisliplibrary.libnet.info/events) |
+| Robert Moses State Park (Field 5) | Communico-NY-westisliplibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westisliplibrary.libnet.info/events) |
+| Bridgeport Public Library | Communico-WV-bplwv | 32 | 14 | 3 | 6 | 5 | 0 | 60 | [cal](https://bplwv.libnet.info/events) |
+| Wisconsin State Parks | Drupal-Parks-WI | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dnr.wisconsin.gov) |
+| (no venue) | Festivals-Eastern-US | 331 | 0 | 0 | 1 | 0 | 0 | 332 | [cal](https://www.eventbrite.com/e/doodle-pumpkin-tickets-1999560130176?aff=ebdssbdestsearch) |
+| Autumn Awakening - Women's Wellness Fair | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/autumn-awakening-womens-wellness-fair-tickets-1992375380396?aff=ebdssbdestsearch) |
+| General Stanton 2nd Annual Jazz Fest | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/general-stanton-2nd-annual-jazz-fest-tickets-1988515329881?aff=ebdssbdestsearch) |
+| Hippie Fest - Indiana 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/hippie-fest-indiana-2026-tickets-1978630355657?aff=ebdssbdestsearch) |
+| 2026 DELAWARE SEAFOOD FESTIVAL | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/2026-delaware-seafood-festival-tickets-1983457438592?aff=ebdssbdestsearch) |
+| 2026-50th Annual Mountain Heritage Arts & Crafts Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/2026-50th-annual-mountain-heritage-arts-crafts-festival-tickets-1980029522603?aff=ebdssbdestsearch) |
+| Liberty Lake Day Camp 9/26 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/lunar-faire-night-market-zodiac-at-liberty-lake-day-camp-926-tickets-1998513270992?aff=ebdssbdestsearch) |
+| Sweet Auburn Music Fest | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/house-in-the-street-sweet-auburn-music-fest-tickets-1994513436379?aff=ebdssbdestsearch) |
+| Delaware Park Casino | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/parktober-fest-at-delaware-park-casino-tickets-1998256051642?aff=ebdssbdestsearch) |
+| Romantasy : A Spicy Book Fair | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/romantasy-a-spicy-book-fair-tickets-1996164648198?aff=ebdssbdestsearch) |
+| 2026 Chincoteague Oyster Festival | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/2026-chincoteague-oyster-festival-tickets-1965396551994?aff=ebdssbdestsearch) |
+| Backlash Fest 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/backlash-fest-2026-tickets-1989143221923?aff=ebdssbdestsearch) |
+| Arts Alley | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/cristalino-tequila-experience-at-arts-alley-tickets-1998559551418?aff=ebdssbdestsearch) |
+| FoodieLand Food Festival - Charlotte / September 18-20, 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/foodieland-food-festival-charlotte-september-18-20-2026-tickets-1977105705387?aff=ebdssbdestsearch) |
+| Alethia Tanner Park | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/2026-home-rule-music-festival-alethia-tanner-park-tickets-1998020276432?aff=ebdssbdestsearch) |
+| Tudor Place | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/trick-or-treat-at-tudor-place-tickets-1989324689698?aff=ebdssbdestsearch) |
+| Rick's Key West | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/luv2glow-liquid-frequency-fantasy-fest-2026-at-ricks-key-west-tickets-1992766060932?aff=ebdssbdestsearch) |
+| 2026 FuelFest New Jersey | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/2026-fuelfest-new-jersey-tickets-1977953857232?aff=ebdssbdestsearch) |
+| Philadelphia Expo Center 2026 (Live Garba) | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/navratri-festival-at-philadelphia-expo-center-2026-live-garba-tickets-1992798116812?aff=ebdssbdestsearch) |
+| Sunfest | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/wine-on-the-beach-sunfest-tickets-1986355367375?aff=ebdssbdestsearch) |
+| R&B In The Park Delaware | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/rb-in-the-park-delaware-tickets-1994811833894?aff=ebdssbdestsearch) |
+| Atlanta Foodie Festival The Ultimate Food Experience in Atlanta | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/atlanta-foodie-festival-the-ultimate-food-experience-in-atlanta-tickets-1986031454543?aff=ebdssbdestsearch) |
+| Swarmiefest 5 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/swarmiefest-5-tickets-1991511610838?aff=ebdssbdestsearch) |
+| Upland Bloomington | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/hippies-cowboys-music-fest-at-upland-bloomington-tickets-1985961283660?aff=ebdssbdestsearch) |
+| 2026 Bowling Green International Festival by Service One Credit Union | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/2026-bowling-green-international-festival-by-service-one-credit-union-tickets-1983218653379?aff=ebdssbdestsearch) |
+| Pumpkin Patch Trolley | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/pumpkin-patch-trolley-tickets-1982602072168?aff=ebdssbdestsearch) |
+| Fahrenheit Flow Arts 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/fahrenheit-flow-arts-2026-tickets-1986764784954?aff=ebdssbdestsearch) |
+| Transcend Fest CT 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/transcend-fest-ct-2026-tickets-1975122914807?aff=ebdssbdestsearch) |
+| Emerald Coast Cruizin' Fall 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/emerald-coast-cruizin-fall-2026-tickets-1983892500875?aff=ebdssbdestsearch) |
+| Oktoberfest 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/oktoberfest-2026-tickets-1963590896229?aff=ebdssbdestsearch) |
+| Melanin Pride Weekend 10 Years Strong | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/melanin-pride-weekend-10-years-strong-tickets-1990343176018?aff=ebdssbdestsearch) |
+| The Hangout 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/experience-the-oyster-at-the-hangout-2026-tickets-1998442153277?aff=ebdssbdestsearch) |
+| THE RUNAWAY MAINE MUSIC FEST: BRYAN MARTIN, SISTER HAZEL, MARCY PLAYGROUND | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/the-runaway-maine-music-fest-bryan-martin-sister-hazel-marcy-playground-tickets-1984343624197?aff=ebdssbdestsearch) |
+| Condesa | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/goodjuice-at-condesa-tickets-1994873653799?aff=ebdssbdestsearch) |
+| Island Vibez Reggae Block Party 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/island-vibez-reggae-block-party-2026-tickets-1985551677517?aff=ebdssbdestsearch) |
+| Sussex Fairgrounds | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/lunar-faire-night-market-1024-halloweekend-at-sussex-fairgrounds-tickets-1992397535663?aff=ebdssbdestsearch) |
+| Oddities Flea Market: Connecticut Halloween 2026 | Festivals-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.eventbrite.com/e/oddities-flea-market-connecticut-halloween-2026-tickets-1992585876997?aff=ebdssbdestsearch) |
+| Philadelphia City Institute | FreeLibrary-Philadelphia | 6 | 0 | 0 | 0 | 0 | 4 | 10 | — |
+| Fumo Family Library | FreeLibrary-Philadelphia | 3 | 0 | 0 | 2 | 0 | 0 | 5 | — |
+| Richmond Library | FreeLibrary-Philadelphia | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Joseph E. Coleman Northwest Regional Library | FreeLibrary-Philadelphia | 2 | 0 | 0 | 1 | 0 | 0 | 3 | — |
+| Kingsessing Library | FreeLibrary-Philadelphia | 0 | 0 | 0 | 0 | 0 | 3 | 3 | — |
+| Chestnut Hill Library | FreeLibrary-Philadelphia | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Eastwick Library | FreeLibrary-Philadelphia | 0 | 0 | 1 | 1 | 0 | 0 | 2 | — |
+| Charles L. Durham Library | FreeLibrary-Philadelphia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Children's Department | FreeLibrary-Philadelphia | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Andorra Library | FreeLibrary-Philadelphia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| David Cohen Ogontz Library | FreeLibrary-Philadelphia | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Parkway Central Library | FreeLibrary-Philadelphia | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lucien E. Blackwell West Philadelphia Regional Library | FreeLibrary-Philadelphia | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Frankford Library | FreeLibrary-Philadelphia | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Patrick County Library | FullCalendar-Libraries | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| Bassett Library | FullCalendar-Libraries | 1 | 1 | 1 | 0 | 0 | 0 | 3 | — |
+| Martinsville Library | FullCalendar-Libraries | 0 | 0 | 3 | 0 | 0 | 0 | 3 | — |
+| Ridgeway Library | FullCalendar-Libraries | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Schlitz Audubon Nature Center | Gardens-Nature-Eastern | 18 | 2 | 0 | 0 | 0 | 0 | 20 | — |
+| Boerner Botanical Gardens | Gardens-Nature-Eastern | 11 | 0 | 0 | 0 | 0 | 0 | 11 | — |
+| Mass Audubon Drumlin Farm | Gardens-Nature-Eastern | 9 | 0 | 0 | 0 | 0 | 0 | 9 | — |
+| New Jersey Botanical Garden | Gardens-Nature-Eastern | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| North Carolina Arboretum | Gardens-Nature-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Delaware Nature Society | Gardens-Nature-Eastern | 1 | 1 | 1 | 1 | 0 | 0 | 4 | — |
+| Coastal Maine Botanical Gardens | Gardens-Nature-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Como Park Zoo & Conservatory | Gardens-Nature-Eastern | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Reeves-Reed Arboretum | Gardens-Nature-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Lewis Ginter Botanical Garden | Gardens-Nature-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mobile Botanical Gardens | Gardens-Nature-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Irvine Nature Center | Gardens-Nature-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Marie Selby Botanical Gardens | Gardens-Nature-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Winterthur Museum & Garden | Gardens-Nature-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Arnold Arboretum of Harvard University | Gardens-Nature-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ashby Free Public Library | GoogleCalendar-MA-ashbylibrary | 34 | 0 | 0 | 0 | 0 | 0 | 34 | [cal](https://www.ashbylibrary.org/calendar/) |
+| Leverett Library | GoogleCalendar-MA-leverettlibrary | 23 | 0 | 0 | 13 | 0 | 0 | 36 | [cal](https://www.leverettlibrary.org/) |
+| Leverett Public Library | GoogleCalendar-MA-leverettlibrary | 29 | 0 | 0 | 0 | 0 | 0 | 29 | [cal](https://www.leverettlibrary.org/) |
+| Phillips Free Library | GoogleCalendar-NY-phillipsfreelibrary | 29 | 15 | 5 | 0 | 0 | 0 | 49 | [cal](https://phillipsfreelibrary.org/) |
+| Sidney Memorial Public Library | GoogleCalendar-NY-sidneylibrary | 50 | 0 | 12 | 22 | 0 | 0 | 84 | [cal](https://www.sidneylibrary.org/) |
+| Cobleigh Public Library | GoogleCalendar-VT-cobleighlibrary | 43 | 6 | 10 | 3 | 0 | 0 | 62 | [cal](https://www.cobleighlibrary.org/) |
+| Hartland Public Library | GoogleCalendar-VT-hartlandlibraryvt | 78 | 14 | 6 | 3 | 0 | 5 | 106 | [cal](https://www.hartlandlibraryvt.org/calendar) |
+| 15700 Thompson Road | KidsOutAndAbout-Eastern | 10 | 0 | 2 | 0 | 0 | 0 | 12 | — |
+| Stevens Creek Nature Preserve | KidsOutAndAbout-Eastern | 8 | 0 | 0 | 0 | 0 | 0 | 8 | — |
+| 625 Calkins Road | KidsOutAndAbout-Eastern | 4 | 0 | 0 | 0 | 0 | 3 | 7 | — |
+| See event page | KidsOutAndAbout-Eastern | 4 | 0 | 0 | 1 | 0 | 0 | 5 | — |
+| Saint John’s in the Village | KidsOutAndAbout-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Wilmot Recital Hall | KidsOutAndAbout-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Zoo Atlanta | KidsOutAndAbout-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Sam Patch Erie Canal Tours | KidsOutAndAbout-Eastern | 2 | 1 | 0 | 0 | 0 | 0 | 3 | — |
+| Shoott | KidsOutAndAbout-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| The Farm | KidsOutAndAbout-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| RMSC (Rochester Museum & Science Center) | KidsOutAndAbout-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Milwaukee Yard Indoor Sports Complex | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Surge Adventure Park | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| 1792 Fort Defiance Drive | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Shelby Corn Maze | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| The Union Exchange | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Lan Su Chinese Garden | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Riverie Tour Boat | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| The Forum at Olympia Parkway- Selma, Texas | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Nashville Sounds | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Lane Motor Museum | KidsOutAndAbout-Eastern | 1 | 1 | 0 | 0 | 0 | 0 | 2 | — |
+| For navigational purposes - the General Jackson Showboat is located at 577 Opry Mills Dr. | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| deCordova Sculpture Park and Museum | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Weir River Farm | KidsOutAndAbout-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Buttonwood Park Zoo | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 10722 Southeast Main Street | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Stringham Park | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Westmoreland Sanctuary | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Atlanta United FC | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Common Ground High School, Urban Farm and Environmental Education Center | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Rochester Contemporary Art Center (RoCo) | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Jewish Community Center | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Peachtree Road Farmers Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Volvo Cars Rochester | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| RocVentures Climbing | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Thomas E. Tidman Amphitheater at NARA Park 71 Quarry Road Acton, MA 01720 | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hidden Valley Animal Adventure | KidsOutAndAbout-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Rochester By Water | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| American Legion Memorial Stadium | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| High Museum of Art | KidsOutAndAbout-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Launch Family Entertainment Clearwater | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Whiskers Workspace | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Milwaukee Public Museum | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| University of Rochester Medicine Center for Advanced Brain Imaging and Neurophysiology | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wea Creek Orchard | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Downtown West Bend Association (DWBA) | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Ingleside Hotel | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Brookhaven Farmers Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wonderwood Springs | KidsOutAndAbout-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| 1 Union St | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Seneca Park Zoo | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Overley Worman Park | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Downtown Davidson | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Discovery World | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Brookside Park | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Third Space for Kids | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| VERSUS | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Alliance Theatre | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Education Center on Pearson Field (Airway Science for Kids) | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| AR Workshop Tampa | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Boomerang Boat Tours | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Old Falls Street | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Campus Parking lot downtown Oconomowoc | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Irish Classical Theatre Company | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Buford Corn Maze | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Quarry at Carrigan Farms | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Newport Art Museum | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 15222 York Road | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1844 Southwest Morrison Street | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Central Rock Gym - Troy | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| School Of The Arts | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Yale Peabody Museum | KidsOutAndAbout-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Community Libraries of Providence: Knight Memorial Library | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Amateur Astronomers Association | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 310 Washington Street | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fox Point Farmers Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Freedom Farmers Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Irish Classical Theater Company | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Airosphere, Inflatable Park & Arcades | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Warwick Center for the Arts | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Edward M. Kennedy Institute for the United States Senate | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Largo Community Center | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| South Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Penn Dixie Fossil Park & Nature Reserve | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1352 North Main Street | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Imagine Museum: Contemporary glass art | KidsOutAndAbout-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| The BHHA Meeting House, 182 S Main St, Washington PA 15301 | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Zone 28 Complex | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sing Out Loud Festival, A1A South | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Carousel Village | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Oaks Academy - Fall Creek | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1355 Boston Post Road | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 45 Pershing Ave | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pringle Nature Center | KidsOutAndAbout-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Clifton Park-Halfmoon Public Library | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Isabella Stewart Gardner Museum | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| St. Johns Farmers Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hoyt Arboretum | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sports Connection - Ballantyne | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Rose Marie and John Beston Hall | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 5710 Broad St | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Providence River Boat Company | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sandy Springs, GA | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Willard Memorial Chapel | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Watertower Park | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Freedom Park | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| LEGOLAND® Florida Resort | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Oregon Rail Heritage Center | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Daniel Stowe Conservancy | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Loflin Yard | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 85 Northern Ave | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Rochester City Ballet | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Atrium Health Ballpark | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Flamig Farm | KidsOutAndAbout-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| North York | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Yankee Stadium | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bold Coffee & Books | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Braintree Farmers Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Glencairn Garden | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Carnegie Museum of Natural History | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mystic Seaport Museum | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Happy Brew | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pittsburgh Botanic Garden | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cordova Library Branch | KidsOutAndAbout-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Créatif Art Studio Fort Mill | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Los Sabrosos Dance Co. | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Germantown Village Hall. N112 W17001 Mequon Road | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1741 Pub and Grill | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ghost Peppers Baseball | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Boston By Foot | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Chinatown Branch of the Boston Public Library | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Forest Home Cemetery & Arboretum | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pruyn House | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 330 Town Center Avenue Northwest | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| HAWS Schallock Center for Animals | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Benjamin Harrison Presidential Site | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Jetton Street | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Landis Arboretum | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| U.S. National Whitewater Center | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Buffalo Niagara Heritage Village | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Genesee Waterways Center | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Let It Shine Gymnastics | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Packer Orchards And Farm Place | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| FASNY Museum of Firefighting | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Niantic Children's Museum | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Spotlight Studios for the Performing Arts, Inc. | KidsOutAndAbout-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| The 13th Acre | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Little Lake Theatre | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wauwatosa, WI | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Blue Hills Trailside Museum | KidsOutAndAbout-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Smith Opera House | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Quincy Farmers Market | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Urban Air Trampoline and Adventure Park | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 430 Elmwood Ave | KidsOutAndAbout-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Cascade Family Skating | KidsOutAndAbout-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Athens-Clarke County Library | LibCal-GA-athenslibrary | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Spout Springs Storytime Room | LibCal-GA-hallcountylibrary | 0 | 2 | 0 | 0 | 0 | 0 | 2 | — |
+| Gainesville Storytime Room | LibCal-GA-hallcountylibrary | 0 | 2 | 0 | 0 | 0 | 0 | 2 | — |
+| East Hall Meeting Room | LibCal-GA-hallcountylibrary | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Blackshear Place Library Meeting Room | LibCal-GA-hallcountylibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Auburn Public Library | LibCal-GA-prlib-auburn | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Bangor Public Library | LibCal-ME-bangorpubliclibrary | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Alamance County Library | LibCal-NC-alamancelibraries | 3 | 1 | 0 | 0 | 0 | 0 | 4 | — |
+| Brunswick County Public Library | LibCal-NC-brunsco | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Durham County Library | LibCal-NC-durhamcountylibrary | 1 | 0 | 1 | 4 | 0 | 0 | 6 | — |
+| North Regional | LibCal-NC-durhamcountylibrary | 0 | 0 | 1 | 2 | 0 | 0 | 3 | — |
+| North Regional Library (221 Milton Rd) | LibCal-NC-durhamcountylibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| North Meeting Room | LibCal-NC-durhamcountylibrary | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Southwest Meeting Room | LibCal-NC-durhamcountylibrary | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Southwest Regional | LibCal-NC-durhamcountylibrary | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Fletcher Branch | LibCal-NC-hendersonpl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Learning Lab | LibCal-NC-hendersonpl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Etowah Branch | LibCal-NC-hendersonpl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Kaplan Auditorium | LibCal-NC-hendersonpl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Iredell County Public Library | LibCal-NC-iredell-lib-nc | 0 | 1 | 3 | 0 | 0 | 0 | 4 | — |
+| Northeast Library 1241 Military Cutoff Rd | LibCal-NC-libcal-nhcpl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| MN Children's Room | LibCal-NC-libcal-nhcpl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Children's Floor | LibCal-NC-union-nc | 0 | 1 | 0 | 1 | 0 | 0 | 2 | — |
+| Hughes Meeting Room | LibCal-NC-union-nc | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Southwest Regional Library | LibCal-NC-union-nc | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Off-Site | LibCal-NC-union-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Griffin Room | LibCal-NC-union-nc | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Alden Ewell Free Library | LibCal-NY-buffalolib | 0 | 0 | 2 | 0 | 0 | 1 | 3 | — |
+| Aurora Town Public Library | LibCal-NY-buffalolib | 0 | 0 | 0 | 0 | 0 | 2 | 2 | — |
+| Orchard Park Public Library | LibCal-NY-buffalolib | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Central Library | LibCal-NY-buffalolib | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Newstead Public Library | LibCal-NY-buffalolib | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Grand Island Memorial Library | LibCal-NY-buffalolib | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Children's Story Hour Room | LibCal-NY-eastmeadow | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Freeport Memorial Library | LibCal-NY-freeportlibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Gardiner Library | LibCal-NY-gardinerlibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Community Room | LibCal-NY-gardinerlibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Library Lower Parking Lot | LibCal-NY-gardinerlibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Great Neck Library | LibCal-NY-greatnecklibrary | 0 | 0 | 0 | 1 | 0 | 1 | 2 | — |
+| Community Room (E) | LibCal-NY-hicksvillelibrary | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Highland Public Library | LibCal-NY-highlandlibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Teen Room | LibCal-NY-highlandlibrary | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Levittown Public Library | LibCal-NY-levittown | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Seymour | LibCal-NY-libraryweb | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Irondequoit Public Library | LibCal-NY-libraryweb | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Monroe County Library System | LibCal-NY-libraryweb | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Long Beach Public Library | LibCal-NY-longbeachpl | 0 | 1 | 1 | 0 | 0 | 0 | 2 | — |
+| Community Room | LibCal-NY-northbellmorelibrary | 1 | 1 | 0 | 0 | 0 | 0 | 2 | — |
+| Small Meeting Room | LibCal-NY-northbellmorelibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Children's Program Room | LibCal-NY-oceansidelibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Community 1 | LibCal-NY-oceansidelibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Community 3 | LibCal-NY-oceansidelibrary | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Literacy Room - Beauchamp Branch | LibCal-NY-onlib-central | 0 | 0 | 0 | 0 | 0 | 2 | 2 | — |
+| KidSpace - Central Library | LibCal-NY-onlib-central | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Petit Branch Library | LibCal-NY-onlib-central | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Helen Kraus Room | LibCal-NY-rvcpl | 0 | 1 | 0 | 1 | 0 | 0 | 2 | — |
+| Kim's Corner | LibCal-NY-rvcpl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wantagh Public Library | LibCal-NY-wantaghlibrary | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| WLS Conference Room | LibCal-NY-westchesterlibraries | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Clarksville-Montgomery County Public Library | LibCal-TN-mcgtn | 1 | 0 | 4 | 1 | 0 | 2 | 8 | — |
+| Children's Area | LibCal-VA-arlingtonva | 0 | 1 | 1 | 0 | 0 | 0 | 2 | — |
+| Campbell Room | LibCal-VA-arlingtonva | 0 | 0 | 1 | 1 | 0 | 0 | 2 | — |
+| Loft | LibCal-VA-arlingtonva | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Arlington County Public Library | LibCal-VA-arlingtonva | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Quincy Room | LibCal-VA-arlingtonva | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Drew Room | LibCal-VA-arlingtonva | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| TW Children's Program Room | LibCal-VA-henricolibrary-va | 0 | 2 | 0 | 0 | 0 | 0 | 2 | — |
+| LM Storytime Room | LibCal-VA-henricolibrary-va | 0 | 2 | 0 | 0 | 0 | 0 | 2 | — |
+| FA Children's Storytime Room | LibCal-VA-henricolibrary-va | 0 | 2 | 0 | 0 | 0 | 0 | 2 | — |
+| TU Children's Program Room | LibCal-VA-henricolibrary-va | 0 | 2 | 0 | 0 | 0 | 0 | 2 | — |
+| GA Meeting Room | LibCal-VA-henricolibrary-va | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| GL Children's Program Room | LibCal-VA-henricolibrary-va | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| VA Meeting Room | LibCal-VA-henricolibrary-va | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Herndon Fortnightly Library | LibCal-VA-librarycalendar | 0 | 0 | 1 | 0 | 0 | 1 | 2 | — |
+| Thomas Jefferson Meeting Room 1 | LibCal-VA-librarycalendar | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Pohick Meeting Room 1 | LibCal-VA-librarycalendar | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| George Mason Meeting Room | LibCal-VA-librarycalendar | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Dolley Madison Meeting Room 1 | LibCal-VA-librarycalendar | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Chantilly Meeting Room | LibCal-VA-librarycalendar | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Martha Washington Library | LibCal-VA-librarycalendar | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Sherwood Meeting Room | LibCal-VA-librarycalendar | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Burke Centre Meeting Room 116 | LibCal-VA-librarycalendar | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Great Falls Meeting Room | LibCal-VA-librarycalendar | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Dolley Madison Library | LibCal-VA-librarycalendar | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Oakton Meeting Room 1 | LibCal-VA-librarycalendar | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| John Marshall Library | LibCal-VA-librarycalendar | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Amherst County Public Library | LibraryCalendar-Libraries-amherstpl | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://amherstpl.librarycalendar.com/events/upcoming) |
+| Anderson County Library System | LibraryCalendar-Libraries-andersonlibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.andersonlibrary.org/events/upcoming) |
+| Atlantic County Library System | LibraryCalendar-Libraries-atlanticcounty | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://atlanticcounty.librarycalendar.com/events/upcoming) |
+| Bedford Public Library System | LibraryCalendar-Libraries-bedford | 1 | 0 | 0 | 0 | 2 | 0 | 3 | [cal](https://bedford.librarycalendar.com/events/upcoming) |
+| Bloomingdale Public Library | LibraryCalendar-Libraries-bloomingdale | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://bloomingdale.librarycalendar.com/events/upcoming) |
+| Caroline County Public Library | LibraryCalendar-Libraries-carolinecounty | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://carolinecounty.librarycalendar.com/events/upcoming) |
+| Cumberland County Public Library | LibraryCalendar-Libraries-cumberland | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://cumberland.librarycalendar.com/events/upcoming) |
+| Florence County Library System | LibraryCalendar-Libraries-florencelibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.florencelibrary.org/events/upcoming) |
+| Forsyth County Public Library | LibraryCalendar-Libraries-forsythcounty | 1 | 0 | 0 | 2 | 0 | 2 | 5 | [cal](https://forsythcounty.librarycalendar.com/events/upcoming) |
+| Frederick County Public Libraries | LibraryCalendar-Libraries-frederick | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://frederick.librarycalendar.com/events/upcoming) |
+| Gloucester County Library System | LibraryCalendar-Libraries-gcls | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://gcls.librarycalendar.com/events/upcoming) |
+| Graves County Public Library | LibraryCalendar-Libraries-gravescountypubliclibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://www.gravescountypubliclibrary.org/events/upcoming) |
+| Haverstraw King's Daughters Public Library | LibraryCalendar-Libraries-haverstraw | 0 | 0 | 0 | 1 | 0 | 1 | 2 | [cal](https://haverstraw.librarycalendar.com/events/upcoming) |
+| Howard County Library System | LibraryCalendar-Libraries-howardcounty | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://howardcounty.librarycalendar.com/events/upcoming) |
+| Jessamine County Public Library | LibraryCalendar-Libraries-jessamine | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://jessamine.librarycalendar.com/events/upcoming) |
+| Knox County Public Library | LibraryCalendar-Libraries-knoxcountylibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://www.knoxcountylibrary.org/events/upcoming) |
+| Carnegie Library of McKeesport | LibraryCalendar-Libraries-mckeesport | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://mckeesport.librarycalendar.com/events/upcoming) |
+| Memphis Public Libraries | LibraryCalendar-Libraries-memphis | 3 | 0 | 0 | 4 | 0 | 5 | 12 | [cal](https://memphis.librarycalendar.com/events/upcoming) |
+| Portsmouth Public Library | LibraryCalendar-Libraries-portsmouthpl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://portsmouthpl.librarycalendar.com/events/upcoming) |
+| Rowan County Public Library | LibraryCalendar-Libraries-rowancountylibrary | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://www.rowancountylibrary.org/events/upcoming) |
+| Schenectady County Public Library | LibraryCalendar-Libraries-schenectady | 2 | 0 | 0 | 2 | 0 | 0 | 4 | [cal](https://schenectady.librarycalendar.com/events/upcoming) |
+| York County Library | LibraryCalendar-Libraries-yorkcounty | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://yorkcounty.librarycalendar.com/events/upcoming) |
+| York County Public Library | LibraryCalendar-Libraries-yorkcountyva | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://yorkcountyva.librarycalendar.com/events/upcoming) |
+| Beaufort County Library | LibraryMarket-SC | 24 | 2 | 2 | 0 | 0 | 1 | 29 | — |
+| Sumter County Library | LibraryMarket-SC | 7 | 0 | 0 | 0 | 0 | 0 | 7 | — |
+| Western | Louisville Free Public Library | 2 | 0 | 0 | 0 | 0 | 1 | 3 | [cal](https://www.lfpl.org/events) |
+| Northeast | Louisville Free Public Library | 0 | 1 | 1 | 0 | 0 | 0 | 2 | [cal](https://www.lfpl.org/events) |
+| Newburg | Louisville Free Public Library | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [cal](https://www.lfpl.org/events) |
+| Iroquois | Louisville Free Public Library | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [cal](https://www.lfpl.org/events) |
+| Fairdale | Louisville Free Public Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.lfpl.org/events) |
+| Outreach (Highlands-Shelby Park) | Louisville Free Public Library | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://www.lfpl.org/events) |
+| Portland | Louisville Free Public Library | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://www.lfpl.org/events) |
+| Parkland | Louisville Free Public Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.lfpl.org/events) |
+| Middletown | Louisville Free Public Library | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://www.lfpl.org/events) |
+| Parkland - Maker Den at Parkland | Louisville Free Public Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.lfpl.org/events) |
+| South Central | Louisville Free Public Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.lfpl.org/events) |
+| Portland - Pod at Portland | Louisville Free Public Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.lfpl.org/events) |
+| St. Matthews | Louisville Free Public Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.lfpl.org/events) |
+| Bookmobile | Louisville Free Public Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.lfpl.org/events) |
+| Southwest | Louisville Free Public Library | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.lfpl.org/events) |
+| Shawnee | Louisville Free Public Library | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://www.lfpl.org/events) |
+| Montgomery Parks | Montgomery-Parks | 8 | 7 | 1 | 2 | 0 | 0 | 18 | [cal](https://montgomeryparks.org) |
+| Rock Creek Regional Park | Montgomery-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://montgomeryparks.org) |
+| Wheaton Regional Park | Montgomery-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://montgomeryparks.org) |
+| Looby | Nashville-Library-TN | 2 | 0 | 0 | 1 | 0 | 0 | 3 | — |
+| East | Nashville-Library-TN | 0 | 0 | 1 | 1 | 0 | 0 | 2 | — |
+| Thompson Lane | Nashville-Library-TN | 1 | 0 | 0 | 1 | 0 | 0 | 2 | — |
+| Hermitage | Nashville-Library-TN | 1 | 0 | 0 | 1 | 0 | 0 | 2 | — |
+| Madison | Nashville-Library-TN | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Donelson | Nashville-Library-TN | 1 | 0 | 0 | 1 | 0 | 0 | 2 | — |
+| Goodlettsville | Nashville-Library-TN | 0 | 0 | 0 | 1 | 0 | 1 | 2 | — |
+| Bellevue | Nashville-Library-TN | 0 | 0 | 0 | 1 | 0 | 1 | 2 | — |
+| Hadley Park | Nashville-Library-TN | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Main Library, Childrens Services | Nashville-Library-TN | 0 | 1 | 1 | 0 | 0 | 0 | 2 | — |
+| Inglewood | Nashville-Library-TN | 0 | 1 | 0 | 1 | 0 | 0 | 2 | — |
+| Old Hickory | Nashville-Library-TN | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Southeast | Nashville-Library-TN | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Main Library, Classroom | Nashville-Library-TN | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Richland Park | Nashville-Library-TN | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Bordeaux | Nashville-Library-TN | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sevier Park Community Center | Nashville-Library-TN | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| North | Nashville-Library-TN | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Main Library, Studio NPL | Nashville-Library-TN | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Port Discovery Children's Museum | PortDiscovery-MD | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://www.portdiscovery.org) |
+| Central Library | Pratt-Library | 79 | 2 | 4 | 17 | 3 | 15 | 120 | — |
+| Northwood Library | Pratt-Library | 27 | 0 | 1 | 1 | 0 | 0 | 29 | — |
+| Southeast Anchor Library | Pratt-Library | 25 | 1 | 0 | 3 | 0 | 0 | 29 | — |
+| Govans Library | Pratt-Library | 18 | 1 | 0 | 1 | 0 | 6 | 26 | — |
+| Brooklyn Library | Pratt-Library | 19 | 0 | 1 | 1 | 0 | 1 | 22 | — |
+| Light Street Library | Pratt-Library | 12 | 2 | 2 | 2 | 0 | 1 | 19 | — |
+| Orleans Library | Pratt-Library | 17 | 0 | 0 | 0 | 0 | 2 | 19 | — |
+| Hamilton Library | Pratt-Library | 11 | 1 | 0 | 6 | 0 | 1 | 19 | — |
+| Patterson Park Library | Pratt-Library | 15 | 1 | 1 | 1 | 0 | 0 | 18 | — |
+| Waverly Library | Pratt-Library | 9 | 1 | 1 | 0 | 0 | 6 | 17 | — |
+| Pennsylvania Library | Pratt-Library | 13 | 1 | 0 | 1 | 0 | 2 | 17 | — |
+| Edmondson Library | Pratt-Library | 13 | 0 | 2 | 1 | 0 | 0 | 16 | — |
+| Cherry Hill Library | Pratt-Library | 10 | 0 | 1 | 0 | 0 | 5 | 16 | — |
+| Hampden Library | Pratt-Library | 8 | 3 | 0 | 0 | 0 | 4 | 15 | — |
+| Roland Park Library | Pratt-Library | 10 | 1 | 0 | 2 | 0 | 2 | 15 | — |
+| Herring Run Library | Pratt-Library | 9 | 1 | 1 | 1 | 0 | 1 | 13 | — |
+| Walbrook Library | Pratt-Library | 9 | 0 | 0 | 1 | 0 | 3 | 13 | — |
+| Canton Library | Pratt-Library | 2 | 1 | 1 | 5 | 0 | 0 | 9 | — |
+| Carthage, NC | SandhillRegional-NC | 19 | 11 | 5 | 0 | 1 | 0 | 36 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Robbins, NC | SandhillRegional-NC | 15 | 0 | 5 | 3 | 0 | 0 | 23 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Troy, NC | SandhillRegional-NC | 1 | 0 | 5 | 5 | 0 | 0 | 11 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Biscoe, NC | SandhillRegional-NC | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Aberdeen, NC | SandhillRegional-NC | 3 | 3 | 2 | 0 | 0 | 0 | 8 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Rockingham, NC | SandhillRegional-NC | 2 | 0 | 5 | 0 | 0 | 0 | 7 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Pinebluff, NC | SandhillRegional-NC | 1 | 0 | 5 | 0 | 0 | 0 | 6 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Vass, NC | SandhillRegional-NC | 1 | 0 | 5 | 0 | 0 | 0 | 6 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Hamlet, NC | SandhillRegional-NC | 0 | 0 | 0 | 5 | 0 | 0 | 5 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Hoke | SandhillRegional-NC | 0 | 0 | 5 | 0 | 0 | 0 | 5 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Star, NC | SandhillRegional-NC | 0 | 0 | 5 | 0 | 0 | 0 | 5 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Aberdeen | SandhillRegional-NC | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://srls.libguides.com/c.php?g=824539&p=5958576) |
+| Seminole County Public Library | SouthwestGeorgia-GA-seminole | 6 | 0 | 1 | 0 | 0 | 0 | 7 | [cal](https://swgrl.org/calendar.php) |
+| Spartanburg County Public Libraries | Trumba-Spartanburg | 7 | 0 | 0 | 63 | 5 | 4 | 79 | — |
+| Kamin Science Center | Venue-Events-ScienceArts | 29 | 0 | 0 | 0 | 0 | 0 | 29 | — |
+| Corning Museum of Glass | Venue-Events-ScienceArts | 24 | 0 | 0 | 0 | 0 | 0 | 24 | — |
+| Virginia Museum of Natural History | Venue-Events-ScienceArts | 20 | 0 | 0 | 1 | 0 | 0 | 21 | — |
+| Kennedy Space Center Visitor Complex | Venue-Events-ScienceArts | 20 | 0 | 0 | 0 | 0 | 0 | 20 | — |
+| Tellus Science Museum | Venue-Events-ScienceArts | 11 | 0 | 1 | 2 | 0 | 0 | 14 | — |
+| NC Museum of Natural Sciences | Venue-Events-ScienceArts | 14 | 0 | 0 | 0 | 0 | 0 | 14 | — |
+| Frost Science Museum | Venue-Events-ScienceArts | 14 | 0 | 0 | 0 | 0 | 0 | 14 | — |
+| EcoTarium | Venue-Events-ScienceArts | 5 | 0 | 0 | 0 | 7 | 0 | 12 | — |
+| American Museum of Natural History | Venue-Events-ScienceArts | 9 | 0 | 1 | 0 | 0 | 0 | 10 | — |
+| Milwaukee Art Museum | Venue-Events-ScienceArts | 7 | 0 | 2 | 0 | 0 | 0 | 9 | — |
+| Academy of Natural Sciences | Venue-Events-ScienceArts | 8 | 0 | 0 | 1 | 0 | 0 | 9 | — |
+| Maryland Science Center | Venue-Events-ScienceArts | 7 | 1 | 0 | 0 | 0 | 0 | 8 | — |
+| Indiana State Museum | Venue-Events-ScienceArts | 0 | 2 | 0 | 1 | 0 | 0 | 3 | — |
+| Smithsonian Air & Space Museum | Venue-Events-ScienceArts | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Science Museum of Virginia | Venue-Events-ScienceArts | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Franklin Institute | Venue-Events-ScienceArts | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Turtle Back Zoo | Venue-Events-ZoosAquariums | 1 | 0 | 1 | 0 | 0 | 4 | 6 | — |
+| Alabama Gulf Coast Zoo | Venue-Events-ZoosAquariums | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| Florida Aquarium | Venue-Events-ZoosAquariums | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Fort Wayne Children's Zoo | Venue-Events-ZoosAquariums | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Brandywine Zoo | Venue-Events-ZoosAquariums | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Roger Williams Park Zoo | Venue-Events-ZoosAquariums | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Brevard Zoo | Venue-Events-ZoosAquariums | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hampton Public Library | WithApps-Libraries | 10 | 1 | 0 | 0 | 0 | 2 | 13 | — |
+| Fairhope Public Library | WordPress-AL | 37 | 3 | 1 | 11 | 0 | 4 | 56 | [cal](https://fairhopelibrary.org/) |
+| Leighton Public Library | WordPress-AL | 14 | 0 | 2 | 1 | 1 | 1 | 19 | [cal](https://www.leightonlibrary.org/) |
+| Mobile Public Library | WordPress-AL | 3 | 2 | 0 | 2 | 0 | 2 | 9 | [cal](https://www.mplonline.org) |
+| Vestavia Hills Library | WordPress-AL | 0 | 0 | 1 | 2 | 0 | 0 | 3 | [cal](https://www.vestavialibrary.org) |
+| Orange County Library System | WordPress-FL | 9 | 1 | 2 | 0 | 0 | 0 | 12 | [cal](https://www.ocls.org) |
+| Land Olakes Branch Library | WordPress-FL | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.landolakeslibrary.org) |
+| Chattanooga Public Library | WordPress-TN | 20 | 51 | 10 | 24 | 15 | 0 | 120 | [cal](https://chattlibrary.org) |
+| Memphis Public Libraries | WordPress-TN | 20 | 5 | 1 | 1 | 0 | 3 | 30 | [cal](https://www.memphislibrary.org) |
+| Lauderdale County Library | WordPress-TN | 7 | 0 | 0 | 10 | 0 | 1 | 18 | [cal](https://lauderdalecountylibrary.com) |
+| Knox County Public Library | WordPress-TN | 10 | 2 | 4 | 0 | 0 | 0 | 16 | [cal](https://www.knoxlib.org) |
+| Johnson City Public Library | WordPress-TN | 14 | 1 | 0 | 0 | 0 | 1 | 16 | [cal](https://www.jcpl.org) |
+| Culpeper County Library | WordPress-VA | 15 | 2 | 2 | 0 | 0 | 2 | 21 | [cal](https://www.cclva.org) |
+| Park Central Library | WordPress-VA | 4 | 1 | 2 | 0 | 0 | 1 | 8 | [cal](https://alexlibraryva.org) |
+| Manassas Park City Library | WordPress-VA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.manassasparkcitylibrary.org) |
+| Glasgow Branch Library | WordPress-WV | 7 | 11 | 0 | 0 | 0 | 1 | 19 | [cal](https://www.kcpls.org/hours-locations/glasgow-branch-library) |
+| Barrett-Wharton Public Library | WordPress-WV | 4 | 8 | 0 | 1 | 0 | 1 | 14 | [cal](https://www.barrettlibrary.org) |
+| Harrison County Public Library | WordPress-WV | 3 | 1 | 0 | 2 | 2 | 0 | 8 | [cal](https://www.clarksburglibrary.org) |
+| South Charleston Public Library | WordPress-WV | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://www.scplwv.org/) |
+| Kanawha County Public Library | WordPress-WV | 2 | 3 | 0 | 0 | 0 | 0 | 5 | [cal](https://www.kcpls.org/) |
+| JCC of Mid-Westchester | YMCA-Community-Eastern | 25 | 0 | 0 | 0 | 0 | 0 | 25 | — |
+| Kaplen JCC on the Palisades | YMCA-Community-Eastern | 9 | 0 | 0 | 0 | 0 | 0 | 9 | — |
+| YMCA of Greater Rochester | YMCA-Community-Eastern | 7 | 0 | 0 | 0 | 0 | 0 | 7 | — |
+| JCC MetroWest | YMCA-Community-Eastern | 7 | 0 | 0 | 0 | 0 | 0 | 7 | — |
+| YMCA of Greater Charlotte | YMCA-Community-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Granite YMCA | YMCA-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Y of Central Maryland | YMCA-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| YMCA of Greater Indianapolis | YMCA-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| YMCA of Delaware | YMCA-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+
+### Flagged: All Ages >= 70% (total >= 20 events)
+
+| Site | Scraper | All Ages | Total | % |
+|---|---|---|---|---|
+| (no venue) | Festivals-Eastern-US | 331 | 332 | 100% |
+| Hartland Public Library | GoogleCalendar-VT-hartlandlibraryvt | 78 | 106 | 74% |
+| Westchester Library Health and Wellness Information Center | Communico-FL-mdpls | 64 | 66 | 97% |
+| Hauppauge Library - Classrooms A & B | Communico-NY-hauppaugelibrary | 38 | 49 | 78% |
+| Ashby Free Public Library | GoogleCalendar-MA-ashbylibrary | 34 | 34 | 100% |
+| Hobe Sound Public Library | Communico-FL-mcls | 25 | 33 | 76% |
+| Hauppauge Library | Communico-NY-hauppaugelibrary | 28 | 33 | 85% |
+| Virtual Branch | Communico-FL-jaxpubliclibrary | 30 | 30 | 100% |
+| Opa-locka Branch | Communico-FL-mdpls | 23 | 30 | 77% |
+| Leverett Public Library | GoogleCalendar-MA-leverettlibrary | 29 | 29 | 100% |
+| Beaufort County Library | LibraryMarket-SC | 24 | 29 | 83% |
+| Northwood Library | Pratt-Library | 27 | 29 | 93% |
+| Southeast Anchor Library | Pratt-Library | 25 | 29 | 86% |
+| Kamin Science Center | Venue-Events-ScienceArts | 29 | 29 | 100% |
+| Barnes & Noble Paramus | BarnesNoble-Eastern | 22 | 28 | 79% |
+| Robert Morgade Library | Communico-FL-mcls | 19 | 26 | 73% |
+| Hauppauge Library - Classroom C | Communico-NY-hauppaugelibrary | 19 | 26 | 73% |
+| JCC of Mid-Westchester | YMCA-Community-Eastern | 25 | 25 | 100% |
+| Corning Museum of Glass | Venue-Events-ScienceArts | 24 | 24 | 100% |
+| Willow Branch | Communico-FL-jaxpubliclibrary | 16 | 22 | 73% |
+| Brooklyn Library | Pratt-Library | 19 | 22 | 86% |
+| Virginia Museum of Natural History | Venue-Events-ScienceArts | 20 | 21 | 95% |
+| Culpeper County Library | WordPress-VA | 15 | 21 | 71% |
+| Schlitz Audubon Nature Center | Gardens-Nature-Eastern | 18 | 20 | 90% |
+| Kennedy Space Center Visitor Complex | Venue-Events-ScienceArts | 20 | 20 | 100% |
