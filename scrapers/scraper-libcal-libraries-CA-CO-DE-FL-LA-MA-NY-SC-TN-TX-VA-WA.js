@@ -359,6 +359,25 @@ const LIBRARY_SYSTEMS = [
   },
 
   // CONNECTICUT
+  // RELOCATED FROM WordPress-{state} 2026-09-07 (batch 2). Each library's own
+  // page referenced this platform host, and the destination was then fetched and
+  // judged on what IT says, not on name similarity: every entry below returned
+  // HTTP 200 with a <title> naming that same library. Two candidates from the
+  // same batch were REJECTED on exactly this check and are guarded in their
+  // WordPress files instead, not relocated -- Hammond Free Library NY, whose
+  // LibraryCalendar instance titles itself "Hammond Public Library" on area code
+  // 219 (INDIANA), and Reddick Public Library FL, whose host prints Ottawa,
+  // IL 61350 and area code 815. Both are the {city}library.org guess again.
+  {
+    // Relocated from WordPress-CT 2026-09-07 -- title "LibCal - Woodbury Public Library (CT)", the host itself carries the state.
+    name: 'Woodbury Public Library',
+    url: 'https://woodburylibraryct.libcal.com/calendar?cid=-1&t=d',
+    county: 'Litchfield',
+    state: 'CT',
+    website: 'https://woodburylibraryct.org',
+    city: 'Woodbury',
+    zipCode: '06798'
+  },
   {
     name: 'Bridgeport Public Library',
     url: 'https://bportlibrary.libcal.com',
@@ -785,6 +804,15 @@ const LIBRARY_SYSTEMS = [
   },
 
   // MASSACHUSETTS
+  // RELOCATED FROM WordPress-{state} 2026-09-07 (batch 2). Each library's own
+  // page referenced this platform host, and the destination was then fetched and
+  // judged on what IT says, not on name similarity: every entry below returned
+  // HTTP 200 with a <title> naming that same library. Two candidates from the
+  // same batch were REJECTED on exactly this check and are guarded in their
+  // WordPress files instead, not relocated -- Hammond Free Library NY, whose
+  // LibraryCalendar instance titles itself "Hammond Public Library" on area code
+  // 219 (INDIANA), and Reddick Public Library FL, whose host prints Ottawa,
+  // IL 61350 and area code 815. Both are the {city}library.org guess again.
   {
     name: 'Cambridge Public Library',
     url: 'https://cambridgepl.libcal.com',
@@ -871,6 +899,55 @@ const LIBRARY_SYSTEMS = [
   // TODO: check worcpublib.org/events to identify the platform.
 
   // NEW YORK
+  // RELOCATED FROM WordPress-{state} 2026-09-07 (batch 2). Each library's own
+  // page referenced this platform host, and the destination was then fetched and
+  // judged on what IT says, not on name similarity: every entry below returned
+  // HTTP 200 with a <title> naming that same library. Two candidates from the
+  // same batch were REJECTED on exactly this check and are guarded in their
+  // WordPress files instead, not relocated -- Hammond Free Library NY, whose
+  // LibraryCalendar instance titles itself "Hammond Public Library" on area code
+  // 219 (INDIANA), and Reddick Public Library FL, whose host prints Ottawa,
+  // IL 61350 and area code 815. Both are the {city}library.org guess again.
+  {
+    // Relocated from WordPress-NY 2026-09-07 -- title "LibCal - Glen Cove Public Library".
+    name: 'Glen Cove Public Library',
+    url: 'https://glencovelibrary.libcal.com/calendar?cid=-1&t=d',
+    county: 'Nassau',
+    state: 'NY',
+    website: 'https://www.glencovelibrary.org',
+    city: 'Glen Cove',
+    zipCode: '11542'
+  },
+  {
+    // Relocated from WordPress-NY 2026-09-07 -- title "Calendar of Events - Minoa Library" -- the onlib- prefix is the Onondaga system tenant, but this subdomain serves the Minoa branch calendar only.
+    name: 'Minoa Library',
+    url: 'https://onlib-minoa.libcal.com/calendar?cid=-1&t=d',
+    county: 'Onondaga',
+    state: 'NY',
+    website: 'https://www.minoalibrary.org',
+    city: 'Minoa',
+    zipCode: '13116'
+  },
+  {
+    // Relocated from WordPress-NY 2026-09-07 -- title "LibCal - Stone Ridge Public Library".
+    name: 'Stone Ridge Public Library',
+    url: 'https://stoneridgelibrary.libcal.com/calendar?cid=-1&t=d',
+    county: 'Ulster',
+    state: 'NY',
+    website: 'https://stoneridgelibrary.org',
+    city: 'Stone Ridge',
+    zipCode: '12484'
+  },
+  {
+    // Relocated from WordPress-NY 2026-09-07 -- title "LibCal - West Nyack Free Library".
+    name: 'West Nyack Free Library',
+    url: 'https://westnyacklib.libcal.com/calendar?cid=-1&t=d',
+    county: 'Rockland',
+    state: 'NY',
+    website: 'https://www.westnyacklibrary.org',
+    city: 'West Nyack',
+    zipCode: '10994'
+  },
   {
     name: 'Buffalo & Erie County Public Library',
     url: 'https://buffalolib.libcal.com/calendar/events?cid=-1&t=d',
@@ -1161,6 +1238,15 @@ const LIBRARY_SYSTEMS = [
   },
 
   // NEW JERSEY
+  // RELOCATED FROM WordPress-{state} 2026-09-07 (batch 2). Each library's own
+  // page referenced this platform host, and the destination was then fetched and
+  // judged on what IT says, not on name similarity: every entry below returned
+  // HTTP 200 with a <title> naming that same library. Two candidates from the
+  // same batch were REJECTED on exactly this check and are guarded in their
+  // WordPress files instead, not relocated -- Hammond Free Library NY, whose
+  // LibraryCalendar instance titles itself "Hammond Public Library" on area code
+  // 219 (INDIANA), and Reddick Public Library FL, whose host prints Ottawa,
+  // IL 61350 and area code 815. Both are the {city}library.org guess again.
   {
     name: 'BCCLS - Bergen County Cooperative Library System',
     url: 'https://bccls.libcal.com/calendar/bccls/?cid=-1&t=m&d=0000-00-00&cal=-1&inc=0',

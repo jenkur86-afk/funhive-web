@@ -2495,7 +2495,10 @@
  "WordPress-MD|||Talbot County Free Library": {
   "verdict": "MISMATCH",
   "comment": "FIX PARTIAL 2026-08-05, NOT YET RE-VERIFIED: tcfl.org 403s and the real calendar is talbot.librarycalendar.com/events/upcoming, so the URL was repointed. The platform changed as well as the address, and this WordPress scraper's DOM selectors are not known to parse librarycalendar.com markup, so a nonzero count is NOT expected with confidence. Re-run and if it is still 0 the fix is a platform move, not more selector work.",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - talbot.librarycalendar.com is a LibraryCalendar instance that a WordPress DOM extractor cannot read, which is why this entry returned 0 despite carrying the correct URL all along",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||New York Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -2808,7 +2811,10 @@
  "WordPress-PA|||Avalon Public Library": {
   "verdict": "MISMATCH",
   "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on BiblioCommons. WordPress-PA is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the BiblioCommons family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on avalonpl.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and then",
+  "statusAt": "2026-09-07"
  },
  "WordPress-PA|||Avella Area Library Center": {
   "verdict": "UNVERIFIABLE",
@@ -2912,7 +2918,10 @@
  "WordPress-PA|||Community Library Of Castle Shannon": {
   "verdict": "MISMATCH",
   "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on BiblioCommons. WordPress-PA is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the BiblioCommons family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on castleshannon.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and",
+  "statusAt": "2026-09-07"
  },
  "WordPress-PA|||John K Tener Library": {
   "verdict": "MATCHES",
@@ -2937,7 +2946,10 @@
  "WordPress-PA|||Clairton Public Library": {
   "verdict": "MISMATCH",
   "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on BiblioCommons. WordPress-PA is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the BiblioCommons family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on clairton.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and then",
+  "statusAt": "2026-09-07"
  },
  "WordPress-PA|||Claysburg Area Public Library Inc": {
   "verdict": "UNVERIFIABLE",
@@ -2965,7 +2977,10 @@
  "WordPress-PA|||Coraopolis Memorial Library": {
   "verdict": "MISMATCH",
   "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on BiblioCommons. WordPress-PA is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the BiblioCommons family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on coraopolis.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and th",
+  "statusAt": "2026-09-07"
  },
  "WordPress-PA|||Thomas Beaver Free Library": {
   "verdict": "UNVERIFIABLE",
@@ -4407,7 +4422,10 @@
  "WordPress-CT|||Woodbury Public Library": {
   "verdict": "MISMATCH",
   "comment": "extraction-failure real site on LibCal with 170 events e.g. Rhythm and Rhyme and Book Time Aug 17 2026 and Tuesdays at the Movies Aug 18 2026",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: this library publishes on LibCal at woodburylibraryct.libcal.com (LibCal-CT), and is now configured there. A WordPress DOM scraper structurally cannot read that platform, so this entry could only ever return 0. NOT a ",
+  "statusAt": "2026-09-07"
  },
  "WordPress-GA|||Douglas-Coffee County Public Library": {
   "verdict": "MATCHES",
@@ -4442,7 +4460,10 @@
  "WordPress-NC|||Mooresville Public Library": {
   "verdict": "MISMATCH",
   "comment": "extraction-failure mooresvillelibrary.org meta-refreshes to mooresvillenc.gov and events live on mooresvillenc.librarycalendar.com e.g. Mahjong at Main Aug 18 2026",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on mooresvillenc.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and",
+  "statusAt": "2026-09-07"
  },
  "WordPress-TN|||Alexandria Branch Library": {
   "verdict": "MATCHES",
@@ -4648,7 +4669,10 @@
  "WordPress-KY|||Calloway County Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.callowaycountylibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on callowaycounty.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup an",
+  "statusAt": "2026-09-07"
  },
  "WordPress-MA|||Andrews Branch Library": {
   "verdict": "MISMATCH",
@@ -4690,7 +4714,10 @@
  "WordPress-MA|||Athol Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.athollibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on athol.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and then co",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NH|||Brown Memorial Library": {
   "verdict": "MISMATCH",
@@ -8015,7 +8042,10 @@
  "WordPress-MA|||Billerica Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves communico markup, so this belongs in Communico-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.billericalibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: this library publishes on Assabet at billericalibrary.assabetinteractive.com (Assabet-NH-MA), and is now configured there. A WordPress DOM scraper structurally cannot read that platform, so this entry could only ever ",
+  "statusAt": "2026-09-07"
  },
  "WordPress-MA|||Blackstone Free Public Library": {
   "verdict": "MISMATCH",
@@ -8342,7 +8372,10 @@
  "WordPress-MA|||Merrimac Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves communico markup, so this belongs in Communico-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://merrimaclibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: this library publishes on Assabet at merrimaclibrary.assabetinteractive.com (Assabet-NH-MA). Note this is Merrimac MA 01860, NOT Merrimack NH, and is now configured there. A WordPress DOM scraper structurally cannot r",
+  "statusAt": "2026-09-07"
  },
  "WordPress-MA|||Millbury Public Library": {
   "verdict": "MISMATCH",
@@ -8513,7 +8546,10 @@
  "WordPress-MA|||Seekonk Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.seekonklibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: NOT RELOCATED, and deliberately so - checked 2026-09-07. The library does publish on LibCal (seekonkpl.libcal.com returns HTTP 200 titled for this library), but that tenant serves NO CALENDAR: /calendar, /calendar/events, /calendar?t=d, /c",
+  "statusAt": "2026-09-07"
  },
  "WordPress-MA|||South Dennis Free Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -9494,7 +9530,10 @@
  "WordPress-FL|||East Lake Community Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.palmharborlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: urlCollision confirmed 2026-09-07: this entry points at palmharborlibrary.org, which is PALM HARBOR LIBRARY - a different institution in the same town, not East Lake Community Library. Palm Harbor Library was added to LibraryCalendar-Libra",
+  "statusAt": "2026-09-07"
  },
  "WordPress-FL|||Freeport Branch Library": {
   "verdict": "MISMATCH",
@@ -9571,7 +9610,10 @@
  "WordPress-FL|||Reddick Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libnet / LibraryMarket markup, so this belongs in LibraryMarket-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.reddicklibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: urlCollision confirmed 2026-09-07: reddicklibrary.org is Reddick Public Library District in Ottawa, ILLINOIS - the live page prints IL 61350 and phones 815-434-0509 / 815-434-2634, and its libnet calendar titles itself \\",
+  "statusAt": "2026-09-07"
  },
  "WordPress-FL|||Sunrise Dan Pearl Branch": {
   "verdict": "UNVERIFIABLE",
@@ -9804,7 +9846,10 @@
  "WordPress-ME|||Portland Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.portlandlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: already covered by LibraryMarket-ME-NH-MA, verified 2026-09-07 - this library publishes on portlandme.librarycalendar.com, which a WordPress DOM extractor cannot read, and scraper-librarymarket-libraries-me-nh-ma.js already carries that ex",
+  "statusAt": "2026-09-07"
  },
  "WordPress-ME|||Rockland Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -10097,7 +10142,10 @@
  "WordPress-NJ|||Clark Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.clarklibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on clarkpl.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and then ",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NJ|||Demarest Public Library Association": {
   "verdict": "MATCHES",
@@ -10148,7 +10196,10 @@
  "WordPress-NJ|||Haddonfield Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.haddonfieldlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on haddonfield.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and t",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NJ|||Hamilton Township Free Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -10269,7 +10320,10 @@
  "WordPress-NJ|||Plainsboro Free Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves the-events-calendar markup, so this belongs in WordPress TEC REST path, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.plainsborolibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: NOT RELOCATED, and deliberately so - checked 2026-09-07. The library does publish on LibCal (plainsborolibrary.libcal.com returns HTTP 200 titled for this library), but that tenant serves NO CALENDAR: /calendar, /calendar/events, /calendar",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NJ|||Princeton Public Library": {
   "verdict": "MATCHES",
@@ -10539,7 +10593,10 @@
  "WordPress-NY|||Cutchogue New Suffolk Free Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://cutchoguelibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on cutchogue.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and the",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Dansville Public Library": {
   "verdict": "MISMATCH",
@@ -10628,7 +10685,10 @@
  "WordPress-NY|||Glen Cove Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.glencovelibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: this library publishes on LibCal at glencovelibrary.libcal.com (LibCal-NY), and is now configured there. A WordPress DOM scraper structurally cannot read that platform, so this entry could only ever return 0. NOT a co",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Goshen Public Library And Historical Society": {
   "verdict": "MISMATCH",
@@ -10646,7 +10706,10 @@
  "WordPress-NY|||Hammond Free Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.hammondlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: urlCollision confirmed 2026-09-07: hammondlibrary.org is the same guessed {city}library.org shape as the rest of Defect A, and the LibraryCalendar instance behind it, hammondpl.librarycalendar.com, titles itself Hammond Public Library on (",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Hamilton Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -10697,7 +10760,10 @@
  "WordPress-NY|||Islip Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://isliplibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on islip.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and then co",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||John Jermain Memorial Library": {
   "verdict": "UNVERIFIABLE",
@@ -10805,7 +10871,10 @@
  "WordPress-NY|||Minoa Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.minoalibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: this library publishes on LibCal at onlib-minoa.libcal.com (LibCal-NY), and is now configured there. A WordPress DOM scraper structurally cannot read that platform, so this entry could only ever return 0. NOT a covera",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Millbrook Free Library": {
   "verdict": "UNVERIFIABLE",
@@ -10848,7 +10917,10 @@
  "WordPress-NY|||New Rochelle Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://nrpl.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on newrochelle.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and t",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||New Woodstock Free Library": {
   "verdict": "MATCHES",
@@ -10973,7 +11045,10 @@
  "WordPress-NY|||Quogue Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.quoguelibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on quogue.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and then c",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Ransomville Free Library": {
   "verdict": "UNVERIFIABLE",
@@ -11094,7 +11169,10 @@
  "WordPress-NY|||Stone Ridge Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://stoneridgelibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: this library publishes on LibCal at stoneridgelibrary.libcal.com (LibCal-NY), and is now configured there. A WordPress DOM scraper structurally cannot read that platform, so this entry could only ever return 0. NOT a ",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Swan Library": {
   "verdict": "UNVERIFIABLE",
@@ -11104,12 +11182,18 @@
  "WordPress-NY|||Syosset Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.syossetlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on syosset.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and then ",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Tappan Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://tappanlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 under the SYSTEM name South Orangetown Libraries, which is what southorangetownlibraries.librarycalendar.com titles itself. Tappan and Orangeburg are its two branches, both Rockland County ",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||The Jervis Public Library Association, Inc.": {
   "verdict": "MISMATCH",
@@ -11137,12 +11221,18 @@
  "WordPress-NY|||Voorheesville Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.voorheesvillelibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on voorheesville.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Valley Cottage Free Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.valleycottagelibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on valleycottage.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Walworth-Seely Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -11177,7 +11267,10 @@
  "WordPress-NY|||West Nyack Free Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.westnyacklibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: this library publishes on LibCal at westnyacklib.libcal.com (LibCal-NY), and is now configured there. A WordPress DOM scraper structurally cannot read that platform, so this entry could only ever return 0. NOT a cover",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||West Winfield Library": {
   "verdict": "UNVERIFIABLE",

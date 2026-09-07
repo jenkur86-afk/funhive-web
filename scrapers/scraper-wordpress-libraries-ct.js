@@ -169,7 +169,7 @@ const LIBRARIES = [
   { name: 'Windsor Locks Public Library', url: 'https://www.windsorlockslibrary.org', eventsUrl: 'https://www.windsorlockslibrary.org/events', city: 'Windsor Locks', state: 'CT', zipCode: '06096', county: 'Capitol Planning Region'},
   { name: 'Wolcott Public Library', url: 'https://www.wolcottlibrary.org', eventsUrl: 'https://www.wolcottlibrary.org/events', city: 'Wolcott', state: 'CT', zipCode: '06716', county: 'Naugatuck Valley Planning Region'},
   // URL corrected 2026-08-11 (was woodburylibrary.org): Site blocks bots; CT Center for the Book directory lists 269 Main St S, Woodbury CT 06798, 203-263-3502, site woodburylibraryct.org
-  { name: 'Woodbury Public Library', url: 'https://woodburylibraryct.org', eventsUrl: 'https://woodburylibraryct.org', city: 'Woodbury', state: 'CT', zipCode: '06798', county: 'Naugatuck Valley Planning Region'},
+  { name: 'Woodbury Public Library', url: 'https://woodburylibraryct.org', eventsUrl: 'https://woodburylibraryct.org', city: 'Woodbury', state: 'CT', zipCode: '06798', county: 'Naugatuck Valley Planning Region', urlCollision: "RELOCATED 2026-09-07: this library publishes on LibCal at woodburylibraryct.libcal.com (LibCal-CT), and is now configured there. A WordPress DOM scraper structurally cannot read that platform, so this entry could only ever return 0. NOT a coverage gap - coverage moved, it did not disappear. Identity was taken from the destination page's own title, not from name similarity" },
 
 ];
 

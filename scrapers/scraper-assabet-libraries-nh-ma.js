@@ -14,6 +14,17 @@ const ngeohash = require('ngeohash');
  */
 
 const LIBRARIES = [
+  // RELOCATED FROM WordPress-{state} 2026-09-07 (batch 2). Each library's own
+  // page referenced this platform host, and the destination was then fetched and
+  // judged on what IT says, not on name similarity: every entry below returned
+  // HTTP 200 with a <title> naming that same library. Two candidates from the
+  // same batch were REJECTED on exactly this check and are guarded in their
+  // WordPress files instead, not relocated -- Hammond Free Library NY, whose
+  // LibraryCalendar instance titles itself "Hammond Public Library" on area code
+  // 219 (INDIANA), and Reddick Public Library FL, whose host prints Ottawa,
+  // IL 61350 and area code 815. Both are the {city}library.org guess again.
+  { name: 'Billerica Public Library', slug: 'billericalibrary', eventsUrl: 'https://billericalibrary.assabetinteractive.com/calendar/', city: 'Billerica', state: 'MA', zipCode: '01821' },
+  { name: 'Merrimac Public Library', slug: 'merrimaclibrary', eventsUrl: 'https://merrimaclibrary.assabetinteractive.com/calendar/', city: 'Merrimac', state: 'MA', zipCode: '01860' },
   // New Hampshire
   { name: 'Dover Public Library', slug: 'dovernh', eventsUrl: 'https://dovernh.assabetinteractive.com/calendar/', city: 'Dover', state: 'NH', zipCode: '03820' },
   { name: 'Derry Public Library', slug: 'derrypl', eventsUrl: 'https://derrypl.assabetinteractive.com/calendar/', city: 'Derry', state: 'NH', zipCode: '03038' },
