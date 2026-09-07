@@ -86,10 +86,31 @@ const STATE_CENTROIDS = {
 async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 // ── Paginated fetch with retries ──
+// KEYSET pagination, not OFFSET. `.range(from, from + n)` makes Postgres re-walk
+// and re-sort every skipped row on each page, so page cost grows with depth and
+// the deep pages eventually breach the statement timeout. That is not a
+// hypothetical: on 2026-09-07 the 1 PM FunHive-DataQuality run died at
+//
+//   Could not read events at offset 117500 after 3 attempts:
+//   canceling statement due to statement timeout
+//
+// and STEP 3 exited 1 — twice — so the junk-title, past-event and dateless
+// deletions did not run at all that day. The same class had already killed
+// build-age-range-audit.js on 2026-09-06, which was fixed the same way.
+//
+// Seeking on the last id read is O(page) instead of O(offset), and it satisfies
+// the ordering rule the old code documented below MORE strongly than .range()
+// did: ordering by a unique key means a row can never land in two pages or be
+// skipped between them.
+//
+// The page size also HALVES on a timeout rather than merely retrying the same
+// query, because retrying an 8-second query three times just spends 24 seconds
+// discovering the same thing. Every call site already selects `id` first, which
+// is what makes the seek column available.
 async function fetchAll(table, select, filters = {}) {
   let all = [];
-  let from = 0;
-  const pageSize = 500;
+  let lastId = null;
+  let pageSize = 500;
 
   while (true) {
     let retries = 0;
@@ -115,7 +136,8 @@ async function fetchAll(table, select, filters = {}) {
       // wildly over-count "duplicates" on 2026-05-15 (one real row showing up
       // 5 times in pagination, then 4 "extras" deleted — actually deleted the
       // one real row when by-id delete fired). Order by id for stability.
-      query = query.order('id', { ascending: true }).range(from, from + pageSize - 1);
+      if (lastId !== null) query = query.gt('id', lastId);
+      query = query.order('id', { ascending: true }).limit(pageSize);
 
       const result = await query;
       data = result.data;
@@ -123,7 +145,12 @@ async function fetchAll(table, select, filters = {}) {
 
       if (!error) break;
       retries++;
-      console.log(`  ⚠️ Retry ${retries}/3: ${error.message}`);
+      if (/statement timeout/i.test(error.message) && pageSize > 50) {
+        pageSize = Math.floor(pageSize / 2);
+        console.log(`  ⚠️ Retry ${retries}/3 (page -> ${pageSize}): ${error.message}`);
+      } else {
+        console.log(`  ⚠️ Retry ${retries}/3: ${error.message}`);
+      }
       await sleep(2000 * retries);
     }
 
@@ -135,13 +162,15 @@ async function fetchAll(table, select, filters = {}) {
     // throw, so the fix-all chain now reports the step as failed instead.
     if (error) {
       throw new Error(
-        `Could not read ${table} at offset ${from} after 3 attempts: ${error.message}. ` +
-        `Aborting rather than reporting an incomplete scan as clean.`
+        `Could not read ${table} after ${all.length} rows (last id ${lastId}) in 3 attempts: ` +
+        `${error.message}. Aborting rather than reporting an incomplete scan as clean.`
       );
     }
+    if (!data || data.length === 0) break;
     all = all.concat(data);
-    if (data.length < pageSize) break;
-    from += pageSize;
+    const shortPage = data.length < pageSize;
+    lastId = data[data.length - 1].id;
+    if (shortPage) break;
     await sleep(50);
   }
   return all;

@@ -942,6 +942,38 @@ function detectAgeRange(name, description) {
     }
   }
 
+  // LOWER BOUND SPELLED "BIRTH": "(ages birth–5)", "ages birth-12 months",
+  // "ages birth to 5 years". Found 2026-09-07 in the Step 3c all-ages audit on
+  // Jacksonville Public Library's Willow Branch (Communico-FL-jaxpubliclibrary),
+  // whose "Little Readers - (ages birth–5)" sat in All Ages.
+  //
+  // MEASURED BEFORE WRITING, over 10 library scrapers: 125 stored rows carry the
+  // word "birth" in the title, 116 of them state an explicit "ages birth to N"
+  // range, and 101 of those 116 are mis-bucketed — 94 in All Ages and, worse,
+  // 7 in Kids (6-8) ("Little Crafters - (ages birth - 5)", a birth-to-five
+  // programme filed as six-to-eight). Only the 15 that happen to say "Baby" in
+  // the title land correctly, and they get there on the keyword rule rather
+  // than on the range they actually state.
+  //
+  // Every numeric rule above needs a DIGIT for the lower bound, so this shape
+  // reached none of them and fell through to the keyword rules, where whatever
+  // word happened to be in the title decided the bracket. It must therefore run
+  // ABOVE those keyword rules, and it is placed with the other explicit-range
+  // rules for that reason.
+  //
+  // Anchored on the literal "age(s)" keyword exactly like every rule around it
+  // (the 2026-08-03 rule), but the false-positive risk the anchor exists to
+  // manage does not really arise here: "birth" is a word, not a number, so
+  // there is no time, price, registration id or year pair it can be confused
+  // with. "Happy Birthday to You!" cannot match — \bbirth\b does not match
+  // inside "birthday", and the "ages" keyword is absent anyway.
+  const birthRange = text.match(
+    /\bages?:?\s*birth\s*(?:[-–—]|\bto\b|\bthrough\b|\bthru\b)\s*(\d{1,2})\s*(months?|mos?\.?|years?|yrs?)?/);
+  if (birthRange) {
+    const isMonths = /^m/.test(birthRange[2] || '');
+    return isMonths ? `0-${birthRange[1]} months` : `0-${birthRange[1]}`;
+  }
+
   // Explicit age ranges: "ages 3-5", "age 6 to 12", "ages 0-18", "Ages: 3-5",
   // "Ages 7&8". The optional colon and the "&" separator were added 2026-09-01
   // from the same measurement — "Soothing Sensory Time Ages: 3-5" and

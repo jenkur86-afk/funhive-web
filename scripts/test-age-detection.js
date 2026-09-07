@@ -37,6 +37,18 @@ const { flattenEvent, resolveAgeRange, detectAgeRange } = require('../scrapers/h
 // [title, scraper-supplied ageRange, expected bracket, why it matters]
 const CASES = [
   // --- generic supplied label must NOT beat an unambiguous title -------------
+  // --- lower bound spelled "birth" (added 2026-09-07) -----------------------
+  // 116 stored rows state "ages birth to N" and 101 were mis-bucketed: 94 in
+  // All Ages, 7 in Kids (6-8). Every numeric rule needs a digit for the lower
+  // bound, so the phrase reached the keyword rules and whatever word was in the
+  // title decided the bracket. Negative controls guard the one word that could
+  // plausibly collide.
+  ['Little Readers - (ages birth–5)', 'All Ages', 'Babies & Toddlers (0-2)', 'en-dash birth range beat the All Ages catch-all'],
+  ['Little Crafters - (ages birth - 5)', null, 'Babies & Toddlers (0-2)', 'spaced hyphen; this exact title was stored as Kids 6-8'],
+  ['Baby Storytime - (ages birth-12 months)', null, 'Babies & Toddlers (0-2)', 'months unit on the upper bound'],
+  ['Family Storytime ages birth to 5 years', null, 'Babies & Toddlers (0-2)', 'spelled "to" plus a years unit, with family in the title'],
+  ['Happy Birthday to You!', null, 'All Ages', 'NEGATIVE: birthday must not match \\bbirth\\b'],
+  ['Birth Center Open House', null, 'All Ages', 'NEGATIVE: bare "birth" with no ages keyword and no bound'],
   ['Toddler Time Downtown (Ages 18-36 Months)', 'All Ages', 'Babies & Toddlers (0-2)', 'supplied catch-all vs explicit months'],
   ['Baby Bounce Northgate 10 am (Ages 0-18 Months)', 'All Ages', 'Babies & Toddlers (0-2)', 'supplied catch-all vs explicit months'],
   ['Preschool Storytime Northgate 10 am (Ages 3-5)', 'All Ages', 'Preschool (3-5)', 'supplied catch-all vs explicit ages'],

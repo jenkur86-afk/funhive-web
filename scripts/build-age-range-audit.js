@@ -84,8 +84,20 @@ async function main() {
   // instead of O(offset), and it also satisfies CLAUDE.md's paginator rule more
   // strongly than .range() did: ordering by a unique key means a row can never
   // land in two pages or be skipped between them.
+  // PAGE SIZE IS ADAPTIVE, and that is not a nicety. There is no index on
+  // scraped_at (see database/schema.sql — events is indexed on date, state,
+  // category, activity_id, scraper_name, location, but not scraped_at), so each
+  // page walks the id index skipping non-matching rows until it has filled the
+  // limit. That cost is roughly constant per page and scales with the ratio of
+  // table size to rows scraped today. On 2026-09-07 a 1000-row page measured
+  // 8.45s against an ~8s statement timeout: the very first page died with
+  // "canceling statement due to statement timeout" and the whole audit exited 1.
+  // Keyset paging (added 2026-09-06) fixed the OFFSET blow-up but not this —
+  // it makes later pages no worse than the first, and the first was already
+  // over the line. Smaller pages cost the same in total wall-clock and keep
+  // every individual statement well inside the timeout.
   const rows = [];
-  const PAGE = 1000;
+  let page = 250;
   let lastId = null;
   for (;;) {
     let q = supabase
@@ -93,16 +105,26 @@ async function main() {
       .select('id, scraper_name, venue, age_range, source_url')
       .gte('scraped_at', SINCE)
       .order('id', { ascending: true })
-      .limit(PAGE);
+      .limit(page);
     if (lastId !== null) q = q.gt('id', lastId);
 
     const { data, error } = await q;
-    if (error) { console.error('Query failed:', error.message); process.exit(1); }
+    if (error) {
+      // Halve and retry rather than abort. Aborting here loses the entire day's
+      // age section, which is the Step 3c heartbeat the preflight reads.
+      if (/statement timeout/i.test(error.message) && page > 25) {
+        page = Math.floor(page / 2);
+        console.log(`\n  statement timeout — retrying with page=${page}`);
+        continue;
+      }
+      console.error('Query failed:', error.message);
+      process.exit(1);
+    }
     if (!data || data.length === 0) break;
     rows.push(...data);
     lastId = data[data.length - 1].id;
     process.stdout.write(`\r  ${rows.length} rows`);
-    if (data.length < PAGE) break;
+    if (data.length < page) break;
   }
   console.log(`\n  ${rows.length} rows total.`);
 
