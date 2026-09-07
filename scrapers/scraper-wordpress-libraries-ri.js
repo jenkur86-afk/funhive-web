@@ -75,7 +75,7 @@ const LIBRARIES = [
   // tell an empty calendar from a JS-gated one). Remove this entry only once a real
   // LibCal-RI run has produced George Hail rows - deleting on an unproven replacement
   // is the Worcester mistake.
-  { name: 'George Hail Free Library', url: 'https://www.georgehail.org/', platform: 'wordpress', eventsUrl: 'https://www.georgehail.org/', city: 'Warren', state: 'RI', zipCode: '02885', county: '' },
+  { name: 'George Hail Free Library', url: 'https://www.georgehail.org/', platform: 'wordpress', eventsUrl: 'https://www.georgehail.org/', city: 'Warren', state: 'RI', zipCode: '02885', county: '' , urlCollision: "RELOCATED 2026-09-07: publishes on the shared LibCal tenant oslri.libcal.com, now configured in LibCal-* as ?cid=18190 so ONLY this library's calendar is read - the bare consortium host would import every member library under this name. Verified live: 95 event elements returned for that cid. A WordPress DOM scraper cannot read LibCal at all, so this entry could only ever return 0. NOT a coverage gap" },
   { name: 'Louttit Memorial Library', url: 'https://www.louttitlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.louttitlibrary.org/events', city: 'West Greenwich', state: 'RI', zipCode: '02817', county: '' },
   { name: 'Westerly Public Library', url: 'https://www.westerlylibrary.org/', platform: 'wordpress', eventsUrl: 'https://www.westerlylibrary.org/', city: 'Westerly', state: 'RI', zipCode: '02891', county: '' },
   { name: 'Fairmount Branch', url: 'https://www.woonsocketlibrary.org', platform: 'wordpress', eventsUrl: 'https://www.woonsocketlibrary.org/events', city: 'Woonsocket', state: 'RI', zipCode: '02895', county: '' },

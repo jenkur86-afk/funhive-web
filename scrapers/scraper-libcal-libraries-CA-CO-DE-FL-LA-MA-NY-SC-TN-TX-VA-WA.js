@@ -899,6 +899,39 @@ const LIBRARY_SYSTEMS = [
   // TODO: check worcpublib.org/events to identify the platform.
 
   // NEW YORK
+  // RELOCATED FROM WordPress-{state} 2026-09-07 -- CONSORTIUM ENTRIES, and the cid
+  // is the whole point. These libraries publish on a SHARED LibCal tenant, so the
+  // bare host would import every member library under one library's name. Each
+  // cid below was read from the tenant's own calendar picker and then FETCHED:
+  // every one returned HTTP 200 with 80-245 event elements for that library.
+  // Two candidates from the same batch were REJECTED because their tenant IGNORES
+  // the filter -- delcolibraries.libcal.com and westwoodlibrary.libcal.com return
+  // an identical event set for a real id, a bogus id and no id at all, so Ridley
+  // Park and Islington Branch would have imported a whole system each. They are
+  // guarded in their WordPress files instead. Re-test with a bogus id before
+  // trusting any new consortium cid.
+  {
+    // Relocated from WordPress-NY 2026-09-07. cid=12970 on the shared
+    // owwl.libcal.com tenant, verified live: 162 event elements for this library.
+    name: 'Naples Library',
+    url: 'https://owwl.libcal.com/calendar?cid=12970&t=d',
+    county: 'Ontario',
+    state: 'NY',
+    website: 'https://naples.pls-net.org',
+    city: 'Naples',
+    zipCode: '14512'
+  },
+  {
+    // Relocated from WordPress-NY 2026-09-07. cid=12971 on the shared
+    // owwl.libcal.com tenant, verified live: 131 event elements for this library.
+    name: 'Williamson Free Public Library',
+    url: 'https://owwl.libcal.com/calendar?cid=12971&t=d',
+    county: 'Wayne',
+    state: 'NY',
+    website: 'https://williamson.pls-net.org',
+    city: 'Williamson',
+    zipCode: '14589'
+  },
   // RELOCATED FROM WordPress-{state} 2026-09-07 (batch 2). Each library's own
   // page referenced this platform host, and the destination was then fetched and
   // judged on what IT says, not on name similarity: every entry below returned
@@ -1238,6 +1271,94 @@ const LIBRARY_SYSTEMS = [
   },
 
   // NEW JERSEY
+  // RELOCATED FROM WordPress-{state} 2026-09-07 -- CONSORTIUM ENTRIES, and the cid
+  // is the whole point. These libraries publish on a SHARED LibCal tenant, so the
+  // bare host would import every member library under one library's name. Each
+  // cid below was read from the tenant's own calendar picker and then FETCHED:
+  // every one returned HTTP 200 with 80-245 event elements for that library.
+  // Two candidates from the same batch were REJECTED because their tenant IGNORES
+  // the filter -- delcolibraries.libcal.com and westwoodlibrary.libcal.com return
+  // an identical event set for a real id, a bogus id and no id at all, so Ridley
+  // Park and Islington Branch would have imported a whole system each. They are
+  // guarded in their WordPress files instead. Re-test with a bogus id before
+  // trusting any new consortium cid.
+  {
+    // Relocated from WordPress-NJ 2026-09-07. cid=10269 on the shared
+    // bccls.libcal.com tenant, verified live: 107 event elements for this library.
+    name: 'Bergenfield Free Public Library',
+    url: 'https://bccls.libcal.com/calendar?cid=10269&t=d',
+    county: 'Bergen',
+    state: 'NJ',
+    website: 'https://bergenfieldlibrary.org',
+    city: 'Bergenfield',
+    zipCode: '07621'
+  },
+  {
+    // Relocated from WordPress-NJ 2026-09-07. cid=10291 on the shared
+    // bccls.libcal.com tenant, verified live: 176 event elements for this library.
+    name: 'Haworth Municipal Library',
+    url: 'https://bccls.libcal.com/calendar?cid=10291&t=d',
+    county: 'Bergen',
+    state: 'NJ',
+    website: 'https://haworthlibrary.org',
+    city: 'Haworth',
+    zipCode: '07641'
+  },
+  {
+    // Relocated from WordPress-NJ 2026-09-07. cid=10281 on the shared
+    // bccls.libcal.com tenant, verified live: 145 event elements for this library.
+    name: 'Maurice M. Pine Free Public Library',
+    url: 'https://bccls.libcal.com/calendar?cid=10281&t=d',
+    county: 'Bergen',
+    state: 'NJ',
+    website: 'https://fairlawnlibrary.org',
+    city: 'Fair Lawn',
+    zipCode: '07410'
+  },
+  {
+    // Relocated from WordPress-NJ 2026-09-07. cid=10317 on the shared
+    // bccls.libcal.com tenant, verified live: 130 event elements for this library.
+    name: 'Old Tappan Free Public Library',
+    url: 'https://bccls.libcal.com/calendar?cid=10317&t=d',
+    county: 'Bergen',
+    state: 'NJ',
+    website: 'https://oldtappanlibrary.org',
+    city: 'Old Tappan',
+    zipCode: '07675'
+  },
+  {
+    // Relocated from WordPress-NJ 2026-09-07. cid=10333 on the shared
+    // bccls.libcal.com tenant, verified live: 80 event elements for this library.
+    name: 'Secaucus Free Public Library',
+    url: 'https://bccls.libcal.com/calendar?cid=10333&t=d',
+    county: 'Hudson',
+    state: 'NJ',
+    website: 'https://secaucuslibrary.org',
+    city: 'Secaucus',
+    zipCode: '07094'
+  },
+  {
+    // Relocated from WordPress-NJ 2026-09-07. cid=9537 on the shared
+    // bccls.libcal.com tenant, verified live: 245 event elements for this library.
+    name: 'Tenafly Free Public Library',
+    url: 'https://bccls.libcal.com/calendar?cid=9537&t=d',
+    county: 'Bergen',
+    state: 'NJ',
+    website: 'https://tenaflylibrary.org',
+    city: 'Tenafly',
+    zipCode: '07670'
+  },
+  {
+    // Relocated from WordPress-NJ 2026-09-07. cid=10344 on the shared
+    // bccls.libcal.com tenant, verified live: 145 event elements for this library.
+    name: 'Wyckoff Free Public Library',
+    url: 'https://bccls.libcal.com/calendar?cid=10344&t=d',
+    county: 'Bergen',
+    state: 'NJ',
+    website: 'https://wyckofflibrary.org',
+    city: 'Wyckoff',
+    zipCode: '07481'
+  },
   // RELOCATED FROM WordPress-{state} 2026-09-07 (batch 2). Each library's own
   // page referenced this platform host, and the destination was then fetched and
   // judged on what IT says, not on name similarity: every entry below returned
@@ -1629,6 +1750,39 @@ const LIBRARY_SYSTEMS = [
   },
 
   // PENNSYLVANIA
+  // RELOCATED FROM WordPress-{state} 2026-09-07 -- CONSORTIUM ENTRIES, and the cid
+  // is the whole point. These libraries publish on a SHARED LibCal tenant, so the
+  // bare host would import every member library under one library's name. Each
+  // cid below was read from the tenant's own calendar picker and then FETCHED:
+  // every one returned HTTP 200 with 80-245 event elements for that library.
+  // Two candidates from the same batch were REJECTED because their tenant IGNORES
+  // the filter -- delcolibraries.libcal.com and westwoodlibrary.libcal.com return
+  // an identical event set for a real id, a bogus id and no id at all, so Ridley
+  // Park and Islington Branch would have imported a whole system each. They are
+  // guarded in their WordPress files instead. Re-test with a bogus id before
+  // trusting any new consortium cid.
+  {
+    // Relocated from WordPress-PA 2026-09-07. cid=13406 on the shared
+    // ccls.libcal.com tenant, verified live: 119 event elements for this library.
+    name: 'Chester Springs Library',
+    url: 'https://ccls.libcal.com/calendar?cid=13406&t=d',
+    county: 'Chester',
+    state: 'PA',
+    website: 'https://ccls.org',
+    city: 'Chester Springs',
+    zipCode: '19425'
+  },
+  {
+    // Relocated from WordPress-PA 2026-09-07. cid=13417 on the shared
+    // ccls.libcal.com tenant, verified live: 145 event elements for this library.
+    name: 'Spring City Free Public Library',
+    url: 'https://ccls.libcal.com/calendar?cid=13417&t=d',
+    county: 'Chester',
+    state: 'PA',
+    website: 'https://ccls.org',
+    city: 'Spring City',
+    zipCode: '19475'
+  },
   // REMOVED: Carnegie Library of Pittsburgh - now uses WordPress Events Calendar at carnegielibrary.org/events
   // {
   //   name: 'Carnegie Library of Pittsburgh',
@@ -1704,6 +1858,28 @@ const LIBRARY_SYSTEMS = [
   },
 
   // RHODE ISLAND
+  // RELOCATED FROM WordPress-{state} 2026-09-07 -- CONSORTIUM ENTRIES, and the cid
+  // is the whole point. These libraries publish on a SHARED LibCal tenant, so the
+  // bare host would import every member library under one library's name. Each
+  // cid below was read from the tenant's own calendar picker and then FETCHED:
+  // every one returned HTTP 200 with 80-245 event elements for that library.
+  // Two candidates from the same batch were REJECTED because their tenant IGNORES
+  // the filter -- delcolibraries.libcal.com and westwoodlibrary.libcal.com return
+  // an identical event set for a real id, a bogus id and no id at all, so Ridley
+  // Park and Islington Branch would have imported a whole system each. They are
+  // guarded in their WordPress files instead. Re-test with a bogus id before
+  // trusting any new consortium cid.
+  {
+    // Relocated from WordPress-RI 2026-09-07. cid=18190 on the shared
+    // oslri.libcal.com tenant, verified live: 95 event elements for this library.
+    name: 'George Hail Free Library',
+    url: 'https://oslri.libcal.com/calendar?cid=18190&t=d',
+    county: 'Bristol',
+    state: 'RI',
+    website: 'https://georgehail.org',
+    city: 'Warren',
+    zipCode: '02885'
+  },
   {
     name: 'Warwick Public Library',
     url: 'https://warwicklibrary.libcal.com/calendar?cid=-1&t=d',

@@ -2936,7 +2936,10 @@
  "WordPress-PA|||Chester Springs Library": {
   "verdict": "MISMATCH",
   "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on LibCal. WordPress-PA is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the LibCal family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: publishes on the shared LibCal tenant ccls.libcal.com, now configured in LibCal-* as ?cid=13406 so ONLY this library's calendar is read - the bare consortium host would import every member library under this name. Ver",
+  "statusAt": "2026-09-07"
  },
  "WordPress-PA|||Moores Memorial Library": {
   "verdict": "UNVERIFIABLE",
@@ -4761,7 +4764,10 @@
  "WordPress-RI|||George Hail Free Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.georgehail.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: publishes on the shared LibCal tenant oslri.libcal.com, now configured in LibCal-* as ?cid=18190 so ONLY this library's calendar is read - the bare consortium host would import every member library under this name. Ve",
+  "statusAt": "2026-09-07"
  },
  "WordPress-RI|||Exeter Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -8272,7 +8278,10 @@
  "WordPress-MA|||Islington Branch Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.westwoodlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: NOT RELOCATED, checked 2026-09-07. This library publishes on westwoodlibrary.libcal.com, but that tenant IGNORES its own per-library filter: a real id, a bogus id (999999) and no id at all return an IDENTICAL event set drawn from the whole",
+  "statusAt": "2026-09-07"
  },
  "WordPress-MA|||Jonathan Bourne Public Library": {
   "verdict": "MISMATCH",
@@ -9124,7 +9133,10 @@
  "WordPress-PA|||Ridley Park Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.ridleyparklibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: NOT RELOCATED, checked 2026-09-07. This library publishes on delcolibraries.libcal.com, but that tenant IGNORES its own per-library filter: a real id, a bogus id (999999) and no id at all return an IDENTICAL event set drawn from the whole ",
+  "statusAt": "2026-09-07"
  },
  "WordPress-PA|||Ringtown Area Library": {
   "verdict": "UNVERIFIABLE",
@@ -9199,7 +9211,10 @@
  "WordPress-PA|||Spring City Free Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://springcitylibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: publishes on the shared LibCal tenant ccls.libcal.com, now configured in LibCal-* as ?cid=13417 so ONLY this library's calendar is read - the bare consortium host would import every member library under this name. Ver",
+  "statusAt": "2026-09-07"
  },
  "WordPress-PA|||Mount Pleasant Free Public Library Association": {
   "verdict": "MISMATCH",
@@ -10099,7 +10114,10 @@
  "WordPress-NJ|||Bergenfield Free Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.bergenfieldlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: publishes on the shared LibCal tenant bccls.libcal.com, now configured in LibCal-* as ?cid=10269 so ONLY this library's calendar is read - the bare consortium host would import every member library under this name. Ve",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NJ|||Bradley Beach Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -10214,7 +10232,10 @@
  "WordPress-NJ|||Haworth Municipal Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.haworthlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: publishes on the shared LibCal tenant bccls.libcal.com, now configured in LibCal-* as ?cid=10291 so ONLY this library's calendar is read - the bare consortium host would import every member library under this name. Ve",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NJ|||Lincoln Park Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -10242,7 +10263,10 @@
  "WordPress-NJ|||Maurice M. Pine Free Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.fairlawnlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: publishes on the shared LibCal tenant bccls.libcal.com, now configured in LibCal-* as ?cid=10281 so ONLY this library's calendar is read - the bare consortium host would import every member library under this name. Ve",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NJ|||Middletown Township Public Library": {
   "verdict": "MISMATCH",
@@ -10300,7 +10324,10 @@
  "WordPress-NJ|||Old Tappan Free Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.oldtappanlibrary.com/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: publishes on the shared LibCal tenant bccls.libcal.com, now configured in LibCal-* as ?cid=10317 so ONLY this library's calendar is read - the bare consortium host would import every member library under this name. Ve",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NJ|||Parsippany-Troy Hills Public Library": {
   "verdict": "MISMATCH",
@@ -10372,7 +10399,10 @@
  "WordPress-NJ|||Secaucus Free Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.secaucuslibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: publishes on the shared LibCal tenant bccls.libcal.com, now configured in LibCal-* as ?cid=10333 so ONLY this library's calendar is read - the bare consortium host would import every member library under this name. Ve",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NJ|||Summit Free Public Library": {
   "verdict": "MISMATCH",
@@ -10398,7 +10428,10 @@
  "WordPress-NJ|||Tenafly Free Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.tenaflylibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: publishes on the shared LibCal tenant bccls.libcal.com, now configured in LibCal-* as ?cid=9537 so ONLY this library's calendar is read - the bare consortium host would import every member library under this name. Ver",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NJ|||Waldwick Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -10436,7 +10469,10 @@
  "WordPress-NJ|||Wyckoff Free Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.wyckofflibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: publishes on the shared LibCal tenant bccls.libcal.com, now configured in LibCal-* as ?cid=10344 so ONLY this library's calendar is read - the bare consortium host would import every member library under this name. Ve",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Alden Ewell Free Library": {
   "verdict": "UNVERIFIABLE",
@@ -10907,7 +10943,10 @@
  "WordPress-NY|||Naples Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.napleslibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: publishes on the shared LibCal tenant owwl.libcal.com, now configured in LibCal-* as ?cid=12970 so ONLY this library's calendar is read - the bare consortium host would import every member library under this name. Ver",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Nassau Library System": {
   "verdict": "UNVERIFIABLE",
@@ -11305,7 +11344,10 @@
  "WordPress-NY|||Williamson Free Public Library": {
   "verdict": "MISMATCH",
   "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.williamsonlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-07: publishes on the shared LibCal tenant owwl.libcal.com, now configured in LibCal-* as ?cid=12971 so ONLY this library's calendar is read - the bare consortium host would import every member library under this name. Ver",
+  "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Woodgate Free Library": {
   "verdict": "UNVERIFIABLE",
