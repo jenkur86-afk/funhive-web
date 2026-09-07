@@ -261,6 +261,12 @@
       "expect": "The LibCal-* remainder is the next batch and is HARDER than this one, not easier: several of its hosts are consortium instances (bccls.libcal.com claimed by six separate Bergen County NJ libraries, owwl.libcal.com by two NY libraries, ccls.libcal.com by two PA libraries), so each needs a per-branch calendar id or location filter rather than a whole-instance relocation. Treat a shared host as evidence AGAINST a simple relocation, not for one - the Menands/UHLS rejection on 2026-09-07 is the pattern.",
       "confirm": "cut -f2,5,6 reports/platform-hosts.tsv | sort | uniq -c | sort -rn | head -20",
       "added": "2026-09-07"
+    },
+    "FIX-EVENT-QUALITY-KEYSET-2026-09-07": {
+      "what": "fix-event-quality.js fetchAll() converted from OFFSET .range() to keyset paging on id, with the page size halving on a statement timeout instead of retrying the same query three times. The old code died with \"Could not read events at offset 117500\" and STEP 3 exited 1 TWICE in the 2026-09-07 1 PM FunHive-DataQuality run, so the junk-title, past-event and dateless DELETIONS did not run at all that day. The failure is SIZE-TRIGGERED, not date-triggered - it begins the day the table grows past the offset the deep pages can still reach inside the timeout - which is why it appeared without any code change.",
+      "expect": "PROVEN by a full dry run the same day: all 13 steps completed, exit 0, ZERO timeout retries. The backlog it surfaced is the measure of the outage - 1,386 past events, 367 events with no location, 50 with no state, 17 duplicate activities. The SCHEDULED path is what remains unproven. On the next 1 PM run, scrapers/logs/fix-all-recent.log should carry NO \"FAILED (exit 1)\" line for STEP 3 and no \"Could not read events at offset\" line, and the past-event count should fall sharply from 1,386 as the backlog clears. If the offset error returns, the halving retry is not enough and the real answer is an index on events.scraped_at, which needs SQL rather than a script change.",
+      "confirm": "grep -c \"Could not read events at offset\" scrapers/logs/fix-all-recent.log  (expect 0 new occurrences after 2026-09-07); grep -n \"STEP 3: fix-event-quality.js.*FAILED\" scrapers/logs/fix-all-recent.log",
+      "added": "2026-09-07"
     }
   },
   "LibCal-VA": {
