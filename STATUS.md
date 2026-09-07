@@ -7,7 +7,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 ---
 ## 2026-09-07
 
-<!-- STATUS-DATA {"date":"2026-09-07","countiesResolve":100,"urlCollisions":0,"confirmedBugs":233,"unknownSites":513,"specificAgeShare":46.5,"nameConformance":75.5,"sourceUrlCoverage":62,"countyCoverage":0} -->
+<!-- STATUS-DATA {"date":"2026-09-07","countiesResolve":100,"urlCollisions":0,"confirmedBugs":169,"unknownSites":513,"specificAgeShare":46.5,"nameConformance":75.5,"sourceUrlCoverage":62,"countyCoverage":0} -->
 
 ### Distance to 100%
 
@@ -15,7 +15,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 |---|---|---|---|---|
 | 1. Counties resolve | 100% | · | 100% | blocks nothing — mechanical once a city→county dataset is chosen |
 | 2. URLs unique per state | 0 | · | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
-| 3. Zero open bugs | 233 | · | 0 | unblocked — gate 2 is clear; these are now the main body of work |
+| 3. Zero open bugs | 169 | -64 ✅ | 0 | unblocked — gate 2 is clear; these are now the main body of work |
 | 4. Zero unknown sites | 513 | · | 0 | independent — re-checking is its own pass |
 | 5. Age brackets resolved | 46.5% | · | max (best 47.4%) | no fixed target — maximise; ratchets vs best ever |
 | 6. Names join to registry | 75.5% ⚠stale | · | 100% | planned migration, not daily work |
@@ -26,8 +26,8 @@ the command is in each gate's detail line and the value is dated, never guessed.
 
 | | Broken | Scale | Why not fixed now |
 |---|---|---|---|
-| 🟠 | Confirmed open bugs (MISMATCH, config entry still live) | 233 sites | NOT blocked any more — gate 2 is clear, so these are directly actionable; dead-endpoint and extraction-failure buckets first |
-| 🟠 | Contained bugs — guarded, so no bad data, but the library is uncovered | 662 sites | each needs a correct URL or a relocation to the right scraper family before it is genuinely fixed |
+| 🟠 | Confirmed open bugs (MISMATCH, config entry still live) | 169 sites | NOT blocked any more — gate 2 is clear, so these are directly actionable; dead-endpoint and extraction-failure buckets first |
+| 🟠 | Contained bugs — guarded, so no bad data, but the library is uncovered | 726 sites | each needs a correct URL or a relocation to the right scraper family before it is genuinely fixed |
 | 🟠 | Unknown sites (UNVERIFIABLE verdicts) | 513 sites | bot-blocks / JS-only calendars / TLS failures — never re-checked |
 | 🟠 | Age detection — most events still land in the All Ages catch-all | 46.5% resolved (cumulative; varies 13-60% by rotation group) | MASTER-PLAN Phase 5, not started — compare like-for-like with age-specificity-by-section.js, NOT against best-ever |
 | 🟡 | scraper_name drift — rows cannot join back to the registry | 75.5% conform (as of 2026-09-06) | mostly ALREADY-FIXED rows aging out, not live drift — check-name-drift-liveness.js separates the two before anyone renames anything |
@@ -38,7 +38,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 **Data notes:**
 - METHODOLOGY CHANGE 2026-09-01: gate 5 stopped DOUBLE-COUNTING flagged sites. AGE-RANGE-AUDIT.md holds two table shapes whose headers both start "| Site | Scraper | All Ages |" — the main per-site table and the >=70%-All-Ages flagged sub-table — and the old header regex matched both, so every flagged site was added a second time on top of its own row in the main table. Flagged sites are >=70% All Ages by definition, so this understated the gate: 1,401 duplicate rows carrying 65,346 events, dragging it from 45.5% down to 35.0%. THE +10.5 JUMP IS A MEASUREMENT FIX, NOT WORK DONE — no event changed bracket because of it. Two consequences. (1) THE RATCHET IS NOT COMPARABLE ACROSS THIS CHANGE: the recorded best of 40.6% (2026-08-10) was measured under the buggy definition, so 45.5% is NOT a new record and must not be reported as one; the honest baseline for future comparison starts today. (2) The bias was NOT a constant offset — it scaled with how many sites were flagged that day, which is itself highest on RecDesk-heavy Group 1 days, so part of the 3-day oscillation previously read as regression was this artifact. Verified before changing: all 22 main-table headers ever written carry a "Babies 0-2" column (including the Adults and "Total (today's new events)" variants) and none of the 21 flagged headers do.
 - METHODOLOGY CHANGE 2026-08-26: gate 2 now excludes multi-state platform hosts (macaronikid.com, libcal.com, libnet.info, bibliocommons.com and the rest of AGGREGATOR_DOMAINS, imported from list-url-collisions.js rather than re-listed here). Those hosts are shared across states BY DESIGN, so counting them made the target of 0 unreachable and left the gate permanently red while the real seed-data defect was being worked. Gate 2 fell 9 -> 0 the moment this landed. THAT DROP IS A DEFINITION CHANGE, NOT WORK DONE — the nine true single-institution collisions were separately resolved the same day (see SCRAPER-FIX-LOG.jsonl 2026-08-26), and it is that fix, not this exclusion, that is the progress. Any comparison with a STATUS.md entry dated on or before 2026-08-25 crosses this change.
-- METHODOLOGY CHANGE 2026-08-21: 600 entries proven to point at another state's library were flagged urlCollision and are skipped at run time, so they are excluded from gate 2. Gate 2 fell 504 -> 448 as a result. That is a real reduction in RISK — those entries can no longer import another state's events — but it is NOT a URL being corrected: the wrong host is still in the config and each of those libraries is now an explicit, uncovered gap. Do not read the drop as coverage improving. Worklist: node scripts/list-url-collisions.js
+- METHODOLOGY CHANGE 2026-08-21: 650 entries proven to point at another state's library were flagged urlCollision and are skipped at run time, so they are excluded from gate 2. Gate 2 fell 504 -> 448 as a result. That is a real reduction in RISK — those entries can no longer import another state's events — but it is NOT a URL being corrected: the wrong host is still in the config and each of those libraries is now an explicit, uncovered gap. Do not read the drop as coverage improving. Worklist: node scripts/list-url-collisions.js
 - 1283 config entries have no literal url string and are excluded from gates 1-2 (usually a variable reference — see loadConfiguredSites' header comment).
 
 ## 2026-09-06
