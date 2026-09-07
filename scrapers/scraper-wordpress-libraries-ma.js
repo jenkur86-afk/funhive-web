@@ -28,7 +28,7 @@ const LIBRARIES = [
   // Ashby Free Public Library RELOCATED 2026-08-18 to GoogleCalendar-MA.
   // Its programme lives entirely in a cross-origin Google Calendar iframe, so the
   // WordPress DOM extractor could never read it. ICS feed verified at 236 events.
-  { name: 'Athol Public Library', url: 'https://www.athollibrary.org/', eventsUrl: 'https://www.athollibrary.org/', city: 'Athol', state: 'MA', zipCode: '01331', county: 'Worcester'},
+  { name: 'Athol Public Library', url: 'https://www.athollibrary.org/', eventsUrl: 'https://www.athollibrary.org/', city: 'Athol', state: 'MA', zipCode: '01331', county: 'Worcester', urlCollision: 'relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on athol.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and then confirmed live: the page titles itself Athol Public Library and its programme renders server-side. The WordPress entry is guarded rather than deleted so the library keeps its audit row'},
   { name: 'Attleboro Public Library', url: 'https://www.attleborolibrary.org', eventsUrl: 'https://www.attleborolibrary.org/events', city: 'Attleboro', state: 'MA', zipCode: '02703', county: 'Bristol'},
   { name: 'Auburn Free Public Library', url: 'https://auburnlibrary.org/', eventsUrl: 'https://auburnlibrary.org/', city: 'Auburn', state: 'MA', zipCode: '01501', county: 'Worcester'},
   { name: 'Auburndale Branch Library', url: 'https://auburndalelibrary.org/', eventsUrl: 'https://auburndalelibrary.org/calendar/', city: 'Auburndale', state: 'MA', zipCode: '00000', county: 'Middlesex'},

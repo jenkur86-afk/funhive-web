@@ -115,7 +115,15 @@ const LIBRARIES = [
     url: "https://talbot.librarycalendar.com",
     platform: "wordpress",
     eventsUrl: "https://talbot.librarycalendar.com/events/upcoming",
-    city: "Easton", state: "MD", zipCode: "21601", county: "Talbot"
+    city: "Easton", state: "MD", zipCode: "21601", county: "Talbot",
+    // This entry was never a guessed URL - it already pointed at the right
+    // LibraryCalendar instance, and declared platform "wordpress" while doing
+    // so. That is the whole defect: a LibraryCalendar page handed to a
+    // WordPress DOM extractor returns nothing no matter how correct the URL is.
+    // Relocated to LibraryCalendar-Libraries 2026-09-07; confirmed live, the
+    // page titles itself Upcoming Events | Talbot County Free Library on
+    // (410) 822-1626. Guarded rather than deleted so it keeps its audit row.
+    urlCollision: 'relocated to LibraryCalendar-Libraries 2026-09-07 - talbot.librarycalendar.com is a LibraryCalendar instance that a WordPress DOM extractor cannot read, which is why this entry returned 0 despite carrying the correct URL all along'
   },
   {
     name: "Worcester County Library",

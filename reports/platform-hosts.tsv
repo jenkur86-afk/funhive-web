@@ -1,0 +1,88 @@
+site	scraper	state	status	discovered_host	suggested_family	note
+Southington Public Library (Southington, CT)	WordPress-CT	CT	200			no platform host referenced on the page
+Greenwich Library (Greenwich, CT)	WordPress-CT	CT	200	greenwichlibrary.bibliocommons.com greenwichlibrary.libcal.com	BiblioCommons-*	platform host referenced in page markup
+City Of Bayou La Batre Public Library	WordPress-AL	AL	200			no platform host referenced on the page
+Dudley Branch Library	WordPress-MA	MA	200	bpl.bibliocommons.com bpl.libcal.com cdn-nerf.bibliocommons.com cor-cdn-static.bibliocommons.com	BiblioCommons-*	platform host referenced in page markup
+Spalding Memorial Library	WordPress-PA	PA	200			no platform host referenced on the page
+Pollard Memorial Library	Assabet-NH-MA	MA	200	pollardml.assabetinteractive.com	Assabet-NH-MA	platform host referenced in page markup
+Talbot County Free Library	WordPress-MD	MD	200	talbot.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Shaw Public Library - Greenville	WordPress-ME	ME	200			no platform host referenced on the page
+York County Library	LibraryCalendar-Libraries		200	yorkcounty.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Washington County Public Library	WordPress-Events-Calendar		200			no platform host referenced on the page
+Avalon Public Library	WordPress-PA	PA	200	avalonpl.librarycalendar.com acl.bibliocommons.com 2facl.bibliocommons.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Community Library Of Castle Shannon	WordPress-PA	PA	200	castleshannon.librarycalendar.com acl.bibliocommons.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Chester Springs Library	WordPress-PA	PA	200	ccls.libcal.com	LibCal-*	platform host referenced in page markup
+Clairton Public Library	WordPress-PA	PA	200	clairton.librarycalendar.com acl.bibliocommons.com 2facl.bibliocommons.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Coraopolis Memorial Library	WordPress-PA	PA	200	coraopolis.librarycalendar.com acl.bibliocommons.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Erie County Public Library	WordPress-PA	PA	200			no platform host referenced on the page
+Woodbury Public Library	WordPress-CT	CT	200	woodburylibraryct.libcal.com	LibCal-*	platform host referenced in page markup
+Ida Hilton Public Library	WordPress-GA	GA	200			no platform host referenced on the page
+Mooresville Public Library	WordPress-NC	NC	200	mooresvillenc.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Athol Public Library	WordPress-MA	MA	200	athol.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+George Hail Free Library	WordPress-RI	RI	200	oslri.libcal.com	LibCal-*	platform host referenced in page markup
+Calloway County Public Library	WordPress-KY	KY	200	callowaycounty.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Berkeley County Library - Sangaree Library	GoogleCalendar-SC	SC	200	berkeleylibrarysc.libcal.com	LibCal-*	platform host referenced in page markup
+Billerica Public Library	WordPress-MA	MA	200	billericalibrary.assabetinteractive.com	Assabet-NH-MA	platform host referenced in page markup
+Chelmsford Public Library	WordPress-MA	MA	200	chelmsfordlibrary.libcal.com chelmsfordlibrary.assabetinteractive.com	LibCal-*	platform host referenced in page markup
+Islington Branch Library	WordPress-MA	MA	200	westwoodlibrary.libcal.com	LibCal-*	platform host referenced in page markup
+Mattapoisett Public Library	WordPress-MA	MA	200			no platform host referenced on the page
+Merrimac Public Library	WordPress-MA	MA	200	merrimaclibrary.assabetinteractive.com	Assabet-NH-MA	platform host referenced in page markup
+Norton Public Library	WordPress-MA	MA	200			no platform host referenced on the page
+Swansea Free Public Library	WordPress-MA	MA	200			no platform host referenced on the page
+Wilbraham Public Library	WordPress-MA	MA	200	wilbraham.libnet.info static.libnet.info	LibraryMarket-* / Communico-*	platform host referenced in page markup
+Ridley Park Public Library	WordPress-PA	PA	200	delcolibraries.libcal.com	LibCal-*	platform host referenced in page markup
+Seekonk Public Library	WordPress-MA	MA	200	seekonkpl.libcal.com	LibCal-*	platform host referenced in page markup
+Spring City Free Public Library	WordPress-PA	PA	200	ccls.libcal.com	LibCal-*	platform host referenced in page markup
+Springdale Free Public Library	WordPress-PA	PA	403			no platform host referenced on the page
+Island Free Library	WordPress-RI	RI	200			no platform host referenced on the page
+Lexington County Library - Swansea	WordPress-SC	SC	200	lexcolibrary.libcal.com	LibCal-*	platform host referenced in page markup
+Montgomery Public Library	WordPress-WV	WV	200			no platform host referenced on the page
+East Lake Community Library	WordPress-FL	FL	200	palmharbor.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Homestead Branch Library	WordPress-FL	FL	200	acl.bibliocommons.com	BiblioCommons-*	platform host referenced in page markup
+Reddick Public Library	WordPress-FL	FL	200	reddicklibrary.libnet.info	LibraryMarket-* / Communico-*	platform host referenced in page markup
+Hollis Center Public Library	WordPress-ME	ME	200			no platform host referenced on the page
+Portland Public Library	WordPress-ME	ME	200	portlandme.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Swans Island Public Library	WordPress-ME	ME	200			no platform host referenced on the page
+Topsham Public Library	WordPress-ME	ME	200			no platform host referenced on the page
+Crosby Public Library	WordPress-MS	MS	403			no platform host referenced on the page
+Houston Carnegie Library	WordPress-MS	MS	200			no platform host referenced on the page
+Bergenfield Free Public Library	WordPress-NJ	NJ	200	bccls.libcal.com	LibCal-*	platform host referenced in page markup
+Butler Public Library	WordPress-NJ	NJ	200			no platform host referenced on the page
+Clark Public Library	WordPress-NJ	NJ	200	clarkpl.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Haddonfield Public Library	WordPress-NJ	NJ	200	haddonfield.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Haworth Municipal Library	WordPress-NJ	NJ	200	bccls.libcal.com	LibCal-*	platform host referenced in page markup
+Maurice M. Pine Free Public Library	WordPress-NJ	NJ	200	bccls.libcal.com	LibCal-*	platform host referenced in page markup
+Milltown Public Library	WordPress-NJ	NJ	200			no platform host referenced on the page
+Old Tappan Free Public Library	WordPress-NJ	NJ	200	bccls.libcal.com	LibCal-*	platform host referenced in page markup
+Parsippany-Troy Hills Public Library	WordPress-NJ	NJ	403			no platform host referenced on the page
+Plainsboro Free Public Library	WordPress-NJ	NJ	200	plainsborolibrary.libcal.com	LibCal-*	platform host referenced in page markup
+Secaucus Free Public Library	WordPress-NJ	NJ	200	bccls.libcal.com	LibCal-*	platform host referenced in page markup
+Tenafly Free Public Library	WordPress-NJ	NJ	200	bccls.libcal.com	LibCal-*	platform host referenced in page markup
+Wyckoff Free Public Library	WordPress-NJ	NJ	200	bccls.libcal.com	LibCal-*	platform host referenced in page markup
+B. Elizabeth Strong Memorial Library	WordPress-NY	NY	200			no platform host referenced on the page
+Barneveld Free Library Association	WordPress-NY	NY	200			no platform host referenced on the page
+Beaver Falls Library	WordPress-NY	NY	200			no platform host referenced on the page
+Cutchogue New Suffolk Free Library	WordPress-NY	NY	200	cutchogue.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Glen Cove Public Library	WordPress-NY	NY	200	glencovelibrary.libcal.com	LibCal-*	platform host referenced in page markup
+Hammond Free Library	WordPress-NY	NY	200	hammondpl.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Islip Public Library	WordPress-NY	NY	200	islip.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Menands Public Library	WordPress-NY	NY	200	uhls.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Minoa Library	WordPress-NY	NY	200	onlib-minoa.libcal.com	LibCal-*	platform host referenced in page markup
+Naples Library	WordPress-NY	NY	200	owwl.libcal.com	LibCal-*	platform host referenced in page markup
+New Rochelle Public Library	WordPress-NY	NY	200	newrochelle.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Prospect Free Library	WordPress-NY	NY	200			no platform host referenced on the page
+Quogue Library	WordPress-NY	NY	200	quogue.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Reading Room Association Of Gouverneur	WordPress-NY	NY	200			no platform host referenced on the page
+Stone Ridge Public Library	WordPress-NY	NY	200	stoneridgelibrary.libcal.com	LibCal-*	platform host referenced in page markup
+Syosset Public Library	WordPress-NY	NY	200	syosset.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Tappan Library	WordPress-NY	NY	200	southorangetownlibraries.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Voorheesville Public Library	WordPress-NY	NY	200	voorheesville.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+Valley Cottage Free Library	WordPress-NY	NY	200	valleycottage.librarycalendar.com	LibraryCalendar-Libraries	platform host referenced in page markup
+West Nyack Free Library	WordPress-NY	NY	200	westnyacklib.libcal.com	LibCal-*	platform host referenced in page markup
+Williamson Free Public Library	WordPress-NY	NY	200	owwl.libcal.com	LibCal-*	platform host referenced in page markup
+Darby Library	WordPress-PA	PA	200			no platform host referenced on the page
+Huntingdon County Library	WordPress-PA	PA	200			no platform host referenced on the page
+Jefferson Hills Public Library	WordPress-PA	PA	403			no platform host referenced on the page
+Trafford Community Public Library	WordPress-PA	PA	200			no platform host referenced on the page
+West Newton Public Library	WordPress-PA	PA	200			no platform host referenced on the page
+Mount Pleasant Free Public Library Association	WordPress-PA	PA	0			fetch failed: Runtime.callFunctionOn timed out. Increase the 'protocolTime

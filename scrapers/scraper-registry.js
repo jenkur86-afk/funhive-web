@@ -782,7 +782,22 @@ const SCRAPERS = {
     // Rowan also crossed a state line - CustomDrupal filed it as North Carolina
     // and the live page reads Morehead KY 40351. Re-counted from LIBRARY_SYSTEMS
     // with comments stripped, not incremented by hand.
-    sites: 36
+    //
+    // 36 -> 56 on 2026-09-07, and ONE of those 20 is a correction rather than
+    // growth: the array already held 37 entries against a declared 36, so the
+    // stale-value failure this comment block keeps warning about had happened
+    // again and went unreported. Re-counted from LIBRARY_SYSTEMS at HEAD before
+    // the change (37) and after it (56), not incremented by hand.
+    //
+    // The 19 real additions come from reports/platform-hosts.tsv - 18 libraries
+    // relocated out of WordPress-{FL,KY,MA,MD,NC,NJ,NY,PA}, whose DOM
+    // extractor cannot read a LibraryCalendar page, plus Palm Harbor Library FL
+    // as new coverage. Each was fetched and judged on its own page before
+    // wiring; FOUR candidates were rejected and the reasons are recorded in the
+    // scraper file, which is the part worth reading - the fourth, Portland
+    // Public Library ME, passed every liveness check and was still wrong,
+    // because LibraryMarket-ME-NH-MA already scrapes that exact instance.
+    sites: 56
   },
   'CustomDrupal-Libraries': {
     file: './scraper-custom-drupal-libraries-GA-NC-SC-WV.js',

@@ -170,6 +170,82 @@ function scraperNameFor(library) {
 
 // LibraryCalendar Library Systems
 const LIBRARY_SYSTEMS = [
+  // ===================================================================
+  // Added 2026-09-07 — 19 entries, from reports/platform-hosts.tsv.
+  //
+  // PROVENANCE, because it is what makes this batch cheap and what limits it:
+  // the discovery pass reads each configured library's OWN page and records any
+  // platform host referenced in its markup. A host found that way is evidence
+  // that the library publishes on that platform. It is NOT proof of identity —
+  // a library page links its neighbour, its consortium and its catalogue as
+  // readily as its own calendar — so every candidate below was fetched and
+  // judged on what the PAGE says: its <title>, its phone area code, its own
+  // event titles. notarealsite-xyz-funhive.librarycalendar.com was probed in
+  // the same pass as a negative control and returned ENOTFOUND, so a 200 here
+  // means a real instance rather than a wildcard.
+  //
+  // FOUR CANDIDATES WERE REJECTED and the rejections are the useful part.
+  // The fourth, Portland Public Library ME, is recorded inline further down
+  // because it passed every check this list applies and was still wrong:
+  //   - Hammond Free Library (WordPress-NY, Hammond NY 13646) -> hammondpl
+  //     titles itself "Hammond Public Library" on (219) 931-5100. Area 219 is
+  //     INDIANA. Its configured hammondlibrary.org is the same {city}library.org
+  //     guess as the rest of Defect A. Guarded in WordPress-NY, NOT relocated.
+  //   - East Lake Community Library (WordPress-FL) -> palmharbor titles itself
+  //     "Palm Harbor Library". Those are two DIFFERENT institutions in the same
+  //     town, which is the Cairo GA/NY trap arriving from a new direction. The
+  //     East Lake entry is guarded; Palm Harbor Library is added below in its
+  //     own right, because nothing else in the repo covers it and the entry that
+  //     pointed at it could only ever return 0.
+  //   - Menands Public Library (WordPress-NY) -> uhls is the UPPER HUDSON
+  //     LIBRARY SYSTEM consortium calendar, not Menands. Voorheesville, added
+  //     below, is also a UHLS member with its own instance, so wiring the system
+  //     calendar would double-scrape an unknown number of member libraries.
+  //     Left alone deliberately; Menands stays an open gap.
+  //
+  // Each relocated library's WordPress-{state} entry is GUARDED rather than
+  // deleted, so it keeps its LIBRARY-SITE-AUDIT.md row as an explained gap.
+  { name: 'Calloway County Public Library', url: 'https://callowaycounty.librarycalendar.com/events/upcoming', county: 'Calloway', state: 'KY', website: 'https://www.callowaycountylibrary.org', city: 'Murray', zipCode: '42071' },
+  { name: 'Athol Public Library', url: 'https://athol.librarycalendar.com/events/upcoming', county: 'Worcester', state: 'MA', website: 'https://www.athollibrary.org', city: 'Athol', zipCode: '01331' },
+  { name: 'Talbot County Free Library', url: 'https://talbot.librarycalendar.com/events/upcoming', county: 'Talbot', state: 'MD', website: 'https://www.tcfl.org', city: 'Easton', zipCode: '21601' },
+  // Portland Public Library ME was drafted here and REMOVED before the batch
+  // settled, which is the fourth rejection and the one that nearly got through.
+  // It passed every check this batch applies — live instance, right title, right
+  // state — and was still wrong, because the question this batch asks ("does the
+  // library publish on LibraryCalendar?") is not the question that decides
+  // ownership ("is anything already scraping that instance?").
+  // scraper-librarymarket-libraries-me-nh-ma.js already carries the identical
+  // eventsUrl portlandme.librarycalendar.com/events/upcoming, and it WORKS —
+  // LIBRARY-SITE-AUDIT.md records LibraryMarket-ME-NH-MA finding 22 and 23
+  // events for it on separate cycles, so this is verified coverage rather than a
+  // config that merely exists. Adding it here would have split one calendar
+  // across two scraper names. Its WordPress-ME entry is still guarded, naming
+  // LibraryMarket as the owner.
+  { name: 'Mooresville Public Library', url: 'https://mooresvillenc.librarycalendar.com/events/upcoming', county: 'Iredell', state: 'NC', website: 'https://www.mooresvillenc.gov/library', city: 'Mooresville', zipCode: '28115' },
+  { name: 'Clark Public Library', url: 'https://clarkpl.librarycalendar.com/events/upcoming', county: 'Union', state: 'NJ', website: 'https://www.clarklibrary.org', city: 'Clark', zipCode: '07066' },
+  { name: 'Haddonfield Public Library', url: 'https://haddonfield.librarycalendar.com/events/upcoming', county: 'Camden', state: 'NJ', website: 'https://www.haddonfieldlibrary.org', city: 'Haddonfield', zipCode: '08033' },
+  { name: 'Cutchogue New Suffolk Free Library', url: 'https://cutchogue.librarycalendar.com/events/upcoming', county: 'Suffolk', state: 'NY', website: 'https://cutchoguelibrary.org', city: 'Cutchogue', zipCode: '11935' },
+  { name: 'Islip Public Library', url: 'https://islip.librarycalendar.com/events/upcoming', county: 'Suffolk', state: 'NY', website: 'https://isliplibrary.org', city: 'Islip', zipCode: '11751' },
+  { name: 'New Rochelle Public Library', url: 'https://newrochelle.librarycalendar.com/events/upcoming', county: 'Westchester', state: 'NY', website: 'https://nrpl.org', city: 'New Rochelle', zipCode: '10801' },
+  { name: 'Quogue Library', url: 'https://quogue.librarycalendar.com/events/upcoming', county: 'Suffolk', state: 'NY', website: 'https://www.quoguelibrary.org', city: 'Quogue', zipCode: '11959' },
+  { name: 'Syosset Public Library', url: 'https://syosset.librarycalendar.com/events/upcoming', county: 'Nassau', state: 'NY', website: 'https://www.syossetlibrary.org', city: 'Syosset', zipCode: '11791' },
+  // Named for the SYSTEM, not for Tappan, because that is what the calendar is:
+  // its own first card reads "Orangeburg Library is Closed for Renovation".
+  // Tappan and Orangeburg are its two branches and both are Rockland County NY,
+  // so the two-branch span is bounded and stays in state - unlike UHLS above.
+  { name: 'South Orangetown Libraries', url: 'https://southorangetownlibraries.librarycalendar.com/events/upcoming', county: 'Rockland', state: 'NY', website: 'https://tappanlibrary.org', city: 'Tappan', zipCode: '10983' },
+  { name: 'Valley Cottage Library', url: 'https://valleycottage.librarycalendar.com/events/upcoming', county: 'Rockland', state: 'NY', website: 'https://www.valleycottagelibrary.org', city: 'Valley Cottage', zipCode: '10989' },
+  { name: 'Voorheesville Public Library', url: 'https://voorheesville.librarycalendar.com/events/upcoming', county: 'Albany', state: 'NY', website: 'https://www.voorheesvillelibrary.org', city: 'Voorheesville', zipCode: '12186' },
+  { name: 'Avalon Public Library', url: 'https://avalonpl.librarycalendar.com/events/upcoming', county: 'Allegheny', state: 'PA', website: 'https://avalonlibrary.org', city: 'Avalon', zipCode: '15202' },
+  { name: 'Clairton Public Library', url: 'https://clairton.librarycalendar.com/events/upcoming', county: 'Allegheny', state: 'PA', website: 'https://clairtonlibrary.org', city: 'Clairton', zipCode: '15025' },
+  { name: 'Community Library of Castle Shannon', url: 'https://castleshannon.librarycalendar.com/events/upcoming', county: 'Allegheny', state: 'PA', website: 'https://castleshannonlibrary.org', city: 'Castle Shannon', zipCode: '15234' },
+  { name: 'Coraopolis Memorial Library', url: 'https://coraopolis.librarycalendar.com/events/upcoming', county: 'Allegheny', state: 'PA', website: 'https://coraopolislibrary.org', city: 'Coraopolis', zipCode: '15108' },
+  // NEW COVERAGE rather than a relocation - see the East Lake rejection above.
+  // No zipCode: the WordPress entry that pointed here carried the placeholder
+  // 00000 and the live page states no postcode, so none is asserted. City plus
+  // the Pinellas centroid is enough for the geocoding chain.
+  { name: 'Palm Harbor Library', url: 'https://palmharbor.librarycalendar.com/events/upcoming', county: 'Pinellas', state: 'FL', website: 'https://www.palmharborlibrary.org', city: 'Palm Harbor' },
+  // ===================================================================
   // --- Added 2026-08-27 from the Step 3d backlog, where both were mislabelled
   // platform=bibliocommons. THAT LABEL WAS A RED HERRING and is worth recording: scraping a
   // library home page finds its CATALOG host as readily as its EVENTS host, and for both of
