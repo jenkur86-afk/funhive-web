@@ -52,7 +52,15 @@ const LIBRARIES = [
   { name: 'Patten Free Library', url: 'https://www.bathlibrary.org', eventsUrl: 'https://www.bathlibrary.org/events', city: 'Bath', state: 'ME', zipCode: '04530', county: 'Sagadahoc', urlCollision: 'bathlibrary.org is KY, not ME' },
   { name: 'Belgrade Public Library', url: 'https://www.belgrademt.gov/', eventsUrl: 'https://www.belgrademt.gov/544/Library', city: 'Belgrade', state: 'ME', zipCode: '04917', county: 'Kennebec', urlCollision: 'live page addresses show MT not ME and it titles itself Belgrade MT Official Website'},
   { name: 'Bethel Library Assn', url: 'https://www.bethellibrary.org', eventsUrl: 'https://www.bethellibrary.org/events', city: 'Bethel', state: 'ME', zipCode: '04217', county: 'Oxford', urlCollision: 'bethellibrary.org is CT, not ME' },
-  { name: 'Blue Hill Library', url: 'https://www.bluehilllibrary.org', eventsUrl: 'https://www.bluehilllibrary.org/events', city: 'Blue Hill', state: 'ME', zipCode: '00000', county: 'Hancock'},
+  // GUARDED 2026-09-08. bluehilllibrary.org/events 404s and the site hosts no calendar of
+  // its own - every events link goes off-host to bhpl.libcal.com, found by reading the
+  // site's own navigation rather than guessing paths. The library was relocated to
+  // LibCal-ME on 2026-09-03; the WORCESTER RULE IS NOW SATISFIED WITH DATABASE ROWS rather
+  // than with the existence of a config entry: 17 rows carry venue "Blue Hill Public
+  // Library", Blue Hill ME, under scraper_name LibCal-ME-bhpl, written by the 2026-09-06
+  // LibCal-ME run. Guarded rather than deleted so the library keeps its
+  // LIBRARY-SITE-AUDIT.md row as an explained relocation.
+  { name: 'Blue Hill Library', url: 'https://www.bluehilllibrary.org', eventsUrl: 'https://www.bluehilllibrary.org/events', city: 'Blue Hill', state: 'ME', zipCode: '00000', county: 'Hancock', urlCollision: 'bluehilllibrary.org publishes no calendar - relocated to LibCal-ME at bhpl.libcal.com on 2026-09-03 and PROVEN covered by 17 database rows under LibCal-ME-bhpl'},
   { name: 'Boothbay Harbor Memorial Library', url: 'https://www.boothbayharborlibrary.org', eventsUrl: 'https://www.boothbayharborlibrary.org/events', city: 'Boothbay Harbor', state: 'ME', zipCode: '04538', county: 'Lincoln', urlCollision: "host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked rather than assumed, because a bare 404 on one path is not evidence a site is gone. Guarded so the rotation stops visiting it. OPEN COVERAGE GAP until a real URL is found" },
   { name: 'Bowdoinham Public Library', url: 'https://www.bowdoinhamlibrary.org', eventsUrl: 'https://www.bowdoinhamlibrary.org/events', city: 'Bowdoinham', state: 'ME', zipCode: '04008', county: 'Sagadahoc'},
   { name: 'John B. Curtis Free Public Library', url: 'https://bradfordlibrary.org/', eventsUrl: 'https://bradfordlibrary.org/', city: 'Bradford', state: 'ME', zipCode: '04410', county: 'Penobscot', urlCollision: 'bradfordlibrary.org is PA, not ME' },
