@@ -37,6 +37,19 @@ const { flattenEvent, resolveAgeRange, detectAgeRange } = require('../scrapers/h
 // [title, scraper-supplied ageRange, expected bracket, why it matters]
 const CASES = [
   // --- generic supplied label must NOT beat an unambiguous title -------------
+  // --- closed compound "Babytime" (added 2026-09-08) ------------------------
+  // The baby keyword carried a trailing \b, which needs a boundary that does not
+  // exist between "baby" and "time", so the one-word spelling fell through to the
+  // catch-all. Same shape as the PreK1 miss. The sibling \btoddler rule has no
+  // trailing anchor and already matched "Toddlertime" — pinned here so a future
+  // tidy-up that adds one to it is caught. Measured: 75 stored rows carry a closed
+  // compound, 6 of them bare "Babytime" sitting in All Ages.
+  ['Babytime', null, 'Babies & Toddlers (0-2)', 'one-word Babytime reached no rule at all'],
+  ['Babytimes', null, 'Babies & Toddlers (0-2)', 'plural of the same compound'],
+  ['Babytime Featuring Drama with Your Mama!', 'All Ages', 'Babies & Toddlers (0-2)', 'live Locust Valley title stored as All Ages'],
+  ['Toddlertime at the Library', null, 'Babies & Toddlers (0-2)', 'sibling compound that already worked - must keep working'],
+  ['Babysitting Basics', null, 'All Ages', 'NEGATIVE: babysitting is a teen course, not a baby programme'],
+
   // --- lower bound spelled "birth" (added 2026-09-07) -----------------------
   // 116 stored rows state "ages birth to N" and 101 were mis-bucketed: 94 in
   // All Ages, 7 in Kids (6-8). Every numeric rule needs a digit for the lower

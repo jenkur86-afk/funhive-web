@@ -1149,7 +1149,18 @@ function detectAgeRange(name, description) {
   // missed the most common real-world phrasings — "Preschoolers", "Infants",
   // "Teens: After-Hours Hide and Seek" all fell through to All Ages before
   // 2026-08-04. "\bteen" keeps its leading boundary so "Juneteenth" can't match.
-  if (/\b(baby|babies|infants?|lap\s*sit)\b/.test(text)) return '0-2';
+  // "Babytime" as ONE WORD did not match, for exactly the reason documented for
+  // "PreK1" below: the trailing \b needs a boundary, and there is none between
+  // "baby" and "time". Found 2026-09-08 in the Step 3c all-ages audit on Locust
+  // Valley Library, whose "Babytime Featuring Drama with Your Mama!" sat in All Ages.
+  // MEASURED BEFORE WRITING: 75 stored rows carry a closed compound of an age word.
+  // 69 already resolve — via a numeric hint, a "lap sit", or the sibling \btoddler
+  // rule, which has NO trailing anchor and so already matched "Toddlertime". The 6
+  // that did not are all bare "Babytime" titles across Assabet-NH-MA, MacaroniKid-CT
+  // and wordpress-CT. The optional suffix cannot create a false positive that bare
+  // "baby" would not already create — "Babytime" has no second reading as a time, a
+  // price or a year, unlike the numeric shapes the 2026-08-03 revert was about.
+  if (/\b(baby(?:times?)?|babies|infants?|lap\s*sit)\b/.test(text)) return '0-2';
   if (/\btoddler/.test(text)) return '1-3';
   // The trailing \b meant "PreK1" / "PreK2" did NOT match — k and 1 are both word
   // characters, so there is no boundary between them. Every RecDesk gymnastics class
