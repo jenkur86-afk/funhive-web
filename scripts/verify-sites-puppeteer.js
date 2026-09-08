@@ -123,7 +123,23 @@ function collectSignals() {
   // Counting those produced a false "20 future-dated events visible, e.g. 17 2026-08-17"
   // on sheppardlibrary.org/calendar.aspx, which is an empty month view. Day cells are
   // dropped here; a real event needs text with some substance to it.
+  // SAME CLASS OF FALSE POSITIVE, SECOND INSTANCE, found 2026-09-08. The Events
+  // Calendar renders its top-bar DATEPICKER as a <time datetime="<today>"> whose text
+  // reads "Upcoming Upcoming" — navigation chrome, not an event. It survived the day-cell
+  // filter above (not a bare number, longer than 4 chars), so three libraries whose pages
+  // literally say "There are no upcoming events" were each reported as
+  // "1 future-dated events visible … platform=tec-wordpress" and filed as open
+  // extraction-failure bugs. Confirmed against their TEC REST endpoints, which return
+  // total:0 — the scrapers were reading these sites correctly all along.
+  //
+  // Excluded by CLASS rather than by text, because the class is what makes it chrome; a
+  // real event could legitimately be titled with a nav-sounding word. Ordering is not the
+  // fix here: a page CAN carry a "no events found" string in a hidden filter widget while
+  // genuinely listing events, so letting EMPTY_RE outrank a content hit would trade this
+  // false positive for a worse false negative.
+  const CHROME_TIME = /top-bar|datepicker|nav|breadcrumb|pagination/i;
   const times = [...document.querySelectorAll('time[datetime]')]
+    .filter(t => !CHROME_TIME.test(t.className || '') && !t.closest('nav, header, footer'))
     .map(t => ({ date: t.getAttribute('datetime'), text: (t.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60) }))
     .filter(t => t.text && !/^\d{1,2}$/.test(t.text) && t.text.length >= 4)
     .slice(0, 200);
