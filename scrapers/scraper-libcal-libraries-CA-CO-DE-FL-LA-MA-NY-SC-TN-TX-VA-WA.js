@@ -2270,7 +2270,19 @@ const LIBRARY_SYSTEMS = [
     state: 'KY',
     website: 'https://www.warrenpl.org',
     city: 'Bowling Green',
-    zipCode: '42101'
+    zipCode: '42101',
+    // RELOCATED 2026-09-08 to SugarCalendar-Libraries. This entry found 19-20 events
+    // per run through 2026-08-29 and then 0 on every run from 08-31 onward, which is
+    // what took the whole of LibCal-KY to zero — its other two entries were already
+    // guarded, so Warren was the scraper's entire output.
+    // warrenpl.libcal.com/calendar now returns HTTP 404. Following the rule that a bare
+    // 404 is not evidence a host is dead, the library's OWN navigation was read
+    // (scripts/find-calendar-link.js) and led to www.warrenpl.org/events-list/ — HTTP 200,
+    // titled "Event Calendar: List View | Warren County Public Library", running the
+    // Sugar Calendar WordPress plugin. Verified live at 346 events over 63 dates.
+    // NOT DELETED, so the library keeps its LIBRARY-SITE-AUDIT.md row as an explained
+    // move rather than silently vanishing from the audit.
+    urlCollision: 'warrenpl.libcal.com/calendar 404s - the library moved off LibCal onto Sugar Calendar at www.warrenpl.org/events-list/ and is now covered by SugarCalendar-Libraries, verified live at 346 events on 2026-09-08'
   },
   // Clay County Public Library was listed here under KY until 2026-08-28. The URL
   // claycountygov.libcal.com is Clay County FLORIDA - confirmed from the calendar's

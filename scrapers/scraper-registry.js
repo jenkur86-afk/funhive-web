@@ -255,6 +255,30 @@ const SCRAPERS = {
   'LibCal-KY': { file: './scraper-libcal-libraries-CA-CO-DE-FL-LA-MA-NY-SC-TN-TX-VA-WA.js', exportName: 'scrapeLibCalKY', type: 'puppeteer', group: 2, state: 'KY' },
 
   // ============================================================================
+  // SUGAR CALENDAR PLATFORM SCRAPERS (1)
+  // ============================================================================
+  // Added 2026-09-08. Sugar Calendar is a WordPress events plugin that is NOT The
+  // Events Calendar, so tec-rest-helper.js cannot read it and the WordPress-* DOM
+  // selectors do not match its markup. First site is Warren County Public Library KY,
+  // relocated from LibCal-KY after warrenpl.libcal.com/calendar started returning 404
+  // on 2026-08-31 — that single dead entry was the whole of LibCal-KY's output, since
+  // its other two entries are already guarded.
+  //
+  // GROUP 2 deliberately matches LibCal-KY's group, so the relocation does not move
+  // Warren County's coverage to a different rotation day.
+  //
+  // `sites` is declared so check-scraper-names.js can assert the distinct-name count.
+  // Count it from LIBRARIES rather than incrementing by hand.
+  'SugarCalendar-Libraries': {
+    file: './scraper-sugarcalendar-libraries.js',
+    exportName: 'scrapeSugarCalendarLibrariesCloudFunction',
+    type: 'puppeteer',
+    group: 2,
+    state: 'Multi',
+    sites: 1
+  },
+
+  // ============================================================================
   // COMMUNICO PLATFORM SCRAPERS (19)
   // ============================================================================
   'Communico-CA': {
