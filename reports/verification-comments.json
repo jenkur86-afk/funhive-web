@@ -503,7 +503,7 @@
  },
  "WordPress-NC|||Leicester Branch Library (Leicester, NC)": {
   "verdict": "MISMATCH",
-  "comment": "dead-domain: the configured URL redirects to leicesterma.org, which serves MA, not NC — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard",
+  "comment": "dead-domain: the configured URL redirects to leicesterma.org, which serves MA, not NC — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard | ENTRY NO LONGER IN CONFIG, confirmed 2026-09-08 - it was removed rather than guarded, so there is nothing for the containment pass to read and it was being counted as an open config bug it can never clear. The removal is now documented in the scraper file so the library keeps a visible, explained gap. STILL AN OPEN COVERAGE GAP awaiting a correct URL - removal is not a fix.",
   "population": "zero"
  },
  "WordPress-NC|||Leland Branch Library (Leland, NC)": {
@@ -567,7 +567,7 @@
  },
  "WordPress-NC|||Newport Public Library (Newport, NC)": {
   "verdict": "MISMATCH",
-  "comment": "dead-domain: the configured URL redirects to newportoregon.gov, which serves OR, not NC — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard",
+  "comment": "dead-domain: the configured URL redirects to newportoregon.gov, which serves OR, not NC — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard | ENTRY NO LONGER IN CONFIG, confirmed 2026-09-08 - it was removed rather than guarded, so there is nothing for the containment pass to read and it was being counted as an open config bug it can never clear. The removal is now documented in the scraper file so the library keeps a visible, explained gap. STILL AN OPEN COVERAGE GAP awaiting a correct URL - removal is not a fix.",
   "population": "zero"
  },
  "WordPress-NC|||Catawba County Library (Newton, NC)": {
@@ -846,7 +846,7 @@
  },
  "WordPress-CT|||Mansfield Public Library (Mansfield, CT)": {
   "verdict": "MISMATCH",
-  "comment": "dead-domain: the configured URL redirects to mansfieldtexas.gov, which serves TX, not CT — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard",
+  "comment": "dead-domain: the configured URL redirects to mansfieldtexas.gov, which serves TX, not CT — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard | ENTRY NO LONGER IN CONFIG, confirmed 2026-09-08 - it was removed rather than guarded, so there is nothing for the containment pass to read and it was being counted as an open config bug it can never clear. The removal is now documented in the scraper file so the library keeps a visible, explained gap. STILL AN OPEN COVERAGE GAP awaiting a correct URL - removal is not a fix.",
   "population": "zero"
  },
  "WordPress-CT|||Levi E.Coe Library (Middlefield, CT)": {
@@ -1078,7 +1078,7 @@
  },
  "WordPress-TN|||Tullahoma Public Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL | ENTRY NO LONGER IN CONFIG, confirmed 2026-09-08 - it was removed rather than guarded, so there is nothing for the containment pass to read and it was being counted as an open config bug it can never clear. The removal is now documented in the scraper file so the library keeps a visible, explained gap. STILL AN OPEN COVERAGE GAP awaiting a correct URL - removal is not a fix.",
   "population": "zero"
  },
  "WordPress-TN|||Lawrenceburg Public Library": {
@@ -1863,7 +1863,7 @@
  },
  "WordPress-VT|||Richmond Free (Richmond, VT)": {
   "verdict": "MISMATCH",
-  "comment": "dead-domain: the configured URL redirects to richmondca.gov, which serves CA, not VT — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard",
+  "comment": "dead-domain: the configured URL redirects to richmondca.gov, which serves CA, not VT — a same-named town in another state, the classic guessed-{city}library.org failure; needs a correct URL or a guard | ENTRY NO LONGER IN CONFIG, confirmed 2026-09-08 - it was removed rather than guarded, so there is nothing for the containment pass to read and it was being counted as an open config bug it can never clear. The removal is now documented in the scraper file so the library keeps a visible, explained gap. STILL AN OPEN COVERAGE GAP awaiting a correct URL - removal is not a fix.",
   "population": "zero"
  },
  "WordPress-VT|||Rochester Public (Rochester, VT)": {
@@ -2317,7 +2317,7 @@
  },
  "WordPress-KY|||Kenton County Public Library": {
   "verdict": "MISMATCH",
-  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on LibCal. WordPress-KY is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the LibCal family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
+  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on LibCal. WordPress-KY is a WordPress/DOM scraper and structurally | ENTRY NO LONGER IN CONFIG, confirmed 2026-09-08 - it was removed rather than guarded, so there is nothing for the containment pass to read and it was being counted as an open config bug it can never clear. The removal is now documented in the scraper file so the library keeps a visible, explained gap. STILL AN OPEN COVERAGE GAP awaiting a correct URL - removal is not a fix.",
   "population": "zero"
  },
  "RecDesk-Parks|||Carroll Gymnastics, Inc.": {
@@ -3695,7 +3695,7 @@
  },
  "WordPress-GA|||Fayette County Public Library": {
   "verdict": "MISMATCH",
-  "comment": "url-collision (domain hijacked, now serves an Indonesian gambling site titled OPUNG4D Toto 4D slot, not a library)",
+  "comment": "url-collision (domain hijacked, now serves an Indonesian gambling site titled OPUNG4D Toto 4D slot, not a library) | ENTRY NO LONGER IN CONFIG, confirmed 2026-09-08 - it was removed rather than guarded, so there is nothing for the containment pass to read and it was being counted as an open config bug it can never clear. The removal is now documented in the scraper file so the library keeps a visible, explained gap. STILL AN OPEN COVERAGE GAP awaiting a correct URL - removal is not a fix.",
   "population": "zero"
  },
  "WordPress-GA|||Gibbs Memorial Library": {
@@ -3917,7 +3917,7 @@
  },
  "WordPress-NC|||Bordeaux Branch Library": {
   "verdict": "MISMATCH",
-  "comment": "url-collision (domain hijacked, now serves an Indonesian gambling site titled OPUNG4D Toto 4D slot, not a library)",
+  "comment": "url-collision (domain hijacked, now serves an Indonesian gambling site titled OPUNG4D Toto 4D slot, not a library) | ENTRY NO LONGER IN CONFIG, confirmed 2026-09-08 - it was removed rather than guarded, so there is nothing for the containment pass to read and it was being counted as an open config bug it can never clear. The removal is now documented in the scraper file so the library keeps a visible, explained gap. STILL AN OPEN COVERAGE GAP awaiting a correct URL - removal is not a fix.",
   "population": "zero"
  },
  "WordPress-NC|||Brunswick County Library": {
@@ -4450,12 +4450,12 @@
  },
  "Venue-Events-ScienceArts|||Imagination Station": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure - real site lists many dated events e.g. Sensory Friendly Sunday Aug 16 2026 and Ice Cream Chemistry Aug 22 2026",
+  "comment": "extraction-failure - real site lists many dated events e.g. Sensory Friendly Sunday Aug 16 2026 and Ice Cream Chemistry Aug 22 2026 | ENTRY NO LONGER IN CONFIG, confirmed 2026-09-08 - it was removed rather than guarded, so there is nothing for the containment pass to read and it was being counted as an open config bug it can never clear. The removal is now documented in the scraper file so the library keeps a visible, explained gap. STILL AN OPEN COVERAGE GAP awaiting a correct URL - removal is not a fix.",
   "population": "zero"
  },
  "Venue-Events-ScienceArts|||Intrepid Sea Air & Space Museum": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure - real dated events listed e.g. Summer Tasting Fest Aug 21 2026 and Movie Night Fievel Goes West Aug 28 2026",
+  "comment": "extraction-failure - real dated events listed e.g. Summer Tasting Fest Aug 21 2026 and Movie Night Fievel Goes West Aug 28 2026 | ENTRY NO LONGER IN CONFIG, confirmed 2026-09-08 - it was removed rather than guarded, so there is nothing for the containment pass to read and it was being counted as an open config bug it can never clear. The removal is now documented in the scraper file so the library keeps a visible, explained gap. STILL AN OPEN COVERAGE GAP awaiting a correct URL - removal is not a fix.",
   "population": "zero"
  },
  "Venue-Events-ScienceArts|||Kamin Science Center": {
@@ -4711,17 +4711,17 @@
  },
  "WordPress-DE|||Appoquinimink Public Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to newcastlede.gov]",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to newcastlede.gov] | ENTRY NO LONGER IN CONFIG, confirmed 2026-09-08 - it was removed rather than guarded, so there is nothing for the containment pass to read and it was being counted as an open config bug it can never clear. The removal is now documented in the scraper file so the library keeps a visible, explained gap. STILL AN OPEN COVERAGE GAP awaiting a correct URL - removal is not a fix.",
   "population": "zero"
  },
  "WordPress-DE|||Bear Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to newcastlede.gov]",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to newcastlede.gov] | ENTRY NO LONGER IN CONFIG, confirmed 2026-09-08 - it was removed rather than guarded, so there is nothing for the containment pass to read and it was being counted as an open config bug it can never clear. The removal is now documented in the scraper file so the library keeps a visible, explained gap. STILL AN OPEN COVERAGE GAP awaiting a correct URL - removal is not a fix.",
   "population": "zero"
  },
  "WordPress-DE|||Brandywine Hundred Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to newcastlede.gov]",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to newcastlede.gov] | ENTRY NO LONGER IN CONFIG, confirmed 2026-09-08 - it was removed rather than guarded, so there is nothing for the containment pass to read and it was being counted as an open config bug it can never clear. The removal is now documented in the scraper file so the library keeps a visible, explained gap. STILL AN OPEN COVERAGE GAP awaiting a correct URL - removal is not a fix.",
   "population": "zero"
  },
  "WordPress-DE|||Bridgeville Public Library": {
@@ -4731,7 +4731,7 @@
  },
  "WordPress-DE|||Claymont Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to newcastlede.gov]",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL [redirects to newcastlede.gov] | ENTRY NO LONGER IN CONFIG, confirmed 2026-09-08 - it was removed rather than guarded, so there is nothing for the containment pass to read and it was being counted as an open config bug it can never clear. The removal is now documented in the scraper file so the library keeps a visible, explained gap. STILL AN OPEN COVERAGE GAP awaiting a correct URL - removal is not a fix.",
   "population": "zero"
  },
  "WordPress-KY|||Adair County Public Library": {

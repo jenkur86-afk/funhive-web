@@ -16,6 +16,19 @@ const ngeohash = require('ngeohash');
  * North Carolina Public Libraries Scraper - Coverage: All North Carolina public libraries
  */
 const LIBRARIES = [
+  // REMOVED before 2026-09-08 with no note left in this file; note restored 2026-09-08. Recorded
+  // in the verdict store as a dead endpoint. RECORDED COVERAGE GAP: Bordeaux Branch Library,
+  // Fayetteville NC has no verified URL here.
+  //
+  // REMOVED before 2026-09-08 with no note left in this file; note restored 2026-09-08. The
+  // configured URL redirected to newportoregon.gov, which serves Newport OREGON, not NC.
+  // RECORDED COVERAGE GAP: Newport Public Library, Newport NC has no verified URL here.
+  //
+  // REMOVED before 2026-09-08 with no note left in this file; note restored 2026-09-08 so the
+  // gap is visible. The configured URL redirected to leicesterma.org, which serves Leicester
+  // MASSACHUSETTS, not the NC branch - the guessed {city}library.org failure. RECORDED COVERAGE
+  // GAP: Leicester Branch Library, Leicester NC has no verified URL here.
+  //
   { name: 'Hazel W. Guilford Memorial Library', url: 'https://bhmlib.org/', eventsUrl: 'https://bhmlib.org/', city: 'Aurora', state: 'NC', zipCode: '00000', county: 'Beaufort County'},
   { name: 'Bath Community Library', url: 'https://bhmlib.org/', eventsUrl: 'https://bhmlib.org/', city: 'Bath', state: 'NC', zipCode: '00000', county: 'Beaufort County'},
   { name: 'Belmont Branch Library', url: 'https://gastonlibrary.org/', eventsUrl: 'https://gastonlibrary.org/calendar.aspx', city: 'Belmont', state: 'NC', zipCode: '00000', county: 'Gaston County'},

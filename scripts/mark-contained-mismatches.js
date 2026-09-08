@@ -137,7 +137,7 @@ if (fixedArg) {
   process.exit(0);
 }
 
-let set = 0, cleared = 0, keptContained = 0, open = 0, keptFixed = 0, noConfig = 0;
+let set = 0, cleared = 0, keptContained = 0, open = 0, keptFixed = 0, noConfig = 0, ageFindings = 0;
 const setSamples = [], clearSamples = [];
 
 for (const [key, v] of Object.entries(store)) {
@@ -151,6 +151,17 @@ for (const [key, v] of Object.entries(store)) {
   // "fixed" is set by hand with run evidence and is never overridden from the config —
   // a fixed entry may legitimately have no guard, because the URL was corrected instead.
   if (v.status === 'fixed') { keptFixed++; continue; }
+
+  // The ALL-AGES population is a different kind of finding and must not be counted
+  // here. Those verdicts say "this venue's events are mis-tagged by age" — they are
+  // about detectAgeRange, not about a URL, and their "site" is a VENUE read out of
+  // the database rather than a configured entry. So they have no config entry BY
+  // CONSTRUCTION, and containment (which means "the scraper no longer visits this
+  // URL") is meaningless for them. Counting them under "no config entry found —
+  // counted as open" put 27 age-detection findings into the open CONFIG-bug column
+  // on 2026-09-08, where no amount of URL work could ever clear them.
+  // They remain open findings; they are just Phase 5 work, not gate 3 work.
+  if (v.population === 'allages') { ageFindings++; continue; }
 
   const [scraper, site] = [key.slice(0, key.indexOf('|||')), key.slice(key.indexOf('|||') + 3)];
   const entry = configEntry(scraper, site);
@@ -181,6 +192,7 @@ console.log(`status cleared         : ${cleared}   (guard removed, or verdict no
 console.log(`hand-set "fixed" kept  : ${keptFixed}`);
 console.log(`still OPEN (unguarded) : ${open}`);
 console.log(`no config entry found  : ${noConfig}   (counted as open — unknown is not safe)`);
+console.log(`age-range findings     : ${ageFindings}   (all-ages population — Phase 5 work, not config work; excluded here by design)`);
 console.log(`mode                   : ${SAVE ? 'SAVE' : 'DRY RUN'}`);
 if (setSamples.length) { console.log('\nnewly contained, sample:'); setSamples.forEach(s => console.log('  + ' + s)); }
 if (clearSamples.length) { console.log('\nre-opened, sample:'); clearSamples.forEach(s => console.log('  - ' + s)); }

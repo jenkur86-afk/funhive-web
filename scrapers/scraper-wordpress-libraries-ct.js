@@ -16,6 +16,10 @@ const ngeohash = require('ngeohash');
  * Connecticut Public Libraries Scraper - Coverage: All Connecticut public libraries
  */
 const LIBRARIES = [
+  // REMOVED before 2026-09-08 with no note left in this file; note restored 2026-09-08. The
+  // configured URL redirected to mansfieldtexas.gov, which serves Mansfield TEXAS, not CT.
+  // RECORDED COVERAGE GAP: Mansfield Public Library, Mansfield CT has no verified URL here.
+  //
   // Major Metro Libraries
   // 2026-08-27: PLATFORM MISMATCH, and it was wrong in TWO families at once: this WordPress row, plus a LibCal-CT row at hplct.libcal.com that returned Found 0 events on the 2026-08-27 run. Hartford actually publishes on hplct.libnet.info, titled "Events - Hartford Public Library", printing CT 06103.
   // Guarded rather than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.

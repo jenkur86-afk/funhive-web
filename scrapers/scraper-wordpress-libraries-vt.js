@@ -16,6 +16,10 @@ const ngeohash = require('ngeohash');
  * Vermont Public Libraries Scraper - Coverage: All Vermont public libraries
  */
 const LIBRARIES = [
+  // REMOVED before 2026-09-08 with no note left in this file; note restored 2026-09-08. The
+  // configured URL redirected to richmondca.gov, which serves Richmond CALIFORNIA, not VT.
+  // RECORDED COVERAGE GAP: Richmond Free Library, Richmond VT has no verified URL here.
+  //
   { name: 'Fletcher Free Library', url: 'https://fletcherfree.org/', eventsUrl: 'https://fletcherfree.org/', city: 'Burlington', state: 'VT', zipCode: '05401', county: 'Chittenden'},
   { name: 'Kellogg-Hubbard Library', url: 'https://kellogghubbard.org/', eventsUrl: 'https://kellogghubbard.org/calendar/', city: 'Montpelier', state: 'VT', zipCode: '05602', county: 'Washington'},
   { name: 'Brooks Memorial Library', url: 'https://www.brookslibraryvt.org', eventsUrl: 'https://www.brookslibraryvt.org/events', city: 'Brattleboro', state: 'VT', zipCode: '05301', county: 'Windham'},
