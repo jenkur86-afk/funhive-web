@@ -288,7 +288,7 @@
  },
  "WordPress-GA|||Rossville Public Library (Rossville, GA)": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "site is UP but publishes NO calendar link 2026-09-08: the homepage carries no href or link text matching calendar/events/programs above threshold, and the 8 standard paths had already failed. This is a library that does not publish machine-readable events on its own site, not a broken scraper. Probe detail: NO-CALENDAR-LINK. Recorded as an OPEN COVERAGE GAP - the host is alive, so this is NOT a dead domain and must not be guarded as one.",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
@@ -719,7 +719,7 @@
  },
  "WordPress-CT|||Vernon Public Library (Vernon, CT)": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "site is UP but publishes NO calendar link 2026-09-08: the homepage carries no href or link text matching calendar/events/programs above threshold, and the 8 standard paths had already failed. This is a library that does not publish machine-readable events on its own site, not a broken scraper. Probe detail: NO-CALENDAR-LINK. Recorded as an OPEN COVERAGE GAP - the host is alive, so this is NOT a dead domain and must not be guarded as one.",
   "population": "zero"
  },
  "WordPress-CT|||Andover Public Library (Andover, CT)": {
@@ -908,7 +908,7 @@
  },
  "WordPress-CT|||Pomfret Public Library (Pomfret, CT)": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "site is UP and DOES link to an events page, but none of the candidate links carried dated events when fetched 2026-09-08 - consistent with a JS-gated widget or a PDF/image calendar. Needs a hand look; no selector work on the current URL can help. Probe detail: checked 1 candidate link(s), none showed dated events. Recorded as an OPEN COVERAGE GAP - the host is alive, so this is NOT a dead domain and must not be guarded as one.",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
@@ -981,7 +981,7 @@
  },
  "WordPress-CT|||Louis Piantino Branch Library (West Haven, CT)": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "site is UP and DOES link to an events page, but none of the candidate links carried dated events when fetched 2026-09-08 - consistent with a JS-gated widget or a PDF/image calendar. Needs a hand look; no selector work on the current URL can help. Probe detail: checked 3 candidate link(s), none showed dated events. Recorded as an OPEN COVERAGE GAP - the host is alive, so this is NOT a dead domain and must not be guarded as one.",
   "population": "zero"
  },
  "WordPress-CT|||Weston Public Library (Weston, CT)": {
@@ -1332,7 +1332,7 @@
  },
  "WordPress-TN|||Franklin Public Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "site is UP and DOES link to an events page, but none of the candidate links carried dated events when fetched 2026-09-08 - consistent with a JS-gated widget or a PDF/image calendar. Needs a hand look; no selector work on the current URL can help. Probe detail: checked 6 candidate link(s), none showed dated events. Recorded as an OPEN COVERAGE GAP - the host is alive, so this is NOT a dead domain and must not be guarded as one.",
   "population": "zero"
  },
  "WordPress-AL|||Florence-Lauderdale Public Library": {
@@ -1696,7 +1696,7 @@
  },
  "WordPress-VT|||Benson Public (Benson, VT)": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
+  "comment": "site is UP but publishes NO calendar link 2026-09-08: the homepage carries no href or link text matching calendar/events/programs above threshold, and the 8 standard paths had already failed. This is a library that does not publish machine-readable events on its own site, not a broken scraper. Probe detail: NO-CALENDAR-LINK. Recorded as an OPEN COVERAGE GAP - the host is alive, so this is NOT a dead domain and must not be guarded as one.",
   "population": "zero",
   "status": "contained",
   "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked ra",
@@ -3089,8 +3089,11 @@
  },
  "WordPress-PA|||Bucks County Free Library - Fallsington Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "comment": "NOT RELOCATABLE as things stand, checked 2026-09-08. calendar.buckslib.org carries this library's events but exposes NO per-branch filter: cid=3891 is the CATEGORY \"Library Programs\", cid=2279 returns HTTP 404, and cm=2279, a bogus cm and no filter at all each return a set spanning all EIGHT Bucks County branches (Bensalem, Doylestown, Fallsington, Langhorne, Levittown, Perkasie, Quakertown, Yardley). Relocating would import all eight under this branch's name, the delcolibraries defect again. OPEN COVERAGE GAP.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: NOT RELOCATED, checked 2026-09-08. The library publishes on calendar.buckslib.org, but that tenant has NO PER-BRANCH FILTER: cid=3891 is the category \\",
+  "statusAt": "2026-09-08"
  },
  "WordPress-PA|||Fleetwood Area Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -3203,8 +3206,11 @@
  },
  "WordPress-PA|||Honey Brook Community Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on the configured URL",
-  "population": "zero"
+  "comment": "RESOLVED 2026-09-08 by relocation, not by a selector fix. The library publishes on LibCal at ccls.libcal.com; found by following the site's own navigation after all 8 standard paths failed. Now configured in LibCal-PA as ?cid=13410, verified live at 168 event elements titled \"Honey Brook Library - LibCal - Chester County\", with a bogus cid on the same tenant returning HTTP 404 so the filter genuinely narrows. The WordPress-PA entry is guarded.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-08: publishes on LibCal at ccls.libcal.com, now configured in LibCal-PA as ?cid=13410 so only this library is read. Found by following the library own site navigation to its calendar link rather than guessing paths - the ",
+  "statusAt": "2026-09-08"
  },
  "WordPress-PA|||Horsham Township Library": {
   "verdict": "MATCHES",
@@ -7993,7 +7999,7 @@
  },
  "WordPress-DE|||Wilmington Public Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint confirmed under Puppeteer 2026-08-24. wilmingtonde.gov is ALIVE (real City of Wilmington site) but /library/events returns a genuine 404 page, and /calendar also 404s. The library section has moved somewhere not yet located. Not a dead domain - a stale path. Needs the current library events URL found from the site's own navigation.",
+  "comment": "site is UP and DOES link to an events page, but none of the candidate links carried dated events when fetched 2026-09-08 - consistent with a JS-gated widget or a PDF/image calendar. Needs a hand look; no selector work on the current URL can help. Probe detail: checked 6 candidate link(s), none showed dated events. Recorded as an OPEN COVERAGE GAP - the host is alive, so this is NOT a dead domain and must not be guarded as one.",
   "population": "zero"
  },
  "WordPress-DE|||Woodlawn Library": {
@@ -8899,7 +8905,7 @@
  },
  "WordPress-NH|||Josiah Carpenter Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint, ROOT CAUSE IDENTIFIED 2026-08-24, deliberately not rewired. Configured /node/81/events/month 404s. Town site is alive on CivicEngage: https://www.pittsfieldnh.gov/calendar.aspx returns 200, titles 'Calendar - Pittsfield, NH - CivicEngage', ~49 calendar elements. Same caveat as Fremont: town-wide, needs a library category filter before it can be attributed to this library.",
+  "comment": "site is UP and DOES link to an events page, but none of the candidate links carried dated events when fetched 2026-09-08 - consistent with a JS-gated widget or a PDF/image calendar. Needs a hand look; no selector work on the current URL can help. Probe detail: checked 6 candidate link(s), none showed dated events. Recorded as an OPEN COVERAGE GAP - the host is alive, so this is NOT a dead domain and must not be guarded as one.",
   "population": "zero"
  },
  "WordPress-NH|||Littleton Public Library": {
@@ -9089,7 +9095,7 @@
  },
  "WordPress-PA|||Malvern Public Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint 2026-08-24: malvernlibrary.org TIMED OUT on all seven paths tried. A timeout is NOT the same evidence as a 404 - the host may simply be slow or blocking - so this is recorded as unreachable rather than dead, per the same rule applied to the three unresolved Defect A hosts. Re-probe on a later run before concluding.",
+  "comment": "site is UP but publishes NO calendar link 2026-09-08: the homepage carries no href or link text matching calendar/events/programs above threshold, and the 8 standard paths had already failed. This is a library that does not publish machine-readable events on its own site, not a broken scraper. Probe detail: NO-CALENDAR-LINK. Recorded as an OPEN COVERAGE GAP - the host is alive, so this is NOT a dead domain and must not be guarded as one.",
   "population": "zero"
  },
  "WordPress-PA|||Mars Area Public Library": {
@@ -10071,7 +10077,7 @@
  },
  "WordPress-ME|||Westbrook Public Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 404 on all 7 candidate paths including the site root - the configured URL is wrong, not the extraction",
+  "comment": "host alive to an earlier probe but the root FAILED on re-fetch 2026-09-08 (net::ERR_BLOCKED_BY_CLIENT) - a client-side block, so this needs a hand check from a normal browser rather than more automation. Probe detail: net::ERR_BLOCKED_BY_CLIENT at https://walkerlibrary.org. Recorded as an OPEN COVERAGE GAP - the host is alive, so this is NOT a dead domain and must not be guarded as one.",
   "population": "zero"
  },
  "WordPress-ME|||Windham Public Library": {
@@ -11837,7 +11843,7 @@
  },
  "WordPress-MA|||Scituate Town Library": {
   "verdict": "MISMATCH",
-  "comment": "dead-endpoint: HTTP 429 on the configured URL",
+  "comment": "site is UP but publishes NO calendar link 2026-09-08: the homepage carries no href or link text matching calendar/events/programs above threshold, and the 8 standard paths had already failed. This is a library that does not publish machine-readable events on its own site, not a broken scraper. Probe detail: NO-CALENDAR-LINK. Recorded as an OPEN COVERAGE GAP - the host is alive, so this is NOT a dead domain and must not be guarded as one.",
   "population": "zero"
  },
  "WordPress-MA|||Swampscott Public Library": {

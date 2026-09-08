@@ -1750,6 +1750,19 @@ const LIBRARY_SYSTEMS = [
   },
 
   // PENNSYLVANIA
+  {
+    // Relocated from WordPress-PA 2026-09-08. Found by following the library's OWN
+    // site navigation to ccls.libcal.com, not by guessing a path. cid=13410 verified:
+    // 168 event elements titled 'Honey Brook Library - LibCal - Chester County', and a
+    // bogus cid on the same tenant returns HTTP 404, so the filter is real.
+    name: 'Honey Brook Community Library',
+    url: 'https://ccls.libcal.com/calendar?cid=13410&t=d',
+    county: 'Chester',
+    state: 'PA',
+    website: 'https://www.honeybrooklibrary.org',
+    city: 'Honey Brook',
+    zipCode: '19344'
+  },
   // RELOCATED FROM WordPress-{state} 2026-09-07 -- CONSORTIUM ENTRIES, and the cid
   // is the whole point. These libraries publish on a SHARED LibCal tenant, so the
   // bare host would import every member library under one library's name. Each
