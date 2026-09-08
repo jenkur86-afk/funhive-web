@@ -683,7 +683,7 @@
  },
  "WordPress-CT|||Greenwich Library (Greenwich, CT)": {
   "verdict": "MISMATCH",
-  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on LibCal. WordPress-CT is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the LibCal family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
+  "comment": "platform confirmed (greenwichlibrary.bibliocommons.com) but NOT relocatable today: that host returns HTTP 403 Forbidden to the scrapers' own browser stack, so the destination cannot be verified and an unverified relocation would be a guess. OPEN COVERAGE GAP pending a route past the block.",
   "population": "zero"
  },
  "WordPress-CT|||Milford Public Library (Milford, CT)": {
@@ -701,7 +701,7 @@
  },
  "WordPress-CT|||Southington Public Library (Southington, CT)": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves whofi markup, so this belongs in no WhoFi extractor exists yet, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.southingtonlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 5 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-CT|||Torrington Library (Torrington, CT)": {
@@ -1505,7 +1505,7 @@
  },
  "WordPress-AL|||City Of Bayou La Batre Public Library": {
   "verdict": "MISMATCH",
-  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on LibCal. WordPress-AL is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the LibCal family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 1 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-AL|||Kennedy Public Library": {
@@ -2138,8 +2138,11 @@
  },
  "WordPress-MA|||Dudley Branch Library": {
   "verdict": "MISMATCH",
-  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on Communico. WordPress-MA is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the Communico family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
-  "population": "zero"
+  "comment": "Branch of Boston Public Library, already configured in BiblioCommons-* at bpl.bibliocommons.com/v2/events. A WordPress DOM scraper cannot read BiblioCommons, so this entry always returned 0; guarded 2026-09-08. Recorded as covered-by-parent rather than proven-per-branch - the parent has not been separately confirmed to emit Dudley-specific rows.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: BRANCH OF BOSTON PUBLIC LIBRARY, which is already configured in BiblioCommons-* at bpl.bibliocommons.com/v2/events. This WordPress entry logged Found 0 every run because a DOM scraper cannot read BiblioCommons. Guarded 2026-09-08 rather th",
+  "statusAt": "2026-09-08"
  },
  "WordPress-MA|||Joshua Hyde Public Library": {
   "verdict": "UNVERIFIABLE",
@@ -2274,7 +2277,7 @@
  },
  "WordPress-PA|||Spalding Memorial Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 10 future-dated events visible under Puppeteer, e.g. Aug 31 2026-08-31; 5:00 pm - 7:00 pm 2026-08-31. platform=tec-wordpress (TEC — use tec-rest-helper.js)",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 6 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-VT|||Brooks Memorial Library": {
@@ -2554,7 +2557,7 @@
  },
  "WordPress-ME|||Shaw Public Library - Greenville": {
   "verdict": "MISMATCH",
-  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on FullCalendar. WordPress-ME is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the FullCalendar family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
+  "comment": "a candidate calendar link was found 2026-09-08 and REJECTED: it resolves to shawpubliclibrary.org/# , the homepage with an anchor, carrying 4 dates and 15 elements rather than a calendar view. No real calendar URL to relocate to. OPEN COVERAGE GAP.",
   "population": "zero"
  },
  "WordPress-GA|||Banks County Public Library": {
@@ -2765,7 +2768,10 @@
  "LibraryCalendar-Libraries|||York County Library": {
   "verdict": "MISMATCH",
   "comment": "Confirmed live at yorkcounty.librarycalendar.com: individual events do carry explicit age/category tags (\"Babies & Toddlers (0-2 years)\", \"Youth Visual Art Contest — ages 7-18\", \"Adults (18 years & up)\") that the text-only detector is evidently missing for a majority of events. Not fixed this session; needs the LibraryCalendar page's category-tag markup inspected for a structured field to read directly.",
-  "population": "allages"
+  "population": "allages",
+  "status": "fixed",
+  "statusNote": "Proven working 2026-09-08: scraper-stdout.log shows York County Library then 'Found 20 events' under LibraryCalendar-Libraries at yorkcounty.librarycalendar.com. The verdict predated that relocation and was stale.",
+  "statusAt": "2026-09-08"
  },
  "CivicEngage-Libraries|||Colonial Heights Public Library": {
   "verdict": "MATCHES",
@@ -2799,7 +2805,7 @@
  },
  "WordPress-Events-Calendar|||Washington County Public Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure: 38 future-dated events visible under Puppeteer, e.g. Now Now 2026-09-06; Tue 8 2026-09-08. platform=tec-wordpress (TEC — use tec-rest-helper.js)",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 6 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-Events-Calendar|||Heritage Public Library": {
@@ -3074,8 +3080,11 @@
  },
  "WordPress-PA|||Erie County Public Library": {
   "verdict": "MISMATCH",
-  "comment": "ROOT CAUSE IDENTIFIED 2026-08-10, not yet fixed: a full browser render shows this library does not publish its events on its own site at all - they live on LibCal. WordPress-PA is a WordPress/DOM scraper and structurally cannot read that platform, so no selector work here will ever help. The fix is to move this library to the LibCal family scraper with its correct per-library URL, the same move made for Auburn Public Library (WordPress-GA to LibCal-GA) on 2026-08-09. Left in place rather than removed because the library is real and configured correctly apart from the platform; removing it would lose a genuine library instead of relocating it.",
-  "population": "zero"
+  "comment": "RESOLVED 2026-09-08 by relocation to LibCal-PA at events.erielibrary.org. Off-host LibCal, found by following the site's own Events Calendar link. Identity from the page: ZIPs PA 16508/16504/16503, phone 814-451-6935. 125 event elements live. WordPress-PA entry guarded.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-08 to LibCal-PA at events.erielibrary.org. Found by following the library own Events Calendar link - the LibCal instance is OFF-HOST, so no path guess against erielibrary.org could have reached it. Identity confirmed from",
+  "statusAt": "2026-09-08"
  },
  "WordPress-PA|||Evans City Public Library": {
   "verdict": "MATCHES",
@@ -4524,7 +4533,7 @@
  },
  "WordPress-GA|||Ida Hilton Public Library": {
   "verdict": "MISMATCH",
-  "comment": "extraction-failure trrl.org calendar 301s to trrl.librarycalendar.com with live events e.g. Tai Chi at Ida Hilton and Teen Night Acrylic Painting Aug 20 2026",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 1 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-NC|||Carver Branch Library": {
@@ -7932,8 +7941,8 @@
   "population": "allages"
  },
  "GoogleCalendar-SC|||Berkeley County Library - Sangaree Library": {
-  "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://berkeleylibrarysc.org/locations-and-hours/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "verdict": "MATCHES",
+  "comment": "NOT A BUG, checked 2026-09-08. The GoogleCalendar-SC entry is working correctly: it reads the configured feed and reports '40 in feed, 0 upcoming' - the calendar genuinely has no future events. Separately, the parent Berkeley County Library System is configured in LibCal-SC and logs Found 20 events, so the system has coverage. An empty feed read correctly is not an extraction failure.",
   "population": "zero"
  },
  "LibCal-VA2|||Prince William Public Library System": {
@@ -8235,8 +8244,11 @@
  },
  "WordPress-MA|||Chelmsford Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.chelmsfordlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "comment": "RESOLVED 2026-09-08 by relocation to Assabet-NH-MA. The 2026-09-07 ambiguity is settled: the library publishes on BOTH chelmsfordlibrary.libcal.com (120 items) and chelmsfordlibrary.assabetinteractive.com (1201 items), both correctly titled. Assabet chosen because that platform+state combination was proven on 2026-09-07 for Billerica and Merrimac; LibCal remains a verified fallback.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-08 to Assabet-NH-MA. This library publishes on BOTH chelmsfordlibrary.libcal.com (120 items, \\",
+  "statusAt": "2026-09-08"
  },
  "WordPress-MA|||Dighton Public Library": {
   "verdict": "MATCHES",
@@ -8453,7 +8465,7 @@
  },
  "WordPress-MA|||Mattapoisett Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves whofi markup, so this belongs in no WhoFi extractor exists yet, not a WordPress DOM extractor. Detected over plain HTTPS at https://mattapoisettlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 6 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-MA|||Memorial Hall Library": {
@@ -8573,7 +8585,7 @@
  },
  "WordPress-MA|||Norton Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves whofi markup, so this belongs in no WhoFi extractor exists yet, not a WordPress DOM extractor. Detected over plain HTTPS at https://nortonlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT NO REACHABLE CALENDAR, checked 2026-09-08. The site is up and its markup was previously read as belonging to another platform, but it publishes no calendar link on its homepage and none of the 8 standard paths answered. There is nothing to relocate TO. OPEN COVERAGE GAP - not an extraction bug and not a dead domain. Probe: NO-CALENDAR-LINK",
   "population": "zero"
  },
  "WordPress-MA|||Paul Pratt Memorial Library": {
@@ -8671,7 +8683,7 @@
  },
  "WordPress-MA|||Swansea Free Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves whofi markup, so this belongs in no WhoFi extractor exists yet, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.swansealibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 3 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-MA|||Stevens Memorial Library": {
@@ -9323,12 +9335,12 @@
  },
  "WordPress-PA|||Mount Pleasant Free Public Library Association": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.mountpleasantlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "root failed to load on the 2026-09-08 navigation pass; the host was reachable earlier, so this is intermittent rather than dead. Needs a hand check. OPEN COVERAGE GAP. Probe: Runtime.callFunctionOn timed out. Increase the 'protocolTimeout' setti",
   "population": "zero"
  },
  "WordPress-PA|||Springdale Free Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://springdalelibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 6 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-PA|||Summerville Public Library": {
@@ -9398,7 +9410,7 @@
  },
  "WordPress-RI|||Island Free Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch, FIXED AND PROVEN LIVE 2026-08-27. Genuinely broken, not stale: islandfreelibrary.org runs The Events Calendar and its REST endpoint returns 143 upcoming events, but WordPress-RI was the ONE active state file tryFetchTecEvents was never wired into - a grep across scraper-wordpress-libraries-*.js returned al ct fl ga me ms nc nj ny pa tn vt and no ri - so the DOM path logged Found 0. TEC wired in; the run went Found 0 to Found 143 and the library now holds 87 database rows with age detection working, e.g. Preschool Storytime with Ms. Morgan to Preschool 3-5 and a weaving workshop to Teens 13-18. WordPress-RI overall went 99 found / 23 new to 235 found / 148 new.",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 3 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-RI|||Langworthy Public Library": {
@@ -9486,8 +9498,11 @@
  },
  "WordPress-SC|||Lexington County Library - Swansea": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://lexcolibrary.com/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "comment": "COVERED BY PARENT, verified 2026-09-08. A branch of Lexington County Public Library, already configured in LibCal-SC at lexcolibrary.libcal.com and logging Found 10 events across the whole system calendar. The WordPress branch entry only ever returned 0 and is now guarded. Not a coverage gap.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: COVERED BY THE PARENT SYSTEM, verified 2026-09-08. This is a BRANCH of Lexington County Public Library, which is already configured in LibCal-SC at lexcolibrary.libcal.com and logged Found 10 events. That parent entry reads the whole syste",
+  "statusAt": "2026-09-08"
  },
  "WordPress-SC|||Lexington County Public Library System - Main": {
   "verdict": "MISMATCH",
@@ -9541,7 +9556,7 @@
  },
  "WordPress-WV|||Montgomery Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves the-events-calendar markup, so this belongs in WordPress TEC REST path, not a WordPress DOM extractor. Detected over plain HTTPS at https://fayette.lib.wv.us/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 1 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-WV|||Pleasants County Public Library": {
@@ -9687,7 +9702,7 @@
  },
  "WordPress-FL|||Homestead Branch Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves bibliocommons markup, so this belongs in BiblioCommons-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.homesteadlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "the discovered host acl.bibliocommons.com is the ALLEGHENY COUNTY, PENNSYLVANIA consortium, while this library is Homestead FLORIDA - a cross-state match that must not be acted on, and it returns HTTP 403 anyway. There are Homesteads in both states. OPEN COVERAGE GAP; do not relocate to acl.",
   "population": "zero"
  },
  "WordPress-FL|||Jefferson County R. J. Bailar Public Library": {
@@ -9871,7 +9886,7 @@
  },
  "WordPress-ME|||Hollis Center Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves google-calendar markup, so this belongs in GoogleCalendar-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.holliscenterpubliclibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 2 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-ME|||Julia Adams Morse Memorial Library": {
@@ -10029,7 +10044,7 @@
  },
  "WordPress-ME|||Swans Island Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves the-events-calendar markup, so this belongs in WordPress TEC REST path, not a WordPress DOM extractor. Detected over plain HTTPS at https://swansislandeducationalsociety.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 1 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-ME|||Steep Falls Library": {
@@ -10057,7 +10072,7 @@
  },
  "WordPress-ME|||Topsham Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves the-events-calendar markup, so this belongs in WordPress TEC REST path, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.topshamlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 4 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-ME|||Washburn Memorial Library": {
@@ -10097,7 +10112,7 @@
  },
  "WordPress-MS|||Crosby Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves the-events-calendar markup, so this belongs in WordPress TEC REST path, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.crosbylibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT NO REACHABLE CALENDAR, checked 2026-09-08. The site is up and its markup was previously read as belonging to another platform, but it publishes no calendar link on its homepage and none of the 8 standard paths answered. There is nothing to relocate TO. OPEN COVERAGE GAP - not an extraction bug and not a dead domain. Probe: NO-CALENDAR-LINK",
   "population": "zero"
  },
  "WordPress-MS|||A. E. Wood Library": {
@@ -10151,8 +10166,11 @@
  },
  "WordPress-MS|||Houston Carnegie Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.houstonlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "comment": "urlCollision, not a platform mismatch. houstonlibrary.org is Houston Public Library TEXAS (TX 77002, phone 832-393-1313); Houston Carnegie Library is Houston MISSISSIPPI. Guarded 2026-09-08. OPEN COVERAGE GAP.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: urlCollision confirmed 2026-09-08: houstonlibrary.org is HOUSTON PUBLIC LIBRARY, TEXAS - its pages print TX 77002 and phone 832-393-1313 (832 is Houston TX), and its calendar titles itself \\",
+  "statusAt": "2026-09-08"
  },
  "WordPress-MS|||Lafayette County-Oxford Public Library": {
   "verdict": "MISMATCH",
@@ -10268,7 +10286,7 @@
  },
  "WordPress-NJ|||Butler Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves the-events-calendar markup, so this belongs in WordPress TEC REST path, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.butlerlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 3 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-NJ|||Cedar Grove Free Public Library": {
@@ -10418,7 +10436,7 @@
  },
  "WordPress-NJ|||Milltown Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves google-calendar markup, so this belongs in GoogleCalendar-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.milltownlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 2 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-NJ|||Millville Public Library": {
@@ -10472,7 +10490,7 @@
  },
  "WordPress-NJ|||Parsippany-Troy Hills Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.parsippanylibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT NO REACHABLE CALENDAR, checked 2026-09-08. The site is up and its markup was previously read as belonging to another platform, but it publishes no calendar link on its homepage and none of the 8 standard paths answered. There is nothing to relocate TO. OPEN COVERAGE GAP - not an extraction bug and not a dead domain. Probe: NO-CALENDAR-LINK",
   "population": "zero"
  },
  "WordPress-NJ|||Passaic Public Library": {
@@ -10673,7 +10691,7 @@
  },
  "WordPress-NY|||B. Elizabeth Strong Memorial Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves the-events-calendar markup, so this belongs in WordPress TEC REST path, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.turinlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT NO REACHABLE CALENDAR, checked 2026-09-08. The site is up and its markup was previously read as belonging to another platform, but it publishes no calendar link on its homepage and none of the 8 standard paths answered. There is nothing to relocate TO. OPEN COVERAGE GAP - not an extraction bug and not a dead domain. Probe: NO-CALENDAR-LINK",
   "population": "zero"
  },
  "WordPress-NY|||Baldwin Public Library": {
@@ -10686,7 +10704,7 @@
  },
  "WordPress-NY|||Barneveld Free Library Association": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves libnet / LibraryMarket markup, so this belongs in LibraryMarket-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.barneveldlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 1 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-NY|||Bainbridge Free Library": {
@@ -10696,7 +10714,7 @@
  },
  "WordPress-NY|||Beaver Falls Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves the-events-calendar markup, so this belongs in WordPress TEC REST path, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.beaverfallslibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT NO REACHABLE CALENDAR, checked 2026-09-08. The site is up and its markup was previously read as belonging to another platform, but it publishes no calendar link on its homepage and none of the 8 standard paths answered. There is nothing to relocate TO. OPEN COVERAGE GAP - not an extraction bug and not a dead domain. Probe: NO-CALENDAR-LINK",
   "population": "zero"
  },
  "WordPress-NY|||Belden Noble Memorial Library Of Essex": {
@@ -11035,8 +11053,11 @@
  },
  "WordPress-NY|||Menands Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.menandslibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
-  "population": "zero"
+  "comment": "RESOLVED 2026-09-08 by relocation to LibraryCalendar-Libraries at uhls.librarycalendar.com?branches[83]=83. REVERSES the 2026-09-07 call that rejected uhls as an unfilterable system host - it does filter per branch, the parameter was simply not known then. Verified: 841 cards with Menands as venue, 805 unfiltered showing other branches, bogus branch id returns empty.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: RELOCATED 2026-09-08: publishes on the Upper Hudson SYSTEM host uhls.librarycalendar.com, now configured in LibraryCalendar-Libraries as ?branches[83]=83 so only Menands is read - the bare system URL would import all 19 member libraries un",
+  "statusAt": "2026-09-08"
  },
  "WordPress-NY|||Middleburgh Library": {
   "verdict": "UNVERIFIABLE",
@@ -11199,7 +11220,7 @@
  },
  "WordPress-NY|||Prospect Free Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves libnet / LibraryMarket markup, so this belongs in LibraryMarket-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://prospect.midyork.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT NO REACHABLE CALENDAR, checked 2026-09-08. The site is up and its markup was previously read as belonging to another platform, but it publishes no calendar link on its homepage and none of the 8 standard paths answered. There is nothing to relocate TO. OPEN COVERAGE GAP - not an extraction bug and not a dead domain. Probe: NO-CALENDAR-LINK",
   "population": "zero"
  },
  "WordPress-NY|||Queens Borough Public Library - Elmhurst": {
@@ -11243,7 +11264,7 @@
  },
  "WordPress-NY|||Reading Room Association Of Gouverneur": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves the-events-calendar markup, so this belongs in WordPress TEC REST path, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.gouverneurlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT NO REACHABLE CALENDAR, checked 2026-09-08. The site is up and its markup was previously read as belonging to another platform, but it publishes no calendar link on its homepage and none of the 8 standard paths answered. There is nothing to relocate TO. OPEN COVERAGE GAP - not an extraction bug and not a dead domain. Probe: NO-CALENDAR-LINK",
   "population": "zero"
  },
  "WordPress-NY|||Richmond Memorial Library": {
@@ -11853,7 +11874,7 @@
  },
  "WordPress-PA|||Darby Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves the-events-calendar markup, so this belongs in WordPress TEC REST path, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.darbylibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 2 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-PA|||East Berlin Community Library": {
@@ -11863,12 +11884,12 @@
  },
  "WordPress-PA|||Huntingdon County Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves the-events-calendar markup, so this belongs in WordPress TEC REST path, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.huntingdonlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 2 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "WordPress-PA|||Jefferson Hills Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.jeffersonhillslibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT NO REACHABLE CALENDAR, checked 2026-09-08. The site is up and its markup was previously read as belonging to another platform, but it publishes no calendar link on its homepage and none of the 8 standard paths answered. There is nothing to relocate TO. OPEN COVERAGE GAP - not an extraction bug and not a dead domain. Probe: NO-CALENDAR-LINK",
   "population": "zero"
  },
  "WordPress-PA|||Pequea Valley Public Library": {
@@ -11878,12 +11899,12 @@
  },
  "WordPress-PA|||Trafford Community Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves the-events-calendar markup, so this belongs in WordPress TEC REST path, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.traffordlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT NO REACHABLE CALENDAR, checked 2026-09-08. The site is up and its markup was previously read as belonging to another platform, but it publishes no calendar link on its homepage and none of the 8 standard paths answered. There is nothing to relocate TO. OPEN COVERAGE GAP - not an extraction bug and not a dead domain. Probe: NO-CALENDAR-LINK",
   "population": "zero"
  },
  "WordPress-PA|||West Newton Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform-mismatch: page serves the-events-calendar markup, so this belongs in WordPress TEC REST path, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.westnewtonlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
+  "comment": "PLATFORM CONFIRMED BUT ITS CALENDAR CARRIES NO READABLE EVENTS, checked 2026-09-08. The site links to an events page, but every candidate link fetched showed no dated events - consistent with a JS-gated widget, a PDF/image calendar, or an empty calendar. Relocating to another scraper family would gain nothing because the destination has nothing to read. OPEN COVERAGE GAP. Probe: checked 2 candidate link(s), none showed dated events",
   "population": "zero"
  },
  "MacaroniKid-NC-cary|||Town of Cary, NC": {

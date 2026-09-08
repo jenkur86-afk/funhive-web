@@ -233,6 +233,22 @@ const LIBRARY_SYSTEMS = [
   // its own first card reads "Orangeburg Library is Closed for Renovation".
   // Tappan and Orangeburg are its two branches and both are Rockland County NY,
   // so the two-branch span is bounded and stays in state - unlike UHLS above.
+  {
+    // Relocated from WordPress-NY 2026-09-08. uhls.librarycalendar.com is the Upper
+    // Hudson SYSTEM host, so the bare URL would import all 19 member libraries under
+    // this name. branches[83]=83 is Menands, read from the tenant's own branch filter
+    // and VERIFIED: 841 event cards whose venue reads Menands, against 805 unfiltered
+    // showing other branches (Berlin Free Town Library), and a bogus branch id returns
+    // an empty result. This reverses a 2026-09-07 call that rejected uhls as an
+    // unfilterable system host - it does filter, the parameter was simply not known then.
+    name: 'Menands Public Library',
+    url: 'https://uhls.librarycalendar.com/events/upcoming?branches[83]=83',
+    county: 'Albany',
+    state: 'NY',
+    website: 'https://www.menandslibrary.org',
+    city: 'Menands',
+    zipCode: '12204'
+  },
   { name: 'South Orangetown Libraries', url: 'https://southorangetownlibraries.librarycalendar.com/events/upcoming', county: 'Rockland', state: 'NY', website: 'https://tappanlibrary.org', city: 'Tappan', zipCode: '10983' },
   { name: 'Valley Cottage Library', url: 'https://valleycottage.librarycalendar.com/events/upcoming', county: 'Rockland', state: 'NY', website: 'https://www.valleycottagelibrary.org', city: 'Valley Cottage', zipCode: '10989' },
   { name: 'Voorheesville Public Library', url: 'https://voorheesville.librarycalendar.com/events/upcoming', county: 'Albany', state: 'NY', website: 'https://www.voorheesvillelibrary.org', city: 'Voorheesville', zipCode: '12186' },
@@ -514,7 +530,7 @@ const LIBRARY_SYSTEMS = [
     // LibraryCalendar-Libraries-uhls. If a second UHLS branch is ever added here the
     // two would collapse onto that one name and need a per-branch slug instead.
     name: 'Rensselaerville Public Library',
-    url: 'https://uhls.librarycalendar.com/events/month?branches[77]=88',
+    url: 'https://uhls.librarycalendar.com/events/upcoming?branches[88]=88',
     county: 'Albany',
     state: 'NY',
     website: 'https://www.rensselaervillelibrary.org',

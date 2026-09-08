@@ -14,6 +14,7 @@ const ngeohash = require('ngeohash');
  */
 
 const LIBRARIES = [
+  { name: 'Chelmsford Public Library', slug: 'chelmsfordlibrary', eventsUrl: 'https://chelmsfordlibrary.assabetinteractive.com/calendar/', city: 'Chelmsford', state: 'MA', zipCode: '01824' },
   // RELOCATED FROM WordPress-{state} 2026-09-07 (batch 2). Each library's own
   // page referenced this platform host, and the destination was then fetched and
   // judged on what IT says, not on name similarity: every entry below returned

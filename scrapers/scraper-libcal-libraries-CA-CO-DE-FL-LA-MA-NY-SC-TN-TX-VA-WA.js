@@ -1751,6 +1751,20 @@ const LIBRARY_SYSTEMS = [
 
   // PENNSYLVANIA
   {
+    // Relocated from WordPress-PA 2026-09-08. Found by following the library's own
+    // 'Events Calendar' link to events.erielibrary.org, an off-host LibCal instance no
+    // path guess would have reached. Identity from the page: 'LibCal - Erie County
+    // Public Library', ZIPs PA 16508/16504/16503, phone 814-451-6935 (814 = Erie PA).
+    // Single-tenant, so cid=-1 reads this system only.
+    name: 'Erie County Public Library',
+    url: 'https://events.erielibrary.org/calendar?cid=-1&t=d',
+    county: 'Erie County',
+    state: 'PA',
+    website: 'https://erielibrary.org',
+    city: 'Erie',
+    zipCode: '16507'
+  },
+  {
     // Relocated from WordPress-PA 2026-09-08. Found by following the library's OWN
     // site navigation to ccls.libcal.com, not by guessing a path. cid=13410 verified:
     // 168 event elements titled 'Honey Brook Library - LibCal - Chester County', and a
