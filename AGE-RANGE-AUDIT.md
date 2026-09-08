@@ -54480,3 +54480,1166 @@ Group 1 rotation, window **2026-09-07T07:00:01Z** onward. **9,237 rows** across 
 | Culpeper County Library | WordPress-VA | 15 | 21 | 71% |
 | Schlitz Audubon Nature Center | Gardens-Nature-Eastern | 18 | 20 | 90% |
 | Kennedy Space Center Visitor Complex | Venue-Events-ScienceArts | 20 | 20 | 100% |
+
+
+## 2026-09-08
+
+Group 2 rotation window, events scraped at/after **2026-09-08T07:00:01Z**: **7,462 rows across 1,074 individual sites and 218 scraper names**. Day 3 of the cycle that opened `## 2026-09-06`.
+
+**63 sites cross the ≥70% All-Ages / ≥20-event flag** after excluding the five known-legitimate broad-content sources. 56 already carry a settled verdict and are carried forward. **Seven are newly flagged**, and they split three ways:
+
+- **Five `Assabet-NH-MA` libraries** — Ridgewood, Chelmsford, Locust Valley, Kennebunk Free, Topsfield Town. They are newly flagged because Assabet gained 18 libraries on 2026-09-06 and Chelmsford on 09-07, not because anything regressed. Checked against their own stored titles: Ridgewood (112 All-Ages), Kennebunk (42) and Topsfield (24) carry **no age-targeted title at all** — adult and general programming (cybersecurity talks, Mahjongg, open mic, yoga nidra) — so the tagging is correct. Chelmsford's four apparent hits are false keyword matches: "Be**tween** the Sheets: A Romance Book Group" matches `tween` inside "Between".
+- **`Locust Valley Library` is a real, narrow detector gap** and is fixed today. Its "Babytime Featuring Drama with Your Mama!" sat in All Ages because the baby keyword rule carried a trailing `\b`, and there is no word boundary between "baby" and "time" — the same shape as the "PreK1" miss. Measured before writing code: **75 stored rows carry a closed compound of an age word**; 69 already resolve (via a numeric hint, a "lap sit", or the sibling `\btoddler` rule, which has no trailing anchor and so already matched "Toddlertime"); the remaining **6 are bare "Babytime" titles** across `Assabet-NH-MA`, `MacaroniKid-CT-hartford` and `wordpress-CT`. `detectAgeRange()` now accepts `baby(?:times?)?`. Regression suite 132 → 137 cases, all passing. **Not retroactive** — the 6 stored rows keep All Ages until re-scraped.
+  - Its "Inclusive Storytime for All Abilities" was checked too and is **not** a bug: with its description the detector returns `5+`, which normalises to All Ages correctly for an all-abilities programme spanning brackets.
+  - Separately, 5 rows spelled "Babytime … (birth-23 months)" / "BABYTIME: LAPSIT (6-17 months)" sit in **Kids (6-8)** — the damaging direction — but these are **stale pre-fix rows**, not a live defect: the current detector returns `0-23 months` and `6-17 months` for them and `normalizeAgeRange()` buckets both to Babies & Toddlers. They correct on their next MacaroniKid turn.
+- **`Simpleview-Tourism-Eastern ||| Buffalo, NY`** (39 events, 100%) is not a site at all — "Buffalo, NY" is the city-level venue fallback, so this row is a CVB feed's general tourism listing rather than a venue whose programming could be age-targeted.
+- **`RecDesk-Parks-westhartford ||| Fernridge Park Soccer Field 2`** (20 events, 100%) is a facility name, at the flag's minimum threshold.
+
+The rest of the flagged list is unchanged in character: `RecDesk-Parks-*` facility and `CivicRec-Parks-Eastern-*` department rows dominate it, as in every prior section.
+
+**`SugarCalendar-Libraries-warrenpl` appears for the first time** with a healthy spread — 156 All Ages / 69 Babies / 73 Preschool / 3 Kids / 0 Tweens / 28 Teens across 329 rows, 47% All Ages, well under the flag.
+
+| Site | Scraper | All Ages | Babies 0-2 | Preschool 3-5 | Kids 6-8 | Tweens 9-12 | Teens 13-18 | Total | Link |
+|---|---|---|---|---|---|---|---|---|---|
+| Wills Park Recreation Center Gymnasium | ActiveNet-Parks-Eastern-alpharetta | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://apm.activecommunities.com/alpharetta/Activity_Search/aussie-kids-golf---beginner/69901?locale=en-US) |
+| Alpharetta Arts Center, 238 Canton St, Alpharetta, GA 30009 | ActiveNet-Parks-Eastern-alpharetta | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/alpharetta/Activity_Search/adaptive-physio-jazz-with-sideways-dance-company/70194?locale=en-US) |
+| Halle Cultural Arts Center | ActiveNet-Parks-Eastern-apexparksrecculres | 13 | 0 | 0 | 0 | 0 | 6 | 19 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/act-sing/21194?locale=en-US) |
+| The Halle Cultural Arts Center | ActiveNet-Parks-Eastern-apexparksrecculres | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/beginner-line-dancing---adults/21303?locale=en-US) |
+| Apex Senior Center | ActiveNet-Parks-Eastern-apexparksrecculres | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/art-with-molly-odum---color-theory-in-watercolors/21378?locale=en-US) |
+| Apex Senior Center Salem, Saunders, Seaboard | ActiveNet-Parks-Eastern-apexparksrecculres | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/family-bingo-night/21843?locale=en-US) |
+| John M. Brown Community Center - Gym #2 | ActiveNet-Parks-Eastern-apexparksrecculres | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/adult-intermediate-pickleball/21853?locale=en-US) |
+| Apex Senior Center Hunter & Hughes Room | ActiveNet-Parks-Eastern-apexparksrecculres | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/aerial-silks-for-all-shapes-and-sizes/21888?locale=en-US) |
+| Apex, NC | ActiveNet-Parks-Eastern-apexparksrecculres | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/a-taste-of-the-big-easy-new-orleans-adventure/21127?locale=en-US) |
+| Summit Room | ActiveNet-Parks-Eastern-apexparksrecculres | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/festive-felt-ornaments/21837?locale=en-US) |
+| Apex Senior Center - Salem/Saunders | ActiveNet-Parks-Eastern-apexparksrecculres | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/film-history-the-making-legacy-of-gone-with-the-wind/21609?locale=en-US) |
+| Apex Salem, Saunders, Seaboard and Kitchen | ActiveNet-Parks-Eastern-apexparksrecculres | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/pjs-and-popcorn-movie-night/21943?locale=en-US) |
+| Apex Senior Center- Chatham | ActiveNet-Parks-Eastern-apexparksrecculres | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/cybersecurity-awareness-training/21612?locale=en-US) |
+| Kitchen | ActiveNet-Parks-Eastern-apexparksrecculres | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/oatmeal-cream-pies-with-crumb-cream/21823?locale=en-US) |
+| Apex Police Station Training Room (205 Saunders Street) | ActiveNet-Parks-Eastern-apexparksrecculres | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/pizza-with-the-police/21847?locale=en-US) |
+| JMBCC Gym 2 | ActiveNet-Parks-Eastern-apexparksrecculres | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/journey-league---specialized-recreation/21259?locale=en-US) |
+| Apex Senior Center Hunter / Hughes | ActiveNet-Parks-Eastern-apexparksrecculres | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/ballroom-dance-lessons/21634?locale=en-US) |
+| Apex Senior Center, Seaboard Room | ActiveNet-Parks-Eastern-apexparksrecculres | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/learning-lunch---hispanic-heritage-month/21470?locale=en-US) |
+| John M. Brown Community Center: Arts and Crafts Room | ActiveNet-Parks-Eastern-apexparksrecculres | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/edible-science-workshop/21822?locale=en-US) |
+| Pleasant Park | ActiveNet-Parks-Eastern-apexparksrecculres | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/adult-fall-soccer-30-league/20942?locale=en-US) |
+| Fire Station 3 (736 Hunter St) | ActiveNet-Parks-Eastern-apexparksrecculres | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/safe-at-home-family-fire-safety-workshop/21846?locale=en-US) |
+| Apex Senior Center - Salem, Saunders and Seaboard Rooms | ActiveNet-Parks-Eastern-apexparksrecculres | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/breakfast-with-santa-registration-required/21850?locale=en-US) |
+| Hunter/Hughes Rooms - Apex Senior Center | ActiveNet-Parks-Eastern-apexparksrecculres | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/sound-bath-session---specialized-recreation/21466?locale=en-US) |
+| Jaycee Cricket Pitch | ActiveNet-Parks-Eastern-apexparksrecculres | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/apexparksrecculres/Activity_Search/abilities-cricket---specialized-recreation/21234?locale=en-US) |
+| Carmel Clay Parks & Recreation | ActiveNet-Parks-Eastern-carmelclayparks | 24 | 0 | 3 | 0 | 0 | 0 | 27 | [cal](https://anc.apm.activecommunities.com/carmelclayparks/activity/search?onlineSiteId=0&locale=en-US&activity_select_param=2&viewMode=list) |
+| Monon Cmty Ctr West Building | ActiveNet-Parks-Eastern-carmelclayparks | 6 | 3 | 0 | 0 | 0 | 1 | 10 | [cal](https://apm.activecommunities.com/carmelclayparks/Activity_Search/adaptive-mellow-meetup/29829?locale=en-US) |
+| Monon Cmty Ctr East Building | ActiveNet-Parks-Eastern-carmelclayparks | 1 | 0 | 0 | 4 | 1 | 1 | 7 | [cal](https://apm.activecommunities.com/carmelclayparks/Activity_Search/adaptive-absolutely-abstract/29965?locale=en-US) |
+| The Skatepark at Central Park | ActiveNet-Parks-Eastern-carmelclayparks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://apm.activecommunities.com/carmelclayparks/Activity_Search/skateboarding-ii/29500?locale=en-US) |
+| FLOWING WELL PARK | ActiveNet-Parks-Eastern-carmelclayparks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://apm.activecommunities.com/carmelclayparks/Activity_Search/family-creek-stomp/29898?locale=en-US) |
+| Central Park Trails | ActiveNet-Parks-Eastern-carmelclayparks | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://apm.activecommunities.com/carmelclayparks/Activity_Search/adaptive-outdoor-fall-explorers/29827?locale=en-US) |
+| Flowing Well Park | ActiveNet-Parks-Eastern-carmelclayparks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://apm.activecommunities.com/carmelclayparks/Activity_Search/family-creek-stomp/29898?locale=en-US) |
+| Carmel, IN | ActiveNet-Parks-Eastern-carmelclayparks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/carmelclayparks/Activity_Search/explore-your-parks-series/29903?locale=en-US) |
+| Indoor Lap Pool | ActiveNet-Parks-Eastern-carmelclayparks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/carmelclayparks/Activity_Search/sea-dragons-swim-team/29530?locale=en-US) |
+| Central Park | ActiveNet-Parks-Eastern-carmelclayparks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/carmelclayparks/Activity_Search/free-fishing-day/29899?locale=en-US) |
+| Carey Grove Park | ActiveNet-Parks-Eastern-carmelclayparks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/carmelclayparks/Activity_Search/indiana-native-tree-walk/29916?locale=en-US) |
+| River Heritage Park | ActiveNet-Parks-Eastern-carmelclayparks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/carmelclayparks/Activity_Search/sensory-friendly-trick-or-treat-trail/29744?locale=en-US) |
+| East Grove at Central Park | ActiveNet-Parks-Eastern-carmelclayparks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/carmelclayparks/Activity_Search/creatures-of-the-night/29921?locale=en-US) |
+| Dodge Park | ActiveNet-Parks-Eastern-columbusrecparks1 | 4 | 0 | 0 | 1 | 0 | 0 | 5 | [cal](https://apm.activecommunities.com/columbusrecparks1/Activity_Search/17u-boxing/6371?locale=en-US) |
+| Thompson Park | ActiveNet-Parks-Eastern-columbusrecparks1 | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://apm.activecommunities.com/columbusrecparks1/Activity_Search/adaptive-aquatics-fitness---fall-1/5372?locale=en-US) |
+| Whetstone Park | ActiveNet-Parks-Eastern-columbusrecparks1 | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://apm.activecommunities.com/columbusrecparks1/Activity_Search/50-strength/6691?locale=en-US) |
+| Lazelle Woods Park | ActiveNet-Parks-Eastern-columbusrecparks1 | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/columbusrecparks1/Activity_Search/12u-basketball-skills-drills/7677?locale=en-US) |
+| Big Walnut Park | ActiveNet-Parks-Eastern-columbusrecparks1 | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/columbusrecparks1/Activity_Search/adult-beginner-golf/7036?locale=en-US) |
+| Burrello Family Center / Fitness Room / 2345 Pagoda Dr | ActiveNet-Parks-Eastern-indyparks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/indyparks/Activity_Search/fitness-community-yoga-garfield-bfc/33686?locale=en-US) |
+| 700 West C Street; Kannapolis, NC 28081 | ActiveNet-Parks-Eastern-kannapolisnc | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://apm.activecommunities.com/kannapolisnc/Activity_Search/artist-trading-cards-workshop/5139?locale=en-US) |
+| All bus trips leave from Village Park unless otherwise noted. | ActiveNet-Parks-Eastern-kannapolisnc | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://apm.activecommunities.com/kannapolisnc/Activity_Search/day-trips-christmas-brunch-at-linbrook-heritage-estate/5128?locale=en-US) |
+| The Swanee Theater: 200 West Ave. | ActiveNet-Parks-Eastern-kannapolisnc | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://apm.activecommunities.com/kannapolisnc/Activity_Search/grandparents-day-brunch/5138?locale=en-US) |
+| Kannapolis City Hall: 401 Laureate Way Kannapolis, NC 28081 | ActiveNet-Parks-Eastern-kannapolisnc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/kannapolisnc/Activity_Search/interactive-mystery-theater---death-is-a-cabernet-ol-chum/5127?locale=en-US) |
+| Downtown Kannapolis | ActiveNet-Parks-Eastern-kannapolisnc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/kannapolisnc/Activity_Search/intermediate-shag-lessons-september-2026/5103?locale=en-US) |
+| Arbor Glen Outreach Ctr | ActiveNet-Parks-Eastern-mecklenburgparks | 3 | 0 | 0 | 0 | 2 | 2 | 7 | [cal](https://apm.activecommunities.com/mecklenburgparks/Activity_Search/agoc-study-time-highschool/181359?locale=en-US) |
+| Naperville Park District | ActiveNet-Parks-Eastern-napervilleparks | 64 | 1 | 1 | 5 | 0 | 0 | 71 | [cal](https://anc.apm.activecommunities.com/napervilleparks/activity/search?onlineSiteId=0&locale=en-US&activity_select_param=2&viewMode=list) |
+| Alfred Rubin Riverwalk Cmty Ctr | ActiveNet-Parks-Eastern-napervilleparks | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [cal](https://apm.activecommunities.com/napervilleparks/Activity_Search/aarp-smart-driver-course/114121?locale=en-US) |
+| 95th Street Ctr | ActiveNet-Parks-Eastern-napervilleparks | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://apm.activecommunities.com/napervilleparks/Activity_Search/ballet-level-4-5-pointe/115077?locale=en-US) |
+| Fort Hill Activity Ctr | ActiveNet-Parks-Eastern-napervilleparks | 2 | 0 | 0 | 3 | 0 | 0 | 5 | [cal](https://apm.activecommunities.com/napervilleparks/Activity_Search/ballet-level-1/114928?locale=en-US) |
+| Naperville Central High School | ActiveNet-Parks-Eastern-napervilleparks | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://apm.activecommunities.com/napervilleparks/Activity_Search/ballet-level-4/115527?locale=en-US) |
+| Knoch Knolls Nature Ctr | ActiveNet-Parks-Eastern-napervilleparks | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://apm.activecommunities.com/napervilleparks/Activity_Search/family-hike-with-a-naturalist/114198?locale=en-US) |
+| Cowlishaw School | ActiveNet-Parks-Eastern-napervilleparks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://apm.activecommunities.com/napervilleparks/Activity_Search/flags-steperette-cadets/114380?locale=en-US) |
+| Riverwalk | ActiveNet-Parks-Eastern-napervilleparks | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/napervilleparks/Activity_Search/a-christmas-carol/115909?locale=en-US) |
+| NOVA Parks (Northern Virginia Regional Park Authority) | ActiveNet-Parks-Eastern-novaparks | 23 | 0 | 0 | 0 | 0 | 0 | 23 | [cal](https://anc.apm.activecommunities.com/novaparks/activity/search?onlineSiteId=0&locale=en-US&activity_select_param=2&viewMode=list) |
+| BRSC Learn the Game Safety Class 5:00 PM | ActiveNet-Parks-Eastern-novaparks | 0 | 0 | 0 | 0 | 14 | 0 | 14 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/learn-the-game-class-september-11-2026/10134?locale=en-US) |
+| Potomac Overlook Regional Park: 2845 N. Marcey Road, Arlington, VA 22207 | ActiveNet-Parks-Eastern-novaparks | 0 | 0 | 1 | 5 | 1 | 0 | 7 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/potomac-overlook---bird-bonanza-10-3-26/10362?locale=en-US) |
+| Catherine's Lodge | ActiveNet-Parks-Eastern-novaparks | 3 | 0 | 0 | 1 | 1 | 0 | 5 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/winkler-preserve-first-aid-merit-badge-9-19-26/10343?locale=en-US) |
+| ***Meet at boat rentals*** | ActiveNet-Parks-Eastern-novaparks | 0 | 0 | 0 | 0 | 1 | 2 | 3 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/pohick-bay-sunset-kayak-paddle--9-11-26/10330?locale=en-US) |
+| Meadowlark Botanical Gardens, 9750 Meadowlark Gardens Court, Vienna, VA | ActiveNet-Parks-Eastern-novaparks | 0 | 0 | 2 | 0 | 0 | 1 | 3 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/autumn-equinox-nature-therapy-sound-experiences-9-19-26/10376?locale=en-US) |
+| Fairfax, VA | ActiveNet-Parks-Eastern-novaparks | 0 | 0 | 0 | 1 | 1 | 0 | 2 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/mothtober-fest-9-18-26/10215?locale=en-US) |
+| ***Broad Run Pavilion*** | ActiveNet-Parks-Eastern-novaparks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/reservoir---pond-prowlers-sampling-event---9-19-2026/10122?locale=en-US) |
+| ***Meet at visitor center entrance*** | ActiveNet-Parks-Eastern-novaparks | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/meadowlark--wandering-warblers-9-21-26/10216?locale=en-US) |
+| 9750 Meadowlark Gardens Court, Vienna, VA | ActiveNet-Parks-Eastern-novaparks | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/preschool-nature-nuts---halloween-fun-10-23-25/10384?locale=en-US) |
+| *Meet at Algonkian Regional Park Boat Ramp area* | ActiveNet-Parks-Eastern-novaparks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/algonkian---sunset-kayak-paddle-9-23-26/10379?locale=en-US) |
+| ***Meet at Nature Center*** | ActiveNet-Parks-Eastern-novaparks | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/potomac-overlook-wandering-warblers---9-13-26/10378?locale=en-US) |
+| Meadowlark Botanical Gardens Visitor Center | ActiveNet-Parks-Eastern-novaparks | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/preschool-nature-nuts---crazy-about-koi-fish-09-10-26/10357?locale=en-US) |
+| Occoquan Regional Park, meet at boat rental location by boat launch. | ActiveNet-Parks-Eastern-novaparks | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/occoquan-sunrise-birding-kayak-paddle--9-20-26/10377?locale=en-US) |
+| Museum Gift Shop | ActiveNet-Parks-Eastern-novaparks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/1920s-party-american-girl-celebration/10374?locale=en-US) |
+| Please check in at the Visitor Center | ActiveNet-Parks-Eastern-novaparks | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/preschool-nature-nuts---butterflies-flutter-by-09-24-26/10386?locale=en-US) |
+| Bluebell Trail, Meet at the atlantis waterpark parking lot | ActiveNet-Parks-Eastern-novaparks | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/haunted-hike/10380?locale=en-US) |
+| This program begins at the Visitor Center. | ActiveNet-Parks-Eastern-novaparks | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/novaparks/Activity_Search/preschool-nature-nuts---all-about-autumn-11-12-26/10387?locale=en-US) |
+| St. Petersburg Parks & Recreation | ActiveNet-Parks-Eastern-stpete | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://anc.apm.activecommunities.com/stpete/activity/search?onlineSiteId=0&locale=en-US&activity_select_param=2&viewMode=list) |
+| Raleigh, NC | ActiveNet-Parks-Eastern-wakeparks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/wakeparks/Activity_Search/ecoexplore-virtual-spider-eyes/9192?locale=en-US) |
+| Academy Park Outdoor Pickleball Courts | ActiveNet-Parks-Eastern-wcpr | 3 | 0 | 0 | 0 | 0 | 10 | 13 | [cal](https://apm.activecommunities.com/wcpr/Activity_Search/ap-pb-shots-footwork-to-nvz-mon-9-14-6pm-7pm-smith/50414?locale=en-US) |
+| Nolensville Rec Cplx | ActiveNet-Parks-Eastern-wcpr | 0 | 0 | 0 | 11 | 0 | 1 | 12 | [cal](https://apm.activecommunities.com/wcpr/Activity_Search/after-school-kids-crochet-club---november---thurs---nv/49581?locale=en-US) |
+| Franklin Rec Cplx | ActiveNet-Parks-Eastern-wcpr | 2 | 0 | 0 | 4 | 1 | 4 | 11 | [cal](https://apm.activecommunities.com/wcpr/Activity_Search/2026-fall-outdoor-frc-monday-pm-women-s-doubles-mixer/49382?locale=en-US) |
+| Franklin, TN | ActiveNet-Parks-Eastern-wcpr | 8 | 0 | 0 | 0 | 2 | 0 | 10 | [cal](https://apm.activecommunities.com/wcpr/Activity_Search/2026-fall-nalta-team-fee/49787?locale=en-US) |
+| Longview Rec Ctr | ActiveNet-Parks-Eastern-wcpr | 2 | 0 | 0 | 3 | 1 | 2 | 8 | [cal](https://apm.activecommunities.com/wcpr/Activity_Search/bark-n-splash-bash-2026---longview/49498?locale=en-US) |
+| Peacock Hill Park | ActiveNet-Parks-Eastern-wcpr | 5 | 0 | 0 | 0 | 1 | 0 | 6 | [cal](https://apm.activecommunities.com/wcpr/Activity_Search/a-taste-of-history-fire-baked-apples/49324?locale=en-US) |
+| Outdoor Courts at Academy Park | ActiveNet-Parks-Eastern-wcpr | 4 | 0 | 0 | 0 | 0 | 1 | 5 | [cal](https://apm.activecommunities.com/wcpr/Activity_Search/ap-pb-better-backhands-mon-9-28-9am-10am-smith/50422?locale=en-US) |
+| Williamson County Parks & Recreation | ActiveNet-Parks-Eastern-wcpr | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://anc.apm.activecommunities.com/wcpr/activity/search?onlineSiteId=0&locale=en-US&activity_select_param=2&viewMode=list) |
+| Academy Park Outdoor Courts | ActiveNet-Parks-Eastern-wcpr | 0 | 0 | 0 | 0 | 0 | 3 | 3 | [cal](https://apm.activecommunities.com/wcpr/Activity_Search/ap-pickleball-hot-hands-thur-10-1-9am-10am-smith/50448?locale=en-US) |
+| Brentwood Indoor Sports Complex | ActiveNet-Parks-Eastern-wcpr | 0 | 0 | 0 | 0 | 3 | 0 | 3 | [cal](https://apm.activecommunities.com/wcpr/Activity_Search/cpr-aed-first-aid-adult-pediatric/49636?locale=en-US) |
+| Pool | ActiveNet-Parks-Eastern-wcpr | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://apm.activecommunities.com/wcpr/Activity_Search/american-red-cross-lifeguard-training/49620?locale=en-US) |
+| Timberland Park | ActiveNet-Parks-Eastern-wcpr | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://apm.activecommunities.com/wcpr/Activity_Search/all-about-owls/49523?locale=en-US) |
+| Outdoor Pickleball Courts at Academy Park | ActiveNet-Parks-Eastern-wcpr | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://apm.activecommunities.com/wcpr/Activity_Search/ap-pickleball-aim-your-shots-thur-9-10-9am-10am-smith/50403?locale=en-US) |
+| Indoor Arena at Crockett Park | ActiveNet-Parks-Eastern-wcpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/wcpr/Activity_Search/better-golf-academy-fall-2026-clinic/50613?locale=en-US) |
+| Academy Park Outdoor Pickelball Courts | ActiveNet-Parks-Eastern-wcpr | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://apm.activecommunities.com/wcpr/Activity_Search/ap-pickleball-interm-round-robin-tue-9-29-9am-11am/50443?locale=en-US) |
+| Fairview Rec Cplx | ActiveNet-Parks-Eastern-wcpr | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://apm.activecommunities.com/wcpr/Activity_Search/card-making-and-paper-play---september-10---fv/49567?locale=en-US) |
+| Ridgewood Public Library | Assabet-NH-MA | 112 | 15 | 3 | 10 | 4 | 12 | 156 | — |
+| Chelmsford Public Library | Assabet-NH-MA | 116 | 6 | 8 | 16 | 3 | 3 | 152 | — |
+| Baldwin Public Library | Assabet-NH-MA | 100 | 16 | 10 | 7 | 8 | 9 | 150 | — |
+| Locust Valley Library | Assabet-NH-MA | 77 | 6 | 9 | 1 | 1 | 5 | 99 | — |
+| Seaford Public Library | Assabet-NH-MA | 38 | 4 | 2 | 1 | 4 | 6 | 55 | — |
+| Kennebunk Free Library | Assabet-NH-MA | 42 | 3 | 0 | 6 | 3 | 0 | 54 | — |
+| Boonton Holmes Public Library | Assabet-NH-MA | 31 | 11 | 2 | 4 | 3 | 0 | 51 | — |
+| Billerica Public Library | Assabet-NH-MA | 19 | 6 | 2 | 2 | 1 | 0 | 30 | — |
+| Merrimac Public Library | Assabet-NH-MA | 14 | 8 | 3 | 2 | 2 | 0 | 29 | — |
+| Topsfield Town Library | Assabet-NH-MA | 24 | 0 | 0 | 0 | 0 | 2 | 26 | — |
+| Weymouth Public Libraries | Assabet-NH-MA | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Billerica, MA | Assabet-NH-MA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Chelmsford, MA | Assabet-NH-MA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Merrimac, MA | Assabet-NH-MA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Haverhill Public Library | Assabet-NH-MA | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Rowley Public Library | Assabet-NH-MA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hanson Public Library | Assabet-NH-MA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Needham Free Public Library | Assabet-NH-MA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| East Point Branch | BiblioCommons-GA-fulcolibrary | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://fulcolibrary.bibliocommons.com/v2/events) |
+| Erlanger Branch | BiblioCommons-KY-kentonlibrary | 0 | 2 | 0 | 0 | 0 | 1 | 3 | [cal](https://kentonlibrary.bibliocommons.com/v2/events) |
+| Independence Branch | BiblioCommons-KY-kentonlibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kentonlibrary.bibliocommons.com/v2/events) |
+| Covington Branch | BiblioCommons-KY-kentonlibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://kentonlibrary.bibliocommons.com/v2/events) |
+| Latonia Branch | BiblioCommons-KY-kentonlibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://kentonlibrary.bibliocommons.com/v2/events) |
+| Ardsley Park | CivicRec-Parks-Eastern-abington-township-pa | 0 | 3 | 3 | 2 | 2 | 0 | 10 | — |
+| Alverthorpe Park | CivicRec-Parks-Eastern-abington-township-pa | 5 | 0 | 2 | 2 | 0 | 0 | 9 | — |
+| Ardsley Community Center | CivicRec-Parks-Eastern-abington-township-pa | 1 | 0 | 1 | 1 | 0 | 0 | 3 | — |
+| Abington, PA | CivicRec-Parks-Eastern-abington-township-pa | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Alverthorpe Manor | CivicRec-Parks-Eastern-abington-township-pa | 1 | 0 | 1 | 1 | 0 | 0 | 3 | — |
+| Crestmont Clubhouse | CivicRec-Parks-Eastern-abington-township-pa | 1 | 0 | 0 | 2 | 0 | 0 | 3 | — |
+| Create Me Pottery Studio | CivicRec-Parks-Eastern-abington-township-pa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Penbryn Park | CivicRec-Parks-Eastern-abington-township-pa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Roychester Park | CivicRec-Parks-Eastern-abington-township-pa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Roslyn Park | CivicRec-Parks-Eastern-abington-township-pa | 1 | 0 | 0 | 1 | 0 | 0 | 2 | — |
+| Pip Moyer Recreation Center | CivicRec-Parks-Eastern-annapolis-md | 6 | 0 | 0 | 0 | 0 | 0 | 6 | — |
+| Athens, AL | CivicRec-Parks-Eastern-athens-al | 1 | 0 | 0 | 0 | 1 | 0 | 2 | — |
+| Athens Recreation Center | CivicRec-Parks-Eastern-athens-al | 0 | 0 | 1 | 0 | 1 | 0 | 2 | — |
+| Cahill Fitness & Wellness Center | CivicRec-Parks-Eastern-baltimore-md | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Beach | CivicRec-Parks-Eastern-barrington-ri | 10 | 0 | 0 | 0 | 0 | 0 | 10 | — |
+| Barrington Park & Ride | CivicRec-Parks-Eastern-barrington-ri | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Peck Center | CivicRec-Parks-Eastern-barrington-ri | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Town Hall | CivicRec-Parks-Eastern-barrington-ri | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Barrington, RI | CivicRec-Parks-Eastern-barrington-ri | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Beckley, WV | CivicRec-Parks-Eastern-beckley-wv | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bluefield, WV | CivicRec-Parks-Eastern-bluefield-wv | 6 | 0 | 0 | 0 | 3 | 3 | 12 | — |
+| Fitness and Recreation Center | CivicRec-Parks-Eastern-bluefield-wv | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Boyd Convention & Arts Center | CivicRec-Parks-Eastern-boyd-county-ky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Briarcliff Todd School | CivicRec-Parks-Eastern-briarcliff-manor-ny | 9 | 0 | 0 | 0 | 0 | 0 | 9 | — |
+| Brooksville, FL | CivicRec-Parks-Eastern-brooksville-fl | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Jerome Brown Community Center | CivicRec-Parks-Eastern-brooksville-fl | 0 | 0 | 1 | 0 | 1 | 0 | 2 | — |
+| Tom Varn Park | CivicRec-Parks-Eastern-brooksville-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hernando Park | CivicRec-Parks-Eastern-brooksville-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Broome County Parks & Recreation | CivicRec-Parks-Eastern-broome-county-ny | 23 | 0 | 0 | 0 | 0 | 0 | 23 | — |
+| Brunswick, ME | CivicRec-Parks-Eastern-brunswick-me | 6 | 0 | 0 | 0 | 0 | 0 | 6 | — |
+| Doylestown, PA | CivicRec-Parks-Eastern-bucks-county-pa-parks-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Burlington, NC | CivicRec-Parks-Eastern-burlington-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mount Pleasant Library and Active Living Center | CivicRec-Parks-Eastern-cabarrus-county | 10 | 0 | 0 | 0 | 0 | 0 | 10 | — |
+| AFTON LIBRARY AND ACTIVE LIVING CENTER | CivicRec-Parks-Eastern-cabarrus-county | 10 | 0 | 0 | 0 | 0 | 0 | 10 | — |
+| Concord Active Living Center | CivicRec-Parks-Eastern-cabarrus-county | 8 | 0 | 0 | 0 | 0 | 0 | 8 | — |
+| Cabarrus Arena & Events Center | CivicRec-Parks-Eastern-cabarrus-county | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Parks Department | CivicRec-Parks-Eastern-camden-county-nj | 1 | 5 | 0 | 4 | 0 | 0 | 10 | — |
+| Danville, VA | CivicRec-Parks-Eastern-city-of-danville-va | 24 | 0 | 0 | 4 | 4 | 1 | 33 | — |
+| Coates Recreation Center | CivicRec-Parks-Eastern-city-of-danville-va | 0 | 0 | 2 | 0 | 0 | 0 | 2 | — |
+| City of Gastonia Parks & Recreation | CivicRec-Parks-Eastern-city-of-gastonia | 13 | 0 | 0 | 0 | 0 | 0 | 13 | — |
+| F. Scott Fitzgerald Theatre & Social Hall | CivicRec-Parks-Eastern-city-of-rockville-md | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Glenview Mansion | CivicRec-Parks-Eastern-city-of-rockville-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Twinbrook CRC | CivicRec-Parks-Eastern-city-of-rockville-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Elwood Smith Park | CivicRec-Parks-Eastern-city-of-rockville-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lincoln Park CC | CivicRec-Parks-Eastern-city-of-rockville-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Thomas Farm CC | CivicRec-Parks-Eastern-city-of-rockville-md | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Lawrence Gregory Community Center | CivicRec-Parks-Eastern-city-tallahassee-fl | 0 | 0 | 5 | 0 | 0 | 0 | 5 | — |
+| Jake Gaither Community Center | CivicRec-Parks-Eastern-city-tallahassee-fl | 0 | 0 | 5 | 0 | 0 | 0 | 5 | — |
+| Jack McLean Center | CivicRec-Parks-Eastern-city-tallahassee-fl | 0 | 0 | 5 | 0 | 0 | 0 | 5 | — |
+| Walker Ford | CivicRec-Parks-Eastern-city-tallahassee-fl | 0 | 0 | 5 | 0 | 0 | 0 | 5 | — |
+| LeVerne Payne Community Center | CivicRec-Parks-Eastern-city-tallahassee-fl | 0 | 0 | 5 | 0 | 0 | 0 | 5 | — |
+| Tallahassee, FL | CivicRec-Parks-Eastern-city-tallahassee-fl | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Wade Wehunt Pool | CivicRec-Parks-Eastern-city-tallahassee-fl | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Clarksville, TN | CivicRec-Parks-Eastern-clarksville-tn | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Michael Zone NRRC | CivicRec-Parks-Eastern-cleveland-oh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Gunning NRRC | CivicRec-Parks-Eastern-cleveland-oh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cleveland, OH | CivicRec-Parks-Eastern-cleveland-oh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Alexander Hamilton NRRC | CivicRec-Parks-Eastern-cleveland-oh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Sterling NRRC | CivicRec-Parks-Eastern-cleveland-oh | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Colchester Recreation Center | CivicRec-Parks-Eastern-colchester-vt | 11 | 0 | 5 | 1 | 0 | 0 | 17 | — |
+| Studio 3 Dance & Fitness | CivicRec-Parks-Eastern-colchester-vt | 0 | 0 | 1 | 2 | 0 | 0 | 3 | — |
+| Colchester, VT | CivicRec-Parks-Eastern-colchester-vt | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Malletts Bay School | CivicRec-Parks-Eastern-colchester-vt | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| City of Columbia Parks & Recreation | CivicRec-Parks-Eastern-columbia-tn | 13 | 0 | 0 | 0 | 0 | 0 | 13 | — |
+| Commerce Parks & Recreation | CivicRec-Parks-Eastern-commerce-ga | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| City of Concord Parks & Recreation | CivicRec-Parks-Eastern-concord-nc | 48 | 0 | 0 | 0 | 0 | 0 | 48 | — |
+| Robbins Park | CivicRec-Parks-Eastern-cornelius-parks-and-recreation | 5 | 0 | 0 | 1 | 1 | 0 | 7 | — |
+| Cornelius Town Hall | CivicRec-Parks-Eastern-cornelius-parks-and-recreation | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| James Hoyt Wilhelm Park | CivicRec-Parks-Eastern-cornelius-parks-and-recreation | 0 | 0 | 1 | 0 | 1 | 0 | 2 | — |
+| Cain Center for the Arts | CivicRec-Parks-Eastern-cornelius-parks-and-recreation | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| JV Washam Recreation Center | CivicRec-Parks-Eastern-cornelius-parks-and-recreation | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Coventry, CT | CivicRec-Parks-Eastern-coventry-ct | 16 | 0 | 0 | 0 | 0 | 0 | 16 | — |
+| Patriots Park | CivicRec-Parks-Eastern-coventry-ct | 6 | 0 | 0 | 0 | 0 | 0 | 6 | — |
+| Coventry Grammar School | CivicRec-Parks-Eastern-coventry-ct | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| G.H. ROBERTSON SCHOOL | CivicRec-Parks-Eastern-coventry-ct | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Coventry High School | CivicRec-Parks-Eastern-coventry-ct | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Mill Brook Place | CivicRec-Parks-Eastern-coventry-ct | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Danville, KY | CivicRec-Parks-Eastern-danvilleboyle-county-parks-recreation-department | 15 | 0 | 0 | 2 | 1 | 0 | 18 | — |
+| Jennie Rogers Community Center | CivicRec-Parks-Eastern-danvilleboyle-county-parks-recreation-department | 5 | 0 | 0 | 1 | 0 | 0 | 6 | — |
+| Daviess County Parks & Recreation | CivicRec-Parks-Eastern-daviess-county-ky | 23 | 0 | 0 | 0 | 0 | 0 | 23 | — |
+| Dawsonville, GA | CivicRec-Parks-Eastern-dawson-county-recreation | 6 | 0 | 0 | 0 | 0 | 0 | 6 | — |
+| Rock Creek Park | CivicRec-Parks-Eastern-dawson-county-recreation | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Daytona Beach, FL | CivicRec-Parks-Eastern-daytona-beach-leisure-services | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Westgate Park | CivicRec-Parks-Eastern-dothan-al | 0 | 0 | 1 | 2 | 0 | 0 | 3 | — |
+| Walton Park | CivicRec-Parks-Eastern-dothan-al | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Wiregrass Park | CivicRec-Parks-Eastern-dothan-al | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Fayetteville, GA | CivicRec-Parks-Eastern-fayette-county-ga | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Kiwanis Park | CivicRec-Parks-Eastern-fayette-county-ga | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Nickel Plate District Amphitheater | CivicRec-Parks-Eastern-fishers-in | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Flagler County Parks & Recreation | CivicRec-Parks-Eastern-flagler-county | 49 | 0 | 0 | 0 | 0 | 0 | 49 | — |
+| Forsyth County Parks & Recreation | CivicRec-Parks-Eastern-forsyth-county-ga | 20 | 0 | 0 | 0 | 0 | 0 | 20 | — |
+| Fort Mill, SC | CivicRec-Parks-Eastern-fort-mill-sc | 5 | 0 | 1 | 11 | 7 | 1 | 25 | — |
+| Fort Mill YMCA Complex | CivicRec-Parks-Eastern-fort-mill-sc | 3 | 0 | 0 | 0 | 11 | 2 | 16 | — |
+| Winchester, VA | CivicRec-Parks-Eastern-frederick-county-va | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Gwinnett Historic Courthouse | CivicRec-Parks-Eastern-gwinnett-county-parks-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Collins Hill Park Aquatic Center | CivicRec-Parks-Eastern-gwinnett-county-parks-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Therapeutic Recreation Center | CivicRec-Parks-Eastern-hampton-va | 1 | 0 | 0 | 10 | 0 | 0 | 11 | — |
+| Montpelier Recreation Center and Library | CivicRec-Parks-Eastern-hanover-county-va | 0 | 0 | 0 | 4 | 0 | 0 | 4 | — |
+| Hanover, NH | CivicRec-Parks-Eastern-hanover-nh | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Anita C. Leight Estuary Center | CivicRec-Parks-Eastern-harford-county-md | 0 | 0 | 0 | 0 | 0 | 10 | 10 | — |
+| Recreation Division Office | CivicRec-Parks-Eastern-harford-county-md | 7 | 0 | 0 | 0 | 0 | 0 | 7 | — |
+| Eden Mill Nature Center | CivicRec-Parks-Eastern-harford-county-md | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Edgewood Recreation & Community Center | CivicRec-Parks-Eastern-harford-county-md | 2 | 0 | 0 | 1 | 0 | 0 | 3 | — |
+| Churchville Recreation Center | CivicRec-Parks-Eastern-harford-county-md | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Friends Community Park | CivicRec-Parks-Eastern-harford-county-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Norrisville Library & Recreation Center | CivicRec-Parks-Eastern-harford-county-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Veronica 'Roni' Chenowith Activity Center | CivicRec-Parks-Eastern-harford-county-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mariner Point Park | CivicRec-Parks-Eastern-harford-county-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hartford, CT | CivicRec-Parks-Eastern-hartford-sports-recreation-ct | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hartland Community Center | CivicRec-Parks-Eastern-hartland-wi | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Conway, SC | CivicRec-Parks-Eastern-horry-county-sc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Flemington, NJ | CivicRec-Parks-Eastern-hunterdon-county-nj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Veterans Park | CivicRec-Parks-Eastern-huntersville-nc- | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Huntersville Athletic Park | CivicRec-Parks-Eastern-huntersville-nc- | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Huntsville, AL | CivicRec-Parks-Eastern-huntsville-al | 12 | 0 | 0 | 0 | 0 | 0 | 12 | — |
+| Johnson Legacy Center | CivicRec-Parks-Eastern-huntsville-al | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Optimist Recreation Center & Field | CivicRec-Parks-Eastern-huntsville-al | 2 | 0 | 0 | 0 | 1 | 0 | 3 | — |
+| Dr. Richard Showers Recreation Center | CivicRec-Parks-Eastern-huntsville-al | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Dr. Robert Shurney Legacy Center | CivicRec-Parks-Eastern-huntsville-al | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cavalry Hill Community Center | CivicRec-Parks-Eastern-huntsville-al | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Max Luther Community Center | CivicRec-Parks-Eastern-huntsville-al | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Jackson County Parks & Recreation | CivicRec-Parks-Eastern-jackson-county-ms | 35 | 0 | 0 | 0 | 0 | 0 | 35 | — |
+| Jackson, NJ | CivicRec-Parks-Eastern-jackson-township-nj | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| Kenton County Fairgrounds | CivicRec-Parks-Eastern-kenton-county-ky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Middleton-Mills Park | CivicRec-Parks-Eastern-kenton-county-ky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Doe Run Lake | CivicRec-Parks-Eastern-kenton-county-ky | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kingsport, TN | CivicRec-Parks-Eastern-kingsport-tn | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lakeland, TN | CivicRec-Parks-Eastern-lakeland-tn | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Veterans Park | CivicRec-Parks-Eastern-lauderhill-fl | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| Ken Thurston Inverrary Community Center & Public Service Facility | CivicRec-Parks-Eastern-lauderhill-fl | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Multiple | CivicRec-Parks-Eastern-lauderhill-fl | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| St. George Park | CivicRec-Parks-Eastern-lauderhill-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lauderhill, FL | CivicRec-Parks-Eastern-lauderhill-fl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Lincoln County Parks & Recreation | CivicRec-Parks-Eastern-lincoln-county-nc | 6 | 0 | 0 | 0 | 0 | 0 | 6 | — |
+| Macon, GA | CivicRec-Parks-Eastern-macon-bibb-ga | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| LH Williams | CivicRec-Parks-Eastern-macon-bibb-ga | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Rosa Jackson Recreation Center | CivicRec-Parks-Eastern-macon-bibb-ga | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Frank Johnson Recreation Center | CivicRec-Parks-Eastern-macon-bibb-ga | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Memorial Park Recreation Center | CivicRec-Parks-Eastern-macon-bibb-ga | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bloomfield Park Recreation Center/Gilead | CivicRec-Parks-Eastern-macon-bibb-ga | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| South Bibb Recreation Center | CivicRec-Parks-Eastern-macon-bibb-ga | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Delores A. Brooks Recreation Center | CivicRec-Parks-Eastern-macon-bibb-ga | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Dana L. Thompson Memorial Park | CivicRec-Parks-Eastern-manchester-vt | 9 | 0 | 0 | 0 | 0 | 0 | 9 | — |
+| Maury County Parks & Recreation | CivicRec-Parks-Eastern-maury-county-tn | 24 | 0 | 0 | 0 | 0 | 0 | 24 | — |
+| Lyons Tennis Courts | CivicRec-Parks-Eastern-melrose-ma | 10 | 0 | 0 | 0 | 0 | 0 | 10 | — |
+| Franklin Field | CivicRec-Parks-Eastern-melrose-ma | 0 | 0 | 0 | 2 | 2 | 0 | 4 | — |
+| Fred Green Field | CivicRec-Parks-Eastern-melrose-ma | 1 | 0 | 1 | 1 | 1 | 0 | 4 | — |
+| Common Park | CivicRec-Parks-Eastern-melrose-ma | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Horace Mann Elementary | CivicRec-Parks-Eastern-melrose-ma | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Roosevelt Elementary School | CivicRec-Parks-Eastern-melrose-ma | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Melrose, MA | CivicRec-Parks-Eastern-melrose-ma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mentor Community Recreation Center | CivicRec-Parks-Eastern-mentor-oh | 4 | 3 | 12 | 14 | 0 | 0 | 33 | — |
+| Mentor Ice Arena | CivicRec-Parks-Eastern-mentor-oh | 7 | 0 | 0 | 2 | 0 | 0 | 9 | — |
+| Wildwood Cultural Center and Park | CivicRec-Parks-Eastern-mentor-oh | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Marina Lagoons | CivicRec-Parks-Eastern-mentor-oh | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Middlebury, CT | CivicRec-Parks-Eastern-middlebury-ct-parks-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Recreation Campus | CivicRec-Parks-Eastern-middletown-ny | 23 | 0 | 3 | 3 | 2 | 0 | 31 | — |
+| Fancher Davidge Park | CivicRec-Parks-Eastern-middletown-ny | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Colquitt, GA | CivicRec-Parks-Eastern-miller-county-parks-and-recreation-ga | 0 | 0 | 5 | 4 | 7 | 1 | 17 | — |
+| Gile Road Sports Complex | CivicRec-Parks-Eastern-milton-ma-parks-recreation | 0 | 0 | 1 | 1 | 0 | 0 | 2 | — |
+| Kelly Field | CivicRec-Parks-Eastern-milton-ma-parks-recreation | 1 | 0 | 0 | 0 | 1 | 0 | 2 | — |
+| Maywood School | CivicRec-Parks-Eastern-monona-wi | 6 | 0 | 12 | 0 | 0 | 0 | 18 | — |
+| Winnequah Park | CivicRec-Parks-Eastern-monona-wi | 3 | 0 | 2 | 1 | 0 | 1 | 7 | — |
+| Community Center | CivicRec-Parks-Eastern-monona-wi | 0 | 0 | 3 | 1 | 0 | 0 | 4 | — |
+| Grand Crossing | CivicRec-Parks-Eastern-monona-wi | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Winnequah School | CivicRec-Parks-Eastern-monona-wi | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Monona, WI | CivicRec-Parks-Eastern-monona-wi | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Clarksville, TN | CivicRec-Parks-Eastern-montgomery-county-parks-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Church Street Rec Center | CivicRec-Parks-Eastern-moorestown-nj | 19 | 2 | 1 | 6 | 4 | 3 | 35 | — |
+| John Pryor Park | CivicRec-Parks-Eastern-moorestown-nj | 1 | 0 | 0 | 0 | 1 | 0 | 2 | — |
+| Moorestown, NJ | CivicRec-Parks-Eastern-moorestown-nj | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Multiple | CivicRec-Parks-Eastern-moorestown-nj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wesley Bishop | CivicRec-Parks-Eastern-moorestown-nj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| War Memorial Center | CivicRec-Parks-Eastern-mooresville-recreation-parks-department | 1 | 0 | 7 | 0 | 0 | 0 | 8 | — |
+| Selma Burke Center | CivicRec-Parks-Eastern-mooresville-recreation-parks-department | 4 | 0 | 0 | 3 | 0 | 0 | 7 | — |
+| Morganton, NC | CivicRec-Parks-Eastern-morganton-parks-recreation-nc | 15 | 0 | 0 | 1 | 1 | 1 | 18 | — |
+| Collett St. Recreation Center | CivicRec-Parks-Eastern-morganton-parks-recreation-nc | 6 | 0 | 0 | 2 | 0 | 0 | 8 | — |
+| Catawba Meadows Park | CivicRec-Parks-Eastern-morganton-parks-recreation-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Nassau County Parks & Recreation | CivicRec-Parks-Eastern-nassau-county-fl-parks-recreation | 49 | 0 | 0 | 0 | 0 | 0 | 49 | — |
+| Chappaqua performing Arts Center | CivicRec-Parks-Eastern-new-castle-ny | 13 | 4 | 2 | 0 | 1 | 0 | 20 | — |
+| Community Center | CivicRec-Parks-Eastern-new-castle-ny | 6 | 0 | 1 | 11 | 0 | 1 | 19 | — |
+| Art Center | CivicRec-Parks-Eastern-new-castle-ny | 7 | 2 | 1 | 0 | 0 | 0 | 10 | — |
+| Chappaqua, NY | CivicRec-Parks-Eastern-new-castle-ny | 3 | 0 | 7 | 0 | 0 | 0 | 10 | — |
+| Town Hall Outdoor Basketball Court | CivicRec-Parks-Eastern-new-castle-ny | 0 | 2 | 2 | 2 | 2 | 0 | 8 | — |
+| Courthouse Way Community Center | CivicRec-Parks-Eastern-newport-news-va | 10 | 0 | 6 | 3 | 3 | 0 | 22 | — |
+| Riverview Gymnastics Center | CivicRec-Parks-Eastern-newport-news-va | 8 | 0 | 8 | 2 | 0 | 2 | 20 | — |
+| Brittingham-Midtown Community Center | CivicRec-Parks-Eastern-newport-news-va | 9 | 0 | 1 | 2 | 0 | 1 | 13 | — |
+| Denbigh Community Center | CivicRec-Parks-Eastern-newport-news-va | 7 | 0 | 2 | 3 | 1 | 0 | 13 | — |
+| Achievable Dream Tennis Center | CivicRec-Parks-Eastern-newport-news-va | 0 | 0 | 1 | 1 | 0 | 0 | 2 | — |
+| Covington, GA | CivicRec-Parks-Eastern-newton-recreation-commission | 0 | 0 | 1 | 3 | 5 | 4 | 13 | — |
+| Nottingham, NH | CivicRec-Parks-Eastern-nottingham-nh | 23 | 10 | 0 | 0 | 0 | 0 | 33 | — |
+| Maine Bound | CivicRec-Parks-Eastern-orono-me | 8 | 0 | 0 | 0 | 0 | 0 | 8 | — |
+| UMaine New Balance Rec Center | CivicRec-Parks-Eastern-orono-me | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Multiple | CivicRec-Parks-Eastern-orono-me | 1 | 0 | 0 | 0 | 1 | 0 | 2 | — |
+| Orono, ME | CivicRec-Parks-Eastern-orono-me | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Christopher Columbus Park | CivicRec-Parks-Eastern-passaic-nj | 0 | 1 | 3 | 1 | 0 | 0 | 5 | — |
+| Veteran's Memorial Third Ward Park | CivicRec-Parks-Eastern-passaic-nj | 1 | 0 | 1 | 1 | 0 | 0 | 3 | — |
+| Martin Luther King Jr School No. 6 | CivicRec-Parks-Eastern-passaic-nj | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Anabelle Schimkowitz Senior Center | CivicRec-Parks-Eastern-passaic-nj | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Etta Gero School #9 | CivicRec-Parks-Eastern-passaic-nj | 0 | 0 | 0 | 1 | 1 | 0 | 2 | — |
+| Ellen Ochoa School No. 22 | CivicRec-Parks-Eastern-passaic-nj | 0 | 0 | 0 | 1 | 0 | 1 | 2 | — |
+| Passaic, NJ | CivicRec-Parks-Eastern-passaic-nj | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Pembroke Pines Parks & Recreation | CivicRec-Parks-Eastern-pembroke-pines-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Forbes Recreation Center | CivicRec-Parks-Eastern-pinellas-park-fl | 10 | 0 | 0 | 0 | 0 | 0 | 10 | — |
+| Library | CivicRec-Parks-Eastern-pinellas-park-fl | 1 | 0 | 2 | 0 | 1 | 0 | 4 | — |
+| Patti Johnson Farm | CivicRec-Parks-Eastern-pinellas-park-fl | 0 | 0 | 4 | 0 | 0 | 0 | 4 | — |
+| Broderick Recreation Center | CivicRec-Parks-Eastern-pinellas-park-fl | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Public Works Operations Center | CivicRec-Parks-Eastern-pinellas-park-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Teen Center | CivicRec-Parks-Eastern-pinellas-park-fl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Pinellas Park, FL | CivicRec-Parks-Eastern-pinellas-park-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pomfret Community Center | CivicRec-Parks-Eastern-pomfret-ct | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Pomfret Recreation Park | CivicRec-Parks-Eastern-pomfret-ct | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Lapsley Orchard | CivicRec-Parks-Eastern-pomfret-ct | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Watercure Farm Distillery | CivicRec-Parks-Eastern-pomfret-ct | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Pomfret, CT | CivicRec-Parks-Eastern-pomfret-ct | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Leonard Brown House | CivicRec-Parks-Eastern-portsmouth-ri | 18 | 0 | 0 | 0 | 1 | 0 | 19 | — |
+| Portsmouth High School | CivicRec-Parks-Eastern-portsmouth-ri | 2 | 0 | 0 | 2 | 2 | 0 | 6 | — |
+| Rail Explorers | CivicRec-Parks-Eastern-portsmouth-ri | 0 | 0 | 0 | 1 | 0 | 1 | 2 | — |
+| Rockland, MA | CivicRec-Parks-Eastern-rockland-ma | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ross Community Center | CivicRec-Parks-Eastern-ross-township | 17 | 0 | 2 | 0 | 0 | 0 | 19 | — |
+| Jeff Triplett Community Center | CivicRec-Parks-Eastern-sanford-fl | 1 | 0 | 2 | 3 | 1 | 0 | 7 | — |
+| Larry A. Dale Aquatic Center | CivicRec-Parks-Eastern-sanford-fl | 5 | 0 | 1 | 0 | 0 | 0 | 6 | — |
+| Chase Park | CivicRec-Parks-Eastern-sanford-fl | 1 | 0 | 1 | 1 | 2 | 0 | 5 | — |
+| Senior Center | CivicRec-Parks-Eastern-sanford-fl | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Multiple | CivicRec-Parks-Eastern-sanford-fl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Downtown Sanford | CivicRec-Parks-Eastern-sanford-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Peter Muhlenberg Middle School | CivicRec-Parks-Eastern-shenandoah-county-va | 4 | 0 | 0 | 1 | 0 | 0 | 5 | — |
+| North Fork Middle School | CivicRec-Parks-Eastern-shenandoah-county-va | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Signal Knob Middle School | CivicRec-Parks-Eastern-shenandoah-county-va | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Central High School | CivicRec-Parks-Eastern-shenandoah-county-va | 1 | 0 | 0 | 2 | 0 | 0 | 3 | — |
+| Wellness & Activity Center | CivicRec-Parks-Eastern-shenandoah-county-va | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Sandy Hook Elementary | CivicRec-Parks-Eastern-shenandoah-county-va | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Charterhouse School | CivicRec-Parks-Eastern-shenandoah-county-va | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Stonewall Jackson High School | CivicRec-Parks-Eastern-shenandoah-county-va | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Strasburg High School | CivicRec-Parks-Eastern-shenandoah-county-va | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Shepherdsville Parks & Recreation | CivicRec-Parks-Eastern-shepherdsville-ky | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Szymanski Park | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Rick Marcotte Central School | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Senior Center | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| City Center Park | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Veterans Memorial Park | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| South Burlington, VT | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Burlington International Airport | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Orchard School | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Jaycee Park | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Bay Crest Park | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Overlook at Underwood Park | CivicRec-Parks-Eastern-south-burlington-vt-recreation-parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Downtown Park | CivicRec-Parks-Eastern-southern-pines-nc | 3 | 0 | 0 | 0 | 1 | 0 | 4 | — |
+| Train Station | CivicRec-Parks-Eastern-southern-pines-nc | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Whitehall | CivicRec-Parks-Eastern-southern-pines-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Martin Park - Off Leash Dog Park | CivicRec-Parks-Eastern-southern-pines-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Multiple | CivicRec-Parks-Eastern-southern-pines-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Memorial Park | CivicRec-Parks-Eastern-southern-pines-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Southern Pines, NC | CivicRec-Parks-Eastern-southern-pines-nc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Griffin, GA | CivicRec-Parks-Eastern-spalding-county-parks-and-recreation | 2 | 0 | 1 | 1 | 0 | 0 | 4 | — |
+| Senior Center | CivicRec-Parks-Eastern-spalding-county-parks-and-recreation | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Multiple | CivicRec-Parks-Eastern-spalding-county-parks-and-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Spartanburg, SC | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 2 | 0 | 3 | 0 | 0 | 0 | 5 | — |
+| Chesnee Community Center | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Timken Community Center - Cowpens | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 1 | 0 | 0 | 0 | 0 | 1 | 2 | — |
+| Inman Elementary School | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cleveland Park | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| TW Edwards Community Center - Pacolet | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Boiling Springs Community Park | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Holly Springs Motlow Elementary School | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Inman Intermediate School | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Woodruff Leisure Center | CivicRec-Parks-Eastern-spartanburg-county-parks-dept | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Room Rentals | CivicRec-Parks-Eastern-springettsbury-township-pa | 16 | 0 | 0 | 0 | 0 | 0 | 16 | — |
+| York, PA | CivicRec-Parks-Eastern-springettsbury-township-pa | 8 | 0 | 0 | 0 | 0 | 0 | 8 | — |
+| Springettsbury Township Park | CivicRec-Parks-Eastern-springettsbury-township-pa | 5 | 0 | 0 | 1 | 0 | 0 | 6 | — |
+| White Rose Senior Center | CivicRec-Parks-Eastern-springettsbury-township-pa | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| Hoss’s Steak & Sea House | CivicRec-Parks-Eastern-springettsbury-township-pa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Springfield, TN | CivicRec-Parks-Eastern-springfield-tn | 6 | 0 | 0 | 0 | 2 | 1 | 9 | — |
+| Robertson County Fairgrounds | CivicRec-Parks-Eastern-springfield-tn | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| J. Travis Price Park | CivicRec-Parks-Eastern-springfield-tn | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Leonardtown, MD | CivicRec-Parks-Eastern-st-marys-county-md | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| St. Mary's County Fairgrounds | CivicRec-Parks-Eastern-st-marys-county-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lexington Manor Passive Park | CivicRec-Parks-Eastern-st-marys-county-md | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Starkville, MS | CivicRec-Parks-Eastern-starkville-parks-recreation | 0 | 0 | 3 | 1 | 3 | 0 | 7 | — |
+| Sportsplex Complex | CivicRec-Parks-Eastern-starkville-parks-recreation | 1 | 0 | 0 | 1 | 1 | 0 | 3 | — |
+| Stowe, VT | CivicRec-Parks-Eastern-stowe-vt | 6 | 0 | 0 | 0 | 0 | 0 | 6 | — |
+| David Gale Rec Center | CivicRec-Parks-Eastern-stowe-vt | 4 | 0 | 1 | 0 | 1 | 0 | 6 | — |
+| Stowe Arena | CivicRec-Parks-Eastern-stowe-vt | 4 | 0 | 0 | 0 | 2 | 0 | 6 | — |
+| Memorial Park | CivicRec-Parks-Eastern-stowe-vt | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Polo Field | CivicRec-Parks-Eastern-stowe-vt | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Brighton Community Center | CivicRec-Parks-Eastern-Town-Brighton-Parks-Recreation | 11 | 0 | 0 | 0 | 0 | 0 | 11 | — |
+| Council Rock Primary School | CivicRec-Parks-Eastern-Town-Brighton-Parks-Recreation | 11 | 0 | 0 | 0 | 0 | 0 | 11 | — |
+| Milton, VT | CivicRec-Parks-Eastern-town-of-milton-vt | 4 | 0 | 0 | 1 | 0 | 1 | 6 | — |
+| Milton Fire Station | CivicRec-Parks-Eastern-town-of-milton-vt | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Milton Grange | CivicRec-Parks-Eastern-town-of-milton-vt | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Village Green | CivicRec-Parks-Eastern-town-of-south-kingstown-ri | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Town Beach | CivicRec-Parks-Eastern-town-of-south-kingstown-ri | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Windsor High School | CivicRec-Parks-Eastern-town-windsor | 7 | 0 | 0 | 0 | 0 | 0 | 7 | — |
+| LP Wilson Community Center | CivicRec-Parks-Eastern-town-windsor | 4 | 0 | 0 | 0 | 0 | 1 | 5 | — |
+| 330 Windsor Ave. Community Center | CivicRec-Parks-Eastern-town-windsor | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Windsor, CT | CivicRec-Parks-Eastern-town-windsor | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Wilson Gateway Park | CivicRec-Parks-Eastern-town-windsor | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Millbrook Club House | CivicRec-Parks-Eastern-town-windsor | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| LaGrange, GA | CivicRec-Parks-Eastern-troup-county-parks-and-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Tullahoma Parks & Recreation | CivicRec-Parks-Eastern-tullahoma-parks-and-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Trailside Nature & Science Center | CivicRec-Parks-Eastern-union-county-nj | 6 | 0 | 0 | 0 | 0 | 0 | 6 | — |
+| Cranford Community Center | CivicRec-Parks-Eastern-union-county-nj | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Oak Ridge Park Archery | CivicRec-Parks-Eastern-union-county-nj | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Warinanco Park | CivicRec-Parks-Eastern-union-county-nj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Echo Lake Park | CivicRec-Parks-Eastern-union-county-nj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Feltville / Glenside Park | CivicRec-Parks-Eastern-union-county-nj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Valdosta, GA | CivicRec-Parks-Eastern-valdosta-lowndes | 11 | 0 | 0 | 0 | 0 | 0 | 11 | — |
+| Victor, NY | CivicRec-Parks-Eastern-victor-parks-recreation | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| DeFuniak Springs, FL | CivicRec-Parks-Eastern-walton-county-fl | 22 | 0 | 0 | 0 | 0 | 0 | 22 | — |
+| Walton Sports Complex | CivicRec-Parks-Eastern-walton-county-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Warren County Recreation Complex | CivicRec-Parks-Eastern-warren-county-nc | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Claude A Stokes Swimming Pool | CivicRec-Parks-Eastern-warren-county-va | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Watertown, NY | CivicRec-Parks-Eastern-watertown-ny | 10 | 0 | 0 | 0 | 0 | 0 | 10 | — |
+| Fairgrounds | CivicRec-Parks-Eastern-watertown-ny | 2 | 0 | 0 | 1 | 0 | 0 | 3 | — |
+| Thompson Park | CivicRec-Parks-Eastern-watertown-ny | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| WAYNE COMMUNITY CENTER | CivicRec-Parks-Eastern-wayne-township-nj | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Multiple | CivicRec-Parks-Eastern-wayne-township-nj | 0 | 0 | 3 | 0 | 0 | 0 | 3 | — |
+| Wayne, NJ | CivicRec-Parks-Eastern-wayne-township-nj | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| BROADWAY | CivicRec-Parks-Eastern-wayne-township-nj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Captain Kilroy Park | CivicRec-Parks-Eastern-wayne-township-nj | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Warfield Auditorium | CivicRec-Parks-Eastern-wildwood-fl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Wildwood Community Center | CivicRec-Parks-Eastern-wildwood-fl | 0 | 0 | 0 | 0 | 1 | 0 | 1 | — |
+| Comstock Community Center | CivicRec-Parks-Eastern-wilton-parks-and-recreation-ct | 13 | 0 | 2 | 2 | 0 | 1 | 18 | — |
+| Multiple | CivicRec-Parks-Eastern-wilton-parks-and-recreation-ct | 5 | 0 | 0 | 0 | 0 | 0 | 5 | — |
+| York County Parks | CivicRec-Parks-Eastern-york-county-pa- | 28 | 0 | 0 | 0 | 0 | 0 | 28 | — |
+| Cobb County Public Library System | Cobb County Public Library System | 1 | 1 | 6 | 0 | 0 | 0 | 8 | [cal](https://www.cobbcounty.gov/events?department=85) |
+| Homewood Public Library | Communico-AL-homewood | 4 | 1 | 2 | 0 | 0 | 1 | 8 | [cal](https://homewood.libnet.info/events) |
+| Hoover Public Library | Communico-AL-hoover | 0 | 0 | 1 | 2 | 0 | 0 | 3 | [cal](https://hoover.libnet.info/events) |
+| Trussville | Communico-AL-jclctrussville | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://jclctrussville.libnet.info/events) |
+| Martin Luther King Jr. Memorial Library - Central Library | Communico-DC-dclibrary | 5 | 0 | 0 | 1 | 0 | 1 | 7 | [cal](https://dclibrary.libnet.info/events) |
+| Cleveland Park Neighborhood Library | Communico-DC-dclibrary | 1 | 0 | 0 | 2 | 0 | 0 | 3 | [cal](https://dclibrary.libnet.info/events) |
+| Georgetown Neighborhood Library | Communico-DC-dclibrary | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://dclibrary.libnet.info/events) |
+| Lamond-Riggs/Lillian J. Huff Neighborhood Library | Communico-DC-dclibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://dclibrary.libnet.info/events) |
+| Southwest Neighborhood Library | Communico-DC-dclibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://dclibrary.libnet.info/events) |
+| Mt. Pleasant Neighborhood Library | Communico-DC-dclibrary | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://dclibrary.libnet.info/events) |
+| Parklands-Turner Neighborhood Library | Communico-DC-dclibrary | 0 | 0 | 1 | 0 | 0 | 1 | 2 | [cal](https://dclibrary.libnet.info/events) |
+| Anacostia Neighborhood Library | Communico-DC-dclibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://dclibrary.libnet.info/events) |
+| Bellevue (William O. Lockridge) Neighborhood Library | Communico-DC-dclibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Takoma Park Neighborhood Library | Communico-DC-dclibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Shepherd Park (Juanita E. Thornton) Neighborhood Library | Communico-DC-dclibrary | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Deanwood Neighborhood Library | Communico-DC-dclibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Benning (Dorothy I. Height) Neighborhood Library | Communico-DC-dclibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Northwest One Neighborhood Library | Communico-DC-dclibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Shaw (Watha T. Daniel) Neighborhood Library | Communico-DC-dclibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Tenley-Friendship Neighborhood Library | Communico-DC-dclibrary | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Palisades Neighborhood Library | Communico-DC-dclibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Northeast Neighborhood Library | Communico-DC-dclibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Petworth Neighborhood Library | Communico-DC-dclibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://dclibrary.libnet.info/events) |
+| Reisterstown Branch | Communico-MD-bcpl | 2 | 0 | 0 | 0 | 0 | 1 | 3 | [cal](https://events.bcpl.info/events) |
+| Pikesville Branch | Communico-MD-bcpl | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://events.bcpl.info/events) |
+| Randallstown Branch | Communico-MD-bcpl | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://events.bcpl.info/events) |
+| Catonsville Branch | Communico-MD-bcpl | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://events.bcpl.info/events) |
+| Lansdowne Branch | Communico-MD-bcpl | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [cal](https://events.bcpl.info/events) |
+| Perry Hall Branch | Communico-MD-bcpl | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://events.bcpl.info/events) |
+| Essex Branch | Communico-MD-bcpl | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://events.bcpl.info/events) |
+| Towson Branch | Communico-MD-bcpl | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.bcpl.info/events) |
+| Rosedale Branch | Communico-MD-bcpl | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.bcpl.info/events) |
+| White Marsh Branch | Communico-MD-bcpl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.bcpl.info/events) |
+| Hereford Branch | Communico-MD-bcpl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.bcpl.info/events) |
+| Virtual | Communico-MD-bcpl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.bcpl.info/events) |
+| Arbutus Branch | Communico-MD-bcpl | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.bcpl.info/events) |
+| Woodlawn Branch | Communico-MD-bcpl | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.bcpl.info/events) |
+| Sollers Point Branch | Communico-MD-bcpl | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.bcpl.info/events) |
+| Southern Branch | Communico-MD-calvertlibrary | 1 | 1 | 1 | 0 | 0 | 1 | 4 | [cal](https://calvertlibrary.libnet.info/events) |
+| Calvert Library Prince Frederick | Communico-MD-calvertlibrary | 1 | 1 | 2 | 0 | 0 | 0 | 4 | [cal](https://calvertlibrary.libnet.info/events) |
+| Twin Beaches Branch | Communico-MD-calvertlibrary | 0 | 0 | 1 | 2 | 0 | 0 | 3 | [cal](https://calvertlibrary.libnet.info/events) |
+| Fairview Branch | Communico-MD-calvertlibrary | 0 | 2 | 0 | 0 | 0 | 0 | 2 | [cal](https://calvertlibrary.libnet.info/events) |
+| Virtual Branch | Communico-MD-calvertlibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://calvertlibrary.libnet.info/events) |
+| Potomac Branch | Communico-MD-ccplonline | 1 | 2 | 0 | 1 | 0 | 0 | 4 | [cal](https://ccplonline.libnet.info/events) |
+| Virtual | Communico-MD-ccplonline | 1 | 0 | 0 | 1 | 0 | 1 | 3 | [cal](https://ccplonline.libnet.info/events) |
+| P.D. Brown Memorial Branch | Communico-MD-ccplonline | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://ccplonline.libnet.info/events) |
+| Waldorf West Branch | Communico-MD-ccplonline | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://ccplonline.libnet.info/events) |
+| La Plata Branch | Communico-MD-ccplonline | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://ccplonline.libnet.info/events) |
+| Bel Air Library | Communico-MD-hcplonline | 3 | 0 | 1 | 0 | 0 | 0 | 4 | [cal](https://programs.hcplonline.org/events) |
+| Havre de Grace Library | Communico-MD-hcplonline | 2 | 0 | 0 | 0 | 0 | 1 | 3 | [cal](https://programs.hcplonline.org/events) |
+| Edgewood Library | Communico-MD-hcplonline | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://programs.hcplonline.org/events) |
+| Aberdeen Library | Communico-MD-hcplonline | 0 | 1 | 1 | 0 | 0 | 0 | 2 | [cal](https://programs.hcplonline.org/events) |
+| Joppa Library | Communico-MD-hcplonline | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://programs.hcplonline.org/events) |
+| Fallston Library | Communico-MD-hcplonline | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://programs.hcplonline.org/events) |
+| Whiteford Library | Communico-MD-hcplonline | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://programs.hcplonline.org/events) |
+| Jarrettsville Library | Communico-MD-hcplonline | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://programs.hcplonline.org/events) |
+| Abingdon Library | Communico-MD-hcplonline | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://programs.hcplonline.org/events) |
+| Sean Bolan's | Communico-MD-hcplonline | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://programs.hcplonline.org/events) |
+| Gaithersburg Library | Communico-MD-mcpl | 0 | 0 | 1 | 3 | 0 | 0 | 4 | [cal](https://mcpl.libnet.info/events) |
+| Davis Library | Communico-MD-mcpl | 0 | 0 | 1 | 3 | 0 | 0 | 4 | [cal](https://mcpl.libnet.info/events) |
+| Germantown Library | Communico-MD-mcpl | 0 | 0 | 0 | 4 | 0 | 0 | 4 | [cal](https://mcpl.libnet.info/events) |
+| Little Falls Library | Communico-MD-mcpl | 0 | 0 | 2 | 0 | 0 | 1 | 3 | [cal](https://mcpl.libnet.info/events) |
+| Marilyn J. Praisner Library | Communico-MD-mcpl | 1 | 0 | 1 | 1 | 0 | 0 | 3 | [cal](https://mcpl.libnet.info/events) |
+| Olney Library | Communico-MD-mcpl | 2 | 0 | 0 | 1 | 0 | 0 | 3 | [cal](https://mcpl.libnet.info/events) |
+| Brigadier General Charles E. McGee Library | Communico-MD-mcpl | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://mcpl.libnet.info/events) |
+| Connie Morella Library | Communico-MD-mcpl | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://mcpl.libnet.info/events) |
+| Potomac Library | Communico-MD-mcpl | 0 | 0 | 1 | 0 | 0 | 1 | 2 | [cal](https://mcpl.libnet.info/events) |
+| Chevy Chase Library | Communico-MD-mcpl | 0 | 0 | 1 | 0 | 0 | 1 | 2 | [cal](https://mcpl.libnet.info/events) |
+| Quince Orchard Library | Communico-MD-mcpl | 0 | 0 | 1 | 1 | 0 | 0 | 2 | [cal](https://mcpl.libnet.info/events) |
+| Virtual Branch | Communico-MD-mcpl | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [cal](https://mcpl.libnet.info/events) |
+| White Oak Library | Communico-MD-mcpl | 0 | 0 | 1 | 1 | 0 | 0 | 2 | [cal](https://mcpl.libnet.info/events) |
+| Rockville Memorial Library | Communico-MD-mcpl | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://mcpl.libnet.info/events) |
+| Twinbrook Library | Communico-MD-mcpl | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://mcpl.libnet.info/events) |
+| Kensington Park Library | Communico-MD-mcpl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://mcpl.libnet.info/events) |
+| Wheaton Library | Communico-MD-mcpl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://mcpl.libnet.info/events) |
+| New Carrollton | Communico-MD-pgcmls | 1 | 0 | 0 | 3 | 0 | 0 | 4 | [cal](https://pgcmls.info/events) |
+| Virtual Branch | Communico-MD-pgcmls | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://pgcmls.info/events) |
+| Bladensburg | Communico-MD-pgcmls | 1 | 0 | 0 | 1 | 0 | 1 | 3 | [cal](https://pgcmls.info/events) |
+| Bowie | Communico-MD-pgcmls | 0 | 0 | 0 | 0 | 0 | 3 | 3 | [cal](https://pgcmls.info/events) |
+| Surratts-Clinton | Communico-MD-pgcmls | 1 | 0 | 0 | 0 | 0 | 2 | 3 | [cal](https://pgcmls.info/events) |
+| Hyattsville | Communico-MD-pgcmls | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://pgcmls.info/events) |
+| Hillcrest Heights | Communico-MD-pgcmls | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://pgcmls.info/events) |
+| Oxon Hill | Communico-MD-pgcmls | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://pgcmls.info/events) |
+| Largo-Kettering | Communico-MD-pgcmls | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://pgcmls.info/events) |
+| Laurel | Communico-MD-pgcmls | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://pgcmls.info/events) |
+| Greenbelt | Communico-MD-pgcmls | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://pgcmls.info/events) |
+| Glenarden | Communico-MD-pgcmls | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://pgcmls.info/events) |
+| South Bowie | Communico-MD-pgcmls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pgcmls.info/events) |
+| Spauldings | Communico-MD-pgcmls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://pgcmls.info/events) |
+| Lexington Park Library | Communico-MD-stmalib | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://stmalib.libnet.info/events) |
+| Online | Communico-MD-stmalib | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://stmalib.libnet.info/events) |
+| Leonardtown Library | Communico-MD-stmalib | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://stmalib.libnet.info/events) |
+| Charlotte Hall Library | Communico-MD-stmalib | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://stmalib.libnet.info/events) |
+| Piney Point Lighthouse Museum | Communico-MD-stmalib | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://stmalib.libnet.info/events) |
+| Hampton Park Library | Communico-NC-forsyth | 1 | 0 | 0 | 1 | 0 | 1 | 3 | [cal](https://forsyth.libnet.info/events) |
+| Cumming Library | Communico-NC-forsyth | 0 | 0 | 2 | 0 | 0 | 1 | 3 | [cal](https://forsyth.libnet.info/events) |
+| Denmark Library | Communico-NC-forsyth | 0 | 0 | 2 | 0 | 0 | 0 | 2 | [cal](https://forsyth.libnet.info/events) |
+| Post Road Library | Communico-NC-forsyth | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://forsyth.libnet.info/events) |
+| Bookmobile | Communico-NC-forsyth | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://forsyth.libnet.info/events) |
+| Outreach | Communico-SC-pickenscountylibrarysystem | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://pickenscountylibrarysystem.libnet.info/events) |
+| Wake Forest Community Library | CustomDrupal-Libraries-wake | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.wake.gov/events?title=&field_department_target_id=25&field_audience_target_id=All&field_category_id_target_id=All&location=All&field_end_date_value=&field_start_date_value=) |
+| Southeast Regional Library | CustomDrupal-Libraries-wake | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.wake.gov/events?title=&field_department_target_id=25&field_audience_target_id=All&field_category_id_target_id=All&location=All&field_end_date_value=&field_start_date_value=) |
+| Richard B. Harrison Community Library | CustomDrupal-Libraries-wake | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.wake.gov/events?title=&field_department_target_id=25&field_audience_target_id=All&field_category_id_target_id=All&location=All&field_end_date_value=&field_start_date_value=) |
+| Fuquay-Varina Community Library | CustomDrupal-Libraries-wake | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.wake.gov/events?title=&field_department_target_id=25&field_audience_target_id=All&field_category_id_target_id=All&location=All&field_end_date_value=&field_start_date_value=) |
+| Oberlin Regional Library | CustomDrupal-Libraries-wake | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://www.wake.gov/events?title=&field_department_target_id=25&field_audience_target_id=All&field_category_id_target_id=All&location=All&field_end_date_value=&field_start_date_value=) |
+| Northeast Regional Library | CustomDrupal-Libraries-wake | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.wake.gov/events?title=&field_department_target_id=25&field_audience_target_id=All&field_category_id_target_id=All&location=All&field_end_date_value=&field_start_date_value=) |
+| Handley Regional Library | Drupal-Virginia | 2 | 0 | 2 | 2 | 0 | 3 | 9 | [cal](https://www.handleyregional.org/events/upcoming) |
+| Greene County Library | EventActions-Libraries-jmrl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Gordon Avenue Library | EventActions-Libraries-jmrl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Northside Library | EventActions-Libraries-jmrl | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Nelson Memorial Library | EventActions-Libraries-jmrl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Fairfax County Parks | Fairfax-Parks | 5 | 1 | 0 | 2 | 0 | 0 | 8 | [cal](https://www.fairfaxcounty.gov) |
+| Frying Pan Farm Park | Fairfax-Parks | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://www.fairfaxcounty.gov) |
+| Sully Historic Site | Fairfax-Parks | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://www.fairfaxcounty.gov) |
+| Riverbend Park | Fairfax-Parks | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://www.fairfaxcounty.gov) |
+| Colvin Run Mill | Fairfax-Parks | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://www.fairfaxcounty.gov) |
+| Burke Lake Park | Fairfax-Parks | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://www.fairfaxcounty.gov) |
+| Hidden Oaks Nature Center | Fairfax-Parks | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://www.fairfaxcounty.gov) |
+| Lake Fairfax Park | Fairfax-Parks | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://www.fairfaxcounty.gov) |
+| Brown's Harvest | FairsFestivals-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Kuipers Family Farm | Farms-Eastern-US | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.kuipersfamilyfarm.com) |
+| Union Library Company Of Hatborough | GoogleCalendar-PA | 37 | 12 | 11 | 0 | 0 | 1 | 61 | [cal](https://www.hatborolibrary.org/) |
+| Union Library-Hatboro | GoogleCalendar-PA | 11 | 0 | 0 | 0 | 0 | 0 | 11 | [cal](https://www.hatborolibrary.org/) |
+| Kanawha County Public Library | Kanawha County Public Library | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.kcpls.org/events/upcoming) |
+| Main Library | Kanawha County Public Library | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://www.kcpls.org/events/upcoming) |
+| Black Rock Children's Room | LibCal-CT-bportlibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Black Rock Program Room 2 | LibCal-CT-bportlibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Burroughs-Saden Children's Room | LibCal-CT-bportlibrary | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Newfield Children's Project Room | LibCal-CT-bportlibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Burrough-Saden (Small) 1st Floor Meeting Room | LibCal-CT-bportlibrary | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Genealogy Room | LibCal-CT-chboothlibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Children's Department | LibCal-CT-stratfordlibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Trumbull Library | LibCal-CT-trumbull | 0 | 0 | 2 | 1 | 0 | 0 | 3 | — |
+| Children's Department | LibCal-CT-woodburylibraryct | 0 | 0 | 0 | 3 | 0 | 0 | 3 | — |
+| Library Gallery Space | LibCal-CT-woodburylibraryct | 0 | 0 | 0 | 0 | 0 | 2 | 2 | — |
+| Main Library | LibCal-CT-woodburylibraryct | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Children's Room Date: Tuesday | LibCal-CT-woodburylibraryct | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Library Gallery Space Registration Type: In-Person Registration Register! - 49 seats left | LibCal-CT-woodburylibraryct | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Children's Room Date: Saturday | LibCal-CT-woodburylibraryct | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Outreach | LibCal-DE-delawarelibraries | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kent County Public Library | LibCal-DE-delawarelibraries | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Children's Wing | LibCal-DE-delawarelibraries | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Delmar Public Library | LibCal-DE-delawarelibraries | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Large Meeting Room B | LibCal-DE-delawarelibraries | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Children's Area | LibCal-DE-delawarelibraries | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Bear Library | LibCal-DE-delawarelibraries-bear | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Brandywine Hundred Library | LibCal-DE-delawarelibraries-brandywine | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hunneman Hall - Brookline Village | LibCal-MA-brooklinelibrary | 1 | 0 | 0 | 1 | 0 | 0 | 2 | — |
+| Tween Room | LibCal-MA-brooklinelibrary | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Central Square Literacy Center | LibCal-MA-cambridgepl | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Main Library | LibCal-MA-cambridgepl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fab Lab | LibCal-MA-cambridgepl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Richard Salter Storrs Library | LibCal-MA-longmeadowlibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Newton Free Library | LibCal-MA-newtonfreelibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 3rd Floor Rear Arc | LibCal-MA-newtonfreelibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Large Meeting Room | LibCal-PA-buckslib | 0 | 2 | 0 | 2 | 0 | 0 | 4 | — |
+| Outside | LibCal-PA-buckslib | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Large Meeting Room (Pearl Buck) | LibCal-PA-buckslib | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Feasterville | LibCal-PA-buckslib | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| New Hope-Solebury | LibCal-PA-buckslib | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Community Meeting Room | LibCal-PA-ccls | 1 | 3 | 6 | 2 | 0 | 0 | 12 | — |
+| Chester Springs Library | LibCal-PA-ccls | 0 | 0 | 4 | 0 | 0 | 0 | 4 | — |
+| Spring City Library | LibCal-PA-ccls | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Struble Room | LibCal-PA-ccls-chestercountylibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kline Community Room | LibCal-PA-dcls | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| EV Community Room | LibCal-PA-dcls | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| Middletown Free Library | LibCal-PA-delcolibraries | 0 | 1 | 0 | 1 | 0 | 0 | 2 | — |
+| Delaware County Library System | LibCal-PA-delcolibraries | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Upper Darby Township/Sellers Library – Sellers Memorial Branch | LibCal-PA-delcolibraries | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Ridley Township Public Library & Resource Center | LibCal-PA-delcolibraries | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Marple Public Library | LibCal-PA-delcolibraries | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Radnor Memorial Library | LibCal-PA-delcolibraries | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Off Site - Please Check Event Listing for Location Details | LibCal-PA-erielibrary | 2 | 0 | 0 | 4 | 0 | 0 | 6 | — |
+| LIN Community Room | LibCal-PA-erielibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| EDB Community Room | LibCal-PA-erielibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| NPL Teen Area | LibCal-PA-mnl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| NPL Public Conference Room | LibCal-PA-mnl | 0 | 0 | 0 | 0 | 0 | 1 | 1 | — |
+| NPL Community Room | LibCal-PA-mnl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Activity Room | LibCal-SC-berkeleylibrarysc | 0 | 0 | 0 | 3 | 0 | 0 | 3 | — |
+| Berkeley County Library System | LibCal-SC-berkeleylibrarysc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mobile Library | LibCal-SC-berkeleylibrarysc | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Charleston County Public Library | LibCal-SC-ccplsc | 1 | 0 | 3 | 0 | 0 | 0 | 4 | — |
+| John's Island | LibCal-SC-ccplsc | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Bees Ferry West Ashley | LibCal-SC-ccplsc | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Baxter-Patrick James Island - Combined Community Rooms | LibCal-SC-ccplsc | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Dorchester Road | LibCal-SC-ccplsc | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Lexington Main Library | LibCal-SC-lexcolibrary | 0 | 1 | 1 | 0 | 0 | 0 | 2 | — |
+| Pelion Branch Library | LibCal-SC-lexcolibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Cayce-West Columbia Branch Library | LibCal-SC-lexcolibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Irmo Branch Library | LibCal-SC-lexcolibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Chapin Branch Library | LibCal-SC-lexcolibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Gaston Branch Library | LibCal-SC-lexcolibrary | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Arlington Public Library | LibCal-VA2 | 7 | 1 | 2 | 1 | 0 | 1 | 12 | [cal](https://library.arlingtonva.us) |
+| Norfolk Public Library | LibCal-VA2 | 1 | 3 | 2 | 1 | 0 | 0 | 7 | [cal](https://www.norfolkpubliclibrary.org) |
+| Fairfax County Public Library | LibCal-VA2 | 2 | 1 | 3 | 0 | 0 | 0 | 6 | [cal](https://www.fairfaxcounty.gov/library) |
+| Library of Virginia | LibCal-VA2 | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://www.lva.virginia.gov) |
+| Richmond Public Library | LibCal-VA2 | 2 | 0 | 0 | 0 | 0 | 1 | 3 | [cal](https://rvalibrary.org) |
+| Suffolk Public Library | LibCal-VA2 | 1 | 0 | 0 | 0 | 0 | 1 | 2 | [cal](https://www.suffolkpubliclibrary.com) |
+| Community Room | LibCal-VT-fletcherfree | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lancaster | Library System of Lancaster County | 2 | 4 | 0 | 3 | 0 | 4 | 13 | — |
+| Manheim Township | Library System of Lancaster County | 3 | 7 | 0 | 2 | 0 | 0 | 12 | — |
+| Ephrata | Library System of Lancaster County | 4 | 0 | 0 | 3 | 2 | 1 | 10 | — |
+| Adamstown | Library System of Lancaster County | 3 | 5 | 0 | 1 | 0 | 0 | 9 | — |
+| Quarryville | Library System of Lancaster County | 2 | 4 | 0 | 1 | 0 | 1 | 8 | — |
+| Bookmobile | Library System of Lancaster County | 8 | 0 | 0 | 0 | 0 | 0 | 8 | — |
+| Mountville Branch | Library System of Lancaster County | 0 | 3 | 0 | 0 | 0 | 0 | 3 | — |
+| Lititz | Library System of Lancaster County | 1 | 0 | 0 | 0 | 0 | 2 | 3 | — |
+| Manheim Community | Library System of Lancaster County | 0 | 2 | 0 | 0 | 0 | 0 | 2 | — |
+| Strasburg-Heisler | Library System of Lancaster County | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Eastern Lancaster County | Library System of Lancaster County | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Moores Memorial | Library System of Lancaster County | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Creek Library | LibraryMarket-allegany | 1 | 0 | 0 | 0 | 0 | 1 | 2 | — |
+| Vale Library | LibraryMarket-allegany | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| South Cumberland Library | LibraryMarket-allegany | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Ferguson Library | LibraryMarket-CT | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| West Hartford Public Library | LibraryMarket-CT | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Fairfield Public Library | LibraryMarket-CT | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Library Branch | LibraryMarket-dallaslibrary | 3 | 0 | 0 | 5 | 0 | 0 | 8 | — |
+| Auditorium Library Branch | LibraryMarket-dallaslibrary | 1 | 2 | 0 | 1 | 0 | 1 | 5 | — |
+| In Library | LibraryMarket-dallaslibrary | 0 | 1 | 0 | 1 | 0 | 0 | 2 | — |
+| Family Central Library | LibraryMarket-dallaslibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Area Library Branch | LibraryMarket-dallaslibrary | 0 | 1 | 0 | 1 | 0 | 0 | 2 | — |
+| Black Box Theater Library Branch | LibraryMarket-dallaslibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Karen Blumenthal Auditorium Library Branch | LibraryMarket-dallaslibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Central Library | LibraryMarket-dallaslibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Lobby Library Branch | LibraryMarket-dallaslibrary | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Augusta-Richmond County Library | LibraryMarket-GA | 9 | 3 | 0 | 3 | 0 | 4 | 19 | — |
+| Library Branch | LibraryMarket-leelibrary | 6 | 0 | 3 | 2 | 0 | 1 | 12 | — |
+| East County Regional Library | LibraryMarket-leelibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Library Branch | LibraryMarket-ppld | 2 | 0 | 1 | 0 | 0 | 2 | 5 | — |
+| Library Branch | LibraryMarket-scgovlibrary | 3 | 0 | 5 | 0 | 0 | 1 | 9 | — |
+| Great Neck Area Library | LibraryMarket-vbpl | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Princess Anne Area Library | LibraryMarket-vbpl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Adults Hancock Veterans Memorial Library | LibraryMarket-wcfl | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| All Day Everyone Williamsport Memorial Library | LibraryMarket-wcfl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Washington County Free Library | LibraryMarket-wcfl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fletcher Branch | LibraryMarket-wcfl | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| National Mall and Memorial Parks | NPS-Parks | 16 | 0 | 0 | 0 | 0 | 0 | 16 | [cal](https://www.nps.gov) |
+| Rock Creek Park | NPS-Parks | 6 | 1 | 0 | 0 | 1 | 0 | 8 | [cal](https://www.nps.gov) |
+| George Washington Memorial Parkway | NPS-Parks | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://www.nps.gov) |
+| Ford's Theatre National Historic Site | NPS-Parks | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://www.nps.gov) |
+| Civil War Defenses of Washington | NPS-Parks | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://www.nps.gov) |
+| Kenilworth Park & Aquatic Gardens | NPS-Parks | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://www.nps.gov) |
+| Chesapeake & Ohio Canal National Historical Park | NPS-Parks | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://www.nps.gov) |
+| Chesapeake Bay | NPS-Parks | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.nps.gov) |
+| The White House and President's Park | NPS-Parks | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.nps.gov) |
+| Share | Patch-Community-Eastern | 14 | 0 | 0 | 2 | 0 | 0 | 16 | — |
+| The Grey Eagle Music Hall and Pub, 185 Clingman Ave, Asheville | Patch-Community-Eastern | 7 | 0 | 0 | 0 | 0 | 0 | 7 | — |
+| Wonderland Books and Toys, 245 Maple St, Manchester | Patch-Community-Eastern | 1 | 0 | 5 | 0 | 0 | 0 | 6 | — |
+| Arts Alley, 20 S Main St, Concord | Patch-Community-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| DC Improv Comedy Club, 1140 Connecticut Ave NW, Washington | Patch-Community-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Sixth & I, 600 I St NW, Washington | Patch-Community-Eastern | 3 | 0 | 0 | 0 | 0 | 0 | 3 | — |
+| Monona Terrace Community and Convention Center, 1 John Nolen Dr, Madison | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Saturn, 200 41st St S, Birmingham | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Carver Theatre for the Performing Arts, 1631 4th Ave N, Birmingham | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| The Rex Theatre, 23 Amherst St, Manchester | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Pawtuckaway State Park, 128 Mountain Rd, Nottingham | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Nashua Center for the Arts, 201 Main St, Nashua | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| 3A Meetinghouse Rd, Bedford, NH, 03110 | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Concord Public Library, 45 Green St, Concord | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Heights Branch Library 14 Canterbury Road Concord, NH 03301 | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Birmingham Museum of Art, 2000 Reverend Abraham Woods Jr Boulevard, Birmingham | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| The Little Treasure Shoppe, 226 W Park Pl, Newark | Patch-Community-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Dillard's, 1000 Turtle Creek Dr, Hattiesburg | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Salud Taqueria, 1931 2nd Ave N, Birmingham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Atlas Performing Arts Center, 1333 H St NE, Washington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Mount Vernon Avenue, Mt Vernon Ave, Alexandria | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Main Street, Main St, Pinson | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Rojo, 2921 Highland Ave, Birmingham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 3 Meetinghouse Rd, Bedford | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ignite Jewelry Studios, 84 W Walnut St, Asheville | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Delaware Theatre Company, 200 Water St, Wilmington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Natural Wellness Corner, 239 Loudon Rd, Concord | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ball-Sellers House (John Ball House), 5620 3rd St S, Arlington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 801 N St Asaph St, Alexandria | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Stevens Square Community Center, 631 Stevens Ave, Portland | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 10145 Bush Lake Rd, Bloomington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Barrel House Cafe & Bar, 1341 14th St NW, Washington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Macy's, 100 Maine Mall Rd, South Portland | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Arlington Historical Museum (Hume School), 1805 S Arlington Ridge Rd, Arlington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1960 Cliff Lake Rd, Eagan | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Manchester Community Music School, 2291 Elm St, Manchester | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ella Asheville, 49 Broadway St, Asheville | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Ashley Mac's Kitchen, 1831 28th Ave S, Homewood | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Busboys and Poets, 2021 14th St NW, Washington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lawson State Community College, 1100 9th Ave SW, Bessemer | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 7734 Terrace Ave, Middleton | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 94 Silk Farm Rd, Concord | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Fireside Theatre, 1131 Janesville Ave, Fort Atkinson | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kalmar Nyckel Foundation, 1124 E 7th St, Wilmington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 8th Street Southeast, 8th St SE, Washington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Dillard's, 100 Columbiana Cir, Columbia | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Creative Cauldron, 127 E Broad St, Falls Church | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Boscawen Congregational Church, 12 High St, Boscawen | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 7617 Idylwood Rd, Falls Church | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Festival Center, 1640 Columbia Rd NW, Washington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Automatic Seafood and Oysters, 2824 5th Ave S, Birmingham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kbird DC, 1333 P St NW, Washington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Greenbelt Cinema, 129 Centerway, Greenbelt | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Belk, 670 Promenade Pl, Columbia | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| David M. Brown Planetarium, 1426 N Quincy St, Arlington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Dillard’s, 2600 Beach Blvd, Biloxi | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Penacook Library & Activity Center 76 Community Drive Penacook, NH 03303 | Patch-Community-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Belk, 700 Haywood Rd, Greenville | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Schouler Park 70 Norcross Cir North Conway, NH 03860 | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Moka Pot, 8 Hanover St, Manchester | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| GoodLife Programs & Activities, 254 N State St, Concord | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Chaia Tacos Chinatown, 615 I St NW, Washington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Belk, 100 Columbiana Cir, Columbia | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Essential, 2215 1st Ave N, Birmingham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Arlington Historical Museum | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Current Charcoal Grill, 1625 2nd Ave S, Birmingham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Aura 121 Center Street Portland, ME 04101 | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Empire Comedy Club, 575 Congress St, Portland | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Stonefalls Gardens, 184 Stonefalls Rd, Henniker | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Works Museum, 9740 Grand Ave S, Bloomington | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Lord Of Life Lutheran Church, 5114 Twinbrook Rd, Fairfax | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Von Maur, 2400 Galleria Cir, Hoover | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Concord NH Farmers Market, Capitol St, Concord | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 5952 Franconia Rd, Franconia | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 505 South St, Bow | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Friedman Family Auditorium 925 13th Street NW Washington, D.C. 20005 | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Linn Park, 20th St N, Birmingham | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Dillard's, 700 Haywood Rd, Greenville | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Kimberly Truck Stop, 9178 US-31, Kimberly | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cinema Arts Theatres, 9650 Main St, Fairfax | Patch-Community-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 9740 Grand Ave S | Patch-Community-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Firestone Park Community Center | RecDesk-Parks-akron | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://akron.recdesk.com) |
+| Lawton Street Community Center | RecDesk-Parks-akron | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://akron.recdesk.com) |
+| Marshallberg Picnic Area | RecDesk-Parks-ccpr | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://ccpr.recdesk.com) |
+| Sheppard Chase Gym (RMC) | RecDesk-Parks-ccrec | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://ccrec.recdesk.com) |
+| Hall of Fame | RecDesk-Parks-cityofaikensc | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://cityofaikensc.recdesk.com) |
+| West End Park | RecDesk-Parks-cityofbinghamton | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://cityofbinghamton.recdesk.com) |
+| Sheehan Soccer Field (Rec Park) | RecDesk-Parks-cityofbinghamton | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://cityofbinghamton.recdesk.com) |
+| Rec Center Gym | RecDesk-Parks-cityofoneida | 0 | 0 | 0 | 0 | 14 | 0 | 14 | [cal](https://cityofoneida.recdesk.com) |
+| SCASD Natatorium | RecDesk-Parks-crpr | 21 | 0 | 3 | 0 | 0 | 0 | 24 | [cal](https://crpr.recdesk.com) |
+| -None Specified- | RecDesk-Parks-crpr | 2 | 8 | 0 | 0 | 0 | 0 | 10 | [cal](https://crpr.recdesk.com) |
+| Puddle Jumpers Classroom | RecDesk-Parks-crpr | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://crpr.recdesk.com) |
+| State College Community Theatre Space | RecDesk-Parks-crpr | 2 | 0 | 0 | 0 | 3 | 0 | 5 | [cal](https://crpr.recdesk.com) |
+| Millbrook Marsh Nature Center | RecDesk-Parks-crpr | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://crpr.recdesk.com) |
+| Parks: Hess Softball Complex | RecDesk-Parks-crpr | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://crpr.recdesk.com) |
+| Whitehall Field 1 | RecDesk-Parks-crpr | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://crpr.recdesk.com) |
+| Young Scholars of Central PA Charter School | RecDesk-Parks-crpr | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://crpr.recdesk.com) |
+| Donald Hamer Community Room | RecDesk-Parks-crpr | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://crpr.recdesk.com) |
+| ResilienCity Park - Field | RecDesk-Parks-hoboken | 4 | 0 | 36 | 9 | 0 | 0 | 49 | [cal](https://hoboken.recdesk.com) |
+| Sinatra Park Turf FIeld | RecDesk-Parks-hoboken | 0 | 0 | 0 | 0 | 20 | 0 | 20 | [cal](https://hoboken.recdesk.com) |
+| Multi-Service Center - Gym | RecDesk-Parks-hoboken | 15 | 0 | 0 | 0 | 0 | 0 | 15 | [cal](https://hoboken.recdesk.com) |
+| 1600 Park - Field | RecDesk-Parks-hoboken | 0 | 0 | 0 | 0 | 12 | 0 | 12 | [cal](https://hoboken.recdesk.com) |
+| ResilienCity Park | RecDesk-Parks-hoboken | 0 | 0 | 3 | 5 | 3 | 0 | 11 | [cal](https://hoboken.recdesk.com) |
+| Damon Murray Community Gym | RecDesk-Parks-hoboken | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://hoboken.recdesk.com) |
+| Johnny Ray McDonald, Jr. ‘Diddle’ Rink | RecDesk-Parks-hoboken | 0 | 0 | 2 | 2 | 2 | 0 | 6 | [cal](https://hoboken.recdesk.com) |
+| -None Specified- | RecDesk-Parks-hoboken | 1 | 0 | 0 | 3 | 0 | 1 | 5 | [cal](https://hoboken.recdesk.com) |
+| Columbus Park (Hudson County) - North Tennis Court | RecDesk-Parks-hoboken | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://hoboken.recdesk.com) |
+| Chief Ladiga Trail | RecDesk-Parks-jacksonvilleal | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://jacksonvilleal.recdesk.com) |
+| Lincoln Park Track | RecDesk-Parks-jcrec | 0 | 0 | 3 | 0 | 6 | 0 | 9 | [cal](https://jcrec.recdesk.com) |
+| MS #7 | RecDesk-Parks-jcrec | 0 | 0 | 0 | 3 | 3 | 3 | 9 | [cal](https://jcrec.recdesk.com) |
+| Pershing Field Pool | RecDesk-Parks-jcrec | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://jcrec.recdesk.com) |
+| Caven Point Little League Field | RecDesk-Parks-jcrec | 0 | 0 | 0 | 3 | 3 | 0 | 6 | [cal](https://jcrec.recdesk.com) |
+| Bayside Park Basketball Court | RecDesk-Parks-jcrec | 0 | 0 | 2 | 0 | 4 | 0 | 6 | [cal](https://jcrec.recdesk.com) |
+| Pershing Field Park | RecDesk-Parks-jcrec | 0 | 0 | 2 | 4 | 0 | 0 | 6 | [cal](https://jcrec.recdesk.com) |
+| 16th Street Park Pickle-Ball Courts | RecDesk-Parks-jcrec | 0 | 0 | 0 | 2 | 2 | 0 | 4 | [cal](https://jcrec.recdesk.com) |
+| -None Specified- | RecDesk-Parks-jcrec | 0 | 0 | 0 | 0 | 3 | 0 | 3 | [cal](https://jcrec.recdesk.com) |
+| Gateway Turf | RecDesk-Parks-jcrec | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://jcrec.recdesk.com) |
+| Audubon Multipurpose Court | RecDesk-Parks-jcrec | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://jcrec.recdesk.com) |
+| Maitland Community Park Meeting Room - 40ppl MAX | RecDesk-Parks-maitland | 60 | 0 | 0 | 0 | 0 | 0 | 60 | [cal](https://maitland.recdesk.com) |
+| Lake Lily Yellow Cottage | RecDesk-Parks-maitland | 45 | 0 | 0 | 0 | 0 | 0 | 45 | [cal](https://maitland.recdesk.com) |
+| MCP Basketball Court | RecDesk-Parks-maitland | 39 | 0 | 0 | 0 | 0 | 0 | 39 | [cal](https://maitland.recdesk.com) |
+| MH Pickleball Court 1 | RecDesk-Parks-maitland | 37 | 0 | 0 | 0 | 0 | 0 | 37 | [cal](https://maitland.recdesk.com) |
+| MCP Tennis Court 1 | RecDesk-Parks-maitland | 27 | 0 | 0 | 0 | 0 | 0 | 27 | [cal](https://maitland.recdesk.com) |
+| Maitland Middle School | RecDesk-Parks-maitland | 0 | 0 | 12 | 12 | 0 | 0 | 24 | [cal](https://maitland.recdesk.com) |
+| City Hall Chamber Room | RecDesk-Parks-maitland | 24 | 0 | 0 | 0 | 0 | 0 | 24 | [cal](https://maitland.recdesk.com) |
+| Maitland Community Park | RecDesk-Parks-maitland | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://maitland.recdesk.com) |
+| Hill Tennis CT 1 | RecDesk-Parks-maitland | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://maitland.recdesk.com) |
+| Hillsdale Community Center & Park | RecDesk-Parks-mprd | 81 | 0 | 0 | 0 | 0 | 0 | 81 | [cal](https://mprd.recdesk.com) |
+| Laun Community Center & Park | RecDesk-Parks-mprd | 68 | 0 | 0 | 0 | 0 | 0 | 68 | [cal](https://mprd.recdesk.com) |
+| Harmon - Thomas Community Center & Park | RecDesk-Parks-mprd | 56 | 0 | 0 | 0 | 0 | 8 | 64 | [cal](https://mprd.recdesk.com) |
+| Cottage Hill Gymnastics Center | RecDesk-Parks-mprd | 5 | 19 | 33 | 3 | 0 | 0 | 60 | [cal](https://mprd.recdesk.com) |
+| Rickarby Community Center & Park | RecDesk-Parks-mprd | 57 | 0 | 0 | 0 | 0 | 0 | 57 | [cal](https://mprd.recdesk.com) |
+| James Seals Community Center & Park | RecDesk-Parks-mprd | 56 | 0 | 0 | 0 | 0 | 0 | 56 | [cal](https://mprd.recdesk.com) |
+| Michael A. Figures Community Center & Park | RecDesk-Parks-mprd | 49 | 0 | 0 | 0 | 0 | 0 | 49 | [cal](https://mprd.recdesk.com) |
+| Thomas Sullivan Community Center & Park | RecDesk-Parks-mprd | 46 | 0 | 0 | 0 | 0 | 0 | 46 | [cal](https://mprd.recdesk.com) |
+| Joseph C. Dotch Community Center & Park | RecDesk-Parks-mprd | 41 | 0 | 0 | 0 | 0 | 0 | 41 | [cal](https://mprd.recdesk.com) |
+| Robert Hope Community Center | RecDesk-Parks-mprd | 40 | 0 | 0 | 0 | 0 | 0 | 40 | [cal](https://mprd.recdesk.com) |
+| Stotts Community Center & Park | RecDesk-Parks-mprd | 34 | 0 | 0 | 0 | 0 | 0 | 34 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Lobby - D | RecDesk-Parks-mprd | 23 | 0 | 0 | 0 | 0 | 0 | 23 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Lobby - C | RecDesk-Parks-mprd | 21 | 0 | 0 | 0 | 0 | 0 | 21 | [cal](https://mprd.recdesk.com) |
+| Springhill Fitness & Community Center | RecDesk-Parks-mprd | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Lobby - A | RecDesk-Parks-mprd | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Pool Room | RecDesk-Parks-mprd | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Multi-Purpose/B | RecDesk-Parks-mprd | 9 | 0 | 0 | 0 | 0 | 0 | 9 | [cal](https://mprd.recdesk.com) |
+| Sage Turf Field A | RecDesk-Parks-mprd | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://mprd.recdesk.com) |
+| -None Specified- | RecDesk-Parks-mprd | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://mprd.recdesk.com) |
+| Cathedral Square | RecDesk-Parks-mprd | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://mprd.recdesk.com) |
+| Mardi Gras Park | RecDesk-Parks-mprd | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Gym | RecDesk-Parks-mprd | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://mprd.recdesk.com) |
+| Hillsdale Gymnasium | RecDesk-Parks-mprd | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Café | RecDesk-Parks-mprd | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://mprd.recdesk.com) |
+| Lavretta Art and Culture Center & Park | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Fitness Room | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Computer Lab | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| Seals Gym | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| Seals Multi-Purpose Room | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| Trimmier Park | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Art Room | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| Langan Performing Arts Pavilion | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| Hillsdale Multi-Purpose Room | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| Connie Hudson Billiard | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| Herndon-Sage Park | RecDesk-Parks-mprd | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://mprd.recdesk.com) |
+| John H. Rollins Recreation Center | RecDesk-Parks-providenceri | 52 | 0 | 0 | 0 | 0 | 0 | 52 | [cal](https://providenceri.recdesk.com) |
+| Vincent Brown Recreation Center | RecDesk-Parks-providenceri | 52 | 0 | 0 | 0 | 0 | 0 | 52 | [cal](https://providenceri.recdesk.com) |
+| Kennedy Recreation Center | RecDesk-Parks-providenceri | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://providenceri.recdesk.com) |
+| Chris Wicker Aquatic Center | RecDesk-Parks-rrparksandrec | 194 | 7 | 0 | 0 | 0 | 0 | 201 | [cal](https://rrparksandrec.recdesk.com) |
+| Swim Lanes 1-3 | RecDesk-Parks-rrparksandrec | 47 | 0 | 0 | 0 | 0 | 0 | 47 | [cal](https://rrparksandrec.recdesk.com) |
+| TJ Davis Recreation Center | RecDesk-Parks-rrparksandrec | 3 | 0 | 0 | 6 | 6 | 0 | 15 | [cal](https://rrparksandrec.recdesk.com) |
+| King Field | RecDesk-Parks-rrparksandrec | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://rrparksandrec.recdesk.com) |
+| Jaycee Field | RecDesk-Parks-rrparksandrec | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://rrparksandrec.recdesk.com) |
+| Allen Field | RecDesk-Parks-rrparksandrec | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://rrparksandrec.recdesk.com) |
+| -None Specified- | RecDesk-Parks-rrparksandrec | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://rrparksandrec.recdesk.com) |
+| Shelter D/Heath Guion Shelter | RecDesk-Parks-stallings | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://stallings.recdesk.com) |
+| Government Center | RecDesk-Parks-stallings | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://stallings.recdesk.com) |
+| Stallings Municipal Park | RecDesk-Parks-stallings | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://stallings.recdesk.com) |
+| Bob Cecile Community Center | RecDesk-Parks-syracuse | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://syracuse.recdesk.com) |
+| Valley Pool | RecDesk-Parks-syracuse | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://syracuse.recdesk.com) |
+| Burnet Arts & Crafts | RecDesk-Parks-syracuse | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://syracuse.recdesk.com) |
+| Burnet Park Fitness area | RecDesk-Parks-syracuse | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://syracuse.recdesk.com) |
+| ECC Room 24 | RecDesk-Parks-westhartford | 116 | 0 | 0 | 0 | 0 | 0 | 116 | [cal](https://westhartford.recdesk.com) |
+| ECC Gymnasium | RecDesk-Parks-westhartford | 75 | 0 | 0 | 0 | 0 | 0 | 75 | [cal](https://westhartford.recdesk.com) |
+| Webster Hill Soccer 3 | RecDesk-Parks-westhartford | 70 | 0 | 0 | 0 | 0 | 0 | 70 | [cal](https://westhartford.recdesk.com) |
+| VMSR Learn to Skate | RecDesk-Parks-westhartford | 70 | 0 | 0 | 0 | 0 | 0 | 70 | [cal](https://westhartford.recdesk.com) |
+| BCSC Main Room (Entire Room) | RecDesk-Parks-westhartford | 63 | 0 | 0 | 0 | 0 | 0 | 63 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 21 | RecDesk-Parks-westhartford | 61 | 0 | 0 | 0 | 0 | 0 | 61 | [cal](https://westhartford.recdesk.com) |
+| Westmoor Park | RecDesk-Parks-westhartford | 60 | 0 | 0 | 0 | 0 | 0 | 60 | [cal](https://westhartford.recdesk.com) |
+| Aerials Gymnastics | RecDesk-Parks-westhartford | 55 | 0 | 0 | 0 | 0 | 0 | 55 | [cal](https://westhartford.recdesk.com) |
+| ECC Lower Level Dance Studio | RecDesk-Parks-westhartford | 46 | 0 | 0 | 0 | 0 | 0 | 46 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 212 | RecDesk-Parks-westhartford | 44 | 0 | 0 | 0 | 0 | 0 | 44 | [cal](https://westhartford.recdesk.com) |
+| Fernridge Park Hard Tennis Court 1 | RecDesk-Parks-westhartford | 11 | 0 | 0 | 15 | 12 | 0 | 38 | [cal](https://westhartford.recdesk.com) |
+| BCSC TV Room | RecDesk-Parks-westhartford | 36 | 0 | 0 | 0 | 0 | 0 | 36 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 22 | RecDesk-Parks-westhartford | 34 | 0 | 0 | 0 | 0 | 0 | 34 | [cal](https://westhartford.recdesk.com) |
+| Fernridge Park | RecDesk-Parks-westhartford | 30 | 0 | 0 | 0 | 0 | 0 | 30 | [cal](https://westhartford.recdesk.com) |
+| Beachland Park Soccer Field | RecDesk-Parks-westhartford | 26 | 0 | 0 | 0 | 0 | 0 | 26 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 15 | RecDesk-Parks-westhartford | 25 | 0 | 0 | 0 | 0 | 0 | 25 | [cal](https://westhartford.recdesk.com) |
+| BCSC Card Room | RecDesk-Parks-westhartford | 23 | 0 | 0 | 0 | 0 | 0 | 23 | [cal](https://westhartford.recdesk.com) |
+| Fernridge Park Soccer Field 2 | RecDesk-Parks-westhartford | 20 | 0 | 0 | 0 | 0 | 0 | 20 | [cal](https://westhartford.recdesk.com) |
+| BCSC Cardroom/ TV Room | RecDesk-Parks-westhartford | 17 | 0 | 0 | 0 | 0 | 0 | 17 | [cal](https://westhartford.recdesk.com) |
+| BCSC Fitness Center | RecDesk-Parks-westhartford | 15 | 0 | 0 | 0 | 0 | 0 | 15 | [cal](https://westhartford.recdesk.com) |
+| ECC Auditorium | RecDesk-Parks-westhartford | 15 | 0 | 0 | 0 | 0 | 0 | 15 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 29 | RecDesk-Parks-westhartford | 14 | 0 | 0 | 0 | 0 | 0 | 14 | [cal](https://westhartford.recdesk.com) |
+| ESC-Offsite Doty Aquatics Center | RecDesk-Parks-westhartford | 14 | 0 | 0 | 0 | 0 | 0 | 14 | [cal](https://westhartford.recdesk.com) |
+| King Philip Gymnasium 7/8 Grade | RecDesk-Parks-westhartford | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://westhartford.recdesk.com) |
+| VIRTUAL ZOOM | RecDesk-Parks-westhartford | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 23 | RecDesk-Parks-westhartford | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://westhartford.recdesk.com) |
+| Duffy Gymnasium | RecDesk-Parks-westhartford | 3 | 0 | 0 | 7 | 0 | 0 | 10 | [cal](https://westhartford.recdesk.com) |
+| ECC Art Room | RecDesk-Parks-westhartford | 6 | 0 | 0 | 3 | 0 | 0 | 9 | [cal](https://westhartford.recdesk.com) |
+| Duffy Elementary School | RecDesk-Parks-westhartford | 0 | 0 | 6 | 3 | 0 | 0 | 9 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 211 | RecDesk-Parks-westhartford | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://westhartford.recdesk.com) |
+| Norfeldt Elementary School | RecDesk-Parks-westhartford | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://westhartford.recdesk.com) |
+| Aiken Gymnasium | RecDesk-Parks-westhartford | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://westhartford.recdesk.com) |
+| ECC Computer Lab | RecDesk-Parks-westhartford | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://westhartford.recdesk.com) |
+| BCSC Lounge | RecDesk-Parks-westhartford | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://westhartford.recdesk.com) |
+| BCSC Conference Room | RecDesk-Parks-westhartford | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://westhartford.recdesk.com) |
+| Rockledge Golf Club | RecDesk-Parks-westhartford | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://westhartford.recdesk.com) |
+| Offsite Trip | RecDesk-Parks-westhartford | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://westhartford.recdesk.com) |
+| Bugbee Elementary School | RecDesk-Parks-westhartford | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://westhartford.recdesk.com) |
+| -None Specified- | RecDesk-Parks-westhartford | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://westhartford.recdesk.com) |
+| Hall Gymnasium-Secondary | RecDesk-Parks-westhartford | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://westhartford.recdesk.com) |
+| King Philip Middle School | RecDesk-Parks-westhartford | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://westhartford.recdesk.com) |
+| ECC Room 18-Kitchen | RecDesk-Parks-westhartford | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westhartford.recdesk.com) |
+| ECC Gazebo | RecDesk-Parks-westhartford | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://westhartford.recdesk.com) |
+| Green Hill Farm | RecDesk-Parks-worcesterparksma | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://worcesterparksma.recdesk.com) |
+| Richland Library | Richland Library | 4 | 0 | 3 | 4 | 0 | 1 | 12 | [cal](https://www.richlandlibrary.com/events) |
+| Buffalo, NY | Simpleview-Tourism-Eastern | 39 | 0 | 0 | 0 | 0 | 0 | 39 | — |
+| New Haven, CT | Simpleview-Tourism-Eastern | 24 | 0 | 0 | 0 | 0 | 0 | 24 | — |
+| Nashville, TN | Simpleview-Tourism-Eastern | 20 | 0 | 0 | 0 | 0 | 0 | 20 | — |
+| Tampa, FL | Simpleview-Tourism-Eastern | 17 | 0 | 0 | 0 | 0 | 0 | 17 | — |
+| Portland, ME | Simpleview-Tourism-Eastern | 9 | 0 | 0 | 0 | 0 | 0 | 9 | — |
+| Albany, NY | Simpleview-Tourism-Eastern | 6 | 0 | 0 | 1 | 0 | 0 | 7 | — |
+| Raleigh, NC | Simpleview-Tourism-Eastern | 6 | 0 | 0 | 0 | 0 | 0 | 6 | — |
+| The Ivy Bookshop | Simpleview-Tourism-Eastern | 4 | 0 | 0 | 0 | 0 | 0 | 4 | — |
+| Richmond, VA | Simpleview-Tourism-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Eubie Blake Cultural Center | Simpleview-Tourism-Eastern | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Patterson Park | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| iO Theater | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| M&T Bank Stadium | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Palette & Chisel Academy of Fine Arts | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Columbus, OH | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Lawn Baltimore Peninsula | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Baltimore Humane Society | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| James M. Nederlander Theatre | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| MD SPCA | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Maryland Science Center 601 Light St. 01:00 PM to 03:30 PM | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Impact Hub | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hampden Yards Beer Garden | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hey Nonny | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Intuit Art Museum | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Capital SUP X B'More SUP - Inner Harbor | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Gameday Firehouse | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Star-Spangled Banner Flag House | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Keystone Korner Baltimore | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Chicago Children’s Museum | Simpleview-Tourism-Eastern | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Manor Mill 2029 Monkton Rd. 04:00 PM to 06:00 PM | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Eager Park | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Baltimore, MD | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Emma's Tea Spot | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Yellow Door Taqueria | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Manor Mill 2029 Monkton Rd. 10:00 AM to 12:30 PM | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Peppa Pig World of Play Chicago | Simpleview-Tourism-Eastern | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Cruises on the Bay by Watermark at the Finger Piersrn555 Light St. 07:00 PM to 08:30 PM | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Baltimore Clayworks | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Second City e.t.c. Theater | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Birmingham, AL | Simpleview-Tourism-Eastern | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+| Riviera Theatre | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Chicago Architecture Center | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 1511 Guilford Ave | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Baltimore National Cemetery | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Lincoln Lodge | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Hilton Baltimore Inner Harbor | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Guaranteed Rate Field | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Center Plaza | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Gallery Cabaret | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Broadway Square | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Chicago Cultural Center | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Lord Baltimore Hotel | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Second Presbyterian Church | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Middle Branch Park | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Manor Mill 2029 Monkton Rd. 03:00 PM to 05:00 PM | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 731 Eastern Ave | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Creative Alliance | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Keystone Korner Baltimore 1350 Lancaster St. 05:00 PM to 09:30 PM | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Manor Mill 2029 Monkton Rd. 08:00 PM to 10:00 PM | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Second City | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Towson University Center for the Arts | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| 901 W Pratt Street | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Brewers Hill | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| City Cruises Chicago – Navy Pier | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Current Space | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Market at Hamilton | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Huntington Bank Pavilion at Northerly Island | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| The Comedy Bar | Simpleview-Tourism-Eastern | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Somerset County Library | Somerset-County | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Warren County Public Library | SugarCalendar-Libraries-warrenpl | 156 | 69 | 73 | 3 | 0 | 28 | 329 | [cal](https://www.warrenpl.org/events-list/) |
+| Delmont Public Library 75 School Rd, Delmont, PA, United States | Westmoreland Library Network | 2 | 0 | 0 | 0 | 0 | 0 | 2 | — |
+| Mount Pleasant Public Library 120 S. Church Street, Mount Pleasant, PA, United States | Westmoreland Library Network | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Murrysville Community Library 4130 Sardis Road, Murrysville, PA, United States | Westmoreland Library Network | 0 | 0 | 0 | 0 | 0 | 2 | 2 | — |
+| Ligonier Valley Library 120 West Main Street, Ligonier, PA, United States | Westmoreland Library Network | 1 | 0 | 0 | 0 | 0 | 1 | 2 | — |
+| Monessen Public Library 326 Donner Avenue, Monessen, PA, United States | Westmoreland Library Network | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Penn Area Library 2001 Municipal Court, Harrison City, PA, United States | Westmoreland Library Network | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Paul S. Sarbanes Library | Wicomico-Public | 1 | 0 | 0 | 0 | 0 | 1 | 2 | — |
+| Centre Library | Wicomico-Public | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Darien Library | WordPress-CT | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://www.darienlibrary.org) |
+| New Canaan Library | WordPress-CT | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://www.newcanaanlibrary.org) |
+| New Fairfield Free Public Library | WordPress-CT | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.newfairfieldlibrary.org/) |
+| Norfolk Library | WordPress-CT | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://www.norfolklibrary.org) |
+| Conference Room | WordPress-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.hplct.org/) |
+| Café, The Westport Library | WordPress-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.westportlibrary.org) |
+| Brooks Place, The Westport Library | WordPress-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.westportlibrary.org) |
+| Wallingford Public Library | WordPress-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.wallingfordlibrary.org) |
+| Cheshire Public Library | WordPress-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.cheshirelibrary.org) |
+| Enfield Public Library | WordPress-CT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.enfieldpubliclibrary.org/) |
+| Ridgefield Library | WordPress-CT | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://ridgefieldlibrary.org/) |
+| City Hall Commissioners Room, 2nd Floor | WordPress-DE | 10 | 0 | 0 | 0 | 0 | 0 | 10 | [cal](https://www.wilmingtonde.gov/library) |
+| Convention Center | WordPress-DE | 6 | 0 | 0 | 0 | 0 | 0 | 6 | [cal](https://www.wilmingtonde.gov/library) |
+| Convention Center Parking Lot | WordPress-DE | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://www.wilmingtonde.gov/library) |
+| Boardwalk | WordPress-DE | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://www.wilmingtonde.gov/library) |
+| Rehoboth Beach Public Library | WordPress-DE | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.rehobothbeachde.gov/library) |
+| Beach | WordPress-DE | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.rehobothbeachde.gov/library) |
+| Bandstand | WordPress-DE | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.wilmingtonde.gov/library) |
+| Grove Park | WordPress-DE | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.wilmingtonde.gov/library) |
+| Merrill Memorial Library | WordPress-ME | 2 | 7 | 0 | 0 | 0 | 8 | 17 | [cal](https://www.yarmouthlibrary.org) |
+| Pittsfield Public Library | WordPress-ME | 6 | 0 | 2 | 0 | 0 | 0 | 8 | [cal](https://www.pittsfield.lib.me.us/) |
+| Rockport Public Library | WordPress-ME | 1 | 5 | 0 | 0 | 0 | 0 | 6 | [cal](https://www.rockport.lib.me.us) |
+| Orrs Island Library | WordPress-ME | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.orrsislandlibrary.org) |
+| Camden Public Library | WordPress-ME | 0 | 1 | 1 | 0 | 0 | 0 | 2 | [cal](https://www.librarycamden.org) |
+| Brooksville Free Public Library | WordPress-ME | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.brooksvillelibrary.org) |
+| Main Library | WordPress-ME | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.portlandlibrary.org) |
+| Auburn Public Library | WordPress-ME | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://www.auburnpubliclibrary.org) |
+| Gorham Baxter Memorial Library | WordPress-ME | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.baxterlibrary.org) |
+| Laurel-Jones County Library | WordPress-MS | 89 | 16 | 19 | 0 | 4 | 0 | 128 | [cal](https://www.laurel.lib.ms.us) |
+| Pearl River County Library System | WordPress-MS | 49 | 0 | 9 | 17 | 0 | 6 | 81 | [cal](https://www.pearlriver.lib.ms.us) |
+| Lincoln-Lawrence-Franklin Regional Library | WordPress-MS | 8 | 0 | 0 | 0 | 0 | 1 | 9 | [cal](https://www.llf.lib.ms.us) |
+| Lee-Itawamba Library System | WordPress-MS | 2 | 2 | 1 | 1 | 0 | 0 | 6 | [cal](https://www.leeitawambalibrary.org/) |
+| Attala County Library | WordPress-MS | 3 | 1 | 0 | 0 | 0 | 0 | 4 | [cal](https://www.jhlibrary.org) |
+| Jackson-Hinds Library System | WordPress-MS | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.jhlibrary.org) |
+| Lexington Public Library | WordPress-MS | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.lexingtonlibrary.org) |
+| Goodman Public Library | WordPress-MS | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.jhlibrary.org) |
+| Winston County Library | WordPress-MS | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://midmisslib.com/winston/) |
+| Ocean Springs Library (525 Dewey Ave, Ocean Springs, MS, United States) | WordPress-MS | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.jhlibrary.org) |
+| Kilmichael Public Library | WordPress-MS | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.jhlibrary.org) |
+| Forest Public Library | WordPress-MS | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.forestlibrary.org/) |
+| Lucedale-George County Public Library (507 Oak St, Lucedale, MS, United States) | WordPress-MS | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.jhlibrary.org) |
+| Vancleave Public Library (12604 Highway 57, Vancleave, MS 39565, United States) | WordPress-MS | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.jhlibrary.org) |
+| Carthage-Leake County Library | WordPress-MS | 0 | 0 | 0 | 1 | 0 | 0 | 1 | [cal](https://www.jhlibrary.org) |
+| Warren County-Vicksburg Public Library | WordPress-MS | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.warren.lib.ms.us/) |
+| Franklin County Library | WordPress-NC | 3 | 0 | 1 | 0 | 0 | 0 | 4 | [cal](https://www.louisburglibrary.org) |
+| Dallas Branch Library | WordPress-NC | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://gastonlibrary.org/) |
+| Belmont Branch Library | WordPress-NC | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://gastonlibrary.org/) |
+| Florence S. Shanklin Branch Library | WordPress-NC | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.denverlibrary.org) |
+| Stanley Branch Library | WordPress-NC | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://gastonlibrary.org/) |
+| Myrtle Grove Branch | WordPress-NC | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://www.nhcgov.com/2628/Library) |
+| Lowell Branch Library | WordPress-NC | 1 | 0 | 1 | 0 | 0 | 0 | 2 | [cal](https://gastonlibrary.org/) |
+| Carver Branch Library | WordPress-NC | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.sheppardlibrary.org/) |
+| Margaret Little Blount Library | WordPress-NC | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.sheppardlibrary.org/) |
+| Albright Memorial Library | WordPress-PA | 10 | 0 | 0 | 0 | 1 | 1 | 12 | [cal](https://lclshome.org) |
+| Lansdale Public Library | WordPress-PA | 4 | 0 | 0 | 0 | 0 | 0 | 4 | [cal](https://www.lansdalelibrary.org) |
+| CLP – Main (Oakland) | WordPress-PA | 2 | 0 | 1 | 0 | 0 | 1 | 4 | [cal](https://www.freelibrary.org) |
+| Wyalusing Public Library | WordPress-PA | 3 | 0 | 0 | 0 | 0 | 0 | 3 | [cal](https://www.wyalusinglibrary.org) |
+| Bellwood Antis Public Library | WordPress-PA | 2 | 0 | 1 | 0 | 0 | 0 | 3 | [cal](https://www.bellwoodlibrary.org) |
+| Hughesville Area Public Library | WordPress-PA | 0 | 1 | 0 | 1 | 0 | 0 | 2 | [cal](https://www.hughesvillelibrary.org) |
+| Memorial Library Of Nazareth Vicinity | WordPress-PA | 0 | 1 | 1 | 0 | 0 | 0 | 2 | [cal](https://www.nazarethlibrary.org) |
+| CLP – Squirrel Hill | WordPress-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.freelibrary.org) |
+| CLP – Downtown | WordPress-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.freelibrary.org) |
+| CLP – Lawrenceville | WordPress-PA | 0 | 1 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.freelibrary.org) |
+| 1221 Turkey Path Rd, Wyalusing, PA 18853, USA | WordPress-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.wyalusinglibrary.org) |
+| Lansdowne Public Library | WordPress-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://lansdownelibrary.org/) |
+| Parkesburg Free Library | WordPress-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.parkesburglibrary.org/) |
+| Ligonier Valley Library | WordPress-PA | 0 | 0 | 0 | 0 | 0 | 1 | 1 | [cal](https://www.ligonierlibrary.org) |
+| CLP – Knoxville | WordPress-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.freelibrary.org) |
+| CLP – Homewood | WordPress-PA | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.freelibrary.org) |
+| Kellogg-Hubbard Library | WordPress-VT | 1 | 0 | 0 | 0 | 0 | 2 | 3 | [cal](https://kellogghubbard.org/) |
+| Norman Williams Public Library | WordPress-VT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.normanwilliams.org) |
+| Brownell Library | WordPress-VT | 0 | 0 | 0 | 0 | 1 | 0 | 1 | [cal](https://www.brownelllibrary.org) |
+| Fletcher Free Library | WordPress-VT | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://fletcherfree.org/) |
+| Martin - York | York County Libraries | 1 | 0 | 1 | 2 | 0 | 5 | 9 | — |
+| Guthrie - Hanover | York County Libraries | 2 | 1 | 0 | 1 | 0 | 2 | 6 | — |
+| Dover | York County Libraries | 1 | 3 | 1 | 0 | 0 | 0 | 5 | — |
+| Dillsburg | York County Libraries | 1 | 2 | 0 | 1 | 0 | 0 | 4 | — |
+| Paul Smith - Shrewsbury | York County Libraries | 1 | 0 | 1 | 0 | 0 | 1 | 3 | — |
+| Kreutz Creek - Hellam | York County Libraries | 1 | 1 | 0 | 0 | 0 | 0 | 2 | — |
+| Village - Jacobus | York County Libraries | 1 | 0 | 1 | 0 | 0 | 0 | 2 | — |
+| Kaltreider-Benfer - Red Lion | York County Libraries | 0 | 2 | 0 | 0 | 0 | 0 | 2 | — |
+| Mason-Dixon - Stewartstown | York County Libraries | 1 | 1 | 0 | 0 | 0 | 0 | 2 | — |
+| Glatfelter - Spring Grove | York County Libraries | 0 | 0 | 0 | 0 | 0 | 2 | 2 | — |
+| Offsite | York County Libraries | 0 | 0 | 1 | 0 | 0 | 0 | 1 | — |
+| Red Land - Etters | York County Libraries | 0 | 1 | 0 | 0 | 0 | 0 | 1 | — |
+
+### Flagged: All Ages >= 70% (total >= 20 events)
+
+| Site | Scraper | All Ages | Total | % |
+|---|---|---|---|---|
+| Chris Wicker Aquatic Center | RecDesk-Parks-rrparksandrec | 194 | 201 | 97% |
+| Ridgewood Public Library | Assabet-NH-MA | 112 | 156 | 72% |
+| Chelmsford Public Library | Assabet-NH-MA | 116 | 152 | 76% |
+| ECC Room 24 | RecDesk-Parks-westhartford | 116 | 116 | 100% |
+| Locust Valley Library | Assabet-NH-MA | 77 | 99 | 78% |
+| Hillsdale Community Center & Park | RecDesk-Parks-mprd | 81 | 81 | 100% |
+| ECC Gymnasium | RecDesk-Parks-westhartford | 75 | 75 | 100% |
+| Naperville Park District | ActiveNet-Parks-Eastern-napervilleparks | 64 | 71 | 90% |
+| Webster Hill Soccer 3 | RecDesk-Parks-westhartford | 70 | 70 | 100% |
+| VMSR Learn to Skate | RecDesk-Parks-westhartford | 70 | 70 | 100% |
+| Laun Community Center & Park | RecDesk-Parks-mprd | 68 | 68 | 100% |
+| Harmon - Thomas Community Center & Park | RecDesk-Parks-mprd | 56 | 64 | 88% |
+| BCSC Main Room (Entire Room) | RecDesk-Parks-westhartford | 63 | 63 | 100% |
+| ECC Room 21 | RecDesk-Parks-westhartford | 61 | 61 | 100% |
+| Maitland Community Park Meeting Room - 40ppl MAX | RecDesk-Parks-maitland | 60 | 60 | 100% |
+| Westmoor Park | RecDesk-Parks-westhartford | 60 | 60 | 100% |
+| Rickarby Community Center & Park | RecDesk-Parks-mprd | 57 | 57 | 100% |
+| James Seals Community Center & Park | RecDesk-Parks-mprd | 56 | 56 | 100% |
+| Aerials Gymnastics | RecDesk-Parks-westhartford | 55 | 55 | 100% |
+| Kennebunk Free Library | Assabet-NH-MA | 42 | 54 | 78% |
+| John H. Rollins Recreation Center | RecDesk-Parks-providenceri | 52 | 52 | 100% |
+| Vincent Brown Recreation Center | RecDesk-Parks-providenceri | 52 | 52 | 100% |
+| Flagler County Parks & Recreation | CivicRec-Parks-Eastern-flagler-county | 49 | 49 | 100% |
+| Nassau County Parks & Recreation | CivicRec-Parks-Eastern-nassau-county-fl-parks-recreation | 49 | 49 | 100% |
+| Michael A. Figures Community Center & Park | RecDesk-Parks-mprd | 49 | 49 | 100% |
+| City of Concord Parks & Recreation | CivicRec-Parks-Eastern-concord-nc | 48 | 48 | 100% |
+| Swim Lanes 1-3 | RecDesk-Parks-rrparksandrec | 47 | 47 | 100% |
+| Thomas Sullivan Community Center & Park | RecDesk-Parks-mprd | 46 | 46 | 100% |
+| ECC Lower Level Dance Studio | RecDesk-Parks-westhartford | 46 | 46 | 100% |
+| Lake Lily Yellow Cottage | RecDesk-Parks-maitland | 45 | 45 | 100% |
+| ECC Room 212 | RecDesk-Parks-westhartford | 44 | 44 | 100% |
+| Joseph C. Dotch Community Center & Park | RecDesk-Parks-mprd | 41 | 41 | 100% |
+| Robert Hope Community Center | RecDesk-Parks-mprd | 40 | 40 | 100% |
+| MCP Basketball Court | RecDesk-Parks-maitland | 39 | 39 | 100% |
+| Buffalo, NY | Simpleview-Tourism-Eastern | 39 | 39 | 100% |
+| MH Pickleball Court 1 | RecDesk-Parks-maitland | 37 | 37 | 100% |
+| BCSC TV Room | RecDesk-Parks-westhartford | 36 | 36 | 100% |
+| Jackson County Parks & Recreation | CivicRec-Parks-Eastern-jackson-county-ms | 35 | 35 | 100% |
+| Stotts Community Center & Park | RecDesk-Parks-mprd | 34 | 34 | 100% |
+| ECC Room 22 | RecDesk-Parks-westhartford | 34 | 34 | 100% |
+| Danville, VA | CivicRec-Parks-Eastern-city-of-danville-va | 24 | 33 | 73% |
+| Recreation Campus | CivicRec-Parks-Eastern-middletown-ny | 23 | 31 | 74% |
+| Fernridge Park | RecDesk-Parks-westhartford | 30 | 30 | 100% |
+| York County Parks | CivicRec-Parks-Eastern-york-county-pa- | 28 | 28 | 100% |
+| Carmel Clay Parks & Recreation | ActiveNet-Parks-Eastern-carmelclayparks | 24 | 27 | 89% |
+| MCP Tennis Court 1 | RecDesk-Parks-maitland | 27 | 27 | 100% |
+| Topsfield Town Library | Assabet-NH-MA | 24 | 26 | 92% |
+| Beachland Park Soccer Field | RecDesk-Parks-westhartford | 26 | 26 | 100% |
+| ECC Room 15 | RecDesk-Parks-westhartford | 25 | 25 | 100% |
+| Maury County Parks & Recreation | CivicRec-Parks-Eastern-maury-county-tn | 24 | 24 | 100% |
+| SCASD Natatorium | RecDesk-Parks-crpr | 21 | 24 | 88% |
+| City Hall Chamber Room | RecDesk-Parks-maitland | 24 | 24 | 100% |
+| New Haven, CT | Simpleview-Tourism-Eastern | 24 | 24 | 100% |
+| NOVA Parks (Northern Virginia Regional Park Authority) | ActiveNet-Parks-Eastern-novaparks | 23 | 23 | 100% |
+| Broome County Parks & Recreation | CivicRec-Parks-Eastern-broome-county-ny | 23 | 23 | 100% |
+| Daviess County Parks & Recreation | CivicRec-Parks-Eastern-daviess-county-ky | 23 | 23 | 100% |
+| Connie Hudson Lobby - D | RecDesk-Parks-mprd | 23 | 23 | 100% |
+| BCSC Card Room | RecDesk-Parks-westhartford | 23 | 23 | 100% |
+| DeFuniak Springs, FL | CivicRec-Parks-Eastern-walton-county-fl | 22 | 22 | 100% |
+| Connie Hudson Lobby - C | RecDesk-Parks-mprd | 21 | 21 | 100% |
+| Forsyth County Parks & Recreation | CivicRec-Parks-Eastern-forsyth-county-ga | 20 | 20 | 100% |
+| Fernridge Park Soccer Field 2 | RecDesk-Parks-westhartford | 20 | 20 | 100% |
+| Nashville, TN | Simpleview-Tourism-Eastern | 20 | 20 | 100% |

@@ -2871,7 +2871,7 @@
  },
  "WordPress-PA|||Avonmore Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 398 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-PA|||Bangor Public Library": {
@@ -2896,7 +2896,7 @@
  },
  "WordPress-PA|||Bernville Area Community Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.bernvillelibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.bernvillelibrary.org/events",
   "population": "zero"
  },
  "WordPress-PA|||Bethany Public Library": {
@@ -2927,7 +2927,7 @@
  },
  "WordPress-PA|||Boyertown Community Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.boyertownlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.boyertownlibrary.org/events",
   "population": "zero"
  },
  "WordPress-PA|||Bradford Area Public Library": {
@@ -2942,7 +2942,7 @@
  },
  "WordPress-PA|||Mengle Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 124 chars of text — likely JS-gated or a shell [redirects to brockwaylibrary.follettdestiny.com]",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.brockwaylibrary.org/events",
   "population": "zero"
  },
  "WordPress-PA|||Green Free Library": {
@@ -3075,7 +3075,7 @@
  },
  "WordPress-PA|||Barbara Moscato Brown Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.emporiumlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.emporiumlibrary.org/events",
   "population": "zero"
  },
  "WordPress-PA|||Erie County Public Library": {
@@ -3119,7 +3119,7 @@
  },
  "WordPress-PA|||Foxburg Free Library Association": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 259 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-PA|||Franklin Public Library": {
@@ -3134,7 +3134,7 @@
  },
  "WordPress-PA|||Genesee Area Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to dot-book.org]",
   "population": "zero"
  },
  "WordPress-PA|||Arthur Hufnagel Public Library Of Glen Rock": {
@@ -3284,7 +3284,7 @@
  },
  "WordPress-CT|||Bethel Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 329 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 183 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-CT|||Bethlehem Public Library": {
@@ -3907,7 +3907,7 @@
  },
  "WordPress-NC|||Blanche Benjamin Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org/events",
   "population": "zero"
  },
  "WordPress-NC|||Boonville Community Public Library": {
@@ -3930,7 +3930,7 @@
  },
  "WordPress-NC|||Bunn Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.bunnlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.bunnlibrary.org/events",
   "population": "zero"
  },
  "WordPress-NC|||Canton Branch Library": {
@@ -3956,7 +3956,7 @@
  },
  "WordPress-NC|||Dobson Community Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.dobsonlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.dobsonlibrary.org/events",
   "population": "zero"
  },
  "WordPress-NC|||Farmville Public Library": {
@@ -4149,12 +4149,12 @@
  },
  "WordPress-NC|||Union West Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.indiantraillibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.indiantraillibrary.org/events",
   "population": "zero"
  },
  "WordPress-NC|||Watauga County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.boonelibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.boonelibrary.org/events",
   "population": "zero"
  },
  "WordPress-VT|||Aldrich Public Library": {
@@ -4164,7 +4164,7 @@
  },
  "WordPress-VT|||Barton Public": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.bartonlibrary.org",
+  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.bartonlibrary.org/events",
   "population": "zero"
  },
  "WordPress-VT|||Benson Public": {
@@ -4330,7 +4330,7 @@
  },
  "WordPress-VT|||Readsboro Community": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.readsborolibrary.org",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.readsborolibrary.org/events",
   "population": "zero"
  },
  "WordPress-VT|||Rochester Public": {
@@ -4355,8 +4355,8 @@
   "population": "zero"
  },
  "WordPress-VT|||Shrewsbury": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "host alive, links but no events: /events 404s; 3 candidate navigation links checked and none carries dated events. OPEN GAP, host is alive",
   "population": "zero"
  },
  "WordPress-VT|||Stamford Community": {
@@ -4400,7 +4400,7 @@
  },
  "WordPress-VT|||Windsor Public": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.windsorlibrary.org",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.windsorlibrary.org/events",
   "population": "zero"
  },
  "CivicRec-Parks-Eastern|||Ross Community Center": {
@@ -7946,8 +7946,8 @@
   "population": "zero"
  },
  "LibCal-VA2|||Prince William Public Library System": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to pwcva.gov]",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: pwcgov.libcal.com answered NO probed path at all (HOST-DEAD). The county site's only calendar link is GO TO COUNTY CALENDAR to pwcva.gov/events, titled Prince William County Calendar Events - a COUNTY-WIDE calendar, so relocating there would import every county event under the library's name. REJECTED as the municipal-scope trap. OPEN GAP",
   "population": "zero"
  },
  "WordPress-DE|||Elsmere Library": {
@@ -7969,8 +7969,8 @@
   "statusAt": "2026-09-07"
  },
  "WordPress-DE|||Garfield Park Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to newcastlede.gov]",
+  "verdict": "MISMATCH",
+  "comment": "dead-domain: nccde.org/garfield/events 404s and redirects to newcastlede.gov. The only calendar found is nccde.org/calendar, a CivicEngage COUNTY-WIDE calendar for New Castle County DE - municipal scope, not this library's programme. REJECTED. OPEN GAP",
   "population": "zero"
  },
  "WordPress-DE|||Georgetown Public Library": {
@@ -7998,7 +7998,7 @@
  },
  "WordPress-DE|||Lewes Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
   "population": "zero"
  },
  "WordPress-DE|||Newark Free Library": {
@@ -9050,8 +9050,8 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-PA|||Carnegie Library, Midland": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "host alive, no calendar link at all: /events 404s and the site's navigation offers no calendar link. OPEN GAP, host is alive",
   "population": "zero"
  },
  "WordPress-PA|||Community College Of Beaver County": {
@@ -9074,7 +9074,7 @@
  },
  "WordPress-PA|||Joseph T. Simpson Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.mechanicsburglibrary.org",
+  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.mechanicsburglibrary.org/events",
   "population": "zero"
  },
  "WordPress-PA|||Johnsonburg Public Library": {
@@ -9102,7 +9102,7 @@
  },
  "WordPress-PA|||Marienville Area Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.marienvillelibrary.org",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.marienvillelibrary.org/events",
   "population": "zero"
  },
  "WordPress-PA|||Malvern Public Library": {
@@ -9112,7 +9112,7 @@
  },
  "WordPress-PA|||Mars Area Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.marslibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.marslibrary.org/events",
   "population": "zero"
  },
  "WordPress-PA|||Mary S Biesecker Public Library": {
@@ -9164,13 +9164,13 @@
   "population": "allages"
  },
  "WordPress-PA|||Murrysville Community Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "host alive, links but no events: /events 404s; 3 candidate navigation links checked and none carries dated events. OPEN GAP, host is alive",
   "population": "zero"
  },
  "WordPress-PA|||New Cumberland Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.newcumberlandlibrary.org",
+  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.newcumberlandlibrary.org/events",
   "population": "zero"
  },
  "WordPress-PA|||North Versailles Public Library": {
@@ -9180,12 +9180,12 @@
  },
  "WordPress-PA|||North Wales Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 131 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-PA|||Oil City Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.oilcitylibrary.org",
+  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.oilcitylibrary.org/events",
   "population": "zero"
  },
  "WordPress-PA|||Orwigsburg Area Fr Pub Library": {
@@ -9211,7 +9211,7 @@
  },
  "WordPress-PA|||Prospect Community Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 322 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 217 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-PA|||Prospect Park Free Library": {
@@ -9221,7 +9221,7 @@
  },
  "WordPress-PA|||Punxsutawney Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 335 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-PA|||Quarryville Library Center": {
@@ -9239,12 +9239,12 @@
  },
  "WordPress-PA|||Reynoldsville Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 391 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 131 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-PA|||Ridgway Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 215 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-PA|||Ridley Park Public Library": {
@@ -9267,7 +9267,7 @@
  },
  "WordPress-PA|||Robesonia Community Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.robesonialibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.robesonialibrary.org/events",
   "population": "zero"
  },
  "WordPress-PA|||Sarah S Bovard Memorial Library": {
@@ -9277,7 +9277,7 @@
  },
  "WordPress-PA|||Saxonburg Area Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.saxonburglibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.saxonburglibrary.org/events",
   "population": "zero"
  },
  "WordPress-PA|||Saxton Community Library": {
@@ -9297,17 +9297,17 @@
  },
  "WordPress-PA|||Shippensburg Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.shippensburglibrary.org",
+  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.shippensburglibrary.org/events",
   "population": "zero"
  },
  "WordPress-PA|||Sinking Spring Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.sinkingspringlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.sinkingspringlibrary.org/events",
   "population": "zero"
  },
  "WordPress-PA|||Slatington Library Inc": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 319 chars of text — likely JS-gated or a shell [redirects to accounts.google.com]",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
   "population": "zero"
  },
  "WordPress-PA|||Smithfield Library": {
@@ -9316,8 +9316,8 @@
   "population": "zero"
  },
  "WordPress-PA|||South Fayette Township Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "host alive, no calendar link at all: morganlibrary.org/events 404s and the site's navigation offers no calendar link. OPEN GAP, host is alive",
   "population": "zero"
  },
  "WordPress-PA|||South Park Township Library": {
@@ -9345,7 +9345,7 @@
  },
  "WordPress-PA|||Summerville Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
   "population": "zero"
  },
  "WordPress-PA|||Strasburg-Heisler Library": {
@@ -9360,17 +9360,17 @@
  },
  "WordPress-PA|||Sykesville Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 215 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-PA|||Tyrone-Snyder Township Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
   "population": "zero"
  },
  "WordPress-PA|||West Chester Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.westchesterlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.westchesterlibrary.org/events",
   "population": "zero"
  },
  "WordPress-PA|||Warren Library Association": {
@@ -9379,8 +9379,8 @@
   "population": "zero"
  },
  "WordPress-PA|||West Pittston Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 351 chars of text — likely JS-gated or a shell",
+  "verdict": "MISMATCH",
+  "comment": "host alive, no calendar link at all: /events 404s and the site's navigation offers no calendar link. OPEN GAP, host is alive",
   "population": "zero"
  },
  "WordPress-PA|||Westfield Public Library": {
@@ -9405,7 +9405,7 @@
  },
  "WordPress-PA|||Yeadon Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "event containers present ([data-event-id]:36) but no parseable dates",
   "population": "zero"
  },
  "WordPress-RI|||Island Free Library": {
@@ -9833,8 +9833,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-ME|||Blue Hill Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper [redirects to bhpl.net]",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint RESOLVED: site publishes no calendar, every events link goes off-host to bhpl.libcal.com. Relocated to LibCal-ME 2026-09-03 and PROVEN by 17 database rows under LibCal-ME-bhpl. WordPress entry guarded 2026-09-08",
   "population": "zero"
  },
  "WordPress-ME|||Boothbay Harbor Memorial Library": {
@@ -9846,8 +9846,8 @@
   "statusAt": "2026-09-07"
  },
  "WordPress-ME|||Bremen Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "host alive, no calendar: /events 404s; the homepage shows 3 dates but the site's own navigation offers 4 candidate links and NONE carries dated events. OPEN GAP, deliberately not guarded as dead - the host answers",
   "population": "zero"
  },
  "WordPress-ME|||Chase Emerson Memorial Library": {
@@ -9901,7 +9901,7 @@
  },
  "WordPress-ME|||Henry D. Moore Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.steubenlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.steubenlibrary.org/events",
   "population": "zero"
  },
  "WordPress-ME|||Kennebunk Free Library": {
@@ -9937,7 +9937,7 @@
  },
  "WordPress-ME|||Milbridge Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.milbridgelibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.milbridgelibrary.org/events",
   "population": "zero"
  },
  "WordPress-ME|||Madawaska Public Library": {
@@ -9959,18 +9959,18 @@
   "population": "zero"
  },
  "WordPress-ME|||New Vineyard Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 384 chars of text — likely JS-gated or a shell",
+  "verdict": "MISMATCH",
+  "comment": "host alive, no calendar link at all: /events 404s and the site's navigation offers no calendar link. OPEN GAP, host is alive",
   "population": "zero"
  },
  "WordPress-ME|||Ogunquit Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.ogunquitlibrary.org",
+  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.ogunquitlibrary.org/events",
   "population": "zero"
  },
  "WordPress-ME|||Owls Head Village Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.owlsheadlibrary.org",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.owlsheadlibrary.org/events",
   "population": "zero"
  },
  "WordPress-ME|||North Haven Public Library": {
@@ -9993,7 +9993,7 @@
  },
  "WordPress-ME|||Parsonsfield Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 350 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-ME|||Portland Public Library": {
@@ -10016,12 +10016,12 @@
  },
  "WordPress-ME|||Southport Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 343 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-ME|||South Berwick Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 13 chars of text — likely JS-gated or a shell",
+  "verdict": "MISMATCH",
+  "comment": "host alive, no calendar link at all: /events 404s, no probed path showed dated events, and the site publishes no calendar-ish link in its navigation. OPEN GAP, host is alive",
   "population": "zero"
  },
  "WordPress-ME|||Springvale Public Library": {
@@ -10031,7 +10031,7 @@
  },
  "WordPress-ME|||Stockton Springs Community Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 93 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-ME|||Stonington Public Library": {
@@ -10049,7 +10049,7 @@
  },
  "WordPress-ME|||Steep Falls Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.steepfallslibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.steepfallslibrary.org/events",
   "population": "zero"
  },
  "WordPress-ME|||Thomas Free Library": {
@@ -10066,8 +10066,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-ME|||Waldoboro Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "host alive, no calendar link at all: /events 404s and the site's navigation offers no calendar link. OPEN GAP, host is alive",
   "population": "zero"
  },
  "WordPress-ME|||Topsham Public Library": {
@@ -10137,8 +10137,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-MS|||Evelyn Taylor Majure Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"check back soon\")",
   "population": "zero"
  },
  "WordPress-MS|||Field Memorial Library": {
@@ -10150,8 +10150,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-MS|||First Regional Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 305 chars of text — likely JS-gated or a shell",
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"no upcoming events\")",
   "population": "zero"
  },
  "WordPress-MS|||Hamilton Public Library": {
@@ -10214,12 +10214,12 @@
  },
  "WordPress-MS|||Northeast Regional Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 343 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-MS|||Ripley Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 343 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-MS|||William And Dolores Mauldin Library": {
@@ -11879,7 +11879,7 @@
  },
  "WordPress-PA|||East Berlin Community Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "event containers present (.event-card:6) but no parseable dates",
+  "comment": "event containers present (.event-card:24) but no parseable dates",
   "population": "zero"
  },
  "WordPress-PA|||Huntingdon County Library": {
@@ -11893,8 +11893,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Pequea Valley Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_BLOCKED_BY_CLIENT at https://www.intercourselibrary.org",
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"no upcoming events\")",
   "population": "zero"
  },
  "WordPress-PA|||Trafford Community Public Library": {
@@ -12167,7 +12167,7 @@
   "comment": "age-detection miss: 1/34 (3%) of this venue's All-Ages titles carry an unambiguous age signal, e.g. \"YA Book Discussion - Disney - Wings of Starlight\" (teen)",
   "population": "allages"
  },
- "Rockbridge Regional Library|||Rockbridge Regional Library - Bookmobile": {
+ "Rockbridge-Regional-Library|||Rockbridge Regional Library - Bookmobile": {
   "verdict": "MATCHES",
   "comment": "checked 33 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
@@ -12222,7 +12222,7 @@
   "comment": "checked 21 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
  },
- "Rockbridge Regional Library|||Rockbridge Regional Library - Bath County": {
+ "Rockbridge-Regional-Library|||Rockbridge Regional Library - Bath County": {
   "verdict": "MATCHES",
   "comment": "checked 16 All-Ages titles for this venue; none carries an age signal (storytime/toddler/teen/explicit range) — programming reads as genuinely broad",
   "population": "allages"
@@ -12313,7 +12313,7 @@
  },
  "LibCal-VA2|||Williamsburg Regional Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
   "population": "zero"
  },
  "MacaroniKid-NY-brooklynnw|||Brooklyn - Northwest": {
@@ -12680,5 +12680,15 @@
   "verdict": "MATCHES",
   "comment": "carried forward unchanged from the pre-rename key GoogleCalendar-MA on 2026-09-07, when the file began emitting per-site slugs: age-neutral by title evidence, 0 of 6 distinct All-Ages titles carry any age signal. Same site, same calendar, new scraper_name.",
   "population": "allages"
+ },
+ "WordPress-NC|||Wayne County Public Library, Fremont": {
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"no upcoming events\")",
+  "population": "zero"
+ },
+ "WordPress-PA|||Coudersport Public Library": {
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"no upcoming events\")",
+  "population": "zero"
  }
 }

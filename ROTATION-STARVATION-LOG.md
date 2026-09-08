@@ -146,6 +146,67 @@ MacaroniKid starts at a fixed 19:00Z and released 15h32m later today, its longes
 - **No intervention was made this run**, so nothing here is attributable to a change; these are observations of the existing #5+#6 configuration. Per the ledger rule, no ledger row is added for a run that changed nothing about the rotation.
 
 
+## Current state — 2026-09-08 — **three clean cycles; the standing prediction held on dropping and failed on arithmetic**
+
+- Rotations in the last 7 days: `09-08=G2 09-07=G1 09-06=G3 09-05=G2 09-04=G1 09-03=G3 09-02=NONE`
+- **The single `NONE` is 09-02, which predates intervention #6.** It is now the oldest day in
+  the window and will age out tomorrow. **Six consecutive clean days, covering each group twice.**
+- `group-last-run.json`: G1 = 1.1d, G2 = 0.1d, G3 = 2.0d. `macaroni-last-run.json`: G1 = 0.5d,
+  G2 = 2.3d, G3 = 1.7d.
+- `LIBRARY-SITE-AUDIT.md` completed a **three-section cycle in three days** (09-06 / 09-07 /
+  09-08) — the first time that has happened. The previous cycle needed nine.
+
+### Prediction check — 2026-09-06 through 2026-09-08
+
+| Predicted (2026-09-05) | Measured | Held? |
+|---|---|---|
+| No `NONE` day on any of the three | 09-06=G3, 09-07=G1, 09-08=G2 all ran | ✅ |
+| Each rotation waits ~2.5–3.5h on the lock | 3h32m, **0**, **0** | ❌ |
+| Finishes between 17:30Z and 19:00Z | 18:12Z, **15:44Z**, **15:50Z** | ❌ |
+| Duration in the 8.0–9.0h band | 7h41m, 8h44m, 8h50m *(post-lock)* | ✅ (09-06 just under, as the note allowed for) |
+| Headroom positive but under 90 min every day | 47m, **3h16m**, **3h10m** | ❌ (positive ✅, under 90m ✗) |
+| Group 3 on 09-06 makes `WORDPRESS-MONTHGRID-UNRUN` checkable | It did | ✅ |
+
+**Every failure is in the safe direction, and they all have one cause: the model assumed
+MacaroniKid runs for a roughly constant ~15h.** It does not.
+
+| MacaroniKid run | Started | Finished | Duration | Lock wait it imposed |
+|---|---|---|---|---|
+| Group 2 → 09-06 | 09-05 19:00:02Z | 09-06 10:31:59Z | **15h32m** | 3h32m |
+| Group 3 → 09-07 | 09-06 19:00Z | 09-07 01:15:23Z | **6h15m** | none |
+| Group 1 → 09-08 | 09-07 19:00Z | 09-08 06:21:30Z | **11h21m** | none |
+
+The lock wait is not a property of the rotation at all — it is simply *whatever is left of
+MacaroniKid after 07:00Z*, and MacaroniKid's own duration ranges over a factor of 2.5 between
+groups. Any figure derived from a single day's wait (the 2h42m / 2h33m table in the 09-05
+entry, and the "headroom under 90 min" line built on it) was fitting a constant to a variable.
+**Revised model:** regular rotation ≈ 8.5h of actual scraping, starting at `max(07:00Z,
+MacaroniKid's finish)`, where MacaroniKid is 6–16h from 19:00Z. Worst case is 11:00Z + 8.5h =
+19:30Z, which is the only shape that breaches the 19:00Z trigger — so the constraint is real
+but is a **tail risk on MacaroniKid's slowest group**, not the daily squeeze the last entry
+described.
+
+**Standing prediction — 2026-09-09 through 2026-09-11.** `getDayGroup`: day 9 → Group 3,
+day 10 → Group 1, day 11 → Group 2. Falsifiably:
+
+- **No `NONE` day**, and on 09-09 the last `NONE` leaves the 7-day window, so the preflight's
+  "recent rotations all started" check goes green for the first time since it was written.
+- **Post-lock rotation duration stays in 7.5–9.0h** on all three. This is the one quantity that
+  has held three times running.
+- **Lock wait is 0 on at least one of the three days.** Predicting the variance now rather than
+  a fixed wait, since that is precisely what the last entry got wrong.
+- **No rotation finishes after 19:00Z.** Unchanged, and still the thing that would force a
+  scheduling change rather than another lock tweak.
+- `SugarCalendar-Libraries` (new, Group 2) first runs on **09-11**, adding ~3.5 min. Immaterial
+  to the budget; recorded so its appearance is not read as drift.
+
+**What would falsify this:** a rotation finishing after 19:00Z, or a `NONE` day — either means
+the tail risk above has arrived and the next intervention is moving a trigger. A lock wait of
+2.5h+ on *all three* days would mean MacaroniKid's duration has stabilised high, which is a
+different and worse problem than the variance measured here.
+
+---
+
 ## Current state — 2026-09-05 — **first full clean cycle; the residual risk is duration, not dropping**
 
 - Rotations in the last 7 days: `09-05=G2 09-04=G1 09-03=G3 09-02=NONE 09-01=NONE 08-31=G1 08-30=G3`
