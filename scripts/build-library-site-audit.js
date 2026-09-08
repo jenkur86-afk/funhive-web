@@ -97,6 +97,19 @@ const START = /🚀 Starting ([A-Za-z0-9_-]+)\.\.\./;
 const SITE_PIN = /^\s*📍\s+(.+?)\s*$/;
 const SITE_SCRAPING = /^\s*📚\s+Scraping\s+(.+?)\.\.\.\s*$/;
 const FOUND = /Found\s+(\d+)\s+events/;
+// THIRD SHAPE, added 2026-09-08. Assabet-NH-MA logs "Scraping: {name} ({slug})" and
+// "  Found N events at {name}" — neither a 📍 pin nor a 📚 line, so BOTH regexes above
+// missed it and all 64 of its libraries collapsed into a single scraper-aggregate row
+// every cycle. That is the largest library scraper in the fleet by FOUND (6,149 on
+// 2026-09-08) and exactly the aggregation AGE-RANGE-AUDIT.md's "No aggregation, ever"
+// rule forbids; it went unnoticed because an aggregate row looks like a deliberate
+// fallback rather than a parser miss.
+//
+// This line NAMES ITS OWN SITE, so it is matched before the pendingSite-based FOUND and
+// does not depend on pin/found ordering at all — a strictly more reliable pairing than
+// the other two shapes. Verified 2026-09-08 that Assabet is the only producer of it
+// (333 occurrences, 64 distinct sites), so it cannot capture another family's counts.
+const FOUND_AT = /Found\s+(\d+)\s+events\s+at\s+(.+?)\s*$/;
 
 /**
  * Stream one capture file, appending {scraper, site, count} rows for the slice
@@ -137,6 +150,13 @@ async function parseLog(logPath, rows) {
     }
     const scr = SITE_SCRAPING.exec(line);
     if (scr) { pendingSite = scr[1].trim(); continue; }
+
+    const fa = FOUND_AT.exec(line);
+    if (fa && currentScraper) {
+      rows.push({ scraper: currentScraper, site: fa[2].trim(), count: parseInt(fa[1], 10) });
+      pendingSite = null;
+      continue;
+    }
 
     const f = FOUND.exec(line);
     if (f && pendingSite && currentScraper) {
