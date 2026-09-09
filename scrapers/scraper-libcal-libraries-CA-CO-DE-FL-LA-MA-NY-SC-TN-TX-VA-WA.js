@@ -2708,6 +2708,39 @@ async function scrapeLibraryEvents(library, browser) {
             .trim();
         }
 
+        // A BARE ROOM NAME IS NOT A VENUE. The cleaner above handles "Library - Meeting
+        // Room", where the room is a SUFFIX on a real place. Some LibCal tenants instead
+        // publish the room as the entire location, so the venue arrives as "Children's
+        // Room" or "Meeting Room" with no library in it at all.
+        //
+        // Found 2026-09-09 on the first run after relocating Morristown-Morris Twp to this
+        // scraper: all 7 of its rows stored a room name, while every other LibCal entry
+        // checked stores a proper one ("Wantagh Public Library", "BCCLS - Bergen County
+        // Cooperative Library System"). So this is a per-tenant publishing habit, not
+        // general LibCal behaviour, and it is worth guarding rather than accepting.
+        //
+        // Two harms, both already seen elsewhere in this codebase: the geocode below is
+        // handed "Children's Room, Morristown, Morris County, NJ" and can only fall through
+        // to a centroid, and the venue reaches the activities table as a place on the map.
+        // Same class as the Simpleview date-as-venue bug and the gcal looksLikeUrl /
+        // looksLikeStreet guards — the venue column receiving something that is not a venue.
+        //
+        // Deliberately narrow: it fires only when the string is JUST a room word, so a real
+        // place that happens to contain one ("Reading Room Cafe", "The Music Room Theater")
+        // is untouched, and anything naming a library or branch is exempt outright.
+        if (event.venue) {
+          const v = event.venue.trim();
+          const namesAPlace = /\b(librar|branch|center|centre|museum|school|park|hall|annex)\b/i.test(v);
+          // The trailing group is a ROOM NUMBER or a single letter ("Program Room B",
+          // "Conference Room 2"), not a word. Allowing any short word let "Reading Room
+          // Cafe" match on a first draft — a real place, caught by the negative controls
+          // in the inline test below before this shipped.
+          const isBareRoom = /^(the\s+)?[a-z0-9'’.\- ]{0,28}\b(room|rooms|auditorium|lab|studio|gallery|meeting\s*space|community\s*space)\b\s*(?:#?\d{1,3}|[a-z])?$/i.test(v);
+          if (!namesAPlace && isBareRoom) {
+            event.venue = '';   // falls back to library.name at both use sites below
+          }
+        }
+
         // Try to geocode location with fallback
         let coordinates = null;
         if (event.venue) {
