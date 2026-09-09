@@ -29,7 +29,12 @@ const LIBRARIES = [
   { name: 'Hampton Lane Memorial Library', url: 'https://www.hampton.lib.nh.us', eventsUrl: 'https://www.hampton.lib.nh.us/events', city: 'Hampton', state: 'NH', zipCode: '03842', county: 'Rockingham County', urlCollision: 'duplicate of Assabet-NH-MA, confirmed 2026-09-06 - resolves to slug hampton, ALREADY configured there as Lane Memorial Library. Caught by matching on SLUG, not name, which is the same catch the 2026-08-24 Assabet note records for this exact library'},
   { name: 'Milford Wadleigh Memorial Library', url: 'https://www.wadleighlibrary.org', eventsUrl: 'https://www.wadleighlibrary.org/events', city: 'Milford', state: 'NH', zipCode: '03055', county: 'Hillsborough County'},
   { name: 'Exeter Public Library', url: 'https://www.exeterpl.org', eventsUrl: 'https://www.exeterpl.org/events', city: 'Exeter', state: 'NH', zipCode: '03833', county: 'Rockingham County'},
-  { name: 'Goffstown Public Library', url: 'https://goffstownlibrary.com/', eventsUrl: 'https://goffstownlibrary.com/570/Calendar', city: 'Goffstown', state: 'NH', zipCode: '03045', county: 'Hillsborough County'},
+  // GUARDED 2026-09-09 as a DUPLICATE, not a gap. Flagged by the platform sweep as running
+  // Assabet, which this scraper cannot read - but Assabet-NH-MA already covers it.
+  // WORCESTER RULE SATISFIED WITH DATABASE ROWS: 88 rows carry venue "Goffstown Public
+  // Library" under scraper_name Assabet-NH-MA, and today's run logged "Found 102 events at
+  // Goffstown Public Library". Guarded rather than deleted so the audit row survives.
+  { name: 'Goffstown Public Library', url: 'https://goffstownlibrary.com/', eventsUrl: 'https://goffstownlibrary.com/570/Calendar', city: 'Goffstown', state: 'NH', zipCode: '03045', county: 'Hillsborough County', urlCollision: 'duplicate of Assabet-NH-MA coverage - this library runs Assabet, which this scraper cannot read, and Assabet-NH-MA already stores it. PROVEN by 88 database rows under venue Goffstown Public Library'},
   { name: 'Bedford Public Library', url: 'https://www.bedfordnhlibrary.org', eventsUrl: 'https://www.bedfordnhlibrary.org/events', city: 'Bedford', state: 'NH', zipCode: '03110', county: 'Hillsborough County'},
   { name: 'Amherst Town Library', url: 'https://www.amherstlibrary.org', eventsUrl: 'https://www.amherstlibrary.org/events', city: 'Amherst', state: 'NH', zipCode: '03031', county: 'Hillsborough County'},
   { name: 'Windham Nesmith Library', url: 'https://www.nesmithlibrary.org', eventsUrl: 'https://www.nesmithlibrary.org/events', city: 'Windham', state: 'NH', zipCode: '03087', county: 'Rockingham County'},

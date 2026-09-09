@@ -63,7 +63,19 @@ const LIBRARIES = [
   { name: 'Apalachin Library Association', url: 'https://www.apalachinlibrary.org', eventsUrl: 'https://www.apalachinlibrary.org/events', city: 'Apalachin', state: 'NY', zipCode: '13732', county: 'Tioga'},
   { name: 'Arcade Free Library', url: 'https://www.arcadelibrary.org', eventsUrl: 'https://www.arcadelibrary.org/events', city: 'Arcade', state: 'NY', zipCode: '14009', county: 'Wyoming'},
   { name: 'Ardsley Public Library', url: 'https://www.ardsleylibrary.org', eventsUrl: 'https://www.ardsleylibrary.org/events', city: 'Ardsley', state: 'NY', zipCode: '10502', county: 'Westchester'},
-  { name: 'Queens Borough Public Library - Astoria', url: 'https://www.astoria.gov/', eventsUrl: 'https://www.astoria.gov/calendar?deptid=6', city: 'Astoria', state: 'NY', zipCode: '11102', county: 'Queens'},
+  // GUARDED 2026-09-09 - a cross-state collision AND a municipal-scope error at once, which
+  // is why it is worth spelling out. A branch of the Queens NYC system was configured at
+  // astoria.gov. Confirmed from the pages themselves: the root titles itself "City of
+  // Astoria Oregon" on area code 503, and the configured events path resolves to "Astoria
+  // Public Library" printing OR 97103. So this entry was pointed at an OREGON city
+  // government calendar filtered to its library department.
+  // Astoria is a neighbourhood of Queens and a city in Oregon; the {city}.gov guess picked
+  // the wrong one, and a city calendar would not have been this library's programme even in
+  // the right state.
+  // OPEN COVERAGE GAP, and deliberately NOT claimed as covered elsewhere: Queens Borough
+  // Public Library appears in no other scraper config in this repo, and the database check
+  // that would settle it timed out rather than answering.
+  { name: 'Queens Borough Public Library - Astoria', url: 'https://www.astoria.gov/', eventsUrl: 'https://www.astoria.gov/calendar?deptid=6', city: 'Astoria', state: 'NY', zipCode: '11102', county: 'Queens', urlCollision: 'astoria.gov is the City of Astoria OREGON - root titles itself City of Astoria Oregon on area code 503, and the configured calendar path resolves to Astoria Public Library printing OR 97103. Also a municipal calendar rather than a library programme. OPEN GAP for the Queens NY branch'},
   // URL corrected 2026-08-11 (was athenslibrary.org): 80 Second Street Athens NY 12015, phone 518-945-1417
   { name: 'D.R. Evarts Library', url: 'https://www.drevartslibrary.org', eventsUrl: 'https://www.drevartslibrary.org/library-calendar', city: 'Athens', state: 'NY', zipCode: '12015', county: 'Greene'},
   // URL corrected 2026-08-11 (was auburnlibrary.org): Site shows Seymour Library, 176 Genesee St, Auburn NY 13021, phone 315-252-7571. auburnlibrary.org is Auburn MA
@@ -239,7 +251,17 @@ const LIBRARIES = [
   { name: 'Island Park Public Library', url: 'https://islandparklibrary.org/', eventsUrl: 'https://islandparklibrary.org/', city: 'Island Park', state: 'NY', zipCode: '11558', county: 'Nassau'},
   { name: 'Islip Public Library', url: 'https://isliplibrary.org/', eventsUrl: 'https://isliplibrary.org/', city: 'Islip', state: 'NY', zipCode: '11751', county: 'Suffolk', urlCollision: 'relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on islip.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and then confirmed live: the page titles itself Islip Public Library and its programme renders server-side. The WordPress entry is guarded rather than deleted so the library keeps its audit row'},
   { name: 'Jericho Public Library', url: 'https://www.jericholibrary.org', eventsUrl: 'https://www.jericholibrary.org/events', city: 'Jericho', state: 'NY', zipCode: '11753', county: 'Nassau'},
-  { name: 'Your Home Public Library', url: 'https://www.johnsoncitylibrary.org', eventsUrl: 'https://www.johnsoncitylibrary.org/events', city: 'Johnson City', state: 'NY', zipCode: '13790', county: 'Broome'},
+  // GUARDED 2026-09-09 as a CROSS-STATE COLLISION, caught by the control rather than by
+  // the finding. The platform sweep read a LibCal host off this page and proposed it as a
+  // relocation - the tenant is jclibrarytx.libcal.com, and the "tx" was the tell. Fetched
+  // it: the destination titles itself "Johnson City Library (TX)". Your Home Public
+  // Library is in Johnson City NEW YORK 13790; Johnson City TEXAS has its own library and
+  // its own LibCal. Relocating would have imported a Texas library's whole programme under
+  // a New York name - strictly worse than the zero it replaces.
+  // This is the same class as Defect A: a host discovered on a library's own page is
+  // evidence the page REFERENCES it, never proof of identity.
+  // OPEN COVERAGE GAP: no working calendar URL is known for the New York library.
+  { name: 'Your Home Public Library', url: 'https://www.johnsoncitylibrary.org', eventsUrl: 'https://www.johnsoncitylibrary.org/events', city: 'Johnson City', state: 'NY', zipCode: '13790', county: 'Broome', urlCollision: 'the LibCal host discovered on this page is jclibrarytx.libcal.com, which titles itself Johnson City Library (TX) - a different state\'s library. NOT relocated. OPEN GAP: no working calendar URL is known for Johnson City NY'},
   { name: 'Jordan Bramley Library', url: 'https://www.jordanlibrary.org', eventsUrl: 'https://www.jordanlibrary.org/events', city: 'Jordan', state: 'NY', zipCode: '13080', county: 'Onondaga'},
   { name: 'Jordanville Public Library', url: 'https://jordanvillelibrary.org/', eventsUrl: 'https://jordanvillelibrary.org/upcoming-events/', city: 'Jordanville', state: 'NY', zipCode: '13361', county: 'Herkimer'},
   { name: 'Katonah Village Library', url: 'https://katonahlibrary.org/', eventsUrl: 'https://katonahlibrary.org/', city: 'Katonah', state: 'NY', zipCode: '10536', county: 'Westchester'},
@@ -424,7 +446,11 @@ const LIBRARIES = [
   { name: 'Ulysses Philomathic Library', url: 'https://www.trumansburglibrary.org/', eventsUrl: 'https://www.trumansburglibrary.org/', city: 'Trumansburg', state: 'NY', zipCode: '14886', county: 'Tompkins'},
   { name: 'Tuckahoe Public Library', url: 'https://www.tuckahoelibrary.org', eventsUrl: 'https://www.tuckahoelibrary.org/events', city: 'Tuckahoe', state: 'NY', zipCode: '10707', county: 'Westchester', urlCollision: "dead/hijacked domain, confirmed: dead-endpoint: HTTP 404 on the configured URL [redirects to tuckahoe.gov] Guarded 2026-09-07 so the rotation stops visiting it — a squatted domain is one selector change away from importing another site's markup as events. NOT deleted: this stays an explained OPEN COVERAGE GAP until a real URL is found." },
   { name: 'B. Elizabeth Strong Memorial Library', url: 'https://www.turinlibrary.org', eventsUrl: 'https://www.turinlibrary.org/events', city: 'Turin', state: 'NY', zipCode: '13473', county: 'Lewis'},
-  { name: 'Tuxedo Park Library', url: 'https://www.tuxedoparklibrary.org/', eventsUrl: 'https://www.tuxedoparklibrary.org/calendar/', city: 'Tuxedo Park', state: 'NY', zipCode: '10987', county: 'Orange'},
+  // RELOCATED 2026-09-09 to LibCal-NY. Found by the platform sweep of the UNVERIFIABLE
+  // backlog: this library publishes on tuxedoparklibrary.libcal.com, a single-tenant
+  // LibCal instance a WordPress DOM extractor structurally cannot read, which is why the
+  // entry could only ever return 0. Guarded, not deleted, so the audit row survives.
+  { name: 'Tuxedo Park Library', url: 'https://www.tuxedoparklibrary.org/', eventsUrl: 'https://www.tuxedoparklibrary.org/calendar/', city: 'Tuxedo Park', state: 'NY', zipCode: '10987', county: 'Orange', urlCollision: 'relocated to LibCal-NY 2026-09-09 - publishes on tuxedoparklibrary.libcal.com, a single-tenant LibCal instance this scraper cannot read'},
   { name: 'Unadilla Public Library', url: 'https://www.unadillalibrary.org', eventsUrl: 'https://www.unadillalibrary.org/events', city: 'Unadilla', state: 'NY', zipCode: '13849', county: 'Otsego'},
   { name: 'Nassau Library System', url: 'https://uniondalelibrary.org/', eventsUrl: 'https://uniondalelibrary.org/', city: 'Uniondale', state: 'NY', zipCode: '11553', county: 'Nassau'},
   { name: 'Valley Cottage Free Library', url: 'https://www.valleycottagelibrary.org/', eventsUrl: 'https://www.valleycottagelibrary.org/', city: 'Valley Cottage', state: 'NY', zipCode: '10989', county: 'Rockland', urlCollision: 'relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on valleycottage.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and then confirmed live: the page titles itself Valley Cottage Library and its programme renders server-side. The WordPress entry is guarded rather than deleted so the library keeps its audit row'},
@@ -434,7 +460,15 @@ const LIBRARIES = [
   { name: 'Voorheesville Public Library', url: 'https://www.voorheesvillelibrary.org', eventsUrl: 'https://www.voorheesvillelibrary.org/events', city: 'Voorheesville', state: 'NY', zipCode: '12186', county: 'Albany', urlCollision: 'relocated to LibraryCalendar-Libraries 2026-09-07 - this library publishes on voorheesville.librarycalendar.com, a LibraryCalendar instance that a WordPress DOM extractor cannot read. Host was discovered in this library own page markup and then confirmed live: the page titles itself Voorheesville Public Library and its programme renders server-side. The WordPress entry is guarded rather than deleted so the library keeps its audit row'},
   { name: 'Hepburn Library Of Waddington', url: 'https://www.waddingtonlibrary.org', eventsUrl: 'https://www.waddingtonlibrary.org/events', city: 'Waddington', state: 'NY', zipCode: '13694', county: 'St. Lawrence'},
   { name: 'Walworth-Seely Public Library', url: 'https://www.walworthlibrary.org/', eventsUrl: 'https://www.walworthlibrary.org/', city: 'Walworth', state: 'NY', zipCode: '14568', county: 'Wayne'},
-  { name: 'Wantagh Public Library', url: 'https://wantaghlibrary.org/', eventsUrl: 'https://wantaghlibrary.org/', city: 'Wantagh', state: 'NY', zipCode: '11793', county: 'Nassau'},
+  // GUARDED 2026-09-09 as a DUPLICATE, not a gap - and this one is the near-miss worth
+  // recording. The platform sweep flagged it as running LibCal and it was queued for
+  // relocation; a grep across the scraper files BEFORE wiring found LibCal already carries
+  // the identical wantaghlibrary.libcal.com entry. Same shape as the Portland ME catch on
+  // 2026-09-07: the question the sweep answers - does this library publish on LibCal - is
+  // NOT the question that decides ownership, which is whether anything already scrapes it.
+  // WORCESTER RULE SATISFIED WITH DATABASE ROWS: 7 rows carry venue "Wantagh Public
+  // Library" under scraper_name LibCal-NY-wantaghlibrary.
+  { name: 'Wantagh Public Library', url: 'https://wantaghlibrary.org/', eventsUrl: 'https://wantaghlibrary.org/', city: 'Wantagh', state: 'NY', zipCode: '11793', county: 'Nassau', urlCollision: 'duplicate of LibCal-NY coverage - the identical wantaghlibrary.libcal.com entry is already configured there. PROVEN by 7 database rows under LibCal-NY-wantaghlibrary'},
   { name: 'Warsaw Public Library', url: 'https://www.warsawlibrary.org/', eventsUrl: 'https://www.warsawlibrary.org/', city: 'Warsaw', state: 'NY', zipCode: '14569', county: 'Wyoming', urlCollision: 'warsawlibrary.org is IN, not NY' },
   { name: 'Waterford Public Library', url: 'https://www.waterfordlibrary.org', eventsUrl: 'https://www.waterfordlibrary.org/events', city: 'Waterford', state: 'NY', zipCode: '12188', county: 'Saratoga', urlCollision: 'waterfordlibrary.org is WA, not NY' },
   { name: 'Waterloo Library And Historical Society', url: 'https://www.waterloolibrary.org', eventsUrl: 'https://www.waterloolibrary.org/events', city: 'Waterloo', state: 'NY', zipCode: '13165', county: 'Seneca'},

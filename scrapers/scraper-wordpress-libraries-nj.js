@@ -105,7 +105,12 @@ const LIBRARIES = [
   { name: 'Montville Township Public Library', url: 'https://montvillelibrary.org/', eventsUrl: 'https://montvillelibrary.org/', city: 'Montville', state: 'NJ', zipCode: '07045', county: 'Morris'},
   { name: 'Moorestown Library', url: 'https://www.moorestownlibrary.org', eventsUrl: 'https://www.moorestownlibrary.org/events', city: 'Moorestown', state: 'NJ', zipCode: '08057', county: 'Burlington'},
   { name: 'Morris Plains Library', url: 'https://morrisplainslibrary.org/', eventsUrl: 'https://morrisplainslibrary.org/', city: 'Morris Plains', state: 'NJ', zipCode: '07950', county: 'Morris'},
-  { name: 'Morristown-Morris Twp Joint Public Library', url: 'https://www.morristownlibrary.org', eventsUrl: 'https://www.morristownlibrary.org/events', city: 'Morristown', state: 'NJ', zipCode: '07960', county: 'Morris'},
+  // RELOCATED 2026-09-09 to LibCal-NJ. Found by the platform sweep of the UNVERIFIABLE
+  // backlog: this library publishes on mmtlibrary.libcal.com, a single-tenant LibCal
+  // instance a WordPress DOM extractor cannot read. Identity taken from the destination
+  // page, which titles itself "Morristown & Morris Township Library" and prints NJ 07960 -
+  // checked because Morristown also names towns in NY and TN, both configured in this repo.
+  { name: 'Morristown-Morris Twp Joint Public Library', url: 'https://www.morristownlibrary.org', eventsUrl: 'https://www.morristownlibrary.org/events', city: 'Morristown', state: 'NJ', zipCode: '07960', county: 'Morris', urlCollision: 'relocated to LibCal-NJ 2026-09-09 - publishes on mmtlibrary.libcal.com, a single-tenant LibCal instance this scraper cannot read'},
   { name: 'Mount Arlington Public Library', url: 'https://mountarlingtonlibrary.org/', eventsUrl: 'https://mountarlingtonlibrary.org/', city: 'Mount Arlington', state: 'NJ', zipCode: '07856', county: 'Morris', urlCollision: "host is DEAD, probed 2026-09-07: the origin answered nothing on any of 8 paths (/, /events, /events/, /calendar, /calendar/, /events/upcoming, /whats-on, /programs). This is a host failure, not a wrong path - the distinction was checked rather than assumed, because a bare 404 on one path is not evidence a site is gone. Guarded so the rotation stops visiting it. OPEN COVERAGE GAP until a real URL is found" },
   { name: 'Mount Laurel Library', url: 'https://www.mountlaurellibrary.org', eventsUrl: 'https://www.mountlaurellibrary.org/events', city: 'Mount Laurel', state: 'NJ', zipCode: '08054', county: 'Burlington'},
   { name: 'Mountain Lakes Free Public Library', url: 'https://www.mountainlakeslibrary.org', eventsUrl: 'https://www.mountainlakeslibrary.org/events', city: 'Mountain Lakes', state: 'NJ', zipCode: '07046', county: 'Morris'},

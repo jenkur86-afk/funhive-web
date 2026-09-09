@@ -186,7 +186,13 @@ const LIBRARIES = [
   { name: 'Oak Bluffs Public Library', url: 'https://www.oakbluffslibrary.org', eventsUrl: 'https://www.oakbluffslibrary.org/events', city: 'Oak Bluffs', state: 'MA', zipCode: '02557', county: 'Dukes'},
   // URL corrected 2026-08-11 (was oxfordlibrary.org): 339 Main Street Oxford MA 01540, phone 508-987-6003
   { name: 'Oxford Free Public Library', url: 'https://oxfordmapubliclibrary.org', eventsUrl: 'https://oxfordmapubliclibrary.org', city: 'Oxford', state: 'MA', zipCode: '01540', county: 'Worcester', urlCollision: 'duplicate of Assabet-NH-MA, confirmed 2026-09-06 - oxfordmapubliclibrary.org serves assabetinteractive.com markup, which a WordPress DOM extractor cannot read, and this library is ALREADY configured in scraper-assabet-libraries-nh-ma.js under the same name. Relocating it would double-scrape one calendar under two scraper names, so the WordPress entry is guarded instead'},
-  { name: 'Palmer Public Library', url: 'https://www.palmerlibrary.org', eventsUrl: 'https://www.palmerlibrary.org/events', city: 'Palmer', state: 'MA', zipCode: '01069', county: 'Hampden'},
+  // GUARDED 2026-09-09 as a DUPLICATE, not a gap. The platform sweep of the UNVERIFIABLE
+  // backlog flagged this site as running Assabet, which a WordPress DOM extractor cannot
+  // read - but Assabet-NH-MA already covers it. WORCESTER RULE SATISFIED WITH DATABASE
+  // ROWS, not with the existence of a config entry: 50 rows carry venue "Palmer Public
+  // Library" under scraper_name Assabet-NH-MA, and today's run logged "Found 65 events at
+  // Palmer Public Library". Guarded rather than deleted so the audit row survives.
+  { name: 'Palmer Public Library', url: 'https://www.palmerlibrary.org', eventsUrl: 'https://www.palmerlibrary.org/events', city: 'Palmer', state: 'MA', zipCode: '01069', county: 'Hampden', urlCollision: 'duplicate of Assabet-NH-MA coverage - this library runs Assabet, which this scraper cannot read, and Assabet-NH-MA already stores it. PROVEN by 50 database rows under venue Palmer Public Library'},
   { name: 'Richards Memorial Library', url: 'https://paxtonflorida.com/', eventsUrl: 'https://paxtonflorida.com/library/', city: 'Paxton', state: 'MA', zipCode: '01612', county: 'Worcester'},
   { name: 'Peabody Institute Library', url: 'https://peabodylibrary.org/', eventsUrl: 'https://peabodylibrary.org/calendar/', city: 'Peabody', state: 'MA', zipCode: '01960', county: 'Essex'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in ME, not MA. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
@@ -231,7 +237,10 @@ const LIBRARIES = [
   { name: 'Joshua Hyde Public Library', url: 'https://www.sturbridgelibrary.org', eventsUrl: 'https://www.sturbridgelibrary.org/events', city: 'Sturbridge', state: 'MA', zipCode: '01566', county: 'Worcester'},
   { name: 'Swampscott Public Library', url: 'https://www.swampscottlibrary.org', eventsUrl: 'https://www.swampscottlibrary.org/events', city: 'Swampscott', state: 'MA', zipCode: '01907', county: 'Essex'},
   { name: 'Swansea Free Public Library', url: 'https://www.swansealibrary.org', eventsUrl: 'https://www.swansealibrary.org/events', city: 'Swansea', state: 'MA', zipCode: '02777', county: 'Bristol'},
-  { name: 'Taunton Public Library', url: 'https://www.tauntonlibrary.org', eventsUrl: 'https://www.tauntonlibrary.org/events', city: 'Taunton', state: 'MA', zipCode: '02780', county: 'Bristol'},
+  // GUARDED 2026-09-09 as a DUPLICATE, not a gap - same finding as Palmer above.
+  // 58 rows carry venue "Taunton Public Library" under scraper_name Assabet-NH-MA, and
+  // today's run logged "Found 70 events at Taunton Public Library".
+  { name: 'Taunton Public Library', url: 'https://www.tauntonlibrary.org', eventsUrl: 'https://www.tauntonlibrary.org/events', city: 'Taunton', state: 'MA', zipCode: '02780', county: 'Bristol', urlCollision: 'duplicate of Assabet-NH-MA coverage - this library runs Assabet, which this scraper cannot read, and Assabet-NH-MA already stores it. PROVEN by 58 database rows under venue Taunton Public Library'},
   { name: 'Boynton Public Library', url: 'https://www.templetonlibrary.org', eventsUrl: 'https://www.templetonlibrary.org/events', city: 'Templeton', state: 'MA', zipCode: '01468', county: 'Worcester'},
   { name: 'Tewksbury Public Library', url: 'https://www.tewksburylibrary.org', eventsUrl: 'https://www.tewksburylibrary.org/events', city: 'Tewksbury', state: 'MA', zipCode: '01876', county: 'Middlesex'},
   { name: 'Topsfield Town Library', url: 'https://www.topsfieldlibrary.org', eventsUrl: 'https://www.topsfieldlibrary.org/events', city: 'Topsfield', state: 'MA', zipCode: '01983', county: 'Essex', urlCollision: 'events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance topsfieldlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 36 items titled for this same library'},

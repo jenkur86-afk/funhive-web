@@ -1153,6 +1153,25 @@ const LIBRARY_SYSTEMS = [
     zipCode: '11793'
   },
   {
+    // Relocated from WordPress-NY 2026-09-09 by the platform sweep of the UNVERIFIABLE
+    // backlog. The WordPress entry sat at UNVERIFIABLE with the backlog's stock comment -
+    // renders fully, no dated events - which was accurate and unactionable: this library
+    // publishes on LibCal, which a WordPress DOM extractor cannot read.
+    // SINGLE-TENANT, not a consortium: tuxedoparklibrary.libcal.com titles itself
+    // "Tuxedo Park Library" and advertises no other member library, so no cid is needed
+    // and the bogus-id control that governs bccls/owwl does not apply here.
+    // A deliberately bogus tenant, notarealtenant-funhive-xyz.libcal.com, returned
+    // ENOTFOUND in the same pass, so a 200 means a real instance rather than a wildcard.
+    // NOT already covered: zero database rows carry this venue under any scraper_name.
+    name: 'Tuxedo Park Library',
+    url: 'https://tuxedoparklibrary.libcal.com/calendar?cid=-1&t=d',
+    county: 'Orange',
+    state: 'NY',
+    website: 'https://tuxedoparklibrary.org',
+    city: 'Tuxedo Park',
+    zipCode: '10987'
+  },
+  {
     name: 'East Meadow Public Library',
     url: 'https://eastmeadow.libcal.com/calendar?cid=-1&t=d',
     county: 'Nassau',
@@ -1271,6 +1290,24 @@ const LIBRARY_SYSTEMS = [
   },
 
   // NEW JERSEY
+  {
+    // Relocated from WordPress-NJ 2026-09-09 by the platform sweep of the UNVERIFIABLE
+    // backlog. IDENTITY FROM THE DESTINATION PAGE: mmtlibrary.libcal.com titles itself
+    // "Morristown & Morris Township Library" and prints NJ 07960 - Morristown NJ. Worth
+    // checking rather than assuming, since Morristown also names towns in NY and TN and
+    // both appear in this repo's WordPress configs.
+    // SINGLE-TENANT: the page advertises exactly one library name, so unlike the bccls
+    // entries below it needs no cid and the bogus-id control does not apply. The bogus
+    // tenant probed in the same pass returned ENOTFOUND, so a 200 is a real instance.
+    // The audit row's name is kept as configured so the LIBRARY-SITE-AUDIT.md row joins.
+    name: 'Morristown-Morris Twp Joint Public Library',
+    url: 'https://mmtlibrary.libcal.com/calendar?cid=-1&t=d',
+    county: 'Morris',
+    state: 'NJ',
+    website: 'https://mmtlibrary.org',
+    city: 'Morristown',
+    zipCode: '07960'
+  },
   // RELOCATED FROM WordPress-{state} 2026-09-07 -- CONSORTIUM ENTRIES, and the cid
   // is the whole point. These libraries publish on a SHARED LibCal tenant, so the
   // bare host would import every member library under one library's name. Each
