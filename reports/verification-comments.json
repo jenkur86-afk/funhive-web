@@ -681,7 +681,7 @@
  },
  "WordPress-CT|||Danbury Public Library (Danbury, CT)": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch: this library publishes on assabet, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in Assabet-NH-MA — check first whether it is ALREADY configured there, since several of this batch were duplicates rather than gaps Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
+  "comment": "platform=assabet was reported by the sweep, but NO Assabet instance answers on any standard path for this host - probed 2026-09-09 and left alone rather than guessed at. OPEN GAP",
   "population": "zero"
  },
  "WordPress-CT|||Greenwich Library (Greenwich, CT)": {
@@ -888,7 +888,7 @@
  },
  "WordPress-CT|||Old Lyme - Phoebe Griffin Noyes Library (Old Lyme, CT)": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch: this library publishes on assabet, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in Assabet-NH-MA — check first whether it is ALREADY configured there, since several of this batch were duplicates rather than gaps Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
+  "comment": "RELOCATED 2026-09-09 to Assabet-NH-MA, WIRED BUT UNRUN. Slug found on the library's own events page; destination RSS titles itself 'Phoebe Griffin Noyes Library Schedule of Events' with 54 items and September 2026 dates, against a bogus instance returning HTTP 503 with 0 items. The scraper is Chrome-based and a rotation was live, so it was not run - next scheduled turn 2026-09-11",
   "population": "zero"
  },
  "WordPress-CT|||Oxford Public Library (Oxford, CT)": {
@@ -2155,7 +2155,7 @@
  },
  "WordPress-MA|||Joshua Hyde Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch: this library publishes on librarymarket, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in LibraryMarket-{ST} Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
+  "comment": "RELOCATED 2026-09-09 to LibraryMarket-ME-NH-MA. THE INSTANCE IS ON THE LIBRARY'S OWN DOMAIN, not a librarymarket.com subdomain - sturbridge.librarymarket.com does not resolve, identically to the negative control - so a host-name probe would have missed it. The configured path here was the MONTH view; the relocation reads /events/upcoming, verified live at HTTP 200 titled 'Upcoming Events | Joshua Hyde Public Library', 606 event nodes, September 2026 dates, MA 01566. Unrun but its scraper is Group 3 and had not yet run today, so the scheduled rotation should prove it",
   "population": "zero"
  },
  "WordPress-VT|||Franklin-Grand Isle Bookmobile": {
@@ -2440,7 +2440,7 @@
  },
  "WordPress-FL|||Miami-Dade Public Library System": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch: this library publishes on communico (static.libnet.info), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in Communico-{ST} Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
+  "comment": "NOT A RELOCATION - already configured in Communico-FL at mdpls.org/events. But NOT confirmed covered either: the Communico run logs 'Event selectors timeout - waiting additional 5 seconds for AJAX render' on this site, and the database queries that would settle it time out. So this is a live extraction problem inside Communico-FL rather than a platform mismatch, and the WordPress entry is deliberately NOT guarded as covered-elsewhere because the Worcester rule is unmet. Note mdpls.org/events and mdpls.libnet.info/events return byte-identical content, so the vanity domain IS the Communico tenant",
   "population": "zero"
  },
  "WordPress-MS|||Pearl River County Library System": {
@@ -3209,7 +3209,7 @@
  },
  "WordPress-PA|||Hellertown Area Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch: this library publishes on google-calendar, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
+  "comment": "RESOLVED 2026-09-09: relocated to GoogleCalendar-PA. Events were in a Google Calendar embed this scraper cannot read. Identity PA 18055 / area 610; feed expanded through the destination scraper's own occurrences() at 54 programme occurrences in 60 days, 0 opening-hours rows. PROVEN LIVE: 64 rows under GoogleCalendar-PA-hellertownlibrary",
   "population": "zero"
  },
  "WordPress-PA|||Hershey Public Library": {
@@ -8527,7 +8527,7 @@
  },
  "WordPress-MA|||Millicent Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch: this library publishes on assabet, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in Assabet-NH-MA — check first whether it is ALREADY configured there, since several of this batch were duplicates rather than gaps Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
+  "comment": "RELOCATED 2026-09-09 to Assabet-NH-MA, WIRED BUT UNRUN. Destination RSS titles itself 'Millicent Library Schedule of Events' with 53 items. Same control and same deferral as Old Lyme",
   "population": "zero"
  },
  "WordPress-MA|||Monterey Public Library": {
@@ -9050,8 +9050,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Carnegie Free Library Of Swissvale": {
-  "verdict": "MISMATCH",
-  "comment": "platform mismatch: this library publishes on bibliocommons (acl.bibliocommons.com), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in BiblioCommons-{ST} — acl.bibliocommons.com is the Allegheny County PA consortium and serves many libraries, so check scope Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
+  "verdict": "UNVERIFIABLE",
+  "comment": "platform=bibliocommons at acl.bibliocommons.com, the Allegheny County consortium. COULD NOT BE VERIFIED over plain HTTP on 2026-09-09: every bibliocommons host returns HTTP 403 to a non-browser request INCLUDING A DELIBERATELY BOGUS TENANT, so a 403 carries no information about whether this tenant is real. Needs the Puppeteer stack, which was not run because a rotation was live. Also note acl is a consortium serving many Allegheny libraries, so it would need per-library filtering rather than a URL swap",
   "population": "zero"
  },
  "WordPress-PA|||Carnegie Library Of Mckeesport": {
@@ -9342,8 +9342,8 @@
   "population": "zero"
  },
  "WordPress-PA|||South Park Township Library": {
-  "verdict": "MISMATCH",
-  "comment": "platform mismatch: this library publishes on bibliocommons (acl.bibliocommons.com), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in BiblioCommons-{ST} — acl.bibliocommons.com is the Allegheny County PA consortium and serves many libraries, so check scope Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
+  "verdict": "UNVERIFIABLE",
+  "comment": "platform=bibliocommons at acl.bibliocommons.com - same consortium and the same unverifiable-by-plain-HTTP result as Carnegie Free Library Of Swissvale, probed together on 2026-09-09",
   "population": "zero"
  },
  "WordPress-PA|||Spring City Free Public Library": {
@@ -9386,7 +9386,7 @@
  },
  "WordPress-PA|||Tyrone-Snyder Township Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch: this library publishes on google-calendar, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
+  "comment": "RESOLVED 2026-09-09: relocated to GoogleCalendar-PA. Identity PA 16686 / area 814 - checked because tyronelibrary.org is also claimed by a Tyrone GEORGIA entry, which is already commented out as a Defect A removal. Feed expanded at 57 programme occurrences, 0 hours rows. PROVEN LIVE: 57 rows under GoogleCalendar-PA-tyronelibrary",
   "population": "zero"
  },
  "WordPress-PA|||West Chester Public Library": {
@@ -9807,8 +9807,8 @@
   "statusAt": "2026-09-07"
  },
  "WordPress-FL|||Tampa-Hillsborough County Public Library": {
-  "verdict": "MISMATCH",
-  "comment": "platform mismatch: this library publishes on bibliocommons (hcplc.bibliocommons.com), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in BiblioCommons-{ST} — acl.bibliocommons.com is the Allegheny County PA consortium and serves many libraries, so check scope Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
+  "verdict": "UNVERIFIABLE",
+  "comment": "platform=bibliocommons at hcplc.bibliocommons.com, which looks single-tenant and would be a large recovery. COULD NOT BE VERIFIED over plain HTTP on 2026-09-09: bibliocommons returns 403 to non-browser requests including a bogus control tenant, so the 403 proves nothing. Highest-value item in this family to re-check with Puppeteer outside a rotation window",
   "population": "zero"
  },
  "WordPress-ME|||Acton Public Library": {
@@ -10106,7 +10106,7 @@
  },
  "WordPress-ME|||Wells Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch: this library publishes on assabet, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in Assabet-NH-MA — check first whether it is ALREADY configured there, since several of this batch were duplicates rather than gaps Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
+  "comment": "platform=assabet was reported by the sweep, but NO Assabet instance answers on any standard path for this host - probed 2026-09-09 and left alone rather than guessed at. OPEN GAP",
   "population": "zero"
  },
  "WordPress-ME|||West Paris Public Library": {
@@ -10238,12 +10238,12 @@
  },
  "WordPress-MS|||Northeast Regional Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch: this library publishes on google-calendar, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
+  "comment": "RESOLVED 2026-09-09: relocated to a NEW GoogleCalendar-MS key. Identity MS 38834 Corinth / area 662. This is a SYSTEM - its four calendars prefix events with a branch code (IU 176, BO 105, CO 62, RP 22, TI 22, RZ 19, BU 17, BE 11, BA 5) - so one entry covers every branch. PROVEN LIVE: 123 found, 0 INVALID, and the ICS LOCATION names each branch so rows carry per-branch venues",
   "population": "zero"
  },
  "WordPress-MS|||Ripley Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch: this library publishes on google-calendar, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
+  "comment": "RESOLVED 2026-09-09 as covered-by-parent and PROVEN PER-BRANCH: a branch of Northeast Regional, which was relocated to GoogleCalendar-MS. Both entries pointed at the same host so this one could only duplicate. The system ICS names each branch, so Ripley rows are stored under venue Ripley Public Library - 11 rows on the first run. The cautious prediction that rows would carry only the system name was disproved by the run and corrected",
   "population": "zero"
  },
  "WordPress-MS|||William And Dolores Mauldin Library": {
@@ -10395,7 +10395,7 @@
  },
  "WordPress-NJ|||Hamilton Township Free Public Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch: this library publishes on assabet, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in Assabet-NH-MA — check first whether it is ALREADY configured there, since several of this batch were duplicates rather than gaps Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
+  "comment": "RELOCATED 2026-09-09 to Assabet-NH-MA, WIRED BUT UNRUN. Destination RSS titles itself 'Hamilton Township Public Library Schedule of Events' with 44 items. Same control and same deferral as Old Lyme",
   "population": "zero"
  },
  "WordPress-NJ|||Keyport Free Public Library": {
@@ -10878,7 +10878,7 @@
  },
  "WordPress-NY|||Elbridge Free Library": {
   "verdict": "MISMATCH",
-  "comment": "platform mismatch: this library publishes on google-calendar, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
+  "comment": "RESOLVED 2026-09-09: relocated to GoogleCalendar-NY. Identity rests on area code 315 plus the page title - the site prints no ZIP, stated plainly rather than implied. Feed expanded at 43 programme occurrences, 0 hours rows. PROVEN LIVE: 60 rows under GoogleCalendar-NY-elbridgelibrary",
   "population": "zero"
  },
  "WordPress-NY|||East Rochester Public Library": {

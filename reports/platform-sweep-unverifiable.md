@@ -185,3 +185,59 @@ destination titled itself correctly while printing an Illinois ZIP.
   three sites were filed as extraction failures on 2026-09-08 and every one turned out to
   have a genuinely empty calendar.
 
+---
+
+## Corrections after working the list — 2026-09-09
+
+Three claims in the original write-up were wrong, and the corrections change what the
+remaining work actually is.
+
+**1. `civicplus` is NOT "needs a new extractor".** `CivicEngage-Libraries` already exists,
+is `state: Multi`, and already covers Williamson County TN — which is itself one of the five
+sites the sweep flagged, so that row is a false positive rather than a gap. The other four
+are relocatable. But each needs its LIBRARY-SPECIFIC `CID`: the config reads
+`calendar.aspx?CID=N`, and its own comment records that `CID=25 was the general city
+calendar (all categories) — no library events`. So this is the same per-library-filter
+discipline as LibCal's `cid` and LibraryCalendar's `branches[]`, with the same bogus-id
+control, not a URL swap.
+
+**2. `bibliocommons` cannot be verified over plain HTTP at all.** Every bibliocommons host
+returns HTTP 403 to a non-browser request — INCLUDING a deliberately bogus tenant probed as a
+control. A 403 therefore carries no information about whether a tenant is real, and none of
+these three can be judged without the Puppeteer stack. `hcplc.bibliocommons.com`
+(Tampa-Hillsborough) looks single-tenant and is the highest-value item in the whole remaining
+list; the other two share `acl.bibliocommons.com`, an Allegheny County PA consortium that
+would need per-library filtering.
+
+**3. `communico` (Miami-Dade) is not a relocation.** It is ALREADY configured in
+`Communico-FL` at `mdpls.org/events`, and `mdpls.org/events` and
+`mdpls.libnet.info/events` return byte-identical content, so the vanity domain IS the
+Communico tenant. The real problem is inside Communico: its run logs
+`Event selectors timeout - waiting additional 5 seconds for AJAX render` on this site. That
+is a per-site extraction bug in the right scraper, not a platform mismatch — and the
+WordPress entry was deliberately NOT guarded as covered-elsewhere, because the database
+queries that would satisfy the Worcester rule time out.
+
+### Resolved in this pass
+
+| Library | Outcome |
+|---|---|
+| Hellertown Area Library PA | relocated to GoogleCalendar-PA, **proven live**, 64 rows |
+| Tyrone-Snyder Township PA | relocated to GoogleCalendar-PA, **proven live**, 57 rows |
+| Elbridge Free Library NY | relocated to GoogleCalendar-NY, **proven live**, 60 rows |
+| Northeast Regional Library MS | relocated to new GoogleCalendar-MS, **proven live**, 123 found |
+| Ripley Public Library MS | covered-by-parent, **proven per-branch**, 11 rows |
+| Joshua Hyde Public Library MA | relocated to LibraryMarket-ME-NH-MA, unrun |
+| Old Lyme CT, Millicent MA, Hamilton Township NJ | relocated to Assabet-NH-MA, **wired but unrun** |
+| Wells PL ME, Danbury PL CT | no Assabet instance answers any standard path — left alone, open gaps |
+| Aldrich PL VT, Woodgate Free Library NY | no Google Calendar iframe found — open gaps |
+
+**Two of the three relocations made the day before shipped a malformed venue that only
+appeared on reading the rows back** — a bare room name from LibCal, a glued street fragment
+from Google Calendar, both since fixed at source with a guard and a test. Read the stored
+rows after every relocation in this queue. A run completing is not the same as a run being
+right.
+
+`libraryaware` remains the largest family and remains unfixable by relocation: it is a
+NoveList newsletter product with no public calendar. Those libraries need a different
+calendar found, or they stay gaps.
