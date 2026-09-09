@@ -222,6 +222,10 @@ const SCRAPERS = {
   // A GoogleCalendar-GA key was drafted the same day and DELIBERATELY NOT ADDED: both
   // Georgia candidates turned out to be libraries in NY and IL. See scraper-gcal-libraries.js.
   'GoogleCalendar-VT': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesVTCloudFunction', type: 'api', group: 1, state: 'VT', sites: 3 },
+  // Added 2026-09-09 from the platform sweep of the UNVERIFIABLE backlog. Torrington
+  // Library was configured under WordPress-CT, where its Google Calendar was structurally
+  // unreadable. GROUP 2 matches WordPress-CT so the library keeps its rotation day.
+  'GoogleCalendar-CT': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesCTCloudFunction', type: 'api', group: 2, state: 'CT' },
   // 2026-09-06: three new states from the UNVERIFIABLE backlog's Google-Calendar-iframe
   // cluster — seven libraries whose programme lives entirely inside a cross-origin
   // Google Calendar iframe, so their WordPress-* entries could only ever return 0.

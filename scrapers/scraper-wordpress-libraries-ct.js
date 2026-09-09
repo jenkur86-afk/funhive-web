@@ -63,7 +63,15 @@ const LIBRARIES = [
   { name: 'Enfield Public Library', url: 'https://www.enfieldpubliclibrary.org/', eventsUrl: 'https://www.enfieldpubliclibrary.org/', city: 'Enfield', state: 'CT', zipCode: '06082', county: 'Capitol Planning Region'},
   { name: 'Southington Public Library', url: 'https://www.southingtonlibrary.org/', eventsUrl: 'https://www.southingtonlibrary.org/', city: 'Southington', state: 'CT', zipCode: '06489', county: 'Capitol Planning Region'},
   { name: 'Shelton Public Library', url: 'https://www.sheltonlibrarysystem.org', eventsUrl: 'https://www.sheltonlibrarysystem.org/events', city: 'Shelton', state: 'CT', zipCode: '06484', county: 'Naugatuck Valley Planning Region'},
-  { name: 'Torrington Library', url: 'https://www.torringtonlibrary.org', eventsUrl: 'https://www.torringtonlibrary.org/events', city: 'Torrington', state: 'CT', zipCode: '06790', county: 'Northwest Hills Planning Region'},
+  // RELOCATED 2026-09-09 to GoogleCalendar-CT. This entry sat at UNVERIFIABLE with the
+  // backlog's most common comment - renders fully, shows no dated events - which was
+  // accurate and unactionable: the events are in a Google Calendar that a WordPress DOM
+  // extractor structurally cannot read, so this entry could only ever return 0.
+  // Identity confirmed from the live page before moving: CT 06790, area code 860, titles
+  // itself "Torrington Library" - worth checking because Torrington is also a town in WY.
+  // PROVEN LIVE at the destination the same day: Found 34, New 34, INVALID 0.
+  // Guarded rather than deleted so the library keeps its LIBRARY-SITE-AUDIT.md row.
+  { name: 'Torrington Library', url: 'https://www.torringtonlibrary.org', eventsUrl: 'https://www.torringtonlibrary.org/events', city: 'Torrington', state: 'CT', zipCode: '06790', county: 'Northwest Hills Planning Region', urlCollision: 'relocated to GoogleCalendar-CT 2026-09-09 - the events live in a Google Calendar embed a WordPress DOM extractor cannot read. Proven live at the destination: Found 34, New 34, INVALID 0'},
   // 2026-08-27: PLATFORM MISMATCH. Trumbull publishes on trumbull.libcal.com, confirmed by that page titling itself "Library Calendar - Trumbull Library".
   // Guarded rather than deleted so the library keeps an explained row in LIBRARY-SITE-AUDIT.md.
   { name: 'Trumbull Library', url: 'https://www.trumbull-ct.gov/', eventsUrl: 'https://www.trumbull-ct.gov/1104/Library', city: 'Trumbull', state: 'CT', zipCode: '06611', county: 'Greater Bridgeport Planning Region', urlCollision: 'platform mismatch - publishes on trumbull.libcal.com; relocated to LibCal-CT 2026-08-27' },

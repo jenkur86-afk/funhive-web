@@ -119,6 +119,30 @@ const LIBRARIES = [
     city: 'Newton', state: 'NC', zipCode: '28658', county: 'Catawba',
   },
   {
+    // Was WordPress-CT. Found 2026-09-09 by the platform sweep of the UNVERIFIABLE
+    // backlog — it had sat at UNVERIFIABLE with the usual "renders but shows no dated
+    // events" comment, which is exactly right and exactly useless: the events are in a
+    // Google Calendar the WordPress DOM extractor structurally cannot see.
+    //
+    // IDENTITY FROM THE LIVE PAGE, not the name: torringtonlibrary.org titles itself
+    // "Torrington Library", prints CT 06790 and carries area code 860 — Connecticut.
+    // Worth stating because Torrington is also a town in Wyoming.
+    //
+    // FEED VERIFIED THROUGH THIS SCRAPER'S OWN occurrences() EXPANSION, not just fetched:
+    // 950 VEVENTs, 148 RRULEs, and 25 programme occurrences inside the 60-day window, with
+    // ZERO opening-hours rows. That second number is the one that matters — a large feed
+    // can still contribute nothing upcoming, and an hours-only feed contributes noise
+    // (see the Mary S Biesecker rejection recorded in the platform sweep report).
+    // A deliberately bogus calendar id was probed alongside and returned HTTP 404, so a
+    // 200 here means a real calendar rather than a permissive endpoint.
+    // Sample titles carry explicit ages — "Wiggles & Giggles (ages 0-2)", "Budding
+    // Bookworms (3-5)" — so these should bracket properly rather than land in All Ages.
+    name: 'Torrington Library',
+    url: 'https://www.torringtonlibrary.org/events',
+    calendarIds: ['rrrgevjde9ahgrj4s2m13ner5g@group.calendar.google.com'],
+    city: 'Torrington', state: 'CT', zipCode: '06790', county: 'Litchfield',
+  },
+  {
     // Was WordPress-VT. Identity: Cobleigh Public Library, 14 Depot St., Lyndonville
     // VT 05851, ph (802) 626-5475 — 802 is Vermont's only area code.
     // The configured URL was a hop short of the calendar, which the GCAL-IFRAME-CLUSTER
@@ -482,6 +506,9 @@ async function scrapeGCalLibrariesVTCloudFunction() { return runState('VT'); }
 async function scrapeGCalLibrariesNCCloudFunction() { return runState('NC'); }
 async function scrapeGCalLibrariesNYCloudFunction() { return runState('NY'); }
 async function scrapeGCalLibrariesPACloudFunction() { return runState('PA'); }
+// Added 2026-09-09 with the Torrington relocation. CT holds exactly one library, so it
+// keeps the bare registry key per the single-library rule documented at the top of this file.
+async function scrapeGCalLibrariesCTCloudFunction() { return runState('CT'); }
 
 module.exports = {
   scrapeGCalLibraries,
@@ -493,4 +520,5 @@ module.exports = {
   scrapeGCalLibrariesNCCloudFunction,
   scrapeGCalLibrariesNYCloudFunction,
   scrapeGCalLibrariesPACloudFunction,
+  scrapeGCalLibrariesCTCloudFunction,
 };
