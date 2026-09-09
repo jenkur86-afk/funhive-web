@@ -7,7 +7,7 @@ the command is in each gate's detail line and the value is dated, never guessed.
 ---
 ## 2026-09-09
 
-<!-- STATUS-DATA {"date":"2026-09-09","countiesResolve":100,"urlCollisions":0,"confirmedBugs":271,"unknownSites":387,"specificAgeShare":46,"nameConformance":75.5,"sourceUrlCoverage":62,"countyCoverage":0} -->
+<!-- STATUS-DATA {"date":"2026-09-09","countiesResolve":100,"urlCollisions":0,"confirmedBugs":281,"unknownSites":354,"specificAgeShare":46,"nameConformance":75.5,"sourceUrlCoverage":62,"countyCoverage":0} -->
 
 ### Distance to 100%
 
@@ -15,8 +15,8 @@ the command is in each gate's detail line and the value is dated, never guessed.
 |---|---|---|---|---|
 | 1. Counties resolve | 100% | · | 100% | blocks nothing — mechanical once a city→county dataset is chosen |
 | 2. URLs unique per state | 0 | · | 0 | blocks gates 3 and 5 — selector work on a wrong URL imports the wrong library |
-| 3. Zero open bugs | 271 | -2 ✅ | 0 | unblocked — gate 2 is clear; these are now the main body of work |
-| 4. Zero unknown sites | 387 | · | 0 | independent — re-checking is its own pass |
+| 3. Zero open bugs | 281 | +10 ⚠️ | 0 | unblocked — gate 2 is clear; these are now the main body of work |
+| 4. Zero unknown sites | 354 | -33 ✅ | 0 | independent — re-checking is its own pass |
 | 5. Age brackets resolved | 46% | · | max (best 47.4%) | no fixed target — maximise; ratchets vs best ever |
 | 6. Names join to registry | 75.5% ⚠stale | · | 100% | planned migration, not daily work |
 | 7. Provenance (source_url) | 62% ⚠stale | · | 90% | partly blocked on rotation |
@@ -26,9 +26,9 @@ the command is in each gate's detail line and the value is dated, never guessed.
 
 | | Broken | Scale | Why not fixed now |
 |---|---|---|---|
-| 🟠 | Confirmed open bugs (MISMATCH, config entry still live) | 271 sites | NOT blocked any more — gate 2 is clear, so these are directly actionable; dead-endpoint and extraction-failure buckets first |
+| 🟠 | Confirmed open bugs (MISMATCH, config entry still live) | 281 sites | NOT blocked any more — gate 2 is clear, so these are directly actionable; dead-endpoint and extraction-failure buckets first |
 | 🟠 | Contained bugs — guarded, so no bad data, but the library is uncovered | 743 sites | each needs a correct URL or a relocation to the right scraper family before it is genuinely fixed |
-| 🟠 | Unknown sites (UNVERIFIABLE verdicts) | 387 sites | bot-blocks / JS-only calendars / TLS failures — never re-checked |
+| 🟠 | Unknown sites (UNVERIFIABLE verdicts) | 354 sites | bot-blocks / JS-only calendars / TLS failures — never re-checked |
 | 🟠 | Age detection — most events still land in the All Ages catch-all | 46% resolved (cumulative; varies 13-60% by rotation group) | MASTER-PLAN Phase 5, not started — compare like-for-like with age-specificity-by-section.js, NOT against best-ever |
 | 🟡 | scraper_name drift — rows cannot join back to the registry | 75.5% conform (as of 2026-09-06) | mostly ALREADY-FIXED rows aging out, not live drift — check-name-drift-liveness.js separates the two before anyone renames anything |
 | 🟡 | County-level coverage unknown | no libraries audited against what exists | MASTER-PLAN Phase 10 — correctly last |
