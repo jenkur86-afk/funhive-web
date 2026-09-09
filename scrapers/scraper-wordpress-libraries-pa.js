@@ -120,7 +120,12 @@ const LIBRARIES = [
   { name: 'Union Library Company Of Hatborough', url: 'https://www.hatborolibrary.org', eventsUrl: 'https://www.hatborolibrary.org/events', city: 'Hatboro', state: 'PA', zipCode: '19040', county: 'Montgomery', urlCollision: 'events are in a cross-origin Google Calendar iframe, unreadable by a DOM extractor. Relocated to GoogleCalendar-PA 2026-09-06, proven live at 77 rows. Identity confirmed from the live page as Union Library of Hatborough, 243 S York Rd, Hatboro PA 19040, ph 215-672-1420'},
   { name: 'Hawley Library', url: 'https://www.hawleylibrary.org/', eventsUrl: 'https://www.hawleylibrary.org/', city: 'Hawley', state: 'PA', zipCode: '18428', county: 'Wayne'},
   { name: 'Hazleton Area Public Library', url: 'https://www.hazletonlibrary.org/', eventsUrl: 'https://www.hazletonlibrary.org/calendar', city: 'Hazleton', state: 'PA', zipCode: '18201', county: 'Luzerne'},
-  { name: 'Hellertown Area Library', url: 'https://www.hellertownlibrary.org', eventsUrl: 'https://www.hellertownlibrary.org/events', city: 'Hellertown', state: 'PA', zipCode: '18055', county: 'Northampton'},
+  // RELOCATED 2026-09-09 to GoogleCalendar-PA. Found by the platform sweep of the
+  // UNVERIFIABLE backlog: the events live in a Google Calendar embed a WordPress DOM
+  // extractor cannot read, so this entry could only ever return 0. Identity confirmed from
+  // the live page (PA 18055, area code 610); feed expanded through the destination
+  // scraper's own window logic at 54 programme occurrences and 0 opening-hours rows.
+  { name: 'Hellertown Area Library', url: 'https://www.hellertownlibrary.org', eventsUrl: 'https://www.hellertownlibrary.org/events', city: 'Hellertown', state: 'PA', zipCode: '18055', county: 'Northampton', urlCollision: 'relocated to GoogleCalendar-PA 2026-09-09 - events are in a Google Calendar embed this scraper cannot read. Feed verified at 54 programme occurrences in 60 days, 0 opening-hours rows'},
   { name: 'Hershey Public Library', url: 'https://www.hersheylibrary.org/', eventsUrl: 'https://www.hersheylibrary.org/', city: 'Hershey', state: 'PA', zipCode: '17033', county: 'Dauphin'},
   { name: 'Hollidaysburg Area Public Library', url: 'https://hollidaysburglibrary.org/', eventsUrl: 'https://hollidaysburglibrary.org/', city: 'Hollidaysburg', state: 'PA', zipCode: '16648', county: 'Blair'},
   { name: 'Honey Brook Community Library', url: 'https://www.honeybrooklibrary.org', eventsUrl: 'https://www.honeybrooklibrary.org/events', city: 'Honey Brook', state: 'PA', zipCode: '19344', county: 'Chester', urlCollision: "RELOCATED 2026-09-08: publishes on LibCal at ccls.libcal.com, now configured in LibCal-PA as ?cid=13410 so only this library is read. Found by following the library own site navigation to its calendar link rather than guessing paths - the 8 standard paths had all failed. Verified live: 168 event elements titled \"Honey Brook Library - LibCal - Chester County\", and a bogus cid on the same tenant returns HTTP 404, so the filter genuinely narrows. A WordPress DOM scraper cannot read LibCal, so this entry could only ever return 0. NOT a coverage gap" },
@@ -232,7 +237,13 @@ const LIBRARIES = [
   { name: 'Towanda Public Library', url: 'https://towandalibrary.org/', eventsUrl: 'https://towandalibrary.org/', city: 'Towanda', state: 'PA', zipCode: '18848', county: 'Bradford'},
   { name: 'Trafford Community Public Library', url: 'https://www.traffordlibrary.org', eventsUrl: 'https://www.traffordlibrary.org/events', city: 'Trafford', state: 'PA', zipCode: '15085', county: 'Westmoreland'},
   { name: 'Tunkhannock Public Library', url: 'https://www.tunkhannocklibrary.org/', eventsUrl: 'https://www.tunkhannocklibrary.org/', city: 'Tunkhannock', state: 'PA', zipCode: '18657', county: 'Wyoming'},
-  { name: 'Tyrone-Snyder Township Public Library', url: 'https://www.tyronelibrary.org', eventsUrl: 'https://www.tyronelibrary.org/events', city: 'Tyrone', state: 'PA', zipCode: '16686', county: 'Blair'},
+  // RELOCATED 2026-09-09 to GoogleCalendar-PA, same finding as Hellertown above.
+  // Identity confirmed from the live page: PA 16686, area code 814. Worth recording that
+  // tyronelibrary.org is also claimed by a Tyrone GEORGIA entry in the GA file - that one
+  // is already commented out as a Defect A removal, so there is no live collision, and this
+  // check independently confirms Pennsylvania is the correct claimant.
+  // Feed expanded at 57 programme occurrences in 60 days, 0 opening-hours rows.
+  { name: 'Tyrone-Snyder Township Public Library', url: 'https://www.tyronelibrary.org', eventsUrl: 'https://www.tyronelibrary.org/events', city: 'Tyrone', state: 'PA', zipCode: '16686', county: 'Blair', urlCollision: 'relocated to GoogleCalendar-PA 2026-09-09 - events are in a Google Calendar embed this scraper cannot read. Feed verified at 57 programme occurrences in 60 days, 0 opening-hours rows'},
   { name: 'Warren Library Association', url: 'https://www.warrenlibrary.org', eventsUrl: 'https://www.warrenlibrary.org/events', city: 'Warren', state: 'PA', zipCode: '16365', county: 'Warren County'},
   { name: 'Waterford Public Library', url: 'https://www.waterfordlibrary.org', eventsUrl: 'https://www.waterfordlibrary.org/events', city: 'Waterford', state: 'PA', zipCode: '16441', county: 'Erie', urlCollision: 'waterfordlibrary.org is WA, not PA' },
   { name: 'West Chester Public Library', url: 'https://www.westchesterlibrary.org', eventsUrl: 'https://www.westchesterlibrary.org/events', city: 'West Chester', state: 'PA', zipCode: '19380', county: 'Chester'},

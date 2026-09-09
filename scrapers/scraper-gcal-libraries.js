@@ -196,6 +196,89 @@ const LIBRARIES = [
     calendarIds: ['unionlibrarycohatboro@gmail.com'],
     city: 'Hatboro', state: 'PA', zipCode: '19040', county: 'Montgomery',
   },
+  // ---------------------------------------------------------------------------
+  // FOUR LIBRARIES RELOCATED 2026-09-09, continuing the platform-mismatch work on the
+  // UNVERIFIABLE backlog. All four sat in WordPress-{state} carrying the backlog's stock
+  // comment — renders fully, shows no dated events — which was accurate and unactionable,
+  // because the events are in a Google Calendar the WordPress DOM extractor cannot see.
+  //
+  // EVERY ONE PASSED THE SAME THREE CHECKS, in this order, and the third is the one that
+  // rejected a candidate yesterday:
+  //   1. IDENTITY from the library's own page — ZIP and phone area code, never the name.
+  //   2. NOT ALREADY COVERED — grepped every scraper file for the host before wiring, the
+  //      check that caught Wantagh and Portland ME.
+  //   3. WHAT WOULD ACTUALLY BE STORED — RRULEs expanded through this file's own
+  //      occurrences() over the 60-day window, counting programme rows against
+  //      opening-hours rows. Mary S Biesecker PA was rejected on exactly this on
+  //      2026-09-08 at 2 programmes against 51 hours rows; all four below are 0% hours.
+  //
+  // NOTE THAT ADDING THESE FLIPS PA AND NY TO SLUGGED NAMES, because scraperNameFor()
+  // slugs whenever a state holds more than one library. Existing Hatboro/Homer/Sidney rows
+  // keep their old name until they expire, so both forms appear in the audits for a while.
+  // That is attribution churn, not duplication — _stableEventId does not include the
+  // scraper name — and passing one library per call keeps write name == lookup name, which
+  // is what makes verifyAndCleanupEvents() safe here.
+  {
+    // Was WordPress-PA. Identity: titles itself "Hellertown Area Library", PA 18055,
+    // ph (610) 838-8381 — 610 is eastern Pennsylvania.
+    // Feed verified 2026-09-09: 1,369 VEVENTs, newest DTSTART 2026-10-07, RRULE present.
+    // Expanded: 54 programme occurrences in 60 days, 0 opening-hours rows.
+    name: 'Hellertown Area Library',
+    url: 'https://www.hellertownlibrary.org/events',
+    calendarIds: ['hellertownlibrary@gmail.com'],
+    city: 'Hellertown', state: 'PA', zipCode: '18055', county: 'Northampton',
+  },
+  {
+    // Was WordPress-PA. Identity: titles itself "Tyrone-Snyder Public Library", PA 16686,
+    // ph 814-684-1133 — 814 is central Pennsylvania.
+    // WORTH STATING: tyronelibrary.org is also claimed by a Tyrone GEORGIA entry in
+    // scraper-wordpress-libraries-ga.js. That entry is already commented out as a Defect A
+    // removal, so there is no live collision — and this check independently confirms the
+    // Pennsylvania library is the correct claimant of the host.
+    // Feed verified 2026-09-09: 1,211 VEVENTs, newest DTSTART 2027-05-20, RRULE present.
+    // Expanded: 57 programme occurrences in 60 days, 0 opening-hours rows.
+    name: 'Tyrone-Snyder Township Public Library',
+    url: 'https://www.tyronelibrary.org/events',
+    calendarIds: ['calendar.tyronelibrary@gmail.com'],
+    city: 'Tyrone', state: 'PA', zipCode: '16686', county: 'Blair',
+  },
+  {
+    // Was WordPress-NY. Identity: titles itself "Elbridge Free Library", ph 315-689-7111 —
+    // 315 is upstate New York. The page prints no ZIP, so the area code is the whole of the
+    // state evidence here; recorded plainly rather than implied.
+    // Feed verified 2026-09-09: 310 VEVENTs, newest DTSTART 2026-10-21, RRULE present.
+    // Expanded: 43 programme occurrences in 60 days, 0 opening-hours rows, and the titles
+    // carry ages — "Story Hour (Ages 1-5)" — so they should bracket rather than land in
+    // All Ages.
+    name: 'Elbridge Free Library',
+    url: 'https://www.elbridgelibrary.org/events',
+    calendarIds: ['elbridgefreelibrary@gmail.com'],
+    city: 'Elbridge', state: 'NY', zipCode: '13060', county: 'Onondaga',
+  },
+  {
+    // Was WordPress-MS, and the FIRST Mississippi library in this family.
+    // Identity: titles itself "Northeast Regional Library", MS 38834 (Corinth),
+    // ph 662-287-7311 — 662 is northern Mississippi.
+    // THIS IS A SYSTEM, NOT A SINGLE LIBRARY, and that is deliberate. Its four calendars
+    // prefix every event with a two-letter branch code — IU 176, BO 105, CO 62, RP 22,
+    // TI 22, RZ 19, BU 17, BE 11, BA 5 — so one entry covers the whole system.
+    // CONSEQUENCE WORTH KNOWING BEFORE SOMEONE "FIXES" IT: RP is Ripley, which is
+    // configured separately in WordPress-MS at this same host. Ripley is therefore
+    // COVERED-BY-PARENT once this runs, but its rows will carry the SYSTEM's venue name
+    // rather than Ripley's own — coverage, not per-branch precision. Recorded the same way
+    // Lexington County-Swansea was on 2026-09-08 rather than claimed as proven-per-branch.
+    // Feed verified 2026-09-09: 489 VEVENTs across 4 calendars, RRULE present.
+    // Expanded: 99 programme occurrences in 60 days, 0 opening-hours rows.
+    name: 'Northeast Regional Library',
+    url: 'https://www.nereg.lib.ms.us/events',
+    calendarIds: [
+      '0e99e6f83a93b1db435a6b1998d05acb94257c30936e4d501e230a7644dc8da6@group.calendar.google.com',
+      'b23a9b7064e1f94832c28afd907df1a13f4070ee4daf9f4ae2f49b3ab8e3da83@group.calendar.google.com',
+      'b982fc55b0389ba8e9879bf1a0c9c0bee86d3611d1cda6c25a026ec40d2fa3f7@group.calendar.google.com',
+      '8213300d50470394ee3f56b049baced0a6d1a201fe9a09d1f6b475c9c6066f51@group.calendar.google.com',
+    ],
+    city: 'Corinth', state: 'MS', zipCode: '38834', county: 'Alcorn',
+  },
   {
     // Was WordPress-MA. Identity: Leverett Library, 75 Montague Rd., Leverett MA 01054,
     // ph 413-548-9220 — 413 is western Massachusetts.
@@ -398,6 +481,28 @@ async function scrapeGCalLibraries(stateFilter) {
             // column receiving something that is not a venue, which then reaches the
             // activities table as a place. Fall back to the library's own name and keep
             // the original string as the address, so nothing is lost.
+            // A THIRD SHAPE, found 2026-09-09 on the first Northeast Regional MS run:
+            // LOCATION reads "Iuka Library (204 N Main St, Iuka, MS 38852)". The paren
+            // opens BEFORE the first comma, so splitting on commas leaves the venue as
+            // "Iuka Library (204 N Main St" — a name with half a street address welded on.
+            // 58 of that system's 123 rows arrived that way. Cut at an unclosed "(" and
+            // push the fragment into the address, where it belongs.
+            // Deliberately only when the paren is UNCLOSED in this piece: a venue that
+            // legitimately contains a complete parenthetical, like "Main Library (Annex)",
+            // is left intact.
+            const openParen = venueName.indexOf('(');
+            if (openParen > 0 && !venueName.includes(')')) {
+              const fragment = venueName.slice(openParen + 1).trim();
+              venueName = venueName.slice(0, openParen).trim();
+              if (fragment) addressParts = [fragment, ...addressParts];
+              // The matching ")" is now stranded on the last address piece. Drop it so the
+              // geocoder is handed a clean address rather than "MS 38852)".
+              if (addressParts.length) {
+                addressParts[addressParts.length - 1] =
+                  addressParts[addressParts.length - 1].replace(/\)\s*$/, '').trim();
+              }
+            }
+
             const looksLikeUrl = /^(https?:\/\/|www\.)/i.test(venueName) || /^zoom$/i.test(venueName);
             const looksLikeStreet = /^\d+\s+\S/.test(venueName);
             if (looksLikeUrl || looksLikeStreet) {
@@ -509,6 +614,9 @@ async function scrapeGCalLibrariesPACloudFunction() { return runState('PA'); }
 // Added 2026-09-09 with the Torrington relocation. CT holds exactly one library, so it
 // keeps the bare registry key per the single-library rule documented at the top of this file.
 async function scrapeGCalLibrariesCTCloudFunction() { return runState('CT'); }
+// Added 2026-09-09 with the Northeast Regional relocation — the first Mississippi library
+// in this family. One library, so it keeps the bare registry key.
+async function scrapeGCalLibrariesMSCloudFunction() { return runState('MS'); }
 
 module.exports = {
   scrapeGCalLibraries,
@@ -521,4 +629,5 @@ module.exports = {
   scrapeGCalLibrariesNYCloudFunction,
   scrapeGCalLibrariesPACloudFunction,
   scrapeGCalLibrariesCTCloudFunction,
+  scrapeGCalLibrariesMSCloudFunction,
 };

@@ -226,6 +226,12 @@ const SCRAPERS = {
   // Library was configured under WordPress-CT, where its Google Calendar was structurally
   // unreadable. GROUP 2 matches WordPress-CT so the library keeps its rotation day.
   'GoogleCalendar-CT': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesCTCloudFunction', type: 'api', group: 2, state: 'CT' },
+  // Added 2026-09-09 with the Northeast Regional relocation, the first Mississippi library
+  // in this family. GROUP 2 matches WordPress-MS so the system keeps its rotation day.
+  // It is a SYSTEM entry: its four calendars prefix events with a branch code, so one key
+  // covers every branch including Ripley, which is guarded in WordPress-MS as
+  // covered-by-parent rather than proven-per-branch.
+  'GoogleCalendar-MS': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesMSCloudFunction', type: 'api', group: 2, state: 'MS' },
   // 2026-09-06: three new states from the UNVERIFIABLE backlog's Google-Calendar-iframe
   // cluster — seven libraries whose programme lives entirely inside a cross-origin
   // Google Calendar iframe, so their WordPress-* entries could only ever return 0.
@@ -242,8 +248,11 @@ const SCRAPERS = {
   // NC and PA hold one library each and keep the bare key per CLAUDE.md's
   // "one site -> exactly the registry key" rule.
   'GoogleCalendar-NC': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesNCCloudFunction', type: 'api', group: 3, state: 'NC' },
-  'GoogleCalendar-NY': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesNYCloudFunction', type: 'api', group: 1, state: 'NY', sites: 2 },
-  'GoogleCalendar-PA': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesPACloudFunction', type: 'api', group: 2, state: 'PA' },
+  'GoogleCalendar-NY': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesNYCloudFunction', type: 'api', group: 1, state: 'NY', sites: 3 },
+  // `sites` counted from LIBRARIES, not incremented by hand. PA went 1 -> 3 on 2026-09-09
+  // with the Hellertown and Tyrone-Snyder relocations, which is also what flipped this
+  // state's scraper_name from the bare key to per-site slugs.
+  'GoogleCalendar-PA': { file: './scraper-gcal-libraries.js', exportName: 'scrapeGCalLibrariesPACloudFunction', type: 'api', group: 2, state: 'PA', sites: 3 },
   // 2026-08-09: WordPress-GA's Decatur County - Gilbert H. Gragg Library entry pointed at
   // bainbridgelibrary.org, which times out. The real institution is the Southwest Georgia
   // Regional Library System, whose calendar is a FullCalendar.js widget with no server-
@@ -1116,7 +1125,15 @@ const SCRAPERS = {
   // is why this one emitted a single bare name for all 18 sites unnoticed until now.
   // NOTE the file name still says nh-ma while it now also covers RI; renaming it
   // needs a git mv plus this entry, so it is recorded rather than done silently.
-  'Assabet-NH-MA': { file: './scraper-assabet-libraries-nh-ma.js', exportName: 'scrapeAssabetLibrariesCloudFunction', type: 'puppeteer', group: 2, state: 'Multi', sites: 61 },
+  // `sites` COUNTED FROM THE CONFIG ARRAY, NOT INCREMENTED BY HAND — 67 live entries, 67
+  // distinct slugs, no duplicates. It read 61 before 2026-09-09 while the file already held
+  // 64, so the declared value was STALE BY THREE before this session added its three; the
+  // count below corrects both. That is the exact drift the LibraryCalendar-Libraries comment
+  // warns about, and check-scraper-names.js compares this number against the distinct
+  // scraper_name count, so a stale value here makes its COLLAPSED check meaningless.
+  // (Assabet is separately COLLAPSED — all 67 sites write one scraper_name — which is a
+  // known, documented constraint rather than drift; see the note in the scraper file.)
+  'Assabet-NH-MA': { file: './scraper-assabet-libraries-nh-ma.js', exportName: 'scrapeAssabetLibrariesCloudFunction', type: 'puppeteer', group: 2, state: 'Multi', sites: 67 },
 
   // ============================================================================
   // PHASE 7: GAP COVERAGE SCRAPERS (non-library family event sources)

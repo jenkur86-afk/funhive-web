@@ -92,7 +92,14 @@ const LIBRARIES = [
   { name: 'Edgartown Free Public Library', url: 'https://www.edgartownlibrary.org', eventsUrl: 'https://www.edgartownlibrary.org/events', city: 'Edgartown', state: 'MA', zipCode: '02539', county: 'Dukes', urlCollision: 'events are on Assabet, unreadable by a WordPress DOM extractor - the site names instance edgartownlibrary.assabetinteractive.com. Relocated to Assabet-NH-MA on 2026-09-06 after its upcoming-events.rss returned 39 items titled for this same library'},
   { name: 'T.O.H.P. Burnham Free Library', url: 'https://www.essexlibrary.org', eventsUrl: 'https://www.essexlibrary.org/events', city: 'Essex', state: 'MA', zipCode: '01929', county: 'Essex County', urlCollision: 'essexlibrary.org is NY, not MA' },
   // URL corrected 2026-08-11 (was fairhavenlibrary.org): Site shows 45 Center Street, Fairhaven MA 02719, phone 508-992-5342
-  { name: 'Millicent Library', url: 'https://millicentlibrary.org', eventsUrl: 'https://millicentlibrary.org/events-calendar', city: 'Fairhaven', state: 'MA', zipCode: '02719', county: 'Bristol'},
+  // RELOCATED 2026-09-09 to Assabet-NH-MA. Found by the platform sweep of the UNVERIFIABLE
+  // backlog: this library publishes on Assabet Interactive, which a WordPress DOM extractor
+  // structurally cannot read, so the entry could only ever return 0. The slug was found on
+  // this library's OWN events page, and the destination feed was then fetched and judged on
+  // what it says: "Millicent Library Schedule of Events", 53 items. A deliberately bogus
+  // Assabet instance returned HTTP 503 with 0 items in the same pass, so a 200 with items
+  // means a real instance. Guarded rather than deleted so the audit row survives.
+  { name: 'Millicent Library', url: 'https://millicentlibrary.org', eventsUrl: 'https://millicentlibrary.org/events-calendar', city: 'Fairhaven', state: 'MA', zipCode: '02719', county: 'Bristol', urlCollision: 'relocated to Assabet-NH-MA 2026-09-09 - publishes on Assabet Interactive, which this scraper cannot read. Destination feed titles itself "Millicent Library Schedule of Events" with 53 items'},
   { name: 'East End Branch Library', url: 'https://www.fallriverlibrary.org', eventsUrl: 'https://www.fallriverlibrary.org/events', city: 'Fall River', state: 'MA', zipCode: '00000', county: 'Bristol'},
   { name: 'Fitchburg Public Library', url: 'http://fitchburgwi.gov/', eventsUrl: 'http://fitchburgwi.gov/2775/Library', city: 'Fitchburg', state: 'MA', zipCode: '01420', county: 'Worcester'},
   { name: 'Lilly Library', url: 'https://www.florencelibrary.org', eventsUrl: 'https://www.florencelibrary.org/events', city: 'Florence', state: 'MA', zipCode: '01062', county: 'Hampshire', urlCollision: 'florencelibrary.org is SC, not MA' },

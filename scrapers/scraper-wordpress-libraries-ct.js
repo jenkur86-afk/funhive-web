@@ -137,7 +137,14 @@ const LIBRARIES = [
   { name: 'North Haven Memorial Library', url: 'https://www.northhavenlibrary.org', eventsUrl: 'https://www.northhavenlibrary.org/events', city: 'North Haven', state: 'CT', zipCode: '06473', county: 'South Central Connecticut Planning Region', urlCollision: 'northhavenlibrary.org is ME, not CT' },
   // URL corrected 2026-08-11 (was norwichlibrary.org): 261 Main St Norwich CT 06360, phone 860-889-2365, listed in City of Norwich CT gov department directory
   { name: 'Otis Library', url: 'https://otislibrarynorwich.org', eventsUrl: 'https://otislibrarynorwich.libcal.com/calendar/otislibrary', city: 'Norwich', state: 'CT', zipCode: '06360', county: 'Southeastern Connecticut Planning Region'},
-  { name: 'Old Lyme - Phoebe Griffin Noyes Library', url: 'https://www.oldlymelibrary.org', eventsUrl: 'https://www.oldlymelibrary.org/events', city: 'Old Lyme', state: 'CT', zipCode: '06371', county: 'Lower Connecticut River Valley Planning Region'},
+  // RELOCATED 2026-09-09 to Assabet-NH-MA. Found by the platform sweep of the UNVERIFIABLE
+  // backlog: this library publishes on Assabet Interactive, which a WordPress DOM extractor
+  // structurally cannot read, so the entry could only ever return 0. The slug was found on
+  // this library's OWN events page, and the destination feed was then fetched and judged on
+  // what it says: "Phoebe Griffin Noyes Library Schedule of Events", 54 items. A deliberately bogus
+  // Assabet instance returned HTTP 503 with 0 items in the same pass, so a 200 with items
+  // means a real instance. Guarded rather than deleted so the audit row survives.
+  { name: 'Old Lyme - Phoebe Griffin Noyes Library', url: 'https://www.oldlymelibrary.org', eventsUrl: 'https://www.oldlymelibrary.org/events', city: 'Old Lyme', state: 'CT', zipCode: '06371', county: 'Lower Connecticut River Valley Planning Region', urlCollision: 'relocated to Assabet-NH-MA 2026-09-09 - publishes on Assabet Interactive, which this scraper cannot read. Destination feed titles itself "Phoebe Griffin Noyes Library Schedule of Events" with 54 items'},
   // REMOVED 2026-08-11 (MASTER-PLAN Defect A): configured host serves a library in WI, not CT. Confirmed live in reports/verification-comments.json. Removed now rather than later because today's date-extraction fixes mean this scraper CAN now read pages it previously failed on, which would have started importing another state's events under this name. RECORDED COVERAGE GAP - restore when a real URL is verified.
   // { name: 'Oxford Public Library', url: 'https://oxfordlibrary.org/', eventsUrl: 'https://oxfordlibrary.org/', city: 'Oxford', state: 'CT', zipCode: '06478', county: 'Naugatuck Valley Planning Region'},
   // REMOVED 2026-08-11 (Defect A): no verifiable official site. Town of Plainfield CT library page lists only Aldrich Free Public Library, 299 Main St Moosup. Central Village branch at 51 Black Hill Rd has no own s

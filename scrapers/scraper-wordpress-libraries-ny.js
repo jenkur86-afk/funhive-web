@@ -160,7 +160,11 @@ const LIBRARIES = [
   { name: 'East Rochester Public Library', url: 'https://www.eastrochesterlibrary.org', eventsUrl: 'https://www.eastrochesterlibrary.org/events', city: 'East Rochester', state: 'NY', zipCode: '14445', county: 'Monroe'},
   { name: 'East Rockaway Public Library', url: 'https://www.eastrockawaylibrary.org', eventsUrl: 'https://www.eastrockawaylibrary.org/events', city: 'East Rockaway', state: 'NY', zipCode: '11518', county: 'Nassau'},
   { name: 'Eastchester Public Library', url: 'https://www.eastchesterlibrary.org', eventsUrl: 'https://www.eastchesterlibrary.org/events', city: 'Eastchester', state: 'NY', zipCode: '10709', county: 'Westchester'},
-  { name: 'Elbridge Free Library', url: 'https://www.elbridgelibrary.org', eventsUrl: 'https://www.elbridgelibrary.org/events', city: 'Elbridge', state: 'NY', zipCode: '13060', county: 'Onondaga'},
+  // RELOCATED 2026-09-09 to GoogleCalendar-NY. Events live in a Google Calendar embed this
+  // scraper cannot read. Identity rests on area code 315 (upstate NY) plus the page title -
+  // the site prints no ZIP, so that is the whole of the state evidence and is stated plainly
+  // rather than implied. Feed expanded at 43 programme occurrences in 60 days, 0 hours rows.
+  { name: 'Elbridge Free Library', url: 'https://www.elbridgelibrary.org', eventsUrl: 'https://www.elbridgelibrary.org/events', city: 'Elbridge', state: 'NY', zipCode: '13060', county: 'Onondaga', urlCollision: 'relocated to GoogleCalendar-NY 2026-09-09 - events are in a Google Calendar embed this scraper cannot read. Feed verified at 43 programme occurrences in 60 days, 0 opening-hours rows'},
   { name: 'Ellicottville Memorial Library', url: 'https://www.ellicottvillelibrary.org', eventsUrl: 'https://www.ellicottvillelibrary.org/events', city: 'Ellicottville', state: 'NY', zipCode: '14731', county: 'Cattaraugus'},
   { name: 'Farman Free Library Association Of Ellington', url: 'https://www.ellingtonlibrary.org', eventsUrl: 'https://www.ellingtonlibrary.org/events', city: 'Ellington', state: 'NY', zipCode: '14732', county: 'Chautauqua'},
   { name: 'Ellisburg Free Library', url: 'https://www.ellisburglibrary.org', eventsUrl: 'https://www.ellisburglibrary.org/events', city: 'Ellisburg', state: 'NY', zipCode: '13636', county: 'Jefferson'},

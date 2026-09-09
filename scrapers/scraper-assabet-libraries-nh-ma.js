@@ -189,6 +189,20 @@ const LIBRARIES = [
   // New Jersey — first NJ libraries in this scraper.
   { name: 'Boonton Holmes Public Library', slug: 'boontonlibrary', eventsUrl: 'https://boontonlibrary.assabetinteractive.com/calendar/', city: 'Boonton', state: 'NJ', zipCode: '07005' },   // 53 upcoming in RSS
   { name: 'Ridgewood Public Library', slug: 'ridgewoodlibrary', eventsUrl: 'https://ridgewoodlibrary.assabetinteractive.com/calendar/', city: 'Ridgewood', state: 'NJ', zipCode: '07450' },   // 123 upcoming in RSS
+  // ---------------------------------------------------------------------------
+  // THREE RELOCATED 2026-09-09 from the platform sweep of the UNVERIFIABLE backlog.
+  // Six candidates were probed; three named no Assabet instance on any standard path and
+  // were left alone rather than guessed at (Uxbridge Free Public Library MA, which this
+  // file already records as naming no instance, plus Wells Public Library ME and Danbury
+  // Public Library CT).
+  //
+  // Each slug was found ON THE LIBRARY'S OWN EVENTS PAGE, so the library itself points at
+  // the instance, and each instance's /calendar/upcoming-events.rss was then fetched and
+  // judged on what IT says. A deliberately bogus instance was probed in the same pass and
+  // returned HTTP 503 with 0 items, so a 200 with items means a real instance.
+  { name: 'Old Lyme - Phoebe Griffin Noyes Library', slug: 'oldlymelibrary', eventsUrl: 'https://oldlymelibrary.assabetinteractive.com/calendar/', city: 'Old Lyme', state: 'CT', zipCode: '06371' },   // feed titles "Phoebe Griffin Noyes Library Schedule of Events", 54 items
+  { name: 'Millicent Library', slug: 'millicentlibrary', eventsUrl: 'https://millicentlibrary.assabetinteractive.com/calendar/', city: 'Fairhaven', state: 'MA', zipCode: '02719' },   // feed titles "Millicent Library Schedule of Events", 53 items
+  { name: 'Hamilton Township Free Public Library', slug: 'hamiltonnjpl', eventsUrl: 'https://hamiltonnjpl.assabetinteractive.com/calendar/', city: 'Hamilton', state: 'NJ', zipCode: '08610' },   // feed titles "Hamilton Township Public Library Schedule of Events", 44 items
 ];
 
 // The registry key, byte-for-byte. This was 'assabet-NH-MA' (lowercase 'a') until

@@ -34,7 +34,11 @@ const LIBRARIES = [
   { name: 'Pearl River County Library System', url: 'https://www.pearlriver.lib.ms.us', eventsUrl: 'https://www.pearlriver.lib.ms.us/events', city: 'Picayune', state: 'MS', zipCode: '39466', county: 'Pearl River'},
   { name: 'Lincoln-Lawrence-Franklin Regional Library', url: 'https://www.llf.lib.ms.us', eventsUrl: 'https://www.llf.lib.ms.us/events', city: 'Brookhaven', state: 'MS', zipCode: '39601', county: 'Lincoln'},
   { name: 'Dixie Regional Library System', url: 'https://dixie.lib.ms.us/', eventsUrl: 'https://dixie.lib.ms.us/', city: 'Pontotoc', state: 'MS', zipCode: '38863', county: 'Pontotoc County'},
-  { name: 'Northeast Regional Library', url: 'https://www.nereg.lib.ms.us', eventsUrl: 'https://www.nereg.lib.ms.us/events', city: 'Corinth', state: 'MS', zipCode: '38834', county: 'Alcorn'},
+  // RELOCATED 2026-09-09 to the new GoogleCalendar-MS key. Events live in four Google
+  // Calendar embeds this scraper cannot read. Identity confirmed from the live page:
+  // MS 38834 (Corinth), area code 662. Feed expanded at 99 programme occurrences in 60 days
+  // across the four calendars, 0 opening-hours rows.
+  { name: 'Northeast Regional Library', url: 'https://www.nereg.lib.ms.us', eventsUrl: 'https://www.nereg.lib.ms.us/events', city: 'Corinth', state: 'MS', zipCode: '38834', county: 'Alcorn', urlCollision: 'relocated to GoogleCalendar-MS 2026-09-09 - events are in four Google Calendar embeds this scraper cannot read. Feed verified at 99 programme occurrences in 60 days, 0 opening-hours rows'},
   { name: 'Central Mississippi Regional Library System', url: 'https://www.cmrls.lib.ms.us', eventsUrl: 'https://www.cmrls.lib.ms.us/events', city: 'Kosciusko', state: 'MS', zipCode: '39090', county: 'Attala'},
   { name: 'Tombigbee Regional Library System', url: 'https://www.tombigbee.lib.ms.us/', eventsUrl: 'https://www.tombigbee.lib.ms.us/', city: 'West Point', state: 'MS', zipCode: '39773', county: 'Clay'},
   // Additional libraries from spreadsheet coverage expansion
@@ -75,7 +79,20 @@ const LIBRARIES = [
   { name: 'Clarke County-Quitman Public Library', url: 'https://www.quitmanlibrary.org/', eventsUrl: 'https://www.quitmanlibrary.org/', city: 'Quitman', state: 'MS', zipCode: '00000', county: 'Quitman County', urlCollision: 'quitmanlibrary.org is TX, not MS' },
   { name: 'Richland Public Library', url: 'https://www.richlandlibrary.org/', eventsUrl: 'https://www.richlandlibrary.org/Calendar', city: 'Richland', state: 'MS', zipCode: '00000', county: 'Rankin', urlCollision: 'richlandlibrary.org is MI, not MS' },
   // URL corrected 2026-08-11 (was ripleylibrary.org): Northeast Regional Library page shows 308 Commerce St, Ripley MS 38663, phone 662-837-7773; branch is titled Ripley Library
-  { name: 'Ripley Public Library', url: 'https://www.nereg.lib.ms.us/ripley-public-library/', eventsUrl: 'https://www.nereg.lib.ms.us/events', city: 'Ripley', state: 'MS', zipCode: '00000', county: 'Tippah'},
+  // GUARDED 2026-09-09 as COVERED-BY-PARENT, and the distinction matters. Ripley is a
+  // branch of Northeast Regional, which was relocated to GoogleCalendar-MS in the same pass;
+  // both entries pointed at the SAME host, nereg.lib.ms.us/events, so this one could only
+  // ever duplicate the system.
+  // THE EVIDENCE IS THE BRANCH PREFIX, not an assumption: the system's four calendars
+  // prefix every event with a two-letter branch code, and RP appears 22 times alongside
+  // IU 176, BO 105, CO 62, TI 22, RZ 19, BU 17, BE 11 and BA 5. So Ripley's events ARE in
+  // the system feed.
+  // PREDICTION CORRECTED AFTER THE RUN, and in the good direction. This note first said the
+  // rows would carry the SYSTEM's venue name, making it coverage without per-branch
+  // precision. The live run disproved that: the ICS LOCATION field names each branch, so
+  // Ripley's events are stored under venue "Ripley Public Library" - 11 rows - exactly as if
+  // it had its own entry. So this is PROVEN PER-BRANCH, not merely covered-by-parent.
+  { name: 'Ripley Public Library', url: 'https://www.nereg.lib.ms.us/ripley-public-library/', eventsUrl: 'https://www.nereg.lib.ms.us/events', city: 'Ripley', state: 'MS', zipCode: '00000', county: 'Tippah', urlCollision: 'covered-by-parent and PROVEN PER-BRANCH - a branch of Northeast Regional Library, relocated to GoogleCalendar-MS 2026-09-09. The system ICS names each branch in LOCATION, so Ripley rows are stored under venue Ripley Public Library, 11 rows on the first run'},
   { name: 'Field Memorial Library', url: 'https://www.shawlibrary.org/', eventsUrl: 'https://www.shawlibrary.org/', city: 'Shaw', state: 'MS', zipCode: '00000', county: 'Bolivar', urlCollision: "shawlibrary.org is PA, not MS - live page is the Joseph & Elizabeth Shaw library in PA. Proven 2026-09-06" },
   // REMOVED 2026-08-11 (Defect A): no verifiable official site. Bolivar County Library System branches page lists Dr. Robert T. Hollingsworth Public Library as Closed Until Further Notice; no branch site or calenda
   // RECORDED COVERAGE GAP - restore if a real URL is found.
