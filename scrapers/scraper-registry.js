@@ -291,6 +291,20 @@ const SCRAPERS = {
     sites: 1
   },
 
+  // New platform family, 2026-09-09. WhoFi ({town}-{st}.whofi.com) is server-rendered, so
+  // this is `type: 'http'` and launches no browser — the whole run is two fetches and
+  // completes in a few seconds. It is therefore immaterial to the runtime balance the
+  // groups are packed by, and Group 3 is chosen only to keep it off the two groups whose
+  // MacaroniKid turns are longest.
+  'WhoFi-Libraries': {
+    file: './scraper-whofi-libraries.js',
+    exportName: 'scrapeWhoFiLibrariesCloudFunction',
+    type: 'http',
+    group: 3,
+    state: 'Multi',
+    sites: 2
+  },
+
   // ============================================================================
   // COMMUNICO PLATFORM SCRAPERS (19)
   // ============================================================================

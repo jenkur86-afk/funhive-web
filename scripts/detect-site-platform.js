@@ -122,6 +122,11 @@ const PLATFORMS = [
   [/assabetinteractive\.com|assabet/i, 'assabet', 'Assabet-NH-MA', /https?:\/\/(?:www\.)?assabetinteractive\.com\/([a-z0-9-]+)/i],
   [/libraryinsight|librarymarket|\.libraryhost\./i, 'librarymarket', 'LibraryMarket-{ST}', /https?:\/\/([a-z0-9-]+\.libraryhost\.com)/i],
   [/calendar\.google\.com/i, 'google-calendar', 'GoogleCalendar-Libraries', /([a-z0-9._%+-]+(?:%40|@)group\.calendar\.google\.com)/i],
+  // Added 2026-09-09, when the WhoFi extractor was built. This table did NOT carry whofi
+  // before, which is why the "4 whofi instances" figure in reports/assabet-relocation-
+  // worklist.md came from recheck-unverifiable-http.js instead and never produced a host
+  // list. Any sweep run through THIS script before today was structurally blind to WhoFi.
+  [/\.whofi\.com/i, 'whofi', 'WhoFi-Libraries', /https?:\/\/([a-z0-9-]+\.whofi\.com)/i],
   [/eventkeeper|evanced|signupsigns|ekp\.plymouthrocket/i, 'eventkeeper', '(none — needs new scraper)', null],
   [/libraryaware\.com|wowbrary/i, 'libraryaware', '(none — newsletter tool, not a calendar)', null],
   [/tribe-events|the-events-calendar|tribe_events/i, 'tribe', 'WordPress-{ST} (REST feed available)', null],

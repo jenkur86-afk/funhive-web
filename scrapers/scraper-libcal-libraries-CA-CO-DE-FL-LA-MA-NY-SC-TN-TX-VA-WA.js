@@ -2041,11 +2041,20 @@ const LIBRARY_SYSTEMS = [
     // nklibrary.libcal.com 404s. The institution is real and verified live -
     // 100 Boone Street, North Kingstown RI 02852, phone 401-294-3306 - and it
     // publishes real dated events, but on northkingstown-ri.whofi.com/calendar/.
-    // WhoFi is a platform NO scraper in this repo handles (grep for whofi returns
-    // nothing), so this needs a new extraction path, not a URL correction.
-    // OPEN COVERAGE GAP: the only rows mentioning North Kingstown are 8 from
-    // MacaroniKid-RI, which is not the library.
-    urlCollision: 'nklibrary.libcal.com 404s - the library publishes on northkingstown-ri.whofi.com, a platform no scraper here supports. OPEN GAP needing a WhoFi extractor'
+    // RESOLVED 2026-09-09: the WhoFi extractor now exists — scraper-whofi-libraries.js,
+    // registry key WhoFi-Libraries, this library under WhoFi-Libraries-northkingstown-ri.
+    // Proven on a real run: 61 events found, 12 stored, INVALID 0, venue and state correct.
+    // This LibCal entry stays guarded because nklibrary.libcal.com genuinely still 404s.
+    //
+    // THE "OPEN COVERAGE GAP" CLAIM THAT USED TO BE HERE WAS WRONG, and the correction is
+    // worth keeping. It said "the only rows mentioning North Kingstown are 8 from
+    // MacaroniKid-RI, which is not the library". Measured 2026-09-09: MacaroniKid-RI-
+    // washingtonri holds 28 rows venued exactly "North Kingstown Free Library", 26 of them
+    // still upcoming. So the library was PARTIALLY COVERED by an aggregator, not
+    // uncovered. WhoFi is still worth having — it is the library's own calendar rather
+    // than a third party's selection, and 8 of its 12 stored titles are ones MacaroniKid
+    // never carried — but the gap was smaller than this note claimed.
+    urlCollision: 'nklibrary.libcal.com 404s - the library publishes on northkingstown-ri.whofi.com. COVERED since 2026-09-09 by WhoFi-Libraries-northkingstown-ri; this LibCal entry stays guarded because the LibCal host is still dead'
   },
   {
     name: 'Cumberland Public Library',
