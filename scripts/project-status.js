@@ -353,8 +353,25 @@ function computeGates() {
       `Of the MISMATCHes, ${openBugs} are OPEN (config entry still live), ${contained} are CONTAINED ` +
       `(guarded — cannot import wrong data, but still an uncovered gap) and ${fixedBugs} are FIXED ` +
       `(coverage restored and observed). Refresh: node scripts/mark-contained-mismatches.js --save` };
+  // SPLIT BY POPULATION, because the two halves ask different questions and only one of
+  // them is answerable by fetching a URL. A 'zero' row asks "does this library site really
+  // have no events?" — a page fetch settles it. An 'allages' row's site is a VENUE read out
+  // of the database, not a configured entry, and its question is "is this venue's
+  // programming genuinely generic?" — settled by reading that venue's own stored events,
+  // never by fetching a site. Reporting one number made the gate unactionable: a re-fetch
+  // pass cannot move the allages half at all, so the gate looked stuck for reasons that had
+  // nothing to do with the work being done. Same confusion mark-contained-mismatches.js
+  // corrected for gate 3 on 2026-09-08, which left it uncorrected here.
+  //
+  // THE HEADLINE NUMBER IS DELIBERATELY UNCHANGED — this is additive detail, not a
+  // redefinition. Shrinking a gate by excluding rows is the move the methodology notes
+  // below exist to warn against, and the trend in STATUS.md must stay comparable.
+  const unvZero = vals.filter(x => x && x.verdict === 'UNVERIFIABLE' && x.population === 'zero').length;
+  const unvAges = vals.filter(x => x && x.verdict === 'UNVERIFIABLE' && x.population === 'allages').length;
   g.unknownSites = { now: count('UNVERIFIABLE'), unit: '', target: 0,
-    detail: 'never re-checked; the true bug count sits between the MISMATCH count and MISMATCH+UNVERIFIABLE' };
+    detail: `never re-checked; the true bug count sits between the MISMATCH count and MISMATCH+UNVERIFIABLE. ` +
+      `Split: ${unvZero} zero-event sites (answerable by fetching the site) and ${unvAges} all-ages venues ` +
+      `(answerable only by reading that venue's stored events — a re-fetch pass cannot move these).` };
 
   // Numbers interpolated from the live store rather than written in, so this note cannot
   // drift from the gate it explains — the first draft of it hardcoded a count that was
