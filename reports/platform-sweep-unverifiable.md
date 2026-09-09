@@ -241,3 +241,48 @@ right.
 `libraryaware` remains the largest family and remains unfixable by relocation: it is a
 NoveList newsletter product with no public calendar. Those libraries need a different
 calendar found, or they stay gaps.
+
+---
+
+## BiblioCommons settled — 2026-09-09
+
+**Correcting my own correction.** The 2026-09-09 note above said bibliocommons "cannot be
+verified over plain HTTP" and called `hcplc.bibliocommons.com` "the highest-value item in
+the whole remaining list". The first half was wrong and the second half was too optimistic.
+
+**It never needed a browser.** The BiblioCommons scraper in this repo does not read the
+website at all — it reads a JSON gateway,
+`gateway.bibliocommons.com/v2/libraries/<slug>/events`, over plain HTTPS with axios. My
+earlier probe fetched the public website instead and read its 403 as a dead end.
+
+**The status codes discriminate, once you have controls.** Established by interleaving a
+known-good tenant with each candidate in the same process:
+
+| Probe | Result | What it means |
+|---|---|---|
+| `notarealtenant-funhive-xyz` | **HTTP 404** | a nonexistent tenant 404s — so 403 is not "no such tenant" |
+| `kentonlibrary` (configured, known-good) | 403 then **HTTP 200**, 20 items over 63 pages | 403 can be a transient IP throttle, and the probe works |
+| `hcplc` | **403 x3**, seconds after a control returned 200 | tenant EXISTS and refuses the gateway — not a shared-IP throttle |
+| `acl` | **403 x3**, same sandwich | tenant EXISTS and refuses the gateway |
+
+The scraper's own header documents the throttle case: *"The gateway rate-limits by IP and
+answers 403 (not 429) when it does... the 403 was a transient throttle, not a block."* That
+is real, and it is why a single 403 must never be believed — BiblioCommons-KY dropped from
+409 events to 1 on 2026-08-25 by doing exactly that. But it is not what is happening here,
+because a control succeeded moments earlier each time.
+
+**There is no alternative path.** For Tampa-Hillsborough: `/events/feed`, `/events.rss`
+and `/calendar.ics` all 404, and `hcplc.org/events` is a 14KB JS shell with no dates in
+the server HTML — it is fed by the same blocked API. The scraper's Puppeteer fallback is
+documented in its own file as unable to render the BiblioCommons React SPA reliably.
+
+**Verdict: all three are real BiblioCommons tenants that this codebase cannot read by any
+available path.** That is a sharper and more useful answer than "unverifiable", but it is a
+worse one than the worklist implied: Tampa-Hillsborough is not a recovery waiting to happen,
+it is a characterised gap. `acl` is additionally a consortium, so it would need per-library
+filtering even if the gateway opened up.
+
+**What would change this:** BiblioCommons enabling the public gateway for those tenants, or
+a different readable endpoint being found. Neither is scraper work, so do not re-probe these
+three on a schedule — re-check only if someone reports the site's own calendar becoming
+server-rendered.
