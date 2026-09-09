@@ -152,7 +152,7 @@
  },
  "WordPress-GA|||Gibbs Memorial Library (Evans, GA)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.evanslibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.evanslibrary.org/events",
   "population": "zero"
  },
  "WordPress-GA|||Fayette County Public Library (Fayetteville, GA)": {
@@ -222,8 +222,8 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-GA|||Manchester Public Library (Manchester, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Server returned HTTP 403 Forbidden - likely bot-blocked.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Manchester Public Library (Manchester, GA) old URL manchesterlibrary.org — host is NH, entry claims GA — Manchester City Library. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-GA|||Maysville Public Library (Maysville, GA)": {
@@ -283,7 +283,7 @@
  },
  "WordPress-GA|||Rockmart Library (Rockmart, GA)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.rockmartlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.rockmartlibrary.org/events",
   "population": "zero"
  },
  "WordPress-GA|||Rossville Public Library (Rossville, GA)": {
@@ -340,8 +340,8 @@
   "population": "zero"
  },
  "WordPress-GA|||Warren County Public Library (Warrenton, GA)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "URL returns a 404 \"There's Nothing Here\" error page -- broken/wrong URL, not a genuine empty calendar.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Warren County Public Library (Warrenton, GA) old URL warrentonlibrary.org — host is OR, entry claims GA — Warrenton Community Library \\. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-GA|||Harlie Fulford Memorial Library (Wrightsville, GA)": {
@@ -360,13 +360,13 @@
   "population": "zero"
  },
  "WordPress-NC|||Margaret Little Blount Library (Bethel, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on civicplus, which its configured scraper structurally cannot read — so the entry can only ever return 0. NO family scraper exists for CivicPlus/CivicEngage — needs a new extractor, not a config edit Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NC|||Watauga County Public Library (Boone, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.boonelibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.boonelibrary.org/events",
   "population": "zero"
  },
  "WordPress-NC|||Boonville Community Public Library (Boonville, NC)": {
@@ -376,7 +376,7 @@
  },
  "WordPress-NC|||Bunn Branch Library (Bunn, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.bunnlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.bunnlibrary.org/events",
   "population": "zero"
  },
  "WordPress-NC|||Canton Branch Library (Canton, NC)": {
@@ -422,7 +422,7 @@
  },
  "WordPress-NC|||Dobson Community Library (Dobson, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation timeout after 35000ms",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.dobsonlibrary.org/events",
   "population": "zero"
  },
  "WordPress-NC|||Erwin Public Library (Erwin, NC)": {
@@ -431,8 +431,8 @@
   "population": "zero"
  },
  "WordPress-NC|||Fairview Branch Library (Fairview, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no URL could be resolved from the scraper config for this site",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Fairview Branch Library (Fairview, NC) old URL fairviewlibrary.org — host is NY, entry claims NC — Fairview Public Library &#124; 43 Walnut St, Margaretville, NY 12455 (845)586-3791. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-NC|||Farmville Public Library (Farmville, NC)": {
@@ -460,7 +460,7 @@
  },
  "WordPress-NC|||Blanche Benjamin Branch Library (Greensboro, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.greensborolibrary.org/events",
   "population": "zero"
  },
  "WordPress-NC|||Hampstead Branch Library (Hampstead, NC)": {
@@ -493,7 +493,7 @@
  },
  "WordPress-NC|||Union West Branch Library (Indian Trail, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.indiantraillibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.indiantraillibrary.org/events",
   "population": "zero"
  },
  "WordPress-NC|||King Public Library (King, NC)": {
@@ -528,13 +528,16 @@
   "population": "zero"
  },
  "WordPress-NC|||Littleton Public Library (Wc Jones Memorial) (Littleton, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "SETTLED, not unverifiable: the config entry is guarded, so the scraper no longer visits this URL and no fetch can change the answer. Guard reason on file: littletonlibrary.org is MA, not NC",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: littletonlibrary.org is MA, not NC",
+  "statusAt": "2026-09-09"
  },
  "WordPress-NC|||Lowell Branch Library (Lowell, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on civicplus, which its configured scraper structurally cannot read — so the entry can only ever return 0. NO family scraper exists for CivicPlus/CivicEngage — needs a new extractor, not a config edit Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NC|||Florence Gallier Library (Magnolia, NC)": {
@@ -630,13 +633,13 @@
   "population": "zero"
  },
  "WordPress-NC|||Warren County Memorial Library (Warrenton, NC)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "URL returns a 404 error page; nav mentions an Events Calendar link but the events URL itself is broken.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Warren County Memorial Library (Warrenton, NC) old URL warrentonlibrary.org — host is OR, entry claims NC — Warrenton Community Library \\. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-NC|||East Branch Library (Wilson, NC)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "event containers present (.event-item:8) but no parseable dates",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
   "population": "zero"
  },
  "WordPress-NC|||Lawrence Memorial Library (Windsor, NC)": {
@@ -677,8 +680,8 @@
   "statusAt": "2026-09-07"
  },
  "WordPress-CT|||Danbury Public Library (Danbury, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on assabet, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in Assabet-NH-MA — check first whether it is ALREADY configured there, since several of this batch were duplicates rather than gaps Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-CT|||Greenwich Library (Greenwich, CT)": {
@@ -706,7 +709,7 @@
  },
  "WordPress-CT|||Torrington Library (Torrington, CT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
   "population": "zero"
  },
  "WordPress-CT|||Trumbull Library (Trumbull, CT)": {
@@ -736,18 +739,18 @@
   "population": "zero"
  },
  "WordPress-CT|||Avon Free Public Library (Avon, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "WebFetch returned empty page content on three separate attempts; could not inspect the page.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Avon Free Public Library (Avon, CT) old URL avonlibrary.org — dead/parked domain (only 114 bytes of HTML — placeholder or redirect stub). OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-CT|||Beacon Falls Public Library (Beacon Falls, CT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 131 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-CT|||Bethel Public Library (Bethel, CT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 329 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 330 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-CT|||Bethlehem Public Library (Bethlehem, CT)": {
@@ -785,8 +788,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Easton Public Library (Easton, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-CT|||Hall Memorial Library (Ellington, CT)": {
@@ -884,8 +887,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Old Lyme - Phoebe Griffin Noyes Library (Old Lyme, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on assabet, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in Assabet-NH-MA — check first whether it is ALREADY configured there, since several of this batch were duplicates rather than gaps Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-CT|||Oxford Public Library (Oxford, CT)": {
@@ -915,8 +918,8 @@
   "statusAt": "2026-09-07"
  },
  "WordPress-CT|||Portland Public Library (Portland, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Server returned HTTP 403 Forbidden -- site is bot-blocking automated fetches.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Portland Public Library (Portland, CT) old URL portlandlibrary.org — host is ME, entry claims CT — Explore Your Public Library \\. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-CT|||Prospect Public Library (Prospect, CT)": {
@@ -957,13 +960,16 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-CT|||Kent Memorial Library (Suffield, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "SETTLED, not unverifiable: the config entry is guarded, so the scraper no longer visits this URL and no fetch can change the answer. Guard reason on file: dead/hijacked domain, confirmed: suffieldlibrary.org is a parked domain - page says This domain may be for sale, no library content Guarded 2026-09-07 so the rotation stops visiting it — a squatted domain is one selector change away from importing another site's markup as events. NOT deleted: this stays an explained OPEN COVERAGE GAP until a real URL is found.",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: dead/hijacked domain, confirmed: suffieldlibrary.org is a parked domain - page says This domain may be for sale, no library content Guarded 2026-09-07 so the rotation stops visiting it — a squatted domain is one selector change away from i",
+  "statusAt": "2026-09-09"
  },
  "WordPress-CT|||Thomaston Public Library (Thomaston, CT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-CT|||Waterford Public Library (Waterford, CT)": {
@@ -1004,7 +1010,7 @@
  },
  "WordPress-CT|||Windsor Locks Public Library (Windsor Locks, CT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 215 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-CT|||Woodbridge Town Library (Woodbridge, CT)": {
@@ -1045,7 +1051,7 @@
  },
  "WordPress-TN|||Collierville Burch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell [redirects to chromewebdata]",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.colliervillelibrary.org/events",
   "population": "zero"
  },
  "WordPress-TN|||Bartlett Library": {
@@ -1092,13 +1098,13 @@
   "population": "zero"
  },
  "WordPress-TN|||Manchester Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "403 Forbidden, likely bot-blocked.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Manchester Public Library (Manchester, TN) old URL manchesterlibrary.org — host is NH, entry claims TN — Manchester City Library. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-TN|||Rogersville Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.rogersvillelibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.rogersvillelibrary.org/events",
   "population": "zero"
  },
  "WordPress-TN|||Tipton County Public Library": {
@@ -1123,8 +1129,8 @@
   "statusAt": "2026-09-07"
  },
  "WordPress-TN|||Ardmore Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Events are shown only via an embedded Google Calendar image/iframe with no server-rendered event text; static 'Standing Programs' descriptions have no dates.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Ardmore Public Library (Ardmore, TN) old URL ardmore.okpls.org — host is OK, entry claims TN — Ardmore Public Library. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-TN|||Sam T. Wilson Public Library": {
@@ -1152,8 +1158,8 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-TN|||Smith County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Fetch returned completely empty content on two attempts, could not evaluate page.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Smith County Public Library (Carthage, TN) old URL carthagelibrary.org — dead/parked domain (only 114 bytes of HTML — placeholder or redirect stub). OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-TN|||Clinton Public Library": {
@@ -1189,8 +1195,8 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-TN|||Englewood Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Page shows a literal unrendered '[events]' shortcode placeholder with only unrelated blog links in the sidebar.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Englewood Public Library (Englewood, TN) old URL englewoodlibrary.org — host is NJ, entry claims TN — Home - Englewood Public Library. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-TN|||Unicoi County Public Library": {
@@ -1199,8 +1205,8 @@
   "population": "zero"
  },
  "WordPress-TN|||Fairview Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no URL could be resolved from the scraper config for this site",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Fairview Public Library (Fairview, TN) old URL fairviewlibrary.org — host is NY, entry claims TN — Fairview Public Library &#124; 43 Walnut St, Margaretville, NY 12455 (845)586-3791. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-TN|||Gleason Memorial Library": {
@@ -1228,8 +1234,8 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-TN|||Fentress County Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "WebFetch returned no page content at all, could not assess the site.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Fentress County Library (Jamestown, TN) old URL jamestownlibrary.org — dead/parked domain (only 114 bytes of HTML — placeholder or redirect stub). OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-TN|||Millard Oakley Public Library": {
@@ -1260,7 +1266,7 @@
  },
  "WordPress-TN|||Mt. Juliet-Harvey Freeman Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation timeout after 35000ms",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.mtjulietlibrary.org/events",
   "population": "zero"
  },
  "WordPress-TN|||Palmer Public Library": {
@@ -1277,8 +1283,8 @@
   "population": "zero"
  },
  "WordPress-TN|||Somerville-Fayette County Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Page is an HTML frameset loading an external apls.state.al.us calendar frame that WebFetch can't render.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Somerville-Fayette County Library (Somerville, TN) old URL somervillelibrary.org — dead/parked domain (only 170 bytes of HTML — placeholder or redirect stub). OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-TN|||Audrey Pack Memorial Library": {
@@ -1361,8 +1367,8 @@
   "population": "zero"
  },
  "WordPress-AL|||Troy Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Only nav element 'Events & Registration' link present; actual event content not rendered.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Troy Public Library (Troy, AL) old URL troylibrary.org — host is IL, entry claims AL — Tri-Township Public Library \\. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-AL|||Akron Public Library": {
@@ -1379,8 +1385,8 @@
   "population": "zero"
  },
  "WordPress-AL|||Ashland City Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no URL could be resolved from the scraper config for this site",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Ashland City Public Library (Ashland, AL) old URL ashlandlibrary.org — dead/parked domain (HTTP 404). OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-AL|||Bridgeport - Lena Cagle Public Library": {
@@ -1530,8 +1536,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-AL|||Lincoln Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Fetch returned no page content on repeated attempts; could not verify.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Lincoln Public Library (Lincoln, AL) old URL lincolnlibrary.org — dead/parked domain (only 114 bytes of HTML — placeholder or redirect stub). OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-AL|||Millbrook Public Library": {
@@ -1583,7 +1589,7 @@
  },
  "WordPress-AL|||Clay Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.pinsonlibrary.org",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.pinsonlibrary.org/events",
   "population": "zero"
  },
  "WordPress-AL|||Satsuma Public Library": {
@@ -1605,8 +1611,8 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-AL|||Somerville Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Page is an HTML frameset pointing to an external apls.state.al.us URL with a blank frame — content loads dynamically/externally, not visible to static fetch.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Somerville Public Library (Somerville, AL) old URL somervillelibrary.org — dead/parked domain (only 170 bytes of HTML — placeholder or redirect stub). OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-AL|||Stevenson Public Library": {
@@ -1627,7 +1633,7 @@
  },
  "WordPress-AL|||Warrior Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.warriorlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.warriorlibrary.org/events",
   "population": "zero"
  },
  "WordPress-AL|||Northwest Regional Library": {
@@ -1646,8 +1652,8 @@
   "population": "zero"
  },
  "WordPress-VT|||Aldrich Public Library (Barre, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on google-calendar, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-VT|||Brownell Library (Essex Junction, VT)": {
@@ -1661,9 +1667,12 @@
   "population": "zero"
  },
  "WordPress-VT|||Haskell Free Library (Derby Line, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "entry guarded with urlCollision - not fetched, because its configured URL is already proven to belong to another institution. This library is a KNOWN COVERAGE GAP awaiting a correct URL or a relocation, not an unverified site; re-verifying it would only re-read the wrong library.",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "SETTLED, not unverifiable: the config entry is guarded, so the scraper no longer visits this URL and no fetch can change the answer. Guard reason on file: haskellopera.com/library returns HTTP 404 and the domain serves a default empty WordPress blog, not the library. The institution is real - Haskell Free Library and Opera House, Derby Line VT - so this is a wrong URL and an OPEN COVERAGE GAP, not a library that does not exist",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: haskellopera.com/library returns HTTP 404 and the domain serves a default empty WordPress blog, not the library. The institution is real - Haskell Free Library and Opera House, Derby Line VT - so this is a wrong URL and an OPEN COVERAGE GA",
+  "statusAt": "2026-09-09"
  },
  "WordPress-VT|||Cobleigh Public Library (Lyndonville, VT)": {
   "verdict": "MISMATCH",
@@ -1691,7 +1700,7 @@
  },
  "WordPress-VT|||Barton Public (Barton, VT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.bartonlibrary.org",
+  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.bartonlibrary.org/events",
   "population": "zero"
  },
  "WordPress-VT|||Benson Public (Benson, VT)": {
@@ -1774,8 +1783,8 @@
   "population": "zero"
  },
  "WordPress-VT|||Grafton Public (Grafton, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Events page only shows navigation links to event category sub-pages (All/Adult/Book Groups/Children's/Teen Events) with no events rendered inline -- appears JS-dependent.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Grafton Public (Grafton, VT) old URL graftonlibrary.org — host is MA, entry claims VT — Home \\. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-VT|||Greensboro Free (Greensboro, VT)": {
@@ -1803,13 +1812,13 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-VT|||Lincoln (Lincoln, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "WebFetch returned no page content -- could not determine page state.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Lincoln (Lincoln, VT) old URL lincolnlibrary.org — dead/parked domain (only 114 bytes of HTML — placeholder or redirect stub). OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-VT|||Lowell Community (Lowell, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Events page shows only category navigation links (Book Clubs, Lowell Stories, etc.) with no actual events rendered; appears JS-dependent.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Lowell Community (Lowell, VT) old URL lowelllibrary.org — host is MA, entry claims VT — Home 📚 Pollard Memorial Library. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-VT|||Alden Balch Memorial (Lunenburg, VT)": {
@@ -1818,8 +1827,8 @@
   "population": "zero"
  },
  "WordPress-VT|||Mark Skinner (Manchester, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "403 Forbidden -- likely bot-blocked.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Mark Skinner (Manchester, VT) old URL manchesterlibrary.org — host is NH, entry claims VT — Manchester City Library. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-VT|||Jaquith Public (Marshfield, VT)": {
@@ -1831,8 +1840,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-VT|||Milton Public Library (Milton, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Events page shows only navigation/category links (Book Groups, Speaker Series, etc.); no actual event titles or dates rendered, appears JS-dependent.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Milton Public Library (Milton, VT) old URL miltonlibrary.org — host is MA, entry claims VT — Milton Public Library - Milton, Massachusetts. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-VT|||Moore Free (Newfane, VT)": {
@@ -1852,13 +1861,13 @@
   "statusAt": "2026-09-07"
  },
  "WordPress-VT|||Kimball Public (Randolph, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "403 Forbidden -- likely bot-blocked.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Kimball Public (Randolph, VT) old URL randolphlibrary.org — dead/parked domain (only 295 bytes of HTML — placeholder or redirect stub). OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-VT|||Readsboro Community (Readsboro, VT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.readsborolibrary.org",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.readsborolibrary.org/events",
   "population": "zero"
  },
  "WordPress-VT|||Richmond Free (Richmond, VT)": {
@@ -1888,18 +1897,18 @@
   "population": "zero"
  },
  "WordPress-VT|||Shrewsbury (Shrewsbury, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-VT|||Stamford Community (Stamford, VT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 291 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-VT|||Stowe Free (Stowe, VT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 131 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-VT|||Morrill Mem. Harris (Strafford, VT)": {
@@ -1926,13 +1935,13 @@
   "population": "zero"
  },
  "WordPress-VT|||Wilder Memorial (Weston, VT)": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Fetched page shows real August 2026 events (City Hall Selfie Day, Town Manager office hours, Colonial Crafts for Kids) but reads as a Weston, MA town calendar, not the Weston, VT library -- domain appears mismatched/repurposed, so the 0 count for the actual library could not be confirmed either way.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Wilder Memorial (Weston, VT) old URL westonlibrary.org — host is MA, entry claims VT — Weston Public Library \\. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-VT|||Windsor Public (Windsor, VT)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.windsorlibrary.org",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.windsorlibrary.org/events",
   "population": "zero"
  },
  "Orange-County-Library-FL|||Melrose Center": {
@@ -2069,8 +2078,8 @@
   "population": "allages"
  },
  "Squarespace-Libraries|||Queen Anne's County Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libcal (static-assets-us.libcal.com), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in LibCal-{ST} — confirm the tenant is single-library, or find a per-library cid, before relocating Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "CivicRec-Parks-Eastern|||St. Mary's County Recreation": {
@@ -2145,8 +2154,8 @@
   "statusAt": "2026-09-08"
  },
  "WordPress-MA|||Joshua Hyde Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "event containers present (.event-card:5) but no parseable dates",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on librarymarket, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in LibraryMarket-{ST} Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-VT|||Franklin-Grand Isle Bookmobile": {
@@ -2351,8 +2360,8 @@
   "population": "allages"
  },
  "LibCal-NJ|||BCCLS - Bergen County Cooperative Library System": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libcal (static-assets-us.libcal.com), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in LibCal-{ST} — confirm the tenant is single-library, or find a per-library cid, before relocating Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-TN|||Germantown Community Library": {
@@ -2430,8 +2439,8 @@
   "population": "allages"
  },
  "WordPress-FL|||Miami-Dade Public Library System": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on communico (static.libnet.info), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in Communico-{ST} Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-MS|||Pearl River County Library System": {
@@ -2552,7 +2561,7 @@
  },
  "WordPress-NY|||Brooklyn Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to discover.bklynlibrary.org]",
   "population": "zero"
  },
  "WordPress-ME|||Shaw Public Library - Greenville": {
@@ -2686,8 +2695,8 @@
   "population": "zero"
  },
  "GoogleCalendar-MD|||Somerset County Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on google-calendar (somelibrary.org_jh8uo8466kov1vth331eje1t7s@group.calendar.google.com), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "RecDesk-Parks|||Valley Pool": {
@@ -2842,13 +2851,13 @@
   "population": "zero"
  },
  "WordPress-PA|||Ardmore Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "No link captured in audit ([Link]() empty) - not guessed, per instructions.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Ardmore Library (Ardmore, PA) old URL ardmore.okpls.org — host is OK, entry claims PA — Ardmore Public Library. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-PA|||Ashland Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "No link captured in audit ([Link]() empty) - not guessed, per instructions.",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Ashland Public Library (Ashland, PA) old URL ashlandlibrary.org — dead/parked domain (HTTP 404). OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-PA|||Aston Public Library": {
@@ -2942,7 +2951,7 @@
  },
  "WordPress-PA|||Mengle Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.brockwaylibrary.org/events",
+  "comment": "page rendered only 253 chars of text — likely JS-gated or a shell [redirects to brockwaylibrary.follettdestiny.com]",
   "population": "zero"
  },
  "WordPress-PA|||Green Free Library": {
@@ -2990,8 +2999,8 @@
   "statusAt": "2026-09-07"
  },
  "WordPress-PA|||Moores Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-PA|||Clairton Public Library": {
@@ -3034,8 +3043,8 @@
   "statusAt": "2026-09-07"
  },
  "WordPress-PA|||Thomas Beaver Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no link captured",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Thomas Beaver Free Library (Danville, PA) old URL danvilleva.gov — host is VA, entry claims PA — Danville, VA - Official Website \\. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-PA|||Delmont Public Library": {
@@ -3138,8 +3147,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Arthur Hufnagel Public Library Of Glen Rock": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no link captured",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Arthur Hufnagel Public Library Of Glen Rock (Glen Rock, PA) old URL glenrocklibrary.org — host is NJ, entry claims PA — Glen Rock Public Library - Bergen County New Jersey - BCCLS Member - Get a Library Card. OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-PA|||Glenolden Library": {
@@ -3171,8 +3180,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Guthrie Memorial Library - Hanovers Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no link captured",
+  "verdict": "MISMATCH",
+  "comment": "seed-data removal, RECORDED not lost: entry deleted by commit a96e747 (Defect A, 2026-08-09) and listed in reports/defect-a-removals.md as Guthrie Memorial Library - Hanovers Public Library (Hanover, PA) old URL hanoverlibrary.org — dead/parked domain (only 114 bytes of HTML — placeholder or redirect stub). OPEN COVERAGE GAP until a real URL is verified",
   "population": "zero"
  },
  "WordPress-PA|||Dauphin County Library System": {
@@ -3199,8 +3208,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Hellertown Area Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on google-calendar, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-PA|||Hershey Public Library": {
@@ -3237,8 +3246,8 @@
   "population": "zero"
  },
  "LibCal-VA2|||Library of Virginia": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libcal (static-assets-us.libcal.com), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in LibCal-{ST} — confirm the tenant is single-library, or find a per-library cid, before relocating Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "MacaroniKid-SC|||Myrtlebeach": {
@@ -3284,7 +3293,7 @@
  },
  "WordPress-CT|||Bethel Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 183 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 330 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-CT|||Bethlehem Public Library": {
@@ -3589,7 +3598,10 @@
  "WordPress-CT|||Torrington Library": {
   "verdict": "MISMATCH",
   "comment": "extraction-failure real site with Google Calendar embed e.g. Stick Dolls and Pets ages 6+ Aug 19 2026 and Teen Slime Party Sep 16 2026",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: relocated to GoogleCalendar-CT 2026-09-09 - the events live in a Google Calendar embed a WordPress DOM extractor cannot read. Proven live at the destination: Found 34, New 34, INVALID 0",
+  "statusAt": "2026-09-09"
  },
  "WordPress-CT|||Trumbull Library": {
   "verdict": "MATCHES",
@@ -3700,7 +3712,7 @@
  },
  "WordPress-GA|||Gibbs Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.evanslibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.evanslibrary.org/events",
   "population": "zero"
  },
  "WordPress-GA|||Gordon Public Library": {
@@ -3846,7 +3858,7 @@
  },
  "WordPress-GA|||Rockmart Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.rockmartlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.rockmartlibrary.org/events",
   "population": "zero"
  },
  "WordPress-GA|||Roddenbery Memorial Library System": {
@@ -4158,8 +4170,8 @@
   "population": "zero"
  },
  "WordPress-VT|||Aldrich Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on google-calendar, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-VT|||Barton Public": {
@@ -4748,8 +4760,8 @@
   "population": "zero"
  },
  "WordPress-KY|||Bullitt County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-KY|||Clark County Public Library": {
@@ -4867,12 +4879,12 @@
  },
  "WordPress-RI|||Exeter Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.exeterlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.exeterlibrary.org/events",
   "population": "zero"
  },
  "WordPress-RI|||Central Falls Free Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.centralfallslibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.centralfallslibrary.org/events",
   "population": "zero"
  },
  "WordPress-RI|||Greene Public Library": {
@@ -4898,7 +4910,7 @@
  },
  "WordPress-SC|||Chesterfield County Library System": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 132 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-SC|||Anderson County Library - Piedmont Branch Library": {
@@ -4910,8 +4922,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-WV|||Berkeley County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 399 chars of text — likely JS-gated or a shell",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-WV|||Cameron Public Library": {
@@ -4941,8 +4953,8 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-SC|||Abbeville County Library System": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on tribe, which its configured scraper structurally cannot read — so the entry can only ever return 0. already on The Events Calendar, which tec-rest-helper.js reads where wired — check the REST endpoint returns a nonzero total before treating this as a bug Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "MacaroniKid-RI-washingtonri|||Charlestown Parks & Recreation": {
@@ -4956,8 +4968,8 @@
   "population": "allages"
  },
  "MacaroniKid-MA-newton|||Brookline Recreation": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "96 rows / 88 distinct are bare class-schedule codes (9/8 - Tuesday Inter/Advanced, Level 1 - Thursday 4:30pm) that carry no audience information in either direction. One row (8 & Under Try-Out) is a missed age signal, but a single row cannot settle the venue. Needs the live class catalogue, not the stored event text.",
+  "verdict": "MISMATCH",
+  "comment": "age-tagging: 104 of 160 stored rows (65%) are All Ages, and 9 of them carry an age signal the CURRENT detector reads: \"How to Talk About Money: Difficult Conversati\" -> 18-18; \"X Aqua Impact - Wednesday 6:30pm\" -> 18-18; \"Amazing Bostonians (Fall)\" -> 18-18. Judged by re-running detectAgeRange() over the stored titles, not by keyword eyeballing. These are pre-fix rows that will re-bracket on the next scrape",
   "population": "allages"
  },
  "MacaroniKid-MA-swboston|||Foxboro, MA Recreation Department": {
@@ -5161,8 +5173,8 @@
   "population": "allages"
  },
  "CivicEngage-Libraries|||Williamson County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on civicplus, which its configured scraper structurally cannot read — so the entry can only ever return 0. NO family scraper exists for CivicPlus/CivicEngage — needs a new extractor, not a config edit Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "Venue-Events-ScienceArts|||Franklin Institute": {
@@ -7998,7 +8010,7 @@
  },
  "WordPress-DE|||Lewes Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 48 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-DE|||Newark Free Library": {
@@ -8017,8 +8029,8 @@
   "population": "zero"
  },
  "WordPress-KY|||Cynthiana-Harrison County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on civicplus, which its configured scraper structurally cannot read — so the entry can only ever return 0. NO family scraper exists for CivicPlus/CivicEngage — needs a new extractor, not a config edit Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-KY|||Fulton Public Library": {
@@ -8059,7 +8071,7 @@
  },
  "WordPress-KY|||Estill County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.irvinelibrary.org/events",
   "population": "zero"
  },
  "WordPress-KY|||Irvington Branch": {
@@ -8108,8 +8120,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-KY|||Madison County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-KY|||Nicholas County Public Library": {
@@ -8122,7 +8134,7 @@
  },
  "WordPress-KY|||Pike County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.pikelibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.pikelibrary.org/events",
   "population": "zero"
  },
  "WordPress-KY|||Woodford County Library": {
@@ -8140,7 +8152,7 @@
  },
  "WordPress-MA|||Bellingham Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.bellinghamlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.bellinghamlibrary.org/events",
   "population": "zero"
  },
  "WordPress-MA|||Beals Memorial Library": {
@@ -8149,8 +8161,8 @@
   "population": "zero"
  },
  "WordPress-MA|||Berkley Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-MA|||Billerica Public Library": {
@@ -8187,12 +8199,12 @@
  },
  "WordPress-MA|||Boylston Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 131 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-MA|||Blanding Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.rehobothlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.rehobothlibrary.org/events",
   "population": "zero"
  },
  "WordPress-MA|||Boynton Public Library": {
@@ -8230,8 +8242,8 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-MA|||Casa Da Saudade": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "bot-block: 403 even under the stealth browser the scrapers use [redirects to newbedford-ma.gov]",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-MA|||Conant Free Public Library": {
@@ -8291,7 +8303,7 @@
  },
  "WordPress-MA|||Gloucester Lyceum Sawyer Free Lib": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
+  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.gloucesterlibrary.org/events",
   "population": "zero"
  },
  "WordPress-MA|||Goshen Free Public Library": {
@@ -8333,12 +8345,12 @@
  },
  "WordPress-MA|||Haston Free Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 131 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-MA|||Heath Free Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.heathlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.heathlibrary.org/events",
   "population": "zero"
  },
  "WordPress-MA|||Haverhill Public Library": {
@@ -8403,9 +8415,12 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Lakeville Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "OPEN GAP, sharpened not closed, 2026-09-06 - lakevillelibrary.assabetinteractive.com returns HTTP 200 titled Lakeville Public Library, but /calendar/ 404s and the instance exposes no internal links at all. The library runs Assabet for its SITE and not for its EVENTS, so there is no feed to relocate to and no entry was wired: an entry that cannot return an event is worse than an acknowledged gap. Identity 4 Precinct St, Lakeville MA 02347, ph 508. Same shape as Somerset, recorded on 2026-08-24",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "SETTLED, not unverifiable: the config entry is guarded, so the scraper no longer visits this URL and no fetch can change the answer. Guard reason on file: OPEN GAP, not fixed - lakevillelibrary.assabetinteractive.com returns HTTP 200 titled Lakeville Public Library, but /calendar/ 404s and the instance exposes no internal links. It runs Assabet for its SITE and not for its EVENTS, so there is no feed to relocate to. Verified 2026-09-06; the same shape as Somerset, recorded on 2026-08-24",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: OPEN GAP, not fixed - lakevillelibrary.assabetinteractive.com returns HTTP 200 titled Lakeville Public Library, but /calendar/ 404s and the instance exposes no internal links. It runs Assabet for its SITE and not for its EVENTS, so there i",
+  "statusAt": "2026-09-09"
  },
  "WordPress-MA|||Lenox Library Association": {
   "verdict": "MISMATCH",
@@ -8485,8 +8500,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Merriam-Gilbert Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-MA|||Merrimac Public Library": {
@@ -8511,8 +8526,8 @@
   "population": "zero"
  },
  "WordPress-MA|||Millicent Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on assabet, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in Assabet-NH-MA — check first whether it is ALREADY configured there, since several of this batch were duplicates rather than gaps Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-MA|||Monterey Public Library": {
@@ -8532,8 +8547,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Nantucket Atheneum": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "bot-block: 403 even under the stealth browser the scrapers use",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-MA|||Newton Free Library": {
@@ -8546,7 +8561,7 @@
  },
  "WordPress-MA|||North Adams Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_UNRECOGNIZED_NAME_ALERT at https://www.northadamslibrary.org",
+  "comment": "navigation error: net::ERR_SSL_UNRECOGNIZED_NAME_ALERT at https://www.northadamslibrary.org/events",
   "population": "zero"
  },
  "WordPress-MA|||Needham Free Public Library": {
@@ -8566,8 +8581,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Oak Bluffs Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_BLOCKED_BY_CLIENT at https://www.oakbluffslibrary.org",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on tribe, which its configured scraper structurally cannot read — so the entry can only ever return 0. already on The Events Calendar, which tec-rest-helper.js reads where wired — check the REST endpoint returns a nonzero total before treating this as a bug Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-MA|||Oxford Free Public Library": {
@@ -8580,7 +8595,7 @@
  },
  "WordPress-MA|||Palmer Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "event containers present (.event-item:4) but no parseable dates",
+  "comment": "page rendered only 330 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-MA|||Norton Public Library": {
@@ -8616,12 +8631,12 @@
  },
  "WordPress-MA|||Reuben Hoar Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.littletonlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.littletonlibrary.org/events",
   "population": "zero"
  },
  "WordPress-MA|||Phinehas S. Newton Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-MA|||Rowley Public Library": {
@@ -8638,13 +8653,13 @@
   "population": "zero"
  },
  "WordPress-MA|||Salisbury Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on eventkeeper, which its configured scraper structurally cannot read — so the entry can only ever return 0. NO family scraper exists for EventKeeper — needs a new extractor, not a config edit Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-MA|||Rutland Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-MA|||Sherborn Library": {
@@ -8677,9 +8692,12 @@
   "population": "zero"
  },
  "WordPress-MA|||Somerset Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "OPEN GAP, re-confirmed 2026-09-06 - somersetpubliclibrary.assabetinteractive.com returns HTTP 200 titled Somerset Public Library, but /calendar/ 404s and the instance exposes no internal links. This was already recorded as exactly this case in the Assabet config on 2026-08-24; today independently reached the same conclusion. Identity 1464 County Street, Somerset MA 02726, ph 508. No entry wired, and none should be until the library exposes a calendar",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "SETTLED, not unverifiable: the config entry is guarded, so the scraper no longer visits this URL and no fetch can change the answer. Guard reason on file: OPEN GAP, not fixed - somersetpubliclibrary.assabetinteractive.com returns HTTP 200 titled Somerset Public Library, but /calendar/ 404s and the instance exposes no internal links. Already recorded as this exact case in the Assabet config on 2026-08-24 and re-confirmed 2026-09-06",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: OPEN GAP, not fixed - somersetpubliclibrary.assabetinteractive.com returns HTTP 200 titled Somerset Public Library, but /calendar/ 404s and the instance exposes no internal links. Already recorded as this exact case in the Assabet config o",
+  "statusAt": "2026-09-09"
  },
  "WordPress-MA|||Swansea Free Public Library": {
   "verdict": "MISMATCH",
@@ -8687,8 +8705,8 @@
   "population": "zero"
  },
  "WordPress-MA|||Stevens Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-MA|||Taunton Public Library": {
@@ -8711,7 +8729,7 @@
  },
  "WordPress-MA|||Tyler Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.charlemontlibrary.org",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.charlemontlibrary.org/events",
   "population": "zero"
  },
  "WordPress-MA|||Topsfield Town Library": {
@@ -8723,8 +8741,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Uxbridge Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on assabet, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in Assabet-NH-MA — check first whether it is ALREADY configured there, since several of this batch were duplicates rather than gaps Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-MA|||Ventress Memorial Library": {
@@ -8737,7 +8755,7 @@
  },
  "WordPress-MA|||Wayland Free Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-MA|||West Dennis Free Public Library": {
@@ -8776,12 +8794,12 @@
  },
  "WordPress-MA|||Young Mens Library Association": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "navigation error: net::ERR_TIMED_OUT at https://warelibrary.org/",
   "population": "zero"
  },
  "WordPress-NH|||Concord Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://concordpubliclibrary.net",
+  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://concordpubliclibrary.net/events",
   "population": "zero"
  },
  "WordPress-NH|||Derry Public Library": {
@@ -8802,7 +8820,7 @@
  },
  "WordPress-NH|||Dunbarton Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.dunbartonlibrary.org",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.dunbartonlibrary.org/events",
   "population": "zero"
  },
  "WordPress-NH|||East Kingston Public Library": {
@@ -8828,7 +8846,7 @@
  },
  "WordPress-NH|||Exeter Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 131 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-NH|||Fiske Free Library": {
@@ -8929,8 +8947,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Laconia Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-NH|||Londonderry Leach Library": {
@@ -8939,19 +8957,22 @@
   "population": "zero"
  },
  "WordPress-NH|||Mansfield Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 379 chars of text — likely JS-gated or a shell",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-NH|||Mason Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to dot-book.org]",
   "population": "zero"
  },
  "WordPress-NH|||Merrimack Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "SETTLED, not unverifiable: the config entry is guarded, so the scraper no longer visits this URL and no fetch can change the answer. Guard reason on file: publishes on merrimack.libcal.com and is ALREADY in the LibCal-NH config - a live duplicate that could only ever return 0 here. Guarded 2026-09-06 on city+ZIP evidence (both entries Merrimack NH 03054), not on name similarity. LibCal-NH logged Found 48 for it in the 2026-09-06 run and that run saved 283 real rows, so this is NOT a coverage gap",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: publishes on merrimack.libcal.com and is ALREADY in the LibCal-NH config - a live duplicate that could only ever return 0 here. Guarded 2026-09-06 on city+ZIP evidence (both entries Merrimack NH 03054), not on name similarity. LibCal-NH lo",
+  "statusAt": "2026-09-09"
  },
  "WordPress-NH|||Monroe Public Library": {
   "verdict": "MISMATCH",
@@ -8975,8 +8996,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-NH|||Newmarket Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NH|||Olive G. Pettis Library": {
@@ -9015,7 +9036,7 @@
  },
  "WordPress-NH|||Salem Kelley Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.ci.salem.nh.us/kelleylibrary",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.ci.salem.nh.us/kelleylibrary/events",
   "population": "zero"
  },
  "WordPress-PA|||Bucks County Free Library - Pipersville Free Library": {
@@ -9029,8 +9050,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Carnegie Free Library Of Swissvale": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=librarycalendar detected — belongs in LibraryCalendar-Libraries",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on bibliocommons (acl.bibliocommons.com), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in BiblioCommons-{ST} — acl.bibliocommons.com is the Allegheny County PA consortium and serves many libraries, so check scope Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-PA|||Carnegie Library Of Mckeesport": {
@@ -9116,8 +9137,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Mary S Biesecker Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on google-calendar (maryslibrary.com_oru4bmh37eo7nbfbu4e8n0pik4@group.calendar.google.com), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-PA|||Meadville Public Library": {
@@ -9134,8 +9155,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-PA|||Meyersdale Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-PA|||Minersville Public Library": {
@@ -9210,8 +9231,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-PA|||Prospect Community Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 217 chars of text — likely JS-gated or a shell",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-PA|||Prospect Park Free Library": {
@@ -9321,8 +9342,8 @@
   "population": "zero"
  },
  "WordPress-PA|||South Park Township Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=librarycalendar detected — belongs in LibraryCalendar-Libraries",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on bibliocommons (acl.bibliocommons.com), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in BiblioCommons-{ST} — acl.bibliocommons.com is the Allegheny County PA consortium and serves many libraries, so check scope Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-PA|||Spring City Free Public Library": {
@@ -9364,8 +9385,8 @@
   "population": "zero"
  },
  "WordPress-PA|||Tyrone-Snyder Township Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on google-calendar, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-PA|||West Chester Public Library": {
@@ -9459,7 +9480,7 @@
  },
  "WordPress-SC|||Edgefield County Public Library - Johnston Branch (Mobley Library)": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.johnstonlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.johnstonlibrary.org/events",
   "population": "zero"
  },
  "WordPress-SC|||Clinton Public Library": {
@@ -9488,7 +9509,7 @@
  },
  "WordPress-SC|||Kershaw County Library - Elgin Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 329 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 300 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-SC|||Horry County Memorial Library - Loris Library": {
@@ -9538,7 +9559,7 @@
  },
  "WordPress-SC|||Spartanburg County Public Library - H. Carlisle Bean Law Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.spartanburglibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.spartanburglibrary.org/events",
   "population": "zero"
  },
  "WordPress-WV|||Marion County Public Library": {
@@ -9561,7 +9582,7 @@
  },
  "WordPress-WV|||Pleasants County Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.stmaryslibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.stmaryslibrary.org/events",
   "population": "zero"
  },
  "WordPress-WV|||Piedmont Public Library": {
@@ -9573,8 +9594,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-WV|||Putnam County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events live in a cross-origin Google Calendar iframe — read its public .ics feed, as GoogleCalendar-MD does",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on google-calendar (putnamcountylibrary.org_ejmopdc7lng1t5gagbq5gv644c@group.calendar.google.com), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-WV|||Swaney Memorial Library": {
@@ -9667,8 +9688,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-FL|||Celebration Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 381 chars of text — likely JS-gated or a shell",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-FL|||East Lake Community Library": {
@@ -9689,7 +9710,7 @@
  },
  "WordPress-FL|||Alachua Branch Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.alachualibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.alachualibrary.org/events",
   "population": "zero"
  },
  "WordPress-FL|||Fruitland Park Library": {
@@ -9712,7 +9733,7 @@
  },
  "WordPress-FL|||Jacaranda Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.venicelibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.venicelibrary.org/events",
   "population": "zero"
  },
  "WordPress-FL|||Lake County Library System": {
@@ -9738,12 +9759,12 @@
  },
  "WordPress-FL|||Largo Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.largolibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_CLOSED at https://www.largolibrary.org/events",
   "population": "zero"
  },
  "WordPress-FL|||Palm Beach County Library System": {
   "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=bibliocommons detected — belongs in a BiblioCommons-* scraper",
+  "comment": "bot-block: 403 even under the stealth browser the scrapers use [redirects to pbclibrary.bibliocommons.com]",
   "population": "zero"
  },
  "WordPress-FL|||Newberry Branch Library": {
@@ -9764,12 +9785,12 @@
  },
  "WordPress-FL|||Sunrise Dan Pearl Branch": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.sunriselibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.sunriselibrary.org/events",
   "population": "zero"
  },
  "WordPress-FL|||Parker Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.parkerlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.parkerlibrary.org/events",
   "population": "zero"
  },
  "WordPress-FL|||Umatilla Public Library": {
@@ -9786,8 +9807,8 @@
   "statusAt": "2026-09-07"
  },
  "WordPress-FL|||Tampa-Hillsborough County Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=bibliocommons detected — belongs in a BiblioCommons-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on bibliocommons (hcplc.bibliocommons.com), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in BiblioCommons-{ST} — acl.bibliocommons.com is the Allegheny County PA consortium and serves many libraries, so check scope Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-ME|||Acton Public Library": {
@@ -9835,7 +9856,10 @@
  "WordPress-ME|||Blue Hill Library": {
   "verdict": "MISMATCH",
   "comment": "dead-endpoint RESOLVED: site publishes no calendar, every events link goes off-host to bhpl.libcal.com. Relocated to LibCal-ME 2026-09-03 and PROVEN by 17 database rows under LibCal-ME-bhpl. WordPress entry guarded 2026-09-08",
-  "population": "zero"
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: bluehilllibrary.org publishes no calendar - relocated to LibCal-ME at bhpl.libcal.com on 2026-09-03 and PROVEN covered by 17 database rows under LibCal-ME-bhpl",
+  "statusAt": "2026-09-09"
  },
  "WordPress-ME|||Boothbay Harbor Memorial Library": {
   "verdict": "MISMATCH",
@@ -9913,8 +9937,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-ME|||Lawrence Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on civicplus, which its configured scraper structurally cannot read — so the entry can only ever return 0. NO family scraper exists for CivicPlus/CivicEngage — needs a new extractor, not a config edit Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-ME|||Limerick Public Library": {
@@ -10081,8 +10105,8 @@
   "population": "zero"
  },
  "WordPress-ME|||Wells Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on assabet, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in Assabet-NH-MA — check first whether it is ALREADY configured there, since several of this batch were duplicates rather than gaps Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-ME|||West Paris Public Library": {
@@ -10213,13 +10237,13 @@
   "statusAt": "2026-08-29"
  },
  "WordPress-MS|||Northeast Regional Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 343 chars of text — likely JS-gated or a shell",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on google-calendar, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-MS|||Ripley Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 343 chars of text — likely JS-gated or a shell",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on google-calendar, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-MS|||William And Dolores Mauldin Library": {
@@ -10249,8 +10273,8 @@
   "population": "zero"
  },
  "WordPress-NJ|||Atlantic City Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-NJ|||Bloomingdale Free Public Library": {
@@ -10290,18 +10314,18 @@
   "population": "zero"
  },
  "WordPress-NJ|||Cedar Grove Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "bot-block: 403 even under the stealth browser the scrapers use",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-NJ|||Carteret Free Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 131 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-NJ|||Cresskill Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 393 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 256 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-NJ|||Clark Public Library": {
@@ -10319,7 +10343,7 @@
  },
  "WordPress-NJ|||Dowdell Library Of South Amboy": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.southamboylibrary.org",
+  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-NJ|||Dwight D. Eisenhower Library": {
@@ -10370,13 +10394,13 @@
   "statusAt": "2026-09-07"
  },
  "WordPress-NJ|||Hamilton Township Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on assabet, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in Assabet-NH-MA — check first whether it is ALREADY configured there, since several of this batch were duplicates rather than gaps Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NJ|||Keyport Free Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 131 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-NJ|||Haworth Municipal Library": {
@@ -10451,7 +10475,7 @@
  },
  "WordPress-NJ|||Morristown-Morris Twp Joint Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js [redirects to mmtlibrary.org]",
+  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
   "population": "zero"
  },
  "WordPress-NJ|||Mount Arlington Public Library": {
@@ -10477,7 +10501,7 @@
  },
  "WordPress-NJ|||Old Bridge Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "bot-block: 403 even under the stealth browser the scrapers use [redirects to oldbridgelibrary.events.mylibrary.digital]",
   "population": "zero"
  },
  "WordPress-NJ|||Old Tappan Free Public Library": {
@@ -10499,8 +10523,8 @@
   "population": "zero"
  },
  "WordPress-NJ|||Pennsville Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 80 chars of text — likely JS-gated or a shell",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-NJ|||Plainsboro Free Public Library": {
@@ -10533,13 +10557,13 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-NJ|||River Vale Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libcal (bccls.libcal.com), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in LibCal-{ST} — confirm the tenant is single-library, or find a per-library cid, before relocating Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NJ|||Roseland Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "bot-block: 403 even under the stealth browser the scrapers use",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-NJ|||Riverside Public Library": {
@@ -10603,8 +10627,8 @@
   "population": "zero"
  },
  "WordPress-NJ|||Wharton Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-NJ|||West Orange Free Public Library": {
@@ -10657,8 +10681,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Amherst Public Library Clearfield Branch": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NY|||Andover Free Library": {
@@ -10671,17 +10695,17 @@
  },
  "WordPress-NY|||Andes Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 176 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 131 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-NY|||Arcade Free Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.arcadelibrary.org",
+  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.arcadelibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||Ardsley Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.ardsleylibrary.org",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.ardsleylibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||Apalachin Library Association": {
@@ -10709,7 +10733,7 @@
  },
  "WordPress-NY|||Bainbridge Free Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.bainbridgelibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.bainbridgelibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||Beaver Falls Library": {
@@ -10724,7 +10748,7 @@
  },
  "WordPress-NY|||Blodgett Memorial Library District Of Fishkill": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.fishkilllibrary.org",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.fishkilllibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||Bemus Point Public Library": {
@@ -10743,8 +10767,8 @@
   "population": "zero"
  },
  "WordPress-NY|||C. W. Clark Memorial Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NY|||Canajoharie Library And Art Gallery": {
@@ -10753,8 +10777,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Canastota Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NY|||Central Islip Public Library": {
@@ -10806,12 +10830,12 @@
  },
  "WordPress-NY|||Cohoes Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.cohoeslibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.cohoeslibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||Deer Park Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-NY|||David A Howe Public Library": {
@@ -10828,8 +10852,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Delevan-Yorkshire Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"There are no events\")",
   "population": "zero"
  },
  "WordPress-NY|||Dolgeville-Manheim Public Library": {
@@ -10838,13 +10862,13 @@
   "population": "zero"
  },
  "WordPress-NY|||Dunham Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NY|||East Islip Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=librarycalendar detected — belongs in LibraryCalendar-Libraries [redirects to eipl.org]",
+  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction [redirects to eipl.org]",
   "population": "zero"
  },
  "WordPress-NY|||Edith B. Ford Memorial Library": {
@@ -10853,13 +10877,13 @@
   "population": "zero"
  },
  "WordPress-NY|||Elbridge Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on google-calendar, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NY|||East Rochester Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.eastrochesterlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.eastrochesterlibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||Erwin Library Institute": {
@@ -10898,7 +10922,7 @@
  },
  "WordPress-NY|||Galway Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.galwaylibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.galwaylibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||Hammond Free Library": {
@@ -10910,8 +10934,8 @@
   "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Hamilton Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NY|||Hauppauge Public Library": {
@@ -10934,7 +10958,7 @@
  },
  "WordPress-NY|||Hannibal Free Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.hanniballibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.hanniballibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||Highland Public Library": {
@@ -10951,8 +10975,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Ilion Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NY|||Islip Public Library": {
@@ -10965,7 +10989,7 @@
  },
  "WordPress-NY|||John Jermain Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.sagharborlibrary.org",
+  "comment": "navigation error: net::ERR_SSL_PROTOCOL_ERROR at https://www.sagharborlibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||Jordan Bramley Library": {
@@ -10985,12 +11009,12 @@
  },
  "WordPress-NY|||John C. Hart Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.shruboaklibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.shruboaklibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||Lafayette Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NY|||Lakewood Memorial Library": {
@@ -11061,7 +11085,7 @@
  },
  "WordPress-NY|||Middleburgh Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_RESET at https://www.middleburghlibrary.org/",
+  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-NY|||Middleville Free Library": {
@@ -11083,8 +11107,8 @@
   "population": "zero"
  },
  "WordPress-NY|||Mooers Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "dead-endpoint: HTTP 404 on the configured URL",
   "population": "zero"
  },
  "WordPress-NY|||Monroe Free Library": {
@@ -11097,12 +11121,12 @@
  },
  "WordPress-NY|||Mount Morris Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.mountmorrislibrary.org",
+  "comment": "navigation error: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://www.mountmorrislibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||Moore Memorial Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "navigation error: net::ERR_BLOCKED_BY_CLIENT at http://greenenylibrary.org",
   "population": "zero"
  },
  "WordPress-NY|||Naples Library": {
@@ -11132,8 +11156,8 @@
   "population": "zero"
  },
  "WordPress-NY|||New York Mills Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libraryaware, which its configured scraper structurally cannot read — so the entry can only ever return 0. NOT A CALENDAR. LibraryAware is a NoveList newsletter and marketing product with no public event calendar, so there is nothing to relocate to and no selector work that would help. This library needs a different calendar found, or it stays a gap Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NY|||Newfane Free Library": {
@@ -11187,7 +11211,7 @@
  },
  "WordPress-NY|||Pawling Free Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.pawlinglibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.pawlinglibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||Port Jervis Free Library": {
@@ -11232,9 +11256,12 @@
   "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Queens Borough Public Library - Astoria": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
-  "population": "zero"
+  "verdict": "MISMATCH",
+  "comment": "url-collision: page addresses show OR not NY; title \"Astoria Public Library:\"",
+  "population": "zero",
+  "status": "contained",
+  "statusNote": "contained via urlCollision guard: the scraper never visits this entry, so it can no longer import wrong data. STILL AN UNCOVERED GAP, not a fix. Reason on file: astoria.gov is the City of Astoria OREGON - root titles itself City of Astoria Oregon on area code 503, and the configured calendar path resolves to Astoria Public Library printing OR 97103. Also a municipal calendar rather than a library ",
+  "statusAt": "2026-09-09"
  },
  "WordPress-NY|||Queens Borough Public Library - Glendale": {
   "verdict": "UNVERIFIABLE",
@@ -11363,17 +11390,17 @@
  },
  "WordPress-NY|||Sodus Free Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.soduslibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.soduslibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||Solvay Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.solvaylibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.solvaylibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||Southold Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on tribe, which its configured scraper structurally cannot read — so the entry can only ever return 0. already on The Events Calendar, which tec-rest-helper.js reads where wired — check the REST endpoint returns a nonzero total before treating this as a bug Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NY|||Stone Ridge Public Library": {
@@ -11431,7 +11458,7 @@
  },
  "WordPress-NY|||Tuxedo Park Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
   "population": "zero"
  },
  "WordPress-NY|||Voorheesville Public Library": {
@@ -11472,7 +11499,7 @@
  },
  "WordPress-NY|||Warner Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.tarrytownlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.tarrytownlibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||West Islip Public Library": {
@@ -11494,13 +11521,13 @@
   "population": "zero"
  },
  "WordPress-NY|||Westchester Library System": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libcal (westchesterlibraries.libcal.com), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in LibCal-{ST} — confirm the tenant is single-library, or find a per-library cid, before relocating Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NY|||White Plains Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on eventkeeper, which its configured scraper structurally cannot read — so the entry can only ever return 0. NO family scraper exists for EventKeeper — needs a new extractor, not a config edit Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NY|||Whitesville Public Library": {
@@ -11527,8 +11554,8 @@
   "statusAt": "2026-09-07"
  },
  "WordPress-NY|||Woodgate Free Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=communico detected — belongs in a Communico-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on google-calendar, which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in GoogleCalendar-{ST} — verify the ICS feed yields programme occurrences and not opening-hours rows Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-NY|||Wyandanch Public Library": {
@@ -11541,12 +11568,12 @@
  },
  "WordPress-NY|||Your Home Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 372 chars of text — likely JS-gated or a shell",
+  "comment": "page rendered only 375 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "WordPress-NY|||Wilson Free Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.wilsonlibrary.org",
+  "comment": "navigation error: net::ERR_CONNECTION_TIMED_OUT at https://www.wilsonlibrary.org/events",
   "population": "zero"
  },
  "WordPress-NY|||Brewster Public Library": {
@@ -11806,7 +11833,7 @@
  },
  "WordPress-TN|||Coffee County Lannom Memorial Public Library": {
   "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "comment": "page rendered only 167 chars of text — likely JS-gated or a shell",
   "population": "zero"
  },
  "LibCal-TN|||Knox County Public Library": {
@@ -12253,8 +12280,8 @@
   "population": "zero"
  },
  "WordPress-NJ|||Spring Lake Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MISMATCH",
+  "comment": "extraction-failure: 4 future-dated events visible under Puppeteer, e.g. Sep 09 2026-09-09; Wednesday, September 9, 2026 2026-09-09.",
   "population": "zero"
  },
  "WordPress-NJ|||Montclair Public Library": {
@@ -12276,13 +12303,13 @@
   "population": "zero"
  },
  "WordPress-NY|||Somers Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=tec-wordpress detected — TEC — use tec-rest-helper.js",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on tribe, which its configured scraper structurally cannot read — so the entry can only ever return 0. already on The Events Calendar, which tec-rest-helper.js reads where wired — check the REST endpoint returns a nonzero total before treating this as a bug Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "WordPress-SC|||Lexington County Library - Chapin": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "rendered fully but shows no dated events, no event containers and no explicit empty-state message — cannot distinguish an empty calendar from one needing interaction",
+  "verdict": "MATCHES",
+  "comment": "live page states no upcoming events (\"No events found\")",
   "population": "zero"
  },
  "LibraryCalendar-Libraries|||Rensselaerville Public Library": {
@@ -12312,8 +12339,8 @@
   "population": "zero"
  },
  "LibCal-VA2|||Williamsburg Regional Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper",
+  "verdict": "MISMATCH",
+  "comment": "platform mismatch: this library publishes on libcal (static-assets-us.libcal.com), which its configured scraper structurally cannot read — so the entry can only ever return 0. belongs in LibCal-{ST} — confirm the tenant is single-library, or find a per-library cid, before relocating Found by scripts/detect-site-platform.js over the UNVERIFIABLE backlog, 2026-09-09. A platform marker proves the page REFERENCES that platform, not that it holds this library's events — confirm the feed carries real dated events, and that nothing already covers this library, before relocating",
   "population": "zero"
  },
  "MacaroniKid-NY-brooklynnw|||Brooklyn - Northwest": {
