@@ -30,6 +30,21 @@ const LIBRARIES = [
     state: 'MA',
     zipCode: '02025'
   },
+  // Relocated out of WordPress-MA 2026-09-09 by the platform sweep of the UNVERIFIABLE
+  // backlog. THE INSTANCE IS ON THE LIBRARY'S OWN DOMAIN, not a librarymarket.com
+  // subdomain — sturbridge.librarymarket.com does not resolve, exactly like the negative
+  // control notarealtenant-funhive-xyz.librarymarket.com. That is why a host-name probe
+  // alone would have missed this one, and it is the same shape as Auburn ME below.
+  // Verified live: /events/upcoming returns HTTP 200 titled "Upcoming Events | Joshua Hyde
+  // Public Library" with September 2026 dates and 606 event nodes, and the page prints
+  // MA 01566 — Sturbridge — so identity comes from the page rather than the name.
+  {
+    name: 'Joshua Hyde Public Library',
+    eventsUrl: 'https://www.sturbridgelibrary.org/events/upcoming',
+    city: 'Sturbridge',
+    state: 'MA',
+    zipCode: '01566'
+  },
   {
     name: 'Portland Public Library',
     eventsUrl: 'https://portlandme.librarycalendar.com/events/upcoming',

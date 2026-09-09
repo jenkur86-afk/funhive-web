@@ -241,7 +241,14 @@ const LIBRARIES = [
   { name: 'Stockbridge Library Association', url: 'https://www.stockbridgelibrary.org', eventsUrl: 'https://www.stockbridgelibrary.org/events', city: 'Stockbridge', state: 'MA', zipCode: '01262', county: 'Berkshire'},
   { name: 'Stoneham Public Library', url: 'https://www.stonehamlibrary.org', eventsUrl: 'https://www.stonehamlibrary.org/events', city: 'Stoneham', state: 'MA', zipCode: '02180', county: 'Middlesex'},
   { name: 'Stoughton Public Library', url: 'https://www.stoughtonlibrary.org', eventsUrl: 'https://www.stoughtonlibrary.org/events', city: 'Stoughton', state: 'MA', zipCode: '02072', county: 'Norfolk'},
-  { name: 'Joshua Hyde Public Library', url: 'https://www.sturbridgelibrary.org', eventsUrl: 'https://www.sturbridgelibrary.org/events', city: 'Sturbridge', state: 'MA', zipCode: '01566', county: 'Worcester'},
+  // RELOCATED 2026-09-09 to LibraryMarket-ME-NH-MA. The site runs LibraryMarket on its OWN
+  // domain rather than a librarymarket.com subdomain, which is why a host-name probe missed
+  // it - sturbridge.librarymarket.com does not resolve, identically to the negative control.
+  // The configured /events path here is the MONTH view, which is why this scraper saw
+  // nothing usable; the relocation points at /events/upcoming, verified live at HTTP 200
+  // titled "Upcoming Events | Joshua Hyde Public Library" with 606 event nodes and
+  // September 2026 dates. Identity from the page: MA 01566, Sturbridge.
+  { name: 'Joshua Hyde Public Library', url: 'https://www.sturbridgelibrary.org', eventsUrl: 'https://www.sturbridgelibrary.org/events', city: 'Sturbridge', state: 'MA', zipCode: '01566', county: 'Worcester', urlCollision: 'relocated to LibraryMarket-ME-NH-MA 2026-09-09 - runs LibraryMarket on its own domain, read at /events/upcoming. Verified live at 606 event nodes with September 2026 dates'},
   { name: 'Swampscott Public Library', url: 'https://www.swampscottlibrary.org', eventsUrl: 'https://www.swampscottlibrary.org/events', city: 'Swampscott', state: 'MA', zipCode: '01907', county: 'Essex'},
   { name: 'Swansea Free Public Library', url: 'https://www.swansealibrary.org', eventsUrl: 'https://www.swansealibrary.org/events', city: 'Swansea', state: 'MA', zipCode: '02777', county: 'Bristol'},
   // GUARDED 2026-09-09 as a DUPLICATE, not a gap - same finding as Palmer above.
