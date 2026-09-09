@@ -41,7 +41,7 @@
  *   node scripts/retag-adult-only-events.js          # dry run, lists every row
  *   node scripts/retag-adult-only-events.js --save   # apply
  */
-const { supabase, ADULTS_MARKER_RE, detectAgeRange } = require('../scrapers/helpers/supabase-adapter');
+const { supabase, titleSaysAdultAudience, detectAgeRange } = require('../scrapers/helpers/supabase-adapter');
 const { normalizeAgeRange } = require('../scrapers/helpers/age-range-normalizer');
 
 const SAVE = process.argv.includes('--save');
@@ -78,7 +78,7 @@ const SAVE = process.argv.includes('--save');
       // Title only. Passing the description would be the catastrophic direction:
       // "children must be accompanied by an adult" is one of the commonest
       // sentences in this dataset, and Adults is a deletion verdict downstream.
-      if (!ADULTS_MARKER_RE.test((r.name || '').toLowerCase())) continue;
+      if (!titleSaysAdultAudience(r.name)) continue;
       // AND the rule must actually have FIRED. Testing the regex alone bypasses
       // detectAgeRange()'s rule ordering, and ordering is what protects titles
       // that carry an adults marker alongside a stronger child signal. Caught on

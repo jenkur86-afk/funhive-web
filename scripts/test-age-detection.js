@@ -64,6 +64,25 @@ const CASES = [
   // Only the negative controls belong here.
   ['Family Movie Night (Adults and Kids)', null, 'All Ages', 'NEGATIVE: parenthetical is not adults alone'],
   ['Pancake Breakfast $8 (adults)', null, 'All Ages', 'NEGATIVE: a PRICE tier, not an audience - this shape has no competing child rule to save it'],
+
+  // --- kindergarten as a bare word (added 2026-09-09) ------------------------
+  // Every grade rule needs a digit or an ordinal and the spelled-out rule starts at
+  // "first", so "Kindergarten Gymnastics" reached nothing. Found by spot-checking the
+  // all-ages UNVERIFIABLE backlog; 132 rows carry the word, 65 sat in All Ages.
+  ['Kindergarten Gymnastics (10/22-12/17/26)', null, 'Preschool (3-5)', 'live Carroll Gymnastics title stored as All Ages'],
+  ['1,000 Books Before Kindergarten Graduation', null, 'All Ages', 'NEGATIVE: birth-to-five programme - the suite already asserts this three times and a first draft of the rule broke it'],
+  ['Countdown to Kindergarten', null, 'All Ages', 'NEGATIVE: after a preposition, kindergarten is a destination not an audience'],
+  ['Toddler Storytime', null, 'Babies & Toddlers (0-2)', 'CONTROL: a more specific child rule above must still win'],
+
+  // --- senior / older-adult audience (added 2026-09-09) ---------------------
+  // Resolves to Adults, so this is a DELETION verdict and the negative controls matter
+  // more than the positives. A bare \bsenior\b matches 398 titles but most are the word
+  // used as a PLACE; only 45 are audience. The venue rows below must never fire.
+  ['Mobile Library Stop: Iredell Senior Center', null, 'All Ages', 'NEGATIVE: venue mention - a bookmobile stop is open to everyone and Adults would DELETE it'],
+  ['Bookmobile at the Senior Center', null, 'All Ages', 'NEGATIVE: venue mention'],
+  ['General Election 2026 Voting - Senior Citizen Center', null, 'All Ages', 'NEGATIVE: "senior citizen CENTER" is a place, not the audience'],
+  ['Senior High Study Night', null, 'All Ages', 'NEGATIVE: senior high is a TEEN signal - reading it as Adults would delete teen events'],
+  ['Teen Senior Portraits Workshop', null, 'Teens (13-18)', 'CONTROL: the teen rule fires first, as it should'],
   ['Moose Shrimp Feast Advance Tickets $25 (adults) $10 (kids under 12)', null, 'Kids (6-8)', 'NEGATIVE: live Patch-Community-Eastern page-dump title; the kids rule must win'],
   ['Teen Advisory Board (No Adults)', null, 'Teens (13-18)', 'NEGATIVE: parenthetical does not start with adults'],
   ['Adult Coloring Club', null, 'All Ages', 'NEGATIVE: no structural marker - bare adjective only'],
@@ -356,6 +375,12 @@ const ADULTS_CASES = [
   ['Tai Chi (Adults) - Location: Event Space', '', 'marker mid-title with trailing location cruft'],
   ['Dungeons & Dragons (Adults)', '', 'ampersand in the title must not break the marker'],
   ['Craft Night - Adults Only', '', 'adults only after a dash, no parentheses'],
+  // Senior audience, added 2026-09-09. Positive outcomes live here because Adults is a
+  // rejection; their negative controls are in CASES above.
+  ['Senior Bingo', '', 'senior paired with a programme noun is audience, not venue'],
+  ['Bingo for Seniors', '', '"for seniors" construction'],
+  ['Coffee and Conversation for Older Adults', '', 'older adults spelled out'],
+  ['Apex 55+ Health and Wellness Fair', '', 'age-banded 55+'],
 ];
 
 // The fixture date must always be in the FUTURE. flattenEvent() rejects past

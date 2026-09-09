@@ -128,6 +128,16 @@ applies to every one: the marker is a lead, not a verdict on the destination.
 | google-calendar | 2 | `GoogleCalendar-*` |
 | bibliocommons | 1 | `BiblioCommons-*` |
 
+> **CORRECTED 2026-09-09 — the "seven" below is not supported by evidence.** Only TWO
+> WhoFi hostnames are recorded anywhere in this repo (`seekonk-ma.whofi.com`,
+> `northkingstown-ri.whofi.com`); the "4" in the table above is an aggregate that never
+> produced a host list, and the `WHOFI-EXTRACTOR-NEEDED` note's own confirm command
+> expected 7+ verdicts in the store and found 2. A fresh sweep of all 344 zero-population
+> UNVERIFIABLE sites on 2026-09-09 found **zero** further WhoFi hosts. The extractor was
+> built that day and covers both known instances. If more exist they are outside the pool
+> swept so far — `detect-site-platform.js` was blind to WhoFi until 2026-09-09, which is
+> the likeliest reason the figure was never groundable.
+
 **WhoFi is now at seven confirmed instances, not three.** The `WHOFI-EXTRACTOR-NEEDED`
 pending note calls three "the confirmed floor" and says the real population should be
 sized before building. These four (plus Seekonk MA, North Kingstown RI and the third

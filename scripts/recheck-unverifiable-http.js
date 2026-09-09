@@ -199,7 +199,12 @@ async function probe(site, scraper, url) {
 
   console.log(`\nMATCHES ${tally.MATCHES}  MISMATCH ${tally.MISMATCH}  UNVERIFIABLE ${tally.UNVERIFIABLE}`);
   if (OUT) {
-    fs.writeFileSync(OUT, out.map(r => JSON.stringify(r)).join(',\n') + ',\n', 'utf8');
+    // Wrapped as a module. Without `module.exports = [...]` the file is a syntax error the
+    // moment anything require()s it, which is exactly what the merge command this script
+    // prints tells you to do next — so the documented next step failed on its own output.
+    // Found 2026-09-09 on a 344-site run. The sibling verify-sites-puppeteer.js already
+    // emits the wrapped form; these two must stay interchangeable.
+    fs.writeFileSync(OUT, 'module.exports = [\n' + out.map(r => JSON.stringify(r)).join(',\n') + '\n];\n', 'utf8');
     console.log(`wrote ${OUT}`);
   }
 })();

@@ -1983,8 +1983,8 @@
   "statusAt": "2026-08-29"
  },
  "RecDesk-Parks|||Hillsdale Community Center & Park": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "RecDesk calendar (mprd.recdesk.com) is JS-dependent and only rendered a facility/category selector; site-wide has separate 'MPRD Kids'/'Teens'/'Camp Life' categories but could not confirm what's tied to this specific venue.",
+  "verdict": "MISMATCH",
+  "comment": "age-detection gap, evidence from stored rows 2026-09-09: 17 of 241 All-Ages titles at this venue resolve to a SPECIFIC bracket when re-run through the shipped detectAgeRange - \"Alabama Elderly Nutrition Program\" -> Adults; \"Alabama Elderly Nutrition Program\" -> Adults; \"Alabama Elderly Nutrition Program\" -> Adults. Not the venue being broad; these rows predate the rule that now reads them and cannot self-heal because a re-scrape skips a known event before the write.",
   "population": "allages"
  },
  "RecDesk-Parks|||Mayeski Field 3 Softball with MP Overlay": {
@@ -1998,18 +1998,18 @@
   "population": "allages"
  },
  "FairsFestivals-Eastern|||Pip Moyer Recreation Center": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events.yodel.today returned HTTP 403 Forbidden; could not view page content.",
+  "verdict": "MATCHES",
+  "comment": "re-read 83 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "RecDesk-Parks|||Joseph C. Dotch Community Center & Park": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "RecDesk calendar (mprd.recdesk.com) is JS-dependent and only rendered a facility/category selector; could not confirm actual events for this specific venue.",
+  "verdict": "MATCHES",
+  "comment": "re-read 144 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "RecDesk-Parks|||Laun Community Center & Park": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "RecDesk calendar (mprd.recdesk.com) is JS-dependent and only rendered a facility/category selector; could not confirm actual events for this specific venue.",
+  "verdict": "MATCHES",
+  "comment": "re-read 158 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "RecDesk-Parks|||Mayeski Legore Memorial Softball Field": {
@@ -2048,13 +2048,13 @@
   "population": "zero"
  },
  "RecDesk-Parks|||Robert Hope Community Center": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "RecDesk calendar (mprd.recdesk.com) is JS-dependent and only rendered a facility/category selector; could not confirm actual events for this specific venue.",
+  "verdict": "MATCHES",
+  "comment": "re-read 48 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "RecDesk-Parks|||Stotts Community Center & Park": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "RecDesk calendar (mprd.recdesk.com) is JS-dependent and only rendered a facility/category selector; could not confirm actual events for this specific venue.",
+  "verdict": "MATCHES",
+  "comment": "re-read 49 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "FairsFestivals-Eastern|||Vermont Farmers Food Center": {
@@ -2063,8 +2063,8 @@
   "population": "allages"
  },
  "Eventbrite-Family-Eastern|||Baltimore County Public Library — Catonsville": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events.yodel.today returned HTTP 403 Forbidden; could not view page content.",
+  "verdict": "MATCHES",
+  "comment": "re-read 1 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "WordPress-GA|||Pelham-Carnegie Library": {
@@ -2073,8 +2073,8 @@
   "population": "zero"
  },
  "CivicRec-Parks-Eastern|||Nottingham, NH": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Catalog page is a navigation/login shell with placeholder text; no actual program titles rendered.",
+  "verdict": "MATCHES",
+  "comment": "re-read 69 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "Squarespace-Libraries|||Queen Anne's County Library": {
@@ -2101,8 +2101,8 @@
   "population": "allages"
  },
  "RecDesk-Parks|||Connie Hudson Gym": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "mprd.recdesk.com calendar page shows only a facility list and nav categories (incl. 'MPRD Kids', 'Teens') with no individual event titles rendered.",
+  "verdict": "MATCHES",
+  "comment": "re-read 31 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "RecDesk-Parks|||Deer Park Meadow Field": {
@@ -2116,8 +2116,8 @@
   "population": "allages"
  },
  "RecDesk-Parks|||Springhill Fitness & Community Center": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Same mprd.recdesk.com calendar as other RecDesk-Parks rows in this batch: only facility list/nav shown, no event titles to judge.",
+  "verdict": "MATCHES",
+  "comment": "re-read 64 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "Venue-Events-ZoosAquariums|||Brandywine Zoo": {
@@ -2141,8 +2141,8 @@
   "population": "zero"
  },
  "RecDesk-Parks|||James Seals Community Center & Park": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Same mprd.recdesk.com calendar as other RecDesk-Parks rows: only facility list/nav shown, no event titles to judge.",
+  "verdict": "MATCHES",
+  "comment": "re-read 113 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "WordPress-MA|||Dudley Branch Library": {
@@ -2164,8 +2164,8 @@
   "population": "zero"
  },
  "KidsOutAndAbout-Eastern|||Cockeysville Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events.yodel.today link returned HTTP 403 Forbidden.",
+  "verdict": "MATCHES",
+  "comment": "re-read 21 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "WordPress-TN|||Seymour Branch Library": {
@@ -2174,13 +2174,13 @@
   "population": "zero"
  },
  "KidsOutAndAbout-Eastern|||Claymont Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events.yodel.today link returned HTTP 403 Forbidden.",
+  "verdict": "MATCHES",
+  "comment": "re-read 27 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "MacaroniKid-DE|||Claymont Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Same events.yodel.today link as the KidsOutAndAbout-Eastern row; returned HTTP 403 Forbidden.",
+  "verdict": "MATCHES",
+  "comment": "re-read 27 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "Assabet-NH-MA|||Lane Memorial Library": {
@@ -2189,8 +2189,8 @@
   "population": "zero"
  },
  "Eventbrite-Family-Eastern|||Metro Baltimore": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "events.yodel.today link returned HTTP 403 Forbidden.",
+  "verdict": "MATCHES",
+  "comment": "re-read 18 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "Orange-County-Library-FL|||Online": {
@@ -2224,8 +2224,8 @@
   "population": "zero"
  },
  "CivicRec-Parks-Eastern|||Huntsville, AL": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "secure.rec1.com/AL/huntsville-al/catalog rendered no program listings, only placeholder/template text.",
+  "verdict": "MATCHES",
+  "comment": "re-read 39 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "WordPress-VT|||Ainsworth Public": {
@@ -2265,8 +2265,8 @@
   "population": "zero"
  },
  "Eventbrite-Family-Eastern|||Montgomery County Public Libraries — Wheaton Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Yodel event page returned HTTP 403 Forbidden, could not read live event list.",
+  "verdict": "MATCHES",
+  "comment": "re-read 21 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "Orange-County-Library-FL|||Orlando Public Library": {
@@ -2300,8 +2300,8 @@
   "population": "allages"
  },
  "Eventbrite-Family-Eastern|||Baltimore County Public Library Catonsville": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Yodel event page returned HTTP 403 Forbidden, could not read live event list.",
+  "verdict": "MATCHES",
+  "comment": "re-read 28 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "Assabet-NH-MA|||Taunton Public Library": {
@@ -2320,8 +2320,8 @@
   "population": "zero"
  },
  "Eventbrite-Family-Eastern|||Takoma Park Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Yodel event page returned HTTP 403 Forbidden, could not read live event list.",
+  "verdict": "MATCHES",
+  "comment": "re-read 71 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "WordPress-KY|||Kenton County Public Library": {
@@ -2330,8 +2330,8 @@
   "population": "zero"
  },
  "RecDesk-Parks|||Carroll Gymnastics, Inc.": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "RecDesk page rendered only facility policy text (mentions Child Watch and Kids Club programs by name) with no actual class/program catalog visible — could not confirm live event mix.",
+  "verdict": "MISMATCH",
+  "comment": "age-detection gap, evidence from stored rows 2026-09-09: 9 of 41 All-Ages titles at this venue resolve to a SPECIFIC bracket when re-run through the shipped detectAgeRange - \"Kindergarten Gymnastics (10/22-12/17/26)\" -> Preschool (3-5); \"Kindergarten Gymnastics (10/22-12/17/26)\" -> Preschool (3-5); \"Kindergarten Gymnastics (10/22-12/17/26)\" -> Preschool (3-5). Not the venue being broad; these rows predate the rule that now reads them and cannot self-heal because a re-scrape skips a known event before the write.",
   "population": "allages"
  },
  "Orange-County-Library-FL|||South Creek Branch": {
@@ -2340,8 +2340,8 @@
   "population": "allages"
  },
  "Eventbrite-Family-Eastern|||Brigadier General Charles E. McGee Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Yodel event page returned HTTP 403 Forbidden, could not read live event list.",
+  "verdict": "MATCHES",
+  "comment": "re-read 12 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "WordPress-Events-Calendar|||Pittsylvania County Public Library": {
@@ -2373,8 +2373,8 @@
   "statusAt": "2026-08-29"
  },
  "Eventbrite-Family-Eastern|||Howard County Library System Savage": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Yodel event page returned HTTP 403 Forbidden, could not read live event list.",
+  "verdict": "MATCHES",
+  "comment": "re-read 4 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "WordPress-AL|||Vestavia Hills Library": {
@@ -3256,8 +3256,8 @@
   "population": "allages"
  },
  "MacaroniKid-NJ|||Ramsey": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "403 Forbidden (bot-blocked) fetching ramsey.macaronikid.com",
+  "verdict": "MATCHES",
+  "comment": "re-read 5 stored rows for this venue on 2026-09-09: NONE is tagged All Ages, so the mostly-All-Ages condition that raised this verdict no longer holds",
   "population": "allages"
  },
  "MacaroniKid-NJ|||Pointpleasantnj": {
@@ -4416,13 +4416,13 @@
   "population": "zero"
  },
  "CivicRec-Parks-Eastern|||Ross Community Center": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Not sampled this pass - grouped with the CivicRec facility-rental family by naming convention but not individually checked; carry forward for next cycle's pass.",
+  "verdict": "MATCHES",
+  "comment": "re-read 56 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern|||Brighton Community Center": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "Not sampled this pass - grouped with the CivicRec facility-rental family by naming convention but not individually checked; carry forward for next cycle's pass.",
+  "verdict": "MATCHES",
+  "comment": "re-read 23 All-Ages titles for this venue on 2026-09-09 through the shipped detectAgeRange: not one resolves to a specific bracket, so the programming reads as genuinely broad rather than mis-tagged",
   "population": "allages"
  },
  "CivicRec-Parks-Eastern|||Council Rock Primary School": {
@@ -8754,8 +8754,8 @@
   "statusAt": "2026-09-06"
  },
  "WordPress-MA|||Wayland Free Public Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "page rendered only 0 chars of text — likely JS-gated or a shell",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch: page serves assabet markup, so this belongs in Assabet-NH-MA, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.waylandlibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
   "population": "zero"
  },
  "WordPress-MA|||West Dennis Free Public Library": {
@@ -9665,8 +9665,8 @@
   "population": "allages"
  },
  "CustomDrupal-Libraries|||Anderson County Library System": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "event containers present (.event-card:149) but no parseable dates",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.andersonlibrary.org/events/month. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
   "population": "zero"
  },
  "LibCal-GA|||Banks County Public Library": {
@@ -9737,8 +9737,8 @@
   "population": "zero"
  },
  "WordPress-FL|||Lake County Library System": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "no dated events in DOM but platform=libcal detected — belongs in a LibCal-* scraper [redirects to tavaresfl.gov]",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.tavareslibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
   "population": "zero"
  },
  "WordPress-FL|||Lakeland Public Library": {
@@ -9763,8 +9763,8 @@
   "population": "zero"
  },
  "WordPress-FL|||Palm Beach County Library System": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "bot-block: 403 even under the stealth browser the scrapers use [redirects to pbclibrary.bibliocommons.com]",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch: page serves libcal markup, so this belongs in LibCal-*, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.pbclibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
   "population": "zero"
  },
  "WordPress-FL|||Newberry Branch Library": {
@@ -11905,8 +11905,8 @@
   "population": "zero"
  },
  "WordPress-PA|||East Berlin Community Library": {
-  "verdict": "UNVERIFIABLE",
-  "comment": "event containers present (.event-card:24) but no parseable dates",
+  "verdict": "MISMATCH",
+  "comment": "platform-mismatch: page serves librarycalendar markup, so this belongs in LibraryCalendar-Libraries, not a WordPress DOM extractor. Detected over plain HTTPS at https://www.adamslibrary.org/. CONFIRM THE FEED CARRIES REAL DATED EVENTS BEFORE RELOCATING - a platform marker proves the platform is REFERENCED, not that it holds this library events",
   "population": "zero"
  },
  "WordPress-PA|||Huntingdon County Library": {

@@ -898,6 +898,31 @@ const ADULTS_MARKER_RE = /\(\s*adults?(?:\s+only)?\s*\)|(?:^|[-–—:|]\s*)adul
  */
 const ADULTS_PRICE_CONTEXT_RE = /[$£€]\s*\d[\d.,]*\s*\(\s*adults?\s*\)/;
 
+/**
+ * SENIOR / OLDER-ADULT audience, hoisted to module scope for the same reason
+ * ADULTS_MARKER_RE is: scripts/retag-adult-only-events.js keys on these rather than on a
+ * detectAgeRange() == Adults verdict, because those two differ and the difference deletes
+ * data. Each rule's shape is explained at its point of use inside detectAgeRange().
+ */
+const SENIOR_VENUE_RE = /\bsenior\s+(?:citizens?\s+)?(?:cent(?:er|re)|living|village|apartments|residence|housing)\b/;
+const SENIOR_TEEN_RE = /\bsenior\s+high\b|\bseniors?\s+(?:night|prom|portraits?|year)\b/;
+const SENIOR_AUDIENCE_RE = /\b(?:senior citizens?|older adults?|elderly)\b|\bfor seniors\b|\bseniors?\s+(?:yoga|fitness|exercise|bingo|matinee|luncheon|lunch|social|tech\s+help)\b|\b(?:55|60|65)\s*\+/;
+
+/**
+ * Does this TITLE carry an explicit adult-audience marker — either the parenthetical
+ * "(Adults)" form or a senior/older-adult audience?
+ *
+ * Exported as ONE predicate rather than as three regexes, so a caller cannot assemble
+ * the combination wrongly. The senior rule is a conjunction of one positive and two
+ * negative tests, and re-deriving that at each call site is precisely how a guard drifts
+ * away from the rule it is supposed to mirror.
+ */
+function titleSaysAdultAudience(title) {
+  const t = String(title || '').toLowerCase();
+  if (ADULTS_MARKER_RE.test(t) && !ADULTS_PRICE_CONTEXT_RE.test(t)) return true;
+  return !SENIOR_VENUE_RE.test(t) && !SENIOR_TEEN_RE.test(t) && SENIOR_AUDIENCE_RE.test(t);
+}
+
 function detectAgeRange(name, description) {
   const text = `${name || ''} ${description || ''}`.toLowerCase();
   const titleText = `${name || ''}`.toLowerCase();
@@ -1423,7 +1448,63 @@ function detectAgeRange(name, description) {
   // still wins: a title carrying both a real child signal and the word adults
   // has already returned by the time control reaches here. It sits just before
   // the All Ages fallback because that fallback is what it is correcting.
+  // KINDERGARTEN as a bare word. Every grade rule above needs a digit or an ordinal, and
+  // the spelled-out-grade rule added 2026-09-01 starts at "first" — so "Kindergarten
+  // Gymnastics" reached no rule at all. Found 2026-09-09 by spot-checking the all-ages
+  // UNVERIFIABLE backlog: Carroll Gymnastics sat at 41 All-Ages rows whose titles are
+  // "Kindergarten Gymnastics", "Girls Basic Gymnastics", "Tumbling Gymnastics".
+  // Measured: 132 rows carry the word and cannot be read, 65 of them stored as All Ages.
+  //
+  // Returns 5-6, the actual age of a kindergartener.
+  //
+  // FIRES ONLY WHEN KINDERGARTEN IS THE AUDIENCE — "Kindergarten Gymnastics",
+  // "kindergarteners" — and never after a preposition. That exclusion is not caution, it
+  // is a rule this suite already encodes three times over: "1000 Books Before
+  // Kindergarten" is a BIRTH-to-five reading challenge, not a five-year-old's programme,
+  // and the deliberate existing behaviour is to leave it All Ages. A first draft of this
+  // rule reasoned that "before kindergarten" lands in the Preschool bucket anyway so the
+  // distinction did not matter; the regression suite rejected it, and it was right —
+  // filing a babies programme under Preschool hides it from the Babies & Toddlers filter,
+  // which is the same multi-bracket collapse the storytime rule's comment warns about.
+  // "Countdown to Kindergarten" and "Get Ready for Kindergarten" are excluded by the same
+  // clause, which preserves their current behaviour rather than changing it unasked.
+  //
+  // Low risk by construction: Preschool is not a rejection verdict, so a false positive
+  // here mis-files an event rather than deleting it. That is the opposite of the senior
+  // rule below, and the reason the two are written to different standards.
+  const KINDER_RE = /\bkindergart(?:en|ner)(?:er)?s?\b/;
+  const KINDER_PREPOSITION_RE = /\b(?:before|until|till|to|toward|towards|for|into)\s+kindergart/;
+  if (KINDER_RE.test(titleText) && !KINDER_PREPOSITION_RE.test(titleText)) return '5-6';
+
   if (ADULTS_MARKER_RE.test(titleText) && !ADULTS_PRICE_CONTEXT_RE.test(titleText)) return '18+';
+
+  // SENIOR / OLDER-ADULT programming. Same harm as the adults marker — it is published to
+  // parents browsing for their kids — and the same deletion risk, since this resolves to
+  // Adults and adult-only rows are rejected at save time.
+  //
+  // DELIBERATELY NARROW, and the width was chosen from measurement rather than taste. A
+  // bare \bsenior\b over 148,532 rows matches 398 titles, but most are the word used as a
+  // PLACE: "Mobile Library Stop: Iredell Senior Center", "Bookmobile at the Senior
+  // Center", "Senior Center: Trivia and Jeopardy" — a bookmobile stop is open to everyone,
+  // and marking it Adults would delete it. That is the "held at Lincoln Elementary"
+  // false-positive class from 2026-08-03, in the direction that destroys data.
+  //
+  // So this requires the word to be doing AUDIENCE work: an explicit "senior citizens" /
+  // "older adults", a "for seniors" construction, an age-banded 55+/60+/65+, or a senior
+  // paired with a recognised programme noun. Venue phrasings are excluded outright.
+  // Measured on that basis: 45 rows match, 43 of them currently All Ages, and the 124
+  // venue-mention rows are correctly skipped.
+  //
+  // SENIOR HIGH is excluded too, and it is the trap worth naming: "senior high", "senior
+  // night", "senior prom" and "senior portraits" are TEEN signals, so reading them as
+  // Adults would delete teen events. Zero such rows exist today; the guard is here so the
+  // first one that arrives does not become an incident.
+  // "elderly" is included where a bare "senior" is not, because the two words do not
+  // behave alike in this dataset: "senior" is half the time a building, while every one of
+  // the 34 rows containing "elderly" is the same genuine audience title ("Alabama Elderly
+  // Nutrition Program") and none is a venue. Checked before adding it rather than assumed.
+  if (!SENIOR_VENUE_RE.test(titleText) && !SENIOR_TEEN_RE.test(titleText)
+      && SENIOR_AUDIENCE_RE.test(titleText)) return '55+';
 
   // Family / all ages
   if (/\ball\s*ages\b/.test(text)) return 'All Ages';
@@ -3266,6 +3347,7 @@ module.exports = {
   isCancelledEvent,
   detectAgeRange,
   ADULTS_MARKER_RE,
+  titleSaysAdultAudience,
   // Exported for testability: flattenEvent and resolveAgeRange are pure and are
   // the code path every scraper's save goes through, so regression suites should
   // exercise them directly rather than re-implementing the precedence rules.
