@@ -146,6 +146,86 @@ MacaroniKid starts at a fixed 19:00Z and released 15h32m later today, its longes
 - **No intervention was made this run**, so nothing here is attributable to a change; these are observations of the existing #5+#6 configuration. Per the ledger rule, no ledger row is added for a run that changed nothing about the rotation.
 
 
+## Current state — 2026-09-09 — **the regular rotation is clean and the window is finally all-green; the failure moved to MacaroniKid**
+
+- Rotations in the last 7 days: `09-09=G3 09-08=G2 09-07=G1 09-06=G3 09-05=G2 09-04=G1 09-03=G3`
+- **No `NONE` day anywhere in the window.** 09-02 aged out exactly as predicted, so the
+  preflight's "recent rotations all started" check is green for the first time since it was
+  written. Seven consecutive clean days, each group twice or more.
+- `group-last-run.json`: G1 = 2.1d, G2 = 1.1d, G3 = 0.2d.
+- `LIBRARY-SITE-AUDIT.md` closed a cycle for the second time running without a starvation
+  event in it.
+
+### Prediction check — 2026-09-09 (day 1 of the 09-09/09-11 standing prediction)
+
+| Predicted (2026-09-08) | Measured | Held? |
+|---|---|---|
+| No `NONE` day; the last `NONE` leaves the window and the preflight goes green | window is `G3 G2 G1 G3 G2 G1 G3`, preflight green | ✅ |
+| Post-lock rotation duration in 7.5–9.0h | **7h27m** (07:00:01Z → 14:27:11Z, lock wait 0) | ❌ **marginally low, in the safe direction** |
+| Lock wait 0 on at least one of the three days | **0 today** — claim already satisfied on day 1 | ✅ |
+| No rotation finishes after 19:00Z | 14:27Z, nearly 4h30m of margin | ✅ |
+
+The duration miss is 3 minutes below the band and is the fourth consecutive reading in a
+narrow spread (7h41m, 8h44m, 8h50m, 7h27m). **Do not re-fit the band to 7.4h on one point** —
+that is the exact over-fitting the 09-05 entry was corrected for. The band stands; note the
+miss and keep counting.
+
+### The lock wait was 0 for a bad reason, not a good one
+
+The prediction that a lock wait would be 0 held, but the mechanism is not the one it assumed.
+Today's rotation did not find the lock free — it found it **stale and broke it**:
+
+```
+[2026-09-09T07:00:01.788Z] [INFO] 🔨 Breaking stale runner lock (holder pid 17424 / macaroni-daily-runner is not alive)
+```
+
+**MacaroniKid's 2026-09-08 turn did not complete.** Three independent signals agree:
+
+- `Get-ScheduledTaskInfo -TaskName FunHive-Macaroni` → `LastRunTime = 2026-09-08 15:00:01`,
+  **`LastTaskResult = 267014`** — `SCHED_S_TASK_TERMINATED`, the same code CLAUDE.md names for
+  the ten-day data-quality outage.
+- `macaroni-last-run.json` has **no entry newer than 2026-09-08T06:21:30Z** (Group 1). The
+  09-08 run recorded no completion, which is the file behaving correctly: completion is
+  recorded from a fresh results file, not from an exit code, so a mid-run death reads as
+  starved rather than as success.
+- It died holding `runner.lock`, leaving the stale lock above.
+
+It was **not** the 30h `ExecutionTimeLimit` (`P1DT6H`): a 09-08 15:00 start could not reach
+that until 09-09 21:00. So the process was killed or lost for another reason — a machine
+sleep/restart is the obvious candidate given the pid was simply gone. **Not diagnosed further
+today, and deliberately not guessed at.**
+
+**Consequence, stated plainly: a MacaroniKid group lost its turn.** Group 2 is now 3.3d stale
+against a 3-day rotation. This is MacaroniKid starvation, which is a different failure from
+the regular-rotation starvation this file was opened for — and it is worth saying that the
+regular rotation, the thing five interventions were aimed at, is currently the healthy half.
+
+**The preflight did not catch it.** Its `macaroni task running` check passed, reporting
+`G1=1.5d G2=3.3d G3=2.7d`, because it watches per-group ages against a tolerance that 3.3d
+does not breach. It does not read `LastTaskResult`, and it has no notion of a stale lock
+having been broken — both of which were unambiguous today. That is the same shape as the
+staleness guard that could not see a dropped rotation: **the check is anti-correlated with the
+failure**, because a group that dies early leaves a *younger* age than one that runs long.
+
+**Standing prediction — 2026-09-10 and 2026-09-11.** Falsifiably:
+
+- **The 09-09 19:00Z MacaroniKid run selects Group 2** on the starvation path rather than the
+  calendar path, and `macaroni-last-run.json` gains a `"2"` entry dated 09-09 or 09-10. This
+  is the designed catch-up; if it does not fire, the catch-up is broken and that is a new
+  intervention, not an observation.
+- **No further stale-lock break** in `scraper-run-2026-09-1{0,1}.log`. A second one means the
+  09-08 death was not a one-off environmental event and needs real diagnosis.
+- **Post-lock rotation duration stays in 7.5–9.0h** on both days, and **no rotation finishes
+  after 19:00Z**. Unchanged from the 09-08 entry.
+- **`SugarCalendar-Libraries` first runs 09-11**, adding ~3.5 min. Recorded so it is not read
+  as drift.
+
+**No intervention was made this run** — nothing about the rotation was changed, so per the
+ledger rule no ledger row is added. The preflight blind spot above is a *finding*, not a fix;
+adding a `LastTaskResult` check would be an intervention and needs its own prediction.
+
+---
+
 ## Current state — 2026-09-08 — **three clean cycles; the standing prediction held on dropping and failed on arithmetic**
 
 - Rotations in the last 7 days: `09-08=G2 09-07=G1 09-06=G3 09-05=G2 09-04=G1 09-03=G3 09-02=NONE`
