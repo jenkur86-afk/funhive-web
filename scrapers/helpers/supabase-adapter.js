@@ -872,6 +872,32 @@ const GRADE_WORD = '(?:kindergarten|kinder|first|second|third|fourth|fifth|sixth
 const WORD_GRADE_RANGE_RE = new RegExp(`\\b(${GRADE_WORD})\\s*(?:[-–&]|through|thru|to|and)\\s*(${GRADE_WORD})\\s*grades?\\b`);
 const WORD_GRADE_SINGLE_RE = new RegExp(`\\b(${GRADE_WORD})\\s*grades?\\b`);
 
+/**
+ * Explicit adults-only marker in an event TITLE. Hoisted to module scope and
+ * exported so `scripts/retag-adult-only-events.js` can ask "did THIS rule fire?"
+ * rather than "does detectAgeRange say Adults?" — the two are not the same
+ * question, and the difference destroys data.
+ *
+ * Found 2026-09-09 while dry-running that backfill: "Tales for Tots (18-36 mos.)"
+ * resolves to Adults through an UNRELATED, pre-existing rule that reads the months
+ * range as years. A retag keyed on the Adults verdict would therefore have swept a
+ * real toddler storytime into the adult-only deletion path. Keyed on this regex it
+ * does not, because this regex does not match it.
+ *
+ * See the rule's own comment at the point of use for why it is title-only and why
+ * it demands a structural marker.
+ */
+const ADULTS_MARKER_RE = /\(\s*adults?(?:\s+only)?\s*\)|(?:^|[-–—:|]\s*)adults?\s+only\b/;
+
+/**
+ * A PRICE tier, not an audience: "Advance Tickets $25 (adults) $10 (kids under
+ * 12)". Found 2026-09-09 on a live Patch-Community-Eastern row whose title is a
+ * whole page dump. Rule ordering already saves that particular row — its "kids
+ * under 12" wins an earlier rule — but a title reading only "Pancake Breakfast $8
+ * (adults)" has no such earlier match, and Adults is a deletion verdict.
+ */
+const ADULTS_PRICE_CONTEXT_RE = /[$£€]\s*\d[\d.,]*\s*\(\s*adults?\s*\)/;
+
 function detectAgeRange(name, description) {
   const text = `${name || ''} ${description || ''}`.toLowerCase();
   const titleText = `${name || ''}`.toLowerCase();
@@ -1360,6 +1386,44 @@ function detectAgeRange(name, description) {
   const storytimeIsVenueMention = /\bstory\s*time\s+room\b/.test(text);
   if (!storytimeIsVenueMention && !ADULTS_RE.test(text)
       && guarded(STORYTIME_RE, FAMILY_RE)) return '3-5';
+
+  // EXPLICIT ADULTS-ONLY MARKER IN THE TITLE.
+  //
+  // Found 2026-09-09 by the Step 3c flagged->=70% check on St. Stephens Branch
+  // Library (GoogleCalendar-NC, 32 of 34 All Ages). Its All-Ages rows are almost
+  // entirely "Mindful Movement (Adults)", "Stitch & Social (Adults)",
+  // "Dungeons & Dragons (Adults)" — adult programming published on a family
+  // events site. MEASURED BEFORE WRITING THIS: 125 stored rows carry an explicit
+  // adults marker in the title and 108 of them are stored as All Ages, across 10
+  // scrapers (GoogleCalendar-NC 52, Assabet-NH-MA 17, Communico-WV-bplwv 15,
+  // Communico-NJ-sclsnj 13, and six others in ones and twos).
+  //
+  // This is the direction that PUBLISHES rather than merely mistags: an unread
+  // adults marker does not lose a filter, it puts an adults-only programme in
+  // front of a parent browsing for their kids. Resolving to Adults is what lets
+  // flattenEvent()/saveEvent() reject the row at all.
+  //
+  // DELIBERATELY NARROW, and the narrowness is the whole point. It reads the
+  // TITLE only and requires the marker to be structural — a parenthetical whose
+  // entire content is "adults"/"adult"/"adults only", or an "adults only" phrase
+  // after a dash/colon/pipe or at the start. A bare \badults?\b over name +
+  // description would be catastrophic here rather than merely noisy: "children
+  // must be accompanied by an adult" is one of the commonest sentences in this
+  // whole dataset, and matching it would DELETE family events, since Adults is a
+  // rejection verdict. Same class as the "held at Lincoln Elementary" venue-name
+  // false positive tightened on 2026-08-03, but with data loss on the other side.
+  //
+  // Negative controls, all covered in scripts/test-age-detection.js:
+  //   "Family Movie Night (Adults and Kids)"  — paren is not adults alone
+  //   "Teen Advisory Board (No Adults)"       — paren does not START with adults
+  //   "Storytime - adults must accompany children" — no structural marker
+  //   "Adult Coloring Club"                   — no parenthetical, no "only"
+  //
+  // Placed last so every specific-age, grade and audience-keyword rule above
+  // still wins: a title carrying both a real child signal and the word adults
+  // has already returned by the time control reaches here. It sits just before
+  // the All Ages fallback because that fallback is what it is correcting.
+  if (ADULTS_MARKER_RE.test(titleText) && !ADULTS_PRICE_CONTEXT_RE.test(titleText)) return '18+';
 
   // Family / all ages
   if (/\ball\s*ages\b/.test(text)) return 'All Ages';
@@ -3201,6 +3265,7 @@ module.exports = {
   // to close.
   isCancelledEvent,
   detectAgeRange,
+  ADULTS_MARKER_RE,
   // Exported for testability: flattenEvent and resolveAgeRange are pure and are
   // the code path every scraper's save goes through, so regression suites should
   // exercise them directly rather than re-implementing the precedence rules.

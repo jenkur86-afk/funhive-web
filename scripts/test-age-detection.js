@@ -50,6 +50,25 @@ const CASES = [
   ['Toddlertime at the Library', null, 'Babies & Toddlers (0-2)', 'sibling compound that already worked - must keep working'],
   ['Babysitting Basics', null, 'All Ages', 'NEGATIVE: babysitting is a teen course, not a baby programme'],
 
+  // --- explicit adults marker in the title (added 2026-09-09) ---------------
+  // Found by the Step 3c flagged->=70% check on St. Stephens Branch Library
+  // (GoogleCalendar-NC, 32 of 34 All Ages). Measured before the rule was written:
+  // 125 stored rows carry an adults marker in the title and 108 sit in All Ages,
+  // across 10 scrapers. Adults is a REJECTION verdict, so this rule is the one
+  // direction where a false positive deletes real family events rather than
+  // mistagging them — which is why the negative controls below outnumber the
+  // positives and why the rule reads the TITLE only, never the description.
+  // The ADULT outcomes of this rule live in ADULTS_CASES below, for the same
+  // reason the 2026-08-13 cases do: flattenEvent() rejects an adult-only row, so
+  // 'Adults' can never be observed as an age_range through this harness path.
+  // Only the negative controls belong here.
+  ['Family Movie Night (Adults and Kids)', null, 'All Ages', 'NEGATIVE: parenthetical is not adults alone'],
+  ['Pancake Breakfast $8 (adults)', null, 'All Ages', 'NEGATIVE: a PRICE tier, not an audience - this shape has no competing child rule to save it'],
+  ['Moose Shrimp Feast Advance Tickets $25 (adults) $10 (kids under 12)', null, 'Kids (6-8)', 'NEGATIVE: live Patch-Community-Eastern page-dump title; the kids rule must win'],
+  ['Teen Advisory Board (No Adults)', null, 'Teens (13-18)', 'NEGATIVE: parenthetical does not start with adults'],
+  ['Adult Coloring Club', null, 'All Ages', 'NEGATIVE: no structural marker - bare adjective only'],
+  ['Preschool Storytime', null, 'Preschool (3-5)', 'NEGATIVE CONTROL, the expensive one: an adults mention in the DESCRIPTION must never reach this rule - see the description passed by the harness'],
+
   // --- lower bound spelled "birth" (added 2026-09-07) -----------------------
   // 116 stored rows state "ages birth to N" and 101 were mis-bucketed: 94 in
   // All Ages, 7 in Kids (6-8). Every numeric rule needs a digit for the lower
@@ -326,6 +345,17 @@ const ADULTS_CASES = [
   ['October 2026 Registration - Ages 18+', '', 'detected "ages 18+" must reach Adults, not All Ages'],
   ['Pickleball Ages 21 and up', '', 'spelled-out "and up" reaches Adults'],
   ['Open Swim Ages 55 and older', '', 'spelled-out "and older" reaches Adults'],
+  // Explicit adults marker in the title, added 2026-09-09. Titles are taken
+  // verbatim from live St. Stephens Branch Library rows, chosen so none trips the
+  // NON-FAMILY filter first — "Book Club" and "Wine Tasting" would, and so would
+  // prove nothing. Their negative controls sit in CASES above, where a wrong
+  // answer shows up as a real age_range rather than as a rejection.
+  ['Mindful Movement (Adults)', 'All Ages', 'supplied All Ages must lose to an explicit adults marker in the title'],
+  ['Stitch & Social (Adults)', '', 'bare parenthetical adults marker'],
+  ['Smartphone Basics - (adults)', '', 'lowercase, dash before the parenthetical'],
+  ['Tai Chi (Adults) - Location: Event Space', '', 'marker mid-title with trailing location cruft'],
+  ['Dungeons & Dragons (Adults)', '', 'ampersand in the title must not break the marker'],
+  ['Craft Night - Adults Only', '', 'adults only after a dash, no parentheses'],
 ];
 
 // The fixture date must always be in the FUTURE. flattenEvent() rejects past
