@@ -55643,3 +55643,73 @@ The rest of the flagged list is unchanged in character: `RecDesk-Parks-*` facili
 | Forsyth County Parks & Recreation | CivicRec-Parks-Eastern-forsyth-county-ga | 20 | 20 | 100% |
 | Fernridge Park Soccer Field 2 | RecDesk-Parks-westhartford | 20 | 20 | 100% |
 | Nashville, TN | Simpleview-Tourism-Eastern | 20 | 20 | 100% |
+
+## 2026-09-09
+
+Group 3 rotation, started **2026-09-09T07:00:01Z**, 55 scrapers, 0 failed. Query window widened to **2026-09-09T00:00:00Z** to pick up `GoogleCalendar-CT`, which ran hand-started at 00:14Z and would otherwise have fallen in the gap between the 09-08 window and today's 07:00Z start.
+
+**4,272 event rows across 1,283 sites and 96 scraper names in the window; 53 rows from 18 scraper names are new to this cycle and appear below.** The other 78 names already reported on 09-06/09-07/09-08 and are skipped per the cycle rule.
+
+**No newly-flagged >=70% All-Ages sites among these 53 rows.** The full-window flag list does contain seven entries, but six belong to scrapers already logged this cycle and one — `Cecil County Public Library` / `WordPress-MD` — was already flagged on 09-06 at 73% and reads 77% today. The genuinely new information there is `Orange-County-Library-FL`: it contributed 54 events on 09-06 and 2,291 today, and at that volume four of its branches cross the threshold (Southeast 97%, Hiawassee 89%, Washington Park 86%, South Trail 76%). That is a volume change revealing the branches, not a detection regression — the same scraper's larger branches bracket normally on the same run (Winter Garden 5 All-Ages of 31, Southwest 3 of 19).
+
+**`GoogleCalendar-CT` bracketed correctly on its first run**, which was the specific thing its registry comment predicted: 34 events with Babies, Preschool and Kids all populated rather than collapsing into All Ages.
+
+| Site | Scraper | All Ages | Babies 0-2 | Preschool 3-5 | Kids 6-8 | Tweens 9-12 | Teens 13-18 | Total | Link |
+|---|---|---|---|---|---|---|---|---|---|
+| Lovejoy Branch | Communico-GA-claytonpl | 2 | 0 | 3 | 0 | 0 | 1 | 6 | [cal](https://claytonpl.libnet.info/events) |
+| Forest Park | Communico-GA-claytonpl | 0 | 0 | 1 | 1 | 0 | 0 | 2 | [cal](https://claytonpl.libnet.info/events) |
+| Northwest Branch | Communico-GA-claytonpl | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://claytonpl.libnet.info/events) |
+| Newman Wetlands Center | Communico-GA-claytonpl | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://claytonpl.libnet.info/events) |
+| Morrow Branch | Communico-GA-claytonpl | 0 | 0 | 1 | 0 | 0 | 0 | 1 | [cal](https://claytonpl.libnet.info/events) |
+| Sea Isle City | Communico-NJ-cmclibrary | 2 | 1 | 0 | 1 | 0 | 0 | 4 | [cal](https://events.cmclibrary.org/events) |
+| Cape May Court House | Communico-NJ-cmclibrary | 1 | 1 | 0 | 1 | 0 | 0 | 3 | [cal](https://events.cmclibrary.org/events) |
+| Lower Cape | Communico-NJ-cmclibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://events.cmclibrary.org/events) |
+| Wildwood Crest | Communico-NJ-cmclibrary | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://events.cmclibrary.org/events) |
+| Upper Cape | Communico-NJ-cmclibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.cmclibrary.org/events) |
+| Princeton Public Library | Communico-NJ-princetonlibrary | 4 | 0 | 0 | 3 | 0 | 0 | 7 | [cal](https://princetonlibrary.libnet.info/events) |
+| Virtual | Communico-NJ-princetonlibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://princetonlibrary.libnet.info/events) |
+| Lucius E. & Elsie C. Burch, Jr. Library | Communico-TN-collierville | 0 | 0 | 0 | 2 | 0 | 0 | 2 | [cal](https://collierville.libnet.info/events) |
+| Torrington Library | GoogleCalendar-CT | 3 | 13 | 12 | 1 | 0 | 5 | 34 | [cal](https://www.torringtonlibrary.org/events) |
+| Iuka Library | GoogleCalendar-MS | 14 | 0 | 2 | 0 | 0 | 12 | 28 | [cal](https://www.nereg.lib.ms.us/events) |
+| Corinth Public Library; auditorium | GoogleCalendar-MS | 0 | 0 | 0 | 0 | 0 | 13 | 13 | [cal](https://www.nereg.lib.ms.us/events) |
+| Corinth Public Library; Children's area | GoogleCalendar-MS | 0 | 0 | 12 | 0 | 0 | 0 | 12 | [cal](https://www.nereg.lib.ms.us/events) |
+| Ripley Public Library | GoogleCalendar-MS | 0 | 0 | 0 | 0 | 0 | 11 | 11 | [cal](https://www.nereg.lib.ms.us/events) |
+| Northeast Regional Library | GoogleCalendar-MS | 9 | 0 | 1 | 0 | 0 | 0 | 10 | [cal](https://www.nereg.lib.ms.us/events) |
+| George E Allen Library | GoogleCalendar-MS | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://www.nereg.lib.ms.us/events) |
+| Anne Spencer Cox Library | GoogleCalendar-MS | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://www.nereg.lib.ms.us/events) |
+| Corinth Public Library; Auditorium | GoogleCalendar-MS | 0 | 0 | 0 | 0 | 0 | 6 | 6 | [cal](https://www.nereg.lib.ms.us/events) |
+| George E. Allen Library | GoogleCalendar-MS | 4 | 1 | 0 | 0 | 0 | 0 | 5 | [cal](https://www.nereg.lib.ms.us/events) |
+| Corinth Public Library | GoogleCalendar-MS | 0 | 0 | 0 | 0 | 0 | 5 | 5 | [cal](https://www.nereg.lib.ms.us/events) |
+| Tishomingo Library | GoogleCalendar-MS | 0 | 0 | 0 | 0 | 0 | 2 | 2 | [cal](https://www.nereg.lib.ms.us/events) |
+| DOWNTOWN RIPLEY | GoogleCalendar-MS | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.nereg.lib.ms.us/events) |
+| George E. Allen library | GoogleCalendar-MS | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.nereg.lib.ms.us/events) |
+| Elbridge Free Library | GoogleCalendar-NY-elbridgelibrary | 32 | 25 | 0 | 3 | 0 | 0 | 60 | [cal](https://www.elbridgelibrary.org/events) |
+| Union Library Company Of Hatborough | GoogleCalendar-PA-hatborolibrary | 37 | 12 | 11 | 0 | 0 | 1 | 61 | [cal](https://www.hatborolibrary.org/) |
+| Union Library-Hatboro | GoogleCalendar-PA-hatborolibrary | 12 | 0 | 0 | 0 | 0 | 0 | 12 | [cal](https://www.hatborolibrary.org/) |
+| Hellertown Area Library | GoogleCalendar-PA-hellertownlibrary | 42 | 13 | 4 | 0 | 5 | 0 | 64 | [cal](https://www.hellertownlibrary.org/events) |
+| Tyrone Snyder Public Library | GoogleCalendar-PA-tyronelibrary | 4 | 20 | 0 | 15 | 0 | 0 | 39 | [cal](https://www.tyronelibrary.org/events) |
+| Tyrone-Snyder Township Public Library | GoogleCalendar-PA-tyronelibrary | 6 | 0 | 0 | 7 | 0 | 0 | 13 | [cal](https://www.tyronelibrary.org/events) |
+| Tyrone Public Library | GoogleCalendar-PA-tyronelibrary | 0 | 5 | 0 | 0 | 0 | 0 | 5 | [cal](https://www.tyronelibrary.org/events) |
+| Ridgefield | LibCal-NJ-bccls-ridgefield | 0 | 0 | 0 | 1 | 0 | 0 | 1 | — |
+| Lambertville Free Public Library | LibCal-NJ-lambertvillelibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Children's Room | LibCal-NJ-mmtlibrary | 0 | 1 | 0 | 5 | 0 | 0 | 6 | — |
+| Meeting Room | LibCal-NJ-mmtlibrary | 1 | 0 | 0 | 0 | 0 | 0 | 1 | — |
+| Cumberland Public Library | LibCal-RI-cumberlandlibrary | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| George Hail Free Library | LibCal-RI-oslri | 0 | 0 | 0 | 2 | 0 | 0 | 2 | — |
+| Little Buffalo State Park | Localist-Parks-pa | 8 | 0 | 0 | 0 | 0 | 0 | 8 | [cal](https://events.dcnr.pa.gov/api/2/events) |
+| Mount Pisgah State Park | Localist-Parks-pa | 0 | 0 | 0 | 7 | 0 | 0 | 7 | [cal](https://events.dcnr.pa.gov/api/2/events) |
+| Kings Gap Environmental Education Center | Localist-Parks-pa | 7 | 0 | 0 | 0 | 0 | 0 | 7 | [cal](https://events.dcnr.pa.gov/api/2/events) |
+| Ricketts Glen State Park | Localist-Parks-pa | 5 | 0 | 0 | 0 | 0 | 0 | 5 | [cal](https://events.dcnr.pa.gov/api/2/events) |
+| Presque Isle State Park | Localist-Parks-pa | 3 | 0 | 0 | 1 | 0 | 0 | 4 | [cal](https://events.dcnr.pa.gov/api/2/events) |
+| Ole Bull State Park | Localist-Parks-pa | 1 | 0 | 0 | 1 | 0 | 0 | 2 | [cal](https://events.dcnr.pa.gov/api/2/events) |
+| Camp Lavigne | Localist-Parks-pa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://events.dcnr.pa.gov/api/2/events) |
+| Tuscarora State Park | Localist-Parks-pa | 2 | 0 | 0 | 0 | 0 | 0 | 2 | [cal](https://events.dcnr.pa.gov/api/2/events) |
+| Caledonia State Park | Localist-Parks-pa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.dcnr.pa.gov/api/2/events) |
+| Ridley Creek State Park | Localist-Parks-pa | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://events.dcnr.pa.gov/api/2/events) |
+| Reelfoot Lake State Park | State-Parks-Events-TN | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://tnstateparks.com/happenings) |
+| at Aiken County Public Library | WordPress-Abbe-Regional | 1 | 1 | 0 | 0 | 0 | 0 | 2 | [cal](https://www.abbe-lib.org/events/) |
+| ABBE Regional Library System | WordPress-Abbe-Regional | 1 | 0 | 0 | 0 | 0 | 0 | 1 | [cal](https://www.abbe-lib.org/events/) |
+
+### Flagged: All Ages >= 70% (total >= 20 events)
+
+None among today's newly-added rows.

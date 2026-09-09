@@ -12717,5 +12717,15 @@
   "verdict": "MATCHES",
   "comment": "live page states no upcoming events (\"no upcoming events\")",
   "population": "zero"
+ },
+ "GoogleCalendar-NC|||St. Stephens Branch Library": {
+  "verdict": "MISMATCH",
+  "comment": "age-detection bug, FIXED 2026-09-09: 32 of 34 All-Ages rows are adult programming - Mindful Movement (Adults), Stitch and Social (Adults), Zumba Mondays! (Adults). detectAgeRange could not read a bare parenthetical (Adults), so adult-only events were published on a family site instead of being rejected. Rule added title-only and anchored to a structural marker; 123 stored rows across 10 scrapers re-tagged Adults for the standard cleanup. Not the venue's programming being broad - a detector gap.",
+  "population": "allages"
+ },
+ "GoogleCalendar-NC|||Sherrills Ford-Terrell Branch Library": {
+  "verdict": "MISMATCH",
+  "comment": "same adults-marker detector gap as St. Stephens, same fix 2026-09-09: Chair Yoga (Adults) and Yoga (Adults) were stored as All Ages",
+  "population": "allages"
  }
 }

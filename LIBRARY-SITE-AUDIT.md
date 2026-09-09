@@ -5,6 +5,18 @@ Standing inventory of every individual library website FunHive scrapes, with the
 **Link column:** each row's Link points to that library's actual calendar/events page as configured in its scraper's source file (the same URL the scraper visits) — every row below resolved to a config URL, so no row needed the database-event-URL fallback this pass, but that fallback (noted inline) remains the intended path if a future update can't find a config match; the ~33 aggregate "no per-library breakdown available" rows link to one representative library from that scraper's config rather than the specific row name, since those rows don't name a single site.
 
 
+## Cycle complete — 2026-09-09
+
+This closes the cycle that opened `## 2026-09-06`. It took **four dated sections rather than three**, and only because three single-library `GoogleCalendar-*` scrapers ran outside the rotation and outside the log capture — the rotation itself was clean: Group 3 on 09-06, Group 1 on 09-07, Group 2 on 09-08, three consecutive days, no dropped turns. That is the first cycle since 2026-08-28 to close without a starvation event in it.
+
+- **115 of 115 active library-family scrapers** have at least one row this cycle. The denominator is active registry entries whose key or file matches `librar|libcal|communico|bibliocommons|libnet`, plus the four single-system library scrapers carrying no such token (`WordPress-Abbe-Regional`, `Tockify-Horry`, `Graniculator-Morris`, `Intercept-Camden`). It is 115 rather than the 09-05 cycle's 109 because six `GoogleCalendar-{state}` entries were added by the platform-mismatch sweep between 09-05 and today.
+- **2,369 individual library-website rows** across the four sections, **62,816 events**, from **122 distinct scraper names** (more than 115 because pre-rename rows still carry old names until they expire).
+- **1,189 rows are zero-event**, 50.2% of the cycle. That share is dominated by the `WordPress-{state}` family and is the known, catalogued platform-heterogeneity gap rather than a fresh regression. It is the number this project is actually trying to move, and the `GoogleCalendar-*` relocations are the mechanism — each one converts a permanently-zero WordPress row into a live feed.
+- **Four rows are scraper aggregates rather than true per-site breakdowns**, each labelled inline — down from 31 last cycle, because `Assabet-NH-MA`'s third log shape was taught to the builder on 09-08 and its 64 libraries now report individually.
+- **Two rows came from `scraper-summary.log` rather than the stdout parser** (`GoogleCalendar-CT` and `GoogleCalendar-MS`): hand-run scrapers bypass `run-scrapers.bat`'s redirection, so their per-site lines never reach the capture file. Each holds exactly one library, so the count is still per-site and not an aggregation.
+
+The next scraper run that reaches a library-family scraper starts a fresh cycle beneath this marker.
+
 ## Cycle complete — 2026-09-05
 
 This closes the cycle that opened `## 2026-08-28`. It took **nine dated sections instead of three**, and the reason is the whole story of this cycle: Group 2's regular scrapers did not complete a rotation between 2026-08-27 and today, losing its 08-29, 09-01 and 09-02 turns to three separate failure modes (overrun-discard, a calendar turn that never existed, and the `run-scrapers.bat` / `run-macaroni.bat` shared-redirect kill). Today's Group 2 run finally supplied the 32 rows that had been outstanding since 08-28. See `ROTATION-STARVATION-LOG.md`.
@@ -16126,3 +16138,21 @@ Group 2 rotation, started **2026-09-08T07:00:01Z** and finished 15:50:07Z (53 sc
 | Windham Town | VT | WordPress-VT | 2 |
 | Windsor Public | VT | WordPress-VT | 0 |
 | Woodbury Community | VT | WordPress-VT | 1 |
+
+## 2026-09-09
+
+Group 3 rotation, started **2026-09-09T07:00:01Z** and finished 14:27:11Z (55 scrapers, 0 failed). **Day 4 of the cycle that opened `## 2026-09-06`** — Group 3 on 09-06, Group 1 on 09-07, Group 2 on 09-08 had already closed a full rotation, leaving only three library scrapers unreported. All three report below, so the cycle closes today.
+
+**Only three rows are added, and that is the whole point of the day.** Today's Group 3 rotation re-covered the same 34 library scrapers already logged on 09-06, so per the cycle rule none of them are duplicated here. The three rows below are the outstanding ones.
+
+**All three are `scraper-gcal-libraries.js` entries holding exactly one library each**, so these are true per-site rows, not scraper aggregates — the state, name and link come from the scraper's own config array rather than from a log parse.
+
+**`GoogleCalendar-CT` and `GoogleCalendar-MS` did not reach the log parser and their counts come from `scraper-summary.log` instead.** Both were hand-run outside `run-scrapers.bat` (CT at 2026-09-09T00:14Z, MS at 11:09Z), so their `📍 … Found N events` lines went to a console the capture file never saw — the documented `--log` gap in `build-library-site-audit.js`'s header, the same situation as `LibCal-FL2` on 09-05 and `SugarCalendar-Libraries` on 09-08. Re-running the wider window `--since=2026-09-09T00:00:00Z` returned byte-identical output to the 07:00Z window, which is what confirms the miss is capture-side and not a window boundary.
+
+**`GoogleCalendar-CT` is its first-ever audit row.** It was registered on 2026-09-09 by the previous session's platform sweep, relocating Torrington Library off `WordPress-CT`, where it had been sitting UNVERIFIABLE because its events live in a Google Calendar the WordPress DOM extractor structurally cannot see. 34 events on its first run.
+
+| Library Website | State | Scraper | Events Found |
+|---|---|---|---|
+| Catawba County Library | NC | GoogleCalendar-NC | 170 |
+| Northeast Regional Library | MS | GoogleCalendar-MS | 123 |
+| Torrington Library | CT | GoogleCalendar-CT | 34 |
