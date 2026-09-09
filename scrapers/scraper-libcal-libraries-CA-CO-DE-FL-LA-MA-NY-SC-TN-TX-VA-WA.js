@@ -3037,5 +3037,14 @@ module.exports = {
   scrapeLibCalKY,
   scrapeLibCalME,
   scrapeLibCalVT,
-  scrapeLibCalWV
+  scrapeLibCalWV,
+  // Exported for scripts/fix-bare-room-venue.js, which repairs rows stored BEFORE the
+  // bare-room guard above shipped. Those rows cannot self-heal on a re-scrape: the
+  // dedup check skips a known event before the write, so the stale venue is never
+  // rewritten (measured 2026-09-09 — LibCal-NJ-mmtlibrary re-ran on its Group 3 turn
+  // and all 7 rows kept their room name). The backfill therefore needs the same
+  // library.name the guard falls back to, resolved by the same slug function the
+  // scraper writes into scraper_name, so the two cannot drift apart.
+  LIBRARY_SYSTEMS,
+  buildScraperName
 };
