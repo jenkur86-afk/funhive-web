@@ -1,5 +1,11 @@
 # FunHive Session Starter
 
+> **⛔ PROJECT CLOSED 2026-09-10.** All scheduled automation is stopped. If you are
+> restarting the project, read **`PROJECT-CONTINUITY.md`** before using this starter —
+> a cold start has ordering constraints (unpause Supabase, restore the gitignored `.env`
+> files, two separate `npm install`s) that will otherwise fail in ways that look like code
+> bugs. This starter assumes a working environment.
+
 Open this file, copy everything between the START and END markers, and paste it as your first message in a new Claude session. Fill in what you need help with at the bottom.
 
 ---

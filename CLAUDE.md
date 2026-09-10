@@ -1,5 +1,18 @@
 # FunHive – Claude Instructions
 
+> ## ⛔ PROJECT CLOSED 2026-09-10 — READ `PROJECT-CONTINUITY.md` FIRST
+>
+> All scheduled automation is stopped: the four Windows tasks are disabled and the
+> `funhive-scraper-diagnosis` Claude Code task is paused. **Nothing below runs on a
+> schedule any more.** The rest of this file remains accurate as a description of how the
+> system works, and every rule in it still applies to any code you write.
+>
+> Before running, restarting or changing anything, read **`PROJECT-CONTINUITY.md`** — it
+> covers what was switched off and how to switch it back on, what lives outside git and
+> would otherwise be lost, what decays while the project is dormant (the Supabase free tier
+> pauses; every stored event goes past-dated and the first cleanup deletes almost all of
+> them), and the ordered cold-start procedure.
+
 ## Project Overview
 FunHive is a family event and activity discovery platform. It aggregates events from 185+ sources (libraries, parks, museums, MacaroniKid, community centers) across the eastern US (22 states: DC, MD, VA + ME, NH, VT, MA, RI, CT, NY, NJ, PA, DE, WV, NC, SC, GA, FL, AL, MS, TN, KY) and displays them on a Next.js website with Supabase (PostgreSQL + PostGIS) as the backend.
 
