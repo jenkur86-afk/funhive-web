@@ -143,7 +143,7 @@ async function geocodeViaPhoton(address) {
         lang: 'en'
       },
       headers: {
-        'User-Agent': 'FunHive-EventAggregator/1.0 (family-events; contact@funhive.com)'
+        'User-Agent': 'FunHive-EventAggregator/1.0 (family-events; https://myfunhive.com)'
       },
       timeout: 8000
     });
@@ -443,7 +443,7 @@ async function geocodeAddress(address, retries = 2) {
           countrycodes: 'us'
         },
         headers: {
-          'User-Agent': 'FunHive-EventAggregator/1.0 (family-events; contact@funhive.com)'
+          'User-Agent': 'FunHive-EventAggregator/1.0 (family-events; https://myfunhive.com)'
         },
         timeout: 10000 // 10 second timeout
       });

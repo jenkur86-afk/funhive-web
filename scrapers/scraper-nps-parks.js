@@ -49,7 +49,7 @@ async function fetchAllEvents() {
         },
         timeout: 30000,
         headers: {
-          'User-Agent': 'FunHive-Family-Events-Scraper/1.0 (https://funhive.co)'
+          'User-Agent': 'FunHive-Family-Events-Scraper/1.0 (https://myfunhive.com)'
         }
       });
 
